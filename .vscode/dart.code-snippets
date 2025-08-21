@@ -1,0 +1,100 @@
+{
+  "Localized Text Widget": {
+    "prefix": "lt",
+    "body": [
+      "Text(AppLocalizations.of(context)!.${1:keyName})"
+    ],
+    "description": "Creates a localized Text widget"
+  },
+  
+  "Localized AppBar": {
+    "prefix": "lab",
+    "body": [
+      "AppBar(",
+      "  title: Text(AppLocalizations.of(context)!.${1:titleKey}),",
+      ")"
+    ],
+    "description": "Creates a localized AppBar"
+  },
+  
+  "Localized SnackBar": {
+    "prefix": "lsb",
+    "body": [
+      "SnackBar(",
+      "  content: Text(AppLocalizations.of(context)!.${1:messageKey}),",
+      ")"
+    ],
+    "description": "Creates a localized SnackBar"
+  },
+  
+  "Localized AlertDialog": {
+    "prefix": "lad",
+    "body": [
+      "AlertDialog(",
+      "  title: Text(AppLocalizations.of(context)!.${1:titleKey}),",
+      "  content: Text(AppLocalizations.of(context)!.${2:contentKey}),",
+      "  actions: [",
+      "    TextButton(",
+      "      onPressed: () => Navigator.pop(context),",
+      "      child: Text(AppLocalizations.of(context)!.cancel),",
+      "    ),",
+      "    FilledButton(",
+      "      onPressed: () {",
+      "        // TODO: Add action",
+      "      },",
+      "      child: Text(AppLocalizations.of(context)!.${3:actionKey}),",
+      "    ),",
+      "  ],",
+      ")"
+    ],
+    "description": "Creates a localized AlertDialog"
+  },
+  
+  "Localized Screen Template": {
+    "prefix": "lscreen",
+    "body": [
+      "import 'package:flutter/material.dart';",
+      "import 'package:flutter_riverpod/flutter_riverpod.dart';",
+      "import '../../../shared/presentation/l10n/generated/app_localizations.dart';",
+      "",
+      "class ${1:ScreenName} extends ConsumerWidget {",
+      "  const ${1:ScreenName}({super.key});",
+      "",
+      "  @override",
+      "  Widget build(BuildContext context, WidgetRef ref) {",
+      "    return Scaffold(",
+      "      appBar: AppBar(",
+      "        title: Text(AppLocalizations.of(context)!.${2:titleKey}),",
+      "      ),",
+      "      body: ${3:body},",
+      "    );",
+      "  }",
+      "}"
+    ],
+    "description": "Creates a new localized screen template"
+  },
+  
+  "Add ARB Entry": {
+    "prefix": "arb",
+    "body": [
+      "\"${1:keyName}\": \"${2:English Text}\",",
+      "\"@${1:keyName}\": {",
+      "  \"description\": \"${3:Description of this text}\"",
+      "},"
+    ],
+    "description": "Creates an ARB file entry"
+  },
+  
+  "Localized Button": {
+    "prefix": "lbtn",
+    "body": [
+      "${1:FilledButton}(",
+      "  onPressed: () {",
+      "    // TODO: Add action",
+      "  },",
+      "  child: Text(AppLocalizations.of(context)!.${2:buttonKey}),",
+      ")"
+    ],
+    "description": "Creates a localized button"
+  }
+}

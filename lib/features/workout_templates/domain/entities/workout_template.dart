@@ -1,0 +1,131 @@
+/**
+ * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+ * 
+ * 📁 Layer: domain
+ * 🎯 Feature: workout_templates
+ * 🔧 Type: entity
+ * 🌍 Localization: N/A
+ * 🎨 Theme: N/A
+ * 📱 Platform: Universal
+ * 
+ * Dependencies:
+ * - Riverpod: None
+ * - Firebase: Firestore structure
+ * - Hive: None
+ */
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../workout/domain/entities/exercise.dart';
+
+part 'workout_template.freezed.dart';
+part 'workout_template.g.dart';
+
+enum TemplateVisibility {
+  private,   // Solo visibile al creatore
+  public,    // Visibile a tutti
+  friends,   // Visibile agli amici (futuro)
+}
+
+enum TemplateCategory {
+  strength,
+  hypertrophy,
+  endurance,
+  powerlifting,
+  bodybuilding,
+  crossfit,
+  calisthenics,
+  cardio,
+  mixed,
+  custom,
+}
+
+@freezed
+class WorkoutTemplate with _$WorkoutTemplate {
+  const factory WorkoutTemplate({
+    required String id,
+    required String userId,
+    required String name,
+    String? description,
+    required List<Exercise> exercises,
+    required TemplateCategory category,
+    required TemplateVisibility visibility,
+    
+    // Metadata
+    required DateTime createdAt,
+    DateTime? updatedAt,
+    
+    // Stats pubbliche
+    @Default(0) int downloadCount,
+    @Default(0) int likeCount,
+    @Default(0) int reviewCount,
+    @Default(0.0) double averageRating,
+    
+    // Info autore
+    String? authorName,
+    String? authorPhotoUrl,
+    
+    // Tags per ricerca
+    @Default([]) List<String> tags,
+    
+    // Durata stimata in minuti
+    int? estimatedDurationMinutes,
+    
+    // Livello difficoltà
+    String? difficultyLevel, // beginner, intermediate, advanced, expert
+    
+    // Equipment necessario
+    @Default([]) List<String> requiredEquipment,
+    
+    // Muscoli target
+    @Default([]) List<String> targetMuscles,
+  }) = _WorkoutTemplate;
+
+  factory WorkoutTemplate.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutTemplateFromJson(json);
+}
+
+@freezed
+class TemplateReview with _$TemplateReview {
+  const factory TemplateReview({
+    required String id,
+    required String templateId,
+    required String userId,
+    required String userName,
+    String? userPhotoUrl,
+    required double rating, // 1-5 stelle
+    required String comment,
+    required DateTime createdAt,
+    @Default(0) int helpfulCount,
+    @Default([]) List<String> helpfulVoters,
+  }) = _TemplateReview;
+
+  factory TemplateReview.fromJson(Map<String, dynamic> json) =>
+      _$TemplateReviewFromJson(json);
+}
+
+@freezed
+class TemplateComment with _$TemplateComment {
+  const factory TemplateComment({
+    required String id,
+    required String templateId,
+    required String userId,
+    required String userName,
+    String? userPhotoUrl,
+    required String text,
+    required DateTime createdAt,
+    @Default(0) int likeCount,
+    @Default([]) List<String> likedBy,
+    String? replyToId, // Per rispondere ad altri commenti
+  }) = _TemplateComment;
+
+  factory TemplateComment.fromJson(Map<String, dynamic> json) =>
+      _$TemplateCommentFromJson(json);
+}
+
+// Limiti per utente
+class TemplateQuota {
+  static const int maxPrivateTemplates = 4; // Max template privati per utente free
+  static const int maxPublicTemplates = 2;  // Max template pubblici per utente free
+  static const int maxPremiumPrivateTemplates = 20; // Per utenti premium
+  static const int maxPremiumPublicTemplates = 10;  // Per utenti premium
+}

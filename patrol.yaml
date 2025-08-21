@@ -1,0 +1,40 @@
+# Patrol configuration for GymBro
+app_name: GymBro
+flavor: development
+package_name: com.gymbro.app
+bundle_id: com.gymbro.app
+
+# iOS specific configuration
+ios:
+  bundle_id: com.gymbro.app
+  app_name: GymBro
+  configuration: Debug
+  scheme: Runner
+
+# Android specific configuration  
+android:
+  package_name: com.gymbro.app
+  app_name: GymBro
+
+# Test configuration
+test_options:
+  settle_timeout: 10s
+  visible_timeout: 10s
+  exist_timeout: 10s
+
+# Environments
+environments:
+  - name: development
+    variables:
+      BASE_URL: http://localhost:8080
+      ENV: dev
+  
+  - name: staging
+    variables:
+      BASE_URL: https://staging.gymbro.app
+      ENV: staging
+  
+  - name: production
+    variables:
+      BASE_URL: https://api.gymbro.app
+      ENV: prod

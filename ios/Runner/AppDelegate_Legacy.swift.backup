@@ -1,0 +1,387 @@
+import Flutter
+import UIKit
+import AVFoundation
+import BackgroundTasks
+
+// MARK: - DateFormatter Extension for Logging
+extension DateFormatter {
+  static let logTimestamp: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "HH:mm:ss.SSS"
+    return formatter
+  }()
+}
+
+  @main
+  @objc class AppDelegate: FlutterAppDelegate {
+    
+    // ✅ BACKGROUND/FOREGROUND STATE TRACKING
+    private var isInBackground = false
+    private var audioSessionConfiguredForBackground = false
+    override func application(
+      _ application: UIApplication,
+      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+      GeneratedPluginRegistrant.register(with: self)
+      
+      // ✅ Setup AVAudioSession corretto per background audio
+      setupAudioSession()
+
+      // Setup Live Activity handler
+      if let controller = window?.rootViewController as? FlutterViewController {
+        LiveActivityHandler.shared.setupMethodChannel(with: controller.binaryMessenger)
+      }
+      
+      // ✅ CHECK BACKGROUND APP REFRESH STATUS
+      checkBackgroundAppRefreshStatus()
+      
+      // ✅ REGISTER BACKGROUND TASKS - Fix BGTaskScheduler Error Code=3
+      if #available(iOS 13.0, *) {
+        registerBackgroundTasks()
+      }
+
+      return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+    
+    /// ✅ Setup AVAudioSession con strategia foreground/background ottimizzata
+    private func setupAudioSession() {
+      configureAudioSessionForContext(isBackground: false)
+    }
+    
+    /// ✅ Configura audio session basato su contesto foreground/background
+    private func configureAudioSessionForContext(isBackground: Bool) {
+      let audioSession = AVAudioSession.sharedInstance()
+      let timestamp = DateFormatter.logTimestamp.string(from: Date())
+      
+      print("🔧 === AVAUDIOSESSION SETUP START [\(timestamp)] ===")
+      
+      do {
+        // ✅ STEP 1: Verifica stato corrente dettagliato
+        print("🔧 PRE-SETUP STATE:")
+        print("🔧   Category: \(audioSession.category.rawValue)")
+        print("🔧   Mode: \(audioSession.mode.rawValue)")
+        print("🔧   Options: \(audioSession.categoryOptions.rawValue)")
+        print("🔧   Is active: \(audioSession.secondaryAudioShouldBeSilencedHint)")
+        print("🔧   Other audio playing: \(audioSession.isOtherAudioPlaying)")
+        print("🔧   Output volume: \(audioSession.outputVolume)")
+        
+        // ✅ STEP 2: Deattiva prima se necessario (evita conflitti)
+        if audioSession.category != .playback {
+          print("🔧 DEACTIVATING current session (category: \(audioSession.category))")
+          try audioSession.setActive(false, options: .notifyOthersOnDeactivation)
+          print("🔧 ✅ Session deactivated successfully")
+        } else {
+          print("🔧 ✅ Session already playback, no deactivation needed")
+        }
+        
+        // ✅ STEP 3: Configura categoria ottimizzata per SILENT TRACK + COMPLETION AUDIO
+        if isBackground {
+          print("🔧 BACKGROUND MODE: Setting .playback for silent track + completion sounds")
+          // Enhanced options for background silent audio + completion
+          try audioSession.setCategory(.playback, mode: .default, options: [
+            .allowAirPlay,
+            .mixWithOthers,  // Allow silent audio to coexist with other apps
+            .duckOthers      // Duck others only when completion audio plays
+          ])
+          print("🔧 ✅ Background audio session optimized for silent track system")
+          audioSessionConfiguredForBackground = true
+        } else {
+          print("🔧 FOREGROUND MODE: Setting .playback with full options for app audio")
+          try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers, .allowAirPlay])
+          print("🔧 ✅ Foreground-optimized audio session configured")
+          audioSessionConfiguredForBackground = false
+        }
+        
+        // ✅ STEP 4: Attiva solo se necessario
+        if !audioSession.isOtherAudioPlaying {
+          print("🔧 ACTIVATING audio session (no other audio playing)")
+          try audioSession.setActive(true)
+          print("🔧 ✅ Session activated successfully")
+        } else {
+          print("🔧 ⚠️ Other audio playing, skipping activation")
+        }
+        
+        // ✅ STEP 5: Verifica stato finale
+        print("🔧 POST-SETUP STATE:")
+        print("🔧   Final category: \(audioSession.category.rawValue)")
+        print("🔧   Final mode: \(audioSession.mode.rawValue)")
+        print("🔧   Final options: \(audioSession.categoryOptions.rawValue)")
+        
+        let finalTimestamp = DateFormatter.logTimestamp.string(from: Date())
+        print("✅ AVAudioSession configurato correttamente [\(finalTimestamp)]: \(audioSession.category)")
+        
+      } catch let error as NSError {
+        let errorTimestamp = DateFormatter.logTimestamp.string(from: Date())
+        print("❌ === AVAUDIOSESSION SETUP FAILED [\(errorTimestamp)] ===")
+        print("❌ Error code: \(error.code)")
+        print("❌ Error domain: \(error.domain)")
+        print("❌ Error description: \(error.localizedDescription)")
+        print("❌ Error userInfo: \(error.userInfo)")
+        
+        // ✅ FALLBACK: Non configurare nulla, lascia tutto a Flutter
+        print("✅ FALLBACK: Flutter gestirà completamente AVAudioSession")
+        print("❌ === END AVAUDIOSESSION ERROR ===")
+      }
+      
+      print("🔧 === AVAUDIOSESSION SETUP END [\(timestamp)] ===")
+    }
+    
+    // ✅ VALIDATE SILENT TRACK AUDIO SESSION
+    private func validateSilentTrackAudioSession() {
+      let audioSession = AVAudioSession.sharedInstance()
+      let timestamp = DateFormatter.logTimestamp.string(from: Date())
+      
+      print("🔍 === SILENT TRACK VALIDATION [\(timestamp)] ===")
+      print("🔍 Current category: \(audioSession.category.rawValue)")
+      print("🔍 Current mode: \(audioSession.mode.rawValue)")
+      print("🔍 Current options: \(audioSession.categoryOptions.rawValue)")
+      print("🔍 Is active: \(audioSession.isOtherAudioPlaying ? "NO" : "YES")")
+      print("🔍 Output volume: \(audioSession.outputVolume)")
+      print("🔍 Background configured: \(audioSessionConfiguredForBackground)")
+      
+      // Validate optimal settings for silent track
+      let isOptimal = audioSession.category == .playback &&
+                     audioSession.categoryOptions.contains(.mixWithOthers)
+      
+      print("🔍 Silent track optimal: \(isOptimal ? "✅ YES" : "❌ NO")")
+      
+      if !isOptimal {
+        print("🔍 ⚠️ Audio session may not support silent background audio optimally")
+      }
+      
+      print("🔍 === END SILENT TRACK VALIDATION ===")
+    }
+    
+    // ✅ BACKGROUND TASK REGISTRATION
+    @available(iOS 13.0, *)
+    private func registerBackgroundTasks() {
+      print("🔧 Registering background tasks...")
+      
+      let refreshTaskIdentifier = "com.gymbro.timer.refresh"
+      let processingTaskIdentifier = "com.gymbro.timer.processing"
+      
+      // Register app refresh task (per timer updates)
+      let refreshSuccess = BGTaskScheduler.shared.register(
+        forTaskWithIdentifier: refreshTaskIdentifier,
+        using: nil
+      ) { task in
+        self.handleAppRefreshTask(task as! BGAppRefreshTask)
+      }
+      
+      // Register processing task (per background audio)
+      let processingSuccess = BGTaskScheduler.shared.register(
+        forTaskWithIdentifier: processingTaskIdentifier,
+        using: nil
+      ) { task in
+        self.handleBackgroundProcessingTask(task as! BGProcessingTask)
+      }
+      
+      print("✅ Background tasks registered - Refresh: \(refreshSuccess), Processing: \(processingSuccess)")
+    }
+    
+    // ✅ BACKGROUND TASK HANDLERS
+    @available(iOS 13.0, *)
+    private func handleAppRefreshTask(_ task: BGAppRefreshTask) {
+      print("🔄 Executing app refresh task")
+      
+      task.expirationHandler = {
+        print("⏰ App refresh task expired")
+        task.setTaskCompleted(success: false)
+      }
+      
+      // Schedule next refresh
+      scheduleAppRefresh()
+      
+      DispatchQueue.global().async {
+        Thread.sleep(forTimeInterval: 1)
+        print("✅ App refresh completed")
+        task.setTaskCompleted(success: true)
+      }
+    }
+    
+    @available(iOS 13.0, *)
+    private func handleBackgroundProcessingTask(_ task: BGProcessingTask) {
+      print("🔄 Executing background processing task")
+      
+      task.expirationHandler = {
+        print("⏰ Background processing task expired")
+        task.setTaskCompleted(success: false)
+      }
+      
+      DispatchQueue.global().async {
+        // Attiva audio session per background
+        self.activateAudioSession()
+        
+        Thread.sleep(forTimeInterval: 2)
+        print("✅ Background processing completed")
+        task.setTaskCompleted(success: true)
+      }
+    }
+    
+    @available(iOS 13.0, *)
+    private func scheduleAppRefresh() {
+      let timestamp = DateFormatter.logTimestamp.string(from: Date())
+      print("🔄 === SCHEDULING APP REFRESH [\(timestamp)] ===")
+      
+      let request = BGAppRefreshTaskRequest(identifier: "com.gymbro.timer.refresh")
+      request.earliestBeginDate = Date(timeIntervalSinceNow: 1)
+      
+      print("🔄 Request ID: \(request.identifier)")
+      print("🔄 Earliest begin: \(request.earliestBeginDate?.description ?? "N/A")")
+      
+      do {
+        try BGTaskScheduler.shared.submit(request)
+        let successTimestamp = DateFormatter.logTimestamp.string(from: Date())
+        print("✅ App refresh task schedulato [\(successTimestamp)]")
+      } catch let error as NSError {
+        let errorTimestamp = DateFormatter.logTimestamp.string(from: Date())
+        print("❌ BACKGROUND TASK SCHEDULING FAILED [\(errorTimestamp)]")
+        print("❌ Error: \(error.localizedDescription)")
+        print("❌ Code: \(error.code) (Code 3 = BGTaskSchedulerErrorCodeUnavailable)")
+        print("❌ Domain: \(error.domain)")
+        print("❌ UserInfo: \(error.userInfo)")
+        
+        if error.code == 3 {
+          print("❌ BGTaskSchedulerErrorCodeUnavailable - Check Background App Refresh settings")
+        }
+      }
+      
+      print("🔄 === END SCHEDULING APP REFRESH ===")
+    }
+    
+    private func activateAudioSession() {
+      let timestamp = DateFormatter.logTimestamp.string(from: Date())
+      print("🔧 === AUDIO SESSION REACTIVATION [\(timestamp)] ===")
+      
+      do {
+        let audioSession = AVAudioSession.sharedInstance()
+        
+        // Log pre-activation state
+        print("🔧 PRE-REACTIVATION:")
+        print("🔧   Category: \(audioSession.category.rawValue)")
+        print("🔧   Is other audio playing: \(audioSession.isOtherAudioPlaying)")
+        
+        // ✅ RICERCA ONLINE: Non ri-configurare, solo riattiva
+        print("🔧 REACTIVATING audio session...")
+        try audioSession.setActive(true)
+        
+        // Log post-activation state
+        print("🔧 POST-REACTIVATION:")
+        print("🔧   Category maintained: \(audioSession.category.rawValue)")
+        print("🔧   Session active: true")
+        
+        let successTimestamp = DateFormatter.logTimestamp.string(from: Date())
+        print("✅ Audio session riattivata [\(successTimestamp)] (Flutter mantiene configurazione)")
+        
+      } catch let error as NSError {
+        let errorTimestamp = DateFormatter.logTimestamp.string(from: Date())
+        print("❌ AUDIO SESSION REACTIVATION FAILED [\(errorTimestamp)]")
+        print("❌ Error: \(error.localizedDescription)")
+        print("❌ Code: \(error.code), Domain: \(error.domain)")
+      }
+      
+      print("🔧 === END AUDIO SESSION REACTIVATION ===")
+    }
+    
+    // ✅ BACKGROUND TASK LIFECYCLE METHODS - Enhanced Logging
+    override func applicationDidEnterBackground(_ application: UIApplication) {
+      super.applicationDidEnterBackground(application)
+      
+      let timestamp = DateFormatter.logTimestamp.string(from: Date())
+      print("📱 === APP ENTERING BACKGROUND [\(timestamp)] ===")
+      print("📱 Background refresh status: \(application.backgroundRefreshStatus.rawValue)")
+      print("📱 Background time remaining: \(application.backgroundTimeRemaining)s")
+      
+      // ✅ RECONFIGURE AUDIO FOR BACKGROUND NOTIFICATIONS
+      isInBackground = true
+      print("📱 Reconfiguring audio session for background notifications...")
+      configureAudioSessionForContext(isBackground: true)
+      
+      // ✅ VALIDATE SILENT TRACK CONFIGURATION
+      validateSilentTrackAudioSession()
+      
+      if #available(iOS 13.0, *) {
+        print("📱 Scheduling background tasks...")
+        scheduleAppRefresh()
+      } else {
+        print("📱 iOS < 13.0 - BGTaskScheduler not available")
+      }
+      
+      print("📱 === END ENTERING BACKGROUND ===")
+    }
+    
+    override func applicationWillEnterForeground(_ application: UIApplication) {
+      super.applicationWillEnterForeground(application)
+      
+      let timestamp = DateFormatter.logTimestamp.string(from: Date())
+      print("📱 === APP ENTERING FOREGROUND [\(timestamp)] ===")
+      
+      // ✅ RECONFIGURE AUDIO FOR FOREGROUND USAGE
+      isInBackground = false
+      print("📱 Reconfiguring audio session for foreground usage...")
+      configureAudioSessionForContext(isBackground: false)
+      
+      if #available(iOS 13.0, *) {
+        print("📱 Cancelling all background tasks...")
+        BGTaskScheduler.shared.cancelAllTaskRequests()
+        print("📱 ✅ Background tasks cancelled")
+      }
+      
+      print("📱 === END ENTERING FOREGROUND ===")
+    }
+    
+    override func applicationDidBecomeActive(_ application: UIApplication) {
+      super.applicationDidBecomeActive(application)
+      
+      let timestamp = DateFormatter.logTimestamp.string(from: Date())
+      print("📱 === APP BECAME ACTIVE [\(timestamp)] ===")
+      print("📱 Ensuring audio session is properly configured...")
+      
+      activateAudioSession()
+      
+      print("📱 === END BECAME ACTIVE ===")
+    }
+    
+    // ✅ CHECK BACKGROUND APP REFRESH STATUS AL PRIMO AVVIO
+    private func checkBackgroundAppRefreshStatus() {
+      let status = UIApplication.shared.backgroundRefreshStatus
+      
+      switch status {
+      case .available:
+        print("✅ Background App Refresh: DISPONIBILE")
+        
+      case .denied:
+        print("🚨 Background App Refresh: DISABILITATO dall'utente")
+        showBackgroundRefreshAlert(message: "Background App Refresh è disabilitato nelle Impostazioni. I timer potrebbero non funzionare correttamente in background.")
+        
+      case .restricted:
+        print("🚨 Background App Refresh: LIMITATO da controlli parentali")
+        showBackgroundRefreshAlert(message: "Background App Refresh è limitato. Contatta l'amministratore del dispositivo.")
+        
+      @unknown default:
+        print("⚠️ Background App Refresh: Stato sconosciuto")
+      }
+    }
+    
+    private func showBackgroundRefreshAlert(message: String) {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        guard let rootViewController = self.window?.rootViewController else { return }
+        
+        let alert = UIAlertController(
+          title: "⚙️ Impostazioni Background",
+          message: message,
+          preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Apri Impostazioni", style: .default) { _ in
+          if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(settingsUrl)
+          }
+        })
+        
+        alert.addAction(UIAlertAction(title: "Più Tardi", style: .cancel))
+        
+        rootViewController.present(alert, animated: true)
+      }
+    }
+  }

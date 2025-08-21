@@ -1,0 +1,904 @@
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../domain/entities/workout_template.dart';
+import '../../domain/entities/exercise.dart';
+
+/// Repository Firebase per template workout con sync offline
+class FirebaseWorkoutTemplateRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
+  static const String _templatesCollection = 'workoutTemplates';
+  static const String _localCacheKey = 'firebase_templates_cache';
+  static const String _lastSyncKey = 'templates_last_sync';
+  
+  /// Ottiene solo i template personalizzati dell'utente
+  Future<List<WorkoutTemplate>> getCustomTemplates() async {
+    final allTemplates = await getAllTemplates();
+    return allTemplates.where((template) => template.isCustom && !template.isPublic).toList();
+  }
+  
+  /// Ottiene i template pubblici
+  Future<List<WorkoutTemplate>> getPublicTemplates() async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(_templatesCollection)
+          .where('isPublic', isEqualTo: true)
+          .orderBy('downloadCount', descending: true)
+          .limit(50)
+          .get();
+      
+      return querySnapshot.docs
+          .map((doc) => WorkoutTemplate.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      print('Errore nel recupero dei template pubblici: $e');
+      return [];
+    }
+  }
+
+  /// Ottiene solo i template predefiniti
+  Future<List<WorkoutTemplate>> getPredefinedTemplates() async {
+    final allTemplates = await getAllTemplates();
+    return allTemplates.where((template) => !template.isCustom).toList();
+  }
+
+  /// Cerca template per query
+  Future<List<WorkoutTemplate>> searchTemplates(String query) async {
+    final allTemplates = await getAllTemplates();
+    final queryLower = query.toLowerCase();
+    
+    return allTemplates.where((template) {
+      return template.name.toLowerCase().contains(queryLower) ||
+             template.description.toLowerCase().contains(queryLower) ||
+             template.tags.any((tag) => tag.toLowerCase().contains(queryLower));
+    }).toList();
+  }
+
+  /// Ottiene template per tag
+  Future<List<WorkoutTemplate>> getTemplatesByTags(List<String> tags) async {
+    final allTemplates = await getAllTemplates();
+    
+    return allTemplates.where((template) {
+      return tags.any((tag) => template.tags.contains(tag));
+    }).toList();
+  }
+
+  /// Crea template da workout esistente
+  Future<WorkoutTemplate> createTemplateFromWorkout({
+    required String name,
+    required String description,
+    required List<Exercise> exercises,
+    List<String>? tags,
+    String? imageUrl,
+  }) async {
+    final exerciseTemplates = exercises.map((exercise) {
+      return ExerciseTemplate(
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        category: exercise.category,
+        type: exercise.type,
+        sets: exercise.sets.map((set) {
+          return SetTemplate(
+            setNumber: set.setNumber,
+            targetWeight: set.weight,
+            targetReps: set.reps,
+            notes: set.notes,
+          );
+        }).toList(),
+        notes: exercise.notes,
+        restTime: exercise.restTime,
+      );
+    }).toList();
+
+    final template = WorkoutTemplate(
+      name: name,
+      description: description,
+      exercises: exerciseTemplates,
+      tags: tags ?? [],
+      imageUrl: imageUrl,
+      isCustom: true,
+    );
+
+    await saveTemplate(template);
+    return template;
+  }
+
+  /// Ottiene tutti i template dell'utente (con cache offline)
+  Future<List<WorkoutTemplate>> getAllTemplates() async {
+    try {
+      // Prova prima dal cloud se l'utente è autenticato
+      if (_auth.currentUser != null) {
+        final cloudTemplates = await _getTemplatesFromCloud();
+        await _cacheTemplates(cloudTemplates);
+        return cloudTemplates;
+      }
+    } catch (e) {
+      print('Errore caricamento da cloud, usando cache locale: $e');
+    }
+    
+    // Fallback alla cache locale se cloud non disponibile
+    return await _getTemplatesFromCache();
+  }
+
+  /// Rende pubblico un template privato
+  Future<void> makeTemplatePublic(String templateId) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) throw Exception('Utente non autenticato');
+    
+    try {
+      await _firestore
+          .collection(_templatesCollection)
+          .doc(templateId)
+          .update({
+            'isPublic': true,
+            'authorName': _auth.currentUser?.displayName ?? 'Anonymous',
+            'userId': userId,
+          });
+    } catch (e) {
+      print('Errore nel rendere pubblico il template: $e');
+      rethrow;
+    }
+  }
+  
+  /// Scarica un template pubblico (crea una copia privata)
+  Future<WorkoutTemplate> downloadPublicTemplate(String templateId) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) throw Exception('Utente non autenticato');
+    
+    try {
+      // Ottieni il template pubblico
+      final doc = await _firestore
+          .collection(_templatesCollection)
+          .doc(templateId)
+          .get();
+      
+      if (!doc.exists) throw Exception('Template non trovato');
+      
+      final publicTemplate = WorkoutTemplate.fromJson(doc.data()!);
+      
+      // Crea una copia privata
+      final privateTemplate = publicTemplate.copyWith(
+        name: '${publicTemplate.name} (Copy)',
+        isPublic: false,
+        isCustom: true,
+        userId: userId,
+        downloadCount: 0,
+        averageRating: 0.0,
+        reviewCount: 0,
+      );
+      
+      // Salva la copia
+      await saveTemplate(privateTemplate);
+      
+      // Incrementa il contatore download del template originale
+      await _firestore
+          .collection(_templatesCollection)
+          .doc(templateId)
+          .update({
+            'downloadCount': FieldValue.increment(1),
+          });
+      
+      return privateTemplate;
+    } catch (e) {
+      print('Errore nel download del template: $e');
+      rethrow;
+    }
+  }
+  
+  /// Salva un template (cloud + cache locale)
+  Future<void> saveTemplate(WorkoutTemplate template) async {
+    
+    // PRE-SAVE VALIDATION - Critical validation before saving
+    
+    // Validate template basic fields
+    if (template.id.isEmpty) {
+      throw Exception('VALIDATION ERROR: Template ID cannot be empty');
+    }
+    if (template.name.trim().isEmpty) {
+      throw Exception('VALIDATION ERROR: Template name cannot be empty');
+    }
+    
+    // CHECK QUOTA before saving
+    if (_auth.currentUser != null) {
+      await _checkAndUpdateQuota(template.isPublic);
+    }
+    
+    // Validate exercises presence and integrity
+    if (template.exercises.isEmpty) {
+      print('⚠️  VALIDATION WARNING: Template has no exercises - this is unusual but allowed');
+    }
+    
+    for (int i = 0; i < template.exercises.length; i++) {
+      final ex = template.exercises[i];
+      
+      if (ex.exerciseId.isEmpty) {
+        throw Exception('VALIDATION ERROR: Exercise at index $i has empty exerciseId');
+      }
+      if (ex.exerciseName.trim().isEmpty) {
+        throw Exception('VALIDATION ERROR: Exercise at index $i has empty exerciseName');
+      }
+      if (ex.sets.isEmpty) {
+        print('⚠️  VALIDATION WARNING: Exercise "${ex.exerciseName}" has no sets');
+      }
+      
+      // Validate each set
+      for (int j = 0; j < ex.sets.length; j++) {
+        final set = ex.sets[j];
+        if (set.setNumber <= 0) {
+          throw Exception('VALIDATION ERROR: Exercise "${ex.exerciseName}" set $j has invalid setNumber: ${set.setNumber}');
+        }
+      }
+    }
+    
+    print('✅ VALIDATION: Pre-save validation passed successfully');
+    
+    // Enhanced Debug Logging - Pre-save details
+    print('📊 DEBUG: Template pre-save details:');
+    print('   - ID: ${template.id}');
+    print('   - Name: ${template.name}');
+    print('   - Description: ${template.description}');
+    print('   - Exercises count: ${template.exercises.length}');
+    
+    for (int i = 0; i < template.exercises.length; i++) {
+      final ex = template.exercises[i];
+      print('   - Exercise [$i]: ${ex.exerciseName}');
+      print('     * ID: ${ex.exerciseId}');
+      print('     * Category: ${ex.category.name}');
+      print('     * Type: ${ex.type.name}');
+      print('     * Sets: ${ex.sets.length}');
+      print('     * Notes: ${ex.notes ?? "none"}');
+      print('     * RestTime: ${ex.restTime ?? "none"}');
+      
+      for (int j = 0; j < ex.sets.length; j++) {
+        final set = ex.sets[j];
+        print('       - Set $j: ${set.targetWeight ?? 0}kg x ${set.targetReps ?? 0} reps');
+      }
+    }
+    
+    // Salva sempre in locale per sync rapido
+    await _saveTemplateLocally(template);
+    
+    // Prova a salvare nel cloud se utente autenticato
+    if (_auth.currentUser != null) {
+      try {
+        await _saveTemplateToCloud(template);
+      } catch (e) {
+        print('Errore salvataggio cloud, salvato solo localmente: $e');
+        // Agenda per sync futuro
+        await _markForSync(template.id);
+      }
+    }
+  }
+
+  /// Elimina un template
+  Future<void> deleteTemplate(String templateId) async {
+    // Get template info before deletion for quota update
+    bool isPublic = false;
+    if (_auth.currentUser != null) {
+      try {
+        final doc = await _firestore
+            .collection(_templatesCollection)
+            .doc(templateId)
+            .get();
+        if (doc.exists) {
+          isPublic = doc.data()?['isPublic'] ?? false;
+        }
+      } catch (e) {
+        print('Warning: Could not determine template type for quota: $e');
+      }
+    }
+    
+    // Elimina localmente
+    await _deleteTemplateLocally(templateId);
+    
+    // Elimina dal cloud se disponibile
+    if (_auth.currentUser != null) {
+      try {
+        await _deleteTemplateFromCloud(templateId);
+        // Decrement quota after successful deletion
+        await _decrementQuota(isPublic);
+      } catch (e) {
+        print('Errore eliminazione cloud: $e');
+        // Agenda per sync futuro
+        await _markForDeletion(templateId);
+      }
+    }
+  }
+
+  /// Incrementa contatore utilizzo
+  Future<void> incrementUsage(String templateId) async {
+    // Aggiorna localmente
+    final templates = await _getTemplatesFromCache();
+    final templateIndex = templates.indexWhere((t) => t.id == templateId);
+    
+    if (templateIndex != -1) {
+      final updatedTemplate = templates[templateIndex].incrementUsage();
+      templates[templateIndex] = updatedTemplate;
+      await _cacheTemplates(templates);
+      
+      // Aggiorna anche nel cloud se possibile
+      if (_auth.currentUser != null) {
+        try {
+          await _saveTemplateToCloud(updatedTemplate);
+        } catch (e) {
+          print('Errore aggiornamento utilizzo cloud: $e');
+        }
+      }
+    }
+  }
+
+  /// Sincronizza template locali con cloud
+  Future<void> syncWithCloud() async {
+    if (_auth.currentUser == null) return;
+    
+    try {
+      // 1. Carica template dal cloud
+      final cloudTemplates = await _getTemplatesFromCloud();
+      final localTemplates = await _getTemplatesFromCache();
+      
+      // 2. Merge intelligente
+      final mergedTemplates = _mergeTemplates(localTemplates, cloudTemplates);
+      
+      // 3. Salva risultato in cache
+      await _cacheTemplates(mergedTemplates);
+      
+      // 4. Aggiorna timestamp sync
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_lastSyncKey, DateTime.now().millisecondsSinceEpoch);
+      
+      print('✅ Sync template completato: ${mergedTemplates.length} template');
+    } catch (e) {
+      print('❌ Errore sync template: $e');
+      rethrow;
+    }
+  }
+
+  /// Verifica se è necessario un sync
+  Future<bool> needsSync() async {
+    if (_auth.currentUser == null) return false;
+    
+    final prefs = await SharedPreferences.getInstance();
+    final lastSync = prefs.getInt(_lastSyncKey) ?? 0;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    
+    // Sync ogni 30 minuti
+    return (now - lastSync) > (30 * 60 * 1000);
+  }
+
+  /// Stream per template real-time (solo cloud)
+  Stream<List<WorkoutTemplate>> templatesStream() {
+    if (_auth.currentUser == null) {
+      return Stream.value([]);
+    }
+    
+    return _firestore
+        .collection(_templatesCollection)
+        .where('userId', isEqualTo: _auth.currentUser!.uid)
+        .orderBy('updatedAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        data['id'] = doc.id; // Assicura che l'ID sia nel data
+        return WorkoutTemplate.fromJson(data);
+      }).toList();
+    });
+  }
+
+  // METODI PRIVATI
+
+  /// Carica template dal cloud
+  Future<List<WorkoutTemplate>> _getTemplatesFromCloud() async {
+    if (_auth.currentUser == null) return [];
+    
+    print('📥 FIREBASE: Loading templates from cloud...');
+    
+    final querySnapshot = await _firestore
+        .collection(_templatesCollection)
+        .where('userId', isEqualTo: _auth.currentUser!.uid)
+        .orderBy('updatedAt', descending: true)
+        .get();
+
+    print('📥 FIREBASE: Found ${querySnapshot.docs.length} documents in cloud');
+
+    final templates = querySnapshot.docs.map((doc) {
+      final data = doc.data();
+      data['id'] = doc.id;
+      
+      // Enhanced Debug Logging - Document validation
+      print('📄 DEBUG: Loading document ${doc.id}:');
+      print('   - Name: ${data['name']}');
+      print('   - Exercises in data: ${(data['exercises'] as List?)?.length ?? 0}');
+      
+      final template = WorkoutTemplate.fromJson(data);
+      
+      print('   - Exercises after fromJson: ${template.exercises.length}');
+      if (template.exercises.isEmpty && (data['exercises'] as List?)?.isNotEmpty == true) {
+        print('⚠️  WARNING: Exercise data lost during fromJson conversion!');
+        print('   - Raw exercises data: ${data['exercises']}');
+      }
+      
+      return template;
+    }).toList();
+    
+    print('✅ FIREBASE: Loaded ${templates.length} templates from cloud');
+    return templates;
+  }
+
+  /// Salva template nel cloud
+  Future<void> _saveTemplateToCloud(WorkoutTemplate template) async {
+    if (_auth.currentUser == null) return;
+    
+    final data = template.toJson();
+    data['userId'] = _auth.currentUser!.uid;
+    data['serverTimestamp'] = FieldValue.serverTimestamp();
+    
+    // Enhanced Debug Logging - JSON validation
+    print('🔥 FIREBASE: JSON da salvare: ${data['exercises']?.length ?? 0} esercizi');
+    print('📊 DEBUG: JSON structure validation:');
+    print('   - Template ID in JSON: ${data['id']}');
+    print('   - Template name in JSON: ${data['name']}');
+    print('   - Exercises in JSON: ${(data['exercises'] as List?)?.length ?? 0}');
+    
+    if (data['exercises'] != null) {
+      final exercisesJson = data['exercises'] as List;
+      for (int i = 0; i < exercisesJson.length; i++) {
+        final exJson = exercisesJson[i] as Map<String, dynamic>;
+        print('   - Exercise JSON [$i]:');
+        print('     * exerciseId: ${exJson['exerciseId']}');
+        print('     * exerciseName: ${exJson['exerciseName']}');
+        print('     * category: ${exJson['category']}');
+        print('     * type: ${exJson['type']}');
+        print('     * sets: ${(exJson['sets'] as List?)?.length ?? 0}');
+      }
+    } else {
+      print('⚠️  WARNING: No exercises in JSON data!');
+    }
+    
+    await _firestore
+        .collection(_templatesCollection)
+        .doc(template.id)
+        .set(data, SetOptions(merge: true));
+        
+    print('✅ FIREBASE: Template saved to cloud successfully');
+    
+    // POST-SAVE VALIDATION - Verify data was saved correctly
+    print('📊 VALIDATION: Starting post-save validation...');
+    try {
+      // Attempt to read back the saved template to verify integrity
+      final savedDoc = await _firestore
+          .collection(_templatesCollection)
+          .doc(template.id)
+          .get();
+          
+      if (savedDoc.exists) {
+        final savedData = savedDoc.data()!;
+        final exercisesInFirestore = (savedData['exercises'] as List?)?.length ?? 0;
+        
+        if (exercisesInFirestore != template.exercises.length) {
+          print('❌ VALIDATION ERROR: Exercise count mismatch!');
+          print('   - Original: ${template.exercises.length} exercises');
+          print('   - Firestore: $exercisesInFirestore exercises');
+          throw Exception('POST-SAVE VALIDATION FAILED: Exercise data integrity compromised');
+        }
+        
+        print('✅ VALIDATION: Post-save validation passed - data integrity verified');
+      } else {
+        throw Exception('POST-SAVE VALIDATION FAILED: Document not found in Firestore');
+      }
+    } catch (e) {
+      print('❌ VALIDATION: Post-save validation failed: $e');
+      // Don't throw here as the save actually succeeded, just log the issue
+    }
+  }
+
+  /// Elimina template dal cloud
+  Future<void> _deleteTemplateFromCloud(String templateId) async {
+    if (_auth.currentUser == null) return;
+    
+    await _firestore
+        .collection(_templatesCollection)
+        .doc(templateId)
+        .delete();
+  }
+
+  /// Carica template dalla cache locale
+  Future<List<WorkoutTemplate>> _getTemplatesFromCache() async {
+    try {
+      print('💾 CACHE: Loading templates from local cache...');
+      
+      final prefs = await SharedPreferences.getInstance();
+      final templatesJson = prefs.getString(_localCacheKey);
+      
+      if (templatesJson == null) {
+        print('💾 CACHE: No cached data found');
+        return [];
+      }
+      
+      final List<dynamic> templatesList = json.decode(templatesJson);
+      print('💾 CACHE: Found ${templatesList.length} templates in cache');
+      
+      final templates = templatesList.map((jsonData) {
+        // Enhanced Debug Logging - Cache validation
+        final templateJson = jsonData as Map<String, dynamic>;
+        print('💾 DEBUG: Loading cached template ${templateJson['name']}:');
+        print('   - Exercises in cache: ${(templateJson['exercises'] as List?)?.length ?? 0}');
+        
+        final template = WorkoutTemplate.fromJson(templateJson);
+        
+        print('   - Exercises after fromJson: ${template.exercises.length}');
+        if (template.exercises.isEmpty && (templateJson['exercises'] as List?)?.isNotEmpty == true) {
+          print('⚠️  WARNING: Exercise data lost during cache fromJson conversion!');
+        }
+        
+        return template;
+      }).toList();
+      
+      print('✅ CACHE: Loaded ${templates.length} templates from cache');
+      return templates;
+    } catch (e) {
+      print('❌ CACHE: Error loading from cache: $e');
+      return [];
+    }
+  }
+
+  /// Salva template in cache locale
+  Future<void> _cacheTemplates(List<WorkoutTemplate> templates) async {
+    try {
+      print('💾 CACHE: Caching ${templates.length} templates...');
+      
+      final prefs = await SharedPreferences.getInstance();
+      
+      // Pre-serialization validation
+      int totalExercises = 0;
+      for (final template in templates) {
+        totalExercises += template.exercises.length;
+      }
+      print('💾 CACHE: Total exercises to cache: $totalExercises');
+      
+      final templatesJson = json.encode(
+        templates.map((template) => template.toJson()).toList(),
+      );
+      
+      await prefs.setString(_localCacheKey, templatesJson);
+      
+      // Post-serialization validation
+      final savedJson = prefs.getString(_localCacheKey);
+      if (savedJson != null) {
+        final decodedList = json.decode(savedJson) as List;
+        print('💾 CACHE: Verified ${decodedList.length} templates in cache');
+        
+        int cachedExercises = 0;
+        for (final templateJson in decodedList) {
+          final exercisesList = (templateJson as Map<String, dynamic>)['exercises'] as List?;
+          cachedExercises += exercisesList?.length ?? 0;
+        }
+        
+        if (cachedExercises != totalExercises) {
+          print('❌ CACHE ERROR: Exercise count mismatch in serialization!');
+          print('   - Original: $totalExercises exercises');
+          print('   - Cached: $cachedExercises exercises');
+        } else {
+          print('✅ CACHE: All exercises successfully cached');
+        }
+      }
+      
+    } catch (e) {
+      print('❌ CACHE: Error saving to cache: $e');
+      rethrow;
+    }
+  }
+
+  /// Salva singolo template localmente
+  Future<void> _saveTemplateLocally(WorkoutTemplate template) async {
+    print('💾 CACHE: Saving template locally: "${template.name}"');
+    
+    final templates = await _getTemplatesFromCache();
+    templates.removeWhere((t) => t.id == template.id);
+    templates.add(template);
+    templates.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    
+    await _cacheTemplates(templates);
+    
+    // POST-SAVE VALIDATION for local cache
+    print('📊 VALIDATION: Verifying local cache save...');
+    final verifyTemplates = await _getTemplatesFromCache();
+    final savedTemplate = verifyTemplates.firstWhere(
+      (t) => t.id == template.id,
+      orElse: () => throw Exception('CACHE VALIDATION ERROR: Template not found after save'),
+    );
+    
+    if (savedTemplate.exercises.length != template.exercises.length) {
+      print('❌ CACHE VALIDATION ERROR: Exercise count mismatch!');
+      print('   - Original: ${template.exercises.length} exercises');
+      print('   - Cached: ${savedTemplate.exercises.length} exercises');
+      throw Exception('CACHE VALIDATION FAILED: Exercise data integrity compromised');
+    }
+    
+    print('✅ CACHE: Template saved and validated locally');
+  }
+
+  /// Elimina template localmente
+  Future<void> _deleteTemplateLocally(String templateId) async {
+    final templates = await _getTemplatesFromCache();
+    templates.removeWhere((t) => t.id == templateId);
+    await _cacheTemplates(templates);
+  }
+
+  /// Merge intelligente tra template locali e cloud
+  List<WorkoutTemplate> _mergeTemplates(
+    List<WorkoutTemplate> local, 
+    List<WorkoutTemplate> cloud,
+  ) {
+    final Map<String, WorkoutTemplate> merged = {};
+    
+    // Aggiungi tutti i template cloud
+    for (final template in cloud) {
+      merged[template.id] = template;
+    }
+    
+    // Aggiungi template locali se più recenti o non esistenti nel cloud
+    for (final localTemplate in local) {
+      final cloudTemplate = merged[localTemplate.id];
+      
+      if (cloudTemplate == null || 
+          localTemplate.updatedAt.isAfter(cloudTemplate.updatedAt)) {
+        merged[localTemplate.id] = localTemplate;
+      }
+    }
+    
+    final result = merged.values.toList();
+    result.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return result;
+  }
+
+  /// Marca template per sync futuro
+  Future<void> _markForSync(String templateId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final pendingSync = prefs.getStringList('pending_sync') ?? [];
+    if (!pendingSync.contains(templateId)) {
+      pendingSync.add(templateId);
+      await prefs.setStringList('pending_sync', pendingSync);
+    }
+  }
+
+  /// Marca template per eliminazione futura
+  Future<void> _markForDeletion(String templateId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final pendingDeletion = prefs.getStringList('pending_deletion') ?? [];
+    if (!pendingDeletion.contains(templateId)) {
+      pendingDeletion.add(templateId);
+      await prefs.setStringList('pending_deletion', pendingDeletion);
+    }
+  }
+
+  /// Processare sync in sospeso
+  Future<void> processPendingSync() async {
+    if (_auth.currentUser == null) return;
+    
+    final prefs = await SharedPreferences.getInstance();
+    
+    // Sync template pendenti
+    final pendingSync = prefs.getStringList('pending_sync') ?? [];
+    for (final templateId in pendingSync) {
+      try {
+        final templates = await _getTemplatesFromCache();
+        final template = templates.firstWhere((t) => t.id == templateId);
+        await _saveTemplateToCloud(template);
+      } catch (e) {
+        print('Errore sync template $templateId: $e');
+      }
+    }
+    await prefs.remove('pending_sync');
+    
+    // Eliminazioni pendenti
+    final pendingDeletion = prefs.getStringList('pending_deletion') ?? [];
+    for (final templateId in pendingDeletion) {
+      try {
+        await _deleteTemplateFromCloud(templateId);
+      } catch (e) {
+        print('Errore eliminazione template $templateId: $e');
+      }
+    }
+    await prefs.remove('pending_deletion');
+  }
+
+  /// Inizializza template predefiniti se necessario
+  Future<void> initializePredefinedTemplates() async {
+    final templates = await _getTemplatesFromCache();
+    final hasAnyTemplate = templates.isNotEmpty;
+    
+    if (!hasAnyTemplate) {
+      // Crea template predefiniti
+      final predefinedTemplates = _createPredefinedTemplates();
+      
+      for (final template in predefinedTemplates) {
+        await saveTemplate(template);
+      }
+    }
+  }
+
+  /// Check and update template quota
+  Future<void> _checkAndUpdateQuota(bool isPublic) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+    
+    try {
+      // Get user document
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (!userDoc.exists) {
+        throw Exception('User profile not found');
+      }
+      
+      final userData = userDoc.data()!;
+      final quotaData = userData['templateQuota'] as Map<String, dynamic>?;
+      
+      if (quotaData == null) {
+        // Initialize quota for existing users
+        await _firestore.collection('users').doc(userId).update({
+          'accountTier': 'free',
+          'templateQuota': {
+            'maxPrivateTemplates': 10,
+            'maxPublicTemplates': 2,
+            'usedPrivateTemplates': 0,
+            'usedPublicTemplates': 0,
+          }
+        });
+        return;
+      }
+      
+      // Check quota limits
+      final maxPrivate = quotaData['maxPrivateTemplates'] ?? 10;
+      final maxPublic = quotaData['maxPublicTemplates'] ?? 2;
+      final usedPrivate = quotaData['usedPrivateTemplates'] ?? 0;
+      final usedPublic = quotaData['usedPublicTemplates'] ?? 0;
+      
+      if (isPublic && usedPublic >= maxPublic) {
+        throw Exception('Public template quota exceeded. Maximum allowed: $maxPublic');
+      }
+      
+      if (!isPublic && usedPrivate >= maxPrivate) {
+        throw Exception('Private template quota exceeded. Maximum allowed: $maxPrivate');
+      }
+      
+      // Update quota count
+      await _firestore.collection('users').doc(userId).update({
+        'templateQuota.usedPrivateTemplates': isPublic ? usedPrivate : usedPrivate + 1,
+        'templateQuota.usedPublicTemplates': isPublic ? usedPublic + 1 : usedPublic,
+      });
+      
+      print('✅ QUOTA: Template quota updated - Private: ${isPublic ? usedPrivate : usedPrivate + 1}/$maxPrivate, Public: ${isPublic ? usedPublic + 1 : usedPublic}/$maxPublic');
+    } catch (e) {
+      print('❌ QUOTA: Error checking/updating quota: $e');
+      throw e;
+    }
+  }
+  
+  /// Decrement quota when deleting a template
+  Future<void> _decrementQuota(bool isPublic) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+    
+    try {
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (!userDoc.exists) return;
+      
+      final userData = userDoc.data()!;
+      final quotaData = userData['templateQuota'] as Map<String, dynamic>?;
+      if (quotaData == null) return;
+      
+      final usedPrivate = quotaData['usedPrivateTemplates'] ?? 0;
+      final usedPublic = quotaData['usedPublicTemplates'] ?? 0;
+      
+      await _firestore.collection('users').doc(userId).update({
+        'templateQuota.usedPrivateTemplates': isPublic ? usedPrivate : (usedPrivate - 1).clamp(0, 999),
+        'templateQuota.usedPublicTemplates': isPublic ? (usedPublic - 1).clamp(0, 999) : usedPublic,
+      });
+      
+      print('✅ QUOTA: Template quota decremented');
+    } catch (e) {
+      print('⚠️  QUOTA: Error decrementing quota: $e');
+      // Don't throw - deletion is more important
+    }
+  }
+
+  /// Crea template predefiniti
+  List<WorkoutTemplate> _createPredefinedTemplates() {
+    return [
+      WorkoutTemplate(
+        name: 'Upper Body Strength',
+        description: 'Allenamento completo parte superiore: petto, schiena, spalle e braccia',
+        exercises: [
+          const ExerciseTemplate(
+            exerciseId: 'panca_piana',
+            exerciseName: 'Panca Piana',
+            category: ExerciseCategory.chest,
+            sets: [
+              SetTemplate(setNumber: 1, targetReps: 12),
+              SetTemplate(setNumber: 2, targetReps: 10),
+              SetTemplate(setNumber: 3, targetReps: 8),
+              SetTemplate(setNumber: 4, targetReps: 6),
+            ],
+          ),
+          const ExerciseTemplate(
+            exerciseId: 'trazioni',
+            exerciseName: 'Trazioni',
+            category: ExerciseCategory.back,
+            sets: [
+              SetTemplate(setNumber: 1, targetReps: 8),
+              SetTemplate(setNumber: 2, targetReps: 8),
+              SetTemplate(setNumber: 3, targetReps: 6),
+            ],
+          ),
+          const ExerciseTemplate(
+            exerciseId: 'shoulder_press',
+            exerciseName: 'Shoulder Press',
+            category: ExerciseCategory.shoulders,
+            sets: [
+              SetTemplate(setNumber: 1, targetReps: 12),
+              SetTemplate(setNumber: 2, targetReps: 10),
+              SetTemplate(setNumber: 3, targetReps: 8),
+            ],
+          ),
+        ],
+        tags: ['upper', 'strength', 'intermediate'],
+        estimatedDuration: 60,
+        isCustom: false,
+      ),
+      
+      WorkoutTemplate(
+        name: 'Lower Body Power',
+        description: 'Allenamento gambe e glutei: squat, stacchi e affondi',
+        exercises: [
+          const ExerciseTemplate(
+            exerciseId: 'squat',
+            exerciseName: 'Squat',
+            category: ExerciseCategory.legs,
+            sets: [
+              SetTemplate(setNumber: 1, targetReps: 12),
+              SetTemplate(setNumber: 2, targetReps: 10),
+              SetTemplate(setNumber: 3, targetReps: 8),
+              SetTemplate(setNumber: 4, targetReps: 6),
+            ],
+          ),
+          const ExerciseTemplate(
+            exerciseId: 'stacco_da_terra',
+            exerciseName: 'Stacco da Terra',
+            category: ExerciseCategory.legs,
+            sets: [
+              SetTemplate(setNumber: 1, targetReps: 8),
+              SetTemplate(setNumber: 2, targetReps: 6),
+              SetTemplate(setNumber: 3, targetReps: 4),
+            ],
+          ),
+        ],
+        tags: ['lower', 'power', 'intermediate'],
+        estimatedDuration: 55,
+        isCustom: false,
+      ),
+
+      WorkoutTemplate(
+        name: 'HIIT Cardio',
+        description: 'Allenamento ad alta intensità per cardio e resistenza',
+        exercises: [
+          const ExerciseTemplate(
+            exerciseId: 'burpees',
+            exerciseName: 'Burpees',
+            category: ExerciseCategory.cardio,
+            sets: [
+              SetTemplate(setNumber: 1, targetReps: 15),
+              SetTemplate(setNumber: 2, targetReps: 15),
+              SetTemplate(setNumber: 3, targetReps: 12),
+            ],
+          ),
+        ],
+        tags: ['hiit', 'cardio', 'beginner'],
+        estimatedDuration: 25,
+        isCustom: false,
+      ),
+    ];
+  }
+}

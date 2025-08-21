@@ -1,0 +1,537 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import '../providers/notification_provider.dart';
+import '../../domain/entities/notification.dart';
+import '../../../progress/presentation/providers/progress_provider.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+
+class NotificationHub extends ConsumerWidget {
+  const NotificationHub({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadCount = ref.watch(unreadCountProvider);
+    
+    return Stack(
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.secondary,
+              ],
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _showNotificationPanel(context, ref),
+              borderRadius: BorderRadius.circular(22),
+              child: const Icon(
+                Icons.notifications_outlined,
+                color: Colors.white,
+                size: 22,
+              ),
+            ),
+          ),
+        ),
+        
+        // Badge per notifiche non lette
+        if (unreadCount > 0)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 20),
+              height: 20,
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2,
+                ),
+              ),
+              child: Text(
+                unreadCount > 99 ? '99+' : unreadCount.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _showNotificationPanel(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => NotificationPanel(),
+    );
+  }
+}
+
+class NotificationPanel extends ConsumerWidget {
+  const NotificationPanel({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifications = ref.watch(notificationProvider);
+    final recentNotifications = ref.watch(recentNotificationsProvider);
+    
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          // Handle bar
+          Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.notifications,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  AppLocalizations.of(context)!.notifications ?? 'Notifiche',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                if (notifications.any((n) => !n.isRead))
+                  TextButton(
+                    onPressed: () {
+                      ref.read(notificationProvider.notifier).markAllAsRead();
+                    },
+                    child: Text(
+                      AppLocalizations.of(context)!.markAllAsRead ?? 'Segna tutte lette',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Quick stats section
+          _buildQuickStats(context, ref),
+          
+          const SizedBox(height: 16),
+          
+          // Notifications list
+          Expanded(
+            child: notifications.isEmpty
+                ? _buildEmptyState(context)
+                : ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: notifications.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 8),
+                    itemBuilder: (context, index) {
+                      final notification = notifications[index];
+                      return NotificationTile(
+                        notification: notification,
+                        onTap: () => _handleNotificationTap(context, ref, notification),
+                        onDismiss: () => ref.read(notificationProvider.notifier)
+                            .removeNotification(notification.id),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickStats(BuildContext context, WidgetRef ref) {
+    // Ottieni i dati reali dell'utente
+    final streakAsync = ref.watch(currentStreakProvider);
+    final quickStatsAsync = ref.watch(quickStatsProvider);
+    final frequencyAsync = ref.watch(weeklyFrequencyProvider);
+    final user = ref.watch(authServiceProvider).currentUser;
+    
+    // Calcola numero di achievement basato sullo streak
+    final streak = streakAsync.asData?.value ?? 0;
+    int achievements = 0;
+    if (streak >= 3) achievements++;
+    if (streak >= 7) achievements++;
+    if (streak >= 14) achievements++;
+    if (streak >= 30) achievements++;
+    
+    // Calcola workout totali questa settimana
+    final weeklyWorkouts = (frequencyAsync.asData?.value ?? 0.0).round();
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.7),
+            Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.5),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                '📊',
+                style: const TextStyle(fontSize: 20),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                AppLocalizations.of(context)!.quickStats ?? 'I tuoi progressi',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              if (user != null)
+                Icon(
+                  Icons.verified_user,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (streakAsync.isLoading || quickStatsAsync.isLoading)
+            const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          else
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatItem(
+                    context, 
+                    '🔥', 
+                    streak.toString(), 
+                    AppLocalizations.of(context)!.streak ?? 'Streak'
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatItem(
+                    context, 
+                    '💪', 
+                    weeklyWorkouts.toString(), 
+                    AppLocalizations.of(context)!.thisWeek ?? 'Settimana'
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatItem(
+                    context, 
+                    '🏆', 
+                    achievements.toString(), 
+                    AppLocalizations.of(context)!.achievements ?? 'Obiettivi'
+                  ),
+                ),
+              ],
+            ),
+          if (quickStatsAsync.hasValue && quickStatsAsync.value != null)
+            if (quickStatsAsync.value!.volumeIncrease > 0) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.green.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.green.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.trending_up,
+                      size: 14,
+                      color: Colors.green,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Volume +${quickStatsAsync.value!.formattedVolumeIncrease}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(BuildContext context, String emoji, String value, String label) {
+    return Column(
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 20)),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.notifications_none,
+            size: 64,
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            AppLocalizations.of(context)!.noNotifications ?? 'Nessuna notifica',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            AppLocalizations.of(context)!.notificationsDescription ?? 'Ti terremo aggiornato sui tuoi progressi!',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleNotificationTap(BuildContext context, WidgetRef ref, AppNotification notification) {
+    // Segna come letta
+    ref.read(notificationProvider.notifier).markAsRead(notification.id);
+    
+    // Chiudi il panel
+    Navigator.pop(context);
+    
+    // Naviga se ha un'azione
+    if (notification.action != null) {
+      context.push(notification.action!.route);
+    }
+  }
+}
+
+class NotificationTile extends StatelessWidget {
+  final AppNotification notification;
+  final VoidCallback onTap;
+  final VoidCallback onDismiss;
+
+  const NotificationTile({
+    super.key,
+    required this.notification,
+    required this.onTap,
+    required this.onDismiss,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: Key(notification.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+      ),
+      onDismissed: (_) => onDismiss(),
+      child: Container(
+        decoration: BoxDecoration(
+          color: notification.isRead 
+              ? Theme.of(context).colorScheme.surface
+              : Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: notification.isRead 
+              ? Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2))
+              : Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  // Emoji/Icon
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: _getTypeColor(notification.type).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Text(
+                        notification.emoji,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(width: 16),
+                  
+                  // Content
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                notification.title,
+                                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              notification.timeAgo,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          notification.message,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (notification.action != null) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.arrow_forward,
+                                size: 14,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                notification.action!.label,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  
+                  // Unread indicator
+                  if (!notification.isRead)
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _getTypeColor(NotificationType type) {
+    switch (type) {
+      case NotificationType.aiTip:
+        return Colors.purple;
+      case NotificationType.achievement:
+        return Colors.amber;
+      case NotificationType.milestone:
+        return Colors.green;
+      case NotificationType.progress:
+        return Colors.blue;
+      case NotificationType.reminder:
+        return Colors.orange;
+      case NotificationType.social:
+        return Colors.pink;
+      case NotificationType.system:
+        return Colors.grey;
+    }
+  }
+}

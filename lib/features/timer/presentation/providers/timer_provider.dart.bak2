@@ -1,0 +1,1226 @@
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:audioplayers/audioplayers.dart';
+import '../../domain/entities/rest_timer.dart';
+import '../../domain/services/notification_service.dart';
+import '../../../../shared/presentation/providers/app_config_provider.dart';
+import '../../../../shared/domain/entities/timer_sound.dart';
+import 'live_activity_provider.dart';
+import '../../../../core/utils/debug_logger.dart';
+
+// Current active timer provider
+final currentTimerProvider = StateNotifierProvider<TimerNotifier, RestTimer?>((ref) {
+  return TimerNotifier(ref);
+});
+
+class TimerNotifier extends StateNotifier<RestTimer?> {
+  TimerNotifier(this.ref) : super(null) {
+    _loadTimerFromStorage();
+    _initNotificationService();
+    _setupAppLifecycleListener();
+  }
+
+  final Ref ref;
+  Timer? _timer;
+  Timer? _scheduledAudioTimer; // ⏰ Timer per audio programmato
+  Box? _timerBox;
+  String? _currentActivityId;
+  NotificationService? _notificationService;
+  AudioPlayer? _audioPlayer;
+  DateTime? _backgroundTime;
+  DateTime? _completionTime; // ⏰ Timestamp quando timer si completa
+  
+  // Live Activity interactive controls
+  String? get currentActivityId => _currentActivityId;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _scheduledAudioTimer?.cancel(); // ⏰ Cancella audio programmato
+    _audioPlayer?.dispose();
+    super.dispose();
+  }
+
+  /// Initialize storage
+  Future<void> _initStorage() async {
+    _timerBox ??= await Hive.openBox('timer_box');
+  }
+
+  /// Initialize notification service
+  Future<void> _initNotificationService() async {
+    try {
+      _notificationService = NotificationService();
+      await _notificationService!.initialize();
+      await _notificationService!.requestPermissions();
+    } catch (e) {
+      DebugLogger.error('Failed to initialize notifications', e);
+    }
+  }
+
+  /// Load timer from persistent storage
+  Future<void> _loadTimerFromStorage() async {
+    try {
+      await _initStorage();
+      final timerData = _timerBox?.get('current_timer');
+      if (timerData != null) {
+        final timer = RestTimer.fromJson(Map<String, dynamic>.from(timerData));
+        // Only restore if timer was running and not too old (max 1 hour)
+        if (timer.isActive && timer.startTime != null) {
+          final elapsed = DateTime.now().difference(timer.startTime!);
+          if (elapsed.inHours < 1) {
+            final adjustedTimer = _adjustTimerForElapsedTime(timer, elapsed);
+            state = adjustedTimer;
+            if (adjustedTimer.isRunning) {
+              _startTicker();
+            }
+          }
+        }
+      }
+    } catch (e) {
+      // If loading fails, start fresh
+      state = null;
+    }
+  }
+
+  /// Adjust timer for time that passed while app was closed
+  RestTimer _adjustTimerForElapsedTime(RestTimer timer, Duration elapsed) {
+    final elapsedSeconds = elapsed.inSeconds;
+    final newRemaining = (timer.remainingSeconds - elapsedSeconds).clamp(0, timer.totalDurationSeconds);
+    
+    if (newRemaining <= 0) {
+      return timer.complete();
+    }
+    
+    return timer.copyWith(remainingSeconds: newRemaining);
+  }
+
+  /// Save timer to persistent storage
+  Future<void> _saveTimerToStorage() async {
+    try {
+      await _initStorage();
+      if (state != null) {
+        await _timerBox?.put('current_timer', state!.toJson());
+      } else {
+        await _timerBox?.delete('current_timer');
+      }
+    } catch (e) {
+      // Ignore storage errors
+    }
+  }
+
+  /// Setup app lifecycle listener for background/foreground sync + audio session
+  void _setupAppLifecycleListener() {
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
+      final timestamp = DateTime.now().toIso8601String();
+      DebugLogger.log(LogCategory.lifecycle, '=== APP LIFECYCLE EVENT [$timestamp] ===');
+      DebugLogger.log(LogCategory.lifecycle, 'Event: $msg');
+      DebugLogger.log(LogCategory.lifecycle, 'Current timer state: ${state?.isRunning == true ? "RUNNING" : "NOT_RUNNING"}');
+      DebugLogger.log(LogCategory.lifecycle, 'Background time: $_backgroundTime');
+      
+      switch (msg) {
+        case 'AppLifecycleState.paused':
+          DebugLogger.log(LogCategory.lifecycle, '🟡 APP GOING TO BACKGROUND');
+          _backgroundTime = DateTime.now();
+          DebugLogger.log(LogCategory.lifecycle, 'Background time set to: $_backgroundTime');
+          
+          // ✅ INFORM NOTIFICATION SERVICE OF BACKGROUND STATE
+          _notificationService?.setBackgroundState(true);
+          DebugLogger.log(LogCategory.lifecycle, '✅ NotificationService informed: BACKGROUND mode');
+          
+          // ✅ Prepara audio session per background SOLO se timer attivo
+          if (state?.isRunning == true) {
+            DebugLogger.log(LogCategory.background, 'Timer is running - starting silent audio for background...');
+            await _startSilentAudioForBackground();
+            DebugLogger.log(LogCategory.background, '✅ Silent audio started for background execution');
+          } else {
+            DebugLogger.log(LogCategory.background, 'Timer not running - no need for background audio');
+          }
+          break;
+          
+        case 'AppLifecycleState.resumed':
+          DebugLogger.log(LogCategory.lifecycle, '🟢 APP RESUMING FROM BACKGROUND');
+          
+          // ✅ INFORM NOTIFICATION SERVICE OF FOREGROUND STATE
+          _notificationService?.setBackgroundState(false);
+          DebugLogger.log(LogCategory.lifecycle, '✅ NotificationService informed: FOREGROUND mode');
+          
+          // ✅ Stop silent audio when returning to foreground
+          await _stopSilentAudio();
+          DebugLogger.log(LogCategory.background, '✅ Silent audio stopped (foreground mode)');
+          
+          if (_backgroundTime != null && state != null) {
+            final backgroundDuration = DateTime.now().difference(_backgroundTime!);
+            DebugLogger.log(LogCategory.sync, 'Background duration: ${backgroundDuration.inSeconds}s');
+            DebugLogger.log(LogCategory.sync, 'Syncing with Live Activity timer...');
+            await _syncWithLiveActivityTimer();
+            DebugLogger.log(LogCategory.sync, '✅ Sync completed');
+          } else {
+            DebugLogger.log(LogCategory.sync, 'No background time or state - skipping sync');
+          }
+          break;
+          
+        case 'AppLifecycleState.inactive':
+          DebugLogger.log(LogCategory.lifecycle, '🟠 APP BECOMING INACTIVE');
+          break;
+          
+        case 'AppLifecycleState.detached':
+          DebugLogger.log(LogCategory.lifecycle, '🔴 APP DETACHED');
+          break;
+          
+        default:
+          DebugLogger.log(LogCategory.lifecycle, '⚪ UNKNOWN LIFECYCLE EVENT: $msg');
+          break;
+      }
+      
+      DebugLogger.log(LogCategory.lifecycle, '=== END LIFECYCLE EVENT [$timestamp] ===');
+      return null;
+    });
+  }
+
+  /// ✅ Start silent audio ONLY when timer is active and app goes to background
+  Future<void> _startSilentAudioForBackground() async {
+    try {
+      final timestamp = DateTime.now().toIso8601String();
+      DebugLogger.log(LogCategory.background, '=== STARTING SILENT AUDIO FOR BACKGROUND [$timestamp] ===');
+      
+      // Clean up any existing audio player
+      if (_audioPlayer != null) {
+        try {
+          await _audioPlayer?.stop();
+          await _audioPlayer?.dispose();
+          DebugLogger.log(LogCategory.background, 'Previous audio player cleaned up');
+        } catch (e) {
+          DebugLogger.log(LogCategory.background, 'Warning: Error cleaning up previous player: $e');
+        }
+      }
+      
+      // Create new player for silent audio
+      _audioPlayer = AudioPlayer();
+      DebugLogger.log(LogCategory.background, 'New AudioPlayer created for silent audio');
+      
+      // Configure for background playback
+      await _audioPlayer!.setPlayerMode(PlayerMode.lowLatency);
+      await _audioPlayer!.setVolume(0.0); // Silent
+      await _audioPlayer!.setReleaseMode(ReleaseMode.loop); // Loop to maintain background
+      DebugLogger.log(LogCategory.background, 'AudioPlayer configured for silent background loop');
+      
+      // Start playing silent audio to keep app active in background
+      final silentSource = AssetSource('sounds/silent_1s.wav');
+      await _audioPlayer!.play(silentSource);
+      DebugLogger.log(LogCategory.background, '✅ Silent audio loop started - app will stay active in background');
+      DebugLogger.log(LogCategory.background, '=== SILENT AUDIO STARTED SUCCESSFULLY ===');
+      
+    } catch (e) {
+      final timestamp = DateTime.now().toIso8601String();
+      print('❌ FAILED TO START SILENT AUDIO [$timestamp]: $e');
+      DebugLogger.log(LogCategory.background, 'Timer may not work properly in background');
+    }
+  }
+  
+  /// ✅ Stop silent audio when not needed
+  Future<void> _stopSilentAudio() async {
+    if (_audioPlayer != null) {
+      try {
+        DebugLogger.log(LogCategory.background, 'Stopping silent audio...');
+        await _audioPlayer?.stop();
+        await _audioPlayer?.dispose();
+        _audioPlayer = null;
+        DebugLogger.log(LogCategory.background, '✅ Silent audio stopped and player disposed');
+      } catch (e) {
+        print('⚠️ Error stopping silent audio: $e');
+      }
+    }
+  }
+
+  /// Sync Flutter timer with Live Activity native timer when app resumes
+  Future<void> _syncWithLiveActivityTimer() async {
+    if (state == null || _backgroundTime == null) return;
+    
+    final now = DateTime.now();
+    final backgroundDuration = now.difference(_backgroundTime!);
+    final timestamp = now.toIso8601String();
+    
+    DebugLogger.log(LogCategory.sync, '=== SYNC WITH LIVE ACTIVITY ===');
+    DebugLogger.log(LogCategory.sync, 'Background duration: ${backgroundDuration.inSeconds}s');
+    DebugLogger.log(LogCategory.sync, 'Timer state before sync: ${state!.isRunning ? "RUNNING" : state!.isCompleted ? "COMPLETED" : "OTHER"}');
+    
+    // Only sync if we were in background for more than 5 seconds
+    if (backgroundDuration.inSeconds > 5) {
+      final adjustedTimer = _adjustTimerForElapsedTime(state!, backgroundDuration);
+      
+      DebugLogger.log(LogCategory.sync, 'Timer state after sync: ${adjustedTimer.isRunning ? "RUNNING" : adjustedTimer.isCompleted ? "COMPLETED" : "OTHER"}');
+      
+      // Update state to match Live Activity timer
+      state = adjustedTimer;
+      await _saveTimerToStorage();
+      
+      // Update Live Activity with synced time
+      if (_currentActivityId != null) {
+        await _updateLiveActivity();
+      }
+      
+      // ⏰ SMART TEMPORAL LOGIC: Check if timer completed during background
+      if (adjustedTimer.isCompleted) {
+        DebugLogger.log(LogCategory.sync, 'Timer completed during background - scheduled audio should have played');
+        DebugLogger.log(LogCategory.sync, 'Only transitioning to RPE mode (audio was scheduled independently)');
+        
+        // Only do RPE transition - l'audio è già stato gestito dal timer programmato
+        _transitionToRPEMode();
+      } else if (adjustedTimer.isRunning) {
+        DebugLogger.log(LogCategory.sync, 'Timer still running - restarting ticker');
+        _startTicker();
+        
+        // ⏰ RE-SCHEDULE audio per il tempo rimanente
+        final remainingSeconds = adjustedTimer.remainingSeconds;
+        if (remainingSeconds > 0) {
+          DebugLogger.log(LogCategory.sync, 'Re-scheduling audio for remaining ${remainingSeconds}s');
+          _scheduleCompletionAudio(remainingSeconds);
+        }
+      }
+    } else {
+      DebugLogger.log(LogCategory.sync, 'Background duration too short - skipping sync');
+    }
+    
+    _backgroundTime = null;
+    DebugLogger.log(LogCategory.sync, '=== END SYNC WITH LIVE ACTIVITY ===');
+  }
+
+  /// Start a new rest timer
+  Future<void> startRestTimer({
+    required String exerciseName,
+    required int durationSeconds,
+    int currentSet = 1,
+    int totalSets = 4,
+    String? workoutId,
+  }) async {
+    // Stop any existing timer
+    await stopTimer();
+
+    // ⏰ RESET COMPLETION TIMESTAMP per nuovo timer
+    _completionTime = null;
+    DebugLogger.log(LogCategory.timer, 'NEW TIMER: Completion timestamp reset');
+
+    // Create new timer
+    final timer = RestTimer(
+      type: TimerType.rest,
+      totalDurationSeconds: durationSeconds,
+      exerciseName: exerciseName,
+      currentSet: currentSet,
+      totalSets: totalSets,
+      workoutId: workoutId,
+    ).start();
+
+    state = timer;
+    await _saveTimerToStorage();
+    _startTicker();
+
+    // ⏰ PROGRAMMA L'AUDIO per suonare ESATTAMENTE dopo durationSeconds
+    _scheduleCompletionAudio(durationSeconds);
+
+    // Start Live Activity if available
+    await _startLiveActivity();
+    
+    // Live Activities showing timer only - no sync needed
+  }
+
+  /// Start a rest timer based on exercise type
+  Future<void> startSmartRestTimer({
+    required String exerciseName,
+    required int reps,
+    int currentSet = 1,
+    int totalSets = 4,
+    String? workoutId,
+  }) async {
+    // Temporary: Use simple rest time logic until AppConfig is updated
+    int restSeconds;
+    if (reps <= 5) {
+      // Strength training
+      restSeconds = 180; // 3 minutes
+    } else if (reps <= 12) {
+      // Hypertrophy
+      restSeconds = 90; // 1.5 minutes
+    } else {
+      // Endurance
+      restSeconds = 60; // 1 minute
+    }
+
+    await startRestTimer(
+      exerciseName: exerciseName,
+      durationSeconds: restSeconds,
+      currentSet: currentSet,
+      totalSets: totalSets,
+      workoutId: workoutId,
+    );
+  }
+
+  /// Pause the current timer
+  Future<void> pauseTimer() async {
+    if (state?.isRunning == true) {
+      state = state!.pause();
+      await _saveTimerToStorage();
+      _stopTicker();
+      await _updateLiveActivity();
+    }
+  }
+
+  /// Resume the current timer
+  Future<void> resumeTimer() async {
+    if (state?.isPaused == true) {
+      state = state!.resume();
+      await _saveTimerToStorage();
+      _startTicker();
+      await _updateLiveActivity();
+    }
+  }
+
+  /// Stop the current timer
+  Future<void> stopTimer() async {
+    if (state != null) {
+      _stopTicker();
+      _cancelScheduledAudio(); // ⏰ Cancella audio programmato
+      await _stopSilentAudio(); // ✅ Stop silent audio if running
+      state = null;
+      
+      // ⏹️ RESET COMPLETION TIMESTAMP when timer stopped
+      _completionTime = null;
+      DebugLogger.log(LogCategory.timer, 'STOP TIMER: Completion timestamp reset');
+      
+      await _saveTimerToStorage();
+      await _endLiveActivity();
+    }
+  }
+
+  /// Skip the current timer (complete immediately)
+  Future<void> skipTimer() async {
+    if (state != null) {
+      state = state!.skip();
+      await _saveTimerToStorage();
+      _stopTicker();
+      _cancelScheduledAudio(); // ⏰ Cancella audio programmato
+      await _stopSilentAudio(); // ✅ Stop silent audio if running
+      
+      // ✅ Suona audio immediatamente quando skippiamo
+      DebugLogger.log(LogCategory.timer, 'SKIP TIMER - Playing audio immediately...');
+      await _playScheduledCompletionAudio();
+      
+      await _endLiveActivity();
+      
+      // Auto-clear after 2 seconds
+      Timer(const Duration(seconds: 2), () {
+        if (state?.isCompleted == true) {
+          state = null;
+          _saveTimerToStorage();
+        }
+      });
+    }
+  }
+
+  /// Test audio method (for debugging)
+  Future<void> testAudio() async {
+    print('🧪 === TEST AUDIO COMPLETO ===');
+    print('🧪 FOREGROUND + BACKGROUND + NOTIFICATION + AVAudioSession');
+    
+    // Test 1: Verifica configurazione AudioSession
+    print('🔧 Test 1: Verifica AudioSession setup...');
+    await _testAudioSessionConfiguration();
+    
+    await Future.delayed(const Duration(seconds: 1));
+    
+    // Test 2: Audio diretto in app
+    print('🔊 Test 2: Audio diretto nell\'app...');
+    await _playCompletionSound();
+    
+    // Aspetta un po' prima del terzo test
+    await Future.delayed(const Duration(seconds: 3));
+    
+    // Test 3: Notifica con audio
+    print('🔔 Test 3: Notifica con audio...');
+    await _sendCompletionNotification();
+  }
+  
+  /// ✅ Test configurazione AVAudioSession (diagnostico) - Semplificato
+  Future<void> _testAudioSessionConfiguration() async {
+    try {
+      print('🔧 === DIAGNOSI AVAUDIOSESSION ===');
+      
+      // Test semplice per verificare che non ci siano conflitti
+      final testPlayer = AudioPlayer();
+      
+      // Solo PlayerMode - AppDelegate gestisce AVAudioSession
+      await testPlayer.setPlayerMode(PlayerMode.mediaPlayer);
+      print('✅ PlayerMode OK - AppDelegate gestisce AVAudioSession');
+      
+      await testPlayer.dispose();
+      print('🔧 === FINE DIAGNOSI ===');
+      
+    } catch (e) {
+      print('❌ Errore test configurazione: $e');
+    }
+  }
+
+  /// Add time to the current timer
+  Future<void> addTime(int seconds) async {
+    if (state?.isActive == true) {
+      state = state!.addTime(seconds);
+      await _saveTimerToStorage();
+      await _updateLiveActivity();
+    }
+  }
+
+  /// Reset the current timer
+  Future<void> resetTimer() async {
+    if (state != null) {
+      _stopTicker();
+      _cancelScheduledAudio(); // ⏰ Cancella audio programmato
+      await _stopSilentAudio(); // ✅ Stop silent audio if running
+      state = state!.reset();
+      
+      // 🔄 RESET COMPLETION TIMESTAMP when timer reset
+      _completionTime = null;
+      DebugLogger.log(LogCategory.timer, 'RESET TIMER: Completion timestamp reset');
+      
+      await _saveTimerToStorage();
+      await _updateLiveActivity();
+      
+      // ⏰ RE-SCHEDULE audio per il nuovo reset
+      if (state!.isRunning) {
+        DebugLogger.log(LogCategory.timer, 'Re-scheduling audio after reset');
+        _scheduleCompletionAudio(state!.totalDurationSeconds);
+      }
+    }
+  }
+
+  /// Start the internal ticker
+  void _startTicker() {
+    _stopTicker(); // Ensure no duplicate timers
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (state?.isRunning == true) {
+        state = state!.tick();
+        _saveTimerToStorage();
+        
+        // Check if timer completed OR at 1 second (fix per bug iOS)
+        if (state!.isCompleted || state!.remainingSeconds <= 1) {
+          DebugLogger.log(LogCategory.timer, 'TIMER COMPLETED! (remainingSeconds: ${state!.remainingSeconds})');
+          // Force immediate completion per bug Live Activities
+          state = state!.copyWith(remainingSeconds: 0);
+          _updateLiveActivity(); // Update finale prima di completare
+          _onTimerCompleted();
+        } else {
+          // Update Live Activity every second
+          _updateLiveActivity();
+        }
+      }
+    });
+  }
+
+  /// Stop the internal ticker
+  void _stopTicker() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  /// ⏰ PROGRAMMA AUDIO per suonare ESATTAMENTE dopo X secondi - iOS Background Fix
+  void _scheduleCompletionAudio(int durationSeconds) {
+    // Cancella qualsiasi audio già programmato
+    _cancelScheduledAudio();
+    
+    final timestamp = DateTime.now().toIso8601String();
+    print('⏰ === SCHEDULING COMPLETION AUDIO (iOS BG FIX) [$timestamp] ===');
+    print('⏰ Audio will play in: ${durationSeconds}s');
+    print('⏰ Expected completion time: ${DateTime.now().add(Duration(seconds: durationSeconds))}');
+    
+    // 🔧 iOS BACKGROUND FIX: Usa silent audio track invece di Timer
+    _scheduleCompletionAudioWithSilentTrack(durationSeconds);
+    
+    print('✅ iOS background-compatible audio scheduled');
+    print('⏰ === END SCHEDULING COMPLETION AUDIO ===');
+  }
+
+  /// 🔧 iOS BACKGROUND FIX: Schedule completion audio without continuous silent track
+  Future<void> _scheduleCompletionAudioWithSilentTrack(int durationSeconds) async {
+    try {
+      print('🔧 === SCHEDULING COMPLETION AUDIO ===');
+      print('🔧 Timer will complete in ${durationSeconds} seconds');
+      
+      // Cancel any existing scheduled timer
+      _cancelScheduledAudio();
+      
+      // Schedule timer to play completion audio
+      _scheduledAudioTimer = Timer(Duration(seconds: durationSeconds), () async {
+        final completionTimestamp = DateTime.now().toIso8601String();
+        print('🔧 === TIMER COMPLETED [$completionTimestamp] ===');
+        
+        // Play completion audio
+        await _playScheduledCompletionAudio();
+      });
+      
+      print('🔧 ✅ Completion audio scheduled for ${durationSeconds}s from now');
+      print('🔧 Note: Silent audio will only be used if app goes to background');
+      
+    } catch (e) {
+      print('❌ Failed to schedule completion audio: $e');
+      // Fallback to notification-only approach
+      _scheduleCompletionAudioWithNotificationFallback(durationSeconds);
+    }
+  }
+  
+  /// 🔧 NOTIFICATION FALLBACK per quando silent audio fallisce
+  void _scheduleCompletionAudioWithNotificationFallback(int durationSeconds) {
+    print('🔧 === NOTIFICATION FALLBACK STRATEGY ===');
+    print('🔧 Silent audio failed - using notification-only approach');
+    
+    _scheduledAudioTimer = Timer(Duration(seconds: durationSeconds), () async {
+      final completionTimestamp = DateTime.now().toIso8601String();
+      print('🔔 === NOTIFICATION FALLBACK TRIGGERED [$completionTimestamp] ===');
+      
+      // Try to play audio first, then notification as backup
+      try {
+        await _playScheduledCompletionAudio();
+      } catch (e) {
+        print('🔔 Audio failed, using notification: $e');
+        await _sendCompletionNotification();
+      }
+    });
+  }
+  
+  /// 🔧 Fallback timer method (original behavior)
+  void _scheduleCompletionAudioFallback(int durationSeconds) {
+    print('🔧 Using fallback Timer method (may not work in background)');
+    
+    _scheduledAudioTimer = Timer(Duration(seconds: durationSeconds), () {
+      final completionTimestamp = DateTime.now().toIso8601String();
+      print('⏰ === FALLBACK TIMER TRIGGERED [$completionTimestamp] ===');
+      _playScheduledCompletionAudio();
+    });
+  }
+
+  /// ⏰ CANCELLA audio programmato
+  void _cancelScheduledAudio() {
+    if (_scheduledAudioTimer != null) {
+      print('⏰ Cancelling previously scheduled audio timer');
+      _scheduledAudioTimer!.cancel();
+      _scheduledAudioTimer = null;
+      print('✅ Scheduled audio timer cancelled');
+    }
+  }
+
+  /// ⏰ SUONA l'audio di completamento programmato - Enhanced for iOS Background
+  Future<void> _playScheduledCompletionAudio() async {
+    final timestamp = DateTime.now().toIso8601String();
+    final isBackground = _backgroundTime != null;
+    
+    try {
+      print('🔊 === SCHEDULED AUDIO PLAYBACK START [$timestamp] ===');
+      print('🔊 Background mode: ${isBackground ? "YES" : "NO"}');
+      print('🔊 This is the EXACT moment the timer should complete');
+      
+      // Ottieni il suono selezionato dalle impostazioni
+      final appConfig = ref.read(appConfigProvider);
+      final selectedSound = appConfig.timerSound;
+      final sound = TimerSound.fromFileName(selectedSound);
+      
+      print('🔊 Sound selection: $selectedSound');
+      print('🔊 Sound file: ${sound.fileName}');
+      
+      // 🔧 iOS BACKGROUND FIX V2: Riusa il player esistente se possibile
+      AudioPlayer completionPlayer;
+      
+      if (_audioPlayer != null && isBackground) {
+        print('🔊 BACKGROUND: Reusing existing player for completion (silent → completion)');
+        completionPlayer = _audioPlayer!;
+        
+        // Stop silent audio and reconfigure for completion
+        await completionPlayer.stop();
+        await completionPlayer.setReleaseMode(ReleaseMode.release); // Stop looping
+        await completionPlayer.setVolume(1.0); // Full volume for completion sound
+        print('🔊 ✅ Player reconfigured: silent → completion');
+      } else {
+        print('🔊 ${isBackground ? "BACKGROUND" : "FOREGROUND"}: Creating new completion player');
+        completionPlayer = AudioPlayer();
+        
+        // Configure for immediate playback
+        if (isBackground) {
+          await completionPlayer.setPlayerMode(PlayerMode.lowLatency);
+        } else {
+          await completionPlayer.setPlayerMode(PlayerMode.mediaPlayer);
+        }
+        
+        await completionPlayer.setVolume(1.0); // Full volume for completion sound
+      }
+      
+      // Setup listeners
+      completionPlayer.onPlayerStateChanged.listen((playerState) {
+        final listenerTimestamp = DateTime.now().toIso8601String();
+        print('🔊 EVENT [$listenerTimestamp]: Completion player state: $playerState');
+        if (playerState == PlayerState.playing) {
+          print('🔊 🎵 COMPLETION AUDIO IS NOW PLAYING!');
+        }
+      });
+      
+      completionPlayer.onPlayerComplete.listen((_) async {
+        final completeTimestamp = DateTime.now().toIso8601String();
+        print('🔊 EVENT [$completeTimestamp]: ✅ COMPLETION AUDIO FINISHED!');
+        
+        // Cleanup completion player (only if it's a separate player)
+        if (completionPlayer != _audioPlayer) {
+          try {
+            await completionPlayer.dispose();
+            print('🔊 ✅ Separate completion player disposed');
+          } catch (e) {
+            print('🔊 ⚠️ Error disposing completion player: $e');
+          }
+        } else {
+          print('🔊 ✅ Reused player kept alive for future timers');
+          // Reset to silent mode for potential future use
+          await completionPlayer.setVolume(0.0);
+        }
+      });
+      
+      // Play the completion audio
+      final audioSource = AssetSource('sounds/${sound.fileName}.wav');
+      print('🔊 🎵 PLAYING COMPLETION AUDIO...');
+      await completionPlayer.play(audioSource);
+      
+      final playTimestamp = DateTime.now().toIso8601String();
+      print('🔊 ✅ COMPLETION AUDIO PLAY COMMAND EXECUTED [$playTimestamp]');
+      print('🔊 Context: ${isBackground ? "BACKGROUND" : "FOREGROUND"}');
+      
+      // Validation
+      await Future.delayed(const Duration(milliseconds: 100));
+      final currentState = completionPlayer.state;
+      print('🔊 Current completion player state: $currentState');
+      
+      if (currentState == PlayerState.playing) {
+        print('🔊 🎉 SUCCESS: Completion audio is playing!');
+        
+        // 🔧 If in background, also send notification as backup
+        if (isBackground) {
+          print('🔊 BACKGROUND: Sending backup notification');
+          await _sendCompletionNotification();
+        }
+      } else {
+        print('🔊 ⚠️ WARNING: Completion audio state is: $currentState');
+        
+        // Fallback to notification if audio fails
+        print('🔊 FALLBACK: Using notification for audio');
+        await _sendCompletionNotification();
+      }
+      
+      print('🔊 === SCHEDULED AUDIO PLAYBACK END ===');
+      
+    } catch (e) {
+      final errorTimestamp = DateTime.now().toIso8601String();
+      print('❌ === SCHEDULED AUDIO FAILED [$errorTimestamp] ===');
+      print('❌ Background mode: ${isBackground ? "YES" : "NO"}');
+      print('❌ Error: $e');
+      print('❌ Error type: ${e.runtimeType}');
+      
+      // Emergency fallback: always send notification if audio fails
+      try {
+        print('❌ EMERGENCY FALLBACK: Notification-only audio');
+        await _sendCompletionNotification();
+      } catch (e2) {
+        print('❌ CRITICAL: All audio methods failed: $e2');
+      }
+      
+      print('❌ === END SCHEDULED AUDIO ERROR ===');
+    }
+  }
+
+  /// Handle timer completion with Timestamp Tracking
+  void _onTimerCompleted() {
+    final now = DateTime.now();
+    final timestamp = now.toIso8601String();
+    final isBackground = _backgroundTime != null;
+    
+    DebugLogger.log(LogCategory.timer, '=== TIMER COMPLETION HANDLER ===');
+    DebugLogger.log(LogCategory.timer, 'Background mode: ${isBackground ? "YES" : "NO"}');
+    
+    // ⏰ TIMESTAMP TRACKING: Salva quando il timer si completa
+    _completionTime = now;
+    DebugLogger.log(LogCategory.timer, 'Completion time saved: $_completionTime');
+    
+    DebugLogger.log(LogCategory.timer, 'Timer reached 00:00 - audio should already be playing from scheduled task');
+    
+    _stopTicker();
+    
+    // ✅ L'audio è già stato programmato per suonare ora
+    // Non facciamo nulla qui - l'audio scheduled si occupa di tutto
+    
+    _transitionToRPEMode();       // ✅ Transizione a modalità RPE nelle Live Activities esistenti
+    
+    DebugLogger.log(LogCategory.timer, '=== END TIMER COMPLETION ===');
+    
+    // Non auto-clear finché RPE non è completato
+    // Il clear avverrà quando l'utente conferma RPE
+  }
+
+  /// 🔥 DUAL AUDIO SYSTEM: Primary AudioPlayer + Backup Notification
+  Future<void> _executeDualAudioSystem(bool isBackground) async {
+    final timestamp = DateTime.now().toIso8601String();
+    print('🔥 === DUAL AUDIO SYSTEM START [$timestamp] ===');
+    print('🔥 Background mode: ${isBackground ? "YES" : "NO"}');
+    
+    if (isBackground) {
+      print('🔥 BACKGROUND MODE: Using notification-first strategy');
+      
+      // Strategy per background: Notification prima, poi AudioPlayer
+      try {
+        print('🔥 STEP 1: Immediate notification (most reliable in background)');
+        await _sendCompletionNotification();
+        
+        print('🔥 STEP 2: AudioPlayer attempt (may fail in deep background)');
+        await _playCompletionSound();
+        
+        print('🔥 ✅ Background dual audio completed');
+      } catch (e) {
+        print('🔥 ❌ Background dual audio failed: $e');
+      }
+      
+    } else {
+      print('🔥 FOREGROUND MODE: Using AudioPlayer-first strategy');
+      
+      // Strategy per foreground: AudioPlayer prima, notification come backup
+      try {
+        print('🔥 STEP 1: AudioPlayer (instant and high quality)');
+        await _playCompletionSound();
+        
+        // Breve delay per verificare se AudioPlayer funziona
+        await Future.delayed(const Duration(milliseconds: 200));
+        
+        print('🔥 STEP 2: Backup notification');
+        await _sendCompletionNotification();
+        
+        print('🔥 ✅ Foreground dual audio completed');
+      } catch (e) {
+        print('🔥 ❌ Foreground dual audio failed: $e');
+        
+        // Emergency fallback: solo notification
+        try {
+          print('🔥 EMERGENCY: Notification-only fallback');
+          await _sendCompletionNotification();
+        } catch (e2) {
+          print('🔥 💥 CRITICAL: All audio methods failed: $e2');
+        }
+      }
+    }
+    
+    print('🔥 === DUAL AUDIO SYSTEM END ===');
+  }
+
+  /// ✅ Transizione a modalità RPE nella Live Activity esistente
+  Future<void> _transitionToRPEMode() async {
+    if (state == null || _currentActivityId == null) {
+      print('❌ Nessuna Live Activity attiva per RPE');
+      _fallbackClearTimer();
+      return;
+    }
+    
+    final liveActivityService = ref.read(liveActivityProvider);
+    
+    try {
+      DebugLogger.log(LogCategory.timer, 'TRANSITIONING TO RPE MODE...');
+      
+      // Aggiorna lo stato del timer per modalità RPE
+      state = state!.awaitRPE();
+      await _saveTimerToStorage();
+      
+      // Aggiorna la Live Activity esistente per mostrare RPE interface
+      final success = await liveActivityService.updateLiveActivity(
+        activityId: _currentActivityId!,
+        timer: state!, // Timer ora in stato awaitingRPE
+        currentSet: state!.currentSet ?? 1,
+        totalSets: state!.totalSets ?? 1,
+        targetReps: 10, // TODO: Ottenere dal set corrente
+        weight: 20.0, // TODO: Ottenere dal set corrente
+        actualReps: 10, // Default alle reps target
+        selectedRPE: null, // Ancora da selezionare
+      );
+      
+      if (success) {
+        print('✅ Live Activity aggiornata per modalità RPE');
+        // Setup callbacks per gestire risposte da Live Activity
+        liveActivityService.setupRPECallbacks(
+          onRPEConfirmed: (actualReps, rpe, notes) {
+            _handleRPEConfirmed(actualReps, rpe, notes);
+          },
+          onRPECancelled: () {
+            _handleRPECancelled();
+          },
+          onRepsModified: (newReps) {
+            _handleRepsModified(newReps);
+          },
+        );
+      } else {
+        print('❌ Fallback: Update Live Activity fallito');
+        _fallbackClearTimer();
+      }
+      
+    } catch (e) {
+      print('❌ Errore transizione RPE: $e');
+      _fallbackClearTimer();
+    }
+  }
+
+  /// Gestisce conferma RPE da Live Activity
+  void _handleRPEConfirmed(int actualReps, int rpe, String? notes) {
+    print('✅ RPE CONFERMATO: $actualReps reps, RPE: $rpe, note: $notes');
+    
+    // TODO: Salvare dati RPE nel workout corrente
+    // TODO: Aggiornare ExerciseSet con actualReps, rpe, completedAt
+    
+    // Clear timer ora che RPE è completato
+    state = null;
+    
+    // ✅ RESET COMPLETION TIMESTAMP after RPE confirmed
+    _completionTime = null;
+    print('✅ RPE CONFIRMED: Completion timestamp reset for next timer');
+    
+    _saveTimerToStorage();
+    
+    // TODO: Triggerare prossimo set se disponibile
+    print('🔄 Set completato, pronto per il prossimo');
+  }
+
+  /// Gestisce cancellazione RPE
+  void _handleRPECancelled() {
+    print('❌ RPE CANCELLATO dall\'utente');
+    _fallbackClearTimer();
+  }
+
+  /// Gestisce modifica reps da Live Activity
+  void _handleRepsModified(int newReps) {
+    print('🔄 REPS MODIFICATE: $newReps');
+    // TODO: Aggiornare UI o stato se necessario
+  }
+
+  /// Fallback: clear timer se RPE non disponibile
+  void _fallbackClearTimer() {
+    print('🔄 FALLBACK: Clearing timer automaticamente');
+    
+    // Auto-clear dopo 3 secondi come backup
+    Timer(const Duration(seconds: 3), () {
+      if (state?.isCompleted == true) {
+        state = null;
+        
+        // 🔄 RESET COMPLETION TIMESTAMP anche nel fallback
+        _completionTime = null;
+        print('🔄 FALLBACK: Completion timestamp reset');
+        
+        _saveTimerToStorage();
+      }
+    });
+  }
+
+  /// Play completion sound directly in app (more reliable than notifications)
+  Future<void> _playCompletionSound() async {
+    final timestamp = DateTime.now().toIso8601String();
+    final isBackground = _backgroundTime != null;
+    
+    try {
+      print('🔊 === AUDIO COMPLETION START [$timestamp] ===');
+      print('🔊 Background mode: ${isBackground ? "YES" : "NO"}');
+      print('🔊 Background time: $_backgroundTime');
+      
+      // Ottieni il suono selezionato dalle impostazioni
+      final appConfig = ref.read(appConfigProvider);
+      final selectedSound = appConfig.timerSound;
+      final sound = TimerSound.fromFileName(selectedSound);
+      
+      print('🔊 Sound selection: $selectedSound');
+      print('🔊 Sound file: ${sound.fileName}');
+      print('🔊 Asset path: sounds/${sound.fileName}.wav');
+      
+      // STEP 1: Cleanup existing player
+      print('🔊 STEP 1: Cleaning up existing AudioPlayer...');
+      if (_audioPlayer != null) {
+        try {
+          await _audioPlayer?.stop();
+          await _audioPlayer?.dispose();
+          print('🔊 ✅ Previous player cleaned up successfully');
+        } catch (e) {
+          print('🔊 ⚠️ Error cleaning previous player: $e');
+        }
+      } else {
+        print('🔊 ✅ No previous player to cleanup');
+      }
+      
+      // STEP 2: Create new player
+      print('🔊 STEP 2: Creating new AudioPlayer...');
+      _audioPlayer = AudioPlayer();
+      print('🔊 ✅ New AudioPlayer instance created');
+      
+      // STEP 3: Configure player mode
+      print('🔊 STEP 3: Configuring PlayerMode...');
+      await _audioPlayer!.setPlayerMode(PlayerMode.lowLatency);
+      print('🔊 ✅ PlayerMode.lowLatency configured');
+      print('🔊 ℹ️ AVAudioSession managed by AppDelegate');
+      
+      // STEP 4: Set volume
+      print('🔊 STEP 4: Setting volume...');
+      await _audioPlayer!.setVolume(1.0);
+      print('🔊 ✅ Volume set to maximum (1.0)');
+      
+      // STEP 5: Setup listeners BEFORE play
+      print('🔊 STEP 5: Setting up event listeners...');
+      _audioPlayer!.onPlayerStateChanged.listen((state) {
+        final listenerTimestamp = DateTime.now().toIso8601String();
+        print('🔊 EVENT [$listenerTimestamp]: Player state changed to: $state');
+        if (state == PlayerState.playing) {
+          print('🔊 🎵 AUDIO IS NOW PLAYING!');
+        } else if (state == PlayerState.stopped) {
+          print('🔊 ⏹️ AUDIO STOPPED');
+        } else if (state == PlayerState.paused) {
+          print('🔊 ⏸️ AUDIO PAUSED');
+        }
+      });
+      
+      _audioPlayer!.onDurationChanged.listen((duration) {
+        final listenerTimestamp = DateTime.now().toIso8601String();
+        print('🔊 EVENT [$listenerTimestamp]: Duration detected: $duration');
+      });
+      
+      _audioPlayer!.onPlayerComplete.listen((_) {
+        final listenerTimestamp = DateTime.now().toIso8601String();
+        print('🔊 EVENT [$listenerTimestamp]: ✅ AUDIO PLAYBACK COMPLETED SUCCESSFULLY!');
+      });
+      
+      _audioPlayer!.onLog.listen((message) {
+        final listenerTimestamp = DateTime.now().toIso8601String();
+        print('🔊 AUDIOPLAYER LOG [$listenerTimestamp]: $message');
+      });
+      
+      print('🔊 ✅ Event listeners configured');
+      
+      // STEP 6: Attempt playback
+      print('🔊 STEP 6: Starting audio playback...');
+      final audioSource = AssetSource('sounds/${sound.fileName}.wav');
+      print('🔊 Audio source created: ${audioSource.path}');
+      
+      print('🔊 🎵 EXECUTING PLAY COMMAND...');
+      await _audioPlayer!.play(audioSource);
+      
+      final playTimestamp = DateTime.now().toIso8601String();
+      print('🔊 ✅ PLAY COMMAND EXECUTED SUCCESSFULLY [$playTimestamp]');
+      print('🔊 Background context: ${isBackground ? "IN BACKGROUND" : "IN FOREGROUND"}');
+      
+      // STEP 7: Post-play validation
+      print('🔊 STEP 7: Post-play validation...');
+      await Future.delayed(const Duration(milliseconds: 100));
+      
+      try {
+        final currentState = _audioPlayer!.state;
+        print('🔊 Current player state after play: $currentState');
+        
+        if (currentState == PlayerState.playing) {
+          print('🔊 🎉 SUCCESS: Audio is actively playing!');
+        } else {
+          print('🔊 ⚠️ WARNING: Audio play command sent but player state is: $currentState');
+        }
+      } catch (e) {
+        print('🔊 ⚠️ Could not validate player state: $e');
+      }
+      
+      print('🔊 === AUDIO COMPLETION END [$timestamp] ===');
+      
+    } catch (e) {
+      final errorTimestamp = DateTime.now().toIso8601String();
+      print('❌ === AUDIO COMPLETION FAILED [$errorTimestamp] ===');
+      print('❌ Background mode: ${isBackground ? "YES" : "NO"}');
+      print('❌ Error: $e');
+      print('❌ Error type: ${e.runtimeType}');
+      print('❌ Stack trace: ${e.toString()}');
+      print('❌ === END AUDIO ERROR ===');
+    }
+  }
+
+  /// Send completion notification (backup/primary for background)
+  Future<void> _sendCompletionNotification() async {
+    final timestamp = DateTime.now().toIso8601String();
+    final isBackground = _backgroundTime != null;
+    
+    print('📱 === NOTIFICATION AUDIO START [$timestamp] ===');
+    print('📱 Background mode: ${isBackground ? "YES" : "NO"}');
+    print('📱 NotificationService: ${_notificationService != null ? "AVAILABLE" : "NULL"}');
+    print('📱 Timer state: ${state != null ? "AVAILABLE" : "NULL"}');
+    
+    if (_notificationService == null) {
+      print('📱 ❌ NotificationService not initialized');
+      return;
+    }
+    
+    if (state == null) {
+      print('📱 ❌ Timer state is null');
+      return;
+    }
+    
+    try {
+      // Ottieni il suono selezionato dalle impostazioni
+      final appConfig = ref.read(appConfigProvider);
+      final selectedSound = appConfig.timerSound;
+      
+      print('📱 Sound file: $selectedSound');
+      print('📱 Exercise: ${state!.exerciseName ?? 'Exercise'}');
+      print('📱 Set: ${state!.currentSet ?? 1}/${state!.totalSets ?? 1}');
+      print('📱 Workout: ${state!.workoutId ?? 'N/A'}');
+      
+      print('📱 SENDING notification with audio...');
+      await _notificationService!.sendTimerCompletionNotification(
+        exerciseName: state!.exerciseName ?? 'Exercise',
+        currentSet: state!.currentSet ?? 1,
+        totalSets: state!.totalSets ?? 1,
+        workoutName: state!.workoutId,
+        customSoundFile: selectedSound,
+      );
+      
+      final successTimestamp = DateTime.now().toIso8601String();
+      print('📱 ✅ NOTIFICATION SENT SUCCESSFULLY [$successTimestamp]');
+      print('📱 Priority: ${isBackground ? "HIGH (Background)" : "NORMAL (Foreground)"}');
+      
+    } catch (e) {
+      final errorTimestamp = DateTime.now().toIso8601String();
+      print('📱 ❌ NOTIFICATION FAILED [$errorTimestamp]: $e');
+      print('📱 Error type: ${e.runtimeType}');
+      print('📱 Stack trace: ${e.toString()}');
+    }
+    
+    print('📱 === NOTIFICATION AUDIO END ===');
+  }
+
+  /// Start Live Activity (iOS only)
+  Future<void> _startLiveActivity() async {
+    if (state == null) return;
+    
+    final liveActivityService = ref.read(liveActivityProvider);
+    
+    try {
+      _currentActivityId = await liveActivityService.startLiveActivity(
+        exerciseName: state!.exerciseName ?? 'Rest Timer',
+        timerType: state!.type.name,
+        totalSeconds: state!.totalDurationSeconds,
+        currentSet: state!.currentSet ?? 1,
+        totalSets: state!.totalSets ?? 1,
+        workoutName: state!.workoutId,
+      );
+    } catch (e) {
+      // Live Activities not available or failed
+      print('Failed to start Live Activity: $e');
+    }
+  }
+
+  /// Update Live Activity
+  Future<void> _updateLiveActivity() async {
+    if (state == null || _currentActivityId == null) return;
+    
+    final liveActivityService = ref.read(liveActivityProvider);
+    
+    try {
+      await liveActivityService.updateLiveActivity(
+        activityId: _currentActivityId!,
+        timer: state!,
+        currentSet: state!.currentSet ?? 1,
+        totalSets: state!.totalSets ?? 1,
+      );
+    } catch (e) {
+      // Live Activities not available or failed
+      print('Failed to update Live Activity: $e');
+    }
+  }
+
+  /// End Live Activity
+  Future<void> _endLiveActivity() async {
+    if (_currentActivityId == null) return;
+    
+    final liveActivityService = ref.read(liveActivityProvider);
+    
+    try {
+      await liveActivityService.endLiveActivity(
+        activityId: _currentActivityId!,
+        dismissalPolicy: 'immediate',
+      );
+      _currentActivityId = null;
+    } catch (e) {
+      // Live Activities not available or failed
+      print('Failed to end Live Activity: $e');
+    }
+  }
+
+  // MARK: - Simplified Live Activities (display only, no interactive controls)
+}
+
+// Timer settings provider (simplified version)
+final timerSettingsProvider = Provider<TimerSettings>((ref) {
+  return const TimerSettings(
+    strengthRestTime: 180,     // 3 minutes
+    hypertrophyRestTime: 90,   // 1.5 minutes
+    enduranceRestTime: 60,     // 1 minute
+    autoStartTimer: true,
+    soundEnabled: true,
+    vibrationEnabled: true,
+  );
+});
+
+class TimerSettings {
+  final int strengthRestTime;
+  final int hypertrophyRestTime;
+  final int enduranceRestTime;
+  final bool autoStartTimer;
+  final bool soundEnabled;
+  final bool vibrationEnabled;
+
+  const TimerSettings({
+    required this.strengthRestTime,
+    required this.hypertrophyRestTime,
+    required this.enduranceRestTime,
+    required this.autoStartTimer,
+    required this.soundEnabled,
+    required this.vibrationEnabled,
+  });
+
+  /// Get rest time for specific rep count
+  int getRestTimeForReps(int reps) {
+    if (reps <= 5) return strengthRestTime;
+    if (reps <= 12) return hypertrophyRestTime;
+    return enduranceRestTime;
+  }
+}
+
+// Timer history provider (for analytics)
+final timerHistoryProvider = StateNotifierProvider<TimerHistoryNotifier, List<RestTimer>>((ref) {
+  return TimerHistoryNotifier();
+});
+
+class TimerHistoryNotifier extends StateNotifier<List<RestTimer>> {
+  TimerHistoryNotifier() : super([]);
+
+  void addCompletedTimer(RestTimer timer) {
+    if (timer.isCompleted) {
+      state = [timer, ...state];
+      // Keep only last 100 timers
+      if (state.length > 100) {
+        state = state.take(100).toList();
+      }
+    }
+  }
+
+  void clearHistory() {
+    state = [];
+  }
+
+  List<RestTimer> getTimersForWorkout(String workoutId) {
+    return state.where((timer) => timer.workoutId == workoutId).toList();
+  }
+
+  Duration getAverageRestTime() {
+    if (state.isEmpty) return const Duration(seconds: 120);
+    
+    final totalSeconds = state.fold<int>(
+      0, 
+      (sum, timer) => sum + timer.totalDurationSeconds,
+    );
+    
+    return Duration(seconds: totalSeconds ~/ state.length);
+  }
+}

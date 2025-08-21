@@ -1,0 +1,106 @@
+// Regole Firestore per Workout Templates
+// Da aggiungere al file firestore.rules esistente
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Workout Templates
+    match /workout_templates/{templateId} {
+      // Lettura: template propri o pubblici
+      allow read: if request.auth != null && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.visibility == 'public'
+      );
+      
+      // Creazione: utenti autenticati con quota disponibile
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid &&
+        checkTemplateQuota();
+      
+      // Aggiornamento: solo il proprietario
+      allow update: if request.auth != null && 
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.userId == request.auth.uid;
+      
+      // Eliminazione: solo il proprietario
+      allow delete: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+        
+      // Funzione helper per controllare quota
+      function checkTemplateQuota() {
+        let visibility = request.resource.data.visibility;
+        let userTemplates = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.templateCount;
+        
+        // Limiti per utenti free
+        let maxPrivate = 4;
+        let maxPublic = 2;
+        
+        // TODO: Aumentare limiti per utenti premium
+        
+        return (visibility == 'private' && userTemplates.private < maxPrivate) ||
+               (visibility == 'public' && userTemplates.public < maxPublic);
+      }
+    }
+    
+    // Template Reviews
+    match /template_reviews/{reviewId} {
+      // Lettura: tutti gli utenti autenticati
+      allow read: if request.auth != null;
+      
+      // Creazione: utenti autenticati, una review per template
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid &&
+        !existingReview();
+      
+      // Aggiornamento: solo il proprietario della review
+      allow update: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+      
+      // Eliminazione: proprietario o admin
+      allow delete: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+        
+      function existingReview() {
+        return exists(/databases/$(database)/documents/template_reviews/$(
+          request.resource.data.templateId + '_' + request.auth.uid
+        ));
+      }
+    }
+    
+    // Template Comments
+    match /template_comments/{commentId} {
+      // Lettura: tutti gli utenti autenticati
+      allow read: if request.auth != null;
+      
+      // Creazione: utenti autenticati
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Aggiornamento: solo per like/unlike
+      allow update: if request.auth != null && 
+        resource.data.userId == request.auth.uid ||
+        onlyLikesChanged();
+      
+      // Eliminazione: proprietario o admin
+      allow delete: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+        
+      function onlyLikesChanged() {
+        return request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['likeCount', 'likedBy']);
+      }
+    }
+    
+    // User Stats (per tracciare quota template)
+    match /users/{userId} {
+      allow read: if request.auth != null && 
+        request.auth.uid == userId;
+      
+      allow update: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['templateCount']);
+    }
+  }
+}

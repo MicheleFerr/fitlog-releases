@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "206648824958",
+    "project_id": "gymprogressapp-184bc",
+    "storage_bucket": "gymprogressapp-184bc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206648824958:android:acdc503da18b82f6bdf42f",
+        "android_client_info": {
+          "package_name": "com.micheleferrero93.GymProgressAppNew"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFV9LfG7M7UjUxvSeqxZIMPuwF2xXIycc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206648824958-she4v0ovv6gpi01k6vsbp6poku7m7nm5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "206648824958-91h4cm9fjmivavikmcvup5atg0sp6v5t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.micheleferrero93.GymProgressAppNew"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
