@@ -139,10 +139,7 @@ class NotificationService {
       importance: Importance.high,
       priority: Priority.high,
       playSound: true,
-      // v3.0.2: Temporarily disabled custom sounds to avoid double audio
-      // sound: RawResourceAndroidNotificationSound(customSoundFile ?? 'timer_complete'),
-      // Using default Android notification sound
-      sound: null, // null = use default system sound
+      sound: RawResourceAndroidNotificationSound(customSoundFile ?? 'timer_complete'),
       enableVibration: true,
       vibrationPattern: Int64List.fromList([0, 250, 250, 250]), // Vibration pattern
       category: AndroidNotificationCategory.alarm,

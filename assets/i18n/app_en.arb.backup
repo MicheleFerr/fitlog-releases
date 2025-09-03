@@ -1,0 +1,3024 @@
+{
+  "@@locale": "en",
+  "appTitle": "GymBro TrackLog",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "welcome": "Ready to train?",
+  "@welcome": {
+    "description": "Welcome message on the main screen"
+  },
+  "welcomeDescription": "Start a new workout and track your exercises with sets, supersets, dropsets, and rest-pause techniques.",
+  "@welcomeDescription": {
+    "description": "Welcome description explaining the app functionality"
+  },
+  "quickStart": "Quick Start",
+  "@quickStart": {
+    "description": "Quick start section title"
+  },
+  "quickWorkout": "Quick Workout",
+  "@quickWorkout": {
+    "description": "Quick workout button text"
+  },
+  "quickWorkoutSubtitle": "Start with empty workout",
+  "@quickWorkoutSubtitle": {
+    "description": "Quick workout subtitle"
+  },
+  "upperBody": "Upper Body",
+  "@upperBody": {
+    "description": "Upper body workout template"
+  },
+  "upperBodySubtitle": "Chest, Back, Shoulders, Arms",
+  "@upperBodySubtitle": {
+    "description": "Upper body workout description"
+  },
+  "lowerBody": "Lower Body",
+  "@lowerBody": {
+    "description": "Lower body workout template"
+  },
+  "lowerBodySubtitle": "Legs, Glutes, Calves",
+  "@lowerBodySubtitle": {
+    "description": "Lower body workout description"
+  },
+  "hiitTraining": "HIIT Training",
+  "@hiitTraining": {
+    "description": "HIIT training template"
+  },
+  "hiitTrainingSubtitle": "High intensity intervals",
+  "@hiitTrainingSubtitle": {
+    "description": "HIIT training description"
+  },
+  "startWorkout": "Start Workout",
+  "@startWorkout": {
+    "description": "Start workout button text"
+  },
+  "addExercise": "Add Exercise",
+  "@addExercise": {
+    "description": "Add exercise button text"
+  },
+  "completeWorkout": "Complete Workout",
+  "@completeWorkout": {
+    "description": "Complete workout button text"
+  },
+  "newWorkout": "New Workout",
+  "@newWorkout": {
+    "description": "New workout quick action"
+  },
+  "workoutName": "Workout Name",
+  "@workoutName": {
+    "description": "Workout name input label"
+  },
+  "workoutNameHint": "e.g., Push Day, Leg Day",
+  "@workoutNameHint": {
+    "description": "Workout name input hint"
+  },
+  "exerciseName": "Exercise Name",
+  "@exerciseName": {
+    "description": "Exercise name input label"
+  },
+  "exerciseNameHint": "e.g., Bench Press",
+  "@exerciseNameHint": {
+    "description": "Exercise name input hint"
+  },
+  "exerciseCategory": "Exercise Category",
+  "@exerciseCategory": {
+    "description": "Exercise category selection label"
+  },
+  "sets": "Sets",
+  "@sets": {
+    "description": "Sets label"
+  },
+  "addSet": "Add Set",
+  "@addSet": {
+    "description": "Add set button text"
+  },
+  "weight": "Weight (kg)",
+  "@weight": {
+    "description": "Weight input label"
+  },
+  "reps": "reps",
+  "@reps": {
+    "description": "Abbreviation for repetitions"
+  },
+  "notes": "Notes (optional)",
+  "@notes": {
+    "description": "Notes input label"
+  },
+  "notesHint": "Add any notes about form, weight progression, etc.",
+  "@notesHint": {
+    "description": "Notes input hint"
+  },
+  "exerciseTypeSingle": "Single",
+  "@exerciseTypeSingle": {
+    "description": "Single exercise type"
+  },
+  "exerciseTypeSuperset": "Superset",
+  "@exerciseTypeSuperset": {
+    "description": "Superset exercise type"
+  },
+  "exerciseTypeDropset": "DropSet",
+  "@exerciseTypeDropset": {
+    "description": "Dropset exercise type"
+  },
+  "exerciseTypeRestPause": "Rest-Pause",
+  "@exerciseTypeRestPause": {
+    "description": "Rest-pause exercise type"
+  },
+  "exerciseCategoryChest": "Chest",
+  "@exerciseCategoryChest": {
+    "description": "Chest exercise category"
+  },
+  "exerciseCategoryBack": "Back",
+  "@exerciseCategoryBack": {
+    "description": "Back exercise category"
+  },
+  "exerciseCategoryShoulders": "Shoulders",
+  "@exerciseCategoryShoulders": {
+    "description": "Shoulders exercise category"
+  },
+  "exerciseCategoryArms": "Arms",
+  "@exerciseCategoryArms": {
+    "description": "Arms exercise category"
+  },
+  "exerciseCategoryLegs": "Legs",
+  "@exerciseCategoryLegs": {
+    "description": "Legs exercise category"
+  },
+  "exerciseCategoryAbs": "Abs",
+  "@exerciseCategoryAbs": {
+    "description": "Abs exercise category"
+  },
+  "exerciseCategoryCardio": "Cardio",
+  "@exerciseCategoryCardio": {
+    "description": "Cardio exercise category"
+  },
+  "exerciseCategoryOther": "Other",
+  "@exerciseCategoryOther": {
+    "description": "Other exercise category"
+  },
+  "workoutStatusPlanned": "Planned",
+  "@workoutStatusPlanned": {
+    "description": "Planned workout status"
+  },
+  "workoutStatusInProgress": "In Progress",
+  "@workoutStatusInProgress": {
+    "description": "In progress workout status"
+  },
+  "workoutStatusCompleted": "Completed",
+  "@workoutStatusCompleted": {
+    "description": "Completed workout status"
+  },
+  "workoutStatusPaused": "Paused",
+  "@workoutStatusPaused": {
+    "description": "Paused workout status"
+  },
+  "exercises": "Exercises",
+  "@exercises": {
+    "description": "Exercises label"
+  },
+  "progress": "Progress",
+  "@progress": {
+    "description": "Progress label"
+  },
+  "workoutProgress": "Workout Progress",
+  "@workoutProgress": {
+    "description": "Workout progress label"
+  },
+  "noExercisesYet": "No exercises yet",
+  "@noExercisesYet": {
+    "description": "Empty exercise list message"
+  },
+  "tapToAddExercise": "Tap the + button to add your first exercise",
+  "@tapToAddExercise": {
+    "description": "Empty exercise list instruction"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "start": "Start",
+  "@start": {
+    "description": "Start button text"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add button text"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit button text"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "duplicate": "Duplicate",
+  "@duplicate": {
+    "description": "Duplicate button label"
+  },
+  "searchExercises": "Search Exercises",
+  "@searchExercises": {
+    "description": "Search exercises input label"
+  },
+  "searchExercisesHint": "Type to search exercise database",
+  "@searchExercisesHint": {
+    "description": "Search exercises input hint"
+  },
+  "supersetInfo": "Superset combines 2+ exercises performed back-to-back with minimal rest.",
+  "@supersetInfo": {
+    "description": "Superset explanation text"
+  },
+  "dropsetInfo": "Drop Set: Perform exercise to failure, then immediately reduce weight and continue.",
+  "@dropsetInfo": {
+    "description": "Drop set explanation text"
+  },
+  "restPauseInfo": "Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.",
+  "@restPauseInfo": {
+    "description": "Rest-pause explanation text"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings menu item"
+  },
+  "signOut": "Sign Out",
+  "@signOut": {
+    "description": "Sign out menu item"
+  },
+  "pauseWorkout": "Pause Workout",
+  "@pauseWorkout": {
+    "description": "Pause workout menu item"
+  },
+  "endWorkout": "End Workout",
+  "@endWorkout": {
+    "description": "End workout dialog title"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings screen title"
+  },
+  "account": "Account",
+  "@account": {
+    "description": "Account section header"
+  },
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Appearance section header"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting"
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Light theme option"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Dark theme option"
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "System theme option"
+  },
+  "themeLightDesc": "Always use light theme",
+  "@themeLightDesc": {
+    "description": "Light theme description"
+  },
+  "themeDarkDesc": "Always use dark theme",
+  "@themeDarkDesc": {
+    "description": "Dark theme description"
+  },
+  "themeSystemDesc": "Follow system setting",
+  "@themeSystemDesc": {
+    "description": "System theme description"
+  },
+  "fontSize": "Font Size",
+  "@fontSize": {
+    "description": "Font size setting"
+  },
+  "fontSizeSmall": "Small",
+  "@fontSizeSmall": {
+    "description": "Small font size"
+  },
+  "fontSizeNormal": "Normal",
+  "@fontSizeNormal": {
+    "description": "Normal font size"
+  },
+  "fontSizeLarge": "Large",
+  "@fontSizeLarge": {
+    "description": "Large font size"
+  },
+  "accentColor": "Accent Color",
+  "@accentColor": {
+    "description": "Accent color setting"
+  },
+  "workout": "Workout",
+  "@workout": {
+    "description": "Workout section header"
+  },
+  "autoStartTimer": "Auto-start Timer",
+  "@autoStartTimer": {
+    "description": "Auto-start timer setting"
+  },
+  "autoStartTimerDesc": "Start rest timer after completing set",
+  "@autoStartTimerDesc": {
+    "description": "Auto-start timer description"
+  },
+  "defaultRestTime": "Default Rest Time",
+  "@defaultRestTime": {
+    "description": "Default rest time setting"
+  },
+  "advancedTechniques": "Advanced Techniques",
+  "@advancedTechniques": {
+    "description": "Advanced techniques setting"
+  },
+  "advancedTechniquesDesc": "Show drop sets, supersets, etc.",
+  "@advancedTechniquesDesc": {
+    "description": "Advanced techniques description"
+  },
+  "unitsLanguage": "Units & Language",
+  "@unitsLanguage": {
+    "description": "Units and language section"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language setting"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language option"
+  },
+  "languageItalian": "Italiano",
+  "@languageItalian": {
+    "description": "Italian language option"
+  },
+  "languageEnglishDesc": "English (US)",
+  "@languageEnglishDesc": {
+    "description": "English language description"
+  },
+  "languageItalianDesc": "Italian (IT)",
+  "@languageItalianDesc": {
+    "description": "Italian language description"
+  },
+  "weightUnits": "Weight Units",
+  "@weightUnits": {
+    "description": "Weight units setting"
+  },
+  "weightUnitsKg": "Kilograms (kg)",
+  "@weightUnitsKg": {
+    "description": "Kilograms weight unit"
+  },
+  "weightUnitsLbs": "Pounds (lbs)",
+  "@weightUnitsLbs": {
+    "description": "Pounds weight unit"
+  },
+  "weightUnitsKgDesc": "Metric system",
+  "@weightUnitsKgDesc": {
+    "description": "Metric system description"
+  },
+  "weightUnitsLbsDesc": "Imperial system",
+  "@weightUnitsLbsDesc": {
+    "description": "Imperial system description"
+  },
+  "iosFeatures": "iOS Features",
+  "@iosFeatures": {
+    "description": "iOS features section"
+  },
+  "liveActivities": "Live Activities",
+  "@liveActivities": {
+    "description": "Live Activities setting"
+  },
+  "liveActivitiesDesc": "Show timer on lock screen & Dynamic Island",
+  "@liveActivitiesDesc": {
+    "description": "Live Activities description"
+  },
+  "healthAppSync": "Health App Sync",
+  "@healthAppSync": {
+    "description": "Health app sync setting"
+  },
+  "healthAppSyncDesc": "Sync workouts to Apple Health",
+  "@healthAppSyncDesc": {
+    "description": "Health app sync description"
+  },
+  "audioFeedback": "Audio & Feedback",
+  "@audioFeedback": {
+    "description": "Audio and feedback section"
+  },
+  "soundEffects": "Sound Effects",
+  "@soundEffects": {
+    "description": "Sound effects setting"
+  },
+  "soundEffectsDesc": "Play sounds for timer and completion",
+  "@soundEffectsDesc": {
+    "description": "Sound effects description"
+  },
+  "vibrations": "Vibrations",
+  "@vibrations": {
+    "description": "Vibrations setting"
+  },
+  "vibrationsDesc": "Haptic feedback for interactions",
+  "@vibrationsDesc": {
+    "description": "Vibrations description"
+  },
+  "advanced": "Advanced",
+  "@advanced": {
+    "description": "Advanced section header"
+  },
+  "exportSettings": "Export Settings",
+  "@exportSettings": {
+    "description": "Export settings option"
+  },
+  "exportSettingsDesc": "Save settings as JSON file",
+  "@exportSettingsDesc": {
+    "description": "Export settings description"
+  },
+  "importSettings": "Import Settings",
+  "@importSettings": {
+    "description": "Import settings option"
+  },
+  "importSettingsDesc": "Load settings from JSON file",
+  "@importSettingsDesc": {
+    "description": "Import settings description"
+  },
+  "resetToDefaults": "Reset to Defaults",
+  "@resetToDefaults": {
+    "description": "Reset to defaults option"
+  },
+  "resetToDefaultsDesc": "Restore all settings to default",
+  "@resetToDefaultsDesc": {
+    "description": "Reset to defaults description"
+  },
+  "accountActions": "Account Actions",
+  "@accountActions": {
+    "description": "Account actions section"
+  },
+  "signOutDesc": "Sign out of your account",
+  "@signOutDesc": {
+    "description": "Sign out description"
+  },
+  "chooseTheme": "Choose Theme",
+  "@chooseTheme": {
+    "description": "Choose theme dialog title"
+  },
+  "chooseLanguage": "Choose Language",
+  "@chooseLanguage": {
+    "description": "Choose language dialog title"
+  },
+  "resetSettings": "Reset Settings",
+  "@resetSettings": {
+    "description": "Reset settings dialog title"
+  },
+  "resetSettingsConfirm": "Are you sure you want to reset all settings to defaults? This cannot be undone.",
+  "@resetSettingsConfirm": {
+    "description": "Reset settings confirmation message"
+  },
+  "signOutConfirm": "Are you sure you want to sign out?",
+  "@signOutConfirm": {
+    "description": "Sign out confirmation message"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button"
+  },
+  "reset": "Reset",
+  "@reset": {
+    "description": "Reset button"
+  },
+  "settingsResetSuccess": "Settings reset to defaults",
+  "@settingsResetSuccess": {
+    "description": "Settings reset success message"
+  },
+  "exportFunctioningComingSoon": "Export functionality coming soon",
+  "@exportFunctioningComingSoon": {
+    "description": "Export functionality coming soon message"
+  },
+  "importFunctioningComingSoon": "Import functionality coming soon",
+  "@importFunctioningComingSoon": {
+    "description": "Import functionality coming soon message"
+  },
+  "editExercise": "Edit Exercise",
+  "@editExercise": {
+    "description": "Edit exercise dialog title"
+  },
+  "exerciseRestTime": "Rest Time",
+  "@exerciseRestTime": {
+    "description": "Exercise rest time setting label"
+  },
+  "exerciseRestTimeDesc": "Rest time for this exercise",
+  "@exerciseRestTimeDesc": {
+    "description": "Exercise rest time description"
+  },
+  "restTimeSeconds": "seconds",
+  "@restTimeSeconds": {
+    "description": "Seconds unit for rest time"
+  },
+  "setRestTime": "Set Timer",
+  "@setRestTime": {
+    "description": "Set rest timer button text"
+  },
+  "customRestTime": "Custom Timer",
+  "@customRestTime": {
+    "description": "Custom rest timer option"
+  },
+  "useDefaultRestTime": "Use Default Timer",
+  "@useDefaultRestTime": {
+    "description": "Use default rest timer option"
+  },
+  "yourTemplates": "Your Templates",
+  "@yourTemplates": {
+    "description": "Your custom templates section title"
+  },
+  "popularTemplates": "Popular Templates",
+  "@popularTemplates": {
+    "description": "Popular templates section title"
+  },
+  "seeAll": "See All",
+  "@seeAll": {
+    "description": "See all button text"
+  },
+  "welcomeToGymBro": "Welcome to GymBro!",
+  "@welcomeToGymBro": {
+    "description": "Welcome title on home screen"
+  },
+  "homeWelcomeDescription": "Track your workouts with precision. Start a new session or continue where you left off.",
+  "@homeWelcomeDescription": {
+    "description": "Welcome description on home screen"
+  },
+  "quickActions": "Quick Actions",
+  "@quickActions": {
+    "description": "Quick actions section title"
+  },
+  "startFresh": "Start fresh",
+  "@startFresh": {
+    "description": "New workout subtitle"
+  },
+  "history": "History",
+  "@history": {
+    "description": "History button label"
+  },
+  "viewPastWorkouts": "View past workouts",
+  "@viewPastWorkouts": {
+    "description": "History subtitle"
+  },
+  "analytics": "Analytics",
+  "@analytics": {
+    "description": "Analytics quick action"
+  },
+  "trackProgress": "Track progress",
+  "@trackProgress": {
+    "description": "Analytics subtitle"
+  },
+  "templates": "Templates",
+  "@templates": {
+    "description": "Templates quick action"
+  },
+  "workoutRoutines": "Workout routines",
+  "@workoutRoutines": {
+    "description": "Templates subtitle"
+  },
+  "customizeApp": "Customize app",
+  "@customizeApp": {
+    "description": "Settings subtitle"
+  },
+  "importExercises": "Import Exercises",
+  "@importExercises": {
+    "description": "Import exercises quick action"
+  },
+  "loadFromJson": "Load from JSON",
+  "@loadFromJson": {
+    "description": "Import exercises subtitle"
+  },
+  "activeWorkout": "Active Workout",
+  "@activeWorkout": {
+    "description": "Active workout banner title"
+  },
+  "pausedWorkout": "Paused Workout",
+  "@pausedWorkout": {
+    "description": "Paused workout banner title"
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Continue workout button"
+  },
+  "resume": "Resume",
+  "@resume": {
+    "description": "Resume workout button"
+  },
+  "end": "End",
+  "@end": {
+    "description": "End workout button"
+  },
+  "endWorkoutConfirm": "Are you sure you want to end your current workout?",
+  "@endWorkoutConfirm": {
+    "description": "End workout confirmation message"
+  },
+  "workoutCompleted": "🎉 Workout completed!",
+  "@workoutCompleted": {
+    "description": "Workout completed message"
+  },
+  "appSettings": "App Settings",
+  "@appSettings": {
+    "description": "App settings menu item"
+  },
+  "historyFeatureComingSoon": "History feature coming soon!",
+  "@historyFeatureComingSoon": {
+    "description": "History feature coming soon message"
+  },
+  "customizeTemplate": "Customize this template",
+  "@customizeTemplate": {
+    "description": "Template customization subtitle"
+  },
+  "deleteTemplatePermanently": "Delete this template permanently",
+  "@deleteTemplatePermanently": {
+    "description": "Template deletion subtitle"
+  },
+  "removeExercise": "Remove Exercise",
+  "@removeExercise": {
+    "description": "Title for removing exercise from template"
+  },
+  "confirmRemoveExercise": "Remove \"{exerciseName}\" from template?",
+  "@confirmRemoveExercise": {
+    "description": "Confirmation message for removing exercise from template",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String",
+        "description": "Name of the exercise to remove"
+      }
+    }
+  },
+  "timerSound": "Timer Sound",
+  "@timerSound": {
+    "description": "Timer sound setting title"
+  },
+  "timerSoundDescription": "Choose the sound that plays when the rest timer completes",
+  "@timerSoundDescription": {
+    "description": "Timer sound setting description"
+  },
+  "currentSound": "Current",
+  "@currentSound": {
+    "description": "Label for currently selected sound"
+  },
+  "playPreview": "Play Preview",
+  "@playPreview": {
+    "description": "Button to preview sound"
+  },
+  "playingPreview": "Playing preview",
+  "@playingPreview": {
+    "description": "Message when playing sound preview"
+  },
+  "statisticsDashboard": "Statistics Dashboard",
+  "@statisticsDashboard": {
+    "description": "Statistics dashboard screen title"
+  },
+  "workoutAnalytics": "Workout Analytics",
+  "@workoutAnalytics": {
+    "description": "Workout analytics section title"
+  },
+  "progressTracking": "Progress Tracking",
+  "@progressTracking": {
+    "description": "Progress tracking section title"
+  },
+  "detailedAnalytics": "Detailed Analytics",
+  "@detailedAnalytics": {
+    "description": "Detailed analytics section title"
+  },
+  "thisWeek": "This Week",
+  "@thisWeek": {
+    "description": "This week label for workout count"
+  },
+  "totalVolume": "Total Volume",
+  "@totalVolume": {
+    "description": "Total volume statistic"
+  },
+  "consistency": "Consistency",
+  "@consistency": {
+    "description": "Consistency statistic"
+  },
+  "totalWorkouts": "Total Workouts",
+  "@totalWorkouts": {
+    "description": "Total workouts statistic"
+  },
+  "completedSessions": "Completed Sessions",
+  "@completedSessions": {
+    "description": "Completed sessions subtitle"
+  },
+  "weightLifted": "Weight Lifted",
+  "@weightLifted": {
+    "description": "Weight lifted subtitle"
+  },
+  "averageWorkoutTime": "Average Workout Time",
+  "@averageWorkoutTime": {
+    "description": "Average workout time statistic"
+  },
+  "perSession": "Per Session",
+  "@perSession": {
+    "description": "Per session subtitle"
+  },
+  "personalRecords": "Personal Records",
+  "@personalRecords": {
+    "description": "Personal records statistic"
+  },
+  "newPRs": "New PRs",
+  "@newPRs": {
+    "description": "New personal records subtitle"
+  },
+  "weeklyVolumeChart": "Weekly Volume Chart",
+  "@weeklyVolumeChart": {
+    "description": "Weekly volume chart title"
+  },
+  "workoutFrequency": "Workout Frequency",
+  "@workoutFrequency": {
+    "description": "Workout frequency chart title"
+  },
+  "bodyPartDistribution": "Body Part Distribution",
+  "@bodyPartDistribution": {
+    "description": "Body part distribution chart title"
+  },
+  "topExercises": "Top Exercises",
+  "@topExercises": {
+    "description": "Top exercises ranking title"
+  },
+  "workoutStreak": "Workout Streak",
+  "@workoutStreak": {
+    "description": "Workout streak card title"
+  },
+  "exportData": "Export Data",
+  "@exportData": {
+    "description": "Export data menu option"
+  },
+  "viewDetails": "View Details",
+  "@viewDetails": {
+    "description": "View details menu option"
+  },
+  "noVolumeData": "No volume data available",
+  "@noVolumeData": {
+    "description": "No volume data message"
+  },
+  "noFrequencyData": "No frequency data available",
+  "@noFrequencyData": {
+    "description": "No frequency data message"
+  },
+  "noBodyPartData": "No body part data available",
+  "@noBodyPartData": {
+    "description": "No body part data message"
+  },
+  "noExerciseData": "No exercise data available",
+  "@noExerciseData": {
+    "description": "No exercise data message"
+  },
+  "noWorkoutData": "No workout data yet",
+  "@noWorkoutData": {
+    "description": "No workout data message"
+  },
+  "completeWorkoutsToSeeAnalytics": "Complete some workouts to see your analytics and progress!",
+  "@completeWorkoutsToSeeAnalytics": {
+    "description": "Message to complete workouts for analytics"
+  },
+  "startFirstWorkout": "Start Your First Workout",
+  "@startFirstWorkout": {
+    "description": "Start first workout button text"
+  },
+  "volumeIncreased": "Volume increased by {amount}kg from last week",
+  "@volumeIncreased": {
+    "description": "Volume increase insight message",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "description": "Amount of volume increase"
+      }
+    }
+  },
+  "volumeDecreased": "Volume decreased by {amount}kg from last week",
+  "@volumeDecreased": {
+    "description": "Volume decrease insight message",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "description": "Amount of volume decrease"
+      }
+    }
+  },
+  "workouts": "workouts",
+  "@workouts": {
+    "description": "Workouts unit label"
+  },
+  "bestWorkoutDay": "Best workout day: {day}",
+  "@bestWorkoutDay": {
+    "description": "Best workout day insight",
+    "placeholders": {
+      "day": {
+        "type": "String",
+        "description": "Day of the week"
+      }
+    }
+  },
+  "averageWorkoutsPerDay": "Average: {average} workouts per day",
+  "@averageWorkoutsPerDay": {
+    "description": "Average workouts per day insight",
+    "placeholders": {
+      "average": {
+        "type": "String",
+        "description": "Average number of workouts"
+      }
+    }
+  },
+  "monday": "Monday",
+  "@monday": {
+    "description": "Monday day name"
+  },
+  "tuesday": "Tuesday",
+  "@tuesday": {
+    "description": "Tuesday day name"
+  },
+  "wednesday": "Wednesday",
+  "@wednesday": {
+    "description": "Wednesday day name"
+  },
+  "thursday": "Thursday",
+  "@thursday": {
+    "description": "Thursday day name"
+  },
+  "friday": "Friday",
+  "@friday": {
+    "description": "Friday day name"
+  },
+  "saturday": "Saturday",
+  "@saturday": {
+    "description": "Saturday day name"
+  },
+  "sunday": "Sunday",
+  "@sunday": {
+    "description": "Sunday day name"
+  },
+  "mondayShort": "Mon",
+  "@mondayShort": {
+    "description": "Monday short abbreviation"
+  },
+  "tuesdayShort": "Tue",
+  "@tuesdayShort": {
+    "description": "Tuesday short abbreviation"
+  },
+  "wednesdayShort": "Wed",
+  "@wednesdayShort": {
+    "description": "Wednesday short abbreviation"
+  },
+  "thursdayShort": "Thu",
+  "@thursdayShort": {
+    "description": "Thursday short abbreviation"
+  },
+  "fridayShort": "Fri",
+  "@fridayShort": {
+    "description": "Friday short abbreviation"
+  },
+  "saturdayShort": "Sat",
+  "@saturdayShort": {
+    "description": "Saturday short abbreviation"
+  },
+  "sundayShort": "Sun",
+  "@sundayShort": {
+    "description": "Sunday short abbreviation"
+  },
+  "filterStatistics": "Filter Statistics",
+  "@filterStatistics": {
+    "description": "Filter statistics dialog title"
+  },
+  "timePeriod": "Time Period",
+  "@timePeriod": {
+    "description": "Time period filter section"
+  },
+  "muscleGroups": "Muscle Groups",
+  "@muscleGroups": {
+    "description": "Muscle groups filter section"
+  },
+  "lastWeek": "Last Week",
+  "@lastWeek": {
+    "description": "Last week filter option"
+  },
+  "lastMonth": "Last Month",
+  "@lastMonth": {
+    "description": "Last month filter option"
+  },
+  "lastThreeMonths": "Last 3 Months",
+  "@lastThreeMonths": {
+    "description": "Last three months filter option"
+  },
+  "applyFilters": "Apply Filters",
+  "@applyFilters": {
+    "description": "Apply filters button"
+  },
+  "improvingProgressSummary": "Your progress is improving! Keep it up!",
+  "@improvingProgressSummary": {
+    "description": "Improving progress summary message"
+  },
+  "needsImprovementSummary": "Your progress needs improvement. Stay consistent!",
+  "@needsImprovementSummary": {
+    "description": "Needs improvement progress summary message"
+  },
+  "steadyProgressSummary": "Your progress is steady. Great consistency!",
+  "@steadyProgressSummary": {
+    "description": "Steady progress summary message"
+  },
+  "weeklyProgress": "Weekly Progress",
+  "@weeklyProgress": {
+    "description": "Weekly progress title"
+  },
+  "workoutGoal": "Workout Goal",
+  "@workoutGoal": {
+    "description": "Workout goal label"
+  },
+  "volumeGoal": "Volume Goal",
+  "@volumeGoal": {
+    "description": "Volume goal label"
+  },
+  "rpe": "RPE",
+  "@rpe": {
+    "description": "Rate of Perceived Exertion abbreviation"
+  },
+  "rpeDescription": "Rate of Perceived Exertion (6-10)",
+  "@rpeDescription": {
+    "description": "Full description of RPE scale"
+  },
+  "rir": "RIR",
+  "@rir": {
+    "description": "Reps in Reserve abbreviation"
+  },
+  "rirDescription": "Reps in Reserve",
+  "@rirDescription": {
+    "description": "Full description of RIR"
+  },
+  "actualReps": "Actual Reps",
+  "@actualReps": {
+    "description": "Actual repetitions completed"
+  },
+  "targetReps": "Target Reps",
+  "@targetReps": {
+    "description": "Target repetitions planned"
+  },
+  "repsCompleted": "Reps Completed",
+  "@repsCompleted": {
+    "description": "Number of reps completed"
+  },
+  "actualRepsCompleted": "Actual Reps Completed",
+  "@actualRepsCompleted": {
+    "description": "Actual repetitions that were completed"
+  },
+  "recordSetCompletion": "Record Set Completion",
+  "@recordSetCompletion": {
+    "description": "Title for recording set completion details"
+  },
+  "howHardWasTheSet": "How hard was this set?",
+  "@howHardWasTheSet": {
+    "description": "Question asking about set difficulty"
+  },
+  "veryEasy": "Very Easy",
+  "@veryEasy": {
+    "description": "RPE 6 description"
+  },
+  "easy": "Easy",
+  "@easy": {
+    "description": "RPE 7 description"
+  },
+  "moderate": "Moderate",
+  "@moderate": {
+    "description": "RPE 8 description"
+  },
+  "hard": "Hard",
+  "@hard": {
+    "description": "RPE 9 description"
+  },
+  "maximal": "Maximal",
+  "@maximal": {
+    "description": "RPE 10 description"
+  },
+  "ofWord": "of",
+  "@ofWord": {
+    "description": "Word 'of' for 'X of Y'"
+  },
+  "skipRpe": "Skip RPE",
+  "@skipRpe": {
+    "description": "Button to skip RPE recording"
+  },
+  "confirmSet": "Confirm Set",
+  "@confirmSet": {
+    "description": "Button to confirm set completion"
+  },
+  "repsInReserve": "reps in reserve",
+  "@repsInReserve": {
+    "description": "Full text for reps in reserve"
+  },
+  "preferredTemplateSet": "Preferred template set!",
+  "@preferredTemplateSet": {
+    "description": "Message when user sets a preferred workout template"
+  },
+  "preferredTemplateRemoved": "Preferred template removed",
+  "@preferredTemplateRemoved": {
+    "description": "Message when user removes the preferred workout template"
+  },
+  "choosePreferredTemplate": "Choose Preferred Template",
+  "@choosePreferredTemplate": {
+    "description": "Title for choosing preferred workout template"
+  },
+  "removePreferredTemplate": "Remove Preferred Template",
+  "@removePreferredTemplate": {
+    "description": "Option to remove the preferred template"
+  },
+  "startWithEmptyWorkout": "Start with an empty workout",
+  "@startWithEmptyWorkout": {
+    "description": "Description for starting with empty workout"
+  },
+  "tapToStart": "Tap to start",
+  "@tapToStart": {
+    "description": "Instruction to tap to start workout"
+  },
+  "errorLoadingTemplates": "Error loading templates",
+  "@errorLoadingTemplates": {
+    "description": "Error message when templates fail to load"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications title"
+  },
+  "markAllAsRead": "Mark all as read",
+  "@markAllAsRead": {
+    "description": "Button to mark all notifications as read"
+  },
+  "noNotifications": "No notifications",
+  "@noNotifications": {
+    "description": "Empty state for notifications"
+  },
+  "notificationsDescription": "We'll keep you updated on your progress!",
+  "@notificationsDescription": {
+    "description": "Description for empty notifications state"
+  },
+  "quickStats": "Your Progress",
+  "@quickStats": {
+    "description": "Quick stats section title"
+  },
+  "streak": "Streak",
+  "@streak": {
+    "description": "Workout streak label"
+  },
+  "achievements": "Achievements",
+  "@achievements": {
+    "description": "Achievements label"
+  },
+  "exerciseInfo": "Info",
+  "@exerciseInfo": {
+    "description": "Exercise information chip label"
+  },
+  "warmup": "Warmup",
+  "@warmup": {
+    "description": "Warmup chip label"
+  },
+  "safetyTips": "Prevention",
+  "@safetyTips": {
+    "description": "Safety tips chip label"
+  },
+  "warmupAndMobility": "Warmup & Mobility",
+  "@warmupAndMobility": {
+    "description": "Warmup modal title"
+  },
+  "exerciseInformation": "Exercise Information",
+  "@exerciseInformation": {
+    "description": "Exercise info modal title"
+  },
+  "safetyAndPrevention": "Safety & Prevention",
+  "@safetyAndPrevention": {
+    "description": "Safety modal title"
+  },
+  "preWorkoutMobility": "Pre-Workout Mobility",
+  "@preWorkoutMobility": {
+    "description": "Pre-workout mobility section title"
+  },
+  "muscleActivation": "Muscle Activation",
+  "@muscleActivation": {
+    "description": "Muscle activation section title"
+  },
+  "warmupSets": "Warmup Sets",
+  "@warmupSets": {
+    "description": "Warmup sets section title"
+  },
+  "warmupDuration": "Warmup Duration",
+  "@warmupDuration": {
+    "description": "Warmup duration section title"
+  },
+  "primaryMuscles": "Primary Muscles",
+  "@primaryMuscles": {
+    "description": "Primary muscles section title"
+  },
+  "secondaryMuscles": "Secondary Muscles",
+  "@secondaryMuscles": {
+    "description": "Secondary muscles section title"
+  },
+  "difficultyLevel": "Difficulty Level",
+  "@difficultyLevel": {
+    "description": "Difficulty level section title"
+  },
+  "exerciseType": "Exercise Type",
+  "@exerciseType": {
+    "description": "Exercise type section title"
+  },
+  "equipment": "Equipment",
+  "@equipment": {
+    "description": "Equipment section title"
+  },
+  "movementPattern": "Movement Pattern",
+  "@movementPattern": {
+    "description": "Movement pattern section title"
+  },
+  "repRange": "Rep Range",
+  "@repRange": {
+    "description": "Rep range section title"
+  },
+  "injuryPrevention": "Injury Prevention",
+  "@injuryPrevention": {
+    "description": "Injury prevention section title"
+  },
+  "recommendedCooldown": "Recommended Cooldown",
+  "@recommendedCooldown": {
+    "description": "Recommended cooldown section title"
+  },
+  "technicalDrills": "Technical Drills",
+  "@technicalDrills": {
+    "description": "Technical drills section title"
+  },
+  "technicalNotes": "Technical Notes",
+  "@technicalNotes": {
+    "description": "Technical notes section title"
+  },
+  "targetMuscles": "Target Muscles",
+  "@targetMuscles": {
+    "description": "Target muscles group title"
+  },
+  "exerciseDetails": "Exercise Details",
+  "@exerciseDetails": {
+    "description": "Exercise details group title"
+  },
+  "preparation": "Preparation",
+  "@preparation": {
+    "description": "Preparation group title"
+  },
+  "specificWarmup": "Specific Warmup",
+  "@specificWarmup": {
+    "description": "Specific warmup group title"
+  },
+  "safetyAndTechnique": "Safety & Technique",
+  "@safetyAndTechnique": {
+    "description": "Safety and technique group title"
+  },
+  "recovery": "Recovery",
+  "@recovery": {
+    "description": "Recovery group title"
+  },
+  "day": "Day",
+  "week": "Week",
+  "month": "Month",
+  "average": "Average",
+  "record": "Record",
+  "trend": "Trend",
+  "tapForDetails": "Tap for details",
+  "totalExercises": "Total Exercises",
+  "totalSets": "Total Sets",
+  "avgVolumePerWorkout": "Avg Volume per Workout",
+  "noDataForSelectedPeriod": "No data for selected period",
+  "unlockPremiumFeatures": "Unlock Premium Features",
+  "premiumVolumeFeatures": "Get AI predictions, muscle balance analysis, recovery recommendations, and training intensity scores",
+  "advancedInsights": "Advanced Insights",
+  "aiPredictions": "AI Predictions",
+  "muscleBalance": "Muscle Balance",
+  "recoveryRecommendation": "Recovery Recommendation",
+  "trainingIntensity": "Training Intensity",
+  "pageNotFound": "Page Not Found",
+  "@pageNotFound": {
+    "description": "404 page not found title"
+  },
+  "pageNotFoundMessage": "The page you're looking for doesn't exist.",
+  "@pageNotFoundMessage": {
+    "description": "404 page not found message"
+  },
+  "goHome": "Go Home",
+  "@goHome": {
+    "description": "Button to go back to home screen"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button for failed operations"
+  },
+  "errorOccurred": "An error occurred",
+  "@errorOccurred": {
+    "description": "Generic error message"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button text"
+  },
+  "networkError": "Network error",
+  "@networkError": {
+    "description": "Network connection error"
+  },
+  "databaseError": "Database error",
+  "@databaseError": {
+    "description": "Database operation error"
+  },
+  "validationError": "Validation error",
+  "@validationError": {
+    "description": "Input validation error"
+  },
+  "permissionDenied": "Permission denied",
+  "@permissionDenied": {
+    "description": "Permission denied error"
+  },
+  "signInWithEmail": "Sign in with Email",
+  "@signInWithEmail": {
+    "description": "Email sign in button"
+  },
+  "signInWithGoogle": "Sign in with Google",
+  "@signInWithGoogle": {
+    "description": "Google sign in button"
+  },
+  "signInWithApple": "Sign in with Apple",
+  "@signInWithApple": {
+    "description": "Apple sign in button"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link"
+  },
+  "backToOptions": "Back to Options",
+  "@backToOptions": {
+    "description": "Back to sign in options"
+  },
+  "volumeExplanation": "Volume is calculated as Sets × Reps × Weight",
+  "@volumeExplanation": {
+    "description": "Explanation of how volume is calculated"
+  },
+  "weeklyDistribution": "Weekly Distribution",
+  "@weeklyDistribution": {
+    "description": "Weekly workout distribution chart title"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading state indicator"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button or dialog"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm action button"
+  },
+  "dismiss": "Dismiss",
+  "@dismiss": {
+    "description": "Dismiss dialog or notification"
+  },
+  "addNewExercise": "Add New Exercise",
+  "@addNewExercise": {
+    "description": "Button to add a new exercise"
+  },
+  "deleteExercise": "Delete Exercise",
+  "@deleteExercise": {
+    "description": "Delete exercise action"
+  },
+  "deleteExerciseDescription": "This will permanently delete this exercise from your workout.",
+  "@deleteExerciseDescription": {
+    "description": "Warning message when deleting exercise"
+  },
+  "replaceExercise": "Replace Exercise",
+  "@replaceExercise": {
+    "description": "Replace exercise with another"
+  },
+  "skipExercise": "Skip Exercise",
+  "@skipExercise": {
+    "description": "Skip current exercise"
+  },
+  "duplicateExercise": "Duplicate Exercise",
+  "@duplicateExercise": {
+    "description": "Create a copy of the exercise"
+  },
+  "restTimer": "Rest Timer",
+  "@restTimer": {
+    "description": "Rest timer between sets"
+  },
+  "startTimer": "Start Timer",
+  "@startTimer": {
+    "description": "Start the rest timer"
+  },
+  "pauseTimer": "Pause Timer",
+  "@pauseTimer": {
+    "description": "Pause the rest timer"
+  },
+  "stopTimer": "Stop Timer",
+  "@stopTimer": {
+    "description": "Stop the rest timer"
+  },
+  "skipTimer": "Skip Timer",
+  "@skipTimer": {
+    "description": "Skip the rest timer"
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Done button or completion status"
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "Completion status"
+  },
+  "abs": "Abs",
+  "@abs": {
+    "description": "Abdominal muscles abbreviation"
+  },
+  "arms": "Arms",
+  "@arms": {
+    "description": "Arms muscle group"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back muscle group"
+  },
+  "chest": "Chest",
+  "@chest": {
+    "description": "Chest muscle group"
+  },
+  "legs": "Legs",
+  "@legs": {
+    "description": "Legs muscle group"
+  },
+  "shoulders": "Shoulders",
+  "@shoulders": {
+    "description": "Shoulders muscle group"
+  },
+  "core": "Core",
+  "@core": {
+    "description": "Core muscle group"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today date label"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday date label"
+  },
+  "weekly": "Weekly",
+  "@weekly": {
+    "description": "Weekly time period"
+  },
+  "monthly": "Monthly",
+  "@monthly": {
+    "description": "Monthly time period"
+  },
+  "morning": "Morning",
+  "@morning": {
+    "description": "Morning time period"
+  },
+  "afternoon": "Afternoon",
+  "@afternoon": {
+    "description": "Afternoon time period"
+  },
+  "evening": "Evening",
+  "@evening": {
+    "description": "Evening time period"
+  },
+  "seconds": "seconds",
+  "@seconds": {
+    "description": "Seconds time unit"
+  },
+  "days": "days",
+  "@days": {
+    "description": "Days time unit"
+  },
+  "createTemplate": "Create Template",
+  "@createTemplate": {
+    "description": "Create workout template button"
+  },
+  "saveAsTemplate": "Save as Template",
+  "@saveAsTemplate": {
+    "description": "Save current workout as template"
+  },
+  "templateDeleted": "Template deleted",
+  "@templateDeleted": {
+    "description": "Template deletion confirmation"
+  },
+  "templateName": "Template Name",
+  "@templateName": {
+    "description": "Template name input label"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Generic error title"
+  },
+  "saveError": "Failed to save",
+  "@saveError": {
+    "description": "Save operation failed"
+  },
+  "personalRecord": "Personal Record",
+  "@personalRecord": {
+    "description": "Personal record achievement"
+  },
+  "volume": "Volume",
+  "@volume": {
+    "description": "Training volume metric"
+  },
+  "intensity": "Intensity",
+  "@intensity": {
+    "description": "Training intensity metric"
+  },
+  "duration": "Duration",
+  "@duration": {
+    "description": "Workout duration"
+  },
+  "oneRmExplanation": "1RM (One Rep Max) is the maximum weight you can lift for one repetition",
+  "@oneRmExplanation": {
+    "description": "Explanation of 1RM calculation"
+  },
+  "strengthProgression": "Strength Progression",
+  "@strengthProgression": {
+    "description": "Strength progression chart title"
+  },
+  "totalVolumeExplanation": "Total volume is the sum of all weight lifted across all exercises",
+  "@totalVolumeExplanation": {
+    "description": "Explanation of total volume calculation"
+  },
+  "totalSetsExplanation": "Total sets is the count of all completed sets across all exercises",
+  "@totalSetsExplanation": {
+    "description": "Explanation of total sets calculation"
+  },
+  "muscleBalanceExplanation": "Muscle balance shows how evenly you train different muscle groups",
+  "@muscleBalanceExplanation": {
+    "description": "Explanation of muscle balance analysis"
+  },
+  "workoutFrequencyExplanation": "Workout frequency shows how often you train per week",
+  "@workoutFrequencyExplanation": {
+    "description": "Explanation of workout frequency"
+  },
+  "streakExplanation": "Workout streak is your consecutive days of training",
+  "@streakExplanation": {
+    "description": "Explanation of workout streak"
+  },
+  "current1RM": "Current 1RM",
+  "@current1RM": {
+    "description": "Current one rep max value"
+  },
+  "estimated1RM": "Estimated 1RM",
+  "@estimated1RM": {
+    "description": "Estimated one rep max value"
+  },
+  "strengthPercentage": "Strength %",
+  "@strengthPercentage": {
+    "description": "Strength as percentage"
+  },
+  "totalPRs": "Total PRs",
+  "@totalPRs": {
+    "description": "Total personal records count"
+  },
+  "newPersonalRecords": "New Personal Records",
+  "@newPersonalRecords": {
+    "description": "New personal records achieved"
+  },
+  "workoutCount": "Workout Count",
+  "@workoutCount": {
+    "description": "Total number of workouts"
+  },
+  "totalWeightLifted": "Total Weight Lifted",
+  "@totalWeightLifted": {
+    "description": "Total weight lifted across all workouts"
+  },
+  "averageVolume": "Average Volume",
+  "@averageVolume": {
+    "description": "Average volume per workout"
+  },
+  "bestDay": "Best Day",
+  "@bestDay": {
+    "description": "Best workout day of the week"
+  },
+  "currentStreak": "Current Streak",
+  "@currentStreak": {
+    "description": "Current workout streak"
+  },
+  "longestStreak": "Longest Streak",
+  "@longestStreak": {
+    "description": "Longest workout streak ever"
+  },
+  "improvement": "Improvement",
+  "@improvement": {
+    "description": "Progress improvement indicator"
+  },
+  "trend": "Trend",
+  "@trend": {
+    "description": "Progress trend indicator"
+  },
+  "target": "Target",
+  "@target": {
+    "description": "Target value or goal"
+  },
+  "undo": "Undo",
+  "@undo": {
+    "description": "Undo last action"
+  },
+  "redo": "Redo",
+  "@redo": {
+    "description": "Redo last undone action"
+  },
+  "expand": "Expand",
+  "@expand": {
+    "description": "Expand collapsed content"
+  },
+  "minimize": "Minimize",
+  "@minimize": {
+    "description": "Minimize expanded content"
+  },
+  "share": "Share",
+  "@share": {
+    "description": "Share content"
+  },
+  "export": "Export",
+  "@export": {
+    "description": "Export data"
+  },
+  "import": "Import",
+  "@import": {
+    "description": "Import data"
+  },
+  "view": "View",
+  "@view": {
+    "description": "View content"
+  },
+  "viewAll": "View All",
+  "@viewAll": {
+    "description": "View all items"
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip current item or step"
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Next step or item"
+  },
+  "previous": "Previous",
+  "@previous": {
+    "description": "Previous step or item"
+  },
+  "workoutPaused": "Workout Paused",
+  "@workoutPaused": {
+    "description": "Workout is paused status"
+  },
+  "workoutSummary": "Workout Summary",
+  "@workoutSummary": {
+    "description": "Summary of completed workout"
+  },
+  "startNewWorkout": "Start New Workout",
+  "@startNewWorkout": {
+    "description": "Button to start a new workout"
+  },
+  "startWorkoutNow": "Start Workout Now",
+  "@startWorkoutNow": {
+    "description": "Button to immediately start workout"
+  },
+  "continueWorkout": "Continue Workout",
+  "@continueWorkout": {
+    "description": "Button to continue paused workout"
+  },
+  "endWorkoutTitle": "End Workout",
+  "@endWorkoutTitle": {
+    "description": "End workout dialog title"
+  },
+  "saveAndEndWorkout": "Save and End Workout",
+  "@saveAndEndWorkout": {
+    "description": "Save workout and end session"
+  },
+  "discardWorkoutTitle": "Discard Workout",
+  "@discardWorkoutTitle": {
+    "description": "Discard workout dialog title"
+  },
+  "discardWorkoutMessage": "Are you sure you want to discard this workout? All progress will be lost.",
+  "@discardWorkoutMessage": {
+    "description": "Discard workout confirmation message"
+  },
+  "keepWorkoutActive": "Keep Workout Active",
+  "@keepWorkoutActive": {
+    "description": "Option to keep workout running"
+  },
+  "leaveWorkout": "Leave Workout",
+  "@leaveWorkout": {
+    "description": "Leave current workout"
+  },
+  "mon": "Mon",
+  "@mon": {
+    "description": "Monday abbreviation"
+  },
+  "tue": "Tue",
+  "@tue": {
+    "description": "Tuesday abbreviation"
+  },
+  "wed": "Wed",
+  "@wed": {
+    "description": "Wednesday abbreviation"
+  },
+  "thu": "Thu",
+  "@thu": {
+    "description": "Thursday abbreviation"
+  },
+  "fri": "Fri",
+  "@fri": {
+    "description": "Friday abbreviation"
+  },
+  "sat": "Sat",
+  "@sat": {
+    "description": "Saturday abbreviation"
+  },
+  "sun": "Sun",
+  "@sun": {
+    "description": "Sunday abbreviation"
+  },
+  "last30Days": "Last 30 Days",
+  "@last30Days": {
+    "description": "Last 30 days time period"
+  },
+  "lastYear": "Last Year",
+  "@lastYear": {
+    "description": "Last year time period"
+  },
+  "thisMonth": "This Month",
+  "@thisMonth": {
+    "description": "Current month time period"
+  },
+  "goPremium": "Go Premium",
+  "@goPremium": {
+    "description": "Upgrade to premium button"
+  },
+  "upgradeForMoreTemplates": "Upgrade for More Templates",
+  "@upgradeForMoreTemplates": {
+    "description": "Upgrade message for template limit"
+  },
+  "templateLimitReached": "Template Limit Reached",
+  "@templateLimitReached": {
+    "description": "Template limit reached message"
+  },
+  "armsFull": "Arms",
+  "@armsFull": {
+    "description": "Full arms muscle group name"
+  },
+  "backFull": "Back",
+  "@backFull": {
+    "description": "Full back muscle group name"
+  },
+  "chestFull": "Chest",
+  "@chestFull": {
+    "description": "Full chest muscle group name"
+  },
+  "legsFull": "Legs",
+  "@legsFull": {
+    "description": "Full legs muscle group name"
+  },
+  "shouldersFull": "Shoulders",
+  "@shouldersFull": {
+    "description": "Full shoulders muscle group name"
+  },
+  "coreFull": "Core",
+  "@coreFull": {
+    "description": "Full core muscle group name"
+  },
+  "cardio": "Cardio",
+  "@cardio": {
+    "description": "Cardio exercise category"
+  },
+  "strength": "Strength",
+  "@strength": {
+    "description": "Strength training category"
+  },
+  "flexibility": "Flexibility",
+  "@flexibility": {
+    "description": "Flexibility training category"
+  },
+  "endurance": "Endurance",
+  "@endurance": {
+    "description": "Endurance training category"
+  },
+  "selectExercise": "Select Exercise",
+  "@selectExercise": {
+    "description": "Select exercise prompt"
+  },
+  "allExercises": "All Exercises",
+  "@allExercises": {
+    "description": "All exercises filter option"
+  },
+  "allCategories": "All Categories",
+  "@allCategories": {
+    "description": "All categories filter option"
+  },
+  "noExercisesFound": "No exercises found",
+  "@noExercisesFound": {
+    "description": "No exercises found message"
+  },
+  "exerciseCount": "Exercise Count",
+  "@exerciseCount": {
+    "description": "Number of exercises"
+  },
+  "setsCount": "Sets Count",
+  "@setsCount": {
+    "description": "Number of sets"
+  },
+  "repsCount": "Reps Count",
+  "@repsCount": {
+    "description": "Number of repetitions"
+  },
+  "weightLabel": "Weight",
+  "@weightLabel": {
+    "description": "Weight input label"
+  },
+  "repsLabel": "Reps",
+  "@repsLabel": {
+    "description": "Reps input label"
+  },
+  "setsLabel": "Sets",
+  "@setsLabel": {
+    "description": "Sets input label"
+  },
+  "restTime": "Rest Time",
+  "@restTime": {
+    "description": "Rest time between sets"
+  },
+  "actualWeight": "Actual Weight",
+  "@actualWeight": {
+    "description": "Actual weight used"
+  },
+  "targetWeight": "Target Weight",
+  "@targetWeight": {
+    "description": "Target weight to use"
+  },
+  "maxWeight": "Max Weight",
+  "@maxWeight": {
+    "description": "Maximum weight lifted"
+  },
+  "maxReps": "Max Reps",
+  "@maxReps": {
+    "description": "Maximum repetitions"
+  },
+  "totalSets": "Total Sets",
+  "@totalSets": {
+    "description": "Total number of sets"
+  },
+  "totalExercises": "Total Exercises",
+  "@totalExercises": {
+    "description": "Total number of exercises"
+  },
+  "workoutDuration": "Workout Duration",
+  "@workoutDuration": {
+    "description": "Duration of the workout"
+  },
+  "workoutDate": "Workout Date",
+  "@workoutDate": {
+    "description": "Date of the workout"
+  },
+  "fieldRequired": "This field is required",
+  "@fieldRequired": {
+    "description": "Required field validation message"
+  },
+  "invalidEmail": "Invalid email address",
+  "@invalidEmail": {
+    "description": "Invalid email validation message"
+  },
+  "weakPassword": "Password is too weak",
+  "@weakPassword": {
+    "description": "Weak password validation message"
+  },
+  "wrongPassword": "Wrong password",
+  "@wrongPassword": {
+    "description": "Incorrect password error"
+  },
+  "emailAlreadyInUse": "Email already in use",
+  "@emailAlreadyInUse": {
+    "description": "Email already registered error"
+  },
+  "userNotFound": "User not found",
+  "@userNotFound": {
+    "description": "User account not found error"
+  },
+  "authenticationError": "Authentication error",
+  "@authenticationError": {
+    "description": "General authentication error"
+  },
+  "pleaseLogin": "Please log in",
+  "@pleaseLogin": {
+    "description": "Login required message"
+  },
+  "notLoggedIn": "Not logged in",
+  "@notLoggedIn": {
+    "description": "User not logged in status"
+  },
+  "passwordResetEmailSent": "Password reset email sent",
+  "@passwordResetEmailSent": {
+    "description": "Password reset email confirmation"
+  },
+  "pleaseEnterEmailFirst": "Please enter your email first",
+  "@pleaseEnterEmailFirst": {
+    "description": "Email required for password reset"
+  },
+  "valueTooLow": "Value is too low",
+  "@valueTooLow": {
+    "description": "Input value below minimum"
+  },
+  "valueTooHigh": "Value is too high",
+  "@valueTooHigh": {
+    "description": "Input value above maximum"
+  },
+  "invalidValue": "Invalid value",
+  "@invalidValue": {
+    "description": "Invalid input value"
+  },
+  "noData": "No data available",
+  "@noData": {
+    "description": "No data to display"
+  },
+  "noDataForExercise": "No data available for this exercise",
+  "@noDataForExercise": {
+    "description": "No exercise data message"
+  },
+  "noComparisonData": "No comparison data available",
+  "@noComparisonData": {
+    "description": "No data for comparison"
+  },
+  "failed": "Failed",
+  "@failed": {
+    "description": "Operation failed status"
+  },
+  "complete": "Complete",
+  "@complete": {
+    "description": "Complete action or status"
+  },
+  "working": "Working",
+  "@working": {
+    "description": "Working status indicator"
+  },
+  "syncing": "Syncing",
+  "@syncing": {
+    "description": "Data synchronization in progress"
+  },
+  "downloaded": "Downloaded",
+  "@downloaded": {
+    "description": "Download completed status"
+  },
+  "uploaded": "Uploaded",
+  "@uploaded": {
+    "description": "Upload completed status"
+  },
+  "exporting": "Exporting",
+  "@exporting": {
+    "description": "Export operation in progress"
+  },
+  "exportSuccess": "Export successful",
+  "@exportSuccess": {
+    "description": "Export completed successfully"
+  },
+  "exportFailed": "Export failed",
+  "@exportFailed": {
+    "description": "Export operation failed"
+  },
+  "importSuccessful": "Import successful",
+  "@importSuccessful": {
+    "description": "Import completed successfully"
+  },
+  "importFailed": "Import failed",
+  "@importFailed": {
+    "description": "Import operation failed"
+  },
+  "dataExported": "Data exported successfully",
+  "@dataExported": {
+    "description": "Data export success message"
+  },
+  "savingWorkout": "Saving workout",
+  "@savingWorkout": {
+    "description": "Workout save in progress"
+  },
+  "templateSavedSuccessfully": "Template saved successfully",
+  "@templateSavedSuccessfully": {
+    "description": "Template save success message"
+  },
+  "notesSaved": "Notes saved",
+  "@notesSaved": {
+    "description": "Notes save confirmation"
+  },
+  "saveChanges": "Save Changes",
+  "@saveChanges": {
+    "description": "Save changes button"
+  },
+  "discard": "Discard",
+  "@discard": {
+    "description": "Discard changes action"
+  },
+  "leave": "Leave",
+  "@leave": {
+    "description": "Leave current screen or action"
+  },
+  "stay": "Stay",
+  "@stay": {
+    "description": "Stay in current screen or action"
+  },
+  "description": "Description",
+  "level": "Level",
+  "beginner": "Beginner",
+  "intermediate": "Intermediate",
+  "advanced": "Advanced",
+  "expert": "Expert",
+  "elite": "Elite",
+  "more": "More",
+  "less": "Less",
+  "all": "All",
+  "none": "None",
+  "other": "Other",
+  "select": "Select",
+  "selected": "Selected",
+  "current": "Current",
+  "previous": "Previous",
+  "next": "Next",
+  "first": "First",
+  "last": "Last",
+  "newItem": "New",
+  "oldItem": "Old",
+  "recent": "Recent",
+  "popular": "Popular",
+  "recommended": "Recommended",
+  "favorite": "Favorite",
+  "favorites": "Favorites",
+  "search": "Search",
+  "filter": "Filter",
+  "sort": "Sort",
+  "group": "Group",
+  "category": "Category",
+  "type": "Type",
+  "status": "Status",
+  "active": "Active",
+  "inactive": "Inactive",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "available": "Available",
+  "unavailable": "Unavailable",
+  "online": "Online",
+  "offline": "Offline",
+  "public": "Public",
+  "private": "Private",
+  "visible": "Visible",
+  "hidden": "Hidden",
+  "open": "Open",
+  "closed": "Closed",
+  "locked": "Locked",
+  "unlocked": "Unlocked",
+  "required": "Required",
+  "optional": "Optional",
+  "defaultValue": "Default",
+  "custom": "Custom",
+  "automatic": "Automatic",
+  "manual": "Manual",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "on": "On",
+  "off": "Off",
+  "yes": "Yes",
+  "no": "No",
+  "trueValue": "True",
+  "falseValue": "False",
+  "always": "Always",
+  "never": "Never",
+  "sometimes": "Sometimes",
+  "often": "Often",
+  "rarely": "Rarely",
+  "daily": "Daily",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "yearly": "Yearly",
+  "hourly": "Hourly",
+  "minutes": "Minutes",
+  "hours": "Hours",
+  "weeks": "Weeks",
+  "months": "Months",
+  "years": "Years",
+  "ago": "ago",
+  "left": "left",
+  "remaining": "remaining",
+  "total": "Total",
+  "average": "Average",
+  "minimum": "Minimum",
+  "maximum": "Maximum",
+  "best": "Best",
+  "worst": "Worst",
+  "highest": "Highest",
+  "lowest": "Lowest",
+  "fastest": "Fastest",
+  "slowest": "Slowest",
+  "strongest": "Strongest",
+  "weakest": "Weakest",
+  "easiest": "Easiest",
+  "hardest": "Hardest",
+  "heaviest": "Heaviest",
+  "lightest": "Lightest",
+  "newest": "Newest",
+  "oldest": "Oldest",
+  "latest": "Latest",
+  "earliest": "Earliest",
+  "first": "First",
+  "second": "Second",
+  "third": "Third",
+  "fourth": "Fourth",
+  "fifth": "Fifth",
+  "sixth": "Sixth",
+  "seventh": "Seventh",
+  "eighth": "Eighth",
+  "ninth": "Ninth",
+  "tenth": "Tenth",
+  "dropset": "Drop Set",
+  "superset": "Superset",
+  "restPause": "Rest-Pause",
+  "single": "Single",
+  "warmup": "Warmup",
+  "cooldown": "Cooldown",
+  "stretching": "Stretching",
+  "mobility": "Mobility",
+  "technique": "Technique",
+  "form": "Form",
+  "safety": "Safety",
+  "injury": "Injury",
+  "prevention": "Prevention",
+  "recovery": "Recovery",
+  "rest": "Rest",
+  "active": "Active",
+  "passive": "Passive",
+  "light": "Light",
+  "moderate": "Moderate",
+  "heavy": "Heavy",
+  "intense": "Intense",
+  "easy": "Easy",
+  "hard": "Hard",
+  "maximal": "Maximal",
+  "submaximal": "Submaximal",
+  "bodyweight": "Bodyweight",
+  "equipment": "Equipment",
+  "dumbbell": "Dumbbell",
+  "barbell": "Barbell",
+  "machine": "Machine",
+  "cable": "Cable",
+  "resistance": "Resistance",
+  "band": "Band",
+  "kettlebell": "Kettlebell",
+  "medicine": "Medicine",
+  "ball": "Ball",
+  "plate": "Plate",
+  "weight": "Weight",
+  "load": "Load",
+  "volume": "Volume",
+  "frequency": "Frequency",
+  "density": "Density",
+  "tempo": "Tempo",
+  "pause": "Pause",
+  "explosive": "Explosive",
+  "controlled": "Controlled",
+  "slow": "Slow",
+  "fast": "Fast",
+  "rep": "Rep",
+  "set": "Set",
+  "exercise": "Exercise",
+  "workout": "Workout",
+  "session": "Session",
+  "training": "Training",
+  "routine": "Routine",
+  "program": "Program",
+  "plan": "Plan",
+  "schedule": "Schedule",
+  "cycle": "Cycle",
+  "phase": "Phase",
+  "block": "Block",
+  "period": "Period",
+  "progression": "Progression",
+  "regression": "Regression",
+  "adaptation": "Adaptation",
+  "overload": "Overload",
+  "plateau": "Plateau",
+  "peak": "Peak",
+  "deload": "Deload",
+  "taper": "Taper",
+  "baseline": "Baseline",
+  "benchmark": "Benchmark",
+  "test": "Test",
+  "assessment": "Assessment",
+  "evaluation": "Evaluation",
+  "measurement": "Measurement",
+  "tracking": "Tracking",
+  "monitoring": "Monitoring",
+  "logging": "Logging",
+  "recording": "Recording",
+  "data": "Data",
+  "statistics": "Statistics",
+  "metrics": "Metrics",
+  "analytics": "Analytics",
+  "insights": "Insights",
+  "trends": "Trends",
+  "patterns": "Patterns",
+  "comparison": "Comparison",
+  "analysis": "Analysis",
+  "report": "Report",
+  "summary": "Summary",
+  "overview": "Overview",
+  "details": "Details",
+  "breakdown": "Breakdown",
+  "distribution": "Distribution",
+  "balance": "Balance",
+  "ratio": "Ratio",
+  "percentage": "Percentage",
+  "score": "Score",
+  "rating": "Rating",
+  "rank": "Rank",
+  "position": "Position",
+  "place": "Place",
+  "achievement": "Achievement",
+  "milestone": "Milestone",
+  "goal": "Goal",
+  "objective": "Objective",
+  "target": "Target",
+  "aim": "Aim",
+  "focus": "Focus",
+  "priority": "Priority",
+  "strategy": "Strategy",
+  "approach": "Approach",
+  "method": "Method",
+  "style": "Style",
+  "variation": "Variation",
+  "modification": "Modification",
+  "adjustment": "Adjustment",
+  "change": "Change",
+  "update": "Update",
+  "revision": "Revision",
+  "improvement": "Improvement",
+  "enhancement": "Enhancement",
+  "optimization": "Optimization",
+  "efficiency": "Efficiency",
+  "effectiveness": "Effectiveness",
+  "performance": "Performance",
+  "result": "Result",
+  "outcome": "Outcome",
+  "success": "Success",
+  "failure": "Failure",
+  "progress": "Progress",
+  "regress": "Regress",
+  "maintain": "Maintain",
+  "stable": "Stable",
+  "consistent": "Consistent",
+  "variable": "Variable",
+  "fluctuating": "Fluctuating",
+  "increasing": "Increasing",
+  "decreasing": "Decreasing",
+  "rising": "Rising",
+  "falling": "Falling",
+  "climbing": "Climbing",
+  "declining": "Declining",
+  "improving": "Improving",
+  "worsening": "Worsening",
+  "growing": "Growing",
+  "shrinking": "Shrinking",
+  "expanding": "Expanding",
+  "contracting": "Contracting",
+  "building": "Building",
+  "losing": "Losing",
+  "gaining": "Gaining",
+  "maintaining": "Maintaining",
+  "registrati": "Sign Up",
+  "@registrati": {
+    "description": "Sign up button text"
+  },
+  "continueWithGoogle": "Continue with Google",
+  "@continueWithGoogle": {
+    "description": "Continue with Google button"
+  },
+  "continueWithApple": "Continue with Apple",
+  "@continueWithApple": {
+    "description": "Continue with Apple button"
+  },
+  "signUpWithGoogle": "Sign Up with Google",
+  "@signUpWithGoogle": {
+    "description": "Sign up with Google button"
+  },
+  "errorLoadingUser": "Error loading user",
+  "@errorLoadingUser": {
+    "description": "Error when loading user data"
+  },
+  "accentColorTitle": "Accent Color",
+  "@accentColorTitle": {
+    "description": "Accent color preference title"
+  },
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  "englishUS": "English (US)",
+  "@englishUS": {
+    "description": "US English language"
+  },
+  "italiano": "Italian",
+  "@italiano": {
+    "description": "Italian language option"
+  },
+  "italianIT": "Italian (IT)",
+  "@italianIT": {
+    "description": "Italian language description"
+  },
+  "weightUnitsTitle": "Weight Units",
+  "@weightUnitsTitle": {
+    "description": "Weight units preference title"
+  },
+  "kilogramsKg": "Kilograms (kg)",
+  "@kilogramsKg": {
+    "description": "Kilograms weight unit"
+  },
+  "metricSystem": "Metric System",
+  "@metricSystem": {
+    "description": "Metric measurement system"
+  },
+  "poundsLbs": "Pounds (lbs)",
+  "@poundsLbs": {
+    "description": "Pounds weight unit"
+  },
+  "imperialSystem": "Imperial System",
+  "@imperialSystem": {
+    "description": "Imperial measurement system"
+  },
+  "resetLayout": "Reset Layout",
+  "@resetLayout": {
+    "description": "Reset layout to defaults"
+  },
+  "settingsResetToDefaults": "Settings reset to defaults",
+  "@settingsResetToDefaults": {
+    "description": "Settings reset confirmation"
+  },
+  "confirmImport": "Confirm Import",
+  "@confirmImport": {
+    "description": "Import confirmation dialog title"
+  },
+  "allExercisesImported": "All exercises imported successfully",
+  "@allExercisesImported": {
+    "description": "Import success message"
+  },
+  "fatto": "Done",
+  "@fatto": {
+    "description": "Done button in Italian"
+  },
+  "iniziaAllenamento": "Start Workout",
+  "@iniziaAllenamento": {
+    "description": "Start workout button in Italian"
+  },
+  "exerciseEditingComingSoon": "Exercise editing coming soon",
+  "@exerciseEditingComingSoon": {
+    "description": "Coming soon message for exercise editing"
+  },
+  "xpPoints": "{points} XP",
+  "@xpPoints": {
+    "description": "XP points display",
+    "placeholders": {
+      "points": {
+        "type": "int",
+        "description": "Number of XP points"
+      }
+    }
+  },
+  "progressTitle": "Progress",
+  "@progressTitle": {
+    "description": "Progress section title"
+  },
+  "completeAnalysis": "Complete Analysis",
+  "@completeAnalysis": {
+    "description": "Complete analysis button"
+  },
+  "detailedStats": "Detailed Stats",
+  "@detailedStats": {
+    "description": "Detailed statistics section"
+  },
+  "workoutsLabel": "Workouts",
+  "@workoutsLabel": {
+    "description": "Workouts metric label"
+  },
+  "avgPerWeek": "Avg/Week",
+  "@avgPerWeek": {
+    "description": "Average per week metric"
+  },
+  "streakLabel": "Streak",
+  "@streakLabel": {
+    "description": "Streak metric label"
+  },
+  "sinceRegistration": "Since Registration",
+  "@sinceRegistration": {
+    "description": "Since registration time period"
+  },
+  "activeDays": "Active Days",
+  "@activeDays": {
+    "description": "Number of active days"
+  },
+  "consecutiveDays": "Consecutive Days",
+  "@consecutiveDays": {
+    "description": "Consecutive days description"
+  },
+  "noWorkoutsRecorded": "No workouts recorded",
+  "@noWorkoutsRecorded": {
+    "description": "Empty state for no workouts"
+  },
+  "changeLayout": "Change Layout",
+  "@changeLayout": {
+    "description": "Change layout option"
+  },
+  "selectMetrics": "Select Metrics",
+  "@selectMetrics": {
+    "description": "Select metrics to display"
+  },
+  "resetDefaults": "Reset Defaults",
+  "@resetDefaults": {
+    "description": "Reset to default settings"
+  },
+  "fullView": "Full View",
+  "@fullView": {
+    "description": "Full view layout option"
+  },
+  "completeStatistics": "Complete Statistics",
+  "@completeStatistics": {
+    "description": "Full statistics view description"
+  },
+  "compactView": "Compact View",
+  "@compactView": {
+    "description": "Compact view layout option"
+  },
+  "essentialStatistics": "Essential Statistics",
+  "@essentialStatistics": {
+    "description": "Essential stats view description"
+  },
+  "minimalView": "Minimal View",
+  "@minimalView": {
+    "description": "Minimal view layout option"
+  },
+  "levelAndXpOnly": "Level and XP Only",
+  "@levelAndXpOnly": {
+    "description": "Minimal view description"
+  },
+  "weeklyVolume": "Weekly Volume",
+  "@weeklyVolume": {
+    "description": "Weekly volume metric"
+  },
+  "levelRequired": "Level {level} Required",
+  "@levelRequired": {
+    "description": "Required level message",
+    "placeholders": {
+      "level": {
+        "type": "int",
+        "description": "Required level number"
+      }
+    }
+  },
+  "saveAndFinish": "Save & Finish",
+  "@saveAndFinish": {
+    "description": "Save and finish workout button"
+  },
+  "fullHistoryComingSoon": "Full history coming soon!",
+  "@fullHistoryComingSoon": {
+    "description": "Coming soon message for history feature"
+  },
+  "volumeExplanationDesc": "Volume measures the total weight lifted (sets × reps × weight) to track your overall training load",
+  "@volumeExplanationDesc": {
+    "description": "Detailed volume explanation"
+  },
+  "setsExplanation": "Total Sets",
+  "@setsExplanation": {
+    "description": "Sets metric explanation title"
+  },
+  "intensityExplanation": "Training Intensity",
+  "@intensityExplanation": {
+    "description": "Intensity metric explanation title"
+  },
+  "oneRmExplanation": "One Rep Max",
+  "@oneRmExplanation": {
+    "description": "1RM explanation title"
+  },
+  "tapForMoreInfo": "Tap for more info",
+  "@tapForMoreInfo": {
+    "description": "Tap for additional information"
+  },
+  "gotIt": "Got It",
+  "@gotIt": {
+    "description": "Acknowledgment button"
+  },
+  "setsExplanationDesc": "Total number of sets completed across all exercises",
+  "@setsExplanationDesc": {
+    "description": "Detailed sets explanation"
+  },
+  "intensityExplanationDesc": "Average intensity based on RPE and weight relative to your max",
+  "@intensityExplanationDesc": {
+    "description": "Detailed intensity explanation"
+  },
+  "streakExplanationDesc": "Number of consecutive days with completed workouts",
+  "@streakExplanationDesc": {
+    "description": "Detailed streak explanation"
+  },
+  "oneRmExplanationDesc": "Estimated maximum weight you can lift for one repetition",
+  "@oneRmExplanationDesc": {
+    "description": "Detailed 1RM explanation"
+  },
+  "helpTitle": "Help",
+  "@helpTitle": {
+    "description": "Help dialog title"
+  },
+  "formula": "Formula",
+  "@formula": {
+    "description": "Formula section title"
+  },
+  "example": "Example",
+  "@example": {
+    "description": "Example section title"
+  },
+  "proTip": "Pro Tip",
+  "@proTip": {
+    "description": "Professional tip label"
+  },
+  "volumeTip": "Track volume to ensure progressive overload",
+  "@volumeTip": {
+    "description": "Volume tracking tip"
+  },
+  "setsTip": "Aim for 10-20 sets per muscle group weekly",
+  "@setsTip": {
+    "description": "Sets recommendation tip"
+  },
+  "intensityTip": "Vary intensity throughout the week for optimal recovery",
+  "@intensityTip": {
+    "description": "Intensity variation tip"
+  },
+  "streakTip": "Consistency beats perfection - maintain your streak!",
+  "@streakTip": {
+    "description": "Streak consistency tip"
+  },
+  "oneRmTip": "Test your 1RM every 4-6 weeks to track strength gains",
+  "@oneRmTip": {
+    "description": "1RM testing tip"
+  },
+  "generalTip": "Track your progress consistently for best results",
+  "@generalTip": {
+    "description": "General training tip"
+  },
+  "zoomOut": "Zoom Out",
+  "@zoomOut": {
+    "description": "Zoom out action"
+  },
+  "resetZoom": "Reset Zoom",
+  "@resetZoom": {
+    "description": "Reset zoom level"
+  },
+  "zoomIn": "Zoom In",
+  "@zoomIn": {
+    "description": "Zoom in action"
+  },
+  "workoutWithExercises": "Workout ({count} exercises)",
+  "@workoutWithExercises": {
+    "description": "Workout with exercise count",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of exercises"
+      }
+    }
+  },
+  "totalDuration": "{minutes} minutes",
+  "@totalDuration": {
+    "description": "Total duration in minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Duration in minutes"
+      }
+    }
+  },
+  "restDay": "Rest Day",
+  "@restDay": {
+    "description": "Rest day label"
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "description": "Duration in minutes abbreviated",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Minutes value"
+      }
+    }
+  },
+  "setsCount": "{count} sets",
+  "@setsCount": {
+    "description": "Number of sets",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Sets count"
+      }
+    }
+  },
+  "setLabel": "Set",
+  "@setLabel": {
+    "description": "Set label"
+  },
+  "effortLabel": "Effort",
+  "@effortLabel": {
+    "description": "Effort/RPE label"
+  },
+  "muscleGroupBalance": "Muscle Group Balance",
+  "@muscleGroupBalance": {
+    "description": "Muscle balance chart title"
+  },
+  "howIsThisCalculated": "How is this calculated?",
+  "@howIsThisCalculated": {
+    "description": "Calculation explanation prompt"
+  },
+  "comparePrevious": "Compare Previous",
+  "@comparePrevious": {
+    "description": "Compare with previous period"
+  },
+  "refreshAnimation": "Refresh Animation",
+  "@refreshAnimation": {
+    "description": "Refresh animation action"
+  },
+  "editTargets": "Edit Targets",
+  "@editTargets": {
+    "description": "Edit target values"
+  },
+  "overallBalance": "Overall Balance",
+  "@overallBalance": {
+    "description": "Overall muscle balance metric"
+  },
+  "currentStrength": "Current Strength",
+  "@currentStrength": {
+    "description": "Current strength level"
+  },
+  "strengthCalculationHint": "Based on volume and 1RM data",
+  "@strengthCalculationHint": {
+    "description": "Strength calculation explanation"
+  },
+  "tapToEditTarget": "Tap to edit target",
+  "@tapToEditTarget": {
+    "description": "Edit target instruction"
+  },
+  "strengthExplanation": "Volume: {volume}kg",
+  "@strengthExplanation": {
+    "description": "Strength volume explanation",
+    "placeholders": {
+      "volume": {
+        "type": "String",
+        "description": "Volume value"
+      }
+    }
+  },
+  "targetStrength": "Target Strength",
+  "@targetStrength": {
+    "description": "Target strength level"
+  },
+  "comparedToLastMonth": "vs Last Month",
+  "@comparedToLastMonth": {
+    "description": "Comparison with last month"
+  },
+  "recommendedExercises": "Recommended Exercises",
+  "@recommendedExercises": {
+    "description": "Exercise recommendations"
+  },
+  "volumeBreakdown": "Volume Breakdown",
+  "@volumeBreakdown": {
+    "description": "Volume distribution details"
+  },
+  "howStrengthIsCalculated": "How Strength is Calculated",
+  "@howStrengthIsCalculated": {
+    "description": "Strength calculation explanation title"
+  },
+  "strengthCalculationExplanation": "Strength is calculated based on training volume and intensity",
+  "@strengthCalculationExplanation": {
+    "description": "Detailed strength calculation explanation"
+  },
+  "volumeFormula": "Volume Formula",
+  "@volumeFormula": {
+    "description": "Volume calculation formula"
+  },
+  "strengthPercentage": "Strength Percentage",
+  "@strengthPercentage": {
+    "description": "Strength as percentage"
+  },
+  "targetExplanation": "Targets help you balance your training",
+  "@targetExplanation": {
+    "description": "Target setting explanation"
+  },
+  "excellentBalance": "Excellent Balance",
+  "@excellentBalance": {
+    "description": "Excellent muscle balance rating"
+  },
+  "goodBalance": "Good Balance",
+  "@goodBalance": {
+    "description": "Good muscle balance rating"
+  },
+  "moderateBalance": "Moderate Balance",
+  "@moderateBalance": {
+    "description": "Moderate muscle balance rating"
+  },
+  "poorBalance": "Poor Balance",
+  "@poorBalance": {
+    "description": "Poor muscle balance rating"
+  },
+  "localStorageOnly": "Local Storage Only",
+  "@localStorageOnly": {
+    "description": "Data stored locally only"
+  },
+  "comparedToPrevious": "Compared to Previous",
+  "@comparedToPrevious": {
+    "description": "Comparison with previous period"
+  },
+  "allTime": "All Time",
+  "@allTime": {
+    "description": "All time period"
+  },
+  "volumeSettings": "Volume Settings",
+  "@volumeSettings": {
+    "description": "Volume display settings"
+  },
+  "weightUnit": "Weight Unit",
+  "@weightUnit": {
+    "description": "Weight unit selection"
+  },
+  "levelSystem": "Level System",
+  "@levelSystem": {
+    "description": "Level progression system"
+  },
+  "yourProgress": "Your Progress",
+  "@yourProgress": {
+    "description": "User progress title"
+  },
+  "toNextLevel": "to next level",
+  "@toNextLevel": {
+    "description": "Progress to next level"
+  },
+  "novice": "Novice",
+  "@novice": {
+    "description": "Novice skill level"
+  },
+  "master": "Master",
+  "@master": {
+    "description": "Master skill level"
+  },
+  "grandmaster": "Grandmaster",
+  "@grandmaster": {
+    "description": "Grandmaster skill level"
+  },
+  "champion": "Champion",
+  "@champion": {
+    "description": "Champion skill level"
+  },
+  "legend": "Legend",
+  "@legend": {
+    "description": "Legend skill level"
+  },
+  "titan": "Titan",
+  "@titan": {
+    "description": "Titan skill level"
+  },
+  "levelDesc1": "Just starting your fitness journey",
+  "@levelDesc1": {
+    "description": "Level 1 description"
+  },
+  "levelDesc2": "Building fundamental strength",
+  "@levelDesc2": {
+    "description": "Level 2 description"
+  },
+  "levelDesc3": "Developing consistent habits",
+  "@levelDesc3": {
+    "description": "Level 3 description"
+  },
+  "levelDesc4": "Advancing your training",
+  "@levelDesc4": {
+    "description": "Level 4 description"
+  },
+  "levelDesc5": "Mastering technique and form",
+  "@levelDesc5": {
+    "description": "Level 5 description"
+  },
+  "levelDesc6": "Achieving excellence",
+  "@levelDesc6": {
+    "description": "Level 6 description"
+  },
+  "levelDesc7": "Elite performance level",
+  "@levelDesc7": {
+    "description": "Level 7 description"
+  },
+  "levelDesc8": "Champion mindset and results",
+  "@levelDesc8": {
+    "description": "Level 8 description"
+  },
+  "levelDesc9": "Legendary dedication",
+  "@levelDesc9": {
+    "description": "Level 9 description"
+  },
+  "levelDesc10": "Peak human performance",
+  "@levelDesc10": {
+    "description": "Level 10 description"
+  },
+  "benefit1_1": "Basic workout tracking",
+  "@benefit1_1": {
+    "description": "Level 1 benefit 1"
+  },
+  "benefit1_2": "Exercise database access",
+  "@benefit1_2": {
+    "description": "Level 1 benefit 2"
+  },
+  "benefit2_1": "Progress analytics",
+  "@benefit2_1": {
+    "description": "Level 2 benefit 1"
+  },
+  "benefit2_2": "Custom workouts",
+  "@benefit2_2": {
+    "description": "Level 2 benefit 2"
+  },
+  "benefit3_1": "Advanced statistics",
+  "@benefit3_1": {
+    "description": "Level 3 benefit 1"
+  },
+  "benefit3_2": "Workout templates",
+  "@benefit3_2": {
+    "description": "Level 3 benefit 2"
+  },
+  "benefit3_3": "Rest timer customization",
+  "@benefit3_3": {
+    "description": "Level 3 benefit 3"
+  },
+  "benefit4_1": "Muscle balance analysis",
+  "@benefit4_1": {
+    "description": "Level 4 benefit 1"
+  },
+  "benefit4_2": "1RM calculator",
+  "@benefit4_2": {
+    "description": "Level 4 benefit 2"
+  },
+  "benefit4_3": "Volume tracking",
+  "@benefit4_3": {
+    "description": "Level 4 benefit 3"
+  },
+  "benefit5_1": "Personal records tracking",
+  "@benefit5_1": {
+    "description": "Level 5 benefit 1"
+  },
+  "benefit5_2": "Advanced techniques",
+  "@benefit5_2": {
+    "description": "Level 5 benefit 2"
+  },
+  "benefit5_3": "Workout comparison",
+  "@benefit5_3": {
+    "description": "Level 5 benefit 3"
+  },
+  "benefit6_1": "Exercise recommendations",
+  "@benefit6_1": {
+    "description": "Level 6 benefit 1"
+  },
+  "benefit6_2": "Recovery insights",
+  "@benefit6_2": {
+    "description": "Level 6 benefit 2"
+  },
+  "benefit6_3": "Training periodization",
+  "@benefit6_3": {
+    "description": "Level 6 benefit 3"
+  },
+  "benefit7_1": "AI workout suggestions",
+  "@benefit7_1": {
+    "description": "Level 7 benefit 1"
+  },
+  "benefit7_2": "Fatigue management",
+  "@benefit7_2": {
+    "description": "Level 7 benefit 2"
+  },
+  "benefit7_3": "Performance predictions",
+  "@benefit7_3": {
+    "description": "Level 7 benefit 3"
+  },
+  "benefit8_1": "Elite athlete features",
+  "@benefit8_1": {
+    "description": "Level 8 benefit 1"
+  },
+  "benefit8_2": "Competition preparation",
+  "@benefit8_2": {
+    "description": "Level 8 benefit 2"
+  },
+  "benefit8_3": "Peak performance tools",
+  "@benefit8_3": {
+    "description": "Level 8 benefit 3"
+  },
+  "benefit9_1": "Legendary status badge",
+  "@benefit9_1": {
+    "description": "Level 9 benefit 1"
+  },
+  "benefit9_2": "Priority support",
+  "@benefit9_2": {
+    "description": "Level 9 benefit 2"
+  },
+  "benefit9_3": "Beta feature access",
+  "@benefit9_3": {
+    "description": "Level 9 benefit 3"
+  },
+  "benefit10_1": "Titan achievement unlocked",
+  "@benefit10_1": {
+    "description": "Level 10 benefit 1"
+  },
+  "benefit10_2": "Lifetime premium features",
+  "@benefit10_2": {
+    "description": "Level 10 benefit 2"
+  },
+  "benefit10_3": "Hall of fame entry",
+  "@benefit10_3": {
+    "description": "Level 10 benefit 3"
+  },
+  "weeklyDistributionDesc": "Your workout distribution throughout the week",
+  "@weeklyDistributionDesc": {
+    "description": "Weekly distribution description"
+  },
+  "trainingDays": "Training Days",
+  "@trainingDays": {
+    "description": "Number of training days"
+  },
+  "perDay": "per day",
+  "@perDay": {
+    "description": "Per day measurement"
+  },
+  "volumePerDay": "Volume per Day",
+  "@volumePerDay": {
+    "description": "Daily volume metric"
+  },
+  "weeklyDistributionInfo": "Distribute your training for optimal recovery",
+  "@weeklyDistributionInfo": {
+    "description": "Weekly distribution tip"
+  },
+  "volumeDetails": "Volume Details",
+  "@volumeDetails": {
+    "description": "Detailed volume information"
+  },
+  "vsLastWeek": "vs Last Week",
+  "@vsLastWeek": {
+    "description": "Comparison with last week"
+  },
+  "dailyAverage": "Daily Average",
+  "@dailyAverage": {
+    "description": "Daily average metric"
+  },
+  "dailyTrend": "Daily Trend",
+  "@dailyTrend": {
+    "description": "Daily trend chart title"
+  },
+  "insertExerciseAbove": "Insert Exercise Above",
+  "@insertExerciseAbove": {
+    "description": "Insert new exercise above current"
+  },
+  "insertExerciseBellow": "Insert Exercise Below",
+  "@insertExerciseBellow": {
+    "description": "Insert new exercise below current"
+  },
+  "replace": "Replace",
+  "@replace": {
+    "description": "Replace action"
+  },
+  "swipeForActions": "Swipe for actions",
+  "@swipeForActions": {
+    "description": "Swipe instruction for exercise actions"
+  },
+  "confirmDeleteExercise": "Delete {name}?",
+  "@confirmDeleteExercise": {
+    "description": "Confirm exercise deletion",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Exercise name"
+      }
+    }
+  },
+  "thisActionCannotBeUndone": "This action cannot be undone",
+  "@thisActionCannotBeUndone": {
+    "description": "Permanent action warning"
+  },
+  "exerciseDeleted": "Exercise deleted",
+  "@exerciseDeleted": {
+    "description": "Exercise deletion confirmation"
+  },
+  "equipmentBusy": "Equipment Busy",
+  "@equipmentBusy": {
+    "description": "Skip reason - equipment unavailable"
+  },
+  "equipmentBusyDesc": "Equipment is currently unavailable",
+  "@equipmentBusyDesc": {
+    "description": "Equipment busy description"
+  },
+  "tooTired": "Too Tired",
+  "@tooTired": {
+    "description": "Skip reason - fatigue"
+  },
+  "tooTiredDesc": "Need more recovery time",
+  "@tooTiredDesc": {
+    "description": "Too tired description"
+  },
+  "noTime": "No Time",
+  "@noTime": {
+    "description": "Skip reason - time constraint"
+  },
+  "noTimeDesc": "Running short on time",
+  "@noTimeDesc": {
+    "description": "No time description"
+  },
+  "minorDiscomfort": "Minor Discomfort",
+  "@minorDiscomfort": {
+    "description": "Skip reason - minor pain"
+  },
+  "minorDiscomfortDesc": "Feeling slight discomfort",
+  "@minorDiscomfortDesc": {
+    "description": "Minor discomfort description"
+  },
+  "otherReason": "Other Reason",
+  "@otherReason": {
+    "description": "Skip reason - other"
+  },
+  "otherReasonDesc": "Different reason for skipping",
+  "@otherReasonDesc": {
+    "description": "Other reason description"
+  },
+  "exerciseSkipped": "{name} skipped",
+  "@exerciseSkipped": {
+    "description": "Exercise skipped confirmation",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Exercise name"
+      }
+    }
+  },
+  "smartSuggestions": "Smart Suggestions",
+  "@smartSuggestions": {
+    "description": "AI-powered exercise suggestions"
+  },
+  "errorLoadingExercises": "Error loading exercises",
+  "@errorLoadingExercises": {
+    "description": "Exercise loading error"
+  },
+  "confirmReplacement": "Confirm Replacement",
+  "@confirmReplacement": {
+    "description": "Confirm exercise replacement"
+  },
+  "replaceExerciseConfirmation": "Replace current exercise with:",
+  "@replaceExerciseConfirmation": {
+    "description": "Replace exercise confirmation text"
+  },
+  "replacementKeepsSetsAndReps": "Sets and reps will be preserved",
+  "@replacementKeepsSetsAndReps": {
+    "description": "Replacement preserves sets/reps note"
+  },
+  "exerciseReplaced": "Exercise replaced",
+  "@exerciseReplaced": {
+    "description": "Exercise replacement confirmation"
+  },
+  "currentExercise": "Current Exercise",
+  "@currentExercise": {
+    "description": "Current exercise label"
+  },
+  "excellentReplacement": "Excellent Replacement",
+  "@excellentReplacement": {
+    "description": "Best replacement option"
+  },
+  "highlyCompatible": "Highly Compatible",
+  "@highlyCompatible": {
+    "description": "Very good replacement option"
+  },
+  "goodAlternative": "Good Alternative",
+  "@goodAlternative": {
+    "description": "Good replacement option"
+  },
+  "possibleAlternative": "Possible Alternative",
+  "@possibleAlternative": {
+    "description": "Acceptable replacement option"
+  },
+  "differentMuscleGroup": "Different Muscle Group",
+  "@differentMuscleGroup": {
+    "description": "Different muscle group warning"
+  },
+  "editModeActive": "Edit Mode Active",
+  "@editModeActive": {
+    "description": "Edit mode is currently active"
+  },
+  "swipeToExit": "Swipe to exit",
+  "@swipeToExit": {
+    "description": "Swipe instruction to exit edit mode"
+  },
+  "reorderExercises": "Reorder Exercises",
+  "@reorderExercises": {
+    "description": "Reorder exercises instruction"
+  },
+  "exitEditModeFirst": "Exit edit mode first",
+  "@exitEditModeFirst": {
+    "description": "Must exit edit mode message"
+  },
+  "exercisesCompleted": "{count} exercises completed",
+  "@exercisesCompleted": {
+    "description": "Number of exercises completed",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Exercise count"
+      }
+    }
+  }
+}

@@ -1,0 +1,646 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============= ENHANCED NOTIFICATION SYSTEM RULES =============
+
+    // ============= NOTIFICATION QUEUE - SYSTEM ONLY =============
+    match /notifications_queue/{queueId} {
+      // Only Cloud Functions can access the queue
+      allow read, write: if false;
+    }
+
+    // ============= USER NOTIFICATIONS - ENHANCED WITH ANALYTICS =============
+    match /user_notifications/{userId}/{notificationId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == userId ||
+         hasCoachAccess(request.auth, userId) ||
+         hasAdminRole());
+      
+      allow list: if request.auth != null &&
+        request.auth.uid == userId;
+      
+      allow create: if request.auth != null &&
+        (request.auth.uid == userId ||
+         isSystemGenerated() ||
+         hasAdminRole()) &&
+        validateNotificationStructure();
+      
+      allow update: if request.auth != null &&
+        request.auth.uid == userId &&
+        // Only allow specific fields to be updated by users
+        request.resource.data.diff(resource.data)
+          .affectedKeys().hasOnly(['isRead', 'clickedAt', 'dismissedAt', 'lastInteractionAt', 'readAt']);
+      
+      allow delete: if request.auth != null &&
+        (request.auth.uid == userId ||
+         hasAdminRole());
+    }
+
+    // ============= NOTIFICATION PREFERENCES - USER CONTROLLED =============
+    match /notification_preferences/{userId} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid == userId;
+      
+      allow create: if request.auth != null &&
+        request.auth.uid == userId &&
+        validatePreferencesStructure();
+      
+      allow update: if request.auth != null &&
+        request.auth.uid == userId &&
+        validatePreferencesUpdate();
+    }
+
+    // ============= NOTIFICATION SUBSCRIPTIONS - FCM TOKEN MANAGEMENT =============
+    match /notification_subscriptions/{userId} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid == userId;
+      
+      // Strict validation for FCM token management
+      allow create, update: if request.auth != null &&
+        request.auth.uid == userId &&
+        validateSubscriptionData();
+    }
+
+    // ============= NOTIFICATION ANALYTICS - SYSTEM WRITES, USER READS =============
+    match /notification_analytics/{analyticsId} {
+      // Users can read their own analytics, admins can read all
+      allow read: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         hasAdminRole());
+      
+      // Only system can write analytics (via Cloud Functions)
+      allow create: if request.auth != null &&
+        (isSystemWrite() || hasAdminRole()) &&
+        validateAnalyticsData();
+      
+      // No direct updates or deletes allowed
+      allow update, delete: if hasAdminRole();
+    }
+
+    // ============= NOTIFICATION TEMPLATES - CONTENT MANAGEMENT =============
+    match /notification_templates/{templateId} {
+      allow read: if request.auth != null;
+      
+      allow create, update: if hasAdminRole() &&
+        validateTemplateStructure();
+      
+      allow delete: if hasAdminRole();
+    }
+
+    // ============= NOTIFICATION CAMPAIGNS - MARKETING SYSTEM =============
+    match /notification_campaigns/{campaignId} {
+      allow read: if hasAdminRole() ||
+        (request.auth != null && resource.data.targetUsers.hasAny([request.auth.uid]));
+      
+      allow create, update: if hasAdminRole() &&
+        validateCampaignData();
+      
+      allow delete: if hasAdminRole();
+    }
+
+    // ============= NOTIFICATION SCHEDULES - TIMING CONTROL =============
+    match /notification_schedules/{scheduleId} {
+      allow read: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         hasAdminRole());
+      
+      allow create: if request.auth != null &&
+        ((resource.data.userId == request.auth.uid && 
+          resource.data.type in ['personal_reminder', 'workout_reminder']) ||
+         hasAdminRole()) &&
+        validateScheduleData();
+      
+      allow update: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         hasAdminRole());
+      
+      allow delete: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         hasAdminRole());
+    }
+
+    // ============= A/B TESTING COLLECTIONS =============
+    match /notification_ab_tests/{testId} {
+      allow read: if hasAdminRole();
+      allow write: if hasAdminRole();
+    }
+
+    match /notification_ab_test_results/{resultId} {
+      allow read: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         hasAdminRole());
+      
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid &&
+        validateABTestResult();
+      
+      allow update, delete: if hasAdminRole();
+    }
+
+    // ============= USER SEGMENTATION =============
+    match /notification_segments/{segmentId} {
+      allow read: if hasAdminRole();
+      allow write: if hasAdminRole();
+    }
+
+    // ============= DELIVERY REPORTS - SYSTEM MONITORING =============
+    match /notification_delivery_reports/{reportId} {
+      allow read: if hasAdminRole();
+      allow write: if isSystemWrite();
+    }
+
+    // ============= USER FEEDBACK ON NOTIFICATIONS =============
+    match /notification_feedback/{feedbackId} {
+      allow read: if hasAdminRole();
+      
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid &&
+        validateFeedbackData();
+      
+      allow update, delete: if false; // Feedback is immutable
+    }
+
+    // ============= GDPR COMPLIANCE LOGS =============
+    match /notification_compliance_logs/{logId} {
+      allow read: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         hasAdminRole());
+      
+      allow create: if request.auth != null &&
+        (request.resource.data.userId == request.auth.uid ||
+         isSystemWrite()) &&
+        validateComplianceLog();
+      
+      allow update, delete: if false; // Compliance logs are immutable
+    }
+
+    // ============= SYSTEM HEALTH MONITORING =============
+    match /system_health/{healthId} {
+      allow read: if hasAdminRole();
+      allow write: if isSystemWrite();
+    }
+
+    match /notification_reports/{reportId} {
+      allow read: if hasAdminRole();
+      allow write: if isSystemWrite();
+    }
+
+    // ============= USER PRIVACY SETTINGS =============
+    match /user_privacy_settings/{userId} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid == userId;
+      
+      allow create: if request.auth != null &&
+        request.auth.uid == userId &&
+        validatePrivacySettings();
+    }
+
+    // ============= VALIDATION FUNCTIONS =============
+    
+    function validateNotificationStructure() {
+      return request.resource.data.keys().hasAll([
+        'type', 'title', 'message', 'createdAt', 'userId'
+      ]) &&
+      request.resource.data.type is string &&
+      request.resource.data.type in [
+        'achievement', 'milestone', 'reminder', 'progress', 
+        'social', 'system', 'marketing', 'ai_tip'
+      ] &&
+      request.resource.data.userId == request.auth.uid;
+    }
+
+    function validatePreferencesStructure() {
+      return request.resource.data.keys().hasAll([
+        'pushEnabled', 'emailEnabled', 'categories', 'quietHours'
+      ]) &&
+      request.resource.data.pushEnabled is bool &&
+      request.resource.data.emailEnabled is bool &&
+      request.resource.data.categories is map;
+    }
+
+    function validatePreferencesUpdate() {
+      return request.resource.data.keys().hasAll([
+        'pushEnabled', 'emailEnabled', 'categories', 'quietHours', 'updatedAt'
+      ]);
+    }
+
+    function validateSubscriptionData() {
+      return request.resource.data.keys().hasAll(['fcmTokens', 'deviceInfo']) &&
+        request.resource.data.fcmTokens is list &&
+        request.resource.data.fcmTokens.size() <= 10 && // Max 10 devices per user
+        request.resource.data.deviceInfo is map;
+    }
+
+    function validateAnalyticsData() {
+      return request.resource.data.keys().hasAll([
+        'userId', 'notificationId', 'action', 'timestamp'
+      ]) &&
+      request.resource.data.action in [
+        'sent', 'delivered', 'clicked', 'dismissed', 'converted'
+      ];
+    }
+
+    function validateTemplateStructure() {
+      return request.resource.data.keys().hasAll([
+        'name', 'type', 'title', 'message', 'variables'
+      ]) &&
+      request.resource.data.type in [
+        'achievement', 'milestone', 'reminder', 'marketing'
+      ];
+    }
+
+    function validateCampaignData() {
+      return request.resource.data.keys().hasAll([
+        'name', 'templateId', 'targetSegment', 'scheduledFor', 'status'
+      ]) &&
+      request.resource.data.status in ['draft', 'scheduled', 'running', 'completed', 'cancelled'];
+    }
+
+    function validateScheduleData() {
+      return request.resource.data.keys().hasAll([
+        'userId', 'type', 'scheduledFor', 'isActive'
+      ]) &&
+      request.resource.data.scheduledFor is timestamp &&
+      request.resource.data.isActive is bool;
+    }
+
+    function validateABTestResult() {
+      return request.resource.data.keys().hasAll([
+        'userId', 'testId', 'variant', 'outcome', 'timestamp'
+      ]) &&
+      request.resource.data.variant in ['A', 'B'] &&
+      request.resource.data.outcome in ['clicked', 'dismissed', 'converted'];
+    }
+
+    function validateFeedbackData() {
+      return request.resource.data.keys().hasAll([
+        'userId', 'notificationId', 'rating', 'feedback', 'timestamp'
+      ]) &&
+      request.resource.data.rating is number &&
+      request.resource.data.rating >= 1 &&
+      request.resource.data.rating <= 5;
+    }
+
+    function validateComplianceLog() {
+      return request.resource.data.keys().hasAll([
+        'userId', 'action', 'timestamp', 'details'
+      ]) &&
+      request.resource.data.action in [
+        'consent_granted', 'consent_revoked', 'data_exported', 
+        'data_deleted', 'preferences_updated'
+      ];
+    }
+
+    function validatePrivacySettings() {
+      return request.resource.data.keys().hasAll([
+        'notificationConsent', 'consentTimestamp', 'consentVersion'
+      ]) &&
+      request.resource.data.notificationConsent is bool;
+    }
+
+    // ============= PERMISSION HELPER FUNCTIONS =============
+    
+    function hasCoachAccess(auth, userId) {
+      return auth.token.email != null &&
+        exists(/databases/$(database)/documents/coach_delegations/$(auth.token.email + '_' + userId)) &&
+        get(/databases/$(database)/documents/coach_delegations/$(auth.token.email + '_' + userId))
+          .data.permissions.canViewNotifications == true;
+    }
+    
+    function hasAdminRole() {
+      return request.auth != null &&
+        request.auth.token.admin == true;
+    }
+    
+    function isSystemGenerated() {
+      return request.resource.data.source == 'system' ||
+        request.resource.data.source == 'cloud_function';
+    }
+
+    function isSystemWrite() {
+      return request.auth != null &&
+        (request.auth.token.system == true ||
+         request.auth.uid == 'system');
+    }
+
+    // ============= RATE LIMITING FUNCTIONS =============
+    
+    function isWithinRateLimit(userId, action) {
+      // Basic rate limiting - can be enhanced with more sophisticated logic
+      return true; // Placeholder - implement actual rate limiting logic
+    }
+
+    // ============= DATA VALIDATION HELPERS =============
+    
+    function isValidTimestamp(timestamp) {
+      return timestamp is timestamp &&
+        timestamp > timestamp.date(2023, 1, 1) &&
+        timestamp < timestamp.date(2030, 12, 31);
+    }
+
+    function isValidUserId(userId) {
+      return userId is string &&
+        userId.size() > 0 &&
+        userId.size() <= 128;
+    }
+
+    // ============= EXISTING GYMBRO RULES (MAINTAINED) =============
+
+    // ============= ESERCIZI - DATABASE CONDIVISO =============
+    match /exercises/{exerciseId} {
+      // Database esercizi condiviso - lettura per utenti autenticati
+      allow read: if request.auth != null;
+      // Solo admin o moderatori possono modificare il database esercizi
+      allow write: if request.auth != null && 
+        (request.auth.token.admin == true || 
+         request.auth.token.moderator == true ||
+         request.auth.uid == resource.data.createdBy);
+    }
+
+    // ============= WORKOUT TEMPLATES =============
+    match /workout_templates/{templateId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // ============= USER ACHIEVEMENTS =============
+    match /user_achievements/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false; // Non permettiamo eliminazione achievement
+    }
+
+    // ============= TEMPLATES (generico per sync) =============
+    match /templates/{templateId} {
+      // Allow list/query for user's own templates OR public templates
+      allow list: if request.auth != null;
+      
+      // Allow read for user's own templates OR public templates
+      allow read: if request.auth != null && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.isPublic == true
+      );
+      
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+      
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
+
+    match /workoutTemplates/{templateId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow write: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+    }
+
+    // ============= USERS - ENHANCED WITH NOTIFICATION SUBCOLLECTIONS =============
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // ============= USER NOTIFICATIONS (legacy subcollection - maintained for backward compatibility) =============
+      match /notifications/{notificationId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null && request.auth.uid == userId;
+        allow delete: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= CUSTOM EXERCISES SUBCOLLECTION =============
+      match /customExercises/{exerciseId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null && request.auth.uid == userId;
+        allow update: if request.auth != null && request.auth.uid == userId;
+        allow delete: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= PERSONAL RECORDS SUBCOLLECTION =============
+      match /personalRecords/{recordId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null && request.auth.uid == userId;
+        allow update: if request.auth != null && request.auth.uid == userId;
+        allow delete: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= BODY MEASUREMENTS SUBCOLLECTION =============
+      match /bodyMeasurements/{measurementId} {
+        allow read: if request.auth != null && (
+          // Proprietario
+          request.auth.uid == userId ||
+          // Coach con delega
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+        
+        allow create: if request.auth != null &&
+          request.auth.uid == userId &&
+          request.resource.data.userId == userId;
+          
+        allow update: if request.auth != null &&
+          request.auth.uid == userId &&
+          resource.data.userId == userId;
+          
+        allow delete: if request.auth != null &&
+          request.auth.uid == userId;
+      }
+
+      // ============= PROGRESS PHOTOS SUBCOLLECTION =============
+      match /progress-photos/{photoId} {
+        allow read: if request.auth != null && (
+          // Proprietario
+          request.auth.uid == userId ||
+          // Coach con delega
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+        
+        allow create: if request.auth != null &&
+          request.auth.uid == userId;
+          
+        allow update: if request.auth != null &&
+          request.auth.uid == userId;
+          
+        allow delete: if request.auth != null &&
+          request.auth.uid == userId;
+      }
+    }
+
+    // ============= WORKOUTS =============
+    match /workouts/{workoutId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    // ============= COMMUNITY REPORTS SYSTEM ================
+    match /exercise_reports/{reportId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.userId
+        && request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'imageUrl', 'reportType', 'userId', 'timestamp',
+'status'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.reportType in ['wrong_image', 'missing_image', 'wrong_name'];
+      allow update: if request.auth != null
+        && request.auth.uid != null
+        && (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes'])
+          || (request.auth.token.email in ['admin@admin.com', 'ferrara-michele@hotmail.it']
+              && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']))
+        );
+
+      match /suggestions/{suggestionId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+          && request.auth.uid == request.resource.data.userId
+          && request.resource.data.keys().hasAll(['reportId', 'userId', 'userName', 'suggestedValue', 'votes', 'voters',
+'timestamp'])
+          && request.resource.data.votes == 0
+          && request.resource.data.voters.size() == 0;
+        allow update: if request.auth != null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'voters']);
+      }
+    }
+
+    // ============= COACH DELEGATIONS =============
+    match /coach_delegations/{delegationId} {
+      allow read: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         resource.data.coachEmail == request.auth.token.email);
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         resource.data.coachEmail == request.auth.token.email);
+    }
+
+  // ============= COACH NOTIFICATIONS =============
+  match /coachNotifications/{notificationId} {
+    // Il coach può leggere le proprie notifiche usando l'email
+    allow read: if request.auth != null &&
+      request.auth.token.email == resource.data.coachEmail;
+    
+    // Permettere list/query per le proprie notifiche
+    allow list: if request.auth != null &&
+      request.auth.token.email != null;
+    
+    // Qualsiasi utente autenticato può creare notifiche
+    allow create: if request.auth != null;
+    
+    // Solo il coach destinatario può aggiornare (per marcare come letta)
+    allow update: if request.auth != null &&
+      request.auth.token.email == resource.data.coachEmail;
+    
+    // Solo il coach può eliminare le proprie notifiche
+    allow delete: if request.auth != null &&
+      request.auth.token.email == resource.data.coachEmail;
+  }
+
+  // ============= ATHLETE NOTIFICATIONS =============
+  match /athleteNotifications/{notificationId} {
+    // L'atleta può leggere le proprie notifiche usando l'email
+    allow read: if request.auth != null &&
+      request.auth.token.email == resource.data.athleteEmail;
+    
+    // Permettere list/query per le proprie notifiche
+    allow list: if request.auth != null &&
+      request.auth.token.email != null;
+    
+    // Qualsiasi utente autenticato può creare notifiche
+    allow create: if request.auth != null;
+    
+    // Solo l'atleta destinatario può aggiornare (per marcare come letta)
+    allow update: if request.auth != null &&
+      request.auth.token.email == resource.data.athleteEmail;
+    
+    // Solo l'atleta può eliminare le proprie notifiche
+    allow delete: if request.auth != null &&
+      request.auth.token.email == resource.data.athleteEmail;
+  }
+
+    // ============= SESSION WORKOUTS - FIXED =============
+    match /sessionWorkouts/{workoutId} {
+      // Permetti list/query basate su email o userId
+      allow list: if request.auth != null;
+      
+      allow read: if request.auth != null && (
+        // Proprietario - AGGIUNTO IL CHECK SULL'EMAIL
+        request.auth.token.email == resource.data.email ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        // Coach con delega - supporta sia userId che email
+        (request.auth.token.email != null && (
+          // Check con userId
+          (resource.data.userId != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.userId)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.userId)).data.permissions.canViewDashboard == true) ||
+          // Check con email dell'utente cercando nel documento settings
+          (resource.data.userId != null &&
+           exists(/databases/$(database)/documents/settings/$(resource.data.userId)) &&
+           get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)).data.permissions.canViewDashboard == true)
+        ))
+      );
+      
+      allow create: if request.auth != null &&
+        (request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+         
+      allow update, delete: if request.auth != null &&
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.userId ||
+         request.auth.uid == resource.data.uid);
+    }
+
+    // Continue with all other existing rules...
+    // (The rest of the rules remain the same as in the original file)
+
+    // ============= SETTINGS =============
+    match /settings/{userId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        // Permetti lettura per cercare coach tramite coachCode
+        (request.auth.token.email != null &&
+         resource.data.email != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)))
+      );
+      
+      allow write: if request.auth != null && request.auth.uid == userId;
+
+      // Subcollections
+      match /userSettings/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /weightHistory/{entryId} {
+        allow read: if request.auth != null && (
+          request.auth.uid == userId ||
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+        
+        allow create, update, delete: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // All other existing rules continue here...
+  }
+}

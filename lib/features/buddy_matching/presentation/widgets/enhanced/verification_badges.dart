@@ -1,0 +1,353 @@
+/**
+ * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+ * 
+ * 📁 Layer: presentation
+ * 🎯 Feature: buddy_matching
+ * 🔧 Type: widget
+ * 🌍 Localization: ✅ AppLocalizations used
+ * 🎨 Theme: ✅ ColorScheme responsive
+ * 📱 Platform: Universal
+ * 
+ * Dependencies:
+ * - Riverpod: ConsumerWidget
+ * - Firebase: None
+ * - Hive: None
+ */
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import '../../../domain/entities/buddy_profile.dart';
+
+class VerificationBadges extends ConsumerWidget {
+  final BuddyProfile profile;
+  final double size;
+  final bool showText;
+
+  const VerificationBadges({
+    super.key,
+    required this.profile,
+    this.size = 24,
+    this.showText = false,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final badges = <Widget>[];
+
+    // Main verification badge
+    if (profile.isVerified) {
+      badges.add(_buildBadge(
+        context,
+        icon: Icons.verified,
+        color: const Color(0xFF1DA1F2), // Twitter blue
+        text: AppLocalizations.of(context)!.verified,
+        tooltip: 'Profilo verificato dal team GymBro',
+      ));
+    }
+
+    // Instagram verification
+    if (profile.hasInstagramVerification) {
+      badges.add(_buildBadge(
+        context,
+        icon: Icons.camera_alt,
+        color: const Color(0xFFE4405F), // Instagram pink
+        text: AppLocalizations.of(context)!.instagramVerified,
+        tooltip: 'Account Instagram collegato e verificato',
+      ));
+    }
+
+    // Photo verification
+    if (profile.isPhotoVerified) {
+      badges.add(_buildBadge(
+        context,
+        icon: Icons.photo_camera,
+        color: const Color(0xFF4CAF50), // Green
+        text: AppLocalizations.of(context)!.photoVerified,
+        tooltip: 'Foto del profilo verificata',
+      ));
+    }
+
+    // Boosted profile indicator
+    if (profile.isCurrentlyBoosted) {
+      badges.add(_buildBadge(
+        context,
+        icon: Icons.rocket_launch,
+        color: const Color(0xFFFF9800), // Orange
+        text: AppLocalizations.of(context)!.boosted,
+        tooltip: 'Profilo in evidenza',
+      ));
+    }
+
+    if (badges.isEmpty) return const SizedBox.shrink();
+
+    return showText 
+        ? _buildBadgeList(badges)
+        : _buildBadgeRow(badges);
+  }
+
+  Widget _buildBadge(
+    BuildContext context, {
+    required IconData icon,
+    required Color color,
+    required String text,
+    required String tooltip,
+  }) {
+    return Tooltip(
+      message: tooltip,
+      child: showText 
+          ? _buildBadgeWithText(context, icon, color, text)
+          : _buildBadgeIcon(icon, color),
+    );
+  }
+
+  Widget _buildBadgeIcon(IconData icon, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.3),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Icon(
+        icon,
+        size: size * 0.6,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildBadgeWithText(BuildContext context, IconData icon, Color color, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBadgeRow(List<Widget> badges) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: badges
+          .map((badge) => Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: badge,
+              ))
+          .toList(),
+    );
+  }
+
+  Widget _buildBadgeList(List<Widget> badges) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: badges,
+    );
+  }
+}
+
+/// Trust score indicator with color-coded levels
+class TrustScoreIndicator extends ConsumerWidget {
+  final double trustScore;
+  final bool showText;
+  final double size;
+
+  const TrustScoreIndicator({
+    super.key,
+    required this.trustScore,
+    this.showText = true,
+    this.size = 32,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    Color getScoreColor() {
+      if (trustScore >= 80) return const Color(0xFF4CAF50); // Green
+      if (trustScore >= 60) return const Color(0xFFFF9800); // Orange
+      if (trustScore >= 40) return const Color(0xFFFFC107); // Amber
+      return const Color(0xFFF44336); // Red
+    }
+
+    IconData getScoreIcon() {
+      if (trustScore >= 80) return Icons.shield_outlined;
+      if (trustScore >= 60) return Icons.verified_user_outlined;
+      if (trustScore >= 40) return Icons.security;
+      return Icons.report_problem_outlined;
+    }
+
+    final color = getScoreColor();
+    final icon = getScoreIcon();
+
+    return Tooltip(
+      message: 'Punteggio di fiducia basato su verifiche, recensioni e comportamento',
+      child: Container(
+        padding: showText 
+            ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
+            : const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: size * 0.7,
+              color: color,
+            ),
+            if (showText) ...[
+              const SizedBox(width: 4),
+              Text(
+                l10n.trustScore(trustScore.round()),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Connection type badges showing what user is looking for
+class ConnectionTypeBadges extends ConsumerWidget {
+  final BuddyProfile profile;
+  final bool compact;
+
+  const ConnectionTypeBadges({
+    super.key,
+    required this.profile,
+    this.compact = false,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final badges = <Widget>[];
+
+    // Matching purpose badge
+    badges.add(_buildConnectionBadge(
+      context,
+      emoji: profile.preferences.matchingPurpose.emoji,
+      text: _getMatchingPurposeText(l10n, profile.preferences.matchingPurpose),
+      color: colorScheme.primaryContainer,
+      textColor: colorScheme.onPrimaryContainer,
+    ));
+
+    // Additional connection preferences
+    if (profile.preferences.openToFriendship) {
+      badges.add(_buildConnectionBadge(
+        context,
+        emoji: '🤝',
+        text: compact ? '' : l10n.openToFriendship,
+        color: const Color(0xFF4CAF50).withOpacity(0.1),
+        textColor: const Color(0xFF4CAF50),
+      ));
+    }
+
+    if (profile.preferences.openToDating) {
+      badges.add(_buildConnectionBadge(
+        context,
+        emoji: '❤️',
+        text: compact ? '' : l10n.openToDating,
+        color: const Color(0xFFF44336).withOpacity(0.1),
+        textColor: const Color(0xFFF44336),
+      ));
+    }
+
+    return Wrap(
+      spacing: 4,
+      runSpacing: 4,
+      children: badges,
+    );
+  }
+
+  Widget _buildConnectionBadge(
+    BuildContext context, {
+    required String emoji,
+    required String text,
+    required Color color,
+    required Color textColor,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 6 : 8,
+        vertical: compact ? 2 : 4,
+      ),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(compact ? 8 : 12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            emoji,
+            style: TextStyle(fontSize: compact ? 12 : 14),
+          ),
+          if (text.isNotEmpty && !compact) ...[
+            const SizedBox(width: 4),
+            Text(
+              text,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String _getMatchingPurposeText(AppLocalizations l10n, MatchingPurpose purpose) {
+    switch (purpose) {
+      case MatchingPurpose.workoutPartner:
+        return l10n.matchingPurposeWorkoutPartner;
+      case MatchingPurpose.gymBuddy:
+        return l10n.matchingPurposeGymBuddy;
+      case MatchingPurpose.both:
+        return l10n.matchingPurposeBoth;
+      case MatchingPurpose.openToEverything:
+        return l10n.matchingPurposeOpenToEverything;
+    }
+  }
+}

@@ -1,0 +1,314 @@
+import 'package:uuid/uuid.dart';
+
+/// Unified timer state model that consolidates all timer functionality
+/// This replaces RestTimer and TimerState with a single, clean model
+class UnifiedTimerState {
+  final String id;
+  final TimerType type;
+  final int totalDurationSeconds;
+  final int remainingSeconds;
+  final TimerStatus status;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final DateTime? pausedTime;
+  final DateTime? completionTime;
+  
+  // Workout context
+  final String? exerciseName;
+  final int? currentSet;
+  final int? totalSets;
+  final String? workoutId;
+  
+  // Audio/notification state
+  final bool audioEnabled;
+  final String? customSoundName;
+  final bool notificationScheduled;
+  final bool audioPlayed;
+  final bool liveActivityActive;
+  
+  // Performance tracking
+  final DateTime createdAt;
+  final int tickCount;
+  final List<DateTime> pauseHistory;
+  
+  // Background sync state
+  final DateTime? lastBackgroundTime;
+
+  UnifiedTimerState({
+    String? id,
+    this.type = TimerType.rest,
+    required this.totalDurationSeconds,
+    int? remainingSeconds,
+    this.status = TimerStatus.idle,
+    this.startTime,
+    this.endTime,
+    this.pausedTime,
+    this.completionTime,
+    this.exerciseName,
+    this.currentSet,
+    this.totalSets,
+    this.workoutId,
+    this.audioEnabled = true,
+    this.customSoundName,
+    this.notificationScheduled = false,
+    this.audioPlayed = false,
+    this.liveActivityActive = false,
+    DateTime? createdAt,
+    this.tickCount = 0,
+    List<DateTime>? pauseHistory,
+    this.lastBackgroundTime,
+  }) : 
+    id = id ?? const Uuid().v4(),
+    remainingSeconds = remainingSeconds ?? totalDurationSeconds,
+    createdAt = createdAt ?? DateTime.now(),
+    pauseHistory = pauseHistory ?? <DateTime>[];
+
+  // Computed properties
+  double get progress => totalDurationSeconds > 0 
+    ? (totalDurationSeconds - remainingSeconds) / totalDurationSeconds 
+    : 0.0;
+    
+  double get remainingProgress => totalDurationSeconds > 0 
+    ? remainingSeconds / totalDurationSeconds 
+    : 0.0;
+    
+  Duration get elapsed => totalDurationSeconds > remainingSeconds 
+    ? Duration(seconds: totalDurationSeconds - remainingSeconds)
+    : Duration.zero;
+    
+  Duration get remaining => Duration(seconds: remainingSeconds);
+  
+  bool get isActive => status == TimerStatus.running;
+  bool get isPaused => status == TimerStatus.paused;
+  bool get isCompleted => status == TimerStatus.completed;
+  bool get isIdle => status == TimerStatus.idle;
+  
+  bool get canStart => status == TimerStatus.idle || status == TimerStatus.paused;
+  bool get canPause => status == TimerStatus.running;
+  bool get canReset => status != TimerStatus.idle;
+  
+  // State transitions
+  UnifiedTimerState start() {
+    final now = DateTime.now();
+    return copyWith(
+      status: TimerStatus.running,
+      startTime: startTime ?? now,
+      pausedTime: null,
+      endTime: now.add(Duration(seconds: remainingSeconds)),
+    );
+  }
+  
+  UnifiedTimerState pause() {
+    return copyWith(
+      status: TimerStatus.paused,
+      pausedTime: DateTime.now(),
+      endTime: null,
+      pauseHistory: [...pauseHistory, DateTime.now()],
+    );
+  }
+  
+  UnifiedTimerState resume() {
+    if (pausedTime == null) return this;
+    
+    final now = DateTime.now();
+    return copyWith(
+      status: TimerStatus.running,
+      pausedTime: null,
+      endTime: now.add(Duration(seconds: remainingSeconds)),
+    );
+  }
+  
+  UnifiedTimerState tick() {
+    if (status != TimerStatus.running) return this;
+    
+    final newRemaining = remainingSeconds - 1;
+    
+    if (newRemaining <= 0) {
+      return copyWith(
+        status: TimerStatus.completed,
+        remainingSeconds: 0,
+        completionTime: DateTime.now(),
+        tickCount: tickCount + 1,
+      );
+    }
+    
+    return copyWith(
+      remainingSeconds: newRemaining,
+      tickCount: tickCount + 1,
+    );
+  }
+  
+  UnifiedTimerState reset() {
+    return copyWith(
+      status: TimerStatus.idle,
+      remainingSeconds: totalDurationSeconds,
+      startTime: null,
+      endTime: null,
+      pausedTime: null,
+      completionTime: null,
+      audioPlayed: false,
+      notificationScheduled: false,
+      liveActivityActive: false,
+      tickCount: 0,
+      pauseHistory: <DateTime>[],
+    );
+  }
+  
+  UnifiedTimerState complete() {
+    return copyWith(
+      status: TimerStatus.completed,
+      remainingSeconds: 0,
+      completionTime: DateTime.now(),
+    );
+  }
+  
+  // Audio state management
+  UnifiedTimerState markAudioPlayed() {
+    return copyWith(audioPlayed: true);
+  }
+  
+  UnifiedTimerState scheduleNotification() {
+    return copyWith(notificationScheduled: true);
+  }
+  
+  UnifiedTimerState activateLiveActivity() {
+    return copyWith(liveActivityActive: true);
+  }
+
+  UnifiedTimerState copyWith({
+    String? id,
+    TimerType? type,
+    int? totalDurationSeconds,
+    int? remainingSeconds,
+    TimerStatus? status,
+    DateTime? startTime,
+    DateTime? endTime,
+    DateTime? pausedTime,
+    DateTime? completionTime,
+    String? exerciseName,
+    int? currentSet,
+    int? totalSets,
+    String? workoutId,
+    bool? audioEnabled,
+    String? customSoundName,
+    bool? notificationScheduled,
+    bool? audioPlayed,
+    bool? liveActivityActive,
+    DateTime? createdAt,
+    int? tickCount,
+    List<DateTime>? pauseHistory,
+    DateTime? lastBackgroundTime,
+  }) {
+    return UnifiedTimerState(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      totalDurationSeconds: totalDurationSeconds ?? this.totalDurationSeconds,
+      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
+      status: status ?? this.status,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      pausedTime: pausedTime ?? this.pausedTime,
+      completionTime: completionTime ?? this.completionTime,
+      exerciseName: exerciseName ?? this.exerciseName,
+      currentSet: currentSet ?? this.currentSet,
+      totalSets: totalSets ?? this.totalSets,
+      workoutId: workoutId ?? this.workoutId,
+      audioEnabled: audioEnabled ?? this.audioEnabled,
+      customSoundName: customSoundName ?? this.customSoundName,
+      notificationScheduled: notificationScheduled ?? this.notificationScheduled,
+      audioPlayed: audioPlayed ?? this.audioPlayed,
+      liveActivityActive: liveActivityActive ?? this.liveActivityActive,
+      createdAt: createdAt ?? this.createdAt,
+      tickCount: tickCount ?? this.tickCount,
+      pauseHistory: pauseHistory ?? this.pauseHistory,
+      lastBackgroundTime: lastBackgroundTime ?? this.lastBackgroundTime,
+    );
+  }
+  
+  // Serialization for persistence
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type.index,
+      'totalDurationSeconds': totalDurationSeconds,
+      'remainingSeconds': remainingSeconds,
+      'status': status.index,
+      'startTime': startTime?.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
+      'pausedTime': pausedTime?.toIso8601String(),
+      'completionTime': completionTime?.toIso8601String(),
+      'exerciseName': exerciseName,
+      'currentSet': currentSet,
+      'totalSets': totalSets,
+      'workoutId': workoutId,
+      'audioEnabled': audioEnabled,
+      'customSoundName': customSoundName,
+      'notificationScheduled': notificationScheduled,
+      'audioPlayed': audioPlayed,
+      'liveActivityActive': liveActivityActive,
+      'createdAt': createdAt.toIso8601String(),
+      'tickCount': tickCount,
+      'pauseHistory': pauseHistory.map((e) => e.toIso8601String()).toList(),
+      'lastBackgroundTime': lastBackgroundTime?.toIso8601String(),
+    };
+  }
+  
+  factory UnifiedTimerState.fromJson(Map<String, dynamic> json) {
+    return UnifiedTimerState(
+      id: json['id'] as String,
+      type: TimerType.values[json['type'] as int],
+      totalDurationSeconds: json['totalDurationSeconds'] as int,
+      remainingSeconds: json['remainingSeconds'] as int,
+      status: TimerStatus.values[json['status'] as int],
+      startTime: json['startTime'] != null 
+        ? DateTime.parse(json['startTime'] as String) 
+        : null,
+      endTime: json['endTime'] != null 
+        ? DateTime.parse(json['endTime'] as String) 
+        : null,
+      pausedTime: json['pausedTime'] != null 
+        ? DateTime.parse(json['pausedTime'] as String) 
+        : null,
+      completionTime: json['completionTime'] != null 
+        ? DateTime.parse(json['completionTime'] as String) 
+        : null,
+      exerciseName: json['exerciseName'] as String?,
+      currentSet: json['currentSet'] as int?,
+      totalSets: json['totalSets'] as int?,
+      workoutId: json['workoutId'] as String?,
+      audioEnabled: json['audioEnabled'] as bool? ?? true,
+      customSoundName: json['customSoundName'] as String?,
+      notificationScheduled: json['notificationScheduled'] as bool? ?? false,
+      audioPlayed: json['audioPlayed'] as bool? ?? false,
+      liveActivityActive: json['liveActivityActive'] as bool? ?? false,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      tickCount: json['tickCount'] as int? ?? 0,
+      pauseHistory: (json['pauseHistory'] as List<dynamic>?)
+        ?.map((e) => DateTime.parse(e as String))
+        .toList() ?? <DateTime>[],
+      lastBackgroundTime: json['lastBackgroundTime'] != null 
+        ? DateTime.parse(json['lastBackgroundTime'] as String) 
+        : null,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is UnifiedTimerState && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    return 'UnifiedTimerState(id: $id, type: $type, status: $status, '
+           'remaining: $remainingSeconds/${totalDurationSeconds}s, '
+           'progress: ${(progress * 100).toStringAsFixed(1)}%)';
+  }
+}
+
+// Re-export enums for compatibility
+enum TimerStatus { idle, running, paused, completed }
+enum TimerType { rest, workout, warmup, cooldown }

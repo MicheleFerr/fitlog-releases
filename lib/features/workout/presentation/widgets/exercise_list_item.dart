@@ -12,7 +12,7 @@ import 'edit_exercise_modal.dart';
 import 'rpe_selector_bottom_sheet.dart';
 import '../../../../shared/presentation/providers/app_config_provider.dart';
 import '../../../../shared/domain/entities/app_config.dart';
-import '../../../timer/presentation/providers/timer_provider.dart';
+import '../../../timer/presentation/providers/unified_timer_extensions.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/set_duration_tracker_provider.dart';
 import 'exercise_start_button.dart';
@@ -2217,10 +2217,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   void _startRestTimer(BuildContext context) {
-    final timerSettings = ref.read(timerSettingsProvider);
+    final autoStartTimer = ref.read(appConfigProvider).autoRestTimer ?? true;
     
     // Only start timer if auto-start is enabled
-    if (!timerSettings.autoStartTimer) return;
+    if (!autoStartTimer) return;
     
     // Find completed sets
     final completedSets = widget.exercise.sets.where((set) => set.isCompleted).toList();
@@ -2236,12 +2236,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final reps = lastSet.reps ?? 10; // Default to 10 if reps not set
     
     // Start smart rest timer based on rep range
-    ref.read(currentTimerProvider.notifier).startSmartRestTimer(
+    final timerActions = ref.read(tier1TimerActionsProvider);
+    timerActions.startSmartRest(
       exerciseName: widget.exercise.name,
       reps: reps,
       currentSet: completedSetCount + 1, // Next set
       totalSets: totalSets,
-      workoutId: null, // Could be passed from parent
     );
   }
 
@@ -2254,10 +2254,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   void _startRestTimerWithSetInfo(BuildContext context, ExerciseSet completedSet) {
-    final timerSettings = ref.read(timerSettingsProvider);
+    final autoStartTimer = ref.read(appConfigProvider).autoRestTimer ?? true;
     
     // Only start timer if auto-start is enabled
-    if (!timerSettings.autoStartTimer) return;
+    if (!autoStartTimer) return;
     
     final totalSets = widget.exercise.sets.length;
     final currentSetNumber = completedSet.setNumber;
@@ -2272,21 +2272,22 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     
     if (exerciseRestTime != null) {
       // Use exercise-specific timer
-      ref.read(currentTimerProvider.notifier).startRestTimer(
+      final timerActions = ref.read(tier1TimerActionsProvider);
+      timerActions.startExerciseRest(
+        seconds: exerciseRestTime,
         exerciseName: widget.exercise.name,
-        durationSeconds: exerciseRestTime,
         currentSet: currentSetNumber + 1,
         totalSets: totalSets,
         exerciseId: widget.exercise.id,
       );
     } else {
       // Use smart rest timer based on rep range
-      ref.read(currentTimerProvider.notifier).startSmartRestTimer(
+      final timerActions = ref.read(tier1TimerActionsProvider);
+      timerActions.startSmartRest(
         exerciseName: widget.exercise.name,
         reps: reps,
         currentSet: currentSetNumber + 1, // Next set
         totalSets: totalSets,
-        workoutId: null, // Could be passed from parent
         exerciseId: widget.exercise.id,
       );
     }

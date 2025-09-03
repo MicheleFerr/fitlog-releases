@@ -1,0 +1,390 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+
+/// Info bar minimalista e professionale per mostrare categoria, tipo e TUT
+class ExerciseInfoBar extends StatefulWidget {
+  final Exercise exercise;
+  final Map<String, dynamic>? exerciseData;
+  final VoidCallback? onTutTap;
+  
+  const ExerciseInfoBar({
+    super.key,
+    required this.exercise,
+    this.exerciseData,
+    this.onTutTap,
+  });
+  
+  @override
+  State<ExerciseInfoBar> createState() => _ExerciseInfoBarState();
+}
+
+class _ExerciseInfoBarState extends State<ExerciseInfoBar> 
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _rotateAnimation;
+  bool _isPressed = false;
+  bool _isDataLoaded = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _rotateAnimation = Tween<double>(
+      begin: 0.0,
+      end: 0.5, // 180 degrees
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    // Trigger shimmer effect on first load
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) {
+        setState(() {
+          _isDataLoaded = true;
+        });
+      }
+    });
+  }
+  
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tut = widget.exerciseData?['tempoEsecuzione'];
+    final hasValidTut = tut != null && tut != '' && tut != 'N/A';
+    
+    return GestureDetector(
+      onTapDown: hasValidTut ? (_) {
+        setState(() => _isPressed = true);
+        _animationController.forward();
+        HapticFeedback.lightImpact();
+      } : null,
+      onTapUp: hasValidTut ? (_) {
+        setState(() => _isPressed = false);
+        _animationController.reverse();
+        widget.onTutTap?.call();
+      } : null,
+      onTapCancel: hasValidTut ? () {
+        setState(() => _isPressed = false);
+        _animationController.reverse();
+      } : null,
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: _isPressed 
+                  ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
+                  : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: _isPressed 
+                  ? Border.all(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                      width: 1,
+                    )
+                  : null,
+              ),
+              child: _isDataLoaded 
+                ? _buildContent(theme, tut, hasValidTut)
+                : _buildShimmer(theme),
+            ),
+          );
+        },
+      ),
+    );
+  }
+  
+  Widget _buildContent(ThemeData theme, String? tut, bool hasValidTut) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Categoria con icona
+        AnimatedSlide(
+          offset: _isDataLoaded ? Offset.zero : const Offset(-0.2, 0),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          child: AnimatedOpacity(
+            opacity: _isDataLoaded ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 300),
+            child: _buildInfoItem(
+              icon: _getCategoryIcon(widget.exercise.category),
+              text: _getCategoryDisplayName(widget.exercise.category),
+              color: theme.colorScheme.onSurfaceVariant,
+              theme: theme,
+            ),
+          ),
+        ),
+        
+        _buildSeparator(theme),
+        
+        // Tipo
+        AnimatedSlide(
+          offset: _isDataLoaded ? Offset.zero : const Offset(-0.2, 0),
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOut,
+          child: AnimatedOpacity(
+            opacity: _isDataLoaded ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 400),
+            child: _buildInfoItem(
+              icon: _getTypeIcon(widget.exercise.type),
+              text: _getTypeDisplayName(widget.exercise.type),
+              color: _getTypeColor(widget.exercise.type, theme),
+              theme: theme,
+            ),
+          ),
+        ),
+        
+        // TUT solo se disponibile e valido
+        if (hasValidTut) ...[
+          _buildSeparator(theme),
+          Expanded(
+            child: AnimatedSlide(
+              offset: _isDataLoaded ? Offset.zero : const Offset(-0.2, 0),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOut,
+              child: AnimatedOpacity(
+                opacity: _isDataLoaded ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 500),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: _buildInfoItem(
+                        icon: Icons.timer_outlined,
+                        text: _formatTut(tut!),
+                        color: theme.colorScheme.primary,
+                        theme: theme,
+                        isHighlighted: true,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    AnimatedBuilder(
+                      animation: _rotateAnimation,
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: _rotateAnimation.value * 3.14159,
+                          child: Icon(
+                            _isPressed ? Icons.close : Icons.info_outline,
+                            size: 14,
+                            color: _isPressed 
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.primary.withValues(alpha: 0.5),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+  
+  Widget _buildShimmer(ThemeData theme) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.3, end: 0.6),
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Row(
+          children: [
+            Container(
+              width: 60,
+              height: 12,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: value * 0.3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              width: 40,
+              height: 12,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: value * 0.3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              width: 50,
+              height: 12,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: value * 0.3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ],
+        );
+      },
+      onEnd: () {
+        // Loop the animation
+        if (mounted && !_isDataLoaded) {
+          setState(() {});
+        }
+      },
+    );
+  }
+  
+  Widget _buildInfoItem({
+    required IconData? icon,
+    required String text,
+    required Color color,
+    required ThemeData theme,
+    bool isHighlighted = false,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (icon != null) ...[
+          Icon(
+            icon,
+            size: 14,
+            color: color.withValues(alpha: 0.8),
+          ),
+          const SizedBox(width: 4),
+        ],
+        Flexible(
+          child: Text(
+            text,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: color,
+              fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.w500,
+              fontSize: 12,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildSeparator(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Text(
+        '•',
+        style: TextStyle(
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+          fontSize: 10,
+        ),
+      ),
+    );
+  }
+  
+  String _formatTut(String tut) {
+    if (tut == 'ISO') return 'ISO';
+    if (tut == 'EXP') return 'EXP';
+    // Mantieni il formato completo, gli zeri indicano esplosività
+    return tut;
+  }
+  
+  String _getCategoryDisplayName(ExerciseCategory category) {
+    switch (category) {
+      case ExerciseCategory.chest:
+        return 'Chest';
+      case ExerciseCategory.shoulders:
+        return 'Shoulders';
+      case ExerciseCategory.back:
+        return 'Back';
+      case ExerciseCategory.arms:
+        return 'Arms';
+      case ExerciseCategory.legs:
+        return 'Legs';
+      case ExerciseCategory.abs:
+        return 'Core';
+      case ExerciseCategory.cardio:
+        return 'Cardio';
+      case ExerciseCategory.other:
+        return 'Other';
+    }
+  }
+  
+  String _getTypeDisplayName(ExerciseType type) {
+    switch (type) {
+      case ExerciseType.single:
+        return 'S';  // Single Set
+      case ExerciseType.superset:
+        return 'SS';  // SuperSet
+      case ExerciseType.dropset:
+        return 'DS';  // DropSet
+      case ExerciseType.restPause:
+        return 'RP';  // Rest-Pause
+    }
+  }
+  
+  IconData? _getCategoryIcon(ExerciseCategory category) {
+    switch (category) {
+      case ExerciseCategory.chest:
+        return Icons.fitness_center;
+      case ExerciseCategory.shoulders:
+        return Icons.accessibility_new;
+      case ExerciseCategory.back:
+        return Icons.sports_gymnastics;
+      case ExerciseCategory.arms:
+        return Icons.sports_mma;
+      case ExerciseCategory.legs:
+        return Icons.directions_run;
+      case ExerciseCategory.abs:
+        return Icons.self_improvement;
+      case ExerciseCategory.cardio:
+        return Icons.favorite;
+      case ExerciseCategory.other:
+        return Icons.fitness_center;
+    }
+  }
+  
+  IconData? _getTypeIcon(ExerciseType type) {
+    switch (type) {
+      case ExerciseType.single:
+        return null; // Nessuna icona per standard
+      case ExerciseType.superset:
+        return Icons.link;
+      case ExerciseType.dropset:
+        return Icons.trending_down;
+      case ExerciseType.restPause:
+        return Icons.pause;
+    }
+  }
+  
+  Color _getTypeColor(ExerciseType type, ThemeData theme) {
+    switch (type) {
+      case ExerciseType.single:
+        return theme.colorScheme.onSurfaceVariant;
+      case ExerciseType.superset:
+        return theme.colorScheme.secondary;
+      case ExerciseType.dropset:
+        return theme.colorScheme.tertiary;
+      case ExerciseType.restPause:
+        return theme.colorScheme.error;
+    }
+  }
+}

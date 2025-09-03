@@ -6,7 +6,7 @@ import '../../../shared/presentation/providers/app_config_provider.dart';
 import '../../../shared/domain/entities/app_config.dart';
 import '../../../shared/domain/entities/timer_sound.dart';
 import '../../auth/presentation/providers/auth_provider.dart';
-import '../../timer/presentation/providers/timer_position_provider.dart';
+import '../../timer/presentation/providers/timer_ui_state_provider.dart';
 import 'widgets/timer_sound_selector.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -838,7 +838,8 @@ class SettingsScreen extends ConsumerWidget {
           ),
           FilledButton(
             onPressed: () async {
-              await ref.read(timerPositionProvider.notifier).resetToDefaultPosition();
+              // Reset timer position to default
+              ref.read(timerUIStateProvider.notifier).updatePosition(const Offset(20, 100));
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

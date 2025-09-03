@@ -1,0 +1,268 @@
+import 'package:flutter/material.dart';
+
+/// Rappresenta un widget configurabile nella home screen
+class HomeWidgetConfig {
+  final String id;
+  final String type;
+  final String title;
+  final IconData icon;
+  final bool isVisible;
+  final int order;
+  final Map<String, dynamic>? settings;
+  final bool isRequired; // Some widgets can't be hidden
+  final bool allowResize; // Some widgets can't be resized
+  final WidgetSize size;
+
+  const HomeWidgetConfig({
+    required this.id,
+    required this.type,
+    required this.title,
+    required this.icon,
+    this.isVisible = true,
+    required this.order,
+    this.settings,
+    this.isRequired = false,
+    this.allowResize = true,
+    this.size = WidgetSize.medium,
+  });
+
+  HomeWidgetConfig copyWith({
+    bool? isVisible,
+    int? order,
+    Map<String, dynamic>? settings,
+    bool? allowResize,
+    WidgetSize? size,
+  }) {
+    return HomeWidgetConfig(
+      id: id,
+      type: type,
+      title: title,
+      icon: icon,
+      isVisible: isVisible ?? this.isVisible,
+      order: order ?? this.order,
+      settings: settings ?? this.settings,
+      isRequired: isRequired,
+      allowResize: allowResize ?? this.allowResize,
+      size: size ?? this.size,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'type': type,
+    'title': title,
+    'icon': icon.codePoint,
+    'isVisible': isVisible,
+    'order': order,
+    'settings': settings,
+    'isRequired': isRequired,
+    'allowResize': allowResize,
+    'size': size.name,
+  };
+
+  factory HomeWidgetConfig.fromJson(Map<String, dynamic> json) {
+    // Use a map to get the correct IconData constant
+    final iconMap = {
+      Icons.fitness_center.codePoint: Icons.fitness_center,
+      Icons.emoji_events.codePoint: Icons.emoji_events,
+      Icons.psychology.codePoint: Icons.psychology,
+      Icons.play_arrow.codePoint: Icons.play_arrow,
+      Icons.trending_up.codePoint: Icons.trending_up,
+      Icons.people.codePoint: Icons.people,
+      Icons.apps.codePoint: Icons.apps,
+      Icons.history.codePoint: Icons.history,
+      Icons.flag.codePoint: Icons.flag,
+      Icons.format_quote.codePoint: Icons.format_quote,
+      // Add more icons as needed
+    };
+    
+    return HomeWidgetConfig(
+      id: json['id'],
+      type: json['type'],
+      title: json['title'],
+      icon: iconMap[json['icon']] ?? Icons.widgets, // Fallback to Icons.widgets
+      isVisible: json['isVisible'] ?? true,
+      order: json['order'],
+      settings: json['settings'],
+      isRequired: json['isRequired'] ?? false,
+      allowResize: json['allowResize'] ?? true,
+      size: WidgetSize.values.firstWhere(
+        (e) => e.name == json['size'],
+        orElse: () => WidgetSize.medium,
+      ),
+    );
+  }
+}
+
+enum WidgetSize {
+  small,   // 1/2 width
+  medium,  // full width
+  large,   // full width + extra height
+}
+
+/// Tipi di widget disponibili
+class HomeWidgetType {
+  static const String activeWorkout = 'active_workout';
+  static const String statsCard = 'stats_card';
+  static const String aiCoach = 'ai_coach';
+  static const String quickStart = 'quick_start';
+  static const String progressDashboard = 'progress_dashboard';
+  static const String communityPulse = 'community_pulse';
+  static const String quickActions = 'quick_actions';
+  static const String recentWorkouts = 'recent_workouts';
+  static const String weeklyGoals = 'weekly_goals';
+  static const String motivationalQuote = 'motivational_quote';
+  static const String exerciseOfTheDay = 'exercise_of_day';
+  static const String nutritionTracker = 'nutrition_tracker';
+  static const String waterIntake = 'water_intake';
+  static const String sleepTracker = 'sleep_tracker';
+  static const String bodyMeasurements = 'body_measurements';
+  // Nuovi widget tier-1
+  static const String realProgressStats = 'real_progress_stats';
+  static const String streakTracker = 'streak_tracker';
+  static const String recentWorkoutsNew = 'recent_workouts_new';
+  static const String weeklyGoalsNew = 'weekly_goals_new';
+  static const String exerciseStats = 'exercise_stats';
+  static const String templateQuickAccess = 'template_quick_access';
+}
+
+/// Default widget configurations
+class DefaultHomeWidgets {
+  static const List<HomeWidgetConfig> defaultWidgets = [
+    HomeWidgetConfig(
+      id: 'active_workout',
+      type: HomeWidgetType.activeWorkout,
+      title: 'Allenamento Attivo',
+      icon: Icons.fitness_center,
+      order: 0,
+      isRequired: true, // Can't be hidden
+      size: WidgetSize.medium,
+    ),
+    HomeWidgetConfig(
+      id: 'stats_card',
+      type: HomeWidgetType.statsCard,
+      title: 'Progressi & Achievement',
+      icon: Icons.emoji_events,
+      order: 1,
+      size: WidgetSize.large,
+    ),
+    HomeWidgetConfig(
+      id: 'ai_coach',
+      type: HomeWidgetType.aiCoach,
+      title: 'AI Coach Insights',
+      icon: Icons.psychology,
+      order: 2,
+      allowResize: false, // Cannot be resized
+      size: WidgetSize.medium,
+    ),
+    HomeWidgetConfig(
+      id: 'quick_start',
+      type: HomeWidgetType.quickStart,
+      title: 'Avvia Allenamento',
+      icon: Icons.play_arrow,
+      order: 3,
+      allowResize: false, // Cannot be resized
+      size: WidgetSize.medium,
+    ),
+    HomeWidgetConfig(
+      id: 'progress_dashboard',
+      type: HomeWidgetType.progressDashboard,
+      title: 'Dashboard Progressi',
+      icon: Icons.trending_up,
+      order: 4,
+      allowResize: false, // Cannot be resized
+      size: WidgetSize.large,
+    ),
+    HomeWidgetConfig(
+      id: 'community_pulse',
+      type: HomeWidgetType.communityPulse,
+      title: 'Community',
+      icon: Icons.people,
+      order: 5,
+      allowResize: false, // Cannot be resized
+      size: WidgetSize.large,
+    ),
+    HomeWidgetConfig(
+      id: 'quick_actions',
+      type: HomeWidgetType.quickActions,
+      title: 'Azioni Rapide',
+      icon: Icons.apps,
+      order: 6,
+      allowResize: false, // Cannot be resized
+      size: WidgetSize.large,
+    ),
+    HomeWidgetConfig(
+      id: 'recent_workouts',
+      type: HomeWidgetType.recentWorkouts,
+      title: 'Allenamenti Recenti',
+      icon: Icons.history,
+      order: 7,
+      isVisible: false, // Hidden by default
+      size: WidgetSize.medium,
+    ),
+    HomeWidgetConfig(
+      id: 'weekly_goals',
+      type: HomeWidgetType.weeklyGoals,
+      title: 'Obiettivi Settimanali',
+      icon: Icons.flag,
+      order: 8,
+      isVisible: false,
+      size: WidgetSize.small,
+    ),
+    // Nuovi widget tier-1
+    HomeWidgetConfig(
+      id: 'real_progress_stats',
+      type: HomeWidgetType.realProgressStats,
+      title: 'Analisi Progressi',
+      icon: Icons.analytics,
+      order: 11,
+      isVisible: true,
+      size: WidgetSize.medium,
+    ),
+    HomeWidgetConfig(
+      id: 'streak_tracker',
+      type: HomeWidgetType.streakTracker,
+      title: 'Streak Tracker',
+      icon: Icons.local_fire_department,
+      order: 12,
+      isVisible: true,
+      size: WidgetSize.small,
+    ),
+    HomeWidgetConfig(
+      id: 'recent_workouts_new',
+      type: HomeWidgetType.recentWorkoutsNew,
+      title: 'Workout Recenti',
+      icon: Icons.history,
+      order: 13,
+      isVisible: true,
+      size: WidgetSize.medium,
+    ),
+    HomeWidgetConfig(
+      id: 'weekly_goals_new',
+      type: HomeWidgetType.weeklyGoalsNew,
+      title: 'Obiettivi',
+      icon: Icons.flag,
+      order: 14,
+      isVisible: true,
+      size: WidgetSize.small,
+    ),
+    HomeWidgetConfig(
+      id: 'motivational_quote',
+      type: HomeWidgetType.motivationalQuote,
+      title: 'Quote del Giorno',
+      icon: Icons.format_quote,
+      order: 9,
+      isVisible: false,
+      size: WidgetSize.small,
+    ),
+    HomeWidgetConfig(
+      id: 'exercise_of_day',
+      type: HomeWidgetType.exerciseOfTheDay,
+      title: 'Esercizio del Giorno',
+      icon: Icons.fitness_center,
+      order: 10,
+      isVisible: false,
+      size: WidgetSize.medium,
+    ),
+  ];
+}

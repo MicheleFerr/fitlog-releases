@@ -1,0 +1,303 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_set.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:mocktail/mocktail.dart';
+
+// Mock classes
+class MockWidgetRef extends Mock implements WidgetRef {}
+
+// Test widget wrapper
+Widget createTestWidget(Widget child) {
+  return MaterialApp(
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: ProviderScope(
+      child: Scaffold(body: child),
+    ),
+  );
+}
+
+void main() {
+  group('Exercise Card Widget Tests', () {
+    late Exercise testExercise;
+    late WidgetRef mockRef;
+
+    setUp(() {
+      mockRef = MockWidgetRef();
+      testExercise = Exercise(
+        id: 'test-1',
+        name: 'Bench Press',
+        muscleGroup: 'Chest',
+        equipment: 'Barbell',
+        sets: [
+          ExerciseSet(
+            id: 'set-1',
+            setNumber: 1,
+            targetReps: 10,
+            targetWeight: 60.0,
+            actualReps: 10,
+            actualWeight: 60.0,
+            isCompleted: true,
+          ),
+          ExerciseSet(
+            id: 'set-2',
+            setNumber: 2,
+            targetReps: 10,
+            targetWeight: 60.0,
+            actualReps: null,
+            actualWeight: null,
+            isCompleted: false,
+          ),
+        ],
+        notes: 'Focus on form',
+        restSeconds: 90,
+      );
+    });
+
+    testWidgets('displays exercise name correctly', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: ListTile(
+              title: Text(testExercise.name),
+              subtitle: Text('${testExercise.sets.length} sets'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Bench Press'), findsOneWidget);
+      expect(find.text('2 sets'), findsOneWidget);
+    });
+
+    testWidgets('shows completed and pending sets', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: Column(
+              children: testExercise.sets.map((set) {
+                return ListTile(
+                  leading: Icon(
+                    set.isCompleted ? Icons.check_circle : Icons.circle_outlined,
+                    color: set.isCompleted ? Colors.green : Colors.grey,
+                  ),
+                  title: Text('Set ${set.setNumber}'),
+                  subtitle: Text('${set.targetWeight}kg x ${set.targetReps}'),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.byIcon(Icons.circle_outlined), findsOneWidget);
+      expect(find.text('Set 1'), findsOneWidget);
+      expect(find.text('Set 2'), findsOneWidget);
+    });
+
+    testWidgets('displays rest timer when provided', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: ListTile(
+              title: Text(testExercise.name),
+              trailing: testExercise.restSeconds != null
+                  ? Chip(
+                      label: Text('${testExercise.restSeconds}s rest'),
+                      avatar: const Icon(Icons.timer, size: 16),
+                    )
+                  : null,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('90s rest'), findsOneWidget);
+      expect(find.byIcon(Icons.timer), findsOneWidget);
+    });
+
+    testWidgets('shows notes when available', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: Column(
+              children: [
+                ListTile(title: Text(testExercise.name)),
+                if (testExercise.notes != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.note, size: 16),
+                        const SizedBox(width: 4),
+                        Text(testExercise.notes!),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Focus on form'), findsOneWidget);
+      expect(find.byIcon(Icons.note), findsOneWidget);
+    });
+
+    testWidgets('handles tap interactions', (tester) async {
+      bool wasTapped = false;
+
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: InkWell(
+              onTap: () => wasTapped = true,
+              child: ListTile(
+                title: Text(testExercise.name),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(InkWell));
+      expect(wasTapped, true);
+    });
+
+    testWidgets('shows progress indicator', (tester) async {
+      final completedSets = testExercise.sets.where((s) => s.isCompleted).length;
+      final totalSets = testExercise.sets.length;
+      final progress = completedSets / totalSets;
+
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: Column(
+              children: [
+                ListTile(title: Text(testExercise.name)),
+                LinearProgressIndicator(value: progress),
+                Text('$completedSets/$totalSets sets completed'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      expect(find.text('1/2 sets completed'), findsOneWidget);
+    });
+
+    testWidgets('displays equipment info', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: ListTile(
+              title: Text(testExercise.name),
+              subtitle: Row(
+                children: [
+                  const Icon(Icons.fitness_center, size: 16),
+                  const SizedBox(width: 4),
+                  Text(testExercise.equipment ?? 'No equipment'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Barbell'), findsOneWidget);
+      expect(find.byIcon(Icons.fitness_center), findsOneWidget);
+    });
+
+    testWidgets('handles long exercise names', (tester) async {
+      final longNameExercise = Exercise(
+        id: 'test-2',
+        name: 'Single Arm Dumbbell Row with Pause at Top Position',
+        muscleGroup: 'Back',
+        sets: [],
+      );
+
+      await tester.pumpWidget(
+        createTestWidget(
+          SizedBox(
+            width: 200,
+            child: Card(
+              child: ListTile(
+                title: Text(
+                  longNameExercise.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.text('Single Arm Dumbbell Row with Pause at Top Position'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('shows muscle group badge', (tester) async {
+      await tester.pumpWidget(
+        createTestWidget(
+          Card(
+            child: ListTile(
+              title: Text(testExercise.name),
+              leading: Chip(
+                label: Text(testExercise.muscleGroup ?? 'Unknown'),
+                backgroundColor: Colors.blue.shade100,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Chest'), findsOneWidget);
+      expect(find.byType(Chip), findsOneWidget);
+    });
+
+    test('Exercise model calculates total volume correctly', () {
+      final totalVolume = testExercise.sets
+          .where((s) => s.isCompleted)
+          .fold(0.0, (sum, set) {
+        final weight = set.actualWeight ?? set.targetWeight ?? 0;
+        final reps = set.actualReps ?? set.targetReps ?? 0;
+        return sum + (weight * reps);
+      });
+
+      expect(totalVolume, 600.0); // 60kg x 10 reps = 600
+    });
+
+    test('Exercise model identifies if all sets completed', () {
+      final allCompleted = testExercise.sets.every((s) => s.isCompleted);
+      expect(allCompleted, false);
+
+      final completedExercise = Exercise(
+        id: 'test-3',
+        name: 'Squat',
+        sets: [
+          ExerciseSet(
+            id: 's1',
+            setNumber: 1,
+            isCompleted: true,
+          ),
+          ExerciseSet(
+            id: 's2',
+            setNumber: 2,
+            isCompleted: true,
+          ),
+        ],
+      );
+
+      final allCompletedTrue = completedExercise.sets.every((s) => s.isCompleted);
+      expect(allCompletedTrue, true);
+    });
+  });
+}

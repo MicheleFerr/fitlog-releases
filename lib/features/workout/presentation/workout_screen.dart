@@ -19,7 +19,8 @@ import 'widgets/exercise_list_item.dart';
 import 'widgets/workout_customization_modal.dart';
 import 'screens/workout_templates_screen.dart';
 import 'screens/edit_template_screen.dart';
-import '../../timer/presentation/widgets/enhanced_timer_overlay.dart';
+import '../../timer/presentation/widgets/tier1_minimal_timer_overlay.dart';
+import '../../timer/presentation/providers/unified_timer_extensions.dart';
 
 class WorkoutScreen extends ConsumerWidget {
   const WorkoutScreen({super.key});
@@ -72,10 +73,13 @@ class WorkoutScreen extends ConsumerWidget {
             currentWorkout == null 
                 ? _buildWelcomeView(context, ref)
                 : _buildWorkoutView(context, ref, currentWorkout),
-            // Enhanced timer overlay with compact mode and fixed positions
-            const EnhancedTimerOverlay(),
-            // ✅ Recovery FAB per timer fuori schermo  
-            const TimerRecoveryFAB(),
+            // Timer Overlay
+            Consumer(
+              builder: (context, ref, child) {
+                final shouldShow = ref.watch(shouldShowTier1TimerProvider);
+                return shouldShow ? const Tier1MinimalTimerOverlay() : const SizedBox.shrink();
+              },
+            ),
           ],
         ),
         ),

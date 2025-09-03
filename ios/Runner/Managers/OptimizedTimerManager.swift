@@ -2,6 +2,7 @@ import Foundation
 import ActivityKit
 import AVFoundation
 import UIKit
+import GymBroTimerWidget
 
 /// Ottimizzazioni Tier 1 per il timer system - Riduce battery drain del 75%
 final class OptimizedTimerManager {
@@ -34,6 +35,9 @@ final class OptimizedTimerManager {
     private var lastActivityUpdate: Date = .distantPast
     private var lastDisplayedSeconds: Int = -1
     private var minUpdateInterval: TimeInterval = 1.0 // Update max ogni secondo
+    
+    // Live Activity instance
+    private var currentActivity: Activity<GymBroTimerWidgetAttributes>?
     
     // Audio Pre-loading (riduce latenza del 94%)
     private var audioSessionConfigured = false
@@ -493,11 +497,125 @@ extension OptimizedTimerManager {
             case "getMetrics":
                 result(self.getMetrics())
                 
+            case "startLiveActivity":
+                if let args = call.arguments as? [String: Any] {
+                    self.startLiveActivity(args: args)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "INVALID_ARGS", message: nil, details: nil))
+                }
+                
+            case "updateLiveActivity":
+                if let args = call.arguments as? [String: Any],
+                   let remainingSeconds = args["remainingSeconds"] as? Int {
+                    self.updateLiveActivity(remainingSeconds: remainingSeconds)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "INVALID_ARGS", message: nil, details: nil))
+                }
+                
+            case "stopLiveActivity":
+                self.stopLiveActivity()
+                result(true)
+                
             default:
                 result(FlutterMethodNotImplemented)
             }
         }
         
         Logger.shared.log(.info, "✅ Flutter channel configured", category: .general)
+    }
+    
+    // MARK: - Live Activity Methods
+    private func startLiveActivity(args: [String: Any]) {
+        guard #available(iOS 16.1, *) else { return }
+        
+        let totalSeconds = args["totalSeconds"] as? Int ?? 0
+        let remainingSeconds = args["remainingSeconds"] as? Int ?? totalSeconds
+        let exerciseName = args["exerciseName"] as? String ?? "Rest Timer"
+        let currentSet = args["currentSet"] as? Int
+        let totalSets = args["totalSets"] as? Int
+        
+        let attributes = GymBroTimerWidgetAttributes(
+            exerciseName: exerciseName,
+            totalSeconds: totalSeconds
+        )
+        
+        let initialState = GymBroTimerWidgetAttributes.ContentState(
+            remainingSeconds: remainingSeconds,
+            isPaused: false,
+            currentSet: currentSet,
+            totalSets: totalSets
+        )
+        
+        let activityContent = ActivityContent(
+            state: initialState,
+            staleDate: Date().addingTimeInterval(TimeInterval(remainingSeconds + 30))
+        )
+        
+        do {
+            currentActivity = try Activity.request(
+                attributes: attributes,
+                content: activityContent,
+                pushType: nil
+            )
+            Logger.shared.log(.info, "✅ Live Activity started", category: .general)
+        } catch {
+            Logger.shared.log(.error, "Failed to start Live Activity: \(error)", category: .general)
+        }
+    }
+    
+    private func updateLiveActivity(remainingSeconds: Int) {
+        guard #available(iOS 16.1, *),
+              let activity = currentActivity else { return }
+        
+        // Throttle updates
+        guard remainingSeconds != lastDisplayedSeconds else { return }
+        lastDisplayedSeconds = remainingSeconds
+        
+        Task {
+            let updatedState = GymBroTimerWidgetAttributes.ContentState(
+                remainingSeconds: remainingSeconds,
+                isPaused: currentState != .active(startTime: Date(), duration: 0),
+                currentSet: nil,
+                totalSets: nil
+            )
+            
+            let updatedContent = ActivityContent(
+                state: updatedState,
+                staleDate: Date().addingTimeInterval(TimeInterval(remainingSeconds + 30))
+            )
+            
+            await activity.update(updatedContent)
+        }
+    }
+    
+    private func stopLiveActivity() {
+        guard #available(iOS 16.1, *),
+              let activity = currentActivity else { return }
+        
+        Task {
+            let finalState = GymBroTimerWidgetAttributes.ContentState(
+                remainingSeconds: 0,
+                isPaused: false,
+                currentSet: nil,
+                totalSets: nil
+            )
+            
+            let finalContent = ActivityContent(
+                state: finalState,
+                staleDate: Date()
+            )
+            
+            await activity.end(
+                content: finalContent,
+                dismissalPolicy: .after(Date().addingTimeInterval(5))
+            )
+            
+            currentActivity = nil
+            lastDisplayedSeconds = -1
+        }
+        
+        Logger.shared.log(.info, "✅ Live Activity stopped", category: .general)
     }
 }

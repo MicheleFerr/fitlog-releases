@@ -1,0 +1,103 @@
+#!/bin/bash
+# Timer Architecture Protection Hook
+# Prevents accidental creation of new timer layers
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo -e "${YELLOW}🔍 Checking Timer Architecture...${NC}"
+
+# Check for new timer providers
+NEW_TIMER_PROVIDERS=$(git diff --cached --name-only | grep -E "timer.*provider.*\.dart$" | grep -v -E "(unified_timer_provider|timer_system_adapter|timer_feature_flags)")
+
+if [ ! -z "$NEW_TIMER_PROVIDERS" ]; then
+    echo -e "${RED}❌ BLOCKED: New timer provider detected!${NC}"
+    echo -e "${RED}Files: $NEW_TIMER_PROVIDERS${NC}"
+    echo ""
+    echo -e "${YELLOW}💡 SOLUTION:${NC}"
+    echo "• Use UnifiedTimerProvider extensions"
+    echo "• Add configuration to UnifiedTimerState"  
+    echo "• Create external service and inject it"
+    echo ""
+    echo -e "${YELLOW}📖 See CLAUDE.md section: 'TIMER DEVELOPMENT RULES'${NC}"
+    exit 1
+fi
+
+# Check for new iOS timer managers
+NEW_IOS_MANAGERS=$(git diff --cached --name-only | grep -E "Timer.*Manager.*\.swift$" | grep -v "SimplifiedTimerManager")
+
+if [ ! -z "$NEW_IOS_MANAGERS" ]; then
+    echo -e "${RED}❌ BLOCKED: New iOS timer manager detected!${NC}"
+    echo -e "${RED}Files: $NEW_IOS_MANAGERS${NC}"
+    echo ""
+    echo -e "${YELLOW}💡 SOLUTION:${NC}"
+    echo "• Use existing SimplifiedTimerManager.swift"
+    echo "• Add methods to existing manager"
+    echo "• Create external service if needed"
+    echo ""
+    echo -e "${YELLOW}📖 See CLAUDE.md section: 'TIMER DEVELOPMENT RULES'${NC}"
+    exit 1
+fi
+
+# Check for new platform channels in iOS
+NEW_CHANNELS=$(git diff --cached --diff-filter=A --name-only | xargs grep -l "com\.gymbro\..*timer" 2>/dev/null | grep -v "unified_timer" | grep "\.swift$")
+
+if [ ! -z "$NEW_CHANNELS" ]; then
+    echo -e "${RED}❌ BLOCKED: New timer platform channel detected!${NC}"
+    echo -e "${RED}Files: $NEW_CHANNELS${NC}"
+    echo ""
+    echo -e "${YELLOW}💡 SOLUTION:${NC}"
+    echo "• Use existing channel: com.gymbro.unified_timer"
+    echo "• Add methods to SimplifiedTimerManager"
+    echo ""
+    echo -e "${YELLOW}📖 See CLAUDE.md section: 'TIMER DEVELOPMENT RULES'${NC}"
+    exit 1
+fi
+
+# Check for timer-related class duplications
+TIMER_CLASSES=$(git diff --cached --diff-filter=A | grep -E "class.*Timer.*Provider|class.*Timer.*Manager|class.*Timer.*Controller" | grep -v -E "(UnifiedTimer|TimerSystem|SimplifiedTimer)")
+
+if [ ! -z "$TIMER_CLASSES" ]; then
+    echo -e "${RED}❌ BLOCKED: New timer class detected that might duplicate functionality!${NC}"
+    echo -e "${RED}Classes: $TIMER_CLASSES${NC}"
+    echo ""
+    echo -e "${YELLOW}💡 SOLUTION:${NC}"
+    echo "• Extend UnifiedTimerProvider instead"
+    echo "• Use configuration parameters"
+    echo "• Create external services"
+    echo ""
+    echo -e "${YELLOW}📖 See CLAUDE.md section: 'TIMER DEVELOPMENT RULES'${NC}"
+    exit 1
+fi
+
+# Count current timer providers to ensure we don't exceed the limit
+TOTAL_TIMER_PROVIDERS=$(find lib -name "*timer*provider*.dart" 2>/dev/null | wc -l)
+if [ $TOTAL_TIMER_PROVIDERS -gt 3 ]; then
+    echo -e "${RED}❌ BLOCKED: Too many timer providers! Found: $TOTAL_TIMER_PROVIDERS, Maximum allowed: 3${NC}"
+    echo ""
+    echo -e "${YELLOW}💡 ALLOWED FILES:${NC}"
+    echo "• unified_timer_provider.dart"
+    echo "• timer_system_adapter.dart" 
+    echo "• timer_feature_flags.dart"
+    echo ""
+    echo -e "${YELLOW}📖 See CLAUDE.md section: 'TIMER DEVELOPMENT RULES'${NC}"
+    exit 1
+fi
+
+# Count iOS timer managers
+TOTAL_IOS_MANAGERS=$(find ios -name "*Timer*Manager*.swift" 2>/dev/null | wc -l)
+if [ $TOTAL_IOS_MANAGERS -gt 1 ]; then
+    echo -e "${RED}❌ BLOCKED: Too many iOS timer managers! Found: $TOTAL_IOS_MANAGERS, Maximum allowed: 1${NC}"
+    echo ""
+    echo -e "${YELLOW}💡 ALLOWED FILE:${NC}"
+    echo "• SimplifiedTimerManager.swift"
+    echo ""
+    echo -e "${YELLOW}📖 See CLAUDE.md section: 'TIMER DEVELOPMENT RULES'${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Timer architecture protection passed!${NC}"
+echo ""

@@ -1,0 +1,353 @@
+import AVFoundation
+import UIKit
+
+/// Protocol for testability and dependency injection
+protocol AudioSessionManaging {
+    func configureForLaunch()
+    func transitionToBackground()
+    func transitionToForeground()
+    func validateConfiguration() -> Bool
+    func reactivate()
+}
+
+/// Manages AVAudioSession configuration with state machine for safe transitions
+final class AudioSessionManager: AudioSessionManaging {
+    
+    // MARK: - State Management
+    
+    enum State: String {
+        case uninitialized
+        case foreground
+        case background
+        case transitioning
+        
+        var debugDescription: String {
+            switch self {
+            case .uninitialized: return "🔴 Uninitialized"
+            case .foreground: return "🟢 Foreground"
+            case .background: return "🔵 Background"
+            case .transitioning: return "🟡 Transitioning"
+            }
+        }
+    }
+    
+    // MARK: - Properties
+    
+    static let shared = AudioSessionManager()
+    
+    private var currentState: State = .uninitialized
+    private let stateQueue = DispatchQueue(label: "com.gymbro.audio.state", qos: .userInitiated)
+    private var session: AVAudioSession { AVAudioSession.sharedInstance() }
+    
+    // Configuration cache to avoid redundant setups
+    private var lastConfiguredCategory: AVAudioSession.Category?
+    private var lastConfiguredOptions: AVAudioSession.CategoryOptions?
+    
+    // MARK: - Initialization
+    
+    private init() {
+        Logger.shared.log(.info, "AudioSessionManager initialized")
+    }
+    
+    // MARK: - Public Methods
+    
+    func configureForLaunch() {
+        stateQueue.sync {
+            guard currentState == .uninitialized else {
+                Logger.shared.log(.warning, "AudioSession already configured, state: \(currentState.debugDescription)")
+                return
+            }
+            
+            // v3.0.5: Don't transition to foreground immediately to avoid music ducking
+            // Just mark as initialized but don't activate audio session yet
+            currentState = .foreground
+            Logger.shared.log(.info, "AudioSession initialized but NOT activated (prevents music ducking)")
+            // performTransition(to: .foreground) // DISABLED to prevent music ducking on app launch
+        }
+    }
+    
+    func transitionToBackground() {
+        stateQueue.sync {
+            guard currentState != .background else {
+                Logger.shared.log(.debug, "Already in background state")
+                return
+            }
+            
+            performTransition(to: .background)
+        }
+    }
+    
+    func transitionToForeground() {
+        stateQueue.sync {
+            guard currentState != .foreground else {
+                Logger.shared.log(.debug, "Already in foreground state")
+                return
+            }
+            
+            performTransition(to: .foreground)
+        }
+    }
+    
+    func validateConfiguration() -> Bool {
+        let isValid = session.category == .playback &&
+                     (currentState == .background ? 
+                      session.categoryOptions.contains(.mixWithOthers) : true)
+        
+        // ENHANCED: Additional validation for silent loop compatibility
+        let silentLoopReady = currentState == .background ? 
+            (session.categoryOptions.contains(.mixWithOthers) && 
+             session.preferredIOBufferDuration <= 0.2) : true
+        
+        let overallValid = isValid && silentLoopReady
+        
+        Logger.shared.log(
+            overallValid ? .debug : .warning,
+            "Audio configuration validation: \(overallValid ? "✅ Valid (silent loop ready)" : "❌ Invalid")"
+        )
+        
+        return overallValid
+    }
+    
+    func reactivate() {
+        // v3.0.6: Don't reactivate audio session on app become active
+        // This prevents music ducking when the app opens
+        // Audio session will be activated only when actually needed (timer sounds)
+        Logger.shared.log(.debug, "Reactivate called but skipped to prevent music ducking")
+        return
+        
+        // Original code kept for reference but disabled
+        /*
+        do {
+            guard !session.isOtherAudioPlaying else {
+                Logger.shared.log(.debug, "Other audio playing, skipping reactivation")
+                return
+            }
+            
+            try session.setActive(true)
+            Logger.shared.log(.info, "Audio session reactivated successfully")
+            
+        } catch {
+            ErrorRecoveryManager.shared.handle(
+                error,
+                context: .audioSession,
+                strategy: .retry(attempts: 2, delay: 0.5)
+            )
+        }
+        */
+    }
+    
+    // v3.0.6: Activate audio session only when timer sounds need to play
+    func activateForTimerSound() {
+        stateQueue.sync {
+            Logger.shared.log(.info, "Activating audio session for timer sound")
+            
+            do {
+                // First check if we need to change the configuration
+                let currentCategory = session.category
+                let currentOptions = session.categoryOptions
+                
+                // Only reconfigure if necessary
+                if currentCategory != .playback || !currentOptions.contains(.mixWithOthers) {
+                    // Configure with mixWithOthers to not duck music
+                    try session.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowAirPlay])
+                    Logger.shared.log(.info, "Audio category updated to playback with mixWithOthers")
+                }
+                
+                // Only activate if not already active
+                if !session.isOtherAudioPlaying || currentState != .foreground {
+                    try session.setActive(true, options: [])
+                    Logger.shared.log(.info, "✅ Audio session activated for timer (no ducking)")
+                } else {
+                    Logger.shared.log(.debug, "Audio session already active, skipping activation")
+                }
+                
+                // Update state
+                currentState = .foreground
+                
+            } catch {
+                Logger.shared.log(.error, "Failed to activate audio session for timer: \(error)")
+            }
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func performTransition(to targetState: State) {
+        let previousState = currentState
+        currentState = .transitioning
+        
+        Logger.shared.log(.info, "Audio transition: \(previousState.debugDescription) → \(targetState.debugDescription)")
+        
+        do {
+            switch targetState {
+            case .foreground:
+                try configureForegroundAudio()
+                
+            case .background:
+                try configureBackgroundAudio()
+                
+            default:
+                Logger.shared.log(.error, "Invalid transition to \(targetState)")
+                currentState = previousState
+                return
+            }
+            
+            currentState = targetState
+            Logger.shared.log(.info, "Audio transition completed: \(targetState.debugDescription)")
+            
+        } catch {
+            currentState = previousState
+            ErrorRecoveryManager.shared.handle(
+                error,
+                context: .audioSession,
+                strategy: .fallback {
+                    Logger.shared.log(.error, "Audio transition failed, reverting to \(previousState.debugDescription)")
+                }
+            )
+        }
+    }
+    
+    private func configureForegroundAudio() throws {
+        // Check if already configured correctly
+        if lastConfiguredCategory == .playback,
+           lastConfiguredOptions == [.mixWithOthers, .allowAirPlay] {
+            Logger.shared.log(.debug, "Foreground audio already configured")
+            return
+        }
+        
+        // Deactivate if switching from different category
+        if session.category != .playback {
+            try session.setActive(false, options: .notifyOthersOnDeactivation)
+        }
+        
+        // Configure for foreground - FIXED: Use mixWithOthers instead of duckOthers to not lower Spotify volume
+        try session.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowAirPlay])
+        
+        // Activate if safe
+        if !session.isOtherAudioPlaying {
+            try session.setActive(true)
+        }
+        
+        // Cache configuration
+        lastConfiguredCategory = .playback
+        lastConfiguredOptions = [.mixWithOthers, .allowAirPlay]
+        
+        Logger.shared.log(.info, "Foreground audio configured successfully (no ducking)")
+    }
+    
+    private func configureBackgroundAudio() throws {
+        // Check if already configured correctly
+        if lastConfiguredCategory == .playback,
+           lastConfiguredOptions == [.allowAirPlay, .mixWithOthers] {
+            Logger.shared.log(.debug, "Background audio already configured")
+            return
+        }
+        
+        // Configure for background silent track + completion sounds
+        // ENHANCED: Optimal settings for silent loop strategy - NO DUCKING
+        try session.setCategory(.playback, mode: .default, options: [
+            .allowAirPlay,
+            .mixWithOthers  // CRITICAL: Allow coexistence with other apps without ducking
+        ])
+        
+        // 🔧 FIX: Removed setPreferredIOBufferDuration which causes error -50
+        // Let iOS manage buffer duration automatically
+        
+        // Activate if safe
+        if !session.isOtherAudioPlaying {
+            try session.setActive(true)
+        }
+        
+        // Cache configuration
+        lastConfiguredCategory = .playback
+        lastConfiguredOptions = [.allowAirPlay, .mixWithOthers]
+        
+        Logger.shared.log(.info, "Background audio configured for ENHANCED silent loop system (no ducking)")
+    }
+    
+    // MARK: - Debug Helpers
+    
+    func debugPrintCurrentState() {
+        Logger.shared.log(.debug, """
+            AudioSession Debug Info:
+            - State: \(currentState.debugDescription)
+            - Category: \(session.category.rawValue)
+            - Mode: \(session.mode.rawValue)
+            - Options: \(session.categoryOptions.rawValue)
+            - Other audio playing: \(session.isOtherAudioPlaying)
+            - Output volume: \(session.outputVolume)
+            - Buffer duration: \(session.preferredIOBufferDuration)s
+            - Silent loop compatible: \(session.categoryOptions.contains(.mixWithOthers) && session.preferredIOBufferDuration <= 0.2)
+            """)
+    }
+    
+    // MARK: - Silent Loop Support
+    
+    /// Configures audio session specifically for silent loop playback
+    func configureSilentLoopSession() throws {
+        Logger.shared.log(.info, "Configuring audio session specifically for silent loop")
+        
+        // Optimal configuration for silent background loop
+        try session.setCategory(.playback, mode: .default, options: [
+            .mixWithOthers,   // CRITICAL: Don't interrupt other audio
+            .allowAirPlay,    // Allow AirPlay
+            .interruptSpokenAudioAndMixWithOthers  // Mix but interrupt spoken content when needed
+        ])
+        
+        // Set optimal buffer for battery efficiency
+        try session.setPreferredIOBufferDuration(0.1)
+        
+        // Set low sample rate for efficiency (silent audio doesn't need high quality)
+        try session.setPreferredSampleRate(22050) // Half of CD quality is enough
+        
+        // Activate session
+        if !session.isOtherAudioPlaying {
+            try session.setActive(true)
+        }
+        
+        Logger.shared.log(.info, "✅ Silent loop audio session configured optimally")
+    }
+    
+    /// Restores normal audio session after silent loop
+    func restoreFromSilentLoop() throws {
+        Logger.shared.log(.info, "Restoring audio session from silent loop mode")
+        
+        // Reset to normal playback configuration
+        try configureBackgroundAudio()
+        
+        Logger.shared.log(.info, "✅ Audio session restored from silent loop")
+    }
+}
+
+// MARK: - Silent Loop Configuration Constants
+
+extension AudioSessionManager {
+    struct SilentLoopConfig {
+        static let optimalBufferDuration: TimeInterval = 0.1
+        static let optimalSampleRate: Double = 22050
+        static let maxAllowedLatency: TimeInterval = 0.2
+    }
+}
+
+// MARK: - Error Extension
+
+extension Error {
+    var audioSessionErrorDescription: String {
+        if let nsError = self as NSError? {
+            // Enhanced error descriptions for silent loop debugging
+            let codeDescription: String
+            switch nsError.code {
+            case AVAudioSession.ErrorCode.cannotInterruptOthers.rawValue:
+                codeDescription = "Cannot interrupt other audio (check mixWithOthers option)"
+            // case AVAudioSession.ErrorCode.categoryNotAvailable.rawValue: // Not available in current SDK
+            //     codeDescription = "Category not available (check background modes)"
+            case AVAudioSession.ErrorCode.insufficientPriority.rawValue:
+                codeDescription = "Insufficient priority (other app has audio focus)"
+            default:
+                codeDescription = nsError.localizedDescription
+            }
+            return "Audio Error [Code: \(nsError.code)] \(codeDescription)"
+        }
+        return localizedDescription
+    }
+}
