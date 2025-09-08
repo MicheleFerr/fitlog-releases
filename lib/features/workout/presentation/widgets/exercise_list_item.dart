@@ -7,7 +7,7 @@ import '../../domain/entities/exercise.dart';
 import '../../domain/entities/exercise_activity.dart';
 import '../../data/repositories/exercise_activity_repository.dart';
 import 'edit_set_modal.dart';
-import 'hybrid_quick_edit_overlay.dart';
+import 'quick_edit_overlay_v2.dart';
 import 'edit_exercise_modal.dart';
 import 'rpe_selector_bottom_sheet.dart';
 import '../../../../shared/presentation/providers/app_config_provider.dart';
@@ -28,6 +28,8 @@ class ExerciseListItem extends ConsumerStatefulWidget {
   final Exercise exercise;
   final VoidCallback onTap;
   final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onReplace;
   final Function(ExerciseSet)? onSetUpdate;
   final Function(ExerciseSet)? onSetToggleComplete;
   final Function(Exercise)? onExerciseUpdate;
@@ -37,6 +39,8 @@ class ExerciseListItem extends ConsumerStatefulWidget {
     required this.exercise,
     required this.onTap,
     required this.onDelete,
+    this.onEdit,
+    this.onReplace,
     this.onSetUpdate,
     this.onSetToggleComplete,
     this.onExerciseUpdate,
@@ -1930,13 +1934,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     // Haptic feedback for quick edit
     HapticFeedback.selectionClick();
     
-    // Use hybrid quick edit with wheel + manual entry
-    context.showHybridQuickEditOverlay(
+    // Use V2 quick edit with superset support
+    context.showQuickEditOverlayV2(
       exerciseSet: set,
       onSave: widget.onSetUpdate!,
       position: position,
       previousSet: previousSet,
-      recentWeights: recentWeights.isNotEmpty ? recentWeights : null,
     );
   }
 
