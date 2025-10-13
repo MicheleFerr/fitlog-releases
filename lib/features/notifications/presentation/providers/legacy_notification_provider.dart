@@ -7,9 +7,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 // ============= STATE MODELS =============
 
@@ -209,21 +211,27 @@ enum MarketingFrequency { enabled, disabled }
 
 enum NotificationInteractionType { clicked, dismissed, read }
 
-// ============= PROVIDER =============
+// ============= DEPRECATED PROVIDER =============
 
-final unifiedNotificationProvider = StateNotifierProvider<UnifiedNotificationNotifier, NotificationState>((ref) {
-  return UnifiedNotificationNotifier(ref);
+/// DEPRECATED: This legacy provider has confusing naming and will be removed
+/// Use the actual unified_notification_provider.dart instead
+/// This file maintains old FCM logic for backward compatibility during migration
+@Deprecated('This is the legacy provider with confusing naming. Use unified_notification_provider.dart instead.')
+final legacyUnifiedNotificationProvider = StateNotifierProvider<LegacyUnifiedNotificationNotifier, NotificationState>((ref) {
+  return LegacyUnifiedNotificationNotifier(ref);
 });
 
-// ============= COMPUTED PROVIDERS =============
+// ============= DEPRECATED COMPUTED PROVIDERS =============
 
-final unreadNotificationCountProvider = Provider<int>((ref) {
-  final state = ref.watch(unifiedNotificationProvider);
+@Deprecated('Use unreadNotificationCountProvider from unified_notification_provider.dart')
+final legacyUnreadNotificationCountProvider = Provider<int>((ref) {
+  final state = ref.watch(legacyUnifiedNotificationProvider);
   return state.unreadCount;
 });
 
-final recentNotificationsProvider = Provider<List<AppNotification>>((ref) {
-  final state = ref.watch(unifiedNotificationProvider);
+@Deprecated('Use todayNotificationsProvider from unified_notification_provider.dart')
+final legacyRecentNotificationsProvider = Provider<List<AppNotification>>((ref) {
+  final state = ref.watch(legacyUnifiedNotificationProvider);
   final now = DateTime.now();
   
   return state.notifications
@@ -232,20 +240,33 @@ final recentNotificationsProvider = Provider<List<AppNotification>>((ref) {
       .toList();
 });
 
-final notificationsByTypeProvider = Provider.family<List<AppNotification>, NotificationType>((ref, type) {
-  final state = ref.watch(unifiedNotificationProvider);
+@Deprecated('Use computed providers from unified_notification_provider.dart')
+final legacyNotificationsByTypeProvider = Provider.family<List<AppNotification>, NotificationType>((ref, type) {
+  final state = ref.watch(legacyUnifiedNotificationProvider);
   return state.notifications.where((n) => n.type == type).toList();
 });
 
-// ============= MAIN NOTIFIER =============
+// ============= DEPRECATED MAIN NOTIFIER =============
 
-class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
+@Deprecated('Use UnifiedNotificationProvider from unified_notification_provider.dart')
+class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState> {
   final Ref ref;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
-  UnifiedNotificationNotifier(this.ref) : super(NotificationState.initial()) {
+
+  // CRITICAL: Initialization tracking (GOLD STANDARD pattern)
+  bool _isInitialized = false;
+  bool _isDisposed = false;
+  Completer<void>? _initCompleter;
+  int _initRetryCount = 0;
+  static const int _maxInitRetries = 3;
+
+  // CRITICAL: Resource tracking for disposal
+  StreamSubscription<String>? _tokenRefreshSubscription;
+
+  LegacyUnifiedNotificationNotifier(this.ref) : super(NotificationState.initial()) {
+    _initCompleter = Completer<void>();
     _initializeNotifications();
   }
 
@@ -253,6 +274,10 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
 
   Future<void> _initializeNotifications() async {
     try {
+      if (kDebugMode) {
+        debugPrint('🔔 [LegacyNotification] Starting initialization (attempt ${_initRetryCount + 1})');
+      }
+
       state = state.copyWith(isLoading: true);
 
       // Request permissions
@@ -288,17 +313,51 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       // Setup real-time listener for notifications
       _setupNotificationListener();
 
+      _isInitialized = true;
+      _initRetryCount = 0;
+      _initCompleter?.complete();
+
       state = state.copyWith(
         isInitialized: true,
         isLoading: false,
         error: null,
       );
 
-    } catch (error) {
+      if (kDebugMode) {
+        debugPrint('✅ [LegacyNotification] Initialization completed successfully');
+      }
+
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [LegacyNotification] Initialization failed (attempt ${_initRetryCount + 1}): $error');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+
       state = state.copyWith(
         isLoading: false,
         error: 'Failed to initialize notifications: $error',
       );
+
+      if (!_initCompleter!.isCompleted) {
+        _initCompleter?.completeError(error, stackTrace);
+      }
+    }
+  }
+
+  /// CRITICAL: Ensure initialization (GOLD STANDARD pattern)
+  Future<void> _ensureInitialized() async {
+    if (_isInitialized) return;
+    if (_initRetryCount >= _maxInitRetries) {
+      throw Exception('Legacy notification initialization failed after $_maxInitRetries attempts');
+    }
+    if (_initCompleter != null) {
+      try {
+        await _initCompleter!.future.timeout(const Duration(seconds: 15));
+      } catch (e) {
+        _initRetryCount++;
+        _initCompleter = Completer<void>();
+        await _initializeNotifications();
+      }
     }
   }
 
@@ -323,7 +382,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       }
 
     } catch (error) {
-      print('Permission request failed: $error');
+      if (kDebugMode) {
+        debugPrint('Permission request failed: $error');
+      }
       // Continue initialization even if permissions are denied
     }
   }
@@ -354,7 +415,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       }
 
     } catch (error) {
-      print('Local notifications initialization failed: $error');
+      if (kDebugMode) {
+        debugPrint('Local notifications initialization failed: $error');
+      }
     }
   }
 
@@ -421,7 +484,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       _fcm.onTokenRefresh.listen(_saveFCMToken);
 
     } catch (error) {
-      print('FCM initialization failed: $error');
+      if (kDebugMode) {
+        debugPrint('FCM initialization failed: $error');
+      }
     }
   }
 
@@ -444,7 +509,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       }, SetOptions(merge: true));
 
     } catch (error) {
-      print('Failed to save FCM token: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to save FCM token: $error');
+      }
     }
   }
 
@@ -480,7 +547,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       }
 
     } catch (error) {
-      print('Failed to load preferences: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to load preferences: $error');
+      }
     }
   }
 
@@ -519,7 +588,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       await _cacheNotifications(notifications);
 
     } catch (error) {
-      print('Failed to load notifications: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to load notifications: $error');
+      }
       
       // Fall back to cached data if available
       final cachedNotifications = await _getCachedNotifications();
@@ -554,7 +625,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
             _updateNotificationsState(notifications);
           },
           onError: (error) {
-            print('Notification listener error: $error');
+            if (kDebugMode) {
+              debugPrint('Notification listener error: $error');
+            }
           },
         );
   }
@@ -571,7 +644,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
   // ============= NOTIFICATION HANDLERS =============
 
   static Future<void> _backgroundMessageHandler(RemoteMessage message) async {
-    print('Handling background message: ${message.messageId}');
+    if (kDebugMode) {
+      debugPrint('Handling background message: ${message.messageId}');
+    }
     
     // Handle background notification logic
     // This runs when the app is in the background or terminated
@@ -579,7 +654,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
     try {
-      print('Handling foreground message: ${message.messageId}');
+      if (kDebugMode) {
+        debugPrint('Handling foreground message: ${message.messageId}');
+      }
 
       // Show local notification when app is in foreground
       await _showLocalNotification(message);
@@ -588,13 +665,17 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       await _recordNotificationDelivered(message);
 
     } catch (error) {
-      print('Error handling foreground message: $error');
+      if (kDebugMode) {
+        debugPrint('Error handling foreground message: $error');
+      }
     }
   }
 
   Future<void> _handleNotificationInteraction(RemoteMessage message) async {
     try {
-      print('Handling notification interaction: ${message.messageId}');
+      if (kDebugMode) {
+        debugPrint('Handling notification interaction: ${message.messageId}');
+      }
 
       final notificationId = message.data['notificationId'];
       if (notificationId != null) {
@@ -608,7 +689,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       }
 
     } catch (error) {
-      print('Error handling notification interaction: $error');
+      if (kDebugMode) {
+        debugPrint('Error handling notification interaction: $error');
+      }
     }
   }
 
@@ -627,7 +710,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
         }
       }
     } catch (error) {
-      print('Error handling local notification tap: $error');
+      if (kDebugMode) {
+        debugPrint('Error handling local notification tap: $error');
+      }
     }
   }
 
@@ -664,7 +749,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       );
 
     } catch (error) {
-      print('Error showing local notification: $error');
+      if (kDebugMode) {
+        debugPrint('Error showing local notification: $error');
+      }
     }
   }
 
@@ -693,6 +780,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
 
   Future<void> updateNotificationPreferences(NotificationPreferences preferences) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
       final authService = ref.read(authServiceProvider);
       final currentUser = authService.currentUser;
 
@@ -706,16 +796,22 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       state = state.copyWith(preferences: preferences);
 
     } catch (error) {
-      print('Failed to update preferences: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to update preferences: $error');
+      }
       state = state.copyWith(error: 'Failed to update preferences');
     }
   }
 
   Future<void> markNotificationAsRead(String notificationId) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
       await markNotificationInteraction(notificationId, NotificationInteractionType.read);
     } catch (error) {
-      print('Failed to mark notification as read: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to mark notification as read: $error');
+      }
     }
   }
 
@@ -724,6 +820,8 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
     NotificationInteractionType type,
   ) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
       final authService = ref.read(authServiceProvider);
       final currentUser = authService.currentUser;
 
@@ -768,12 +866,16 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       _updateNotificationsState(updatedNotifications);
 
     } catch (error) {
-      print('Failed to mark interaction: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to mark interaction: $error');
+      }
     }
   }
 
   Future<void> markAllNotificationsAsRead() async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
       final authService = ref.read(authServiceProvider);
       final currentUser = authService.currentUser;
 
@@ -804,12 +906,16 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       _updateNotificationsState(updatedNotifications);
 
     } catch (error) {
-      print('Failed to mark all as read: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to mark all as read: $error');
+      }
     }
   }
 
   Future<void> deleteNotification(String notificationId) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
       final authService = ref.read(authServiceProvider);
       final currentUser = authService.currentUser;
 
@@ -830,7 +936,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       _updateNotificationsState(updatedNotifications);
 
     } catch (error) {
-      print('Failed to delete notification: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to delete notification: $error');
+      }
     }
   }
 
@@ -842,7 +950,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       return box.values.toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     } catch (error) {
-      print('Failed to get cached notifications: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to get cached notifications: $error');
+      }
       return [];
     }
   }
@@ -856,7 +966,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
         await box.put(notification.id, notification);
       }
     } catch (error) {
-      print('Failed to cache notifications: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to cache notifications: $error');
+      }
     }
   }
 
@@ -876,7 +988,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
         'fcmMessageId': message.messageId,
       });
     } catch (error) {
-      print('Failed to record delivery: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to record delivery: $error');
+      }
     }
   }
 
@@ -884,6 +998,8 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
 
   Future<void> revokeNotificationConsent() async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
       final authService = ref.read(authServiceProvider);
       final currentUser = authService.currentUser;
 
@@ -918,13 +1034,17 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       });
 
     } catch (error) {
-      print('Failed to revoke consent: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to revoke consent: $error');
+      }
       state = state.copyWith(error: 'Failed to revoke notification consent');
     }
   }
 
   Future<Map<String, dynamic>> exportNotificationData() async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) throw Exception('Provider disposed');
       final authService = ref.read(authServiceProvider);
       final currentUser = authService.currentUser;
 
@@ -963,7 +1083,9 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       return exportData;
 
     } catch (error) {
-      print('Failed to export data: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to export data: $error');
+      }
       throw Exception('Failed to export notification data');
     }
   }
@@ -1000,5 +1122,40 @@ class UnifiedNotificationNotifier extends StateNotifier<NotificationState> {
       'id': doc.id,
       ...doc.data(),
     }).toList();
+  }
+
+  /// CRITICAL: Dispose method for resource cleanup
+  @override
+  void dispose() {
+    if (kDebugMode) {
+      debugPrint('🧹 [LegacyNotification] Starting disposal');
+    }
+
+    _isDisposed = true;
+
+    try {
+      // Cancel token refresh listener
+      _tokenRefreshSubscription?.cancel();
+      _tokenRefreshSubscription = null;
+
+      // Note: FCM listeners (onMessage, onMessageOpenedApp) cannot be cancelled
+      // They are static and handled by Firebase internally
+
+      // Note: Firestore snapshot listener from _setupNotificationListener()
+      // is not tracked, consider adding StreamSubscription tracking if needed
+
+      _initCompleter = null;
+
+      if (kDebugMode) {
+        debugPrint('✅ [LegacyNotification] Disposal completed');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [LegacyNotification] Error during disposal: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    } finally {
+      super.dispose();
+    }
   }
 }

@@ -197,21 +197,95 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
   Timer? _progressTimer;
-  
+
+  // GOLD STANDARD: Initialization tracking
+  bool _isInitialized = false;
+  bool _isDisposed = false;
+  Completer<void>? _initCompleter;
+  int _initRetryCount = 0;
+  static const int _maxInitRetries = 3;
+  Box? _adminPrefsBox;
+
   AdminAnalyticsSyncNotifier(this._ref) : super(const AdminAnalyticsSyncState()) {
-    _loadLastSyncTime();
+    _initCompleter = Completer<void>();
+    _initialize();
   }
   
-  /// Load last sync time from preferences
-  Future<void> _loadLastSyncTime() async {
+  /// Initialize with retry logic
+  Future<void> _initialize() async {
     try {
-      final box = await Hive.openBox('admin_preferences');
-      final lastSync = box.get('last_analytics_sync');
+      if (kDebugMode) {
+        debugPrint('📍 [AdminAnalytics] Initializing AdminAnalyticsSyncNotifier...');
+      }
+
+      // Open Hive box with timeout
+      _adminPrefsBox = await Hive.openBox('admin_preferences').timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          if (kDebugMode) {
+            debugPrint('⚠️ [AdminAnalytics] Hive box open timeout');
+          }
+          throw TimeoutException('Failed to open admin preferences box');
+        },
+      );
+
+      // Load last sync time
+      final lastSync = _adminPrefsBox!.get('last_analytics_sync');
       if (lastSync != null) {
         state = state.copyWith(lastSyncTime: lastSync);
+        if (kDebugMode) {
+          debugPrint('✅ [AdminAnalytics] Loaded last sync time: $lastSync');
+        }
       }
-    } catch (e) {
-      debugPrint('Failed to load last sync time: $e');
+
+      _isInitialized = true;
+      _initRetryCount = 0;
+      _initCompleter?.complete();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AdminAnalytics] Initialization complete');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Initialization error: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+
+      if (_initRetryCount < _maxInitRetries) {
+        _initRetryCount++;
+        if (kDebugMode) {
+          debugPrint('🔄 [AdminAnalytics] Retrying initialization (attempt $_initRetryCount/$_maxInitRetries)');
+        }
+        await Future.delayed(Duration(seconds: _initRetryCount));
+        await _initialize();
+      } else {
+        _initCompleter?.completeError(e, stackTrace);
+      }
+    }
+  }
+
+  /// Ensure initialized before operations
+  Future<void> _ensureInitialized() async {
+    if (_isInitialized) return;
+    if (_initRetryCount >= _maxInitRetries) {
+      throw Exception('AdminAnalyticsSyncNotifier initialization failed after $_maxInitRetries attempts');
+    }
+    if (_initCompleter != null) {
+      try {
+        await _initCompleter!.future.timeout(
+          const Duration(seconds: 15),
+          onTimeout: () {
+            if (kDebugMode) {
+              debugPrint('⚠️ [AdminAnalytics] Initialization timeout');
+            }
+            throw TimeoutException('Initialization timeout');
+          },
+        );
+      } catch (e) {
+        _initRetryCount++;
+        _initCompleter = Completer<void>();
+        await _initialize();
+      }
     }
   }
   
@@ -223,25 +297,47 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   
   /// Trigger reverse sync for all users (admin only)
   Future<void> triggerReverseSync() async {
-    if (!isAdmin) {
-      debugPrint('❌ Non-admin user attempted reverse sync');
-      return;
-    }
-    
-    state = state.copyWith(
-      isSyncing: true,
-      syncErrors: [],
-      currentProgress: null,
-    );
-    
     try {
-      debugPrint('🔄 Starting admin reverse sync...');
+      await _ensureInitialized();
+      if (_isDisposed) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [AdminAnalytics] triggerReverseSync: Provider is disposed');
+        }
+        return;
+      }
+
+      if (!isAdmin) {
+        if (kDebugMode) {
+          debugPrint('❌ [AdminAnalytics] Non-admin user attempted reverse sync');
+        }
+        return;
+      }
+
+      state = state.copyWith(
+        isSyncing: true,
+        syncErrors: [],
+        currentProgress: null,
+      );
+
+      if (kDebugMode) {
+        debugPrint('🔄 [AdminAnalytics] Starting admin reverse sync...');
+      }
       
-      // Get all users
-      final usersSnapshot = await _firestore.collection('users').get();
+      // Get all users with timeout
+      final usersSnapshot = await _firestore.collection('users').get().timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          if (kDebugMode) {
+            debugPrint('⚠️ [AdminAnalytics] Users query timeout');
+          }
+          throw TimeoutException('Failed to fetch users list');
+        },
+      );
       final totalUsers = usersSnapshot.docs.length;
-      
-      debugPrint('📊 Found $totalUsers users to sync');
+
+      if (kDebugMode) {
+        debugPrint('📊 [AdminAnalytics] Found $totalUsers users to sync');
+      }
       
       final collectedData = <String, UserAnalyticsData>{};
       final errors = <String>[];
@@ -265,14 +361,14 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
           
           // Collect analytics for this user
           final analyticsData = await _collectUserAnalytics(userDoc);
-          
+
           if (analyticsData != null) {
             collectedData[userDoc.id] = analyticsData;
             syncedCount++;
           } else {
             failedCount++;
           }
-          
+
           // Update progress
           state = state.copyWith(
             collectedData: collectedData,
@@ -283,12 +379,14 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
               currentUser: userDoc.data()['displayName'] ?? userDoc.id,
             ),
           );
-          
+
           // Small delay to prevent overwhelming Firestore
           await Future.delayed(const Duration(milliseconds: 100));
-          
+
         } catch (e) {
-          debugPrint('❌ Failed to sync user ${userDoc.id}: $e');
+          if (kDebugMode) {
+            debugPrint('❌ [AdminAnalytics] Failed to sync user ${userDoc.id}: $e');
+          }
           errors.add('User ${userDoc.id}: $e');
           failedCount++;
         }
@@ -299,12 +397,13 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
       
       // Save to admin collection
       await _saveAdminAnalytics(collectedData, aggregates);
-      
-      // Update last sync time
+
+      // Update last sync time using tracked box
       final now = DateTime.now().toIso8601String();
-      final box = await Hive.openBox('admin_preferences');
-      await box.put('last_analytics_sync', now);
-      
+      if (_adminPrefsBox != null && _adminPrefsBox!.isOpen) {
+        await _adminPrefsBox!.put('last_analytics_sync', now);
+      }
+
       state = state.copyWith(
         isSyncing: false,
         lastSyncTime: now,
@@ -318,11 +417,16 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
           currentUser: 'Complete',
         ),
       );
-      
-      debugPrint('✅ Reverse sync complete: $syncedCount/$totalUsers users');
-      
-    } catch (e) {
-      debugPrint('❌ Reverse sync failed: $e');
+
+      if (kDebugMode) {
+        debugPrint('✅ [AdminAnalytics] Reverse sync complete: $syncedCount/$totalUsers users');
+      }
+
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Reverse sync failed: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
       state = state.copyWith(
         isSyncing: false,
         syncErrors: ['Sync failed: $e'],
@@ -338,14 +442,23 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
       final userId = userDoc.id;
       final userData = userDoc.data() as Map<String, dynamic>;
       
-      // Get user's workouts
+      // Get user's workouts with timeout
       final workoutsQuery = await _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
           .orderBy('startTime', descending: true)
           .limit(100)
-          .get();
-      
+          .get()
+          .timeout(
+            const Duration(seconds: 20),
+            onTimeout: () {
+              if (kDebugMode) {
+                debugPrint('⚠️ [AdminAnalytics] Workouts query timeout for user $userId');
+              }
+              throw TimeoutException('Workouts query timeout');
+            },
+          );
+
       if (workoutsQuery.docs.isEmpty) {
         return null; // Skip users with no workouts
       }
@@ -382,15 +495,24 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
         }
       }
       
-      // Get personal records
+      // Get personal records with timeout
       final prsQuery = await _firestore
           .collection('users')
           .doc(userId)
           .collection('personalRecords')
           .orderBy('achievedAt', descending: true)
           .limit(10)
-          .get();
-      
+          .get()
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () {
+              if (kDebugMode) {
+                debugPrint('⚠️ [AdminAnalytics] PRs query timeout for user $userId');
+              }
+              throw TimeoutException('Personal records query timeout');
+            },
+          );
+
       final recentPRs = prsQuery.docs
           .map((doc) => PersonalRecord.fromJson(doc.data()))
           .toList();
@@ -426,9 +548,12 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
         insights: _generateUserInsights(workoutsQuery.docs),
         syncedAt: DateTime.now(),
       );
-      
-    } catch (e) {
-      debugPrint('Failed to collect analytics for user: $e');
+
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Failed to collect analytics for user: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
       return null;
     }
   }
@@ -553,7 +678,7 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
     AnalyticsAggregates aggregates,
   ) async {
     try {
-      // Save to admin collection
+      // Save to admin collection with timeout
       await _firestore.collection('adminAnalytics').doc('latest').set({
         'syncedAt': FieldValue.serverTimestamp(),
         'totalUsers': aggregates.totalUsers,
@@ -563,13 +688,26 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
         'topExercises': aggregates.topExercises,
         'avgMetricsByTier': aggregates.avgMetricsByTier,
         'userData': data.map((k, v) => MapEntry(k, v.toJson())),
-      });
-      
-      debugPrint('✅ Admin analytics saved to Firestore');
-      
-    } catch (e) {
-      debugPrint('❌ Failed to save admin analytics: $e');
-      throw e;
+      }).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          if (kDebugMode) {
+            debugPrint('⚠️ [AdminAnalytics] Firestore write timeout');
+          }
+          throw TimeoutException('Failed to save admin analytics');
+        },
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [AdminAnalytics] Admin analytics saved to Firestore');
+      }
+
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Failed to save admin analytics: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+      rethrow;
     }
   }
   
@@ -588,18 +726,36 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   
   /// Sync exercises from Firestore to local for analytics
   Future<void> syncExercisesFromFirestore() async {
-    if (!isAdmin) return;
-    
-    state = state.copyWith(
-      isCollecting: true,
-      syncErrors: [],
-    );
-    
     try {
-      debugPrint('🔄 Syncing exercises from Firestore...');
-      
-      // Get all users
-      final usersSnapshot = await _firestore.collection('users').get();
+      await _ensureInitialized();
+      if (_isDisposed) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [AdminAnalytics] syncExercisesFromFirestore: Provider is disposed');
+        }
+        return;
+      }
+
+      if (!isAdmin) return;
+
+      state = state.copyWith(
+        isCollecting: true,
+        syncErrors: [],
+      );
+
+      if (kDebugMode) {
+        debugPrint('🔄 [AdminAnalytics] Syncing exercises from Firestore...');
+      }
+
+      // Get all users with timeout
+      final usersSnapshot = await _firestore.collection('users').get().timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          if (kDebugMode) {
+            debugPrint('⚠️ [AdminAnalytics] Users query timeout in syncExercises');
+          }
+          throw TimeoutException('Failed to fetch users list');
+        },
+      );
       int syncedExercises = 0;
       int syncedWorkouts = 0;
       
@@ -607,29 +763,42 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
         final userId = userDoc.id;
         
         try {
-          // Get user's workouts from Firestore
+          // Get user's workouts from Firestore with timeout
           final workoutsQuery = await _firestore
               .collection('workouts')
               .where('userId', isEqualTo: userId)
               .orderBy('startTime', descending: true)
               .limit(200) // Get more workouts for better analytics
-              .get();
-          
+              .get()
+              .timeout(
+                const Duration(seconds: 20),
+                onTimeout: () {
+                  if (kDebugMode) {
+                    debugPrint('⚠️ [AdminAnalytics] Workouts query timeout for user $userId in syncExercises');
+                  }
+                  throw TimeoutException('Workouts query timeout');
+                },
+              );
+
           if (workoutsQuery.docs.isNotEmpty) {
             syncedWorkouts += workoutsQuery.docs.length;
-            
+
             // Count exercises
             for (final workout in workoutsQuery.docs) {
               final data = workout.data();
               final exercises = data['exercises'] as List? ?? [];
               syncedExercises += exercises.length;
             }
-            
-            debugPrint('✅ Synced ${workoutsQuery.docs.length} workouts for user $userId');
+
+            if (kDebugMode) {
+              debugPrint('✅ [AdminAnalytics] Synced ${workoutsQuery.docs.length} workouts for user $userId');
+            }
           }
-          
+
         } catch (e) {
-          debugPrint('⚠️ Failed to sync workouts for user $userId: $e');
+          if (kDebugMode) {
+            debugPrint('⚠️ [AdminAnalytics] Failed to sync workouts for user $userId: $e');
+          }
         }
       }
       
@@ -637,13 +806,18 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
         isCollecting: false,
         lastSyncTime: DateTime.now().toIso8601String(),
       );
-      
-      debugPrint('✅ Exercise sync complete: $syncedWorkouts workouts, $syncedExercises exercises');
-      
+
+      if (kDebugMode) {
+        debugPrint('✅ [AdminAnalytics] Exercise sync complete: $syncedWorkouts workouts, $syncedExercises exercises');
+      }
+
       // Show success message (removed undefined _syncEventController)
-      
-    } catch (e) {
-      debugPrint('❌ Exercise sync failed: $e');
+
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Exercise sync failed: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
       state = state.copyWith(
         isCollecting: false,
         syncErrors: ['Exercise sync failed: $e'],
@@ -653,32 +827,53 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   
   /// Trigger Cloud Function to collect analytics (alternative method)
   Future<void> triggerCloudAnalyticsCollection() async {
-    if (!isAdmin) return;
-    
-    state = state.copyWith(isCollecting: true);
-    
     try {
+      await _ensureInitialized();
+      if (_isDisposed) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [AdminAnalytics] triggerCloudAnalyticsCollection: Provider is disposed');
+        }
+        return;
+      }
+
+      if (!isAdmin) return;
+
+      state = state.copyWith(isCollecting: true);
+
       // First sync exercises from Firestore
       await syncExercisesFromFirestore();
-      
+
       final callable = _functions.httpsCallable('collectGlobalAnalytics');
       final result = await callable.call({
         'requestedBy': FirebaseAuth.instance.currentUser?.uid,
         'timestamp': DateTime.now().toIso8601String(),
-      });
-      
+      }).timeout(
+        const Duration(seconds: 60),
+        onTimeout: () {
+          if (kDebugMode) {
+            debugPrint('⚠️ [AdminAnalytics] Cloud function call timeout');
+          }
+          throw TimeoutException('Cloud function timeout');
+        },
+      );
+
       if (result.data['success'] == true) {
-        debugPrint('✅ Cloud analytics collection triggered');
-        
+        if (kDebugMode) {
+          debugPrint('✅ [AdminAnalytics] Cloud analytics collection triggered');
+        }
+
         // Wait for collection to complete
         await Future.delayed(const Duration(seconds: 5));
-        
+
         // Load the collected data
         await loadCollectedAnalytics();
       }
-      
-    } catch (e) {
-      debugPrint('❌ Cloud collection failed: $e');
+
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Cloud collection failed: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
       state = state.copyWith(
         isCollecting: false,
         syncErrors: ['Cloud collection failed: $e'],
@@ -689,11 +884,27 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   /// Load previously collected analytics
   Future<void> loadCollectedAnalytics() async {
     try {
-      final doc = await _firestore.collection('adminAnalytics').doc('latest').get();
-      
+      await _ensureInitialized();
+      if (_isDisposed) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [AdminAnalytics] loadCollectedAnalytics: Provider is disposed');
+        }
+        return;
+      }
+
+      final doc = await _firestore.collection('adminAnalytics').doc('latest').get().timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          if (kDebugMode) {
+            debugPrint('⚠️ [AdminAnalytics] Firestore read timeout in loadCollectedAnalytics');
+          }
+          throw TimeoutException('Failed to load analytics');
+        },
+      );
+
       if (doc.exists) {
         final data = doc.data()!;
-        
+
         // Parse user data
         final userData = <String, UserAnalyticsData>{};
         if (data['userData'] != null) {
@@ -701,7 +912,7 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
             userData[key] = UserAnalyticsData.fromJson(value);
           });
         }
-        
+
         // Parse aggregates
         final aggregates = AnalyticsAggregates(
           totalUsers: data['totalUsers'] ?? 0,
@@ -713,24 +924,62 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
           volumeTrends: [], // Would need to parse from data
           frequencyTrends: [], // Would need to parse from data
         );
-        
+
         state = state.copyWith(
           isCollecting: false,
           collectedData: userData,
           aggregates: aggregates,
           lastSyncTime: data['syncedAt']?.toDate().toIso8601String(),
         );
+
+        if (kDebugMode) {
+          debugPrint('✅ [AdminAnalytics] Loaded analytics: ${userData.length} users');
+        }
       }
-      
-    } catch (e) {
-      debugPrint('Failed to load collected analytics: $e');
+
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Failed to load collected analytics: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
     }
   }
   
   @override
   void dispose() {
-    _stopProgressTracking();
-    super.dispose();
+    if (kDebugMode) {
+      debugPrint('🧹 [AdminAnalytics] Starting disposal');
+    }
+
+    _isDisposed = true;
+
+    try {
+      // Cancel progress timer
+      _stopProgressTracking();
+
+      // Close Hive box if open
+      if (_adminPrefsBox != null && _adminPrefsBox!.isOpen) {
+        _adminPrefsBox!.close();
+        if (kDebugMode) {
+          debugPrint('✅ [AdminAnalytics] Closed Hive box');
+        }
+      }
+      _adminPrefsBox = null;
+
+      // Null out completer
+      _initCompleter = null;
+
+      if (kDebugMode) {
+        debugPrint('✅ [AdminAnalytics] Disposal completed');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AdminAnalytics] Error during disposal: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    } finally {
+      super.dispose();
+    }
   }
 }
 

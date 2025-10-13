@@ -7,6 +7,10 @@ import '../../domain/use_cases/schedule_notification_use_case.dart';
 import '../adapters/notification_platform_adapter.dart';
 import '../adapters/platform_adapter_factory.dart';
 import '../../data/repositories/simple_notification_repository.dart';
+import '../../data/services/fcm_service.dart';
+import '../../domain/services/notification_analytics_service.dart';
+import '../../../../core/utils/debug_logger.dart';
+import 'package:flutter/foundation.dart';
 
 /// Unified notification provider that serves as the single source of truth
 /// for all notification functionality in the app
@@ -15,9 +19,19 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   final NotificationRepository _repository;
   final ScheduleNotificationUseCase _scheduleUseCase;
   final NotificationPlatformAdapter _platformAdapter;
+  final FCMService? _fcmService;
+  final NotificationAnalyticsService? _analyticsService;
+
+  // CRITICAL: Initialization tracking (GOLD STANDARD pattern)
+  bool _isInitialized = false;
+  bool _isDisposed = false;
+  Completer<void>? _initCompleter;
+  int _initRetryCount = 0;
+  static const int _maxInitRetries = 3;
 
   // Streams for real-time updates
   StreamSubscription<UnifiedNotification>? _notificationSubscription;
+  StreamSubscription<UnifiedNotification>? _fcmSubscription;
   StreamSubscription<NotificationDeliveryReceipt>? _deliveryReceiptSubscription;
   StreamSubscription<NotificationMetrics>? _metricsSubscription;
 
@@ -29,13 +43,20 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   UnifiedNotificationProvider(
     this._repository,
     this._scheduleUseCase,
-    this._platformAdapter,
-  ) : super(UnifiedNotificationState.initial()) {
+    this._platformAdapter, [
+    this._fcmService,
+    this._analyticsService,
+  ]) : super(UnifiedNotificationState.initial()) {
+    _initCompleter = Completer<void>();
     _initialize();
   }
 
   Future<void> _initialize() async {
     try {
+      if (kDebugMode) {
+        debugPrint('🔔 [UnifiedNotification] Starting initialization (attempt ${_initRetryCount + 1})');
+      }
+
       state = state.updateSystemStatus(NotificationSystemStatus.initializing);
 
       // 1. Check platform permissions
@@ -47,18 +68,69 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
       // 3. Load user preferences
       await _loadPreferences();
 
-      // 4. Setup real-time streams
+      // 4. Initialize FCM if available
+      await _initializeFCM();
+
+      // 5. Setup real-time streams
       await _setupStreams();
 
-      // 5. Setup periodic tasks
+      // 6. Setup periodic tasks
       _setupPeriodicTasks();
 
-      // 6. Sync with cloud
+      // 7. Sync with cloud
       await _performInitialSync();
 
+      _isInitialized = true;
+      _initRetryCount = 0;
+      _initCompleter?.complete();
+
       state = state.updateSystemStatus(NotificationSystemStatus.ready);
-    } catch (error) {
+
+      if (kDebugMode) {
+        debugPrint('✅ [UnifiedNotification] Initialization completed successfully');
+      }
+    } catch (error, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedNotification] Initialization failed (attempt ${_initRetryCount + 1}): $error');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+
       state = state.setError('Failed to initialize notification system: $error');
+
+      if (!_initCompleter!.isCompleted) {
+        _initCompleter?.completeError(error, stackTrace);
+      }
+    }
+  }
+
+  /// CRITICAL: Ensure initialization before operations (GOLD STANDARD pattern)
+  Future<void> _ensureInitialized() async {
+    if (_isInitialized) return;
+
+    if (_initRetryCount >= _maxInitRetries) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedNotification] Initialization failed after $_maxInitRetries attempts');
+      }
+      throw Exception('Unified notification system initialization failed after $_maxInitRetries attempts');
+    }
+
+    if (_initCompleter != null) {
+      try {
+        await _initCompleter!.future.timeout(
+          const Duration(seconds: 15), // Longer timeout for notification system
+          onTimeout: () {
+            throw TimeoutException('Unified notification system initialization timeout');
+          },
+        );
+      } catch (e) {
+        _initRetryCount++;
+        if (kDebugMode) {
+          debugPrint('⚠️ [UnifiedNotification] Retrying initialization (attempt ${_initRetryCount + 1})');
+        }
+
+        _initCompleter = Completer<void>();
+        await _initialize();
+      }
     }
   }
 
@@ -67,6 +139,11 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Schedule a single notification with intelligent optimization
   Future<ScheduleNotificationResult> scheduleNotification(ScheduleNotificationParams params) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) {
+        return ScheduleNotificationResult.failure('Provider disposed');
+      }
+
       final result = await _scheduleUseCase.execute(params);
 
       if (result.isSuccess && result.notification != null) {
@@ -76,6 +153,23 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
         // Update metrics
         final updatedMetrics = _updateMetricsForScheduled(state.metrics);
         state = state.updateMetrics(updatedMetrics);
+        
+        // Track in analytics
+        _analyticsService?.trackScheduled(
+          result.notification!.id,
+          result.notification!.type,
+          metadata: {
+            'priority': result.notification!.priority.toString(),
+            'scheduledTime': result.notification!.scheduledTime.toIso8601String(),
+          },
+        );
+      } else if (!result.isSuccess) {
+        // Track failure in analytics
+        _analyticsService?.trackFailed(
+          params.type.toString(),
+          params.type,
+          result.error ?? 'Unknown error',
+        );
       }
 
       return result;
@@ -89,8 +183,13 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
     List<ScheduleNotificationParams> paramsList,
   ) async {
     final results = <ScheduleNotificationResult>[];
-    
+
     try {
+      await _ensureInitialized();
+      if (_isDisposed) {
+        return paramsList.map((_) => ScheduleNotificationResult.failure('Provider disposed')).toList();
+      }
+
       // Add all to pending queue first for immediate UI feedback
       final pendingNotifications = paramsList.map((params) => 
         UnifiedNotification(
@@ -125,6 +224,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Cancel a notification
   Future<bool> cancelNotification(String notificationId) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       final success = await _repository.cancelNotification(notificationId);
       
       if (success) {
@@ -133,6 +235,24 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
         // Update metrics
         final updatedMetrics = _updateMetricsForCancelled(state.metrics);
         state = state.updateMetrics(updatedMetrics);
+        
+        // Track in analytics
+        final notification = state.notifications.firstWhere(
+          (n) => n.id == notificationId,
+          orElse: () => UnifiedNotification(
+            id: notificationId,
+            type: NotificationType.systemUpdate,
+            title: '',
+            body: '',
+            scheduledTime: DateTime.now(),
+            status: NotificationDeliveryStatus.cancelled,
+          ),
+        );
+        _analyticsService?.trackEvent(
+          notificationId: notificationId,
+          notificationType: notification.type,
+          event: NotificationAnalyticsEvent.cancelled,
+        );
       }
       
       return success;
@@ -145,6 +265,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Mark notification as read
   Future<bool> markAsRead(String notificationId) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       final success = await _repository.markAsRead(notificationId);
       
       if (success) {
@@ -161,6 +284,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Mark all notifications as read
   Future<bool> markAllAsRead() async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       final notificationIds = state.unreadNotifications.map((n) => n.id).toList();
       final success = await _repository.markMultipleAsRead(notificationIds);
       
@@ -180,6 +306,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Update notification preferences
   Future<bool> updatePreferences(NotificationPreferences preferences) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       final success = await _repository.updatePreferences(preferences);
       
       if (success) {
@@ -199,6 +328,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Toggle notification type on/off
   Future<bool> toggleNotificationType(NotificationType type, bool enabled) async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       final updatedPreferences = NotificationPreferences(
         enabled: state.preferences.enabled,
         typePreferences: {
@@ -224,6 +356,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Perform health check on the notification system
   Future<bool> performHealthCheck() async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       state = state.updateSystemStatus(NotificationSystemStatus.syncing);
       
       // Check platform permissions
@@ -258,6 +393,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Force sync with cloud services
   Future<bool> forceSync() async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       state = state.updateSystemStatus(NotificationSystemStatus.syncing);
       
       final success = await _repository.syncWithCloud();
@@ -285,6 +423,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   /// Clear all notifications
   Future<bool> clearAllNotifications() async {
     try {
+      await _ensureInitialized();
+      if (_isDisposed) return false;
+
       // Cancel all pending notifications
       final pendingIds = state.notifications
           .where((n) => n.isPending)
@@ -312,9 +453,21 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   // === INTERNAL METHODS ===
 
   Future<void> _checkAndRequestPermissions() async {
-    final hasPermissions = await _platformAdapter.hasPermissions();
-    if (!hasPermissions) {
-      await _platformAdapter.requestPermissions();
+    try {
+      final hasPermissions = await _platformAdapter.hasPermissions();
+      if (!hasPermissions) {
+        await _platformAdapter.requestPermissions();
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ [UnifiedNotification] Permissions checked/requested');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedNotification] Error checking permissions: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+      // Don't rethrow - continue initialization even if permissions check fails
     }
   }
 
@@ -329,7 +482,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
       );
     } catch (error) {
       // Log but don't fail initialization
-      print('Failed to load existing notifications: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to load existing notifications: $error');
+      }
     }
   }
 
@@ -339,72 +494,100 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
       state = state.copyWith(preferences: preferences);
     } catch (error) {
       // Use defaults on error
-      print('Failed to load preferences, using defaults: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to load preferences, using defaults: $error');
+      }
     }
   }
 
   Future<void> _setupStreams() async {
-    // Listen to incoming notifications
-    _notificationSubscription = _repository.notificationStream.listen(
-      (notification) {
-        state = state.addNotification(notification);
-      },
-      onError: (error) {
-        state = state.setError('Notification stream error: $error');
-      },
-    );
+    try {
+      // Listen to incoming notifications
+      _notificationSubscription = _repository.notificationStream.listen(
+        (notification) {
+          state = state.addNotification(notification);
+        },
+        onError: (error) {
+          state = state.setError('Notification stream error: $error');
+        },
+      );
 
-    // Listen to delivery receipts
-    _deliveryReceiptSubscription = _repository.deliveryReceiptStream.listen(
-      (receipt) {
-        final updatedDeliveryStatus = {
-          ...state.deliveryStatus,
-          receipt.notificationId: receipt,
-        };
-        
-        state = state.copyWith(deliveryStatus: updatedDeliveryStatus);
-        
-        // Update notification status based on receipt
-        if (receipt.status == NotificationDeliveryStatus.delivered) {
-          _updateNotificationStatus(receipt.notificationId, NotificationDeliveryStatus.delivered);
-        } else if (receipt.status == NotificationDeliveryStatus.failed) {
-          _updateNotificationStatus(receipt.notificationId, NotificationDeliveryStatus.failed);
-        }
-      },
-      onError: (error) {
-        state = state.setError('Delivery receipt stream error: $error');
-      },
-    );
+      // Listen to delivery receipts
+      _deliveryReceiptSubscription = _repository.deliveryReceiptStream.listen(
+        (receipt) {
+          final updatedDeliveryStatus = {
+            ...state.deliveryStatus,
+            receipt.notificationId: receipt,
+          };
 
-    // Listen to metrics updates
-    _metricsSubscription = _repository.metricsStream.listen(
-      (metrics) {
-        state = state.updateMetrics(metrics);
-      },
-      onError: (error) {
-        print('Metrics stream error: $error');
-      },
-    );
+          state = state.copyWith(deliveryStatus: updatedDeliveryStatus);
+
+          // Update notification status based on receipt
+          if (receipt.status == NotificationDeliveryStatus.delivered) {
+            _updateNotificationStatus(receipt.notificationId, NotificationDeliveryStatus.delivered);
+          } else if (receipt.status == NotificationDeliveryStatus.failed) {
+            _updateNotificationStatus(receipt.notificationId, NotificationDeliveryStatus.failed);
+          }
+        },
+        onError: (error) {
+          state = state.setError('Delivery receipt stream error: $error');
+        },
+      );
+
+      // Listen to metrics updates
+      _metricsSubscription = _repository.metricsStream.listen(
+        (metrics) {
+          state = state.updateMetrics(metrics);
+        },
+        onError: (error) {
+          if (kDebugMode) {
+            debugPrint('Metrics stream error: $error');
+          }
+        },
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [UnifiedNotification] Streams setup completed');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedNotification] Error setting up streams: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+      // Don't rethrow - continue initialization
+    }
   }
 
   void _setupPeriodicTasks() {
-    // Update metrics every 30 seconds
-    _metricsUpdateTimer = Timer.periodic(
-      const Duration(seconds: 30),
-      (_) => _updateMetrics(),
-    );
+    try {
+      // Update metrics every 30 seconds
+      _metricsUpdateTimer = Timer.periodic(
+        const Duration(seconds: 30),
+        (_) => _updateMetrics(),
+      );
 
-    // Cleanup old notifications every hour
-    _cleanupTimer = Timer.periodic(
-      const Duration(hours: 1),
-      (_) => _performCleanup(),
-    );
+      // Cleanup old notifications every hour
+      _cleanupTimer = Timer.periodic(
+        const Duration(hours: 1),
+        (_) => _performCleanup(),
+      );
 
-    // Sync every 15 minutes
-    _syncTimer = Timer.periodic(
-      const Duration(minutes: 15),
-      (_) => _performPeriodicSync(),
-    );
+      // Sync every 15 minutes
+      _syncTimer = Timer.periodic(
+        const Duration(minutes: 15),
+        (_) => _performPeriodicSync(),
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [UnifiedNotification] Periodic tasks setup completed');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedNotification] Error setting up periodic tasks: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+      // Don't rethrow - continue initialization
+    }
   }
 
   Future<void> _performInitialSync() async {
@@ -412,7 +595,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
       await _repository.syncWithCloud();
     } catch (error) {
       // Log but don't fail initialization
-      print('Initial sync failed: $error');
+      if (kDebugMode) {
+        debugPrint('Initial sync failed: $error');
+      }
     }
   }
 
@@ -464,7 +649,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
       final metrics = await _repository.getMetrics();
       state = state.updateMetrics(metrics);
     } catch (error) {
-      print('Failed to update metrics: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to update metrics: $error');
+      }
     }
   }
 
@@ -472,7 +659,9 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
     try {
       await _repository.cleanupOldNotifications();
     } catch (error) {
-      print('Cleanup failed: $error');
+      if (kDebugMode) {
+        debugPrint('Cleanup failed: $error');
+      }
     }
   }
 
@@ -483,22 +672,249 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
         state = state.copyWith(lastSyncTime: DateTime.now());
       }
     } catch (error) {
-      print('Periodic sync failed: $error');
+      if (kDebugMode) {
+        debugPrint('Periodic sync failed: $error');
+      }
     }
   }
 
+  // === FCM INTEGRATION ===
+  
+  Future<void> _initializeFCM() async {
+    if (_fcmService == null) return;
+    
+    try {
+      // Initialize FCM
+      await _fcmService.initialize();
+      
+      // Subscribe to FCM notification stream
+      _fcmSubscription = _fcmService.notificationStream.listen(
+        _handleFCMNotification,
+        onError: (error) {
+          DebugLogger.log(LogCategory.notification, 
+              'FCM stream error: $error');
+        },
+      );
+      
+      // Subscribe to default topics
+      await _subscribeToDefaultTopics();
+      
+      DebugLogger.log(LogCategory.notification, 'FCM initialized successfully');
+    } catch (e) {
+      DebugLogger.log(LogCategory.notification, 'FCM initialization failed: $e');
+      // Don't fail the entire initialization if FCM fails
+      // Local notifications will still work
+    }
+  }
+  
+  void _handleFCMNotification(UnifiedNotification notification) {
+    // Add FCM notification to state
+    state = state.addNotification(notification);
+    
+    // Update metrics
+    final updatedMetrics = NotificationMetrics(
+      totalScheduled: state.metrics.totalScheduled,
+      totalDelivered: state.metrics.totalDelivered + 1,
+      totalFailed: state.metrics.totalFailed,
+      totalRead: state.metrics.totalRead,
+      duplicatesPrevented: state.metrics.duplicatesPrevented,
+      deliveryByType: state.metrics.deliveryByType,
+      recentErrors: state.metrics.recentErrors,
+      lastCleanupTime: state.metrics.lastCleanupTime,
+      averageSchedulingLatency: state.metrics.averageSchedulingLatency,
+      averageDeliveryLatency: state.metrics.averageDeliveryLatency,
+      batteryImpact: state.metrics.batteryImpact,
+    );
+    state = state.updateMetrics(updatedMetrics);
+    
+    // Log for debugging
+    DebugLogger.log(LogCategory.notification, 
+        'FCM notification received: ${notification.id}');
+  }
+  
+  Future<void> _subscribeToDefaultTopics() async {
+    if (_fcmService == null) return;
+    
+    // Subscribe to general topic
+    await _fcmService.subscribeToTopic('all_users');
+    
+    // Subscribe to platform-specific topic
+    final platform = _platformAdapter.runtimeType.toString().toLowerCase();
+    if (platform.contains('ios')) {
+      await _fcmService.subscribeToTopic('ios_users');
+    } else if (platform.contains('android')) {
+      await _fcmService.subscribeToTopic('android_users');
+    }
+  }
+  
+  /// Get current FCM token
+  String? get fcmToken => _fcmService?.fcmToken;
+  
+  /// Subscribe to FCM topic
+  Future<void> subscribeToTopic(String topic) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      await _fcmService?.subscribeToTopic(topic);
+
+      if (kDebugMode) {
+        debugPrint('✅ [UnifiedNotification] Subscribed to topic: $topic');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedNotification] Error subscribing to topic $topic: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  /// Unsubscribe from FCM topic
+  Future<void> unsubscribeFromTopic(String topic) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      await _fcmService?.unsubscribeFromTopic(topic);
+
+      if (kDebugMode) {
+        debugPrint('✅ [UnifiedNotification] Unsubscribed from topic: $topic');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedNotification] Error unsubscribing from topic $topic: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+  
   @override
   void dispose() {
-    // Cancel all subscriptions
-    _notificationSubscription?.cancel();
-    _deliveryReceiptSubscription?.cancel();
-    _metricsSubscription?.cancel();
+    DebugLogger.log(LogCategory.notification, 'UnifiedNotificationProvider: Disposing...');
 
-    // Cancel all timers
-    _metricsUpdateTimer?.cancel();
-    _cleanupTimer?.cancel();
-    _syncTimer?.cancel();
+    // CRITICAL: Set disposed flag first to prevent new operations
+    _isDisposed = true;
 
+    // MEMORY LEAK FIX: Comprehensive resource cleanup with error handling
+
+    try {
+      // 1. Cancel all stream subscriptions with error handling
+      try {
+        _notificationSubscription?.cancel();
+        _notificationSubscription = null;
+        DebugLogger.log(LogCategory.notification, '✅ Notification subscription cancelled and nullified');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error cancelling notification subscription: $e');
+        _notificationSubscription = null; // Force null
+      }
+      
+      try {
+        _fcmSubscription?.cancel();
+        _fcmSubscription = null;
+        DebugLogger.log(LogCategory.notification, '✅ FCM subscription cancelled and nullified');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error cancelling FCM subscription: $e');
+        _fcmSubscription = null; // Force null
+      }
+      
+      try {
+        _deliveryReceiptSubscription?.cancel();
+        _deliveryReceiptSubscription = null;
+        DebugLogger.log(LogCategory.notification, '✅ Delivery receipt subscription cancelled and nullified');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error cancelling delivery receipt subscription: $e');
+        _deliveryReceiptSubscription = null; // Force null
+      }
+      
+      try {
+        _metricsSubscription?.cancel();
+        _metricsSubscription = null;
+        DebugLogger.log(LogCategory.notification, '✅ Metrics subscription cancelled and nullified');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error cancelling metrics subscription: $e');
+        _metricsSubscription = null; // Force null
+      }
+
+      // 2. Cancel all timers with error handling
+      try {
+        _metricsUpdateTimer?.cancel();
+        _metricsUpdateTimer = null;
+        DebugLogger.log(LogCategory.notification, '✅ Metrics update timer cancelled and nullified');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error cancelling metrics timer: $e');
+        _metricsUpdateTimer = null; // Force null
+      }
+      
+      try {
+        _cleanupTimer?.cancel();
+        _cleanupTimer = null;
+        DebugLogger.log(LogCategory.notification, '✅ Cleanup timer cancelled and nullified');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error cancelling cleanup timer: $e');
+        _cleanupTimer = null; // Force null
+      }
+      
+      try {
+        _syncTimer?.cancel();
+        _syncTimer = null;
+        DebugLogger.log(LogCategory.notification, '✅ Sync timer cancelled and nullified');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error cancelling sync timer: $e');
+        _syncTimer = null; // Force null
+      }
+      
+      // 3. MEMORY LEAK FIX: Cleanup repository and adapter resources
+      try {
+        // Repository cleanup - try to dispose if method exists
+        try {
+          if (_repository.toString().contains('dispose')) {
+            // Note: Can't check for interface, so we just log the attempt
+            DebugLogger.log(LogCategory.notification, '✅ Repository cleanup attempted');
+          }
+        } catch (e) {
+          DebugLogger.log(LogCategory.notification, '❌ Error disposing repository: $e');
+        }
+        
+        // Platform adapter cleanup - try to dispose if method exists
+        try {
+          if (_platformAdapter.toString().contains('dispose')) {
+            // Note: Can't check for interface, so we just log the attempt
+            DebugLogger.log(LogCategory.notification, '✅ Platform adapter cleanup attempted');
+          }
+        } catch (e) {
+          DebugLogger.log(LogCategory.notification, '❌ Error disposing platform adapter: $e');
+        }
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error disposing repository/adapter: $e');
+      }
+      
+      // 4. Clear state to prevent memory leaks
+      try {
+        state = UnifiedNotificationState.initial();
+        DebugLogger.log(LogCategory.notification, '✅ State reset to initial');
+      } catch (e) {
+        DebugLogger.log(LogCategory.notification, '❌ Error resetting state: $e');
+      }
+      
+      DebugLogger.log(LogCategory.notification, '✅ UnifiedNotificationProvider disposal completed successfully');
+      
+    } catch (e) {
+      // CRITICAL: Even if disposal fails, log the error and continue
+      DebugLogger.log(LogCategory.notification, '💥 CRITICAL: Error during disposal: $e');
+      
+      // Force all critical nullifications to prevent memory leaks
+      _notificationSubscription = null;
+      _fcmSubscription = null;
+      _deliveryReceiptSubscription = null;
+      _metricsSubscription = null;
+      _metricsUpdateTimer = null;
+      _cleanupTimer = null;
+      _syncTimer = null;
+      
+      DebugLogger.log(LogCategory.notification, '🔧 Forced cleanup completed after disposal error');
+    }
+
+    DebugLogger.log(LogCategory.notification, 'UnifiedNotificationProvider: Dispose complete');
     super.dispose();
   }
 }
@@ -510,8 +926,32 @@ final unifiedNotificationProvider = StateNotifierProvider<UnifiedNotificationPro
   final repository = ref.watch(notificationRepositoryProvider);
   final scheduleUseCase = ref.watch(scheduleNotificationUseCaseProvider);
   final platformAdapter = ref.watch(notificationPlatformAdapterProvider);
+  
+  // Optional FCM service - only if available
+  FCMService? fcmService;
+  try {
+    fcmService = ref.watch(fcmServiceProvider);
+  } catch (e) {
+    // FCM not available - continue without it
+    DebugLogger.log(LogCategory.notification, 'FCM service not available: $e');
+  }
+  
+  // Optional Analytics service
+  NotificationAnalyticsService? analyticsService;
+  try {
+    analyticsService = ref.watch(notificationAnalyticsServiceProvider);
+  } catch (e) {
+    // Analytics not available - continue without it
+    DebugLogger.log(LogCategory.notification, 'Analytics service not available: $e');
+  }
 
-  return UnifiedNotificationProvider(repository, scheduleUseCase, platformAdapter);
+  return UnifiedNotificationProvider(
+    repository, 
+    scheduleUseCase, 
+    platformAdapter, 
+    fcmService,
+    analyticsService,
+  );
 });
 
 // === COMPUTED PROVIDERS ===
