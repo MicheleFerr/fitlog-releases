@@ -1,9 +1,14 @@
 ---
 allowed-tools: Glob(*), Grep(*), Read(*), Write(*), Edit(*), Bash(git:*)
-description: Automatically sync all documentation with current codebase - UPDATE outdated docs, DELETE deprecated, CREATE missing, ARCHIVE speculative
+description: "[PROJECT-SPECIFIC] Project documentation sync - for universal version see ~/.claude/commands/sync-docs.md"
 ---
 
-# `/sync-docs` - Auto-Update All Documentation
+# `/sync-docs` - Project-Specific Documentation Sync
+
+> ⚠️ **NOTE**: A global version exists at `~/.claude/commands/sync-docs.md` that works across ALL projects.
+> This file is kept as project-specific reference and fallback.
+
+# Auto-Update All Documentation
 
 > **Slash Command**: Automatically sync all documentation with current codebase
 
