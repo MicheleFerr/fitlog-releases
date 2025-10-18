@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as db_exercise;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 
 class ExerciseSearchService {
   factory ExerciseSearchService() => _instance;
@@ -148,8 +150,8 @@ class ExerciseSearchService {
       return _searchByMuscles(mappedMuscles);
     }
 
-    // Standard search in name and muscles
-    return _standardSearch(queryLower);
+    // Standard fuzzy search in name, muscles, and aliases
+    return await _standardSearch(queryLower);
   }
 
   List<String> _getMappedMuscles(String query) {
@@ -200,17 +202,31 @@ class ExerciseSearchService {
     return results;
   }
 
-  List<ExerciseTemplate> _standardSearch(String query) {
+  Future<List<ExerciseTemplate>> _standardSearch(String query) async {
+    // Convert JSON data to Exercise entities for fuzzy matching
+    final exercises = _exercisesData
+        .map((data) => db_exercise.Exercise.fromJson(data))
+        .toList();
+
+    // Perform fuzzy search
+    final fuzzyResults = await ExerciseFuzzyMatcher.searchExercises(
+      exercises: exercises,
+      query: query,
+      strictThreshold: 0.85, // Match quasi esatti
+      typeThreshold: 0.65,   // Tolleranza typos
+      maxResults: 50,        // Limita risultati per performance
+    );
+
+    // Convert fuzzy results to ExerciseTemplate
     final results = <ExerciseTemplate>[];
+    for (final fuzzyResult in fuzzyResults) {
+      // Find original JSON data for the matched exercise
+      final exerciseData = _exercisesData.firstWhere(
+        (data) => data['id'] == fuzzyResult.exercise.id,
+        orElse: () => <String, dynamic>{},
+      );
 
-    for (final exerciseData in _exercisesData) {
-      final nome = (exerciseData['nome'] as String? ?? '').toLowerCase();
-      final focus = (exerciseData['focus'] as String? ?? '').toLowerCase();
-      final muscoliSecondari = (exerciseData['muscoliSecondari'] as String? ?? '').toLowerCase();
-
-      if (nome.contains(query) ||
-          focus.contains(query) ||
-          muscoliSecondari.contains(query)) {
+      if (exerciseData.isNotEmpty) {
         results.add(_mapToExerciseTemplate(exerciseData));
       }
     }

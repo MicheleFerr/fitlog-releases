@@ -12,7 +12,7 @@ void main() {
     
     testWidgets('📱 TEST 1: Timer 60s con lockscreen', (WidgetTester tester) async {
       // Avvia l'app
-      await tester.pumpWidget(const app.GymBroApp());
+      await tester.pumpWidget(const app.FitLogApp());
       await tester.pumpAndSettle();
       
       // Naviga alla schermata workout (se necessario login)
@@ -76,7 +76,7 @@ void main() {
     
     testWidgets('🎵 TEST 2: Timer 120s con musica in background', (WidgetTester tester) async {
       // Avvia l'app
-      await tester.pumpWidget(const app.GymBroApp());
+      await tester.pumpWidget(const app.FitLogApp());
       await tester.pumpAndSettle();
       
       if (kDebugMode) debugPrint('🎵 Test Timer con musica');
@@ -138,7 +138,7 @@ void main() {
     
     testWidgets('🔄 TEST 3: Transizione app→lockscreen→app (90s)', (WidgetTester tester) async {
       // Avvia l'app
-      await tester.pumpWidget(const app.GymBroApp());
+      await tester.pumpWidget(const app.FitLogApp());
       await tester.pumpAndSettle();
       
       if (kDebugMode) debugPrint('🔄 Test sincronizzazione timer');
@@ -205,7 +205,7 @@ void main() {
         return;
       }
 
-      await tester.pumpWidget(const app.GymBroApp());
+      await tester.pumpWidget(const app.FitLogApp());
       await tester.pumpAndSettle();
       
       if (kDebugMode) debugPrint('🍎 Test Live Activity iOS');
@@ -251,7 +251,7 @@ void main() {
     });
     
     testWidgets('🔊 TEST 5: Audio completion in background', (WidgetTester tester) async {
-      await tester.pumpWidget(const app.GymBroApp());
+      await tester.pumpWidget(const app.FitLogApp());
       await tester.pumpAndSettle();
       
       if (kDebugMode) debugPrint('🔊 Test audio in background');

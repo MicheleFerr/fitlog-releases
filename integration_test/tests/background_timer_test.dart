@@ -11,7 +11,7 @@ void main() {
     'Timer continues running when app goes to background',
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -77,7 +77,7 @@ void main() {
     'Timer sound plays when timer completes in background',
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -129,7 +129,7 @@ void main() {
     'App recovers timer state after being killed and restarted',
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -179,7 +179,7 @@ void main() {
     'Notification appears when timer completes and app is in background',
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);

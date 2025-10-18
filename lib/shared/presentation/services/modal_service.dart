@@ -141,7 +141,7 @@ class ModalService {
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
-              cancelText ?? 'Cancel',
+              cancelText ?? context.l10n.cancel,
               style: TextStyle(
                 color: context.colors.onSurfaceVariant,
               ),
@@ -155,7 +155,7 @@ class ModalService {
                     foregroundColor: context.colors.onError,
                   )
                 : null,
-            child: Text(confirmText ?? 'Confirm'),
+            child: Text(confirmText ?? context.l10n.confirm),
           ),
         ],
       ),
@@ -240,8 +240,94 @@ class ModalService {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
+        ],
+      ),
+    );
+  }
+
+  /// Mostra dialog con azioni multiple personalizzate
+  ///
+  /// Esempio:
+  /// ```dart
+  /// await ModalService.showActionDialog(
+  ///   context,
+  ///   title: 'Error',
+  ///   message: 'Failed to save. Retry or export?',
+  ///   icon: Icons.error,
+  ///   actions: [
+  ///     DialogAction(
+  ///       label: 'RETRY',
+  ///       onPressed: () => retry(),
+  ///     ),
+  ///     DialogAction(
+  ///       label: 'EXPORT',
+  ///       onPressed: () => export(),
+  ///       isDangerous: true,
+  ///     ),
+  ///   ],
+  /// );
+  /// ```
+  static Future<void> showActionDialog(
+    BuildContext context, {
+    required String title,
+    required String message,
+    required List<DialogAction> actions,
+    IconData? icon,
+    bool barrierDismissible = true,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (_) => AlertDialog(
+        icon: icon != null
+            ? Icon(icon, size: 48, color: context.colors.error)
+            : null,
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          // Cancel button (sempre presente)
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              context.l10n.cancel,
+              style: TextStyle(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          // Azioni custom
+          ...actions.map((action) {
+            if (action.isPrimary) {
+              return FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  action.onPressed();
+                },
+                style: action.isDangerous
+                    ? FilledButton.styleFrom(
+                        backgroundColor: context.colors.error,
+                        foregroundColor: context.colors.onError,
+                      )
+                    : null,
+                child: Text(action.label),
+              );
+            } else {
+              return TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  action.onPressed();
+                },
+                child: Text(
+                  action.label,
+                  style: action.isDangerous
+                      ? TextStyle(color: context.colors.error)
+                      : null,
+                ),
+              );
+            }
+          }),
         ],
       ),
     );
@@ -251,6 +337,21 @@ class ModalService {
   static void dismiss(BuildContext context, [dynamic result]) {
     Navigator.of(context).pop(result);
   }
+}
+
+/// Rappresenta un'azione in un dialog con azioni multiple
+class DialogAction {
+  final String label;
+  final VoidCallback onPressed;
+  final bool isDangerous;
+  final bool isPrimary;
+
+  const DialogAction({
+    required this.label,
+    required this.onPressed,
+    this.isDangerous = false,
+    this.isPrimary = false,
+  });
 }
 
 /// Mixin per aggiungere metodi helper di modali ai widget

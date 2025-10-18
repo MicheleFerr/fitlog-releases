@@ -717,7 +717,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exerciseCategory => 'Exercise Category';
 
   @override
-  String get sets => 'Sets';
+  String get sets => 'sets';
 
   @override
   String get addSet => 'Add Set';
@@ -3793,13 +3793,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String hoursAgo(int count) {
-    return '${count}h ago';
+  String hoursAgo(int hours) {
+    return '${hours}h ago';
   }
 
   @override
-  String minutesAgo(int count) {
-    return '${count}m ago';
+  String minutesAgo(int minutes) {
+    return '${minutes}m ago';
   }
 
   @override
@@ -9454,4 +9454,360 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get historyViewSettingsSaved => 'View settings saved';
+
+  @override
+  String get reportExerciseIssue => 'Report Issue';
+
+  @override
+  String get feedbackType => 'Issue Type';
+
+  @override
+  String get feedbackBug => '🐛 Bug';
+
+  @override
+  String get feedbackSuggestion => '💡 Suggestion';
+
+  @override
+  String get feedbackTypo => '📝 Text Error';
+
+  @override
+  String get feedbackOther => '❓ Other';
+
+  @override
+  String get describeProblem => 'Describe the issue...';
+
+  @override
+  String get sendFeedback => 'Send Report';
+
+  @override
+  String get cancelFeedback => 'Cancel';
+
+  @override
+  String get feedbackSentSuccess => '✅ Thanks for the report!';
+
+  @override
+  String get feedbackSentError => '❌ Error sending report';
+
+  @override
+  String get feedbackRequired => 'Please describe the issue';
+
+  @override
+  String get exerciseReviewReport => 'Exercise Review Report';
+
+  @override
+  String get monthlyReview => 'Monthly Review';
+
+  @override
+  String get staleExercises => 'Stale Exercises';
+
+  @override
+  String get flaggedExercises => 'Flagged Exercises';
+
+  @override
+  String get exercisesObsolete => 'Stale Exercises';
+
+  @override
+  String get exercisesFlagged => 'Flagged Exercises';
+
+  @override
+  String get feedbackTotal => 'Total Feedback';
+
+  @override
+  String get criticalIssues => 'Critical Issues';
+
+  @override
+  String get daysThreshold => '>90 days';
+
+  @override
+  String get feedbackThreshold => '≥3 feedback';
+
+  @override
+  String get flagged => 'flagged';
+
+  @override
+  String get critical => 'critical';
+
+  @override
+  String modifiedDaysAgo(int days) {
+    return 'Modified $days days ago';
+  }
+
+  @override
+  String get noReportAvailable => 'No report available';
+
+  @override
+  String get reportWillBeAvailable =>
+      'The monthly report will be available after the first execution';
+
+  @override
+  String get exerciseFeedback => 'Exercise Feedback';
+
+  @override
+  String get feedbackRefresh => 'Refresh';
+
+  @override
+  String get feedbackStatsTotal => 'Total';
+
+  @override
+  String get feedbackStatsOpen => 'Open';
+
+  @override
+  String get feedbackStatsResolved => 'Resolved';
+
+  @override
+  String get feedbackByType => 'Feedback by Type';
+
+  @override
+  String get feedbackBySeverity => 'Feedback by Severity';
+
+  @override
+  String get feedbackSeverityCritical => 'Critical';
+
+  @override
+  String get feedbackSeverityHigh => 'High';
+
+  @override
+  String get feedbackSeverityMedium => 'Medium';
+
+  @override
+  String get feedbackSeverityLow => 'Low';
+
+  @override
+  String get feedbackCriticalIssues => 'Critical Issues (Severity ≥ 4)';
+
+  @override
+  String get feedbackCriticalIssuesTitle => 'Critical Issues (Severity ≥ 4)';
+
+  @override
+  String get feedbackNoCriticalIssues => 'No critical issues';
+
+  @override
+  String get feedbackErrorLoadingCritical => 'Error loading critical issues';
+
+  @override
+  String get feedbackRecentOpen => 'Recent Open Feedback';
+
+  @override
+  String get feedbackRecentOpenTitle => 'Recent Open Feedback';
+
+  @override
+  String get feedbackNoOpenFeedback => 'No open feedback';
+
+  @override
+  String get feedbackErrorLoading => 'Error loading feedback';
+
+  @override
+  String get feedbackErrorLoadingList => 'Error loading feedback';
+
+  @override
+  String get feedbackLoadingMessage => 'Loading feedback...';
+
+  @override
+  String feedbackSubmittedBy(String email) {
+    return 'by $email';
+  }
+
+  @override
+  String get feedbackDetailUserMessage => 'User Message';
+
+  @override
+  String get feedbackDetailAdminNotes => 'Admin Notes';
+
+  @override
+  String get feedbackDetailAdminNotesHint =>
+      'Add internal notes about this feedback...';
+
+  @override
+  String get feedbackDetailSaveNotes => 'Save Notes';
+
+  @override
+  String get feedbackDetailNotesSaved => 'Notes saved successfully';
+
+  @override
+  String get feedbackDetailNotesError => 'Error saving notes';
+
+  @override
+  String get feedbackDetailQuickActions => 'Quick Actions';
+
+  @override
+  String get feedbackActionStartReview => 'Start Review';
+
+  @override
+  String get feedbackActionMarkResolved => 'Mark Resolved';
+
+  @override
+  String get feedbackActionDismiss => 'Dismiss';
+
+  @override
+  String get feedbackActionReopen => 'Reopen';
+
+  @override
+  String feedbackStatusUpdated(String status) {
+    return 'Status updated to $status';
+  }
+
+  @override
+  String get feedbackStatusUpdateError => 'Error updating status';
+
+  @override
+  String get feedbackDetailChangeSeverity => 'Change Severity';
+
+  @override
+  String get feedbackSeverityUpdated => 'Severity updated';
+
+  @override
+  String get feedbackSeverityUpdateError => 'Error updating severity';
+
+  @override
+  String get feedbackDetailInfoUser => 'User';
+
+  @override
+  String get feedbackDetailInfoCreated => 'Created';
+
+  @override
+  String get feedbackDetailInfoVersion => 'Version';
+
+  @override
+  String get feedbackSeverityUrgent => 'Urgent';
+
+  @override
+  String feedbackTimeMinutesAgo(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String feedbackTimeHoursAgo(int hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String feedbackTimeDaysAgo(int days) {
+    return '${days}d ago';
+  }
+
+  @override
+  String feedbackByUser(String email) {
+    return 'by $email';
+  }
+
+  @override
+  String get savingWorkout => 'Saving workout...';
+
+  @override
+  String get syncingToCloud => 'Syncing to cloud...';
+
+  @override
+  String get workoutSavedLocally => 'Workout saved locally';
+
+  @override
+  String get cloudSyncComplete => 'Cloud sync complete';
+
+  @override
+  String get cloudSyncQueued => 'Queued for sync';
+
+  @override
+  String get saveFailed => 'Failed to save';
+
+  @override
+  String get retryingSync => 'Retrying sync...';
+
+  @override
+  String get localSaveFailed => 'Local save failed';
+
+  @override
+  String get retryOrExport => 'Retry or export data';
+
+  @override
+  String get quickRepPresets => 'Quick Rep Presets';
+
+  @override
+  String get quickSetCount => 'Quick Set Count';
+
+  @override
+  String get averageRpe => 'Average RPE';
+
+  @override
+  String get routineDayCompleted => 'Routine day completed:';
+
+  @override
+  String get routineDayCompletionFailed => 'Failed to complete routine day';
+
+  @override
+  String get repPresetStrengthLabel => '1-3';
+
+  @override
+  String get repPresetStrengthDescription => 'Maximum Strength';
+
+  @override
+  String get repPresetPowerLabel => '4-6';
+
+  @override
+  String get repPresetPowerDescription => 'Power';
+
+  @override
+  String get repPresetStrengthHypertrophyLabel => '6-8';
+
+  @override
+  String get repPresetStrengthHypertrophyDescription =>
+      'Strength / Hypertrophy';
+
+  @override
+  String get repPresetHypertrophyLabel => '8-12';
+
+  @override
+  String get repPresetHypertrophyDescription => 'Hypertrophy';
+
+  @override
+  String get repPresetEnduranceLabel => '12-15';
+
+  @override
+  String get repPresetEnduranceDescription => 'Muscular Endurance';
+
+  @override
+  String get repPresetHighEnduranceLabel => '15+';
+
+  @override
+  String get repPresetHighEnduranceDescription => 'High Endurance';
+
+  @override
+  String get restPresetNoTimer => 'No Timer';
+
+  @override
+  String get restPresetThirtySeconds => '30 seconds';
+
+  @override
+  String get restPresetOneMinute => '1 minute';
+
+  @override
+  String get restPresetOneMinuteThirty => '1:30 min';
+
+  @override
+  String get restPresetTwoMinutes => '2 minutes';
+
+  @override
+  String get restPresetThreeMinutes => '3 minutes';
+
+  @override
+  String get restPresetFiveMinutes => '5 minutes';
+
+  @override
+  String get restTimeDescription => 'Set the recovery timer between sets';
+
+  @override
+  String get useCustomTimer => 'Use custom timer';
+
+  @override
+  String get timerActiveForExercise => 'Timer active for this exercise';
+
+  @override
+  String get noSpecificTimer => 'No specific timer';
+
+  @override
+  String get quickPresets => 'Quick Presets';
+
+  @override
+  String get customTimer => 'Custom Timer';
+
+  @override
+  String get timerSet => 'Timer set: ';
 }

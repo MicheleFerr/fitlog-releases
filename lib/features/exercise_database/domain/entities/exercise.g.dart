@@ -38,13 +38,16 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
       spiegazioneTermini: fields[18] as String?,
       tempoEsecuzione: fields[19] as String?,
       tempoNote: fields[20] as String?,
+      aliases: (fields[21] as List).cast<String>(),
+      normalizedNome: fields[22] as String?,
+      searchableFields: (fields[23] as List?)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Exercise obj) {
     writer
-      ..writeByte(21)
+      ..writeByte(24)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -86,7 +89,13 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
       ..writeByte(19)
       ..write(obj.tempoEsecuzione)
       ..writeByte(20)
-      ..write(obj.tempoNote);
+      ..write(obj.tempoNote)
+      ..writeByte(21)
+      ..write(obj.aliases)
+      ..writeByte(22)
+      ..write(obj.normalizedNome)
+      ..writeByte(23)
+      ..write(obj.searchableFields);
   }
 
   @override

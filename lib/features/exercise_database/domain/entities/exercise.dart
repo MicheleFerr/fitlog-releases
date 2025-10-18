@@ -6,7 +6,7 @@ part 'exercise.g.dart';
 @HiveType(typeId: 2)
 class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
 
-  const Exercise({
+  Exercise({
     required this.id,
     required this.nome,
     required this.focus,
@@ -28,7 +28,12 @@ class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
     this.spiegazioneTermini,
     this.tempoEsecuzione,
     this.tempoNote,
-  });
+    // Fuzzy matching fields
+    this.aliases = const [],
+    String? normalizedNome,
+    List<String>? searchableFields,
+  })  : normalizedNome = normalizedNome ?? _normalize(nome),
+        searchableFields = searchableFields ?? _buildSearchableFields(nome, aliases);
 
   // Factory constructor per creare da JSON
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -54,6 +59,8 @@ class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
       spiegazioneTermini: json['spiegazioneTermini']?.isEmpty == true ? null : json['spiegazioneTermini'],
       tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true ? null : json['tempoEsecuzione'],
       tempoNote: json['tempoNote']?.isEmpty == true ? null : json['tempoNote'],
+      // Fuzzy matching fields
+      aliases: (json['aliases'] as List<dynamic>?)?.cast<String>() ?? [],
     );
   }
   @HiveField(0)
@@ -119,6 +126,16 @@ class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
   @HiveField(20)
   final String? tempoNote;
 
+  // Fuzzy matching fields
+  @HiveField(21)
+  final List<String> aliases; // Varianti del nome (es: ["panca", "bench press", "BP"])
+
+  @HiveField(22)
+  final String normalizedNome; // Nome normalizzato (lowercase, no accenti)
+
+  @HiveField(23)
+  final List<String> searchableFields; // Campi pre-calcolati per fuzzy search
+
   // Metodo helper per parsare stringhe separate da virgole
   static List<String> _parseCommaSeparated(String? value) {
     if (value == null || value.isEmpty) return [];
@@ -128,6 +145,29 @@ class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
   // Metodo pubblico per il model
   static List<String> parseCommaSeparated(String? value) {
     return _parseCommaSeparated(value);
+  }
+
+  // Normalizza stringhe (lowercase + rimuovi accenti)
+  static String _normalize(String text) {
+    return text
+        .toLowerCase()
+        .replaceAll(RegExp(r'[àáâãäå]'), 'a')
+        .replaceAll(RegExp(r'[èéêë]'), 'e')
+        .replaceAll(RegExp(r'[ìíîï]'), 'i')
+        .replaceAll(RegExp(r'[òóôõö]'), 'o')
+        .replaceAll(RegExp(r'[ùúûü]'), 'u')
+        .replaceAll(RegExp(r'[ñ]'), 'n')
+        .replaceAll(RegExp(r'[ç]'), 'c')
+        .trim();
+  }
+
+  // Pre-calcola tutti i campi searchabili
+  static List<String> _buildSearchableFields(String nome, List<String> aliases) {
+    final fields = <String>{
+      _normalize(nome),
+      ...aliases.map((a) => _normalize(a)),
+    };
+    return fields.toList();
   }
 
   // Getters utili per UI
@@ -189,6 +229,9 @@ class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
       'spiegazioneTermini': spiegazioneTermini,
       'tempoEsecuzione': tempoEsecuzione,
       'tempoNote': tempoNote,
+      // Fuzzy matching fields
+      'aliases': aliases,
+      'normalizedNome': normalizedNome,
     };
   }
 
@@ -215,5 +258,9 @@ class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
         spiegazioneTermini,
         tempoEsecuzione,
         tempoNote,
+        // Fuzzy matching fields
+        aliases,
+        normalizedNome,
+        searchableFields,
       ];
 }

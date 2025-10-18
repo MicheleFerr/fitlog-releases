@@ -16,7 +16,7 @@ void main() {
       await TestBase.setupTestEnvironment();
       
       // Start app
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       // Initialize page objects
       final workoutPage = WorkoutPage($);
@@ -96,7 +96,7 @@ void main() {
       }
       
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -168,7 +168,7 @@ void main() {
       // This test would need device-specific checks
       
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);

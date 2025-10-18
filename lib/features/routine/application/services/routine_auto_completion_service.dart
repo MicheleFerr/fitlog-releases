@@ -1,0 +1,344 @@
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+///
+/// 📁 Layer: features/routine/application/services
+/// 🎯 Feature: routine
+/// 🔧 Type: service
+///
+/// Service per automatic routine day completion quando un workout viene completato.
+/// Risolve il problema UX critico: "Non c'è auto-completion quando finisci workout".
+///
+/// **FUNZIONALITÀ**:
+/// - Auto-detection routine attiva
+/// - Match workout → scheduled day (per templateId)
+/// - Multi-day support con UI selezione
+/// - Feedback UI con toast
+///
+/// **UTILIZZO**:
+/// ```dart
+/// // Nel workout_provider dopo completamento
+/// final autoCompletionService = ref.read(routineAutoCompletionServiceProvider);
+/// await autoCompletionService.tryAutoCompleteRoutineDay(
+///   completedWorkout: workout,
+///   context: context, // Per UI feedback e date selection
+/// );
+/// ```
+///
+/// **COMPORTAMENTO**:
+/// - Se routine attiva non trovata → skip silenzioso
+/// - Se template non corrisponde → skip silenzioso
+/// - Se single match → auto-complete con toast success
+/// - Se multiple matches → mostra UI per selezione data
+library;
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+
+/// Result of routine auto-completion attempt
+class RoutineAutoCompletionResult {
+  final bool completed;
+  final String? reason;
+  final List<DateTime>? candidateDates;
+
+  const RoutineAutoCompletionResult({
+    required this.completed,
+    this.reason,
+    this.candidateDates,
+  });
+
+  factory RoutineAutoCompletionResult.success(DateTime completedDate) {
+    return RoutineAutoCompletionResult(
+      completed: true,
+      reason: 'Routine day auto-completed for ${completedDate.toLocal()}',
+    );
+  }
+
+  factory RoutineAutoCompletionResult.skipped(String reason) {
+    return RoutineAutoCompletionResult(
+      completed: false,
+      reason: reason,
+    );
+  }
+
+  factory RoutineAutoCompletionResult.needsUserSelection(
+      List<DateTime> candidates) {
+    return RoutineAutoCompletionResult(
+      completed: false,
+      reason: 'Multiple candidate dates found, user selection required',
+      candidateDates: candidates,
+    );
+  }
+}
+
+/// Service for automatic routine day completion
+class RoutineAutoCompletionService {
+  RoutineAutoCompletionService(this._ref);
+
+  final Ref _ref;
+
+  /// Repository for routine operations
+  FlexibleRoutineRepository get _repository =>
+      _ref.read(flexibleRoutineRepositoryProvider);
+
+  /// Try to auto-complete routine day when workout is completed
+  ///
+  /// Returns:
+  /// - RoutineAutoCompletionResult with completion status
+  ///
+  /// Behavior:
+  /// - If no active routine → skip silently (return skipped)
+  /// - If workout template doesn't match any scheduled day → skip silently
+  /// - If single match → auto-complete and show success toast
+  /// - If multiple matches → return candidates for UI selection
+  Future<RoutineAutoCompletionResult> tryAutoCompleteRoutineDay({
+    required Workout completedWorkout,
+    BuildContext? context,
+  }) async {
+    try {
+      // 1. Get active routine (if exists)
+      final activeRoutineAsync = _ref.read(activeFlexibleRoutineProvider);
+
+      final activeRoutine = activeRoutineAsync.when(
+        data: (routine) => routine,
+        loading: () => null,
+        error: (_, __) => null,
+      );
+
+      if (activeRoutine == null) {
+        if (kDebugMode) {
+          debugPrint('ℹ️ [RoutineAutoCompletion] No active routine found, skipping auto-completion');
+        }
+        return RoutineAutoCompletionResult.skipped('No active routine');
+      }
+
+      // 2. Check if workout has a templateId
+      final workoutTemplateId = completedWorkout.templateId;
+      if (workoutTemplateId == null || workoutTemplateId.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('ℹ️ [RoutineAutoCompletion] Workout has no templateId, skipping');
+        }
+        return RoutineAutoCompletionResult.skipped('No workout template');
+      }
+
+      // 3. Find scheduled days that match the template
+      final candidateDays = _findCandidateDays(
+        routine: activeRoutine,
+        templateId: workoutTemplateId,
+        completedAt: completedWorkout.completedAt,
+      );
+
+      if (candidateDays.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('ℹ️ [RoutineAutoCompletion] No matching scheduled days found for template $workoutTemplateId');
+        }
+        return RoutineAutoCompletionResult.skipped('No matching scheduled days');
+      }
+
+      // 4. Single match → auto-complete immediately
+      if (candidateDays.length == 1) {
+        final dayToComplete = candidateDays.first;
+
+        await _repository.completeDayWorkout(
+          routineId: activeRoutine.id,
+          date: dayToComplete,
+          workoutId: completedWorkout.id,
+        );
+
+        if (kDebugMode) {
+          debugPrint('✅ [RoutineAutoCompletion] Routine day auto-completed: $dayToComplete');
+        }
+
+        // Show success toast if context available
+        if (context != null && context.mounted) {
+          SnackBarService.showSuccess(
+            context,
+            '${context.l10n.routineDayCompleted} ${_formatDate(dayToComplete)}',
+            duration: const Duration(seconds: 3),
+          );
+        }
+
+        return RoutineAutoCompletionResult.success(dayToComplete);
+      }
+
+      // 5. Multiple matches → return for UI selection
+      if (kDebugMode) {
+        debugPrint('ℹ️ [RoutineAutoCompletion] Multiple candidate days found: $candidateDays');
+      }
+
+      return RoutineAutoCompletionResult.needsUserSelection(candidateDays);
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [RoutineAutoCompletion] Error during auto-completion: $e');
+        debugPrint('📍 [RoutineAutoCompletion] Stack trace: $stackTrace');
+      }
+
+      return RoutineAutoCompletionResult.skipped('Error: $e');
+    }
+  }
+
+  /// Manual completion with user-selected date
+  ///
+  /// Used when multiple candidate dates exist and user picks one.
+  Future<void> completeRoutineDayManually({
+    required String routineId,
+    required DateTime selectedDate,
+    required String workoutId,
+    BuildContext? context,
+  }) async {
+    try {
+      await _repository.completeDayWorkout(
+        routineId: routineId,
+        date: selectedDate,
+        workoutId: workoutId,
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [RoutineAutoCompletion] Routine day manually completed: $selectedDate');
+      }
+
+      // Show success toast if context available
+      if (context != null && context.mounted) {
+        SnackBarService.showSuccess(
+          context,
+          '${context.l10n.routineDayCompleted} ${_formatDate(selectedDate)}',
+          duration: const Duration(seconds: 3),
+        );
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [RoutineAutoCompletion] Error during manual completion: $e');
+        debugPrint('📍 [RoutineAutoCompletion] Stack trace: $stackTrace');
+      }
+
+      // Show error toast if context available
+      if (context != null && context.mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.routineDayCompletionFailed,
+          duration: const Duration(seconds: 4),
+        );
+      }
+
+      rethrow;
+    }
+  }
+
+  /// Find scheduled days that match the template and are candidates for completion
+  ///
+  /// Returns only days that:
+  /// - Have matching templateId
+  /// - Are in "scheduled" or "skipped" status (actionable)
+  /// - Are within ±7 days of workout completion (to avoid distant matches)
+  List<DateTime> _findCandidateDays({
+    required FlexibleRoutine routine,
+    required String templateId,
+    DateTime? completedAt,
+  }) {
+    final targetDate = completedAt ?? DateTime.now();
+    final candidates = <DateTime>[];
+
+    // Check all scheduled days in the routine
+    for (final scheduledDay in routine.scheduledDays) {
+      // Must match template
+      if (scheduledDay.templateId != templateId) continue;
+
+      // Must be actionable (not already completed or rest day)
+      if (!scheduledDay.status.isActionable) continue;
+
+      // Must be within ±7 days of workout completion (configurable window)
+      final daysDifference = scheduledDay.date.difference(targetDate).inDays.abs();
+      if (daysDifference > 7) continue;
+
+      candidates.add(scheduledDay.date);
+    }
+
+    // Sort by proximity to target date
+    candidates.sort((a, b) {
+      final diffA = a.difference(targetDate).inDays.abs();
+      final diffB = b.difference(targetDate).inDays.abs();
+      return diffA.compareTo(diffB);
+    });
+
+    return candidates;
+  }
+
+  /// Format date for UI display
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final dateOnly = DateTime(date.year, date.month, date.day);
+
+    final diff = dateOnly.difference(today).inDays;
+
+    if (diff == 0) return 'Today';
+    if (diff == -1) return 'Yesterday';
+    if (diff == 1) return 'Tomorrow';
+
+    // Format as "Mon 15 Jan"
+    return '${_weekdayName(date.weekday)} ${date.day} ${_monthName(date.month)}';
+  }
+
+  String _weekdayName(int weekday) {
+    switch (weekday) {
+      case 1:
+        return 'Mon';
+      case 2:
+        return 'Tue';
+      case 3:
+        return 'Wed';
+      case 4:
+        return 'Thu';
+      case 5:
+        return 'Fri';
+      case 6:
+        return 'Sat';
+      case 7:
+        return 'Sun';
+      default:
+        return '';
+    }
+  }
+
+  String _monthName(int month) {
+    switch (month) {
+      case 1:
+        return 'Jan';
+      case 2:
+        return 'Feb';
+      case 3:
+        return 'Mar';
+      case 4:
+        return 'Apr';
+      case 5:
+        return 'May';
+      case 6:
+        return 'Jun';
+      case 7:
+        return 'Jul';
+      case 8:
+        return 'Aug';
+      case 9:
+        return 'Sep';
+      case 10:
+        return 'Oct';
+      case 11:
+        return 'Nov';
+      case 12:
+        return 'Dec';
+      default:
+        return '';
+    }
+  }
+}
+
+/// Provider for RoutineAutoCompletionService
+final routineAutoCompletionServiceProvider = Provider<RoutineAutoCompletionService>((ref) {
+  return RoutineAutoCompletionService(ref);
+});

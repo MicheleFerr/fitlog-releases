@@ -325,6 +325,11 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
       _currentExerciseId = exerciseId;
       // Timer started with exerciseId: $exerciseId
       
+      // DEBUG: Log what custom sound is being set
+      if (kDebugMode) {
+        debugPrint('🔊 [TIMER SOUND DEBUG 2] Creating timer state with customSound: $customSound');
+      }
+
       // Create new timer state
       final newState = UnifiedTimerState(
         type: type,
@@ -879,8 +884,34 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
     // Android: Use ONLY Flutter AudioPlayer
     
     try {
-      final soundName = state?.customSoundName ?? 'sound';
-      
+      // CRITICAL FIX: If customSoundName is null, read CURRENT value from AppConfig
+      // This handles cases where the setting was changed but timer state wasn't updated
+      String soundName = state?.customSoundName ?? 'sound';
+
+      if (soundName == 'sound' || soundName == 'timer_complete') {
+        // Fallback to current AppConfig value
+        final currentConfig = ref.read(appConfigProvider);
+        final configSound = currentConfig.timerSound;
+
+        if (configSound != 'timer_complete') {
+          soundName = configSound;
+
+          if (kDebugMode) {
+            debugPrint('🔧 [TIMER SOUND FIX] Using current AppConfig value:');
+            debugPrint('  - state?.customSoundName was: ${state?.customSoundName}');
+            debugPrint('  - AppConfig.timerSound is: $configSound');
+            debugPrint('  - Final soundName: $soundName');
+          }
+        }
+      }
+
+      // DEBUG: Log what sound is being played
+      if (kDebugMode) {
+        debugPrint('🔊 [TIMER SOUND DEBUG 3] Playing completion sound:');
+        debugPrint('  - state?.customSoundName = ${state?.customSoundName}');
+        debugPrint('  - Final soundName = $soundName');
+      }
+
       if (Platform.isIOS) {
         // iOS: ONLY use native audio through unified coordinator
         // This prevents duplicate audio by having a single playback path
@@ -894,6 +925,12 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
             return;
           }
           
+          // DEBUG: Log iOS playback
+          if (kDebugMode) {
+            debugPrint('🔊 [TIMER SOUND DEBUG 4] Sending to iOS:');
+            debugPrint('  - soundName parameter = $soundName');
+          }
+
           // Play through unified coordinator ONLY
           await _unifiedChannel.invokeMethod('playCompletionSound', {
             'soundName': soundName,
@@ -1340,9 +1377,16 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
           }
         }
         
-        
+
         final restoredState = UnifiedTimerState.fromJson(stateMap);
-        
+
+        // DEBUG: Log customSoundName when restoring
+        if (kDebugMode) {
+          debugPrint('📂 [TIMER RESTORE] Restoring timer state:');
+          debugPrint('  - customSoundName: ${restoredState.customSoundName}');
+          debugPrint('  - remainingSeconds: ${restoredState.remainingSeconds}');
+        }
+
         // Check if timer should still be running
         if (restoredState.isActive && restoredState.endTime != null) {
           final now = DateTime.now();
@@ -1474,6 +1518,13 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
 
       if (totalDuration < 0 || remainingSeconds < 0 || remainingSeconds > totalDuration) {
         throw Exception('Invalid state data: time inconsistency');
+      }
+
+      // DEBUG: Log customSoundName when saving
+      if (kDebugMode && dataToSave.containsKey('customSoundName')) {
+        debugPrint('💾 [TIMER SAVE] Saving timer state:');
+        debugPrint('  - customSoundName: ${dataToSave['customSoundName']}');
+        debugPrint('  - remainingSeconds: $remainingSeconds');
       }
 
       // ATOMIC WRITE: Save validated state

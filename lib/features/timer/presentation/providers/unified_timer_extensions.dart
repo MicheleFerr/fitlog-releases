@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_ui_state_provider.dart';
@@ -21,7 +22,12 @@ extension Tier1TimerExtensions on StateNotifier<UnifiedTimerState?> {
   }) async {
     // Get timer sound preference from app config
     final config = ref.read(appConfigProvider);
-    
+
+    // DEBUG: Log what sound is being used
+    if (kDebugMode) {
+      debugPrint('🔊 [TIMER SOUND DEBUG 1] Reading timer sound from config: ${config.timerSound}');
+    }
+
     // Start timer logic - cast to access methods
     final controller = this as dynamic;
     await controller.startTimer(

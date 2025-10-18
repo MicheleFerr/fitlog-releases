@@ -21,7 +21,9 @@ class HapticFeedbackService {
   /// Trigger haptic feedback for set completion (from widgets)
   /// Uses light impact by default
   static void setCompletion(dynamic ref) {
-    final settings = ref.read(feedbackSettingsProvider).valueOrNull;
+    // Use asData?.value to safely handle AsyncLoading state
+    final asyncValue = ref.read(feedbackSettingsProvider);
+    final settings = asyncValue.asData?.value;
 
     if (settings == null || !settings.hapticEnabled) {
       return;
@@ -34,7 +36,9 @@ class HapticFeedbackService {
   /// Trigger haptic feedback for exercise completion (from widgets)
   /// Uses medium impact by default
   static void exerciseCompletion(dynamic ref) {
-    final settings = ref.read(feedbackSettingsProvider).valueOrNull;
+    // Use asData?.value to safely handle AsyncLoading state
+    final asyncValue = ref.read(feedbackSettingsProvider);
+    final settings = asyncValue.asData?.value;
 
     if (settings == null || !settings.hapticEnabled) {
       return;
@@ -47,7 +51,9 @@ class HapticFeedbackService {
   /// Trigger haptic feedback for workout completion (from providers)
   /// Uses heavy impact by default
   static void workoutCompletion(dynamic ref) {
-    final settings = ref.read(feedbackSettingsProvider).valueOrNull;
+    // Use valueOrNull to safely handle AsyncLoading state
+    final asyncValue = ref.read(feedbackSettingsProvider);
+    final settings = asyncValue.valueOrNull;
 
     if (settings == null || !settings.hapticEnabled) {
       return;
@@ -76,7 +82,9 @@ class HapticFeedbackService {
   /// This respects user settings but uses a lighter feedback
   /// Accepts both WidgetRef (from widgets) and Ref (from providers)
   static void selection(Ref ref) {
-    final settings = ref.read(feedbackSettingsProvider).valueOrNull;
+    // Use asData?.value to safely handle AsyncLoading state
+    final asyncValue = ref.read(feedbackSettingsProvider);
+    final settings = asyncValue.asData?.value;
 
     if (settings == null || !settings.hapticEnabled) {
       return;

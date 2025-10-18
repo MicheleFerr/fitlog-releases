@@ -13,7 +13,9 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/community_corrections_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/missing_exercises_requests_screen.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/firebase_init_widget.dart';
 
 class AdminQuickActions extends ConsumerWidget {
@@ -62,6 +64,16 @@ class AdminQuickActions extends ConsumerWidget {
                   subtitle: l10n.manageExercisesDescription,
                   color: Theme.of(context).colorScheme.primary,
                   onTap: () => _navigateToDatabaseManager(context),
+                ),
+
+                // Exercise Feedback (NUOVO)
+                _QuickActionCardWithBadge(
+                  icon: Icons.flag_circle,
+                  title: 'Exercise Feedback',
+                  subtitle: 'Segnalazioni e bug utenti',
+                  color: Colors.deepPurple,
+                  onTap: () => _navigateToExerciseFeedback(context),
+                  badgeProvider: unreadFeedbackCountProvider,
                 ),
 
                 // Review contributi community
@@ -190,6 +202,14 @@ class AdminQuickActions extends ConsumerWidget {
     );
   }
 
+  void _navigateToExerciseFeedback(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const ExerciseFeedbackScreen(),
+      ),
+    );
+  }
+
   void _fixMissingData(BuildContext context, WidgetRef ref) {
     // Mostra dialogo di conferma
     showDialog(
@@ -288,6 +308,119 @@ class _QuickActionCard extends StatelessWidget {
                   color: color,
                   size: 32,
                 ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Quick Action Card con badge per contatore real-time
+class _QuickActionCardWithBadge extends ConsumerWidget {
+  const _QuickActionCardWithBadge({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+    required this.badgeProvider,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+  final StreamProvider<int> badgeProvider;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final badgeCountAsync = ref.watch(badgeProvider);
+
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon with Badge
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      icon,
+                      color: color,
+                      size: 32,
+                    ),
+                  ),
+                  // Badge count
+                  badgeCountAsync.when(
+                    data: (count) {
+                      if (count == 0) return const SizedBox.shrink();
+                      return Positioned(
+                        right: -4,
+                        top: -4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 20,
+                            minHeight: 20,
+                          ),
+                          child: Text(
+                            count > 99 ? '99+' : count.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    },
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
               Text(

@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/dynamic_gr
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_update_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/stale_profile_banner.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
@@ -249,8 +251,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                 // Admin panel (only visible for admin users)
                 Consumer(
                   builder: (context, ref, child) {
-                    final user = ref.watch(firebaseUserProvider).asData?.value;
-                    final isAdmin = user?.email == 'ferrara-michele@hotmail.it';
+                    final isAdmin = ref.watch(isAdminCachedProvider);
 
                     if (!isAdmin) return const SizedBox.shrink();
 
@@ -284,6 +285,74 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                             ],
                           ),
                           const SizedBox(height: 12),
+
+                          // Exercise Feedback Card
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const ExerciseFeedbackScreen(),
+                                  ),
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.deepPurple.shade700,
+                                      Colors.deepPurple.shade900,
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.flag_circle,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            '🔧 Exercise Feedback',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Segnalazioni e bug utenti',
+                                            style: TextStyle(
+                                              color: Colors.white.withOpacity(0.8),
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Reset Onboarding Button
                           FilledButton.tonal(
                             onPressed: () {
                               ref.read(onboardingStateProvider.notifier).resetOnboarding();

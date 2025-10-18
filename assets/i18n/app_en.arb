@@ -11210,5 +11210,539 @@
   "historyViewSettingsSaved": "View settings saved",
   "@historyViewSettingsSaved": {
     "description": "Success message after saving view settings"
+  },
+  "reportExerciseIssue": "Report Issue",
+  "@reportExerciseIssue": {
+    "description": "Button tooltip for reporting exercise issues"
+  },
+  "feedbackType": "Issue Type",
+  "@feedbackType": {
+    "description": "Label for feedback type selection"
+  },
+  "feedbackBug": "🐛 Bug",
+  "@feedbackBug": {
+    "description": "Bug issue type option"
+  },
+  "feedbackSuggestion": "💡 Suggestion",
+  "@feedbackSuggestion": {
+    "description": "Suggestion issue type option"
+  },
+  "feedbackTypo": "📝 Text Error",
+  "@feedbackTypo": {
+    "description": "Text error issue type option"
+  },
+  "feedbackOther": "❓ Other",
+  "@feedbackOther": {
+    "description": "Other issue type option"
+  },
+  "describeProblem": "Describe the issue...",
+  "@describeProblem": {
+    "description": "Placeholder text for feedback message input"
+  },
+  "sendFeedback": "Send Report",
+  "@sendFeedback": {
+    "description": "Button label for sending feedback"
+  },
+  "cancelFeedback": "Cancel",
+  "@cancelFeedback": {
+    "description": "Button label for canceling feedback dialog"
+  },
+  "feedbackSentSuccess": "✅ Thanks for the report!",
+  "@feedbackSentSuccess": {
+    "description": "Success message after sending feedback"
+  },
+  "feedbackSentError": "❌ Error sending report",
+  "@feedbackSentError": {
+    "description": "Error message when sending feedback fails"
+  },
+  "feedbackRequired": "Please describe the issue",
+  "@feedbackRequired": {
+    "description": "Error message when feedback message is empty"
+  },
+  "exerciseReviewReport": "Exercise Review Report",
+  "@exerciseReviewReport": {
+    "description": "Title for the exercise review report screen"
+  },
+  "monthlyReview": "Monthly Review",
+  "@monthlyReview": {
+    "description": "Monthly review section header"
+  },
+  "staleExercises": "Stale Exercises",
+  "@staleExercises": {
+    "description": "Stale exercises section header"
+  },
+  "flaggedExercises": "Flagged Exercises",
+  "@flaggedExercises": {
+    "description": "Flagged exercises section header"
+  },
+  "statistics": "Statistics",
+  "@statistics": {
+    "description": "Statistics section header"
+  },
+  "recommendations": "Recommendations",
+  "@recommendations": {
+    "description": "Recommendations section header"
+  },
+  "exercisesObsolete": "Stale Exercises",
+  "@exercisesObsolete": {
+    "description": "Stale exercises count label"
+  },
+  "exercisesFlagged": "Flagged Exercises",
+  "@exercisesFlagged": {
+    "description": "Flagged exercises count label"
+  },
+  "feedbackTotal": "Total Feedback",
+  "@feedbackTotal": {
+    "description": "Total feedback count label"
+  },
+  "criticalIssues": "Critical Issues",
+  "@criticalIssues": {
+    "description": "Critical issues count label"
+  },
+  "daysThreshold": ">90 days",
+  "@daysThreshold": {
+    "description": "Days threshold description for stale exercises"
+  },
+  "feedbackThreshold": "≥3 feedback",
+  "@feedbackThreshold": {
+    "description": "Feedback threshold for flagged exercises"
+  },
+  "flagged": "flagged",
+  "@flagged": {
+    "description": "Flagged status indicator"
+  },
+  "critical": "critical",
+  "@critical": {
+    "description": "Critical status indicator"
+  },
+  "modifiedDaysAgo": "Modified {days} days ago",
+  "@modifiedDaysAgo": {
+    "description": "Days since modification",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Number of days"
+      }
+    }
+  },
+  "noReportAvailable": "No report available",
+  "@noReportAvailable": {
+    "description": "Message when no review report is available"
+  },
+  "reportWillBeAvailable": "The monthly report will be available after the first execution",
+  "@reportWillBeAvailable": {
+    "description": "Description when no review report exists yet"
+  },
+  "exerciseFeedback": "Exercise Feedback",
+  "@exerciseFeedback": {
+    "description": "Title for exercise feedback admin dashboard"
+  },
+  "feedbackRefresh": "Refresh",
+  "@feedbackRefresh": {
+    "description": "Refresh button tooltip for feedback list"
+  },
+  "feedbackStatsTotal": "Total",
+  "@feedbackStatsTotal": {
+    "description": "Total feedback count stat label"
+  },
+  "feedbackStatsOpen": "Open",
+  "@feedbackStatsOpen": {
+    "description": "Open feedback count stat label - feedback awaiting admin review"
+  },
+  "feedbackStatsResolved": "Resolved",
+  "@feedbackStatsResolved": {
+    "description": "Resolved feedback count stat label - issues that have been fixed"
+  },
+  "feedbackByType": "Feedback by Type",
+  "@feedbackByType": {
+    "description": "Section title for feedback grouped by type (bug, suggestion, etc)"
+  },
+  "feedbackBySeverity": "Feedback by Severity",
+  "@feedbackBySeverity": {
+    "description": "Section title for feedback grouped by severity (critical, high, medium, low)"
+  },
+  "feedbackSeverityCritical": "Critical",
+  "@feedbackSeverityCritical": {
+    "description": "Critical severity level (4-5) - requires immediate attention"
+  },
+  "feedbackSeverityHigh": "High",
+  "@feedbackSeverityHigh": {
+    "description": "High severity level (3) - important issue to address soon"
+  },
+  "feedbackSeverityMedium": "Medium",
+  "@feedbackSeverityMedium": {
+    "description": "Medium severity level (2) - standard priority issue"
+  },
+  "feedbackSeverityLow": "Low",
+  "@feedbackSeverityLow": {
+    "description": "Low severity level (1) - minor issue or enhancement"
+  },
+  "feedbackCriticalIssues": "Critical Issues (Severity ≥ 4)",
+  "@feedbackCriticalIssues": {
+    "description": "Section title for critical issues that need immediate attention"
+  },
+  "feedbackCriticalIssuesTitle": "Critical Issues (Severity ≥ 4)",
+  "@feedbackCriticalIssuesTitle": {
+    "description": "Section title for critical issues that need immediate attention"
+  },
+  "feedbackNoCriticalIssues": "No critical issues",
+  "@feedbackNoCriticalIssues": {
+    "description": "Message when there are no critical issues - good news!"
+  },
+  "feedbackErrorLoadingCritical": "Error loading critical issues",
+  "@feedbackErrorLoadingCritical": {
+    "description": "Error message when critical issues fail to load"
+  },
+  "feedbackRecentOpen": "Recent Open Feedback",
+  "@feedbackRecentOpen": {
+    "description": "Section title for latest open feedback items awaiting review"
+  },
+  "feedbackRecentOpenTitle": "Recent Open Feedback",
+  "@feedbackRecentOpenTitle": {
+    "description": "Section title for latest open feedback items awaiting review"
+  },
+  "feedbackNoOpenFeedback": "No open feedback",
+  "@feedbackNoOpenFeedback": {
+    "description": "Message when all feedback has been reviewed - all caught up!"
+  },
+  "feedbackErrorLoading": "Error loading feedback",
+  "@feedbackErrorLoading": {
+    "description": "Error message when feedback list fails to load"
+  },
+  "feedbackErrorLoadingList": "Error loading feedback",
+  "@feedbackErrorLoadingList": {
+    "description": "Error message when feedback list fails to load"
+  },
+  "feedbackLoadingMessage": "Loading feedback...",
+  "@feedbackLoadingMessage": {
+    "description": "Loading message while fetching feedback data"
+  },
+  "feedbackSubmittedBy": "by {email}",
+  "@feedbackSubmittedBy": {
+    "description": "Prefix for user email who submitted feedback",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "description": "User email address"
+      }
+    }
+  },
+  "feedbackDetailUserMessage": "User Message",
+  "@feedbackDetailUserMessage": {
+    "description": "Section title for the message submitted by the user"
+  },
+  "feedbackDetailAdminNotes": "Admin Notes",
+  "@feedbackDetailAdminNotes": {
+    "description": "Section title for internal admin notes - not visible to users"
+  },
+  "feedbackDetailAdminNotesHint": "Add internal notes about this feedback...",
+  "@feedbackDetailAdminNotesHint": {
+    "description": "Hint text for admin notes field - explain it's for internal use only"
+  },
+  "feedbackDetailSaveNotes": "Save Notes",
+  "@feedbackDetailSaveNotes": {
+    "description": "Button to save admin notes to database"
+  },
+  "feedbackDetailNotesSaved": "Notes saved successfully",
+  "@feedbackDetailNotesSaved": {
+    "description": "Success message after saving admin notes"
+  },
+  "feedbackDetailNotesError": "Error saving notes",
+  "@feedbackDetailNotesError": {
+    "description": "Error message when saving admin notes fails"
+  },
+  "feedbackDetailQuickActions": "Quick Actions",
+  "@feedbackDetailQuickActions": {
+    "description": "Section title for quick action buttons to change feedback status"
+  },
+  "feedbackActionStartReview": "Start Review",
+  "@feedbackActionStartReview": {
+    "description": "Action to mark feedback as 'REVIEWING' - you're actively working on it"
+  },
+  "feedbackActionMarkResolved": "Mark Resolved",
+  "@feedbackActionMarkResolved": {
+    "description": "Action to mark feedback as 'RESOLVED' - issue has been fixed"
+  },
+  "feedbackActionDismiss": "Dismiss",
+  "@feedbackActionDismiss": {
+    "description": "Action to mark feedback as 'DISMISSED' - won't fix or not applicable"
+  },
+  "feedbackActionReopen": "Reopen",
+  "@feedbackActionReopen": {
+    "description": "Action to reopen feedback back to 'OPEN' status - needs more attention"
+  },
+  "feedbackStatusUpdated": "Status updated to {status}",
+  "@feedbackStatusUpdated": {
+    "description": "Success message after changing feedback status",
+    "placeholders": {
+      "status": {
+        "type": "String",
+        "description": "New status value"
+      }
+    }
+  },
+  "feedbackStatusUpdateError": "Error updating status",
+  "@feedbackStatusUpdateError": {
+    "description": "Error message when status update fails"
+  },
+  "feedbackDetailChangeSeverity": "Change Severity",
+  "@feedbackDetailChangeSeverity": {
+    "description": "Section title for changing feedback severity level (1-5)"
+  },
+  "feedbackSeverityUpdated": "Severity updated",
+  "@feedbackSeverityUpdated": {
+    "description": "Success message after changing severity level"
+  },
+  "feedbackSeverityUpdateError": "Error updating severity",
+  "@feedbackSeverityUpdateError": {
+    "description": "Error message when severity update fails"
+  },
+  "feedbackDetailInfoUser": "User",
+  "@feedbackDetailInfoUser": {
+    "description": "Label for user email in feedback detail"
+  },
+  "feedbackDetailInfoCreated": "Created",
+  "@feedbackDetailInfoCreated": {
+    "description": "Label for creation date in feedback detail"
+  },
+  "feedbackDetailInfoVersion": "Version",
+  "@feedbackDetailInfoVersion": {
+    "description": "Label for app version when feedback was submitted"
+  },
+  "feedbackSeverityUrgent": "Urgent",
+  "@feedbackSeverityUrgent": {
+    "description": "Urgent severity level (5) - critical issue requiring immediate action"
+  },
+  "feedbackTimeMinutesAgo": "{minutes}m ago",
+  "@feedbackTimeMinutesAgo": {
+    "description": "Relative time format for minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Number of minutes"
+      }
+    }
+  },
+  "feedbackTimeHoursAgo": "{hours}h ago",
+  "@feedbackTimeHoursAgo": {
+    "description": "Relative time format for hours",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "description": "Number of hours"
+      }
+    }
+  },
+  "feedbackTimeDaysAgo": "{days}d ago",
+  "@feedbackTimeDaysAgo": {
+    "description": "Relative time format for days",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Number of days"
+      }
+    }
+  },
+  "feedbackByUser": "by {email}",
+  "@feedbackByUser": {
+    "description": "Shows who submitted the feedback - 'by email@example.com'",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "description": "User's email address"
+      }
+    }
+  },
+  "savingWorkout": "Saving workout...",
+  "@savingWorkout": {
+    "description": "Message shown while saving workout"
+  },
+  "workoutSaved": "Workout saved!",
+  "@workoutSaved": {
+    "description": "Success message after workout is saved"
+  },
+  "syncingToCloud": "Syncing to cloud...",
+  "@syncingToCloud": {
+    "description": "Message shown while syncing workout to cloud"
+  },
+  "workoutSavedLocally": "Workout saved locally",
+  "@workoutSavedLocally": {
+    "description": "Message when workout is saved to local storage"
+  },
+  "cloudSyncComplete": "Cloud sync complete",
+  "@cloudSyncComplete": {
+    "description": "Message when cloud synchronization completes successfully"
+  },
+  "cloudSyncQueued": "Queued for sync",
+  "@cloudSyncQueued": {
+    "description": "Message when workout is queued for cloud synchronization"
+  },
+  "saveFailed": "Failed to save",
+  "@saveFailed": {
+    "description": "Error message when save operation fails"
+  },
+  "retryingSync": "Retrying sync...",
+  "@retryingSync": {
+    "description": "Message when retrying cloud synchronization"
+  },
+  "localSaveFailed": "Local save failed",
+  "@localSaveFailed": {
+    "description": "Critical error message when local save fails"
+  },
+  "retryOrExport": "Retry or export data",
+  "@retryOrExport": {
+    "description": "Action message for local save failure"
+  },
+  "quickRepPresets": "Quick Rep Presets",
+  "@quickRepPresets": {
+    "description": "Title for quick rep preset chips section"
+  },
+  "quickSetCount": "Quick Set Count",
+  "@quickSetCount": {
+    "description": "Title for quick set count selector"
+  },
+  "averageRpe": "Average RPE",
+  "@averageRpe": {
+    "description": "Average Rate of Perceived Exertion label in workout summary"
+  },
+  "justNow": "Just now",
+  "@justNow": {
+    "description": "Timestamp indicating action just happened"
+  },
+  "minutesAgo": "{minutes}m ago",
+  "@minutesAgo": {
+    "description": "Timestamp showing minutes elapsed",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Number of minutes"
+      }
+    }
+  },
+  "hoursAgo": "{hours}h ago",
+  "@hoursAgo": {
+    "description": "Timestamp showing hours elapsed",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "description": "Number of hours"
+      }
+    }
+  },
+  "routineDayCompleted": "Routine day completed:",
+  "@routineDayCompleted": {
+    "description": "Success message when a routine day is auto-completed"
+  },
+  "routineDayCompletionFailed": "Failed to complete routine day",
+  "@routineDayCompletionFailed": {
+    "description": "Error message when routine day completion fails"
+  },
+  "sets": "sets",
+  "@sets": {
+    "description": "Sets unit label"
+  },
+  "repPresetStrengthLabel": "1-3",
+  "@repPreset.strength.label": {
+    "description": "Strength rep range label"
+  },
+  "repPresetStrengthDescription": "Maximum Strength",
+  "@repPreset.strength.description": {
+    "description": "Strength rep range description"
+  },
+  "repPresetPowerLabel": "4-6",
+  "@repPreset.power.label": {
+    "description": "Power rep range label"
+  },
+  "repPresetPowerDescription": "Power",
+  "@repPreset.power.description": {
+    "description": "Power rep range description"
+  },
+  "repPresetStrengthHypertrophyLabel": "6-8",
+  "@repPreset.strengthHypertrophy.label": {
+    "description": "Strength/Hypertrophy rep range label"
+  },
+  "repPresetStrengthHypertrophyDescription": "Strength / Hypertrophy",
+  "@repPreset.strengthHypertrophy.description": {
+    "description": "Strength/Hypertrophy description"
+  },
+  "repPresetHypertrophyLabel": "8-12",
+  "@repPreset.hypertrophy.label": {
+    "description": "Hypertrophy rep range label"
+  },
+  "repPresetHypertrophyDescription": "Hypertrophy",
+  "@repPreset.hypertrophy.description": {
+    "description": "Hypertrophy description"
+  },
+  "repPresetEnduranceLabel": "12-15",
+  "@repPreset.endurance.label": {
+    "description": "Endurance rep range label"
+  },
+  "repPresetEnduranceDescription": "Muscular Endurance",
+  "@repPreset.endurance.description": {
+    "description": "Endurance description"
+  },
+  "repPresetHighEnduranceLabel": "15+",
+  "@repPreset.highEndurance.label": {
+    "description": "High endurance label"
+  },
+  "repPresetHighEnduranceDescription": "High Endurance",
+  "@repPreset.highEndurance.description": {
+    "description": "High endurance description"
+  },
+  "restPresetNoTimer": "No Timer",
+  "@restPreset.noTimer": {
+    "description": "No rest timer"
+  },
+  "restPresetThirtySeconds": "30 seconds",
+  "@restPreset.thirtySeconds": {
+    "description": "30 second rest"
+  },
+  "restPresetOneMinute": "1 minute",
+  "@restPreset.oneMinute": {
+    "description": "1 minute rest"
+  },
+  "restPresetOneMinuteThirty": "1:30 min",
+  "@restPreset.oneMinuteThirty": {
+    "description": "90 second rest"
+  },
+  "restPresetTwoMinutes": "2 minutes",
+  "@restPreset.twoMinutes": {
+    "description": "2 minute rest"
+  },
+  "restPresetThreeMinutes": "3 minutes",
+  "@restPreset.threeMinutes": {
+    "description": "3 minute rest"
+  },
+  "restPresetFiveMinutes": "5 minutes",
+  "@restPreset.fiveMinutes": {
+    "description": "5 minute rest"
+  },
+  "restTimeDescription": "Set the recovery timer between sets",
+  "@restTimeDescription": {
+    "description": "Description for rest time modal"
+  },
+  "useCustomTimer": "Use custom timer",
+  "@useCustomTimer": {
+    "description": "Switch to enable/disable custom timer"
+  },
+  "timerActiveForExercise": "Timer active for this exercise",
+  "@timerActiveForExercise": {
+    "description": "Subtitle when timer is enabled"
+  },
+  "noSpecificTimer": "No specific timer",
+  "@noSpecificTimer": {
+    "description": "Subtitle when timer is disabled"
+  },
+  "quickPresets": "Quick Presets",
+  "@quickPresets": {
+    "description": "Header for quick preset buttons"
+  },
+  "customTimer": "Custom Timer",
+  "@customTimer": {
+    "description": "Header for custom timer picker"
+  },
+  "timerSet": "Timer set: ",
+  "@timerSet": {
+    "description": "Preview label for selected time"
   }
 }

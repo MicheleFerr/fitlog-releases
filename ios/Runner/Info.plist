@@ -325,5 +325,8 @@
             <string>7rz58n8ntl.skadnetwork</string>
         </dict>
     </array>
+    <!-- Export Compliance: App uses only standard encryption (HTTPS/TLS) -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>

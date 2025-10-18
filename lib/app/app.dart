@@ -8,6 +8,8 @@ import 'package:gymbro_flutter_new/features/auth/presentation/register_screen.da
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/home_screen_optimized.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_completion_summary_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analytics_screen.dart';
 // import 'package:gymbro_flutter_new/features/analytics/presentation/screens/analytics_dashboard_screen.dart'; // TEMP DISABLED
@@ -177,6 +179,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/workout',
         name: 'workout',
         builder: (context, state) => const WorkoutScreen(),
+      ),
+      GoRoute(
+        path: '/workout-completion-summary',
+        name: 'workout-completion-summary',
+        builder: (context, state) {
+          final workout = state.extra as Workout;
+          return WorkoutCompletionSummaryScreen(workout: workout);
+        },
       ),
       // ✅ REMOVED: Dead route '/timer' (0 usage, redirected to /workout)
       GoRoute(

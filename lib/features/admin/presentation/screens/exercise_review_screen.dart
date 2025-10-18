@@ -1,0 +1,461 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import '../providers/exercise_review_provider.dart';
+
+/// Admin screen for viewing monthly exercise review reports
+class ExerciseReviewScreen extends ConsumerWidget {
+  const ExerciseReviewScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reviewStream = ref.watch(latestReviewProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.l10n.exerciseReviewReport),
+        elevation: 0,
+      ),
+      body: reviewStream.when(
+        loading: () => const LoadingIndicator(
+          message: 'Caricando il report...',
+        ),
+        error: (error, stack) => _buildErrorWidget(context, error),
+        data: (review) => review == null
+            ? _buildNoReportWidget(context)
+            : _buildReportContent(context, review),
+      ),
+    );
+  }
+
+  /// Build error widget
+  Widget _buildErrorWidget(BuildContext context, Object error) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: context.colors.error,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Errore nel caricamento del report',
+            style: context.textTheme.titleMedium?.copyWith(
+              color: context.colors.error,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Text(
+              error.toString(),
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodySmall,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build no report available widget
+  Widget _buildNoReportWidget(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.assignment_outlined,
+            size: 64,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Nessun report disponibile',
+            style: context.textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Il report mensile sarà disponibile dopo la prima esecuzione',
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build main report content
+  Widget _buildReportContent(BuildContext context, Map<String, dynamic> review) {
+    final stats = review['statistics'] as Map<String, dynamic>? ?? {};
+    final recommendations = (review['recommendations'] as List?)?.cast<String>() ?? [];
+    final period = review['period'] as String? ?? 'Unknown';
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Report period header
+          _buildPeriodHeader(context, period),
+          const SizedBox(height: 24),
+
+          // Statistics cards
+          _buildStatisticsSection(context, stats),
+          const SizedBox(height: 24),
+
+          // Recommendations
+          if (recommendations.isNotEmpty) ...[
+            _buildRecommendationsSection(context, recommendations),
+            const SizedBox(height: 24),
+          ],
+
+          // Stale exercises section
+          if (review['staleExercises'] != null) ...[
+            _buildStaleExercisesSection(
+              context,
+              (review['staleExercises'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+            ),
+            const SizedBox(height: 24),
+          ],
+
+          // Flagged exercises section
+          if (review['flaggedExercises'] != null) ...[
+            _buildFlaggedExercisesSection(
+              context,
+              (review['flaggedExercises'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+            ),
+          ],
+
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  /// Build period header
+  Widget _buildPeriodHeader(BuildContext context, String period) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Report: $period',
+          style: context.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Revisione automatica mensile degli esercizi',
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build statistics section with stat cards
+  Widget _buildStatisticsSection(
+    BuildContext context,
+    Map<String, dynamic> stats,
+  ) {
+    final staleCount = (stats['staleExercisesCount'] as num?)?.toInt() ?? 0;
+    final flaggedCount = (stats['flaggedExercisesCount'] as num?)?.toInt() ?? 0;
+    final totalFeedback = (stats['totalFeedbackFlagged'] as num?)?.toInt() ?? 0;
+    final criticalCount = (stats['criticalIssuesCount'] as num?)?.toInt() ?? 0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Statistiche',
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            _buildStatCard(
+              context,
+              icon: Icons.schedule_outlined,
+              label: 'Esercizi Obsoleti',
+              value: staleCount.toString(),
+              color: Colors.orange,
+              subtitle: '>90 giorni',
+            ),
+            _buildStatCard(
+              context,
+              icon: Icons.flag_outlined,
+              label: 'Esercizi Flaggati',
+              value: flaggedCount.toString(),
+              color: Colors.amber,
+              subtitle: '≥3 feedback',
+            ),
+            _buildStatCard(
+              context,
+              icon: Icons.comment_outlined,
+              label: 'Feedback Totali',
+              value: totalFeedback.toString(),
+              color: Colors.blue,
+              subtitle: 'flaggati',
+            ),
+            _buildStatCard(
+              context,
+              icon: Icons.error_outline,
+              label: 'Problemi Critici',
+              value: criticalCount.toString(),
+              color: Colors.red,
+              subtitle: 'severità ≥4',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Build individual stat card
+  Widget _buildStatCard(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+    required String subtitle,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: context.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: context.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build recommendations section
+  Widget _buildRecommendationsSection(
+    BuildContext context,
+    List<String> recommendations,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Raccomandazioni',
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Card(
+          color: context.colors.surfaceVariant,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                recommendations.length,
+                (index) => Padding(
+                  padding: EdgeInsets.only(
+                    bottom: index < recommendations.length - 1 ? 8 : 0,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8, top: 2),
+                        child: Text(
+                          '•',
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          recommendations[index],
+                          style: context.textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build stale exercises section
+  Widget _buildStaleExercisesSection(
+    BuildContext context,
+    List<Map<String, dynamic>> staleExercises,
+  ) {
+    if (staleExercises.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Esercizi Obsoleti (${staleExercises.length})',
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Icon(
+              Icons.schedule_outlined,
+              color: Colors.orange,
+              size: 20,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: staleExercises.length,
+            separatorBuilder: (_, __) => Divider(
+              height: 1,
+              color: context.colors.outlineVariant,
+            ),
+            itemBuilder: (context, index) {
+              final exercise = staleExercises[index];
+              return _buildExerciseListTile(
+                context,
+                exerciseName: exercise['nome'] as String? ?? 'Unknown',
+                subtitle:
+                    'Modificato ${exercise['lastModifiedDaysAgo'] ?? 0} giorni fa',
+                icon: Icons.schedule,
+                color: Colors.orange,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build flagged exercises section
+  Widget _buildFlaggedExercisesSection(
+    BuildContext context,
+    List<Map<String, dynamic>> flaggedExercises,
+  ) {
+    if (flaggedExercises.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Esercizi Flaggati (${flaggedExercises.length})',
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Icon(
+              Icons.flag_outlined,
+              color: Colors.amber,
+              size: 20,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Card(
+          child: ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: flaggedExercises.length,
+            separatorBuilder: (_, __) => Divider(
+              height: 1,
+              color: context.colors.outlineVariant,
+            ),
+            itemBuilder: (context, index) {
+              final exercise = flaggedExercises[index];
+              final feedbackCount = (exercise['feedbackCount'] as num?)?.toInt() ?? 0;
+              final criticalCount = (exercise['criticalCount'] as num?)?.toInt() ?? 0;
+
+              return _buildExerciseListTile(
+                context,
+                exerciseName: exercise['nome'] as String? ?? 'Unknown',
+                subtitle:
+                    '$feedbackCount feedback${criticalCount > 0 ? ' ($criticalCount critici)' : ''}',
+                icon: Icons.flag,
+                color: criticalCount > 0 ? Colors.red : Colors.amber,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build exercise list tile
+  Widget _buildExerciseListTile(
+    BuildContext context, {
+    required String exerciseName,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(exerciseName),
+      subtitle: Text(subtitle),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: context.colors.onSurfaceVariant,
+      ),
+    );
+  }
+}

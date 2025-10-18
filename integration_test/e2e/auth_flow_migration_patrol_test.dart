@@ -24,7 +24,7 @@ void main() {
       ($) async {
         // Arrange: Launch app
         await $.pumpWidgetAndSettle(
-          const ProviderScope(child: GymBroApp()),
+          const ProviderScope(child: FitLogApp()),
         );
         
         // Assert: Should start with onboarding or login screen
@@ -70,9 +70,9 @@ void main() {
       ($) async {
         // This test would simulate a user with existing data
         // upgrading to the new user system
-        
+
         await $.pumpWidgetAndSettle(
-          const ProviderScope(child: GymBroApp()),
+          const ProviderScope(child: FitLogApp()),
         );
         
         // Login with existing user (would have old data format)
@@ -90,7 +90,7 @@ void main() {
       'offline and online sync scenarios',
       ($) async {
         await $.pumpWidgetAndSettle(
-          const ProviderScope(child: GymBroApp()),
+          const ProviderScope(child: FitLogApp()),
         );
 
         // TODO: Patrol 3.x - Network control APIs removed
@@ -108,7 +108,7 @@ void main() {
       'multi-language user experience',
       ($) async {
         await $.pumpWidgetAndSettle(
-          const ProviderScope(child: GymBroApp()),
+          const ProviderScope(child: FitLogApp()),
         );
         
         // Test English experience
@@ -126,7 +126,7 @@ void main() {
       'dark and light theme user experience',
       ($) async {
         await $.pumpWidgetAndSettle(
-          const ProviderScope(child: GymBroApp()),
+          const ProviderScope(child: FitLogApp()),
         );
         
         // Login first
@@ -298,7 +298,7 @@ Future<void> testAppStatePersistence(PatrolIntegrationTester $) async {
   // Kill and restart app to test state persistence
   // await $.native.killApp();
   // await $.native.startApp();
-  // await $.pumpWidgetAndSettle(const GymBroApp());
+  // await $.pumpWidgetAndSettle(const FitLogApp());
   //
   // // Wait for app to load
   // await $.waitUntilVisible(find.text('GymBro'), timeout: const Duration(seconds: 10));

@@ -1,7 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
@@ -22,14 +28,20 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 // APRE auto-regulation
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
-// Routine auto-completion
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 // 🔒 Security: Input sanitization
 import 'package:gymbro_flutter_new/shared/domain/services/input_sanitizer.dart';
 // Haptic feedback
 import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
+// ⏱️ Unified Timer for rest timer auto-start
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+// 🔄 Firestore Batch Writer for optimized cloud sync
+import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.dart';
+// 📸 Snapshot Sync Service for differential cloud sync
+import 'package:gymbro_flutter_new/shared/data/services/snapshot_sync_service.dart';
+// 📢 Sync Status Toast for user feedback during save flow
+import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast.dart';
+// 🔄 Routine Auto-Completion Service for automatic day completion
+import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -172,7 +184,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     }
   }
 
-  void completeWorkout() {
+  /// Complete workout with optional UI feedback
+  ///
+  /// Pass [context] to show sync status toasts during save flow.
+  /// If [context] is null, saves silently without UI feedback.
+  void completeWorkout([BuildContext? context]) {
     if (state != null) {
       state = state!.completeWorkout();
 
@@ -180,7 +196,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       HapticFeedbackService.workoutCompletion(ref);
 
       // Salva automaticamente il workout completato in Firestore
-      _saveCompletedWorkoutToFirestore();
+      _saveCompletedWorkoutToFirestore(context);
 
       // Disattiva wakelock quando il workout è completato
       ref.read(screenWakelockProvider.notifier).stopWakelock();
@@ -188,7 +204,10 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   }
 
   /// Salva il workout completato localmente e in Firestore
-  Future<void> _saveCompletedWorkoutToFirestore() async {
+  ///
+  /// Pass [context] to show sync status toasts during save flow.
+  /// If [context] is null, saves silently without UI feedback.
+  Future<void> _saveCompletedWorkoutToFirestore([BuildContext? context]) async {
     final workout = state;
     if (workout == null || !workout.isCompleted) {
       return;
@@ -198,6 +217,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     final currentUser = authService.currentUser;
     if (currentUser == null) {
       return;
+    }
+
+    // 📢 UI Feedback: Show "Saving workout..." toast
+    if (context != null) {
+      SyncStatusToast.showSavingWorkout(context);
     }
 
     try {
@@ -269,34 +293,128 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         templateId: workout.templateId, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
       );
 
-      // 2. Save to 'workouts' collection in Firestore
-      await FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(workoutHistoryDetail.id)
-          .set(workoutHistoryDetail.toFirestoreMap());
-
-      // CRITICAL FIX: Check disposal after Firestore write
-      if (_isDisposed) {
-        debugPrint('⚠️ [WorkoutProvider] Provider disposed after Firestore save - aborting remaining operations');
-        return;
-      }
-
-      // 3. Save workout using HiveWorkoutDataSource directly (unified approach)
+      // 2. SEMPRE salvare localmente PRIMA (BLOCKING ma veloce ~50ms)
+      // Questo garantisce che i dati siano persistenti anche se cloud sync fallisce
       try {
         final hiveDataSource = ref.read(hiveWorkoutDataSourceProvider);
         final userId = FirebaseAuth.instance.currentUser?.uid;
         if (userId != null) {
           final workoutModel = WorkoutModel.fromDomain(workout);
           await hiveDataSource.saveWorkout(workoutModel, userId);
-          debugPrint('✅ [WorkoutProvider] Workout saved to unified Hive storage successfully');
+
+          if (kDebugMode) {
+            debugPrint('✅ [WorkoutProvider] Workout saved to Hive local storage');
+          }
+
+          // 📢 UI Feedback: Show "Workout saved locally" toast
+          if (context != null) {
+            SyncStatusToast.showWorkoutSavedLocally(context);
+          }
         }
       } catch (saveError, stackTrace) {
-        debugPrint('❌ [WorkoutProvider] CRITICAL: Failed to save workout: $saveError');
-        debugPrint('📍 [WorkoutProvider] Stack trace: $stackTrace');
-        // Continue execution - don't fail the entire completion process
+        if (kDebugMode) {
+          debugPrint('❌ [WorkoutProvider] CRITICAL: Failed to save workout locally: $saveError');
+          debugPrint('📍 [WorkoutProvider] Stack trace: $stackTrace');
+        }
+
+        // 📢 UI Feedback: Show CRITICAL error toast with retry/export options
+        if (context != null) {
+          SyncStatusToast.showLocalSaveFailed(
+            context,
+            onRetry: () {
+              // Retry local save
+              _saveCompletedWorkoutToFirestore(context);
+            },
+            onExport: () async {
+              // Export workout data to JSON and share
+              try {
+                await _exportWorkoutData(workout);
+                if (kDebugMode) {
+                  debugPrint('✅ [WorkoutProvider] Workout data exported successfully');
+                }
+              } catch (e) {
+                if (kDebugMode) {
+                  debugPrint('❌ [WorkoutProvider] Failed to export workout data: $e');
+                }
+              }
+            },
+          );
+        }
+
+        // CRITICAL: Se fallisce il save locale, rilanciamo l'errore
+        // Non possiamo permettere che i dati vadano persi
+        rethrow;
       }
 
-      // 4. Update user stats with transaction to prevent lost updates
+      // CRITICAL FIX: Check disposal after local save
+      if (_isDisposed) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [WorkoutProvider] Provider disposed after local save - aborting cloud sync');
+        }
+        return;
+      }
+
+      // 3. Track entity con SnapshotSyncService per differential sync
+      // Calcola checksum e confronta con cloud per determinare se serve sync
+      try {
+        final snapshotSync = ref.read(snapshotSyncServiceProvider.notifier);
+
+        await snapshotSync.trackEntity(
+          collection: 'workouts',
+          documentId: workoutHistoryDetail.id,
+          data: workoutHistoryDetail.toFirestoreMap(),
+        );
+
+        if (kDebugMode) {
+          debugPrint('📸 [WorkoutProvider] Workout tracked for differential sync');
+        }
+      } catch (snapshotError) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [WorkoutProvider] Failed to track workout snapshot: $snapshotError');
+        }
+        // Non-critical: continua comunque con batch sync
+      }
+
+      // 4. Accoda operazione per cloud sync (NON-BLOCKING)
+      // La batch queue gestirà il flush automaticamente dopo 3s o 10 ops
+      try {
+        final batchWriter = ref.read(firestoreBatchWriterProvider.notifier);
+
+        await batchWriter.addOperation(
+          BatchOperation(
+            collection: 'workouts',
+            documentId: workoutHistoryDetail.id,
+            type: BatchOperationType.set,
+            data: workoutHistoryDetail.toFirestoreMap(),
+            setOptions: SetOptions(merge: true),
+          ),
+        );
+
+        if (kDebugMode) {
+          debugPrint('✅ [WorkoutProvider] Workout queued for batch cloud sync');
+        }
+
+        // 📢 UI Feedback: Show final success toast
+        // Local save complete + cloud sync queued = workout saved successfully
+        if (context != null) {
+          SyncStatusToast.showWorkoutSaved(context);
+        }
+      } catch (batchError) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [WorkoutProvider] Failed to queue cloud sync: $batchError');
+        }
+
+        // 📢 UI Feedback: Show warning that cloud sync failed to queue
+        // But workout is safe locally
+        if (context != null) {
+          SyncStatusToast.showCloudSyncQueued(context);
+        }
+
+        // Non-critical: workout già salvato localmente
+        // La batch queue riproverà o farà sync al prossimo flush
+      }
+
+      // 5. Update user stats with transaction to prevent lost updates
       try {
         final firestore = FirebaseFirestore.instance;
         final userRef = firestore.collection('users').doc(currentUser.uid);
@@ -382,13 +500,26 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
       // 7. Auto-complete routine day if applicable
       try {
-        final didAutoComplete = await _autoCompleteRoutineDay(workout);
+        final didAutoComplete = await _autoCompleteRoutineDay(workout, context);
         if (didAutoComplete) {
           debugPrint('✅ [Routine] Auto-completed routine day');
         }
       } catch (routineError) {
         debugPrint('⚠️ [Routine] Failed to auto-complete day: $routineError');
         // Non-critical - workout is already saved
+      }
+
+      // 8. Navigate to workout completion summary screen (if context available)
+      if (context != null) {
+        // Use pushNamed to navigate to summary screen
+        context.pushNamed(
+          'workout-completion-summary',
+          extra: workout,
+        );
+
+        if (kDebugMode) {
+          debugPrint('📊 [WorkoutProvider] Navigated to completion summary screen');
+        }
       }
 
     } catch (e, stackTrace) {
@@ -399,98 +530,105 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   /// Auto-complete routine day if workout matches scheduled template
   ///
+  /// Uses RoutineAutoCompletionService for robust auto-completion with multi-day support.
   /// Returns true if a routine day was auto-completed, false otherwise.
-  Future<bool> _autoCompleteRoutineDay(Workout workout) async {
-    // 1. Check if workout has templateId
-    if (workout.templateId == null || workout.templateId!.isEmpty) {
-      debugPrint('[Routine] Workout has no templateId - skipping auto-completion');
+  Future<bool> _autoCompleteRoutineDay(Workout workout, BuildContext? context) async {
+    final autoCompletionService = ref.read(routineAutoCompletionServiceProvider);
+
+    final result = await autoCompletionService.tryAutoCompleteRoutineDay(
+      completedWorkout: workout,
+      context: context,
+    );
+
+    // If multiple candidate dates found, show UI for user selection
+    // (For now, we skip this case - will implement UI in next task)
+    if (result.candidateDates != null && result.candidateDates!.isNotEmpty) {
+      if (kDebugMode) {
+        debugPrint('ℹ️ [WorkoutProvider] Multiple candidate dates found, but UI selection not yet implemented');
+        debugPrint('   Candidates: ${result.candidateDates}');
+      }
+      // TODO: Show DaySelectionBottomSheet for user to pick date
       return false;
     }
 
-    // 2. Get active routine
-    final activeRoutineAsync = ref.read(activeFlexibleRoutineProvider);
-    final activeRoutine = activeRoutineAsync.value;
-
-    if (activeRoutine == null) {
-      debugPrint('[Routine] No active routine - skipping auto-completion');
-      return false;
-    }
-
-    debugPrint('[Routine] Checking workout template ${workout.templateId} against routine ${activeRoutine.name}');
-
-    // 3. Find matching day in schedule
-    // Priority: today > yesterday > last 7 days
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final workoutDate = workout.startTime ?? now;
-    final workoutDay = DateTime(workoutDate.year, workoutDate.month, workoutDate.day);
-
-    // Check dates in order of priority: workout day, today, yesterday, then last 7 days
-    final datesToCheck = <DateTime>[
-      workoutDay, // Day when workout was done
-      today, // Today
-      today.subtract(const Duration(days: 1)), // Yesterday
-      today.subtract(const Duration(days: 2)),
-      today.subtract(const Duration(days: 3)),
-      today.subtract(const Duration(days: 4)),
-      today.subtract(const Duration(days: 5)),
-      today.subtract(const Duration(days: 6)),
-      today.subtract(const Duration(days: 7)),
-    ];
-
-    // Remove duplicates while preserving order
-    final uniqueDates = <DateTime>[];
-    for (final date in datesToCheck) {
-      if (!uniqueDates.any((d) =>
-          d.year == date.year && d.month == date.month && d.day == date.day)) {
-        uniqueDates.add(date);
-      }
-    }
-
-    // Find first matching scheduled day
-    for (final date in uniqueDates) {
-      final dateKey = _dateToString(date);
-      final scheduledDay = activeRoutine.schedule[dateKey];
-
-      if (scheduledDay == null) continue;
-
-      // Check if templateId matches and day is not already completed
-      if (scheduledDay.templateId == workout.templateId &&
-          scheduledDay.status != DayStatus.completed) {
-        debugPrint('[Routine] Found matching day: $dateKey (${scheduledDay.status})');
-
-        // 4. Complete the day
-        try {
-          final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
-          final success = await notifier.completeDayWorkout(
-            routineId: activeRoutine.id,
-            date: date,
-            workoutId: workout.id,
-          );
-
-          if (success) {
-            debugPrint('✅ [Routine] Auto-completed routine day $dateKey');
-
-            // Refresh routine data
-            ref.invalidate(activeFlexibleRoutineProvider);
-            ref.invalidate(userFlexibleRoutinesProvider);
-
-            return true;
-          }
-        } catch (e) {
-          debugPrint('❌ [Routine] Error auto-completing day: $e');
-          return false;
-        }
-      }
-    }
-
-    debugPrint('[Routine] No matching scheduled day found for template ${workout.templateId}');
-    return false;
+    return result.completed;
   }
 
-  /// Convert DateTime to string key for schedule map (YYYY-MM-DD)
-  String _dateToString(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  /// 📁 Export workout data to JSON file and share
+  ///
+  /// Creates a JSON file with complete workout data (exercises, sets, reps, etc.)
+  /// and shares it using the system share dialog.
+  ///
+  /// **Use Cases:**
+  /// - Backup workout data when local save fails
+  /// - Manual data export for external analysis
+  /// - Data migration between devices
+  ///
+  /// **File Format:**
+  /// - JSON format with pretty printing
+  /// - Filename: workout_YYYY-MM-DD_HH-MM-SS.json
+  /// - Contains: workout name, exercises, sets, timestamps, stats
+  Future<void> _exportWorkoutData(Workout workout) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('📁 [WorkoutProvider] Exporting workout data: ${workout.name}');
+      }
+
+      // 1. Convert workout to JSON
+      final workoutJson = workout.toJson();
+      final prettyJson = const JsonEncoder.withIndent('  ').convert(workoutJson);
+
+      // 2. Create filename with timestamp
+      final timestamp = DateTime.now();
+      final filename = 'workout_'
+          '${timestamp.year}-${timestamp.month.toString().padLeft(2, '0')}-${timestamp.day.toString().padLeft(2, '0')}_'
+          '${timestamp.hour.toString().padLeft(2, '0')}-${timestamp.minute.toString().padLeft(2, '0')}-${timestamp.second.toString().padLeft(2, '0')}'
+          '.json';
+
+      // 3. Get temporary directory and create file
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/$filename');
+      await file.writeAsString(prettyJson);
+
+      if (kDebugMode) {
+        debugPrint('📁 [WorkoutProvider] Created file: ${file.path}');
+        debugPrint('📊 [WorkoutProvider] File size: ${await file.length()} bytes');
+      }
+
+      // 4. Share file using share_plus
+      final result = await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: 'Workout: ${workout.name}',
+        text: 'Workout data export from GymBro TrackLog',
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [WorkoutProvider] Share result: ${result.status}');
+      }
+
+      // 5. Clean up temporary file after short delay
+      Future.delayed(const Duration(seconds: 5), () async {
+        try {
+          if (await file.exists()) {
+            await file.delete();
+            if (kDebugMode) {
+              debugPrint('🗑️ [WorkoutProvider] Cleaned up temporary file');
+            }
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('⚠️ [WorkoutProvider] Failed to delete temp file: $e');
+          }
+        }
+      });
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [WorkoutProvider] Error exporting workout: $e');
+        debugPrint('📍 [WorkoutProvider] Stack trace: $stackTrace');
+      }
+      // Rethrow to allow caller to handle error
+      rethrow;
+    }
   }
 
   void pauseWorkout() {
@@ -639,10 +777,19 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     if (state == null) return;
 
     try {
+      // Track which exercise and set were completed for auto-timer
+      Exercise? targetExercise;
+      int completedSetNumber = 0;
+      int totalSets = 0;
+
       final updatedExercises = state!.exercises.map((exercise) {
         if (exercise.id == exerciseId) {
+          targetExercise = exercise;
+          totalSets = exercise.sets.length;
+
           final updatedSets = exercise.sets.map((set) {
             if (set.id == setId) {
+              completedSetNumber = set.setNumber;
               return set.copyWith(isCompleted: true);
             }
             return set;
@@ -653,6 +800,36 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // ✅ BUG #2 FIX: Auto-start rest timer after completing a set
+      if (targetExercise != null && completedSetNumber > 0) {
+        // Check if not the last set
+        final isLastSet = completedSetNumber >= totalSets;
+
+        if (!isLastSet) {
+          // Get rest time from exercise (default 90 seconds)
+          final restTime = targetExercise!.restTime ?? 90;
+          final nextSetNumber = completedSetNumber + 1;
+
+          if (kDebugMode) {
+            debugPrint('⏰ [AUTO-TIMER] Starting rest timer after set $completedSetNumber/$totalSets');
+            debugPrint('⏰ [AUTO-TIMER] Duration: ${restTime}s for next set $nextSetNumber');
+          }
+
+          // Start the timer automatically
+          ref.read(unifiedTimerProvider.notifier).startTimer(
+            durationSeconds: restTime,
+            exerciseName: targetExercise!.name,
+            currentSet: nextSetNumber,
+            totalSets: totalSets,
+            exerciseId: targetExercise!.id,
+          );
+        } else {
+          if (kDebugMode) {
+            debugPrint('⏰ [AUTO-TIMER] Last set completed - no timer started');
+          }
+        }
+      }
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [WorkoutProvider] Error completing set: $e');

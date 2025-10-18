@@ -1406,10 +1406,10 @@ abstract class AppLocalizations {
   /// **'Exercise Category'**
   String get exerciseCategory;
 
-  /// Label for sets section
+  /// Sets unit label
   ///
   /// In en, this message translates to:
-  /// **'Sets'**
+  /// **'sets'**
   String get sets;
 
   /// Button to add a new set
@@ -5045,7 +5045,7 @@ abstract class AppLocalizations {
   /// **'Training Insights'**
   String get trainingInsights;
 
-  /// Recommendations section title
+  /// Recommendations section header
   ///
   /// In en, this message translates to:
   /// **'Recommendations'**
@@ -6479,7 +6479,7 @@ abstract class AppLocalizations {
   /// **'Error loading history'**
   String get errorLoadingHistory;
 
-  /// Statistics section title
+  /// Statistics section header
   ///
   /// In en, this message translates to:
   /// **'Statistics'**
@@ -7067,19 +7067,19 @@ abstract class AppLocalizations {
   /// **'{count}d ago'**
   String daysAgo(int count);
 
-  /// Hours ago time format
+  /// Timestamp showing hours elapsed
   ///
   /// In en, this message translates to:
-  /// **'{count}h ago'**
-  String hoursAgo(int count);
+  /// **'{hours}h ago'**
+  String hoursAgo(int hours);
 
-  /// Minutes ago time format
+  /// Timestamp showing minutes elapsed
   ///
   /// In en, this message translates to:
-  /// **'{count}m ago'**
-  String minutesAgo(int count);
+  /// **'{minutes}m ago'**
+  String minutesAgo(int minutes);
 
-  /// Time indicator for very recent activities
+  /// Timestamp indicating action just happened
   ///
   /// In en, this message translates to:
   /// **'Just now'**
@@ -7883,7 +7883,7 @@ abstract class AppLocalizations {
   /// **'{exercise} complete'**
   String exerciseComplete(String exercise);
 
-  /// Success message after saving workout
+  /// Success message after workout is saved
   ///
   /// In en, this message translates to:
   /// **'Workout saved!'**
@@ -16766,6 +16766,684 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View settings saved'**
   String get historyViewSettingsSaved;
+
+  /// Button tooltip for reporting exercise issues
+  ///
+  /// In en, this message translates to:
+  /// **'Report Issue'**
+  String get reportExerciseIssue;
+
+  /// Label for feedback type selection
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Type'**
+  String get feedbackType;
+
+  /// Bug issue type option
+  ///
+  /// In en, this message translates to:
+  /// **'🐛 Bug'**
+  String get feedbackBug;
+
+  /// Suggestion issue type option
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Suggestion'**
+  String get feedbackSuggestion;
+
+  /// Text error issue type option
+  ///
+  /// In en, this message translates to:
+  /// **'📝 Text Error'**
+  String get feedbackTypo;
+
+  /// Other issue type option
+  ///
+  /// In en, this message translates to:
+  /// **'❓ Other'**
+  String get feedbackOther;
+
+  /// Placeholder text for feedback message input
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the issue...'**
+  String get describeProblem;
+
+  /// Button label for sending feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Send Report'**
+  String get sendFeedback;
+
+  /// Button label for canceling feedback dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelFeedback;
+
+  /// Success message after sending feedback
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Thanks for the report!'**
+  String get feedbackSentSuccess;
+
+  /// Error message when sending feedback fails
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Error sending report'**
+  String get feedbackSentError;
+
+  /// Error message when feedback message is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe the issue'**
+  String get feedbackRequired;
+
+  /// Title for the exercise review report screen
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Review Report'**
+  String get exerciseReviewReport;
+
+  /// Monthly review section header
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Review'**
+  String get monthlyReview;
+
+  /// Stale exercises section header
+  ///
+  /// In en, this message translates to:
+  /// **'Stale Exercises'**
+  String get staleExercises;
+
+  /// Flagged exercises section header
+  ///
+  /// In en, this message translates to:
+  /// **'Flagged Exercises'**
+  String get flaggedExercises;
+
+  /// Stale exercises count label
+  ///
+  /// In en, this message translates to:
+  /// **'Stale Exercises'**
+  String get exercisesObsolete;
+
+  /// Flagged exercises count label
+  ///
+  /// In en, this message translates to:
+  /// **'Flagged Exercises'**
+  String get exercisesFlagged;
+
+  /// Total feedback count label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Feedback'**
+  String get feedbackTotal;
+
+  /// Critical issues count label
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Issues'**
+  String get criticalIssues;
+
+  /// Days threshold description for stale exercises
+  ///
+  /// In en, this message translates to:
+  /// **'>90 days'**
+  String get daysThreshold;
+
+  /// Feedback threshold for flagged exercises
+  ///
+  /// In en, this message translates to:
+  /// **'≥3 feedback'**
+  String get feedbackThreshold;
+
+  /// Flagged status indicator
+  ///
+  /// In en, this message translates to:
+  /// **'flagged'**
+  String get flagged;
+
+  /// Critical status indicator
+  ///
+  /// In en, this message translates to:
+  /// **'critical'**
+  String get critical;
+
+  /// Days since modification
+  ///
+  /// In en, this message translates to:
+  /// **'Modified {days} days ago'**
+  String modifiedDaysAgo(int days);
+
+  /// Message when no review report is available
+  ///
+  /// In en, this message translates to:
+  /// **'No report available'**
+  String get noReportAvailable;
+
+  /// Description when no review report exists yet
+  ///
+  /// In en, this message translates to:
+  /// **'The monthly report will be available after the first execution'**
+  String get reportWillBeAvailable;
+
+  /// Title for exercise feedback admin dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Feedback'**
+  String get exerciseFeedback;
+
+  /// Refresh button tooltip for feedback list
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get feedbackRefresh;
+
+  /// Total feedback count stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get feedbackStatsTotal;
+
+  /// Open feedback count stat label - feedback awaiting admin review
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get feedbackStatsOpen;
+
+  /// Resolved feedback count stat label - issues that have been fixed
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get feedbackStatsResolved;
+
+  /// Section title for feedback grouped by type (bug, suggestion, etc)
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback by Type'**
+  String get feedbackByType;
+
+  /// Section title for feedback grouped by severity (critical, high, medium, low)
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback by Severity'**
+  String get feedbackBySeverity;
+
+  /// Critical severity level (4-5) - requires immediate attention
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get feedbackSeverityCritical;
+
+  /// High severity level (3) - important issue to address soon
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get feedbackSeverityHigh;
+
+  /// Medium severity level (2) - standard priority issue
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get feedbackSeverityMedium;
+
+  /// Low severity level (1) - minor issue or enhancement
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get feedbackSeverityLow;
+
+  /// Section title for critical issues that need immediate attention
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Issues (Severity ≥ 4)'**
+  String get feedbackCriticalIssues;
+
+  /// Section title for critical issues that need immediate attention
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Issues (Severity ≥ 4)'**
+  String get feedbackCriticalIssuesTitle;
+
+  /// Message when there are no critical issues - good news!
+  ///
+  /// In en, this message translates to:
+  /// **'No critical issues'**
+  String get feedbackNoCriticalIssues;
+
+  /// Error message when critical issues fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading critical issues'**
+  String get feedbackErrorLoadingCritical;
+
+  /// Section title for latest open feedback items awaiting review
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Open Feedback'**
+  String get feedbackRecentOpen;
+
+  /// Section title for latest open feedback items awaiting review
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Open Feedback'**
+  String get feedbackRecentOpenTitle;
+
+  /// Message when all feedback has been reviewed - all caught up!
+  ///
+  /// In en, this message translates to:
+  /// **'No open feedback'**
+  String get feedbackNoOpenFeedback;
+
+  /// Error message when feedback list fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading feedback'**
+  String get feedbackErrorLoading;
+
+  /// Error message when feedback list fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading feedback'**
+  String get feedbackErrorLoadingList;
+
+  /// Loading message while fetching feedback data
+  ///
+  /// In en, this message translates to:
+  /// **'Loading feedback...'**
+  String get feedbackLoadingMessage;
+
+  /// Prefix for user email who submitted feedback
+  ///
+  /// In en, this message translates to:
+  /// **'by {email}'**
+  String feedbackSubmittedBy(String email);
+
+  /// Section title for the message submitted by the user
+  ///
+  /// In en, this message translates to:
+  /// **'User Message'**
+  String get feedbackDetailUserMessage;
+
+  /// Section title for internal admin notes - not visible to users
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Notes'**
+  String get feedbackDetailAdminNotes;
+
+  /// Hint text for admin notes field - explain it's for internal use only
+  ///
+  /// In en, this message translates to:
+  /// **'Add internal notes about this feedback...'**
+  String get feedbackDetailAdminNotesHint;
+
+  /// Button to save admin notes to database
+  ///
+  /// In en, this message translates to:
+  /// **'Save Notes'**
+  String get feedbackDetailSaveNotes;
+
+  /// Success message after saving admin notes
+  ///
+  /// In en, this message translates to:
+  /// **'Notes saved successfully'**
+  String get feedbackDetailNotesSaved;
+
+  /// Error message when saving admin notes fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving notes'**
+  String get feedbackDetailNotesError;
+
+  /// Section title for quick action buttons to change feedback status
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get feedbackDetailQuickActions;
+
+  /// Action to mark feedback as 'REVIEWING' - you're actively working on it
+  ///
+  /// In en, this message translates to:
+  /// **'Start Review'**
+  String get feedbackActionStartReview;
+
+  /// Action to mark feedback as 'RESOLVED' - issue has been fixed
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Resolved'**
+  String get feedbackActionMarkResolved;
+
+  /// Action to mark feedback as 'DISMISSED' - won't fix or not applicable
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get feedbackActionDismiss;
+
+  /// Action to reopen feedback back to 'OPEN' status - needs more attention
+  ///
+  /// In en, this message translates to:
+  /// **'Reopen'**
+  String get feedbackActionReopen;
+
+  /// Success message after changing feedback status
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated to {status}'**
+  String feedbackStatusUpdated(String status);
+
+  /// Error message when status update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating status'**
+  String get feedbackStatusUpdateError;
+
+  /// Section title for changing feedback severity level (1-5)
+  ///
+  /// In en, this message translates to:
+  /// **'Change Severity'**
+  String get feedbackDetailChangeSeverity;
+
+  /// Success message after changing severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Severity updated'**
+  String get feedbackSeverityUpdated;
+
+  /// Error message when severity update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating severity'**
+  String get feedbackSeverityUpdateError;
+
+  /// Label for user email in feedback detail
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get feedbackDetailInfoUser;
+
+  /// Label for creation date in feedback detail
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get feedbackDetailInfoCreated;
+
+  /// Label for app version when feedback was submitted
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get feedbackDetailInfoVersion;
+
+  /// Urgent severity level (5) - critical issue requiring immediate action
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get feedbackSeverityUrgent;
+
+  /// Relative time format for minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m ago'**
+  String feedbackTimeMinutesAgo(int minutes);
+
+  /// Relative time format for hours
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h ago'**
+  String feedbackTimeHoursAgo(int hours);
+
+  /// Relative time format for days
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d ago'**
+  String feedbackTimeDaysAgo(int days);
+
+  /// Shows who submitted the feedback - 'by email@example.com'
+  ///
+  /// In en, this message translates to:
+  /// **'by {email}'**
+  String feedbackByUser(String email);
+
+  /// Message shown while saving workout
+  ///
+  /// In en, this message translates to:
+  /// **'Saving workout...'**
+  String get savingWorkout;
+
+  /// Message shown while syncing workout to cloud
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing to cloud...'**
+  String get syncingToCloud;
+
+  /// Message when workout is saved to local storage
+  ///
+  /// In en, this message translates to:
+  /// **'Workout saved locally'**
+  String get workoutSavedLocally;
+
+  /// Message when cloud synchronization completes successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync complete'**
+  String get cloudSyncComplete;
+
+  /// Message when workout is queued for cloud synchronization
+  ///
+  /// In en, this message translates to:
+  /// **'Queued for sync'**
+  String get cloudSyncQueued;
+
+  /// Error message when save operation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save'**
+  String get saveFailed;
+
+  /// Message when retrying cloud synchronization
+  ///
+  /// In en, this message translates to:
+  /// **'Retrying sync...'**
+  String get retryingSync;
+
+  /// Critical error message when local save fails
+  ///
+  /// In en, this message translates to:
+  /// **'Local save failed'**
+  String get localSaveFailed;
+
+  /// Action message for local save failure
+  ///
+  /// In en, this message translates to:
+  /// **'Retry or export data'**
+  String get retryOrExport;
+
+  /// Title for quick rep preset chips section
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Rep Presets'**
+  String get quickRepPresets;
+
+  /// Title for quick set count selector
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Set Count'**
+  String get quickSetCount;
+
+  /// Average Rate of Perceived Exertion label in workout summary
+  ///
+  /// In en, this message translates to:
+  /// **'Average RPE'**
+  String get averageRpe;
+
+  /// Success message when a routine day is auto-completed
+  ///
+  /// In en, this message translates to:
+  /// **'Routine day completed:'**
+  String get routineDayCompleted;
+
+  /// Error message when routine day completion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete routine day'**
+  String get routineDayCompletionFailed;
+
+  /// No description provided for @repPresetStrengthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'1-3'**
+  String get repPresetStrengthLabel;
+
+  /// No description provided for @repPresetStrengthDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Strength'**
+  String get repPresetStrengthDescription;
+
+  /// No description provided for @repPresetPowerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'4-6'**
+  String get repPresetPowerLabel;
+
+  /// No description provided for @repPresetPowerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Power'**
+  String get repPresetPowerDescription;
+
+  /// No description provided for @repPresetStrengthHypertrophyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'6-8'**
+  String get repPresetStrengthHypertrophyLabel;
+
+  /// No description provided for @repPresetStrengthHypertrophyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength / Hypertrophy'**
+  String get repPresetStrengthHypertrophyDescription;
+
+  /// No description provided for @repPresetHypertrophyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'8-12'**
+  String get repPresetHypertrophyLabel;
+
+  /// No description provided for @repPresetHypertrophyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy'**
+  String get repPresetHypertrophyDescription;
+
+  /// No description provided for @repPresetEnduranceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'12-15'**
+  String get repPresetEnduranceLabel;
+
+  /// No description provided for @repPresetEnduranceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Muscular Endurance'**
+  String get repPresetEnduranceDescription;
+
+  /// No description provided for @repPresetHighEnduranceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'15+'**
+  String get repPresetHighEnduranceLabel;
+
+  /// No description provided for @repPresetHighEnduranceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'High Endurance'**
+  String get repPresetHighEnduranceDescription;
+
+  /// No description provided for @restPresetNoTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'No Timer'**
+  String get restPresetNoTimer;
+
+  /// No description provided for @restPresetThirtySeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'30 seconds'**
+  String get restPresetThirtySeconds;
+
+  /// No description provided for @restPresetOneMinute.
+  ///
+  /// In en, this message translates to:
+  /// **'1 minute'**
+  String get restPresetOneMinute;
+
+  /// No description provided for @restPresetOneMinuteThirty.
+  ///
+  /// In en, this message translates to:
+  /// **'1:30 min'**
+  String get restPresetOneMinuteThirty;
+
+  /// No description provided for @restPresetTwoMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'2 minutes'**
+  String get restPresetTwoMinutes;
+
+  /// No description provided for @restPresetThreeMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'3 minutes'**
+  String get restPresetThreeMinutes;
+
+  /// No description provided for @restPresetFiveMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'5 minutes'**
+  String get restPresetFiveMinutes;
+
+  /// Description for rest time modal
+  ///
+  /// In en, this message translates to:
+  /// **'Set the recovery timer between sets'**
+  String get restTimeDescription;
+
+  /// Switch to enable/disable custom timer
+  ///
+  /// In en, this message translates to:
+  /// **'Use custom timer'**
+  String get useCustomTimer;
+
+  /// Subtitle when timer is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Timer active for this exercise'**
+  String get timerActiveForExercise;
+
+  /// Subtitle when timer is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'No specific timer'**
+  String get noSpecificTimer;
+
+  /// Header for quick preset buttons
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Presets'**
+  String get quickPresets;
+
+  /// Header for custom timer picker
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Timer'**
+  String get customTimer;
+
+  /// Preview label for selected time
+  ///
+  /// In en, this message translates to:
+  /// **'Timer set: '**
+  String get timerSet;
 }
 
 class _AppLocalizationsDelegate

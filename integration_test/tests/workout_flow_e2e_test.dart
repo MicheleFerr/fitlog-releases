@@ -12,7 +12,7 @@ void main() {
     'Complete workout flow from creation to completion',
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -165,7 +165,7 @@ void main() {
     'Workout with interruptions and recovery',
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -229,7 +229,7 @@ void main() {
     'Workout with superset exercises',
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.GymBroApp());
+      await $.pumpWidgetAndSettle(const app.FitLogApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);

@@ -18,6 +18,8 @@ dependencies:
   cloud_firestore: ^5.2.1
   firebase_auth: ^5.1.4
   firebase_messaging: ^15.0.4  # Push notifications
+  firebase_analytics: ^11.3.3  # Analytics tracking
+  firebase_performance: ^0.10.0+7  # Performance monitoring
   google_sign_in: ^6.3.0   # Supporta GoogleUtilities 8.0+
   sign_in_with_apple: ^7.0.0  # Upgraded for Flutter Android embedding compatibility
   
@@ -31,6 +33,7 @@ dependencies:
   
   # Utilities
   uuid: ^4.5.1
+  fuzzy_bolt: ^2.0.0  # Fuzzy matching for exercise search
   
   # Background & Timer
   flutter_background_service: ^5.0.5

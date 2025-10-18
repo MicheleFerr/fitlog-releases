@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-18",
+  "presets": [
+    {
+      "id": "strength",
+      "labelKey": "repPresetStrengthLabel",
+      "reps": 3,
+      "descriptionKey": "repPresetStrengthDescription",
+      "iconName": "fitness_center",
+      "colorHex": "#E53935",
+      "order": 0
+    },
+    {
+      "id": "power",
+      "labelKey": "repPresetPowerLabel",
+      "reps": 5,
+      "descriptionKey": "repPresetPowerDescription",
+      "iconName": "bolt",
+      "colorHex": "#FF6F00",
+      "order": 1
+    },
+    {
+      "id": "strength_hypertrophy",
+      "labelKey": "repPresetStrengthHypertrophyLabel",
+      "reps": 8,
+      "descriptionKey": "repPresetStrengthHypertrophyDescription",
+      "iconName": "trending_up",
+      "colorHex": "#FFA726",
+      "order": 2
+    },
+    {
+      "id": "hypertrophy",
+      "labelKey": "repPresetHypertrophyLabel",
+      "reps": 10,
+      "descriptionKey": "repPresetHypertrophyDescription",
+      "iconName": "bubble_chart",
+      "colorHex": "#66BB6A",
+      "order": 3
+    },
+    {
+      "id": "endurance",
+      "labelKey": "repPresetEnduranceLabel",
+      "reps": 12,
+      "descriptionKey": "repPresetEnduranceDescription",
+      "iconName": "timer",
+      "colorHex": "#42A5F5",
+      "order": 4
+    },
+    {
+      "id": "high_endurance",
+      "labelKey": "repPresetHighEnduranceLabel",
+      "reps": 20,
+      "descriptionKey": "repPresetHighEnduranceDescription",
+      "iconName": "all_inclusive",
+      "colorHex": "#9C27B0",
+      "order": 5
+    }
+  ]
+}

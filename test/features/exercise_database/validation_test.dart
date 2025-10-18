@@ -65,6 +65,9 @@ class ExerciseModel {
 }
 
 void main() {
+  // ✅ FIX: Initialize Flutter binding for asset loading
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('🏋️ Exercise Database Validation Tests', () {
     late List<dynamic> exerciseData;
     late List<ExerciseModel> exercises;

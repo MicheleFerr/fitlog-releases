@@ -33,7 +33,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 ///
 /// Vedi: scripts/README_ADMIN_SETUP.md per gestione admin
 final isAdminProvider = StreamProvider<bool>((ref) {
+  if (kDebugMode) {
+    debugPrint('🚀 isAdminProvider STARTED - listening to auth changes');
+  }
+
   return FirebaseAuth.instance.authStateChanges().asyncMap((user) async {
+    if (kDebugMode) {
+      debugPrint('🔄 Auth state change detected: user=${user?.email ?? "null"}');
+    }
+
     if (user == null) return false;
 
     try {
@@ -42,6 +50,12 @@ final isAdminProvider = StreamProvider<bool>((ref) {
 
       // Verifica claim admin
       final isAdmin = token.claims?['admin'] == true;
+
+      if (kDebugMode) {
+        debugPrint('🔐 Admin check for: ${user.email}');
+        debugPrint('🔐 Claims: ${token.claims}');
+        debugPrint('🔐 Is admin: $isAdmin');
+      }
 
       if (kDebugMode && isAdmin) {
         debugPrint('✅ Admin access granted for: ${user.email}');
@@ -69,10 +83,29 @@ final isAdminProvider = StreamProvider<bool>((ref) {
 /// }
 /// ```
 final isAdminCachedProvider = Provider<bool>((ref) {
+  if (kDebugMode) {
+    debugPrint('📌 isAdminCachedProvider CALLED - checking async value');
+  }
+
   final asyncValue = ref.watch(isAdminProvider);
+
+  if (kDebugMode) {
+    debugPrint('📌 AsyncValue state: ${asyncValue.runtimeType}');
+  }
+
   return asyncValue.maybeWhen(
-    data: (isAdmin) => isAdmin,
-    orElse: () => false,
+    data: (isAdmin) {
+      if (kDebugMode) {
+        debugPrint('📌 isAdminCachedProvider returning: $isAdmin');
+      }
+      return isAdmin;
+    },
+    orElse: () {
+      if (kDebugMode) {
+        debugPrint('📌 isAdminCachedProvider returning FALSE (loading/error)');
+      }
+      return false;
+    },
   );
 });
 

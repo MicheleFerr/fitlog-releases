@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -10,8 +13,11 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_customization_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_search_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_search_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
@@ -33,7 +39,7 @@ class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select 
 class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final Set<Exercise> _selectedExercises = <Exercise>{};
-  
+
   String _searchQuery = '';
   List<String> _selectedFocus = [];
   final List<String> _selectedMuscleGroups = [];
@@ -46,17 +52,294 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   bool _showDifficultyFilter = false;
   bool _showEquipmentFilter = false;
 
+  // Fuzzy search state
+  Timer? _searchDebounce;
+  List<ExerciseFuzzyResult> _fuzzyResults = [];
+  bool _isSearching = false;
+  bool _useFuzzyResults = false;
+
+  // ML-enhanced state (usage tracking)
+  Set<String> _frequentExerciseIds = {};
+  Set<String> _trendingExerciseIds = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsageStats();
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
+    _searchDebounce?.cancel();
     super.dispose();
+  }
+
+  /// Carica statistiche utilizzo esercizi (frequent/trending)
+  Future<void> _loadUsageStats() async {
+    try {
+      final tracker = ExerciseUsageTracker();
+
+      // Get top used exercises (top 10%)
+      final topExercises = await tracker.getTopUsedExercises(limit: 50);
+
+      // Get recently used (last 7 days)
+      final recentExercises = await tracker.getRecentlyUsedExercises(limit: 30);
+      final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
+      final recentIds = recentExercises
+          .where((e) => e.lastUsedAt.isAfter(sevenDaysAgo))
+          .map((e) => e.exerciseId)
+          .toSet();
+
+      if (mounted) {
+        setState(() {
+          _frequentExerciseIds = topExercises.map((e) => e.exerciseId).toSet();
+          _trendingExerciseIds = recentIds;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ Error loading usage stats: $e');
+      }
+    }
+  }
+
+  /// Gestisce negative feedback con opzioni (decrementa o rimuovi)
+  Future<void> _handleNegativeFeedback(Exercise exercise) async {
+    // Mostra dialogo con opzioni
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.feedback_outlined, size: 24),
+            SizedBox(width: 12),
+            Expanded(child: Text('Feedback Esercizio')),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Come vuoi gestire "${exercise.nome}"?',
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '• Riduci priorità: L\'esercizio apparirà meno in alto\n• Rimuovi dai popolari: L\'esercizio non sarà più suggerito come frequente',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Annulla'),
+          ),
+          TextButton.icon(
+            onPressed: () => Navigator.of(context).pop('decrement'),
+            icon: const Icon(Icons.arrow_downward, size: 18),
+            label: const Text('Riduci priorità'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).pop('remove'),
+            icon: const Icon(Icons.delete_outline, size: 18),
+            label: const Text('Rimuovi'),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.errorContainer,
+              foregroundColor: context.colors.onErrorContainer,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (result == null || !mounted) return;
+
+    try {
+      final tracker = ExerciseUsageTracker();
+
+      if (result == 'decrement') {
+        // Decrementa boost
+        await tracker.decrementUsage(exerciseId: exercise.id);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Priorità ridotta per "${exercise.nome}"'),
+              duration: const Duration(seconds: 2),
+              backgroundColor: context.colors.tertiary,
+            ),
+          );
+        }
+      } else if (result == 'remove') {
+        // Rimuovi completamente
+        await tracker.removeExercise(exerciseId: exercise.id);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('"${exercise.nome}" rimosso dai popolari'),
+              duration: const Duration(seconds: 3),
+              backgroundColor: context.colors.error,
+              action: SnackBarAction(
+                label: 'ANNULLA',
+                textColor: Colors.white,
+                onPressed: () async {
+                  // Re-add with usage count 1
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user != null) {
+                    await tracker.incrementUsage(
+                      exerciseId: exercise.id,
+                      exerciseName: exercise.nome,
+                      userId: user.uid,
+                    );
+                    await _loadUsageStats();
+                  }
+                },
+              ),
+            ),
+          );
+        }
+      }
+
+      // Reload stats
+      await _loadUsageStats();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error handling negative feedback: $e');
+      }
+    }
+  }
+
+  /// Tracka utilizzo esercizio quando viene selezionato
+  Future<void> _trackExerciseSelection(Exercise exercise) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final tracker = ExerciseUsageTracker();
+      await tracker.incrementUsage(
+        exerciseId: exercise.id,
+        exerciseName: exercise.nome,
+        userId: user.uid,
+      );
+
+      // Reload stats in background (no await to not block UI)
+      _loadUsageStats();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ Error tracking exercise selection: $e');
+      }
+    }
+  }
+
+  Future<void> _performFuzzySearch(String query) async {
+    // Cancel previous timer
+    _searchDebounce?.cancel();
+
+    if (query.trim().isEmpty || query.length < 2) {
+      setState(() {
+        _useFuzzyResults = false;
+        _fuzzyResults = [];
+        _isSearching = false;
+      });
+      return;
+    }
+
+    // OPTIMIZATION: Only show loading indicator after 100ms
+    // This prevents flicker for fast typers
+    Timer(const Duration(milliseconds: 100), () {
+      if (mounted && _isSearching == false) {
+        setState(() {
+          _isSearching = true;
+        });
+      }
+    });
+
+    // Debounce for 400ms (increased from 300ms for better batching)
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () async {
+      if (!mounted) return;
+
+      final searchStartTime = DateTime.now();
+
+      try {
+        // ✅ FIX: Usa esercizi già caricati dal provider (CACHED!)
+        // Non ricaricare JSON ogni volta - causa lag UI
+        final exercisesAsync = ref.read(jsonExerciseRepositoryProvider);
+        final exercises = exercisesAsync.value;
+
+        if (exercises == null) {
+          // Provider still loading, skip
+          if (mounted) {
+            setState(() {
+              _isSearching = false;
+            });
+          }
+          return;
+        }
+
+        // Get userId for ML-enhanced personalization
+        final user = FirebaseAuth.instance.currentUser;
+        final userId = user?.uid;
+
+        // Get current category from selected muscle groups (if any)
+        final currentCategory = _selectedMuscleGroups.isNotEmpty
+            ? _selectedMuscleGroups.first
+            : null;
+
+        // 🚀 OPTIMIZED: Persistent isolate + batch ML boosts
+        final results = await ExerciseFuzzyMatcher.searchExercises(
+          exercises: exercises,
+          query: query,
+          strictThreshold: 0.65,
+          typeThreshold: 0.50,
+          maxResults: 50,
+          userId: userId,
+          currentCategory: currentCategory,
+          enableUserBoost: true,
+          enableCategoryBoost: true,
+        );
+
+        if (!mounted) return;
+
+        // Filter quality (>= 65% score)
+        final filteredResults = results.where((r) => r.score >= 0.65).toList();
+
+        // PERFORMANCE METRICS (debug only)
+        if (kDebugMode) {
+          final duration = DateTime.now().difference(searchStartTime);
+          debugPrint('🔍 Fuzzy search completed in ${duration.inMilliseconds}ms (${filteredResults.length} results)');
+        }
+
+        // OPTIMIZATION: Batch setState to reduce rebuilds
+        setState(() {
+          _fuzzyResults = filteredResults;
+          _useFuzzyResults = filteredResults.isNotEmpty;
+          _isSearching = false;
+        });
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('❌ Fuzzy search error: $e');
+        }
+        if (mounted) {
+          setState(() {
+            _useFuzzyResults = false;
+            _fuzzyResults = [];
+            _isSearching = false;
+          });
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Use both the old and new search systems
+    // Use fuzzy search for active queries, fallback to JSON repository for browsing
     final exercisesAsync = ref.watch(jsonExerciseRepositoryProvider);
-    final improvedSearchAsync = ref.watch(improvedExerciseSearchProvider);
     final l10n = context.l10n;
     
     return Scaffold(
@@ -96,13 +379,27 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: l10n.searchExercisesHint,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: _isSearching
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _searchController.clear();
-                          setState(() => _searchQuery = '');
+                          setState(() {
+                            _searchQuery = '';
+                            _useFuzzyResults = false;
+                            _fuzzyResults = [];
+                          });
+                          _searchDebounce?.cancel();
                         },
                       )
                     : null,
@@ -112,8 +409,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
               onChanged: (value) {
                 setState(() => _searchQuery = value.toLowerCase());
-                // Update the provider for improved search
-                ref.read(exerciseSearchQueryProvider.notifier).state = value;
+                // Trigger fuzzy search
+                _performFuzzySearch(value);
               },
             ),
           ),
@@ -174,88 +471,21 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           
           // Results
           Expanded(
-            child: improvedSearchAsync.when(
-              data: (improvedResults) {
-                // If we have results from improved search, use them
-                // Otherwise fall back to the old system
-                final useImprovedSearch = _searchQuery.isNotEmpty;
+            child: _useFuzzyResults
+                ? _buildFuzzySearchResults()
+                : exercisesAsync.when(
+                    data: (exercises) {
+                      final filteredExercises = _filterExercises(exercises);
 
-                if (useImprovedSearch && improvedResults.isNotEmpty) {
-                  // Convert ExerciseTemplate to Exercise for compatibility
-                  final convertedExercises = improvedResults.map((template) {
-                    return Exercise(
-                      id: template.id,
-                      nome: template.name,
-                      focus: template.muscleGroups.map((m) => _mapMuscleNameToCode(m)).toList(),
-                      imageUrl: template.imageUrl,
-                      muscoliSecondari: [],
-                      difficolta: template.difficulty ?? 'Intermedio',
-                      tipoEsercizio: 'Compound',
-                      attrezzatura: template.equipment.isNotEmpty ? template.equipment.first : 'Vario',
-                      patternMovimento: '',
-                      rangeRipetizioni: '8-12',
-                      noteTecniche: template.instructions?.join(' '),
-                      mobilitaPre: null,
-                      attivazionePre: null,
-                      warmupSets: null,
-                      tempoWarmup: null,
-                      drillTecnico: null,
-                      prevenzioneInfortuni: null,
-                      cooldownConsigliato: null,
-                      spiegazioneTermini: null,
-                      tempoEsecuzione: null,
-                      tempoNote: null,
-                    );
-                  }).toList();
+                      if (filteredExercises.isEmpty) {
+                        return _buildEmptyState();
+                      }
 
-                  // Apply filters to the converted exercises
-                  final filteredResults = _filterExercises(convertedExercises);
-
-                  if (filteredResults.isEmpty) {
-                    return _buildEmptyState();
-                  }
-
-                  return _buildSearchResults(filteredResults);
-                }
-
-                // Fall back to old system for browsing all or when improved search has no results
-                return exercisesAsync.when(
-                  data: (exercises) {
-                    final filteredExercises = _filterExercises(exercises);
-
-                    if (filteredExercises.isEmpty) {
-                      return _buildEmptyState();
-                    }
-
-                    return _buildSearchResults(filteredExercises);
-                  },
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (error, stack) => _buildErrorState(error),
-                );
-              },
-              loading: () => exercisesAsync.when(
-                data: (exercises) {
-                  final filteredExercises = _filterExercises(exercises);
-                  if (filteredExercises.isEmpty) {
-                    return _buildEmptyState();
-                  }
-                  return _buildSearchResults(filteredExercises);
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => _buildErrorState(error),
-              ),
-              error: (error, stack) => exercisesAsync.when(
-                data: (exercises) {
-                  final filteredExercises = _filterExercises(exercises);
-                  if (filteredExercises.isEmpty) {
-                    return _buildEmptyState();
-                  }
-                  return _buildSearchResults(filteredExercises);
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error2, stack2) => _buildErrorState(error),
-              ),
-            ),
+                      return _buildSearchResults(filteredExercises);
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => _buildErrorState(error),
+                  ),
           ),
         ],
       ),
@@ -322,6 +552,70 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               final isSelected = _selectedExercises.contains(exercise);
 
               return _buildExerciseCard(exercise, isSelected);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFuzzySearchResults() {
+    final l10n = context.l10n;
+
+    return Column(
+      children: [
+        // Results count with fuzzy indicator
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          color: context.colors.primaryContainer.withOpacity(0.3),
+          child: Row(
+            children: [
+              Icon(
+                Icons.auto_awesome,
+                size: 16,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${_fuzzyResults.length} ${l10n.exercisesFound}',
+                style: context.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.primary,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '(Smart Search)',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurface.withOpacity(0.6),
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Fuzzy Exercise List + Missing Exercise Widget
+        Expanded(
+          child: ListView.builder(
+            itemCount: _fuzzyResults.length + 1, // +1 for missing exercise widget
+            itemBuilder: (context, index) {
+              // Show missing exercise widget as last item
+              if (index == _fuzzyResults.length) {
+                return _buildMissingExerciseWidget();
+              }
+
+              final fuzzyResult = _fuzzyResults[index];
+              final exercise = fuzzyResult.exercise;
+              final isSelected = _selectedExercises.contains(exercise);
+
+              return _buildFuzzyExerciseCard(
+                exercise,
+                isSelected,
+                fuzzyResult.score,
+                fuzzyResult.wasAutoCorrected,
+              );
             },
           ),
         ),
@@ -984,6 +1278,237 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           });
         },
         onLongPress: widget.selectionMode ? null : () => _showExerciseOptionsModal(exercise),
+      ),
+    );
+  }
+
+  Widget _buildFuzzyExerciseCard(
+    Exercise exercise,
+    bool isSelected,
+    double matchScore,
+    bool wasAutoCorrected,
+  ) {
+    final matchPercentage = (matchScore * 100).toInt();
+
+    // Color based on match quality
+    Color matchColor;
+    if (matchScore >= 0.85) {
+      matchColor = Colors.green;
+    } else if (matchScore >= 0.70) {
+      matchColor = Colors.orange;
+    } else {
+      matchColor = Colors.grey;
+    }
+
+    // Check if exercise is frequent or trending (ML-enhanced)
+    final isFrequent = _frequentExerciseIds.contains(exercise.id);
+    final isTrending = _trendingExerciseIds.contains(exercise.id);
+
+    // Check if category matches (for colored border)
+    // ML-enhanced: show green border if exercise matches selected muscle groups
+    final hasCategoryMatch = _selectedMuscleGroups.isNotEmpty &&
+        exercise.focus.any((focus) =>
+            _selectedMuscleGroups.contains(_normalizedMuscleCode(focus))
+        );
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      elevation: wasAutoCorrected ? 3 : 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: hasCategoryMatch
+            ? BorderSide(color: Colors.green, width: 2)
+            : BorderSide.none,
+      ),
+      child: ListTile(
+        leading: _buildExerciseLeading(exercise, isSelected),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                exercise.nome,
+                style: TextStyle(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            ),
+            // Match percentage badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: matchColor.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: matchColor.withOpacity(0.5),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                '$matchPercentage%',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: matchColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            // Auto-correct icon
+            if (wasAutoCorrected) ...[
+              const SizedBox(width: 4),
+              Icon(
+                Icons.auto_fix_high,
+                size: 16,
+                color: context.colors.secondary,
+              ),
+            ],
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ML-enhanced badges row
+            if (isFrequent || isTrending) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  if (isFrequent)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.amber.withOpacity(0.4),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('⭐', style: TextStyle(fontSize: 10)),
+                          SizedBox(width: 2),
+                          Text(
+                            'Frequente',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (isFrequent && isTrending) const SizedBox(width: 4),
+                  if (isTrending)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.deepOrange.withOpacity(0.4),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('🔥', style: TextStyle(fontSize: 10)),
+                          SizedBox(width: 2),
+                          Text(
+                            'Recente',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 4),
+            ],
+            Text(exercise.focusDisplayName),
+            const SizedBox(height: 2),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: _getDifficultyColor(exercise.difficolta).withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    exercise.difficolta,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: _getDifficultyColor(exercise.difficolta),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  exercise.attrezzatura,
+                  style: context.textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ],
+        ),
+        trailing: SizedBox(
+          width: isSelected || widget.selectionMode ? 24 : 56,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // Negative feedback button (only if not selected)
+              if (!isSelected && !widget.selectionMode)
+                InkWell(
+                  onTap: () => _handleNegativeFeedback(exercise),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.close,
+                      size: 16,
+                      color: context.colors.error.withOpacity(0.7),
+                    ),
+                  ),
+                ),
+              // Spacer
+              if (!isSelected && !widget.selectionMode) const SizedBox(width: 4),
+              // Selection icon
+              isSelected
+                  ? Icon(Icons.check_circle, color: context.colors.primary)
+                  : (widget.selectionMode
+                      ? const Icon(Icons.arrow_forward_ios, size: 16)
+                      : const Icon(Icons.radio_button_unchecked)),
+            ],
+          ),
+        ),
+        onTap: () {
+          // Track selection (ML-enhanced)
+          _trackExerciseSelection(exercise);
+
+          // Selection mode: return exercise and close
+          if (widget.selectionMode) {
+            Navigator.of(context).pop(exercise);
+            return;
+          }
+
+          // Multi-select mode or normal mode: toggle selection
+          setState(() {
+            if (isSelected) {
+              _selectedExercises.remove(exercise);
+            } else {
+              _selectedExercises.add(exercise);
+            }
+          });
+        },
+        onLongPress: widget.selectionMode
+            ? null
+            : () => _showExerciseOptionsModal(exercise),
       ),
     );
   }

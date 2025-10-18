@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-18",
+  "presets": [
+    {
+      "id": "rest_none",
+      "labelKey": "restPresetNoTimer",
+      "seconds": null,
+      "iconName": "timer_off",
+      "order": 0
+    },
+    {
+      "id": "rest_30",
+      "labelKey": "restPresetThirtySeconds",
+      "seconds": 30,
+      "iconName": "flash_on",
+      "order": 1
+    },
+    {
+      "id": "rest_60",
+      "labelKey": "restPresetOneMinute",
+      "seconds": 60,
+      "iconName": "speed",
+      "order": 2
+    },
+    {
+      "id": "rest_90",
+      "labelKey": "restPresetOneMinuteThirty",
+      "seconds": 90,
+      "iconName": "fitness_center",
+      "order": 3
+    },
+    {
+      "id": "rest_120",
+      "labelKey": "restPresetTwoMinutes",
+      "seconds": 120,
+      "iconName": "schedule",
+      "order": 4
+    },
+    {
+      "id": "rest_180",
+      "labelKey": "restPresetThreeMinutes",
+      "seconds": 180,
+      "iconName": "access_time",
+      "order": 5
+    },
+    {
+      "id": "rest_300",
+      "labelKey": "restPresetFiveMinutes",
+      "seconds": 300,
+      "iconName": "hourglass_empty",
+      "order": 6
+    }
+  ]
+}

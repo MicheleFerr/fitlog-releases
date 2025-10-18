@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'dart:convert';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
 
 /// 🚀 TIER-1: Modal condiviso per opzioni esercizio sia per single che superset
 class ExerciseOptionsModal extends StatelessWidget {
@@ -233,7 +234,26 @@ class ExerciseOptionsModal extends StatelessWidget {
                       }
                     },
                   ),
-                  
+
+                  const Divider(),
+
+                  // 🆕 Segnala problema
+                  ListTile(
+                    leading: const Icon(Icons.flag_outlined, color: Colors.orange),
+                    title: const Text('Segnala problema'),
+                    subtitle: const Text('Bug, errori o suggerimenti'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      // Show feedback dialog
+                      ExerciseFeedbackButton.showFeedbackDialog(
+                        context,
+                        exerciseId: exercise.id ?? 'unknown',
+                        exerciseName: exercise.name,
+                        version: '1.0.0',
+                      );
+                    },
+                  ),
+
                   const Divider(),
                   
                   // Storico

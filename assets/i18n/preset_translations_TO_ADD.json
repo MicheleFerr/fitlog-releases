@@ -1,0 +1,134 @@
+{
+  "instructions": "Add these keys to app_en.arb and app_it.arb for Phase 3 Preset Configuration",
+  "note": "These are localization keys for workout presets (rep, set, rest time)",
+
+  "english_keys": {
+    "quickRepPresets": "Quick Rep Presets",
+    "@quickRepPresets": {
+      "description": "Header for rep preset chips"
+    },
+    "quickSetCount": "Quick Set Count",
+    "@quickSetCount": {
+      "description": "Header for set preset chips"
+    },
+    "sets": "sets",
+    "@sets": {
+      "description": "Sets unit label (e.g., '3 sets')"
+    },
+
+    "repPreset.strength.label": "1-3",
+    "@repPreset.strength.label": {
+      "description": "Label for strength rep range (1-3 reps)"
+    },
+    "repPreset.strength.description": "Maximum Strength",
+    "@repPreset.strength.description": {
+      "description": "Description for strength rep range"
+    },
+
+    "repPreset.power.label": "4-6",
+    "@repPreset.power.label": {
+      "description": "Label for power rep range (4-6 reps)"
+    },
+    "repPreset.power.description": "Power",
+    "@repPreset.power.description": {
+      "description": "Description for power rep range"
+    },
+
+    "repPreset.strengthHypertrophy.label": "6-8",
+    "@repPreset.strengthHypertrophy.label": {
+      "description": "Label for strength/hypertrophy rep range (6-8 reps)"
+    },
+    "repPreset.strengthHypertrophy.description": "Strength / Hypertrophy",
+    "@repPreset.strengthHypertrophy.description": {
+      "description": "Description for strength/hypertrophy rep range"
+    },
+
+    "repPreset.hypertrophy.label": "8-12",
+    "@repPreset.hypertrophy.label": {
+      "description": "Label for hypertrophy rep range (8-12 reps)"
+    },
+    "repPreset.hypertrophy.description": "Hypertrophy",
+    "@repPreset.hypertrophy.description": {
+      "description": "Description for hypertrophy rep range"
+    },
+
+    "repPreset.endurance.label": "12-15",
+    "@repPreset.endurance.label": {
+      "description": "Label for endurance rep range (12-15 reps)"
+    },
+    "repPreset.endurance.description": "Muscular Endurance",
+    "@repPreset.endurance.description": {
+      "description": "Description for endurance rep range"
+    },
+
+    "repPreset.highEndurance.label": "15+",
+    "@repPreset.highEndurance.label": {
+      "description": "Label for high endurance rep range (15+ reps)"
+    },
+    "repPreset.highEndurance.description": "High Endurance",
+    "@repPreset.highEndurance.description": {
+      "description": "Description for high endurance rep range"
+    },
+
+    "restPreset.noTimer": "No Timer",
+    "@restPreset.noTimer": {
+      "description": "No rest timer option"
+    },
+    "restPreset.thirtySeconds": "30 seconds",
+    "@restPreset.thirtySeconds": {
+      "description": "30 second rest timer"
+    },
+    "restPreset.oneMinute": "1 minute",
+    "@restPreset.oneMinute": {
+      "description": "1 minute rest timer"
+    },
+    "restPreset.oneMinuteThirty": "1:30 min",
+    "@restPreset.oneMinuteThirty": {
+      "description": "1 minute 30 seconds rest timer"
+    },
+    "restPreset.twoMinutes": "2 minutes",
+    "@restPreset.twoMinutes": {
+      "description": "2 minute rest timer"
+    },
+    "restPreset.threeMinutes": "3 minutes",
+    "@restPreset.threeMinutes": {
+      "description": "3 minute rest timer"
+    },
+    "restPreset.fiveMinutes": "5 minutes",
+    "@restPreset.fiveMinutes": {
+      "description": "5 minute rest timer"
+    }
+  },
+
+  "italian_keys": {
+    "quickRepPresets": "Preset Ripetizioni",
+    "quickSetCount": "Numero Serie",
+    "sets": "serie",
+
+    "repPreset.strength.label": "1-3",
+    "repPreset.strength.description": "Forza Massimale",
+
+    "repPreset.power.label": "4-6",
+    "repPreset.power.description": "Potenza",
+
+    "repPreset.strengthHypertrophy.label": "6-8",
+    "repPreset.strengthHypertrophy.description": "Forza / Ipertrofia",
+
+    "repPreset.hypertrophy.label": "8-12",
+    "repPreset.hypertrophy.description": "Ipertrofia",
+
+    "repPreset.endurance.label": "12-15",
+    "repPreset.endurance.description": "Resistenza Muscolare",
+
+    "repPreset.highEndurance.label": "15+",
+    "repPreset.highEndurance.description": "Alta Resistenza",
+
+    "restPreset.noTimer": "Nessun Timer",
+    "restPreset.thirtySeconds": "30 secondi",
+    "restPreset.oneMinute": "1 minuto",
+    "restPreset.oneMinuteThirty": "1:30 min",
+    "restPreset.twoMinutes": "2 minuti",
+    "restPreset.threeMinutes": "3 minuti",
+    "restPreset.fiveMinutes": "5 minuti"
+  }
+}

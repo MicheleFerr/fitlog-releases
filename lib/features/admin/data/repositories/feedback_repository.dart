@@ -178,8 +178,9 @@ abstract class FeedbackRepository {
 /// 🔐 Inherits security from Firestore rules
 /// 💾 Single Firebase instance for efficiency
 class FirestoreFeedbackRepository implements FeedbackRepository {
-  final FirebaseFirestore _firestore;
   static const String _collection = 'exercise_feedback';
+
+  final FirebaseFirestore _firestore;
 
   FirestoreFeedbackRepository({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;

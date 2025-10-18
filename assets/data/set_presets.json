@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-18",
+  "presets": [
+    {
+      "id": "sets_1",
+      "sets": 1,
+      "order": 0
+    },
+    {
+      "id": "sets_2",
+      "sets": 2,
+      "order": 1
+    },
+    {
+      "id": "sets_3",
+      "sets": 3,
+      "order": 2
+    },
+    {
+      "id": "sets_4",
+      "sets": 4,
+      "order": 3
+    },
+    {
+      "id": "sets_5",
+      "sets": 5,
+      "order": 4
+    },
+    {
+      "id": "sets_6",
+      "sets": 6,
+      "order": 5
+    }
+  ]
+}

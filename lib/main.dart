@@ -7,6 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:gymbro_flutter_new/app/app.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+// 🔄 AppLifecycleManager per flush batch queue quando app va in background
+import 'package:gymbro_flutter_new/shared/presentation/widgets/app_lifecycle_manager.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/theme_mode_adapter.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboarding_state.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
@@ -19,6 +21,9 @@ import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
 import 'package:gymbro_flutter_new/shared/data/models/weight_settings_model.dart';
 import 'package:gymbro_flutter_new/shared/data/models/feedback_settings_model.dart';
 import 'package:gymbro_flutter_new/shared/data/models/history_view_settings_model.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,13 +101,18 @@ void main() async {
   if (!Hive.isAdapterRegistered(HistoryViewSettingsModelAdapter().typeId)) {
     Hive.registerAdapter(HistoryViewSettingsModelAdapter());
   }
+  if (!Hive.isAdapterRegistered(ExerciseUsageModelAdapter().typeId)) {
+    Hive.registerAdapter(ExerciseUsageModelAdapter());
+  }
 
   // Initialize secure storage boxes
   await _initializeStorage();
 
   runApp(
     const ProviderScope(
-      child: FitLogApp(),
+      child: AppLifecycleManager(
+        child: FitLogApp(),
+      ),
     ),
   );
 }
@@ -149,6 +159,32 @@ Future<void> _initializeStorage() async {
   } catch (e, stackTrace) {
     assert(() {
       debugPrint('❌ Failed to initialize QuestionnaireAnalyticsDataSource: $e');
+      debugPrint('📍 Stack trace: $stackTrace');
+      return true;
+    }());
+  }
+
+  // Initialize exercise usage tracker (ML-enhanced fuzzy search)
+  try {
+    await ExerciseUsageTracker().initialize();
+  } catch (e, stackTrace) {
+    assert(() {
+      debugPrint('❌ Failed to initialize ExerciseUsageTracker: $e');
+      debugPrint('📍 Stack trace: $stackTrace');
+      return true;
+    }());
+  }
+
+  // 🚀 PERFORMANCE: Initialize persistent fuzzy search isolate
+  // This pre-creates the isolate once at app start, saving 200ms per search
+  try {
+    await ExerciseFuzzyMatcher.initialize();
+    if (kDebugMode) {
+      debugPrint('✅ Fuzzy search isolate initialized');
+    }
+  } catch (e, stackTrace) {
+    assert(() {
+      debugPrint('❌ Failed to initialize fuzzy search isolate: $e');
       debugPrint('📍 Stack trace: $stackTrace');
       return true;
     }());

@@ -1,8 +1,8 @@
 {
   "@@locale": "it",
-  "appTitle": "GymBro TrackLog",
+  "appTitle": "FitLog Pro",
   "welcome": "Pronto per allenarti?",
-  "welcomeDescription": "Inizia un nuovo allenamento e traccia i tuoi esercizi con serie, superset, dropset e tecniche rest-pause.",
+  "welcomeDescription": "Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.",
   "onboardingWelcomeTitle": "Benvenuto nel Tuo Hub di Allenamento",
   "onboardingWelcomeDescription": "Traccia i tuoi progressi, raggiungi i tuoi obiettivi con il tracker di allenamenti più completo",
   "onboardingSkip": "Salta",
@@ -22,7 +22,7 @@
   "onboardingAdvancedFeaturesTitle": "Funzionalità Avanzate",
   "onboardingAdvancedFeaturesDescription": "Esplora le features Pro:\\n\\n• Superset e Dropset\\n• Rest-Pause e tecniche avanzate\\n• Analytics e insights\\n• Suggerimenti community\\n• Warmup automatici\\n• Calcolo 1-Rep Max\\n• Export e condivisione",
   "onboardingCongratulations": "Congratulazioni!",
-  "onboardingCompletedMessage": "Hai completato il tutorial completo di GymBro. Ora sei pronto per iniziare i tuoi allenamenti!",
+  "onboardingCompletedMessage": "Hai completato il tutorial completo di FitLog Pro. Ora sei pronto per iniziare i tuoi allenamenti!",
   "selected": "selezionati",
   "onboardingFeaturesTitle": "Funzionalità Potenti",
   "onboardingFeature1": "Traccia serie, ripetizioni e peso",
@@ -35,7 +35,7 @@
   "onboardingGetStartedDescription": "Inizia con un template o crea il tuo allenamento personalizzato. Iniziamo il tuo percorso fitness!",
   "onboardingDone": "Inizia",
   "onboardingProgress": "Passo {current} di {total}",
-  "globalOnboardingTitle": "Guida Completa GymBro",
+  "globalOnboardingTitle": "Guida Completa FitLog Pro",
   "globalOnboardingDescription": "Impara tutto sull'app con questo tutorial interattivo passo dopo passo",
   "togglePanoramaTitle": "Panoramica Toggle e Personalizzazioni",
   "togglePanoramaDescription": "Esplora tutte le funzionalità disponibili e scopri come personalizzare la tua esperienza",
@@ -50,7 +50,7 @@
   "timerRestStepTitle": "Timer e Riposo",
   "advancedFeaturesStepTitle": "Funzionalità Avanzate",
   "congratulations": "Congratulazioni!",
-  "onboardingComplete": "Hai completato il tutorial completo di GymBro. Ora sei pronto per iniziare i tuoi allenamenti!",
+  "onboardingComplete": "Hai completato il tutorial completo di FitLog Pro. Ora sei pronto per iniziare i tuoi allenamenti!",
   "onboardingTryItOut": "Provalo!",
   "onboardingTapToComplete": "Tocca per completare",
   "onboardingExampleWorkout": "Scheda di Esempio",
@@ -129,7 +129,7 @@
   "done": "Fatto",
   "hiitTraining": "Allenamento HIIT",
   "hiitTrainingSubtitle": "Intervalli ad alta intensità",
-  "startWorkout": "Inizia Allenamento",
+  "startWorkout": "Avvia Allenamento",
   "addExercise": "Aggiungi Esercizio",
   "completeWorkout": "Completa Allenamento",
   "newWorkout": "Nuovo Allenamento",
@@ -162,13 +162,13 @@
   "premiumAccount": "Account Premium",
   "freeExportLimitations": "Limitato a 1 esportazione, nessun dato analitico",
   "premiumExportFeatures": "Esportazione multipla, dati analitici, formati multipli",
-  "upgrade": "Aggiorna",
+  "upgrade": "Upgrade",
   "downloadJson": "Scarica JSON",
   "share": "Condividi",
   "copy": "Copia",
   "exportSuccessful": "Esportazione completata con successo!",
   "exportFailed": "Esportazione fallita. Riprova.",
-  "gymbroTemplatesExport": "Esportazione Schede Allenamento GymBro",
+  "gymbroTemplatesExport": "Esportazione Schede Allenamento FitLog Pro",
   "exportLimits": "Limiti Esportazione",
   "yourCurrentLimits": "I tuoi attuali limiti di esportazione:",
   "close": "Chiudi",
@@ -190,7 +190,7 @@
   "customRequestHint": "es. Focus movimenti composti, allenamento 45 min, attrezzatura minima",
   "generatedPrompt": "Prompt AI Generato",
   "convertExistingWorkout": "Converti Allenamento Esistente",
-  "convertExistingDesc": "Converti il tuo testo allenamento nel formato JSON di GymBro",
+  "convertExistingDesc": "Converti il tuo testo allenamento nel formato JSON di FitLog Pro",
   "pasteWorkoutText": "Incolla il Testo del Tuo Allenamento",
   "workoutTextHint": "LUNEDÌ - PUSH\nPanca Piana - 3 min\nSet1 x 5: 80kg\nSet2 x 5: 82.5kg\n...",
   "generateConversionPrompt": "Genera Prompt di Conversione",
@@ -203,15 +203,15 @@
   "quickAIAccess": "Accesso Rapido AI",
   "copyPromptAndOpenAI": "Copia Prompt e Apri Servizio AI",
   "instructions": "Istruzioni",
-  "conversionInstructions": "1. Copia il prompt sopra 2. Apri un servizio AI 3. Incolla e invia 4. Copia il JSON risultante 5. Importa in GymBro",
-  "creationInstructions": "1. Copia il prompt sopra 2. Apri un servizio AI 3. Incolla e invia 4. Copia il JSON risultante 5. Importa in GymBro",
+  "conversionInstructions": "1. Copia il prompt sopra 2. Apri un servizio AI 3. Incolla e invia 4. Copia il JSON risultante 5. Importa in FitLog Pro",
+  "creationInstructions": "1. Copia il prompt sopra 2. Apri un servizio AI 3. Incolla e invia 4. Copia il JSON risultante 5. Importa in FitLog Pro",
   "promptCopied": "Prompt Copiato!",
   "promptCopiedDesc": "Il prompt AI è stato copiato negli appunti.",
   "nextSteps": "Prossimi passi:",
   "step1OpenAI": "Apri il tuo servizio AI preferito (ChatGPT, Claude, ecc.)",
   "step2PastePrompt": "Incolla il prompt copiato e invia",
   "step3CopyJSON": "Copia la risposta JSON dall'AI",
-  "step4ReturnToApp": "Torna in GymBro e usa 'Importa Scheda'",
+  "step4ReturnToApp": "Torna in FitLog Pro e usa 'Importa Scheda'",
   "gotIt": "Capito!",
   "openChatGPT": "Apri ChatGPT",
   "cannotOpenUrl": "Impossibile aprire questo URL",
@@ -223,7 +223,7 @@
   "weight": "Peso",
   "reps": "Reps",
   "notes": "Note (opzionale)",
-  "notesHint": "Aggiungi note sulla forma, progressione del peso, ecc.",
+  "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
   "exerciseTypeSingle": "Singolo",
   "exerciseTypeSuperset": "Superset",
   "exerciseTypeDropset": "Drop Set",
@@ -245,7 +245,7 @@
   "confirmReorder": "Conferma ordine",
   "orderSaved": "Ordine salvato",
   "startNow": "Inizia Subito",
-  "startImmediately": "Inizia ad allenarti immediatamente",
+  "startImmediately": "Inizia immediatamente e aggiungi esercizi al volo",
   "workoutStartedQuickly": "Allenamento iniziato! Aggiungi esercizi man mano",
   "progress": "Progressi",
   "workoutProgress": "Progresso Allenamento",
@@ -304,9 +304,9 @@
   "dropsetInfo": "Drop Set: Esegui l'esercizio fino al cedimento, poi riduci immediatamente il peso e continua.",
   "restPauseInfo": "Rest-Pause: Esegui fino al cedimento, riposa 10-15 secondi, ripeti fino alle ripetizioni target.",
   "settings": "Impostazioni",
-  "signOut": "Disconnetti",
-  "pauseWorkout": "Metti in Pausa",
-  "endWorkout": "Concludi Allenamento",
+  "signOut": "Esci",
+  "pauseWorkout": "Pausa Allenamento",
+  "endWorkout": "Termina Allenamento",
   "settingsTitle": "⚙️ Impostazioni",
   "account": "Account",
   "appearance": "Aspetto",
@@ -377,10 +377,10 @@
   "setRestTime": "Imposta Timer",
   "customRestTime": "Timer Personalizzato",
   "useDefaultRestTime": "Usa Timer Predefinito",
-  "yourTemplates": "I tuoi Template",
+  "yourTemplates": "I Tuoi Template",
   "popularTemplates": "Schede Popolari",
   "seeAll": "Vedi tutti",
-  "welcomeToGymBro": "Benvenuto in GymBro!",
+  "welcomeToGymBro": "Benvenuto nel tuo nuovo compagno fitness!",
   "homeWelcomeDescription": "Traccia i tuoi allenamenti con precisione. Inizia una nuova sessione o continua da dove avevi lasciato.",
   "quickActions": "Azioni Rapide",
   "startFresh": "Inizia da capo",
@@ -396,7 +396,7 @@
   "activeWorkout": "Allenamento Attivo",
   "pausedWorkout": "Allenamento in Pausa",
   "continueButton": "CONTINUA",
-  "resume": "RIPRENDI",
+  "resume": "Riprendi",
   "end": "TERMINA",
   "endWorkoutConfirm": "Sei sicuro di voler terminare l'allenamento corrente?",
   "workoutCompleted": "🎉 Allenamento completato!",
@@ -493,7 +493,7 @@
   "rir": "RIR",
   "rirDescription": "Ripetizioni di Riserva",
   "actualReps": "Reps Effettive",
-  "targetReps": "Ripetizioni Target",
+  "targetReps": "Target {reps} reps",
   "repsCompleted": "Ripetizioni Completate",
   "actualRepsCompleted": "Ripetizioni Effettivamente Completate",
   "recordSetCompletion": "Registra Completamento Serie",
@@ -553,7 +553,7 @@
   "injuryPrevention": "Prevenzione Infortuni",
   "recommendedCooldown": "Defaticamento Consigliato",
   "technicalDrills": "Esercizi Tecnici",
-  "technicalNotes": "Note Tecniche",
+  "technicalNotes": "Suggerimenti Tecnici",
   "targetMuscles": "Muscoli target",
   "exerciseDetails": "Dettagli Esercizio",
   "preparation": "Preparazione",
@@ -584,7 +584,7 @@
   "predefined": "Predefiniti",
   "myTemplates": "Le Mie Schede",
   "noPersonalTemplates": "Nessun template personale",
-  "createFirstTemplate": "Crea la tua prima scheda allenamento",
+  "createFirstTemplate": "Crea il tuo primo template!",
   "createTemplate": "Crea Scheda",
   "otherTools": "Altri strumenti",
   "workoutHistory": "Cronologia",
@@ -607,6 +607,10 @@
   "aiCoachModalPlaceholder": "Insights intelligenti in arrivo! Il tuo AI Coach analizzerà i tuoi pattern di allenamento e fornirà raccomandazioni personalizzate.",
   "aiCoachDisclaimer": "Questi sono consigli generali basati sui tuoi dati di allenamento. Consulta sempre un professionista del fitness qualificato prima di apportare modifiche significative al tuo programma di allenamento.",
   "aiBadge": "AI",
+  "badgeCritical": "CRITICO",
+  "badgeWarning": "ATTENZIONE",
+  "badgeInfo": "INFO",
+  "badgeSuccess": "OTTIMO",
   "aiInsightStartJourney": "Inizia il Tuo Percorso",
   "aiInsightStartJourneyDesc": "Inizia a tracciare gli allenamenti per sbloccare insights personalizzati",
   "aiInsightStartJourneyRec": "Completa il tuo primo allenamento per iniziare",
@@ -695,7 +699,7 @@
   "minutes": "min",
   "noTemplatesYet": "Nessuna scheda ancora",
   "difficulty": "Difficoltà",
-  "errorOccurred": "Errore Verificato",
+  "errorOccurred": "Si è verificato un errore durante il caricamento dell'allenamento",
   "ok": "OK",
   "networkError": "Errore di rete",
   "databaseError": "Errore Database",
@@ -766,7 +770,7 @@
   "upgradeToPremium": "Passa a Premium",
   "deleteTemplate": "Elimina Template",
   "confirmDeleteTemplate": "Sei sicuro di voler eliminare \"{templateName}\"?",
-  "templateDeleted": "Scheda eliminata",
+  "templateDeleted": "Template \"{name}\" eliminato",
   "shareLinkCopied": "Link di condivisione copiato negli appunti!",
   "templateDownloaded": "Scheda \"{templateName}\" scaricata!",
   "failedToDownload": "Impossibile scaricare la scheda",
@@ -963,7 +967,7 @@
   "durationMinutes": "{minutes} minuti",
   "setsCount": "{count} serie",
   "setLabel": "Serie {number}",
-  "weightLabel": "Peso",
+  "weightLabel": "Peso (kg)",
   "repsLabel": "Ripetizioni",
   "effortLabel": "Sforzo",
   "importedTemplate": "Template Importato",
@@ -1012,7 +1016,7 @@
   "swipeToEditExercise": "Scorri a sinistra per modificare",
   "swipeToReplaceExercise": "Scorri a sinistra per sostituire",
   "supersetTraining": "Allenamento Superset",
-  "supersetDescription": "Esegui 2+ esercizi consecutivi senza riposo tra gli esercizi per massima efficienza e intensità.",
+  "supersetDescription": "Superset: Esegui due esercizi consecutivamente senza riposo tra loro.",
   "selectedExercises": "Esercizi Selezionati",
   "addAtLeastTwoExercises": "Aggiungi almeno 2 esercizi per creare un superset",
   "addRound": "Aggiungi Round",
@@ -1132,8 +1136,8 @@
   "tooHeavy": "Troppo pesante",
   "editTemplate": "Modifica Template",
   "useTemplate": "Usa Questa Scheda",
-  "saveAsTemplate": "Salva Come Scheda",
-  "templateName": "Nome Scheda",
+  "saveAsTemplate": "Salva come Template",
+  "templateName": "Nome Template",
   "templateDescription": "Descrizione Scheda",
   "areYouSure": "Sei sicuro?",
   "confirmDelete": "Conferma Eliminazione",
@@ -1192,7 +1196,7 @@
   "editableWorkoutHistory": "Storico Allenamenti Modificabile",
   "editWorkout": "Modifica Allenamento",
   "deleteWorkout": "Elimina Allenamento",
-  "workoutDate": "Data Allenamento",
+  "workoutDate": "Allenamento {day}/{month}/{year}",
   "workoutTime": "Ora Allenamento",
   "removeSet": "Rimuovi Serie",
   "deleteWorkoutConfirmation": "Sei sicuro di voler eliminare questo allenamento? Questa azione non può essere annullata.",
@@ -1238,7 +1242,7 @@
   "checkFailed": "Verifica Fallita",
   "currentVersion": "Versione Attuale",
   "notAvailable": "Non Disponibile",
-  "loadingError": "Errore di Caricamento",
+  "loadingError": "Errore di caricamento: {error}",
   "collectionStats": "Statistiche Collection",
   "versionMetadata": "Metadati Versione",
   "present": "Presente",
@@ -1285,7 +1289,7 @@
   "viewAll": "Visualizza Tutto",
   "adminInfo": "Informazioni Admin",
   "welcomeAdmin": "Benvenuto, Admin!",
-  "adminDashboardDescription": "Gestisci il sistema GymBro e controlla i contributi della community",
+  "adminDashboardDescription": "Gestisci il sistema FitLog Pro e controlla i contributi della community",
   "systemStatistics": "Statistiche Sistema",
   "firebaseDatabase": "Database Firebase",
   "communityActivity": "Attività Community",
@@ -1421,12 +1425,12 @@
   "@thankYouForContributing": {
     "description": "Thank you message for community contributions"
   },
-  "startWorkoutWithTemplate": "Inizia l'allenamento con questo template",
-  "editTemplateSubtitle": "Cambia esercizi e impostazioni",
+  "startWorkoutWithTemplate": "Inizia allenamento con questo template",
+  "editTemplateSubtitle": "Modifica esercizi e serie",
   "sharePdf": "Condividi PDF",
-  "sharePdfSubtitle": "Invia template come PDF",
+  "sharePdfSubtitle": "Esporta come PDF e condividi",
   "print": "Stampa",
-  "printTemplate": "Stampa il template",
+  "printTemplate": "Stampa template allenamento",
   "pdfExportOptions": "Opzioni Esportazione PDF",
   "pdfDetailLevelCompact": "Formato Compatto",
   "pdfDetailLevelCompactDesc": "Raggruppa set identici (es. 3 x 10)",
@@ -2357,7 +2361,7 @@
   "@dropsetTraining": {
     "description": "Dropset training technique title"
   },
-  "dropsetDescription": "Riduci il peso immediatamente dopo il cedimento per estendere la serie e aumentare lo stress metabolico",
+  "dropsetDescription": "Drop Set: Esegui l'esercizio a cedimento, poi riduci immediatamente il peso e continua.",
   "@dropsetDescription": {
     "description": "Dropset training technique description"
   },
@@ -2428,7 +2432,7 @@
   "@restPauseTraining": {
     "description": "Rest-pause training technique title"
   },
-  "restPauseDescription": "Esegui fino al cedimento con brevi pause per accumulare più ripetizioni e aumentare il tempo sotto tensione",
+  "restPauseDescription": "Rest-Pause: Esegui a cedimento, riposa 10-15 secondi, ripeti fino al target di ripetizioni.",
   "@restPauseDescription": {
     "description": "Rest-pause training technique description"
   },
@@ -2567,8 +2571,7 @@
   "fitnessInjuryBodyRegion": "Zona del Corpo",
   "fitnessInjuryMonthsSince": "Mesi dall'Infortunio",
   "fitnessValidationRequired": "Obbligatorio",
-  "fitnessInjuryTypeHint": "es. Stiramento lombare"
-},
+  "fitnessInjuryTypeHint": "es. Stiramento lombare",
   "dropsetStage1Weight": "Peso Stadio 1",
   "@dropsetStage1Weight": {
     "description": "Etichetta per l'input del peso del primo stadio dropset"
@@ -2642,4 +2645,1558 @@
   "confirmOrAdjustWeight": "Conferma o Modifica Peso",
   "@confirmOrAdjustWeight": {
     "description": "Istruzione per confermare o modificare manualmente il peso calcolato"
+  },
+  "appSubtitle": "Traccia il tuo percorso fitness",
+  "emailLabel": "Email",
+  "emailHint": "Inserisci la tua email",
+  "passwordLabel": "Password",
+  "passwordHint": "Inserisci la tua password",
+  "confirmPasswordLabel": "Conferma Password",
+  "confirmPasswordHint": "Conferma la tua password",
+  "fullNameLabel": "Nome Completo",
+  "fullNameHint": "Inserisci il tuo nome completo",
+  "signInButton": "Accedi",
+  "signUpButton": "Registrati",
+  "createAccountButton": "Crea Account",
+  "createAccountTitle": "Crea Account",
+  "joinGymBro": "Unisciti a FitLog Pro",
+  "forgotPassword": "Password dimenticata?",
+  "signInWithGoogle": "Accedi con Google",
+  "continueWithGoogle": "Continua con Google",
+  "signInWithApple": "Accedi con Apple",
+  "continueWithApple": "Continua con Apple",
+  "signInWithEmail": "Accedi con Email",
+  "backToLogin": "Torna al Login",
+  "pleaseEnterEmailFirst": "Inserisci prima la tua email",
+  "passwordResetEmailSent": "Email di reset password inviata! Controlla la tua casella.",
+  "errorDialogTitle": "Errore",
+  "workoutLoadError": "Si è verificato un errore durante il caricamento dell'allenamento",
+  "goHomeButton": "Vai alla Home",
+  "createNewTemplate": "Crea Nuovo Template",
+  "saveTemplateComingSoon": "Funzione salva template in arrivo!",
+  "saveToFirebase": "Salva su Firebase per riutilizzarlo",
+  "useTemplateScreenForImport": "Usa la funzione di importazione nella schermata template",
+  "keepWorkoutActiveTitle": "Mantenere Allenamento Attivo?",
+  "workoutPausedMessage": "Allenamento in pausa - Continua quando vuoi dalla Home",
+  "completeWorkoutTitle": "Completa Allenamento",
+  "completeWorkoutConfirmation": "Sei sicuro di voler completare questo allenamento?",
+  "completeButton": "Completa",
+  "workoutCompletedSuccess": "Allenamento completato! Ottimo lavoro!",
+  "signOutButton": "Esci",
+  "addExerciseTitle": "Aggiungi Esercizio",
+  "addButton": "Aggiungi",
+  "supersetTab": "Superset",
+  "dropsetTab": "Dropset",
+  "restPauseTab": "Rest-Pause",
+  "exerciseCategoryLabel": "Categoria Esercizio",
+  "setsLabel": "Serie",
+  "addSetButton": "Aggiungi Serie",
+  "removeSetTooltip": "Rimuovi Serie",
+  "weightHint": "Inserisci peso",
+  "repsHint": "Inserisci ripetizioni",
+  "notesLabel": "Note (opzionale)",
+  "exerciseAddedMessage": "Aggiunto {exerciseName} all'allenamento",
+  "dropsetAddedMessage": "Aggiunto {exerciseName} Drop Set all'allenamento",
+  "restPauseAddedMessage": "Aggiunto {exerciseName} Rest-Pause all'allenamento",
+  "supersetAddedMessage": "Aggiunto {exerciseName} Superset all'allenamento",
+  "categoryChest": "Petto",
+  "categoryBack": "Dorso",
+  "categoryShoulders": "Spalle",
+  "categoryArms": "Braccia",
+  "categoryLegs": "Gambe",
+  "categoryAbs": "Addominali",
+  "categoryCardio": "Cardio",
+  "categoryOther": "Altro",
+  "exerciseEditingComingSoon": "Modifica esercizio in arrivo!",
+  "exerciseReplacementComingSoon": "Sostituzione esercizio in arrivo!",
+  "errorUserNotAuthenticated": "Utente non autenticato",
+  "errorEntityValidationFailed": "Validazione fallita",
+  "errorAudioFileNotFound": "File audio non trovato",
+  "errorAchievementNotFound": "Achievement non trovato",
+  "errorRegistrationFailed": "Registrazione fallita",
+  "errorSignInFailed": "Accesso fallito",
+  "errorLoadingWorkout": "Errore caricamento allenamento: {error}",
+  "orSeparator": "OPPURE",
+  "alreadyHaveAccount": "Hai già un account?",
+  "dontHaveAccount": "Non hai un account?",
+  "backToOptions": "Torna alle opzioni",
+  "pleaseEnterEmail": "Inserisci la tua email",
+  "pleaseEnterValidEmail": "Inserisci un'email valida",
+  "pleaseEnterPassword": "Inserisci la tua password",
+  "featureSmartTimer": "Timer Intelligente",
+  "featureLiveActivities": "Live Activities",
+  "featureAppleHealth": "Apple Health",
+  "createAccount": "Crea Account",
+  "startTrackingJourney": "Inizia a tracciare il tuo percorso fitness",
+  "registerQuickly": "Registrati Velocemente",
+  "autoAccountCreation": "Il sistema creerà automaticamente il tuo account\nse è la prima volta che accedi",
+  "orDivider": "OPPURE",
+  "fullName": "Nome Completo",
+  "enterYourName": "Inserisci il tuo nome",
+  "nameRequired": "Inserisci il tuo nome",
+  "nameMinLength": "Il nome deve contenere almeno 2 caratteri",
+  "emailRequired": "Inserisci la tua email",
+  "emailInvalid": "Inserisci un'email valida",
+  "passwordRequired": "Inserisci una password",
+  "passwordMinLength": "La password deve contenere almeno 6 caratteri",
+  "confirmPassword": "Conferma Password",
+  "confirmPasswordRequired": "Conferma la tua password",
+  "passwordsDoNotMatch": "Le password non corrispondono",
+  "signUpWithGoogle": "Registrati con Google",
+  "signUpWithApple": "Registrati con Apple",
+  "alreadyHaveAccountPrompt": "Hai già un account? ",
+  "myWorkouts": "Le Mie Schede",
+  "predefinedWorkouts": "Schede Predefinite",
+  "noCustomTemplates": "Nessun template personalizzato",
+  "noPredefinedWorkouts": "Nessuna scheda predefinita",
+  "predefinedWorkoutsComingSoon": "Le schede predefinite arriveranno presto!",
+  "customBadge": "Personalizzato",
+  "keepWorkoutActive": "Mantieni Allenamento Attivo?",
+  "keepWorkoutActiveMessage": "Vuoi tornare alla Home e mantenere il tuo allenamento attivo in background?\\n\\nPotrai tornare a continuare l'allenamento in qualsiasi momento.",
+  "goToHome": "Vai alla Home",
+  "workoutPausedContinue": "Allenamento in pausa - Continua quando vuoi dalla Home",
+  "deleteTemplateConfirm": "Sei sicuro di voler eliminare \"{name}\"?",
+  "deleteTemplateWarning": "Questa azione non può essere annullata.",
+  "timerRest": "Timer Riposo",
+  "rpeTimerMore": "RPE, Timer, e altro",
+  "completeWorkoutConfirm": "Sei sicuro di voler completare questo allenamento?",
+  "error": "Errore",
+  "goHome": "Vai alla Home",
+  "errorLoading": "Errore caricamento: {error}",
+  "jsonFormat": "Formato JSON",
+  "pasteJsonHere": "Incolla qui il JSON del tuo template di allenamento",
+  "jsonPlaceholder": "Esempio: nome, descrizione, array di esercizi",
+  "useImportFunction": "Usa la funzione import nella schermata template",
+  "saveAsTemplateTitle": "Salva come Template",
+  "templateNameHint": "Es: Push Day, Upper Body...",
+  "descriptionHint": "Descrivi brevemente questo workout...",
+  "templateSyncInfo": "Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi",
+  "enterTemplateName": "Inserisci un nome per il template",
+  "savingToFirebase": "Salvataggio su Firebase...",
+  "templateSavedSuccess": "Template \"{name}\" salvato con successo!",
+  "view": "Visualizza",
+  "templateLimitReached": "Hai raggiunto il limite di {max} template privati.",
+  "deleteOrUpgrade": "Elimina un template esistente o passa a Premium per avere più spazio.",
+  "templatesRemaining": "Solo {remaining} template rimanenti nel piano Free",
+  "customTemplate": "Template personalizzato",
+  "errorSaving": "Errore nel salvataggio: {error}",
+  "quotaExceeded": "Limite Raggiunto",
+  "deleteExistingOrUpgrade": "Elimina template esistenti o passa a Premium.",
+  "generatingPdf": "Generazione PDF...",
+  "pdfSharedSuccess": "PDF condiviso con successo!",
+  "sharingError": "Errore nella condivisione: {error}",
+  "preparingPrint": "Preparazione stampa...",
+  "printError": "Errore nella stampa: {error}",
+  "templateUseFunctionComingSoon": "Usa la schermata template per creare nuovi template",
+  "saveTemplateFunctionComingSoon": "Funzione salva template in arrivo!",
+  "workoutStartedQuick": "Allenamento avviato velocemente",
+  "quickWorkoutName": "Allenamento Veloce",
+  "startWorkoutTitle": "Avvia Allenamento",
+  "startNowAction": "Inizia Ora",
+  "startExercise": "Avvia Esercizio",
+  "modifyTemplate": "Modifica Template",
+  "addOrRemoveExercises": "Aggiungi o rimuovi esercizi",
+  "deleteTemplateAction": "Elimina Template",
+  "removePermanently": "Rimuovi definitivamente",
+  "dropsetStages": "{count} stadi",
+  "dropsetStage": "Stadio {number}",
+  "dropsetGetReady": "Preparati a ridurre il peso!",
+  "dropsetNoRest": "Nessun riposo! Riduci il peso e vai di nuovo!",
+  "dropsetLastStage": "Ultimo stadio! Dai tutto quello che hai!",
+  "dropsetReduceWeightNow": "Riduci il peso a {weight} kg ORA!",
+  "dropsetCompleted": "DropSet completato! 💪",
+  "completeDropset": "Completa DropSet",
+  "completeStage": "Completa Stadio {number}",
+  "cancelDropset": "Annullare DropSet?",
+  "cancelDropsetMessage": "Il tuo progresso non sarà salvato. Sei sicuro?",
+  "executeDropset": "Esegui DropSet",
+  "keepWorkoutActiveContent": "Vuoi tornare alla Home e mantenere il tuo allenamento attivo in background?\\n\\nPotrai tornare a continuare l'allenamento in qualsiasi momento.",
+  "deleteTemplateQuestion": "Sei sicuro di voler eliminare \"{name}\"?",
+  "cannotUndo": "Questa azione non può essere annullata.",
+  "errorLabel": "Errore: {error}",
+  "templateQuotaLimit": "Hai raggiunto il limite di {max} template privati.",
+  "deleteExistingTemplateOrUpgrade": "Elimina un template esistente o passa a Premium per avere più spazio.",
+  "templatesRemainingWarning": "Solo {remaining} template rimanenti nel piano Free",
+  "customTemplateDescription": "Template personalizzato",
+  "templateSavedSuccessfully": "Template \"{name}\" salvato con successo!",
+  "templateDeletedSuccessfully": "Template \"{name}\" eliminato",
+  "errorWithMessage": "Errore: {error}",
+  "pdfSharedSuccessfully": "PDF condiviso con successo!",
+  "sharingErrorMessage": "Errore nella condivisione: {error}",
+  "printErrorMessage": "Errore nella stampa: {error}",
+  "savingErrorMessage": "Errore nel salvataggio: {error}",
+  "useImportFunctionInTemplateScreen": "Usa la funzione import nella schermata template",
+  "deleteExistingOrUpgradeToPremium": "Elimina template esistenti o passa a Premium.",
+  "removePermanentlyAction": "Rimuovi definitivamente",
+  "startWorkoutAction": "Avvia Allenamento",
+  "startWorkoutDescription": "Inizia immediatamente",
+  "templateSyncInformation": "Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi",
+  "tabSingle": "Singolo",
+  "tabAdvanced": "Avanzati",
+  "tabSuperset": "Superset",
+  "tabDropSet": "DropSet",
+  "tabRestPause": "Rest-Pause",
+  "dropSetInfoCard": "Drop Set: Esegui l'esercizio fino al cedimento, poi riduci immediatamente il peso e continua.",
+  "restPauseInfoCard": "Rest-Pause: Esegui fino al cedimento, riposa 10-15 secondi, ripeti fino alle ripetizioni target.",
+  "exerciseNameHintBicepCurl": "es. Curl Bicipiti Drop Set",
+  "exerciseNameHintBenchPress": "es. Panca Piana Rest-Pause",
+  "dropSetStagesTitle": "Fasi Drop Set",
+  "stageHeavy": "Fase 1 (Pesante)",
+  "stageMedium": "Fase 2 (Medio)",
+  "stageLight": "Fase 3 (Leggero)",
+  "addStageButton": "Aggiungi Fase",
+  "notesHintWeightDrops": "Calo pesi, riposo tra fasi, ecc.",
+  "notesHintFormCues": "Indicazioni sulla forma, strategia di progressione, ecc.",
+  "weightKgLabel": "Peso (kg)",
+  "targetRepsLabel": "Ripetizioni Target",
+  "restPeriodSecondsLabel": "Periodo di Riposo (secondi)",
+  "restPeriodSecondsHint": "10-15 secondi tipico",
+  "maxRestPauseSetsLabel": "Massimo Serie Rest-Pause",
+  "maxRestPauseSetsHint": "3-4 tipico",
+  "addSetLabel": "Aggiungi Serie",
+  "weightHintKg": "Peso (kg)",
+  "repsHintLabel": "Reps",
+  "customExercisePrompt": "Non trovi l'esercizio? Creane uno personalizzato",
+  "customExerciseDetails": "Inserisci i dettagli dell'esercizio personalizzato:",
+  "focusLabel": "Focus",
+  "exerciseAddedToWorkout": "Aggiunto {exerciseName} all'allenamento",
+  "exerciseAddedDropSet": "Aggiunto {exerciseName} Drop Set all'allenamento",
+  "exerciseAddedRestPause": "Aggiunto {exerciseName} Rest-Pause all'allenamento",
+  "quickTimerOptions": "Opzioni Timer Rapide",
+  "exerciseUpdated": "Esercizio \"{exerciseName}\" aggiornato",
+  "timerLabel": "Timer",
+  "errorLoadingEditor": "Errore nel caricamento dell'editor esercizi",
+  "errorOpeningEditor": "Errore nell'apertura dell'editor esercizi. Riprova.",
+  "errorUnableToEdit": "Errore: Impossibile modificare questo esercizio",
+  "errorUpdatingExercise": "Errore nell'aggiornamento dell'esercizio. Riprova.",
+  "exerciseNameCannotBeEmpty": "{exerciseName} non può essere vuoto",
+  "invalidRestTimeError": "Inserisci un tempo di riposo valido (1-3600 secondi)",
+  "invalidApreBaseWeight": "Inserisci un peso base APRE valido",
+  "notesSavedMessage": "Note salvate",
+  "exerciseCompletedTapToExpand": "{exerciseName} completato! Tocca per espandere",
+  "expandLabel": "Espandi",
+  "settingsNotLoggedIn": "Non connesso",
+  "settingsLoading": "Caricamento...",
+  "settingsErrorLoadingUser": "Errore caricamento utente",
+  "settingsGymBroUser": "Utente FitLog Pro",
+  "settingsNoEmail": "Nessuna email",
+  "settingsLastUpdated": "Ultimo aggiornamento",
+  "settingsUpdateProfile": "Aggiorna Profilo",
+  "settingsAccentColor": "Colore Principale",
+  "settingsFontSize": "Dimensione Carattere",
+  "settingsFontSizeSmall": "Piccolo",
+  "settingsFontSizeNormal": "Normale",
+  "settingsFontSizeLarge": "Grande",
+  "settingsWorkoutTitle": "Allenamento",
+  "settingsAutoStartTimer": "Timer Automatico",
+  "settingsAutoStartTimerDesc": "Avvia timer riposo dopo serie completata",
+  "settingsDefaultRestTime": "Tempo Riposo Predefinito",
+  "settingsAdvancedTechniques": "Tecniche Avanzate",
+  "settingsAdvancedTechniquesDesc": "Mostra drop set, superset, ecc.",
+  "settingsUnitsLanguage": "Unità e Lingua",
+  "settingsLanguage": "Lingua",
+  "settingsWeightUnits": "Unità di Peso",
+  "settingsIOSFeatures": "Funzioni iOS",
+  "settingsLiveActivities": "Live Activities",
+  "settingsLiveActivitiesDesc": "Mostra timer in lockscreen e Dynamic Island",
+  "settingsHealthAppSync": "Sincronizzazione Salute",
+  "settingsHealthAppSyncDesc": "Sincronizza allenamenti con Apple Salute",
+  "settingsAudioFeedback": "Audio e Feedback",
+  "settingsSoundEffects": "Effetti Sonori",
+  "settingsSoundEffectsDesc": "Riproduci suoni per timer e completamento",
+  "settingsVibrations": "Vibrazioni",
+  "settingsVibrationsDesc": "Feedback aptico per interazioni",
+  "settingsTestSounds": "Testa Suoni",
+  "settingsAdvancedTitle": "Avanzate",
+  "settingsExportSettings": "Esporta Impostazioni",
+  "settingsExportSettingsDesc": "Salva impostazioni come file JSON",
+  "settingsImportSettings": "Importa Impostazioni",
+  "settingsImportSettingsDesc": "Carica impostazioni da file JSON",
+  "settingsResetTimerPosition": "Ripristina Posizione Timer",
+  "settingsResetTimerPositionDesc": "Ripristina timer trascinabile alla posizione predefinita",
+  "settingsDataMigrationCompleted": "Migrazione completata o non necessaria",
+  "settingsMigrationHasData": "Hai dati da migrare dalla versione precedente",
+  "settingsMigrationAvailable": "Disponibile",
+  "settingsBetaMode": "Modalità Beta",
+  "settingsBetaModeEnabled": "Tutte le funzionalità premium sbloccate per testing",
+  "settingsBetaModeDisabled": "Abilita accesso temporaneo a tutte le funzionalità premium",
+  "settingsBetaModeLabel": "BETA",
+  "settingsBetaModeActivated": "🧪 Modalità Beta attivata - Tutte le funzionalità premium sbloccate!",
+  "settingsBetaModeDeactivated": "Modalità Beta disattivata",
+  "settingsResetToDefaults": "Ripristina Predefiniti",
+  "settingsAccountActionsTitle": "Azioni Account",
+  "settingsSignOut": "Disconnetti",
+  "settingsChooseLanguage": "Scegli Lingua",
+  "settingsEnglishUS": "Inglese (US)",
+  "settingsItalianIT": "Italiano (IT)",
+  "settingsWeightUnitsTitle": "Unità di Peso",
+  "settingsKilogramsKg": "Chilogrammi (kg)",
+  "settingsMetricSystem": "Sistema metrico",
+  "settingsPoundsLbs": "Libbre (lbs)",
+  "settingsImperialSystem": "Sistema imperiale",
+  "settingsResetTimerPositionTitle": "Ripristina Posizione Timer",
+  "settingsResetTimerPositionMessage": "Questo ripristinerà il timer trascinabile alla posizione predefinita. Utile se il timer è bloccato fuori schermo.",
+  "settingsResetPosition": "Ripristina Posizione",
+  "settingsTimerPositionReset": "Posizione timer ripristinata",
+  "settingsResetSettingsTitle": "Ripristina Impostazioni",
+  "settingsResetSettingsMessage": "Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.",
+  "settingsResetSettingsButton": "Ripristina",
+  "settingsSignOutTitle": "Disconnetti",
+  "settingsSignOutMessage": "Sei sicuro di voler disconnetterti?",
+  "settingsExportComingSoon": "Funzionalità esportazione in arrivo",
+  "settingsImportComingSoon": "Funzionalità importazione in arrivo",
+  "templateSearchPlaceholder": "Cerca template...",
+  "templateDebugNotSeeing": "❌ WorkoutTemplatesScreen - Qui NON VEDO i miei template",
+  "templateTemplatesCount": "Template",
+  "templateNoTemplatesYet": "Nessun template popolare ancora",
+  "templateMostUsedTemplatesWillAppear": "I template più utilizzati appariranno qui",
+  "templateNoCustomTemplates": "Nessun template personalizzato",
+  "templateCreateFirstTemplate": "Crea il tuo primo template personalizzato",
+  "templateNoTemplatesFound": "Nessun template trovato",
+  "templateSyncStateTitle": "Stato Sincronizzazione",
+  "templateSyncStatus": "Stato",
+  "templateLastSync": "Ultima sincronizzazione",
+  "templateTotalTemplates": "Template totali",
+  "templateOfflineChanges": "Hai modifiche offline che verranno sincronizzate alla prossima connessione.",
+  "templateSyncNow": "Sincronizza Ora",
+  "templateSyncCompleted": "Sincronizzazione completata",
+  "templateDeleteTitle": "Elimina Template",
+  "templateDeleteMessage": "Sei sicuro di voler eliminare \"{name}\"?",
+  "templateDeleteButton": "Elimina",
+  "templateDeleteError": "Errore durante l'eliminazione del template",
+  "templateStartError": "Errore nell'avvio del workout",
+  "@templateDay": {
+    "description": "Day label"
+  },
+  "copyPreviousSet": "Copia Set Precedente",
+  "@copyPreviousSet": {
+    "description": "Pulsante per copiare peso e ripetizioni dal set precedente"
+  },
+  "routineWeeklyRoutine": "Routine Settimanale",
+  "routineMyRoutine": "La Mia Routine",
+  "routineAddToRoutine": "Aggiungi alla Routine",
+  "routineSelectDay": "Seleziona Giorno",
+  "routineSelectDaySubtitle": "Scegli in quale giorno/i programmare questo allenamento",
+  "routineMonday": "Lunedì",
+  "routineTuesday": "Martedì",
+  "routineWednesday": "Mercoledì",
+  "routineThursday": "Giovedì",
+  "routineFriday": "Venerdì",
+  "routineSaturday": "Sabato",
+  "routineSunday": "Domenica",
+  "routineDayAlreadyScheduled": "Questo giorno ha già un template programmato",
+  "routineReplaceTemplate": "Sostituire il template?",
+  "routineReplaceTemplateMessage": "{day} ha già \"{currentTemplate}\" programmato. Sostituire con \"{newTemplate}\"?",
+  "routineNoTemplateScheduled": "Nessun template programmato",
+  "routineRestDay": "Giorno di Riposo",
+  "routineQuickStart": "Avvio Rapido",
+  "routineTemplateAddedSuccess": "Template aggiunto a {day}",
+  "routineNoWorkoutsScheduled": "Nessun allenamento programmato",
+  "routineStartScheduling": "Inizia a programmare i tuoi allenamenti settimanali",
+  "routineTapToAdd": "Tocca un template e seleziona 'Aggiungi alla Routine'",
+  "routineChangeTemplate": "Cambia Template",
+  "routineRemoveFromDay": "Rimuovi dal giorno",
+  "routineClearAllDays": "Cancella Tutti i Giorni",
+  "routineClearAllDaysConfirm": "Sei sicuro di voler cancellare tutti i template programmati?",
+  "routineWorkoutsScheduled": "{count} {count, plural, =1{allenamento} other{allenamenti}} programmati",
+  "routineRestDays": "{count} {count, plural, =1{giorno di riposo} other{giorni di riposo}}",
+  "routineExercises": "{count} {count, plural, =1{esercizio} other{esercizi}}",
+  "routineSaveChanges": "Salva Modifiche",
+  "routineDiscardChanges": "Annulla Modifiche",
+  "routineViewAndManage": "Visualizza e gestisci la tua routine",
+  "feedbackQuestion": "Valuta la tua esperienza con questo passaggio",
+  "feedbackHelpful": "Utile",
+  "feedbackNotHelpful": "Non utile",
+  "feedbackThankYou": "Grazie per il tuo feedback!",
+  "feedbackSubmitted": "Feedback inviato",
+  "feedbackAlreadyGiven": "Hai già valutato questo insight",
+  "dataQualityWarning": "⚠️ Basato su dati dubbi",
+  "dataQualityLow": "Qualità dati bassa",
+  "anomaliesDetected": "{count, plural, =1{1 problema nei dati rilevato} other{{count} problemi nei dati rilevati}}",
+  "viewAnomalies": "Vedi problemi dati",
+  "anomalyImpossibleWeight": "Peso impossibile rilevato",
+  "anomalyExtremeWeightJump": "Salto di peso estremo rilevato",
+  "anomalyNegativeValues": "Valori negativi rilevati",
+  "anomalyFutureDate": "Data futura rilevata",
+  "correctData": "Correggi dati",
+  "dismissAnomaly": "Ignora",
+  "myFeedback": "I Miei Feedback",
+  "feedbackHistory": "Storico Feedback",
+  "viewMyFeedback": "Vedi i Miei Feedback",
+  "noFeedbackYet": "Nessun feedback ancora",
+  "startRatingInsights": "Inizia a valutare gli insight per migliorare le raccomandazioni del Coach AI",
+  "ratedHelpful": "Valutato utile",
+  "ratedNotHelpful": "Valutato non utile",
+  "feedbackOn": "Feedback su",
+  "routineEditorTitle": "Crea Routine",
+  "routineEditorEditTitle": "Modifica Routine",
+  "routineStepInfo": "Info",
+  "routineStepPattern": "Pattern",
+  "routineStepReview": "Riepilogo",
+  "routinePatternChooseTitle": "Scegli il Tuo Pattern",
+  "routinePatternChooseDescription": "Seleziona una suddivisione di allenamento che si adatta ai tuoi obiettivi",
+  "routinePatternPreset": "Predefinito",
+  "routinePatternCustom": "Personalizzato",
+  "routinePatternPopular": "Pattern Popolari",
+  "routinePatternWorkouts": "{count, plural, =1{1 allenamento} other{{count} allenamenti}}",
+  "routinePatternRest": "{count, plural, =1{1 riposo} other{{count} riposi}}",
+  "customPatternBuilderTitle": "Costruttore Pattern Personalizzato",
+  "customPatternBuilderDescription": "Costruisci il tuo programma di allenamento",
+  "customPatternYourSchedule": "Il Tuo Programma ({count} giorni)",
+  "customPatternAddWorkout": "Aggiungi Allenamento",
+  "customPatternAddRest": "Aggiungi Giorno di Riposo",
+  "customPatternEmptyWarning": "Aggiungi almeno un giorno di allenamento per continuare",
+  "customPatternAddWorkoutDialogTitle": "Aggiungi Giorno di Allenamento",
+  "customPatternWorkoutNameLabel": "Nome Allenamento",
+  "customPatternWorkoutNameHint": "es. Push, Pull, Gambe, Upper, Lower",
+  "customPatternDayNumber": "Giorno {number}",
+  "customPatternRestDay": "Giorno di Riposo",
+  "customPatternRemoveDay": "Rimuovi giorno",
+  "customPatternSelectTemplate": "Seleziona Scheda di Allenamento",
+  "customPatternNoTemplates": "Nessuna scheda disponibile. Crea prima delle schede.",
+  "routineButtonBack": "Indietro",
+  "routineButtonNext": "Avanti",
+  "routineButtonCreate": "Crea Routine",
+  "routineErrorIncomplete": "Completa tutti i campi richiesti",
+  "routineErrorNoPattern": "Seleziona un pattern",
+  "routineSuccessCreated": "Routine \"{name}\" creata con successo! 🎉",
+  "routineErrorCreateFailed": "Creazione routine fallita",
+  "routineDiscardTitle": "Scartare le modifiche?",
+  "routineDiscardMessage": "I tuoi progressi andranno persi se torni indietro ora.",
+  "errorLoadingImage": "Errore nel caricamento dell'immagine",
+  "tapAnywhereToClose": "Tocca ovunque per chiudere",
+  "routineOnboardingSkip": "Salta",
+  "routineOnboardingBack": "Indietro",
+  "routineOnboardingNext": "Avanti",
+  "routineOnboardingGetStarted": "Inizia! 🚀",
+  "routineOnboardingWelcomeTitle": "Benvenuto nel\nCentro Routine! 🏋️",
+  "routineOnboardingWelcomeSubtitle": "Il tuo gestore di piani di allenamento personale.\nImpariamo insieme come usarlo!",
+  "routineOnboardingWhatIsTitle": "Cos'è una Routine? 🤔",
+  "routineOnboardingWhatIsDescription": "Una routine è un piano di allenamento strutturato con:",
+  "routineOnboardingFeatureScheduled": "Giorni di Allenamento Programmati",
+  "routineOnboardingFeatureScheduledDesc": "Pianifica le tue settimane di allenamento in anticipo",
+  "routineOnboardingFeatureTemplates": "Schede di Allenamento Specifiche",
+  "routineOnboardingFeatureTemplatesDesc": "Assegna esercizi ad ogni giorno",
+  "routineOnboardingFeatureProgression": "Progressione Automatica",
+  "routineOnboardingFeatureProgressionDesc": "Il tuo piano si ripete automaticamente",
+  "routineOnboardingFeatureTracking": "Monitoraggio Progressi",
+  "routineOnboardingFeatureTrackingDesc": "Visualizza la tua costanza nel tempo",
+  "routineOnboardingHowItWorksTitle": "Come Funziona ⚙️",
+  "routineOnboardingStep1Title": "Crea la Tua Routine",
+  "routineOnboardingStep1Desc": "Nominala e scegli il pattern di allenamento\n(es. Push/Pull/Gambe)",
+  "routineOnboardingStep2Title": "Assegna gli Allenamenti",
+  "routineOnboardingStep2Desc": "Seleziona le schede per ogni giorno di allenamento",
+  "routineOnboardingStep3Title": "Segui e Monitora",
+  "routineOnboardingStep3Desc": "Completa gli allenamenti e guarda i tuoi progressi crescere!",
+  "routineOnboardingBenefitsTitle": "Perché Usare le Routine? 💪",
+  "routineOnboardingBenefit1Title": "Rimani Costante",
+  "routineOnboardingBenefit1Desc": "Basta chiedersi \"cosa alleno oggi?\"",
+  "routineOnboardingBenefit2Title": "Vedi i Progressi",
+  "routineOnboardingBenefit2Desc": "Monitora tasso di completamento e serie",
+  "routineOnboardingBenefit3Title": "Recupero Intelligente",
+  "routineOnboardingBenefit3Desc": "Hai saltato un allenamento? Riprogrammalo facilmente",
+  "routineOnboardingReadyCTA": "Pronto a creare la tua prima routine?",
+  "routineCenter": "Centro Routine",
+  "@routineCenter": {
+    "description": "Routine Center title on home screen"
+  },
+  "routineCenterDescription": "Routine multi-periodo con tracciamento intelligente",
+  "@routineCenterDescription": {
+    "description": "Routine Center description on home screen"
+  },
+  "routineBasicInfoTitle": "Informazioni di Base",
+  "@routineBasicInfoTitle": {
+    "description": "Basic info step title"
+  },
+  "routineBasicInfoSubtitle": "Imposta le fondamenta della tua routine",
+  "@routineBasicInfoSubtitle": {
+    "description": "Basic info step subtitle"
+  },
+  "routineNameLabel": "Nome Routine *",
+  "@routineNameLabel": {
+    "description": "Routine name field label"
+  },
+  "routineNameHint": "es., Estate Definizione 2025",
+  "@routineNameHint": {
+    "description": "Routine name field hint"
+  },
+  "routineNameRequired": "Inserisci un nome",
+  "@routineNameRequired": {
+    "description": "Routine name required validation"
+  },
+  "routineNameMinLength": "Il nome deve essere di almeno 3 caratteri",
+  "@routineNameMinLength": {
+    "description": "Routine name minimum length validation"
+  },
+  "routineDescriptionLabel": "Descrizione (Opzionale)",
+  "@routineDescriptionLabel": {
+    "description": "Routine description field label"
+  },
+  "routineDescriptionHint": "Aggiungi note su questa routine...",
+  "@routineDescriptionHint": {
+    "description": "Routine description field hint"
+  },
+  "routineTypeLabel": "Tipo di Routine",
+  "@routineTypeLabel": {
+    "description": "Routine type section label"
+  },
+  "routineTypeWeekly": "Settimanale",
+  "@routineTypeWeekly": {
+    "description": "Weekly routine type"
+  },
+  "routineTypeWeeklyDuration": "7 giorni",
+  "@routineTypeWeeklyDuration": {
+    "description": "Weekly routine duration"
+  },
+  "routineTypeMonthly": "Mensile",
+  "@routineTypeMonthly": {
+    "description": "Monthly routine type"
+  },
+  "routineTypeMonthlyDuration": "30 giorni",
+  "@routineTypeMonthlyDuration": {
+    "description": "Monthly routine duration"
+  },
+  "routineTypeBimonthly": "Bimestrale",
+  "@routineTypeBimonthly": {
+    "description": "Bimonthly routine type"
+  },
+  "routineTypeBimonthlyDuration": "60 giorni",
+  "@routineTypeBimonthlyDuration": {
+    "description": "Bimonthly routine duration"
+  },
+  "routineTypeSemester": "Semestrale",
+  "@routineTypeSemester": {
+    "description": "Semester routine type"
+  },
+  "routineTypeSemesterDuration": "6 mesi",
+  "@routineTypeSemesterDuration": {
+    "description": "Semester routine duration"
+  },
+  "routineTypeCustom": "Personalizzata",
+  "@routineTypeCustom": {
+    "description": "Custom routine type"
+  },
+  "routineTypeCustomDuration": "Durata personalizzata",
+  "@routineTypeCustomDuration": {
+    "description": "Custom routine duration"
+  },
+  "routineDurationLabel": "Durata",
+  "@routineDurationLabel": {
+    "description": "Duration section label"
+  },
+  "routineStartDateLabel": "Data Inizio",
+  "@routineStartDateLabel": {
+    "description": "Start date field label"
+  },
+  "routineEndDateLabel": "Data Fine",
+  "@routineEndDateLabel": {
+    "description": "End date field label"
+  },
+  "routineDurationWeeks": "{weeks, plural, =1{1 settimana} other{{weeks} settimane}}",
+  "@routineDurationWeeks": {
+    "description": "Duration in weeks",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "routineDurationDays": "{days, plural, =1{1 giorno} other{{days} giorni}}",
+  "@routineDurationDays": {
+    "description": "Duration in days",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "routineDurationInfo": "Durata: {duration}",
+  "@routineDurationInfo": {
+    "description": "Duration info label",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "routinePatternOneWorkoutOneRest": "1 Allenamento + 1 Riposo",
+  "@routinePatternOneWorkoutOneRest": {
+    "description": "Pattern name: 1 workout 1 rest"
+  },
+  "routinePatternOneWorkoutOneRestDesc": "1 giorno di allenamento seguito da 1 giorno di riposo",
+  "@routinePatternOneWorkoutOneRestDesc": {
+    "description": "Pattern description: 1 workout 1 rest"
+  },
+  "routinePatternTwoWorkoutsOneRest": "2 Allenamenti + 1 Riposo",
+  "@routinePatternTwoWorkoutsOneRest": {
+    "description": "Pattern name: 2 workouts 1 rest"
+  },
+  "routinePatternTwoWorkoutsOneRestDesc": "2 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternTwoWorkoutsOneRestDesc": {
+    "description": "Pattern description: 2 workouts 1 rest"
+  },
+  "routinePatternThreeWorkoutsOneRest": "3 Allenamenti + 1 Riposo",
+  "@routinePatternThreeWorkoutsOneRest": {
+    "description": "Pattern name: 3 workouts 1 rest"
+  },
+  "routinePatternThreeWorkoutsOneRestDesc": "3 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternThreeWorkoutsOneRestDesc": {
+    "description": "Pattern description: 3 workouts 1 rest"
+  },
+  "routinePatternThreeWorkoutsTwoRest": "3 Allenamenti + 2 Riposi",
+  "@routinePatternThreeWorkoutsTwoRest": {
+    "description": "Pattern name: 3 workouts 2 rest"
+  },
+  "routinePatternThreeWorkoutsTwoRestDesc": "3 giorni di allenamento con 2 giorni di riposo a settimana",
+  "@routinePatternThreeWorkoutsTwoRestDesc": {
+    "description": "Pattern description: 3 workouts 2 rest"
+  },
+  "routinePatternFourWorkoutsOneRest": "4 Allenamenti + 1 Riposo",
+  "@routinePatternFourWorkoutsOneRest": {
+    "description": "Pattern name: 4 workouts 1 rest"
+  },
+  "routinePatternFourWorkoutsOneRestDesc": "4 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternFourWorkoutsOneRestDesc": {
+    "description": "Pattern description: 4 workouts 1 rest"
+  },
+  "routinePatternFourWorkoutsThreeRest": "4 Allenamenti + 3 Riposi",
+  "@routinePatternFourWorkoutsThreeRest": {
+    "description": "Pattern name: 4 workouts 3 rest"
+  },
+  "routinePatternFourWorkoutsThreeRestDesc": "4 giorni di allenamento con 3 giorni di riposo a settimana",
+  "@routinePatternFourWorkoutsThreeRestDesc": {
+    "description": "Pattern description: 4 workouts 3 rest"
+  },
+  "routinePatternFiveWorkoutsTwoRest": "5 Allenamenti + 2 Riposi",
+  "@routinePatternFiveWorkoutsTwoRest": {
+    "description": "Pattern name: 5 workouts 2 rest"
+  },
+  "routinePatternFiveWorkoutsTwoRestDesc": "5 giorni di allenamento seguiti da 2 giorni di riposo",
+  "@routinePatternFiveWorkoutsTwoRestDesc": {
+    "description": "Pattern description: 5 workouts 2 rest"
+  },
+  "routinePatternSixWorkoutsOneRest": "6 Allenamenti + 1 Riposo",
+  "@routinePatternSixWorkoutsOneRest": {
+    "description": "Pattern name: 6 workouts 1 rest"
+  },
+  "routinePatternSixWorkoutsOneRestDesc": "6 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternSixWorkoutsOneRestDesc": {
+    "description": "Pattern description: 6 workouts 1 rest"
+  },
+  "routineCalendarPreview": "Anteprima Calendario",
+  "@routineCalendarPreview": {
+    "description": "Calendar preview title"
+  },
+  "routineCalendarPreviewSubtitle": "Come appare il tuo pattern sul calendario",
+  "@routineCalendarPreviewSubtitle": {
+    "description": "Calendar preview subtitle"
+  },
+  "routineAndMoreDays": "... e altri {count} {count, plural, =1{giorno} other{giorni}}",
+  "@routineAndMoreDays": {
+    "description": "More days indicator",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineTotalWorkouts": "Totale: {count} {count, plural, =1{allenamento} other{allenamenti}}",
+  "@routineTotalWorkouts": {
+    "description": "Total workouts in period",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineTotalRestDays": "Totale: {count} {count, plural, =1{giorno di riposo} other{giorni di riposo}}",
+  "@routineTotalRestDays": {
+    "description": "Total rest days in period",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineWorkoutDayLabel": "Giorni Allenamento",
+  "@routineWorkoutDayLabel": {
+    "description": "Workout days label"
+  },
+  "routineRestDayLabel": "Giorni Riposo",
+  "@routineRestDayLabel": {
+    "description": "Rest days label"
+  },
+  "routineTotalDaysLabel": "Giorni Totali",
+  "@routineTotalDaysLabel": {
+    "description": "Total days label"
+  },
+  "routineWeekdayMonday": "Lunedì",
+  "@routineWeekdayMonday": {
+    "description": "Monday"
+  },
+  "routineWeekdayTuesday": "Martedì",
+  "@routineWeekdayTuesday": {
+    "description": "Tuesday"
+  },
+  "routineWeekdayWednesday": "Mercoledì",
+  "@routineWeekdayWednesday": {
+    "description": "Wednesday"
+  },
+  "routineWeekdayThursday": "Giovedì",
+  "@routineWeekdayThursday": {
+    "description": "Thursday"
+  },
+  "routineWeekdayFriday": "Venerdì",
+  "@routineWeekdayFriday": {
+    "description": "Friday"
+  },
+  "routineWeekdaySaturday": "Sabato",
+  "@routineWeekdaySaturday": {
+    "description": "Saturday"
+  },
+  "routineWeekdaySunday": "Domenica",
+  "@routineWeekdaySunday": {
+    "description": "Sunday"
+  },
+  "routineWorkoutCount": "{count} allenamento{count, plural, =1{} other{i}}",
+  "@routineWorkoutCount": {
+    "description": "Workout count text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineRestCount": "{count} riposo",
+  "@routineRestCount": {
+    "description": "Rest count text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineRotationTitle": "Ordine di Rotazione",
+  "routineRotationSubtitle": "Trascina per riordinare come i template ruoteranno nei giorni di allenamento",
+  "routineTemplatesSelected": "{count} template selezionat{count, plural, =1{o} other{i}}",
+  "routineDistributionPreview": "Anteprima Distribuzione",
+  "routineFirstDaysPreview": "Primi {shown} giorni (totale: {total} giorni)",
+  "routineMoreDays": "... e altri {count} {count, plural, =1{giorno} other{giorni}}",
+  "routineNoTemplatesSelected": "Nessun Template Selezionato",
+  "routineNoTemplatesMessage": "Torna allo step precedente e seleziona almeno un template di allenamento",
+  "routineNoPatternSelected": "Nessun pattern selezionato",
+  "routineErrorLoading": "Errore: {error}",
+  "routineSelectionTitle": "Seleziona Template di Allenamento",
+  "@routineSelectionTitle": {
+    "description": "Template selection step title"
+  },
+  "routineSelectionSubtitle": "Scegli i template da alternare automaticamente nei giorni di allenamento",
+  "@routineSelectionSubtitle": {
+    "description": "Template selection step subtitle"
+  },
+  "routineAvailableTemplates": "Template Disponibili",
+  "@routineAvailableTemplates": {
+    "description": "Available templates label"
+  },
+  "routineSelected": "{count} selezionat{count, plural, =1{o} other{i}}",
+  "@routineSelected": {
+    "description": "Selected count badge",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineNextStepInfo": "Nel prossimo step, organizzerai l'ordine di rotazione di questi template",
+  "@routineNextStepInfo": {
+    "description": "Info about next step"
+  },
+  "routineNoTemplatesYet": "Nessun Template di Allenamento",
+  "@routineNoTemplatesYet": {
+    "description": "No templates empty state title"
+  },
+  "routineNeedTemplatesMessage": "Hai bisogno di template di allenamento per creare una routine.\nScegli una delle opzioni qui sotto per continuare.",
+  "@routineNeedTemplatesMessage": {
+    "description": "No templates empty state message"
+  },
+  "routinePopularTemplates": "Template Popolari",
+  "@routinePopularTemplates": {
+    "description": "Popular templates option title"
+  },
+  "routinePopularTemplatesDesc": "Inizia con programmi di allenamento collaudati",
+  "@routinePopularTemplatesDesc": {
+    "description": "Popular templates option description"
+  },
+  "routineImportPopularTemplates": "Importa Template Popolari",
+  "@routineImportPopularTemplates": {
+    "description": "Import popular templates button"
+  },
+  "routineCustomTemplate": "Template Personalizzato",
+  "@routineCustomTemplate": {
+    "description": "Custom template option title"
+  },
+  "routineCustomTemplateDesc": "Progetta il tuo programma di allenamento",
+  "@routineCustomTemplateDesc": {
+    "description": "Custom template option description"
+  },
+  "routineCreateFirstTemplate": "Crea Primo Template",
+  "@routineCreateFirstTemplate": {
+    "description": "Create first template button"
+  },
+  "routineNavigatingToCreator": "Navigando verso il creatore di template... 🏗️",
+  "@routineNavigatingToCreator": {
+    "description": "Navigating to template creator message"
+  },
+  "routineSelectTemplatesDialog": "Seleziona i template che vuoi importare",
+  "@routineSelectTemplatesDialog": {
+    "description": "Select templates dialog message"
+  },
+  "routineSelectTemplatesButton": "Seleziona template",
+  "@routineSelectTemplatesButton": {
+    "description": "Select templates button (disabled state)"
+  },
+  "routineImportCount": "Importa ({count})",
+  "@routineImportCount": {
+    "description": "Import button with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineOr": "OPPURE",
+  "@routineOr": {
+    "description": "OR divider text"
+  },
+  "routineErrorLoadingTemplates": "Errore nel caricamento dei template",
+  "@routineErrorLoadingTemplates": {
+    "description": "Error loading templates"
+  },
+  "routineSuccessCreatedInactive": "Routine \"{name}\" creata! Vai al Centro Routine per attivarla.",
+  "@routineSuccessCreatedInactive": {
+    "description": "Success message when routine is created as inactive",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "routineAnalyticsNoActiveRoutine": "Nessuna Routine Attiva",
+  "@routineAnalyticsNoActiveRoutine": {
+    "description": "Title when no routine is active in analytics"
+  },
+  "routineAnalyticsNoActiveRoutineDesc": "Crea e attiva una routine per vedere le statistiche qui",
+  "@routineAnalyticsNoActiveRoutineDesc": {
+    "description": "Description when no routine is active"
+  },
+  "routineAnalyticsCreateRoutine": "Crea Routine",
+  "@routineAnalyticsCreateRoutine": {
+    "description": "Button to create a routine"
+  },
+  "routineAnalyticsErrorLoading": "Errore Caricamento Statistiche",
+  "@routineAnalyticsErrorLoading": {
+    "description": "Error title for analytics"
+  },
+  "routineAnalyticsActiveRoutine": "Statistiche Routine Attiva",
+  "@routineAnalyticsActiveRoutine": {
+    "description": "Subtitle for active routine card"
+  },
+  "routineAnalyticsPerformanceMetrics": "Metriche di Performance",
+  "@routineAnalyticsPerformanceMetrics": {
+    "description": "Section title for KPI metrics"
+  },
+  "routineAnalyticsAdherence": "Aderenza",
+  "@routineAnalyticsAdherence": {
+    "description": "Adherence metric label"
+  },
+  "routineAnalyticsSkipRate": "Tasso Skip",
+  "@routineAnalyticsSkipRate": {
+    "description": "Skip rate metric label"
+  },
+  "routineAnalyticsRecovery": "Recupero",
+  "@routineAnalyticsRecovery": {
+    "description": "Recovery metric label"
+  },
+  "routineAnalyticsAvgGap": "Gap Medio",
+  "@routineAnalyticsAvgGap": {
+    "description": "Average gap metric label"
+  },
+  "routineAnalyticsDays": "giorni",
+  "@routineAnalyticsDays": {
+    "description": "Days unit"
+  },
+  "routineAnalyticsSkipped": "saltati",
+  "@routineAnalyticsSkipped": {
+    "description": "Skipped label"
+  },
+  "routineAnalyticsRecovered": "recuperati",
+  "@routineAnalyticsRecovered": {
+    "description": "Recovered label"
+  },
+  "routineAnalyticsBetweenWorkouts": "tra allenamenti",
+  "@routineAnalyticsBetweenWorkouts": {
+    "description": "Between workouts label"
+  },
+  "routineAnalyticsCurrentStreak": "Striscia Corrente",
+  "@routineAnalyticsCurrentStreak": {
+    "description": "Current streak label"
+  },
+  "routineAnalyticsBestStreak": "Miglior Striscia",
+  "@routineAnalyticsBestStreak": {
+    "description": "Best streak label"
+  },
+  "routineAnalyticsInsights": "Insights",
+  "@routineAnalyticsInsights": {
+    "description": "Insights section title"
+  },
+  "routineAnalyticsTemplateDistribution": "Distribuzione Template",
+  "@routineAnalyticsTemplateDistribution": {
+    "description": "Template distribution section title"
+  },
+  "routineAnalyticsWeeklyPattern": "Pattern Settimanale",
+  "@routineAnalyticsWeeklyPattern": {
+    "description": "Weekly pattern section title"
+  },
+  "routineAnalyticsWeeklyTrend": "Trend Aderenza Settimanale",
+  "@routineAnalyticsWeeklyTrend": {
+    "description": "Weekly trend chart title"
+  },
+  "routineAnalyticsChartComingSoon": "Grafico in arrivo",
+  "@routineAnalyticsChartComingSoon": {
+    "description": "Placeholder for chart"
+  },
+  "routine": "Routine",
+  "@routine": {
+    "description": "Routine tab label"
+  },
+  "@feedbackThankYou": {
+    "description": "Thank you message after user rates a questionnaire step"
+  },
+  "feedbackPrompt": "Come è stato questo passaggio?",
+  "@feedbackPrompt": {
+    "description": "Prompt asking user to rate questionnaire step"
+  },
+  "@feedbackQuestion": {
+    "description": "Question asking user to provide feedback"
+  },
+  "feedbackPoor": "Scarso",
+  "@feedbackPoor": {
+    "description": "Label for 1-star rating (poor)"
+  },
+  "feedbackExcellent": "Eccellente",
+  "@feedbackExcellent": {
+    "description": "Label for 5-star rating (excellent)"
+  },
+  "staleProfileTitle": "Aggiorna il Tuo Profilo Fitness",
+  "@staleProfileTitle": {
+    "description": "Title for stale profile banner"
+  },
+  "staleProfileSubtitle1Month": "Il tuo profilo non è stato aggiornato da {days} giorni. Aggiornalo per suggerimenti più precisi!",
+  "@staleProfileSubtitle1Month": {
+    "description": "Subtitle when profile is 30-59 days old",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "staleProfileSubtitleMonths": "Il tuo profilo ha {months} mesi. È ora di aggiornarlo per suggerimenti migliori!",
+  "@staleProfileSubtitleMonths": {
+    "description": "Subtitle when profile is 2-5 months old",
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "staleProfileSubtitleManyMonths": "Il tuo profilo non è stato aggiornato da {months} mesi! Aggiornalo ora per suggerimenti accurati.",
+  "@staleProfileSubtitleManyMonths": {
+    "description": "Subtitle when profile is 6+ months old",
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "staleProfileUpdateButton": "Aggiorna",
+  "@staleProfileUpdateButton": {
+    "description": "Button text to update profile"
+  },
+  "exerciseProgress": "Progressi Esercizi",
+  "@exerciseProgress": {
+    "description": "Exercise progress feature title"
+  },
+  "exerciseProgressTitle": "Progressi Esercizi",
+  "@exerciseProgressTitle": {
+    "description": "Exercise progress screen title"
+  },
+  "searchExercisesPlaceholder": "Cerca esercizi...",
+  "@searchExercisesPlaceholder": {
+    "description": "Placeholder for exercise search field"
+  },
+  "weightProgression": "Progressione Peso",
+  "@weightProgression": {
+    "description": "Weight progression chart title"
+  },
+  "volumeProgression": "Progressione Volume",
+  "@volumeProgression": {
+    "description": "Volume progression chart title"
+  },
+  "repsProgression": "Progressione Ripetizioni",
+  "@repsProgression": {
+    "description": "Reps progression chart title"
+  },
+  "effortProgression": "Progressione Sforzo",
+  "@effortProgression": {
+    "description": "RPE/Effort progression chart title"
+  },
+  "personalRecord": "Record Personale",
+  "@personalRecord": {
+    "description": "Personal record label"
+  },
+  "averageWeight": "Peso Medio",
+  "@averageWeight": {
+    "description": "Average weight label"
+  },
+  "averageRPE": "RPE Medio",
+  "@averageRPE": {
+    "description": "Average RPE label"
+  },
+  "totalSessions": "Sessioni",
+  "@totalSessions": {
+    "description": "Total sessions label"
+  },
+  "exerciseStats": "Statistiche Esercizio",
+  "@exerciseStats": {
+    "description": "Exercise statistics section title"
+  },
+  "progressionCharts": "Grafici Progressione",
+  "@progressionCharts": {
+    "description": "Progression charts section title"
+  },
+  "noExercisesFound": "Nessun esercizio trovato",
+  "@noExercisesFound": {
+    "description": "Empty state when no exercises match search"
+  },
+  "noExercisesFoundDesc": "Completa un allenamento per vedere i progressi degli esercizi",
+  "@noExercisesFoundDesc": {
+    "description": "Description for empty exercise list"
+  },
+  "selectExercise": "Seleziona un esercizio per vedere i progressi",
+  "@selectExercise": {
+    "description": "Hint to select an exercise"
+  },
+  "maxWeight": "Peso Max",
+  "@maxWeight": {
+    "description": "Maximum weight label"
+  },
+  "avgReps": "Reps Medie",
+  "@avgReps": {
+    "description": "Average reps label"
+  },
+  "lastWorkout": "Ultimo Allenamento",
+  "@lastWorkout": {
+    "description": "Last workout date label"
+  },
+  "viewProgress": "Vedi Progressi",
+  "@viewProgress": {
+    "description": "Button to view progress details"
+  },
+  "sessionHistory": "Storico Sessioni",
+  "@sessionHistory": {
+    "description": "Session history section title"
+  },
+  "trend": "Trend",
+  "@trend": {
+    "description": "Trend label"
+  },
+  "improving": "Migliorando",
+  "@improving": {
+    "description": "Positive trend indicator"
+  },
+  "declining": "In Calo",
+  "@declining": {
+    "description": "Negative trend indicator"
+  },
+  "stable": "Stabile",
+  "@stable": {
+    "description": "Stable trend indicator"
+  },
+  "exerciseDetails": "Dettagli Esercizio",
+  "@exerciseDetails": {
+    "description": "Exercise details screen title"
+  },
+  "periodSelectorLabel": "Periodo",
+  "@periodSelectorLabel": {
+    "description": "Period selector label"
+  },
+  "combinedView": "Unificato",
+  "@combinedView": {
+    "description": "Combined chart view option"
+  },
+  "separatedView": "Separato",
+  "@separatedView": {
+    "description": "Separated charts view option"
+  },
+  "combinedChart": "Progressi Unificati",
+  "@combinedChart": {
+    "description": "Combined chart title"
+  },
+  "tapToToggle": "Tocca per mostrare/nascondere",
+  "@tapToToggle": {
+    "description": "Legend tap instruction"
+  },
+  "weight": "Peso",
+  "@weight": {
+    "description": "Weight metric label"
+  },
+  "reps": "Ripetizioni",
+  "@reps": {
+    "description": "Reps metric label"
+  },
+  "volume": "Volume",
+  "@volume": {
+    "description": "Volume metric label"
+  },
+  "effort": "Sforzo",
+  "@effort": {
+    "description": "Effort (RPE) metric label"
+  },
+  "weightSettings": "Impostazioni Peso",
+  "@weightSettings": {
+    "description": "Weight settings screen title"
+  },
+  "resetToDefaults": "Ripristina Predefiniti",
+  "@resetToDefaults": {
+    "description": "Reset settings to default values"
+  },
+  "errorLoadingSettings": "Errore nel Caricamento",
+  "@errorLoadingSettings": {
+    "description": "Error message when settings fail to load"
+  },
+  "quickIncrements": "Incrementi Rapidi",
+  "@quickIncrements": {
+    "description": "Quick increment chips section title"
+  },
+  "quickIncrementsDescription": "Seleziona l'incremento predefinito per i pulsanti +/-",
+  "@quickIncrementsDescription": {
+    "description": "Quick increments section description"
+  },
+  "customIncrement": "Incremento Personalizzato",
+  "@customIncrement": {
+    "description": "Custom increment section title"
+  },
+  "customIncrementDescription": "Imposta un incremento personalizzato per regolazioni precise",
+  "@customIncrementDescription": {
+    "description": "Custom increment section description"
+  },
+  "plateCalculator": "Calcolatore Dischi",
+  "@plateCalculator": {
+    "description": "Plate calculator section title"
+  },
+  "plateCalculatorDescription": "Calcola quali dischi caricare sul bilanciere",
+  "@plateCalculatorDescription": {
+    "description": "Plate calculator section description"
+  },
+  "availablePlates": "Dischi Disponibili",
+  "@availablePlates": {
+    "description": "Available plates section title"
+  },
+  "availablePlatesDescription": "Dischi disponibili nella tua palestra",
+  "@availablePlatesDescription": {
+    "description": "Available plates section description"
+  },
+  "useCustomIncrement": "Usa Incremento Personalizzato",
+  "@useCustomIncrement": {
+    "description": "Toggle to use custom increment"
+  },
+  "customIncrementActive": "Incremento personalizzato attivo",
+  "@customIncrementActive": {
+    "description": "Message when custom increment is enabled"
+  },
+  "defaultIncrementActive": "Incremento predefinito attivo",
+  "@defaultIncrementActive": {
+    "description": "Message when default increment is enabled"
+  },
+  "customIncrementValue": "Valore Incremento Personalizzato",
+  "@customIncrementValue": {
+    "description": "TextField label for custom increment value"
+  },
+  "customIncrementHint": "Inserisci un valore tra 0.5 e 100",
+  "@customIncrementHint": {
+    "description": "Hint text for custom increment input"
+  },
+  "pleaseEnterValue": "Inserisci un valore",
+  "@pleaseEnterValue": {
+    "description": "Validation message for empty value"
+  },
+  "pleaseEnterValidNumber": "Inserisci un numero positivo valido",
+  "@pleaseEnterValidNumber": {
+    "description": "Validation message for invalid number"
+  },
+  "incrementTooLarge": "L'incremento non può superare 100",
+  "@incrementTooLarge": {
+    "description": "Validation message for too large increment"
+  },
+  "saveCustomIncrement": "Salva Incremento Personalizzato",
+  "@saveCustomIncrement": {
+    "description": "Button to save custom increment"
+  },
+  "customIncrementSaved": "Incremento personalizzato salvato con successo",
+  "@customIncrementSaved": {
+    "description": "Success message after saving custom increment"
+  },
+  "calculatePlatesNeeded": "Calcola Dischi Necessari",
+  "@calculatePlatesNeeded": {
+    "description": "Plate calculator subsection title"
+  },
+  "barWeight": "Peso Bilanciere",
+  "@barWeight": {
+    "description": "TextField label for bar weight"
+  },
+  "targetWeight": "Peso Obiettivo",
+  "@targetWeight": {
+    "description": "TextField label for target weight"
+  },
+  "calculate": "Calcola",
+  "@calculate": {
+    "description": "Button to calculate plates"
+  },
+  "platesInYourGym": "Dischi nella Tua Palestra",
+  "@platesInYourGym": {
+    "description": "Available plates list title"
+  },
+  "quantity": "Quantità",
+  "@quantity": {
+    "description": "Quantity label for plates"
+  },
+  "editPlates": "Modifica Dischi",
+  "@editPlates": {
+    "description": "Button to edit available plates"
+  },
+  "featureComingSoon": "Questa funzionalità sarà presto disponibile",
+  "@featureComingSoon": {
+    "description": "Message for features not yet implemented"
+  },
+  "pleaseEnterValidWeights": "Inserisci pesi validi",
+  "@pleaseEnterValidWeights": {
+    "description": "Error when weight values are invalid"
+  },
+  "targetWeightTooLow": "Il peso obiettivo deve essere maggiore o uguale al peso del bilanciere",
+  "@targetWeightTooLow": {
+    "description": "Warning when target weight is less than bar weight"
+  },
+  "plateCalculationResult": "Risultato Calcolo Dischi",
+  "@plateCalculationResult": {
+    "description": "Dialog title for plate calculation result"
+  },
+  "actualWeight": "Peso Effettivo",
+  "@actualWeight": {
+    "description": "Label for actual achievable weight"
+  },
+  "difference": "Differenza",
+  "@difference": {
+    "description": "Label for weight difference"
+  },
+  "platesPerSide": "Dischi per Lato",
+  "@platesPerSide": {
+    "description": "Section title for plates needed per side"
+  },
+  "barOnly": "Solo bilanciere (nessun disco necessario)",
+  "@barOnly": {
+    "description": "Message when no plates are needed"
+  },
+  "close": "Chiudi",
+  "@close": {
+    "description": "Close button"
+  },
+  "resetSettingsConfirmation": "Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.",
+  "@resetSettingsConfirmation": {
+    "description": "Confirmation message for resetting settings"
+  },
+  "cancel": "Annulla",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "reset": "Ripristina",
+  "@reset": {
+    "description": "Reset button"
+  },
+  "settingsReset": "Impostazioni ripristinate ai valori predefiniti",
+  "@settingsReset": {
+    "description": "Success message after resetting settings"
+  },
+  "feedbackSettings": "Feedback Aptico",
+  "hapticFeedback": "Feedback Aptico",
+  "enableHaptic": "Abilita feedback aptico",
+  "hapticIntensity": "Intensità Aptica",
+  "intensityLight": "Leggera",
+  "intensityMedium": "Media",
+  "intensityHeavy": "Forte",
+  "hapticDescription": "Senti vibrazioni sottili quando completi serie, esercizi e allenamenti",
+  "feedbackSettingsSaved": "Impostazioni feedback salvate",
+  "historyViewSettings": "Impostazioni Vista Cronologia",
+  "viewMode": "Modalità Vista",
+  "viewModeList": "Vista Lista",
+  "viewModeCompact": "Vista Compatta",
+  "viewModeCalendar": "Vista Calendario",
+  "viewModeStats": "Vista Statistiche",
+  "historyDisplayOptions": "Opzioni Visualizzazione",
+  "showThumbnails": "Mostra Miniature",
+  "showDuration": "Mostra Durata",
+  "showExerciseCount": "Mostra Conteggio Esercizi",
+  "viewSettingsDescription": "Personalizza come viene visualizzata la cronologia degli allenamenti",
+  "historyViewSettingsSaved": "Impostazioni vista salvate",
+  "reportExerciseIssue": "Segnala Problema",
+  "@reportExerciseIssue": {
+    "description": "Button tooltip for reporting exercise issues"
+  },
+  "feedbackType": "Tipo Segnalazione",
+  "@feedbackType": {
+    "description": "Label for feedback type selection"
+  },
+  "feedbackBug": "🐛 Bug",
+  "@feedbackBug": {
+    "description": "Bug issue type option"
+  },
+  "feedbackSuggestion": "💡 Suggerimento",
+  "@feedbackSuggestion": {
+    "description": "Suggestion issue type option"
+  },
+  "feedbackTypo": "📝 Errore di Testo",
+  "@feedbackTypo": {
+    "description": "Text error issue type option"
+  },
+  "feedbackOther": "❓ Altro",
+  "@feedbackOther": {
+    "description": "Other issue type option"
+  },
+  "describeProblem": "Descrivi il problema...",
+  "@describeProblem": {
+    "description": "Placeholder text for feedback message input"
+  },
+  "sendFeedback": "Invia Segnalazione",
+  "@sendFeedback": {
+    "description": "Button label for sending feedback"
+  },
+  "cancelFeedback": "Annulla",
+  "@cancelFeedback": {
+    "description": "Button label for canceling feedback dialog"
+  },
+  "feedbackSentSuccess": "✅ Grazie per la segnalazione!",
+  "@feedbackSentSuccess": {
+    "description": "Success message after sending feedback"
+  },
+  "feedbackSentError": "❌ Errore nell'invio della segnalazione",
+  "@feedbackSentError": {
+    "description": "Error message when sending feedback fails"
+  },
+  "feedbackRequired": "Descrivi il problema",
+  "@feedbackRequired": {
+    "description": "Error message when feedback message is empty"
+  },
+  "exerciseReviewReport": "Report di Revisione Esercizi",
+  "@exerciseReviewReport": {
+    "description": "Title for the exercise review report screen"
+  },
+  "monthlyReview": "Revisione Mensile",
+  "@monthlyReview": {
+    "description": "Monthly review section header"
+  },
+  "staleExercises": "Esercizi Obsoleti",
+  "@staleExercises": {
+    "description": "Stale exercises section header"
+  },
+  "flaggedExercises": "Esercizi Flaggati",
+  "@flaggedExercises": {
+    "description": "Flagged exercises section header"
+  },
+  "statistics": "Statistiche",
+  "@statistics": {
+    "description": "Statistics section header"
+  },
+  "recommendations": "Raccomandazioni",
+  "@recommendations": {
+    "description": "Recommendations section header"
+  },
+  "exercisesObsolete": "Esercizi Obsoleti",
+  "@exercisesObsolete": {
+    "description": "Stale exercises count label"
+  },
+  "exercisesFlagged": "Esercizi Flaggati",
+  "@exercisesFlagged": {
+    "description": "Flagged exercises count label"
+  },
+  "feedbackTotal": "Feedback Totali",
+  "@feedbackTotal": {
+    "description": "Total feedback count label"
+  },
+  "criticalIssues": "Problemi Critici",
+  "@criticalIssues": {
+    "description": "Critical issues count label"
+  },
+  "daysThreshold": ">90 giorni",
+  "@daysThreshold": {
+    "description": "Days threshold description for stale exercises"
+  },
+  "feedbackThreshold": "≥3 feedback",
+  "@feedbackThreshold": {
+    "description": "Feedback threshold for flagged exercises"
+  },
+  "flagged": "flaggati",
+  "@flagged": {
+    "description": "Flagged status indicator"
+  },
+  "critical": "critici",
+  "@critical": {
+    "description": "Critical status indicator"
+  },
+  "modifiedDaysAgo": "Modificato {days} giorni fa",
+  "@modifiedDaysAgo": {
+    "description": "Days since modification",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Number of days"
+      }
+    }
+  },
+  "noReportAvailable": "Nessun report disponibile",
+  "@noReportAvailable": {
+    "description": "Message when no review report is available"
+  },
+  "reportWillBeAvailable": "Il report mensile sarà disponibile dopo la prima esecuzione",
+  "@reportWillBeAvailable": {
+    "description": "Description when no review report exists yet"
+  },
+  "exerciseFeedback": "Feedback Esercizi",
+  "feedbackRefresh": "Aggiorna",
+  "feedbackStatsTotal": "Totale",
+  "feedbackStatsOpen": "Aperti",
+  "feedbackStatsResolved": "Risolti",
+  "feedbackByType": "Feedback per Tipo",
+  "feedbackBySeverity": "Feedback per Gravità",
+  "feedbackSeverityCritical": "Critico",
+  "feedbackSeverityHigh": "Alta",
+  "feedbackSeverityMedium": "Media",
+  "feedbackSeverityLow": "Bassa",
+  "feedbackCriticalIssues": "Problemi Critici (Gravità ≥ 4)",
+  "feedbackCriticalIssuesTitle": "Problemi Critici (Gravità ≥ 4)",
+  "feedbackNoCriticalIssues": "Nessun problema critico",
+  "feedbackErrorLoadingCritical": "Errore caricamento problemi critici",
+  "feedbackRecentOpen": "Feedback Recenti Aperti",
+  "feedbackRecentOpenTitle": "Feedback Recenti Aperti",
+  "feedbackNoOpenFeedback": "Nessun feedback aperto",
+  "feedbackErrorLoading": "Errore caricamento feedback",
+  "feedbackErrorLoadingList": "Errore caricamento feedback",
+  "feedbackLoadingMessage": "Caricamento feedback...",
+  "feedbackSubmittedBy": "da {email}",
+  "feedbackDetailUserMessage": "Messaggio Utente",
+  "feedbackDetailAdminNotes": "Note Admin",
+  "feedbackDetailAdminNotesHint": "Aggiungi note interne su questo feedback...",
+  "feedbackDetailSaveNotes": "Salva Note",
+  "feedbackDetailNotesSaved": "Note salvate con successo",
+  "feedbackDetailNotesError": "Errore salvataggio note",
+  "feedbackDetailQuickActions": "Azioni Rapide",
+  "feedbackActionStartReview": "Inizia Revisione",
+  "feedbackActionMarkResolved": "Segna Risolto",
+  "feedbackActionDismiss": "Ignora",
+  "feedbackActionReopen": "Riapri",
+  "feedbackStatusUpdated": "Status aggiornato a {status}",
+  "feedbackStatusUpdateError": "Errore aggiornamento status",
+  "feedbackDetailChangeSeverity": "Cambia Gravità",
+  "feedbackSeverityUpdated": "Gravità aggiornata",
+  "feedbackSeverityUpdateError": "Errore aggiornamento gravità",
+  "feedbackDetailInfoUser": "Utente",
+  "feedbackDetailInfoCreated": "Creato",
+  "feedbackDetailInfoVersion": "Versione",
+  "feedbackSeverityUrgent": "Urgente",
+  "feedbackTimeMinutesAgo": "{minutes}m fa",
+  "feedbackTimeHoursAgo": "{hours}h fa",
+  "feedbackTimeDaysAgo": "{days}g fa",
+  "feedbackByUser": "da {email}",
+  "savingWorkout": "Salvataggio allenamento...",
+  "@savingWorkout": {
+    "description": "Message shown while saving workout"
+  },
+  "workoutSaved": "Allenamento salvato!",
+  "@workoutSaved": {
+    "description": "Success message after workout is saved"
+  },
+  "syncingToCloud": "Sincronizzazione cloud...",
+  "@syncingToCloud": {
+    "description": "Message shown while syncing to cloud"
+  },
+  "workoutSavedLocally": "Allenamento salvato localmente",
+  "@workoutSavedLocally": {
+    "description": "Message when workout is saved locally but not yet synced"
+  },
+  "cloudSyncComplete": "Sincronizzazione completata",
+  "@cloudSyncComplete": {
+    "description": "Message when cloud sync is complete"
+  },
+  "cloudSyncQueued": "In coda per sincronizzazione",
+  "@cloudSyncQueued": {
+    "description": "Message when workout is queued for cloud sync"
+  },
+  "saveFailed": "Salvataggio fallito",
+  "@saveFailed": {
+    "description": "Error message when save fails"
+  },
+  "retryingSync": "Nuovo tentativo di sincronizzazione...",
+  "@retryingSync": {
+    "description": "Message when retrying failed sync"
+  },
+  "localSaveFailed": "Salvataggio locale fallito",
+  "@localSaveFailed": {
+    "description": "Critical error when local save fails"
+  },
+  "retryOrExport": "Riprova o esporta dati",
+  "@retryOrExport": {
+    "description": "Action options after local save failure"
+  },
+  "quickRepPresets": "Preset Ripetizioni Rapidi",
+  "@quickRepPresets": {
+    "description": "Title for quick rep preset chips section"
+  },
+  "quickSetCount": "Scelta Serie Rapida",
+  "@quickSetCount": {
+    "description": "Title for quick set count selector"
+  },
+  "averageRpe": "RPE Medio",
+  "@averageRpe": {
+    "description": "Average Rate of Perceived Exertion label in workout summary"
+  },
+  "justNow": "Proprio ora",
+  "@justNow": {
+    "description": "Timestamp indicating action just happened"
+  },
+  "minutesAgo": "{minutes}m fa",
+  "@minutesAgo": {
+    "description": "Timestamp showing minutes elapsed",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Number of minutes"
+      }
+    }
+  },
+  "hoursAgo": "{hours}h fa",
+  "@hoursAgo": {
+    "description": "Timestamp showing hours elapsed",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "description": "Number of hours"
+      }
+    }
+  },
+  "routineDayCompleted": "Giorno routine completato:",
+  "@routineDayCompleted": {
+    "description": "Success message when a routine day is auto-completed"
+  },
+  "routineDayCompletionFailed": "Impossibile completare giorno routine",
+  "@routineDayCompletionFailed": {
+    "description": "Error message when routine day completion fails"
   }
+}

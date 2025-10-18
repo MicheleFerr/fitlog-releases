@@ -207,9 +207,10 @@ final class AudioSessionManager: AudioSessionManaging {
     
     private func configureForegroundAudio() throws {
         // Define target configuration
+        // ✅ FIX BUG #1: Removed .duckOthers from default config to allow Spotify to continue
+        // .duckOthers is only applied when timer actually plays sound (in reactivate())
         let targetOptions: AVAudioSession.CategoryOptions = [
-            .mixWithOthers,      // REQUIRED: Must be present when using .duckOthers
-            .duckOthers,         // Duck other audio when playing timer sounds
+            .mixWithOthers,      // Allow mixing with Spotify and other audio
             .allowAirPlay,
             .allowBluetooth,
             .allowBluetoothA2DP
@@ -251,9 +252,10 @@ final class AudioSessionManager: AudioSessionManaging {
     
     private func configureBackgroundAudio() throws {
         // Define target configuration
+        // ✅ FIX BUG #1: Removed .duckOthers from default config to allow Spotify to continue
+        // .duckOthers is only applied when timer actually plays sound (in reactivate())
         let targetOptions: AVAudioSession.CategoryOptions = [
-            .mixWithOthers,     // Allow mixing with other audio
-            .duckOthers,        // Duck others when playing
+            .mixWithOthers,     // Allow mixing with Spotify and other audio
             .allowAirPlay,      // Allow AirPlay
             .allowBluetooth,    // Allow Bluetooth audio
             .allowBluetoothA2DP // Allow high-quality Bluetooth
@@ -317,15 +319,16 @@ final class AudioSessionManager: AudioSessionManaging {
     /// Configures audio session specifically for silent loop playback
     func configureSilentLoopSession() throws {
         Logger.shared.log(.info, "Configuring audio session for lockscreen audio support")
-        
+
         // CRITICAL FIX: Configuration for lockscreen audio playback (removed conflicting option)
+        // ✅ FIX BUG #1: Removed .duckOthers to allow Spotify to continue during silent loop
         try session.setCategory(.playback, mode: .default, options: [
-            .mixWithOthers,   // Don't interrupt other audio
-            .duckOthers,      // Duck other audio when playing
+            .mixWithOthers,   // Don't interrupt Spotify or other audio
             .allowAirPlay,    // Allow AirPlay
             .allowBluetooth,  // Allow Bluetooth
             .allowBluetoothA2DP // Allow high-quality Bluetooth
             // REMOVED: .interruptSpokenAudioAndMixWithOthers - was causing error -50
+            // REMOVED: .duckOthers - was stopping Spotify when app opens
         ])
         
         // Set optimal buffer for battery efficiency

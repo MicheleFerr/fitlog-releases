@@ -38,6 +38,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_contribution_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/contribution_success_dialog.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_advice_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 
@@ -2158,6 +2159,23 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 },
               ),
               const Divider(),
+              // 🆕 Segnala problema
+              ListTile(
+                leading: const Icon(Icons.flag_outlined, color: Colors.orange),
+                title: const Text('Segnala problema'),
+                subtitle: const Text('Bug, errori o suggerimenti'),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Show feedback dialog
+                  ExerciseFeedbackButton.showFeedbackDialog(
+                    context,
+                    exerciseId: widget.exercise.id ?? 'unknown',
+                    exerciseName: widget.exercise.name,
+                    version: '1.0.0',
+                  );
+                },
+              ),
+              const Divider(),
               ListTile(
                 leading: Icon(
                   Icons.delete,
@@ -2992,8 +3010,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
         widget.onSetToggleComplete!(updatedSet);
 
-        // Haptic feedback for set completion
-        HapticFeedbackService.setCompletion(ref);
+        // Haptic feedback for set completion (wrapped for safety)
+        try {
+          HapticFeedbackService.setCompletion(ref);
+        } catch (e) {
+          // Log error but don't block timer from starting
+          if (kDebugMode) {
+            debugPrint('Haptic feedback error: $e');
+          }
+        }
 
         // Start rest timer for next set (if not warmup)
         if (!isWarmupSet) {
@@ -3127,10 +3152,17 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           
           widget.onSetToggleComplete!(updatedSet);
 
-          // Haptic feedback for set completion
-          HapticFeedbackService.setCompletion(ref);
+          // Haptic feedback for set completion (wrapped for safety)
+          try {
+            HapticFeedbackService.setCompletion(ref);
+          } catch (e) {
+            // Log error but don't block timer from starting
+            if (kDebugMode) {
+              debugPrint('Haptic feedback error: $e');
+            }
+          }
 
-          // Start rest timer
+          // Start rest timer (will always execute even if haptic fails)
           _startRestTimerWithSetInfo(context, updatedSet);
           
           // Mark next set as starting when rest timer ends
@@ -3187,8 +3219,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             
             widget.onSetToggleComplete!(updatedSet);
 
-            // Haptic feedback for set update
-            HapticFeedbackService.setCompletion(ref);
+            // Haptic feedback for set update (wrapped for safety)
+            try {
+              HapticFeedbackService.setCompletion(ref);
+            } catch (e) {
+              // Log error but continue with visual feedback
+              if (kDebugMode) {
+                debugPrint('Haptic feedback error: $e');
+              }
+            }
 
             // Visual feedback with snackbar
             final rpeText = ' (RPE $rpe updated)';

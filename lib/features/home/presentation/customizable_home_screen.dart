@@ -9,6 +9,8 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/widget_cus
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/data/services/rewarded_ad_service.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 
 class CustomizableHomeScreen extends ConsumerStatefulWidget {
   const CustomizableHomeScreen({super.key});
@@ -263,6 +265,89 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
               ),
             ),
           ],
+
+          // 🔧 Admin Feedback Dashboard (visible only to admins)
+          if (ref.watch(isAdminCachedProvider))
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ExerciseFeedbackScreen(),
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.deepPurple.shade700,
+                            Colors.deepPurple.shade900,
+                          ],
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.flag_circle,
+                              color: Colors.white,
+                              size: 32,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '🔧 Exercise Feedback',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Gestisci segnalazioni esercizi',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.9),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
           // 🎁 Premium Unlock Card
           SliverToBoxAdapter(
