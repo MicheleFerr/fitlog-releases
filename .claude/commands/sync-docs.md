@@ -1,3 +1,8 @@
+---
+allowed-tools: Glob(*), Grep(*), Read(*), Write(*), Edit(*), Bash(git:*)
+description: Automatically sync all documentation with current codebase - UPDATE outdated docs, DELETE deprecated, CREATE missing, ARCHIVE speculative
+---
+
 # `/sync-docs` - Auto-Update All Documentation
 
 > **Slash Command**: Automatically sync all documentation with current codebase
@@ -55,10 +60,8 @@ Report changes and commit automatically
 
 ### Manual Execution
 ```bash
-# In chat, just ask:
-"Sincronizza tutti i docs col codice"
-or
-"/sync-docs"
+# In chat, just type:
+/sync-docs
 ```
 
 ### Automatic (Pre-Commit)
@@ -156,4 +159,4 @@ This command integrates with:
 ---
 
 **Last Updated**: October 18, 2025
-**Status**: ✅ Active - Ready for implementation
+**Status**: ✅ Active - Ready for use
