@@ -1144,12 +1144,83 @@ Claude: Mostra all'utente dove è stato salvato
 | "Crea docs per exercise database" | exercise_database | `docs/UX_FLOWS/exercise_database/[nome_report].md` |
 | "Report session progress" | root/archived | `docs/SESSION_PROGRESS_REPORT.md` |
 
+### 🔄 Smart Update - Se il Doc Esiste Già
+
+**Step 1: Riconosci se il file esiste**
+```
+User: "Scrivi un report sul timer system"
+Claude: "Aspetta, c'è già docs/UX_FLOWS/workout_session/TIMER_AUDIO_KB.md?"
+→ Sì, esiste
+```
+
+**Step 2: Leggi il file esistente**
+- Analizza il contenuto attuale
+- Nota l'ultimo aggiornamento (data nel file)
+- Identifica le sezioni principali
+
+**Step 3: Confronta con il Codice Attuale**
+- Esegui una verifica codice-doc
+- Identifica: Cosa è cambiato? Cosa è deprecato? Cosa è nuovo?
+- Marcare come: ✅ CURRENT, ⚠️ OUTDATED, 🆕 NEW INFO
+
+**Step 4: Decidi l'Azione**
+- **Se CURRENT**: "✅ Già aggiornato (Oct 18, 2025)"
+- **Se OUTDATED**: Aggiorna intelligentemente (mantieni custom, aggiorna tecnico)
+- **Se ha NEW INFO**: Aggiungi le nuove sezioni
+
+**Step 5: Comunica l'Azione**
+```
+"✅ UPDATED: docs/UX_FLOWS/workout_session/TIMER_AUDIO_KB.md
+- Sezione 'iOS Audio Session' aggiornata (nuove patterns)
+- Aggiunto: LiveActivity integration notes
+- Rimosso: Deprecated AppLocalizations pattern
+- Data: Oct 18, 2025"
+```
+
 ### 🚨 IMPORTANTE
 
 - **MAI** chiedere "dove vuoi il file?" - Decidi tu basato sul contenuto
-- **SEMPRE** aggiungi il file a NAVIGATION/INDEX.md
+- **SEMPRE** aggiungi il file a NAVIGATION/INDEX.md se nuovo
 - **SEMPRE** crea con nome descrittivo e data se è un report
 - **SEMPRE** verifica che vada nella cartella corretta della struttura UX flows
+- **SE ESISTE**: Leggi, analizza, paragona, aggiorna intelligentemente
+
+---
+
+## 🔄 Slash Command: `/sync-docs` - Sincronizza Automaticamente TUTTI i Docs
+
+### Cosa Fa
+```
+/sync-docs
+↓ Legge TUTTI i docs
+↓ Analizza il codice attuale
+↓ Per ogni doc: UPDATE / DELETE / CREATE / ARCHIVE
+↓ Commit automatico con report
+```
+
+### Quando Usare
+- **Dopo grandi refactoring**: `/sync-docs` per aggiornare tutta la doc
+- **Prima di release**: Sincronizza tutto prima di taggare
+- **Trimestrale**: Ogni 3 mesi per evitare drift
+- **Manualmente**: Quando senti che i docs sono outdated
+
+### Azioni Automatiche
+
+| Situazione | Azione | Risultato |
+|-----------|--------|-----------|
+| Doc matchato col codice | ✅ KEEP | "Already current" |
+| Doc outdated ma rilevante | 🔄 UPDATE | Aggiorna intelligentemente |
+| Codice senza documentazione | ➕ CREATE | Crea doc in cartella corretta |
+| Documentazione di feature rimossa | 🗑️ DELETE | Rimuove il file |
+| Documentazione speculativa | 📦 ARCHIVE | Sposta in `archived/` |
+
+### Esempio Uso
+```
+User: "Fammi un sync-docs per verificare che tutto sia aggiornato"
+Claude: "✅ SYNC-DOCS REPORT: Scanned 32 docs, 24 current, 5 updated, 2 created, 1 deleted"
+```
+
+**Vedi**: `.claude/commands/sync-docs.md` per dettagli completi
 
 ---
 

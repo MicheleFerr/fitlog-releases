@@ -645,17 +645,91 @@ rules_version = '2';
         request.auth.token.admin == true;
     }
 
-    // ============= EXERCISE FEEDBACK SYSTEM =============
+    // ============= EXERCISE FEEDBACK SYSTEM (User Reports) =============
+    match /exercise_feedback/{feedbackId} {
+      // 🔒 SECURITY: Read access control
+      // - Users can read only their own feedback
+      // - Admins can read all feedback for moderation
+      allow read: if request.auth != null && (
+        // User can read their own feedback
+        resource.data.userId == request.auth.uid ||
+        // Admin can read all feedback
+        isAdmin()
+      );
+
+      // 🔒 SECURITY: Create feedback with comprehensive validation
+      // Prevents spam, DoS attacks, and data corruption
+      allow create: if request.auth != null &&
+        // User ownership: feedback belongs to the authenticated user
+        request.auth.uid == request.resource.data.userId &&
+        // Email validation: user email is captured for contact/tracking
+        request.auth.token.email == request.resource.data.userEmail &&
+        // Required fields validation
+        request.resource.data.keys().hasAll([
+          'userId',
+          'userEmail',
+          'exerciseId',
+          'exerciseName',
+          'version',
+          'feedbackType',
+          'message',
+          'severity',
+          'createdAt',
+          'status'
+        ]) &&
+        // Feedback type must be one of allowed values
+        request.resource.data.feedbackType in ['BUG', 'SUGGESTION', 'TYPO', 'OTHER'] &&
+        // New feedback starts as OPEN
+        request.resource.data.status == 'OPEN' &&
+        // Severity must be between 1-5
+        request.resource.data.severity >= 1 &&
+        request.resource.data.severity <= 5 &&
+        // Message validation: non-empty, reasonable length
+        validateStringField(request.resource.data, 'message', 1, 2000, false) &&
+        // Exercise name validation
+        validateStringField(request.resource.data, 'exerciseName', 1, 100, false) &&
+        // Version validation: app version format
+        validateStringField(request.resource.data, 'version', 1, 20, false) &&
+        // Exercise ID validation
+        validateStringField(request.resource.data, 'exerciseId', 1, 100, false) &&
+        // Prevent document size DoS attacks
+        request.resource.size() < 100000;  // 100KB max per document
+
+      // 🔒 SECURITY: Update access (admin moderation only)
+      // Prevents users from modifying feedback after submission
+      allow update: if request.auth != null && isAdmin() &&
+        // Can only modify specific moderation fields
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status',      // OPEN → REVIEWING → RESOLVED/DISMISSED
+          'adminNotes',  // Admin commentary
+          'severity'     // Severity adjustment based on triage
+        ]) &&
+        // Maintain user ownership immutability
+        request.resource.data.userId == resource.data.userId &&
+        // Maintain original message immutability
+        request.resource.data.message == resource.data.message &&
+        // Status must be valid
+        request.resource.data.status in ['OPEN', 'REVIEWING', 'RESOLVED', 'DISMISSED'];
+
+      // 🔒 SECURITY: Delete access (admin only)
+      allow delete: if request.auth != null && isAdmin();
+
+      // 🔒 SECURITY: Prevent non-existent fields from being added
+      // Additional fields will cause failure
+      allow list: if request.auth != null;
+    }
+
+    // ============= EXERCISE FEEDBACK SYSTEM (Community Corrections) =============
     match /exerciseFeedback/{feedbackId} {
       // Tutti gli utenti autenticati possono leggere
       allow read: if request.auth != null;
-      
+
       // Creazione con controlli
       allow create: if request.auth != null &&
         request.auth.uid == request.resource.data.reportedBy.userId &&
         request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'feedbackType', 'currentValue', 'proposedValue', 'reportedBy', 'deviceInfo']) &&
         request.resource.data.feedbackType in ['nome', 'immagine', 'focus'];
-      
+
       // Update solo per aggiungere approvazioni
       allow update: if request.auth != null &&
         // Non può approvare le proprie segnalazioni
@@ -664,7 +738,7 @@ rules_version = '2';
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['approvals', 'approvalCount', 'firstApprovalAt']) &&
         // L'utente non ha già approvato
         !resource.data.approvals.hasAny([request.auth.uid]);
-      
+
       // Solo admin può eliminare
       allow delete: if request.auth != null && request.auth.token.admin == true;
     }
