@@ -25,40 +25,40 @@ Building a comprehensive exercise database system with:
 
 ### 📚 Documentation (Start Here!)
 
-**BEFORE STARTING ANY TASK, READ THESE:**
+**⭐ ALL DOCUMENTATION IS HERE**: [`📚 docs/INDEX.md`](./docs/INDEX.md)
 
-1. **Quick Reference** (Start here, 15 min read):
+**QUICK START** (Choose your path):
+
+1. **New Developer?** Start here (15 min):
    ```
    docs/QUICK_REFERENCE.md
+   📍 docs/INDEX.md (complete navigation)
    ```
-   - Where to find everything
-   - Quick navigation
-   - Copy-paste commands
 
-2. **Architecture Overview** (Understand the system, 30 min):
+2. **Need Architecture?** Read this (30 min):
    ```
    docs/EXERCISE_DATABASE_SYNC_ARCHITECTURE.md
    ```
-   - How the system works
-   - Design decisions
-   - Technical deep-dive
 
-3. **Implementation Playbook** (Follow this to code, 2-3 hours):
+3. **Ready to Implement?** Follow this (2-3 hours):
    ```
    docs/EXERCISE_IMPLEMENTATION_PLAYBOOK.md
    ```
-   - Step-by-step implementation
-   - Complete code examples
-   - Task checklists
-   - Success metrics
 
-4. **Implementation Status** (Update weekly!):
+4. **Hit an Error?** Check here:
+   ```
+   docs/ERROR_KB.md
+   docs/TIMER_AUDIO_KB.md
+   docs/LIVE_ACTIVITY_KB.md
+   docs/NOTIFICATION_SYSTEM_KB.md
+   ```
+
+5. **Track Progress** (Update weekly!):
    ```
    docs/IMPLEMENTATION_STATUS.json
    ```
-   - Track current progress
-   - See what's next
-   - Update after each session
+
+**📖 For complete documentation index and navigation**: [`📚 docs/INDEX.md`](./docs/INDEX.md)
 
 ### 🎯 How to Resume After Break
 
@@ -1084,6 +1084,72 @@ Il report include:
 - 📊 Metriche di impatto (178-259 implementazioni → 3 componenti)
 - 🔄 Pattern di migrazione da codice legacy
 - ✅ Checklist per adozione nei nuovi PR
+
+---
+
+## 🤖 AUTO-CATEGORIZATION HOOK: Report & Documentation
+
+### 📝 Cosa Significa "Scrivi un Report" o "Crea la Documentazione"
+
+Quando l'utente chiede:
+- **"Scrivi un report"** - Fine di una task, voglio un summary/documentazione
+- **"Crea la documentazione"** - Voglio docs categorizzate e salvate automaticamente
+- **"Documenta questo"** - Crea docs per il lavoro appena fatto
+
+### 🤖 Come Claude Deve Rispondere (AUTOMATICO)
+
+**Step 1: Riconosci la Richiesta**
+```
+User: "Fatto! Scrivi un report con quello che abbiamo fatto"
+```
+
+**Step 2: Categorizz automaticamente usando Decision Tree**
+1. È relativo a una feature UX? → Va in `docs/UX_FLOWS/[feature]/`
+2. È tecnico/architetturale? → Va in `docs/TECHNICAL_FOUNDATION/`
+3. È un report di progress? → Va in root `/docs/` o archival
+
+**Step 3: Crea il file nella cartella corretta**
+- NON chiedere conferma su dove metterlo
+- Crea il file con nome appropriato (es: `FEATURE_IMPLEMENTATION_REPORT.md`)
+- Usa la struttura del progetto (vedi `.claude/hooks/document-categorization-guide.md`)
+
+**Step 4: Aggiorna NAVIGATION/INDEX.md**
+- Aggiungi il riferimento al nuovo file
+- Link alla cartella appropriata
+
+### ✅ Workflow Automatico
+
+```
+User: "Scrivi un report su quello che abbiamo fatto oggi"
+↓
+Claude: Analizza il contenuto della session
+↓
+Claude: Decide la categoria (UX_FLOWS/workout_session, TECHNICAL_FOUNDATION, etc.)
+↓
+Claude: Crea il file con nome descrittivo
+↓
+Claude: Salva in docs/[categoria]/[nome_file].md
+↓
+Claude: Aggiorna docs/NAVIGATION/INDEX.md
+↓
+Claude: Mostra all'utente dove è stato salvato
+```
+
+### 📍 Esempi di Categorizzazione Automatica
+
+| Richiesta | Categoria | Risultato |
+|-----------|-----------|-----------|
+| "Scrivi report timer fixes" | workout_session | `docs/UX_FLOWS/workout_session/TIMER_FIXES_REPORT.md` |
+| "Documenta la nuova architettura" | TECHNICAL_FOUNDATION | `docs/TECHNICAL_FOUNDATION/NEW_ARCHITECTURE_REPORT.md` |
+| "Crea docs per exercise database" | exercise_database | `docs/UX_FLOWS/exercise_database/[nome_report].md` |
+| "Report session progress" | root/archived | `docs/SESSION_PROGRESS_REPORT.md` |
+
+### 🚨 IMPORTANTE
+
+- **MAI** chiedere "dove vuoi il file?" - Decidi tu basato sul contenuto
+- **SEMPRE** aggiungi il file a NAVIGATION/INDEX.md
+- **SEMPRE** crea con nome descrittivo e data se è un report
+- **SEMPRE** verifica che vada nella cartella corretta della struttura UX flows
 
 ---
 
