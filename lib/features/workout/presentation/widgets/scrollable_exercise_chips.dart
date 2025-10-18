@@ -4,9 +4,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 /// Widget che mostra chips scrollabili per categoria, tipo e TUT dell'esercizio
 class ScrollableExerciseChips extends StatefulWidget {
-  final Exercise exercise;
-  final Map<String, dynamic>? exerciseData;
-  final VoidCallback? onTutTap;
   
   const ScrollableExerciseChips({
     super.key,
@@ -14,6 +11,9 @@ class ScrollableExerciseChips extends StatefulWidget {
     this.exerciseData,
     this.onTutTap,
   });
+  final Exercise exercise;
+  final Map<String, dynamic>? exerciseData;
+  final VoidCallback? onTutTap;
 
   @override
   State<ScrollableExerciseChips> createState() => _ScrollableExerciseChipsState();
@@ -325,13 +325,6 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
 }
 
 class _ChipItem {
-  final String label;
-  final IconData? icon;
-  final Color backgroundColor;
-  final Color textColor;
-  final String? subtitle;
-  final VoidCallback? onTap;
-  final bool isHighlighted;
   
   const _ChipItem({
     required this.label,
@@ -342,4 +335,11 @@ class _ChipItem {
     this.onTap,
     this.isHighlighted = false,
   });
+  final String label;
+  final IconData? icon;
+  final Color backgroundColor;
+  final Color textColor;
+  final String? subtitle;
+  final VoidCallback? onTap;
+  final bool isHighlighted;
 }

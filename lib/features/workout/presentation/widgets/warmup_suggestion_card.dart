@@ -3,13 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class WarmupSuggestionCard extends ConsumerStatefulWidget {
-  final double workingWeight;
-  final int targetReps;
-  final Function(List<ExerciseSet>) onAddWarmupSets;
-  final VoidCallback? onDismiss;
-  final String exerciseName;
   
   const WarmupSuggestionCard({
     super.key,
@@ -19,6 +15,11 @@ class WarmupSuggestionCard extends ConsumerStatefulWidget {
     this.onDismiss,
     required this.exerciseName,
   });
+  final double workingWeight;
+  final int targetReps;
+  final Function(List<ExerciseSet>) onAddWarmupSets;
+  final VoidCallback? onDismiss;
+  final String exerciseName;
 
   @override
   ConsumerState<WarmupSuggestionCard> createState() => _WarmupSuggestionCardState();
@@ -31,7 +32,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
   late Animation<double> _fadeAnimation;
   
   bool _isExpanded = false;
-  List<WarmupSet> _warmupSets = [];
+  final List<WarmupSet> _warmupSets = [];
   
   // Warmup calculation parameters
   static const double barbellWeight = 20.0;
@@ -100,7 +101,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
     if (widget.workingWeight >= 60) {
       // Set 1: Empty bar (if using barbell)
       if (widget.workingWeight >= barbellWeight * 2) {
-        _warmupSets.add(WarmupSet(
+        _warmupSets.add(const WarmupSet(
           weight: barbellWeight,
           reps: 10,
           percentage: 0,
@@ -181,250 +182,186 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final config = ref.watch(appConfigProvider);
-    
+    final l10n = AppLocalizations.of(context);
+
     if (_warmupSets.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         children: [
-          // Collapsed indicator
-          InkWell(
-            onTap: _toggleExpanded,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: theme.colorScheme.primary.withOpacity(0.3),
+          // Simplified collapsed indicator
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: _toggleExpanded,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: theme.colorScheme.outline.withOpacity(0.3),
+                    width: 1,
+                  ),
                 ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.local_fire_department,
-                      size: 16,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.fitness_center,
+                      size: 20,
                       color: theme.colorScheme.primary,
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.recommendedWarmup,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${_warmupSets.length} sets · ${widget.workingWeight}kg target',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      _isExpanded ? Icons.expand_less : Icons.expand_more,
+                      color: theme.colorScheme.onSurfaceVariant,
+                      size: 24,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          
+          // Simplified expanded content
+          SizeTransition(
+            sizeFactor: _expandAnimation,
+            child: Container(
+              margin: const EdgeInsets.only(top: 12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                children: [
+                  // Simple header
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                    child: Row(
                       children: [
-                        Text(
-                          'Riscaldamento consigliato',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
+                        Expanded(
+                          child: Text(
+                            l10n.warmupIntelligentProgression,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                        Text(
-                          '${_warmupSets.length} sets progressivi',
-                          style: theme.textTheme.bodySmall?.copyWith(
+                        IconButton(
+                          onPressed: () {
+                            _toggleExpanded();
+                            widget.onDismiss?.call();
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            size: 18,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  if (!_isExpanded)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        'Tap to view',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                        ),
+
+                  // Simple warmup sets list
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: _warmupSets.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final warmupSet = entry.value;
+                        final isEmptyBar = warmupSet.weight == barbellWeight;
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  isEmptyBar
+                                    ? '${l10n.emptyBarbell} × ${warmupSet.reps}'
+                                    : '${warmupSet.weight}kg × ${warmupSet.reps}',
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                  // Simple action button
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FilledButton.icon(
+                      onPressed: _addAllWarmupSets,
+                      icon: const Icon(Icons.add, size: 16),
+                      label: Text(l10n.addAll),
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
                       ),
                     ),
-                  Icon(
-                    _isExpanded ? Icons.expand_less : Icons.expand_more,
-                    color: theme.colorScheme.primary,
                   ),
                 ],
-              ),
-            ),
-          ),
-          
-          // Expanded content
-          SizeTransition(
-            sizeFactor: _expandAnimation,
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Container(
-                margin: const EdgeInsets.only(top: 8),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: theme.colorScheme.outline.withOpacity(0.2),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.local_fire_department,
-                          color: Colors.orange,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Progressione Riscaldamento',
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.close, size: 18),
-                          onPressed: () {
-                            _toggleExpanded();
-                            widget.onDismiss?.call();
-                          },
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ],
-                    ),
-                    
-                    const SizedBox(height: 12),
-                    
-                    // Warmup sets list
-                    ..._warmupSets.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final warmupSet = entry.value;
-                      
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: theme.colorScheme.outline.withOpacity(0.1),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: _getSetColor(warmupSet.percentage).withOpacity(0.2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${index + 1}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: _getSetColor(warmupSet.percentage),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    warmupSet.weight == barbellWeight 
-                                        ? 'Bilanciere vuoto'
-                                        : '${warmupSet.weight} ${config.measurementUnit}',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  if (warmupSet.percentage > 0)
-                                    Text(
-                                      '${warmupSet.percentage}% del carico',
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurfaceVariant,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.secondaryContainer.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                '× ${warmupSet.reps}',
-                                style: theme.textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.secondary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                    
-                    const SizedBox(height: 16),
-                    
-                    // Action buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: _customizeWarmup,
-                            icon: const Icon(Icons.tune, size: 16),
-                            label: const Text('Personalizza'),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          flex: 2,
-                          child: FilledButton.icon(
-                            onPressed: _addAllWarmupSets,
-                            icon: const Icon(Icons.add, size: 16),
-                            label: const Text('Aggiungi tutti'),
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
@@ -433,14 +370,10 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
     );
   }
   
-  Color _getSetColor(int percentage) {
-    if (percentage <= 40) return Colors.green;
-    if (percentage <= 60) return Colors.blue;
-    if (percentage <= 80) return Colors.orange;
-    return Colors.red;
-  }
-  
+
+
   void _addAllWarmupSets() {
+    final l10n = AppLocalizations.of(context);
     final sets = _warmupSets.map((warmup) {
       return ExerciseSet(
         setNumber: 0, // Will be assigned by parent
@@ -458,27 +391,24 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Aggiunti ${sets.length} set di riscaldamento'),
+        content: Text(l10n.warmupSetsAdded('${sets.length}')),
         duration: const Duration(seconds: 2),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }
   
-  void _customizeWarmup() {
-    // TODO: Show customization dialog
-    HapticFeedback.selectionClick();
-  }
 }
 
 class WarmupSet {
-  final double weight;
-  final int reps;
-  final int percentage;
-  
+
   const WarmupSet({
     required this.weight,
     required this.reps,
     required this.percentage,
   });
+  final double weight;
+  final int reps;
+  final int percentage;
 }
+

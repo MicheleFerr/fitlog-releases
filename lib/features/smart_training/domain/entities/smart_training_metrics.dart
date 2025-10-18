@@ -2,21 +2,6 @@ import 'package:uuid/uuid.dart';
 
 /// Comprehensive training metrics for smart analysis
 class SmartTrainingMetrics {
-  final String id;
-  final String userId;
-  final DateTime date;
-  final double volume; // Total volume (weight * reps)
-  final int totalSets;
-  final int totalReps;
-  final double averageIntensity; // Average %1RM
-  final double trainingLoad; // Volume * Intensity
-  final int sessionDuration; // Minutes
-  final double fatigueScore; // 1-10 scale
-  final double readinessScore; // 1-10 scale
-  final Map<String, double> muscleGroupVolume; // Volume per muscle group
-  final List<ExerciseMetrics> exerciseMetrics;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   SmartTrainingMetrics({
     String? id,
@@ -38,6 +23,43 @@ class SmartTrainingMetrics {
     id = id ?? const Uuid().v4(),
     createdAt = createdAt ?? DateTime.now(),
     updatedAt = updatedAt ?? DateTime.now();
+
+  factory SmartTrainingMetrics.fromJson(Map<String, dynamic> json) {
+    return SmartTrainingMetrics(
+      id: json['id'],
+      userId: json['userId'],
+      date: DateTime.parse(json['date']),
+      volume: (json['volume'] as num).toDouble(),
+      totalSets: json['totalSets'],
+      totalReps: json['totalReps'],
+      averageIntensity: (json['averageIntensity'] as num).toDouble(),
+      trainingLoad: (json['trainingLoad'] as num).toDouble(),
+      sessionDuration: json['sessionDuration'],
+      fatigueScore: (json['fatigueScore'] as num).toDouble(),
+      readinessScore: (json['readinessScore'] as num).toDouble(),
+      muscleGroupVolume: Map<String, double>.from(json['muscleGroupVolume']),
+      exerciseMetrics: (json['exerciseMetrics'] as List)
+          .map((e) => ExerciseMetrics.fromJson(e))
+          .toList(),
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
+  final String id;
+  final String userId;
+  final DateTime date;
+  final double volume; // Total volume (weight * reps)
+  final int totalSets;
+  final int totalReps;
+  final double averageIntensity; // Average %1RM
+  final double trainingLoad; // Volume * Intensity
+  final int sessionDuration; // Minutes
+  final double fatigueScore; // 1-10 scale
+  final double readinessScore; // 1-10 scale
+  final Map<String, double> muscleGroupVolume; // Volume per muscle group
+  final List<ExerciseMetrics> exerciseMetrics;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   SmartTrainingMetrics copyWith({
     String? userId,
@@ -92,43 +114,10 @@ class SmartTrainingMetrics {
       'updatedAt': updatedAt.toIso8601String(),
     };
   }
-
-  factory SmartTrainingMetrics.fromJson(Map<String, dynamic> json) {
-    return SmartTrainingMetrics(
-      id: json['id'],
-      userId: json['userId'],
-      date: DateTime.parse(json['date']),
-      volume: (json['volume'] as num).toDouble(),
-      totalSets: json['totalSets'],
-      totalReps: json['totalReps'],
-      averageIntensity: (json['averageIntensity'] as num).toDouble(),
-      trainingLoad: (json['trainingLoad'] as num).toDouble(),
-      sessionDuration: json['sessionDuration'],
-      fatigueScore: (json['fatigueScore'] as num).toDouble(),
-      readinessScore: (json['readinessScore'] as num).toDouble(),
-      muscleGroupVolume: Map<String, double>.from(json['muscleGroupVolume']),
-      exerciseMetrics: (json['exerciseMetrics'] as List)
-          .map((e) => ExerciseMetrics.fromJson(e))
-          .toList(),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
-  }
 }
 
 /// Exercise-specific metrics for analysis
 class ExerciseMetrics {
-  final String exerciseName;
-  final String category;
-  final double volume;
-  final double maxWeight;
-  final double averageWeight;
-  final int totalSets;
-  final int totalReps;
-  final double averageRPE;
-  final double estimatedOneRM;
-  final double intensityScore; // Based on %1RM
-  final List<SetMetrics> setMetrics;
 
   ExerciseMetrics({
     required this.exerciseName,
@@ -143,22 +132,6 @@ class ExerciseMetrics {
     required this.intensityScore,
     required this.setMetrics,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'exerciseName': exerciseName,
-      'category': category,
-      'volume': volume,
-      'maxWeight': maxWeight,
-      'averageWeight': averageWeight,
-      'totalSets': totalSets,
-      'totalReps': totalReps,
-      'averageRPE': averageRPE,
-      'estimatedOneRM': estimatedOneRM,
-      'intensityScore': intensityScore,
-      'setMetrics': setMetrics.map((s) => s.toJson()).toList(),
-    };
-  }
 
   factory ExerciseMetrics.fromJson(Map<String, dynamic> json) {
     return ExerciseMetrics(
@@ -177,19 +150,37 @@ class ExerciseMetrics {
           .toList(),
     );
   }
+  final String exerciseName;
+  final String category;
+  final double volume;
+  final double maxWeight;
+  final double averageWeight;
+  final int totalSets;
+  final int totalReps;
+  final double averageRPE;
+  final double estimatedOneRM;
+  final double intensityScore; // Based on %1RM
+  final List<SetMetrics> setMetrics;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'exerciseName': exerciseName,
+      'category': category,
+      'volume': volume,
+      'maxWeight': maxWeight,
+      'averageWeight': averageWeight,
+      'totalSets': totalSets,
+      'totalReps': totalReps,
+      'averageRPE': averageRPE,
+      'estimatedOneRM': estimatedOneRM,
+      'intensityScore': intensityScore,
+      'setMetrics': setMetrics.map((s) => s.toJson()).toList(),
+    };
+  }
 }
 
 /// Individual set metrics
 class SetMetrics {
-  final int setNumber;
-  final double weight;
-  final int targetReps;
-  final int actualReps;
-  final int rpe;
-  final double estimatedOneRM;
-  final double intensityPercent; // %1RM
-  final double volume;
-  final bool isWarmup;
 
   SetMetrics({
     required this.setNumber,
@@ -203,20 +194,6 @@ class SetMetrics {
     required this.isWarmup,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'setNumber': setNumber,
-      'weight': weight,
-      'targetReps': targetReps,
-      'actualReps': actualReps,
-      'rpe': rpe,
-      'estimatedOneRM': estimatedOneRM,
-      'intensityPercent': intensityPercent,
-      'volume': volume,
-      'isWarmup': isWarmup,
-    };
-  }
-
   factory SetMetrics.fromJson(Map<String, dynamic> json) {
     return SetMetrics(
       setNumber: json['setNumber'],
@@ -229,6 +206,29 @@ class SetMetrics {
       volume: (json['volume'] as num).toDouble(),
       isWarmup: json['isWarmup'],
     );
+  }
+  final int setNumber;
+  final double weight;
+  final int targetReps;
+  final int actualReps;
+  final int rpe;
+  final double estimatedOneRM;
+  final double intensityPercent; // %1RM
+  final double volume;
+  final bool isWarmup;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'setNumber': setNumber,
+      'weight': weight,
+      'targetReps': targetReps,
+      'actualReps': actualReps,
+      'rpe': rpe,
+      'estimatedOneRM': estimatedOneRM,
+      'intensityPercent': intensityPercent,
+      'volume': volume,
+      'isWarmup': isWarmup,
+    };
   }
 }
 

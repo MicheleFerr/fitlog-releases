@@ -12,6 +12,13 @@ import 'package:gymbro_flutter_new/features/timer/domain/services/fatigue_analyz
 /// TIER-1 Use Case for tracking set execution with millisecond precision
 /// Extends existing timer functionality without creating new providers
 class TrackSetExecutionUseCase {
+  
+  TrackSetExecutionUseCase(
+    this._repository,
+    this._velocityAnalyzer,
+    this._formAnalyzer,
+    this._fatigueAnalyzer,
+  );
   final SetTimingRepository _repository;
   final VelocityAnalyzerService _velocityAnalyzer;
   final FormAnalyzerService _formAnalyzer;
@@ -23,13 +30,6 @@ class TrackSetExecutionUseCase {
   final List<DateTime> _repTimestamps = [];
   final List<double> _velocityData = [];
   final List<double> _formScores = [];
-  
-  TrackSetExecutionUseCase(
-    this._repository,
-    this._velocityAnalyzer,
-    this._formAnalyzer,
-    this._fatigueAnalyzer,
-  );
 
   /// Start tracking a new set with TIER-1 precision
   Future<void> startSetTracking({
@@ -291,10 +291,10 @@ class TrackSetExecutionUseCase {
 
   /// Generate contextual coaching tips
   String? _generateCoachingTip(double fatigueIndex, double velocityDrop, double formScore) {
-    if (fatigueIndex > 90) return "High fatigue detected - consider ending set";
-    if (velocityDrop > 25) return "Velocity dropping - focus on explosive movement";
-    if (formScore < 60) return "Form declining - reduce weight or focus on technique";
-    if (formScore > 85 && velocityDrop < 10) return "Excellent form and speed - great work!";
+    if (fatigueIndex > 90) return 'High fatigue detected - consider ending set';
+    if (velocityDrop > 25) return 'Velocity dropping - focus on explosive movement';
+    if (formScore < 60) return 'Form declining - reduce weight or focus on technique';
+    if (formScore > 85 && velocityDrop < 10) return 'Excellent form and speed - great work!';
     
     return null;
   }

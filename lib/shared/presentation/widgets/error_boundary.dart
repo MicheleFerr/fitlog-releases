@@ -3,9 +3,6 @@ import 'package:flutter/foundation.dart';
 
 /// Widget che cattura e gestisce errori nei suoi figli
 class ErrorBoundary extends StatefulWidget {
-  final Widget child;
-  final String context;
-  final Function(Object error, StackTrace? stack)? onError;
 
   const ErrorBoundary({
     super.key,
@@ -13,6 +10,9 @@ class ErrorBoundary extends StatefulWidget {
     required this.context,
     this.onError,
   });
+  final Widget child;
+  final String context;
+  final Function(Object error, StackTrace? stack)? onError;
 
   @override
   State<ErrorBoundary> createState() => _ErrorBoundaryState();
@@ -40,7 +40,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
     setState(() {
       hasError = true;
       this.error = error;
-      this.stackTrace = stack;
+      stackTrace = stack;
     });
   }
 

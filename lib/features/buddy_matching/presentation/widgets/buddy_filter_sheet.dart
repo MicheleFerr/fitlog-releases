@@ -1,24 +1,23 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/buddy_preferences.dart';
-import '../providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
 
 class BuddyFilterSheet extends ConsumerStatefulWidget {
   const BuddyFilterSheet({super.key});
@@ -48,7 +47,7 @@ class _BuddyFilterSheetState extends ConsumerState<BuddyFilterSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.8,
@@ -281,7 +280,7 @@ class _BuddyFilterSheetState extends ConsumerState<BuddyFilterSheet> {
   Widget _buildVerifiedOnlyToggle(ThemeData theme, AppLocalizations l10n) {
     return SwitchListTile(
       title: Text(l10n.verifiedOnly),
-      subtitle: Text('Mostra solo utenti con profilo verificato'),
+      subtitle: const Text('Mostra solo utenti con profilo verificato'),
       value: _verifiedOnly,
       onChanged: (value) => setState(() => _verifiedOnly = value),
       contentPadding: EdgeInsets.zero,

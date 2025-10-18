@@ -10,7 +10,7 @@ void main() {
   group('HomeCustomizationProvider - Unit Tests', () {
     // Test the default widgets directly without provider
     test('DefaultHomeWidgets has correct default configuration', () {
-      final defaults = DefaultHomeWidgets.defaultWidgets;
+      const defaults = DefaultHomeWidgets.defaultWidgets;
       
       expect(defaults, isNotEmpty);
       expect(defaults.every((w) => w.id.isNotEmpty), true);
@@ -19,7 +19,7 @@ void main() {
     });
     
     test('HomeWidgetConfig copyWith works correctly', () {
-      final widget = HomeWidgetConfig(
+      const widget = HomeWidgetConfig(
         id: 'test-widget',
         type: 'workout',
         title: 'Test Widget',
@@ -41,7 +41,7 @@ void main() {
     });
     
     test('HomeWidgetConfig serialization works', () {
-      final widget = HomeWidgetConfig(
+      const widget = HomeWidgetConfig(
         id: 'test-widget',
         type: 'workout',
         title: 'Test Widget',

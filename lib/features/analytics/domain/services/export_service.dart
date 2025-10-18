@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
@@ -419,13 +418,49 @@ class ExportService {
     );
   }
   
-  /// Generate workout CSV data
+  /// Generate workout CSV data with metadata
   static List<List<dynamic>> _generateWorkoutCSV(List<AnalyticsActivity> activities) {
-    List<List<dynamic>> rows = [
-      ['Date', 'Exercise', 'Sets', 'Total Reps', 'Total Volume (kg)', 'Max Weight (kg)', 'Duration (min)']
-    ];
-    
+    final List<List<dynamic>> rows = [];
+
+    // Metadata section
+    rows.add(['# GymBro TrackLog - Workout Export']);
+    rows.add(['# Generated:', _fullDateFormat.format(DateTime.now())]);
+    rows.add(['# Total Workouts:', activities.length]);
+    rows.add(['']); // Empty row for separation
+
+    // Summary statistics
+    final totalVolume = activities.fold<double>(0, (sum, a) => sum + a.totalVolume);
+    final totalSets = activities.fold<int>(0, (sum, a) => sum + a.sets.length);
+    final avgDuration = activities.where((a) => a.duration != null).isEmpty
+        ? 0
+        : activities.where((a) => a.duration != null).map((a) => a.duration!).reduce((a, b) => a + b) ~/
+            activities.where((a) => a.duration != null).length;
+
+    rows.add(['# SUMMARY']);
+    rows.add(['Total Volume (kg):', totalVolume.toStringAsFixed(1)]);
+    rows.add(['Total Sets:', totalSets]);
+    rows.add(['Average Duration (min):', avgDuration]);
+    rows.add(['']); // Empty row
+
+    // Main data headers
+    rows.add(['# WORKOUT DATA']);
+    rows.add([
+      'Date',
+      'Exercise Name',
+      'Sets Completed',
+      'Total Reps',
+      'Total Volume (kg)',
+      'Max Weight (kg)',
+      'Avg Weight (kg)',
+      'Duration (min)',
+      'Muscle Group'
+    ]);
+
     for (final activity in activities) {
+      final avgWeight = activity.sets.isEmpty
+          ? 0.0
+          : activity.sets.map((s) => s.weight).reduce((a, b) => a + b) / activity.sets.length;
+
       rows.add([
         _dateFormat.format(activity.date),
         activity.exerciseName,
@@ -433,19 +468,41 @@ class ExportService {
         activity.totalReps,
         activity.totalVolume.toStringAsFixed(1),
         activity.maxWeight.toStringAsFixed(1),
+        avgWeight.toStringAsFixed(1),
         activity.duration ?? 0,
+        activity.muscleGroup ?? 'Unknown',
       ]);
     }
-    
+
     return rows;
   }
   
-  /// Generate exercise CSV data
+  /// Generate detailed exercise CSV data with metadata
   static List<List<dynamic>> _generateExerciseCSV(List<AnalyticsActivity> activities) {
-    List<List<dynamic>> rows = [
-      ['Date', 'Exercise', 'Set', 'Reps', 'Weight (kg)', 'Volume (kg)', 'RPE', 'Rest (sec)']
-    ];
-    
+    final List<List<dynamic>> rows = [];
+
+    // Metadata
+    rows.add(['# GymBro TrackLog - Detailed Exercise Export']);
+    rows.add(['# Generated:', _fullDateFormat.format(DateTime.now())]);
+    final totalSets = activities.fold<int>(0, (sum, a) => sum + a.sets.length);
+    rows.add(['# Total Sets:', totalSets]);
+    rows.add(['']); // Empty row
+
+    // Headers with descriptions
+    rows.add(['# SET-BY-SET DATA']);
+    rows.add([
+      'Date',
+      'Exercise Name',
+      'Set Number',
+      'Reps Performed',
+      'Weight Used (kg)',
+      'Set Volume (kg)',
+      'RPE (1-10)',
+      'Rest Time (sec)',
+      'Tempo',
+      'Notes'
+    ]);
+
     for (final activity in activities) {
       for (int i = 0; i < activity.sets.length; i++) {
         final set = activity.sets[i];
@@ -456,50 +513,102 @@ class ExportService {
           set.reps,
           set.weight.toStringAsFixed(1),
           (set.weight * set.reps).toStringAsFixed(1),
-          set.rpe ?? '',
-          set.restTime ?? '',
+          set.rpe ?? 'N/A',
+          set.restTime ?? 'N/A',
+          set.tempo ?? 'N/A',
+          set.notes ?? '',
         ]);
       }
     }
-    
+
     return rows;
   }
   
-  /// Generate volume CSV data
+  /// Generate volume tracking CSV with analytics
   static List<List<dynamic>> _generateVolumeCSV(List<AnalyticsActivity> activities) {
     // Group by date
-    Map<DateTime, double> dailyVolume = {};
-    
+    final Map<DateTime, double> dailyVolume = {};
+    final Map<DateTime, int> dailySets = {};
+
     for (final activity in activities) {
       final date = DateTime(activity.date.year, activity.date.month, activity.date.day);
       dailyVolume[date] = (dailyVolume[date] ?? 0) + activity.totalVolume;
+      dailySets[date] = (dailySets[date] ?? 0) + activity.sets.length;
     }
-    
-    List<List<dynamic>> rows = [
-      ['Date', 'Total Volume (kg)', 'Total Volume (tons)']
-    ];
-    
+
+    final List<List<dynamic>> rows = [];
+
+    // Metadata
+    rows.add(['# GymBro TrackLog - Volume Tracking Export']);
+    rows.add(['# Generated:', _fullDateFormat.format(DateTime.now())]);
+    final totalVolume = dailyVolume.values.fold<double>(0, (sum, v) => sum + v);
+    final avgDaily = dailyVolume.isEmpty ? 0 : totalVolume / dailyVolume.length;
+    rows.add(['# Total Volume:', '${totalVolume.toStringAsFixed(1)} kg']);
+    rows.add(['# Average Daily Volume:', '${avgDaily.toStringAsFixed(1)} kg']);
+    rows.add(['# Training Days:', dailyVolume.length]);
+    rows.add(['']); // Empty row
+
+    // Volume progression data
+    rows.add(['# DAILY VOLUME DATA']);
+    rows.add([
+      'Date',
+      'Total Volume (kg)',
+      'Total Volume (tons)',
+      'Total Sets',
+      'Avg Volume per Set (kg)',
+      '7-Day Moving Avg (kg)',
+      'Trend'
+    ]);
+
     final sortedDates = dailyVolume.keys.toList()..sort();
-    for (final date in sortedDates) {
+
+    for (int i = 0; i < sortedDates.length; i++) {
+      final date = sortedDates[i];
       final volume = dailyVolume[date]!;
+      final sets = dailySets[date]!;
+      final avgPerSet = volume / sets;
+
+      // Calculate 7-day moving average
+      double movingAvg = 0;
+      int count = 0;
+      for (int j = i - 6; j <= i; j++) {
+        if (j >= 0 && j < sortedDates.length) {
+          movingAvg += dailyVolume[sortedDates[j]]!;
+          count++;
+        }
+      }
+      movingAvg = count > 0 ? movingAvg / count : 0;
+
+      // Determine trend
+      String trend = '→';
+      if (i > 0) {
+        final prevVolume = dailyVolume[sortedDates[i - 1]]!;
+        if (volume > prevVolume * 1.05) trend = '↑';
+        if (volume < prevVolume * 0.95) trend = '↓';
+      }
+
       rows.add([
         _dateFormat.format(date),
         volume.toStringAsFixed(1),
         (volume / 1000).toStringAsFixed(3),
+        sets,
+        avgPerSet.toStringAsFixed(1),
+        movingAvg.toStringAsFixed(1),
+        trend,
       ]);
     }
-    
+
     return rows;
   }
   
   /// Generate personal records CSV data
   static List<List<dynamic>> _generatePRCSV(List<AnalyticsActivity> activities) {
-    List<List<dynamic>> rows = [
+    final List<List<dynamic>> rows = [
       ['Date', 'Exercise', 'Type', 'Value', 'Previous Best', 'Improvement %']
     ];
     
     // Track PRs per exercise
-    Map<String, Map<String, double>> exercisePRs = {};
+    final Map<String, Map<String, double>> exercisePRs = {};
     
     for (final activity in activities) {
       final exercise = activity.exerciseName;

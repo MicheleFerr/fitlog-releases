@@ -2,20 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Model representing an analytics activity (workout session)
 class AnalyticsActivity extends Equatable {
-  final String id;
-  final String userId;
-  final DateTime date;
-  final String exerciseId;
-  final String exerciseName;
-  final String muscleGroup;
-  final List<AnalyticsSet> sets;
-  final double totalVolume;
-  final int totalReps;
-  final double maxWeight;
-  final double? averageIntensity;
-  final int? duration;
-  final String? workoutId;
-  final Map<String, dynamic>? metadata;
 
   const AnalyticsActivity({
     required this.id,
@@ -33,24 +19,6 @@ class AnalyticsActivity extends Equatable {
     this.workoutId,
     this.metadata,
   });
-
-  @override
-  List<Object?> get props => [
-        id,
-        userId,
-        date,
-        exerciseId,
-        exerciseName,
-        muscleGroup,
-        sets,
-        totalVolume,
-        totalReps,
-        maxWeight,
-        averageIntensity,
-        duration,
-        workoutId,
-        metadata,
-      ];
 
   /// Create from Firestore document
   factory AnalyticsActivity.fromMap(Map<String, dynamic> map) {
@@ -73,6 +41,38 @@ class AnalyticsActivity extends Equatable {
       metadata: map['metadata'] as Map<String, dynamic>?,
     );
   }
+  final String id;
+  final String userId;
+  final DateTime date;
+  final String exerciseId;
+  final String exerciseName;
+  final String muscleGroup;
+  final List<AnalyticsSet> sets;
+  final double totalVolume;
+  final int totalReps;
+  final double maxWeight;
+  final double? averageIntensity;
+  final int? duration;
+  final String? workoutId;
+  final Map<String, dynamic>? metadata;
+
+  @override
+  List<Object?> get props => [
+        id,
+        userId,
+        date,
+        exerciseId,
+        exerciseName,
+        muscleGroup,
+        sets,
+        totalVolume,
+        totalReps,
+        maxWeight,
+        averageIntensity,
+        duration,
+        workoutId,
+        metadata,
+      ];
 
   /// Convert to Firestore document
   Map<String, dynamic> toMap() {
@@ -132,34 +132,17 @@ class AnalyticsActivity extends Equatable {
 
 /// Model representing a single set in an activity
 class AnalyticsSet extends Equatable {
-  final double weight;
-  final int reps;
-  final double? rpe;
-  final int? restTime;
-  final bool? isDropSet;
-  final bool? isFailure;
-  final String? notes;
 
   const AnalyticsSet({
     required this.weight,
     required this.reps,
     this.rpe,
     this.restTime,
+    this.tempo,
     this.isDropSet,
     this.isFailure,
     this.notes,
   });
-
-  @override
-  List<Object?> get props => [
-        weight,
-        reps,
-        rpe,
-        restTime,
-        isDropSet,
-        isFailure,
-        notes,
-      ];
 
   /// Create from map
   factory AnalyticsSet.fromMap(Map<String, dynamic> map) {
@@ -168,11 +151,32 @@ class AnalyticsSet extends Equatable {
       reps: map['reps'] as int,
       rpe: (map['rpe'] as num?)?.toDouble(),
       restTime: map['restTime'] as int?,
+      tempo: map['tempo'] as String?,
       isDropSet: map['isDropSet'] as bool?,
       isFailure: map['isFailure'] as bool?,
       notes: map['notes'] as String?,
     );
   }
+  final double weight;
+  final int reps;
+  final double? rpe;
+  final int? restTime;
+  final String? tempo;  // Tempo notation (e.g., "3-0-1-0")
+  final bool? isDropSet;
+  final bool? isFailure;
+  final String? notes;
+
+  @override
+  List<Object?> get props => [
+        weight,
+        reps,
+        rpe,
+        restTime,
+        tempo,
+        isDropSet,
+        isFailure,
+        notes,
+      ];
 
   /// Convert to map
   Map<String, dynamic> toMap() {
@@ -181,6 +185,7 @@ class AnalyticsSet extends Equatable {
       'reps': reps,
       'rpe': rpe,
       'restTime': restTime,
+      'tempo': tempo,
       'isDropSet': isDropSet,
       'isFailure': isFailure,
       'notes': notes,

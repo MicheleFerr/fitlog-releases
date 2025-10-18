@@ -4,9 +4,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 
 /// Universal help button with explanations
 class HelpButton extends StatelessWidget {
-  final String metricKey;
-  final String? customTooltip;
-  final VoidCallback? onTap;
 
   const HelpButton({
     super.key,
@@ -14,11 +11,14 @@ class HelpButton extends StatelessWidget {
     this.customTooltip,
     this.onTap,
   });
+  final String metricKey;
+  final String? customTooltip;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return IconButton(
       icon: Icon(
@@ -32,7 +32,7 @@ class HelpButton extends StatelessWidget {
   }
 
   String _getTooltip(BuildContext context, String key) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     // Map metric keys to localized tooltips
     final tooltips = {
       'volume': localizations.volumeExplanationDesc,
@@ -46,7 +46,7 @@ class HelpButton extends StatelessWidget {
 
   void _showHelpDialog(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     HapticFeedback.lightImpact();
     
@@ -89,7 +89,7 @@ class HelpButton extends StatelessWidget {
   }
 
   String _getTitle(BuildContext context, String key) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final titles = {
       'volume': localizations.volumeExplanation,
       'sets': localizations.setsExplanation,
@@ -101,7 +101,7 @@ class HelpButton extends StatelessWidget {
   }
 
   String _getExplanation(BuildContext context, String key) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final explanations = {
       'volume': localizations.volumeExplanationDesc,
       'sets': localizations.setsExplanationDesc,
@@ -114,7 +114,7 @@ class HelpButton extends StatelessWidget {
 
   Widget _buildFormula(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return Card(
       color: colorScheme.primaryContainer.withValues(alpha: 0.3),
@@ -160,7 +160,7 @@ class HelpButton extends StatelessWidget {
 
   Widget _buildExamples(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return Card(
       color: colorScheme.secondaryContainer.withValues(alpha: 0.3),
@@ -171,7 +171,7 @@ class HelpButton extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb_outline, size: 16, color: Colors.amber),
+                const Icon(Icons.lightbulb_outline, size: 16, color: Colors.amber),
                 const SizedBox(width: 8),
                 Text(
                   localizations.example,
@@ -191,7 +191,7 @@ class HelpButton extends StatelessWidget {
   }
 
   String _getExample(BuildContext context, String key) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final examples = {
       'volume': '3 sets × 10 reps × 50kg = 1500kg total',
       'sets': '4 exercises × 3 sets = 12 total sets',
@@ -204,7 +204,7 @@ class HelpButton extends StatelessWidget {
 
   Widget _buildTips(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return Card(
       color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
@@ -235,7 +235,7 @@ class HelpButton extends StatelessWidget {
   }
 
   String _getTip(BuildContext context, String key) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final tips = {
       'volume': localizations.volumeTip,
       'sets': localizations.setsTip,
@@ -249,15 +249,6 @@ class HelpButton extends StatelessWidget {
 
 /// Interactive metric card with animations
 class InteractiveMetricCard extends StatefulWidget {
-  final String title;
-  final String value;
-  final String? unit;
-  final IconData icon;
-  final Color? color;
-  final double? previousValue;
-  final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
-  final String? helpKey;
 
   const InteractiveMetricCard({
     super.key,
@@ -271,6 +262,15 @@ class InteractiveMetricCard extends StatefulWidget {
     this.onLongPress,
     this.helpKey,
   });
+  final String title;
+  final String value;
+  final String? unit;
+  final IconData icon;
+  final Color? color;
+  final double? previousValue;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+  final String? helpKey;
 
   @override
   State<InteractiveMetricCard> createState() => _InteractiveMetricCardState();
@@ -430,9 +430,6 @@ class _InteractiveMetricCardState extends State<InteractiveMetricCard>
 
 /// Trend indicator with animations
 class TrendIndicator extends StatelessWidget {
-  final double current;
-  final double previous;
-  final bool showPercentage;
 
   const TrendIndicator({
     super.key,
@@ -440,6 +437,9 @@ class TrendIndicator extends StatelessWidget {
     required this.previous,
     this.showPercentage = true,
   });
+  final double current;
+  final double previous;
+  final bool showPercentage;
 
   @override
   Widget build(BuildContext context) {
@@ -482,13 +482,6 @@ class TrendIndicator extends StatelessWidget {
 
 /// Motivational empty state
 class MotivationalEmptyState extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final String? motivationalQuote;
-  final String? proTip;
-  final String actionLabel;
-  final VoidCallback onAction;
 
   const MotivationalEmptyState({
     super.key,
@@ -500,11 +493,18 @@ class MotivationalEmptyState extends StatelessWidget {
     required this.actionLabel,
     required this.onAction,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final String? motivationalQuote;
+  final String? proTip;
+  final String actionLabel;
+  final VoidCallback onAction;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
 
     return Center(
       child: Padding(
@@ -620,7 +620,7 @@ class MotivationalEmptyState extends StatelessWidget {
                 HapticFeedback.mediumImpact();
                 onAction();
               },
-              icon: Icon(Icons.fitness_center),
+              icon: const Icon(Icons.fitness_center),
               label: Text(actionLabel),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

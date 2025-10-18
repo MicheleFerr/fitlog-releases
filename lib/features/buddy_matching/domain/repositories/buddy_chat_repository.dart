@@ -1,20 +1,19 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: buddy_matching
- * 🔧 Type: repository interface
- * 🌍 Localization: N/A - Repository interface
- * 🎨 Theme: N/A - Repository interface
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None (abstract interface)
- * - Hive: None (abstract interface)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: repository interface
+/// 🌍 Localization: N/A - Repository interface
+/// 🎨 Theme: N/A - Repository interface
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None (abstract interface)
+/// - Hive: None (abstract interface)
+library;
 
-import '../entities/buddy_message.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_message.dart';
 
 /// Repository interface for buddy chat operations
 abstract class BuddyChatRepository {

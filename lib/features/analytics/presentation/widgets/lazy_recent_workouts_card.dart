@@ -86,7 +86,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          AppLocalizations.of(context)!.recentWorkouts,
+                          AppLocalizations.of(context).recentWorkouts,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -134,7 +134,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      AppLocalizations.of(context)!.noWorkoutsYet,
+                      AppLocalizations.of(context).noWorkoutsYet,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -457,9 +457,9 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
 
 // Separate widget for workout details sheet to keep code organized
 class _WorkoutDetailsSheet extends StatelessWidget {
-  final List<ExerciseActivity> activities;
   
   const _WorkoutDetailsSheet({required this.activities});
+  final List<ExerciseActivity> activities;
   
   @override
   Widget build(BuildContext context) {

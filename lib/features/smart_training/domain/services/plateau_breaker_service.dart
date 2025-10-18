@@ -1,6 +1,6 @@
 import 'dart:math' as math;
-import '../entities/smart_training_metrics.dart';
-import '../entities/progressive_overload_analysis.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/progressive_overload_analysis.dart';
 
 /// Service for detecting plateaus and providing breakthrough strategies
 class PlateauBreakerService {
@@ -92,7 +92,7 @@ class PlateauBreakerService {
     final previousVolume = volumes.skip(2).take(2).reduce((a, b) => a + b) / 2;
     
     final volumeChange = (recentVolume - previousVolume) / previousVolume;
-    final threshold = 0.02; // 2% improvement threshold
+    const threshold = 0.02; // 2% improvement threshold
     
     return PlateauIndicator(
       name: 'Volume Stagnation',
@@ -110,7 +110,7 @@ class PlateauBreakerService {
     final previousOneRM = oneRMs.skip(2).take(2).reduce((a, b) => math.max(a, b));
     
     final strengthChange = (recentOneRM - previousOneRM) / previousOneRM;
-    final threshold = 0.01; // 1% strength improvement threshold
+    const threshold = 0.01; // 1% strength improvement threshold
     
     return PlateauIndicator(
       name: 'Strength Plateau',
@@ -147,7 +147,7 @@ class PlateauBreakerService {
     final avgRPEs = metrics.map((m) => m.averageRPE).toList();
     final recentRPE = avgRPEs.take(2).reduce((a, b) => a + b) / 2;
     
-    final threshold = 8.5; // High RPE threshold
+    const threshold = 8.5; // High RPE threshold
     
     return PlateauIndicator(
       name: 'RPE Ceiling',

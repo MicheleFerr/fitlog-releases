@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain/services
- * 🎯 Feature: workout
- * 🔧 Type: service
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities
- * - File system access
- * - JSON/CSV serialization
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain/services
+/// 🎯 Feature: workout
+/// 🔧 Type: service
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities
+/// - File system access
+/// - JSON/CSV serialization
+library;
 
 import 'dart:convert';
 import 'dart:io';
@@ -20,8 +19,6 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:intl/intl.dart';
 
 /// Formati di export supportati
@@ -33,15 +30,6 @@ enum ExportFormat {
 
 /// Opzioni per l'export
 class ExportOptions {
-  final List<String>? workoutIds; // null = tutti
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final ExportFormat format;
-  final bool includeIncomplete;
-  final bool includeNotes;
-  final bool includeRPE;
-  final bool includeSetDurations;
-  final bool compressJson;
   
   ExportOptions({
     this.workoutIds,
@@ -54,6 +42,15 @@ class ExportOptions {
     this.includeSetDurations = true,
     this.compressJson = false,
   });
+  final List<String>? workoutIds; // null = tutti
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final ExportFormat format;
+  final bool includeIncomplete;
+  final bool includeNotes;
+  final bool includeRPE;
+  final bool includeSetDurations;
+  final bool compressJson;
 }
 
 /// Service per esportare workout in vari formati
@@ -66,7 +63,7 @@ class WorkoutExportService {
   }) async {
     try {
       // Filtra workout in base alle opzioni
-      var filteredWorkouts = _filterWorkouts(workouts, options);
+      final filteredWorkouts = _filterWorkouts(workouts, options);
       
       if (filteredWorkouts.isEmpty) {
         return ExportResult(
@@ -346,11 +343,6 @@ class WorkoutExportService {
 
 /// Risultato dell'export
 class ExportResult {
-  final bool success;
-  final String message;
-  final String? filePath;
-  final int? workoutCount;
-  final int? fileSize;
   
   ExportResult({
     required this.success,
@@ -359,6 +351,11 @@ class ExportResult {
     this.workoutCount,
     this.fileSize,
   });
+  final bool success;
+  final String message;
+  final String? filePath;
+  final int? workoutCount;
+  final int? fileSize;
   
   String get formattedFileSize {
     if (fileSize == null) return '';

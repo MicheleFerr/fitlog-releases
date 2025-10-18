@@ -7,10 +7,6 @@ import 'dart:math' as math;
 /// Heatmap calendario stile GitHub contributions per visualizzare
 /// l'intensità e frequenza degli allenamenti
 class WorkoutHeatmapCalendar extends ConsumerStatefulWidget {
-  final Map<DateTime, WorkoutIntensity> workoutData;
-  final Function(DateTime, WorkoutIntensity?)? onDayTap;
-  final DateTime? startDate;
-  final int weeksToShow;
   
   const WorkoutHeatmapCalendar({
     super.key,
@@ -19,6 +15,10 @@ class WorkoutHeatmapCalendar extends ConsumerStatefulWidget {
     this.startDate,
     this.weeksToShow = 52,
   });
+  final Map<DateTime, WorkoutIntensity> workoutData;
+  final Function(DateTime, WorkoutIntensity?)? onDayTap;
+  final DateTime? startDate;
+  final int weeksToShow;
 
   @override
   ConsumerState<WorkoutHeatmapCalendar> createState() => _WorkoutHeatmapCalendarState();
@@ -577,14 +577,14 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
 }
 
 class WorkoutIntensity {
-  final int workoutCount;
-  final int totalMinutes;
-  final WorkoutIntensityLevel level;
   
   WorkoutIntensity({
     required this.workoutCount,
     this.totalMinutes = 0,
   }) : level = _calculateLevel(workoutCount);
+  final int workoutCount;
+  final int totalMinutes;
+  final WorkoutIntensityLevel level;
   
   static WorkoutIntensityLevel _calculateLevel(int count) {
     if (count == 0) return WorkoutIntensityLevel.none;
@@ -604,13 +604,13 @@ enum WorkoutIntensityLevel {
 }
 
 class MonthLabel {
-  final int month;
-  final int year;
-  final int weekIndex;
   
   const MonthLabel({
     required this.month,
     required this.year,
     required this.weekIndex,
   });
+  final int month;
+  final int year;
+  final int weekIndex;
 }

@@ -7,7 +7,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -16,12 +15,6 @@ import 'package:flutter/foundation.dart';
 // ============= STATE MODELS =============
 
 class NotificationState {
-  final List<AppNotification> notifications;
-  final NotificationPreferences preferences;
-  final bool isInitialized;
-  final int unreadCount;
-  final String? error;
-  final bool isLoading;
 
   const NotificationState({
     required this.notifications,
@@ -40,6 +33,12 @@ class NotificationState {
       unreadCount: 0,
     );
   }
+  final List<AppNotification> notifications;
+  final NotificationPreferences preferences;
+  final bool isInitialized;
+  final int unreadCount;
+  final String? error;
+  final bool isLoading;
 
   NotificationState copyWith({
     List<AppNotification>? notifications,
@@ -61,12 +60,6 @@ class NotificationState {
 }
 
 class NotificationPreferences {
-  final bool pushEnabled;
-  final bool emailEnabled;
-  final Map<String, bool> categories;
-  final QuietHours quietHours;
-  final FrequencySettings frequency;
-  final DateTime? updatedAt;
 
   const NotificationPreferences({
     required this.pushEnabled,
@@ -78,7 +71,7 @@ class NotificationPreferences {
   });
 
   factory NotificationPreferences.defaultPreferences() {
-    return NotificationPreferences(
+    return const NotificationPreferences(
       pushEnabled: true,
       emailEnabled: true,
       categories: {
@@ -90,28 +83,17 @@ class NotificationPreferences {
         'system': true,
         'marketing': false,
       },
-      quietHours: const QuietHours(
+      quietHours: QuietHours(
         enabled: true,
         start: '22:00',
         end: '08:00',
       ),
-      frequency: const FrequencySettings(
+      frequency: FrequencySettings(
         achievements: AchievementFrequency.instant,
         reminders: ReminderFrequency.daily,
         marketing: MarketingFrequency.disabled,
       ),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'pushEnabled': pushEnabled,
-      'emailEnabled': emailEnabled,
-      'categories': categories,
-      'quietHours': quietHours.toJson(),
-      'frequency': frequency.toJson(),
-      'updatedAt': FieldValue.serverTimestamp(),
-    };
   }
 
   factory NotificationPreferences.fromJson(Map<String, dynamic> json) {
@@ -123,6 +105,23 @@ class NotificationPreferences {
       frequency: FrequencySettings.fromJson(json['frequency'] ?? {}),
       updatedAt: (json['updatedAt'] as Timestamp?)?.toDate(),
     );
+  }
+  final bool pushEnabled;
+  final bool emailEnabled;
+  final Map<String, bool> categories;
+  final QuietHours quietHours;
+  final FrequencySettings frequency;
+  final DateTime? updatedAt;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'pushEnabled': pushEnabled,
+      'emailEnabled': emailEnabled,
+      'categories': categories,
+      'quietHours': quietHours.toJson(),
+      'frequency': frequency.toJson(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
   }
 
   NotificationPreferences copyWith({
@@ -143,24 +142,13 @@ class NotificationPreferences {
   }
 }
 
-class QuietHours {
-  final bool enabled;
-  final String start; // "22:00"
-  final String end;   // "08:00"
+class QuietHours {   // "08:00"
 
   const QuietHours({
     required this.enabled,
     required this.start,
     required this.end,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'enabled': enabled,
-      'start': start,
-      'end': end,
-    };
-  }
 
   factory QuietHours.fromJson(Map<String, dynamic> json) {
     return QuietHours(
@@ -169,26 +157,26 @@ class QuietHours {
       end: json['end'] ?? '08:00',
     );
   }
+  final bool enabled;
+  final String start; // "22:00"
+  final String end;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'enabled': enabled,
+      'start': start,
+      'end': end,
+    };
+  }
 }
 
 class FrequencySettings {
-  final AchievementFrequency achievements;
-  final ReminderFrequency reminders;
-  final MarketingFrequency marketing;
 
   const FrequencySettings({
     required this.achievements,
     required this.reminders,
     required this.marketing,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'achievements': achievements.name,
-      'reminders': reminders.name,
-      'marketing': marketing.name,
-    };
-  }
 
   factory FrequencySettings.fromJson(Map<String, dynamic> json) {
     return FrequencySettings(
@@ -202,6 +190,17 @@ class FrequencySettings {
         json['marketing'] ?? 'disabled'
       ),
     );
+  }
+  final AchievementFrequency achievements;
+  final ReminderFrequency reminders;
+  final MarketingFrequency marketing;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'achievements': achievements.name,
+      'reminders': reminders.name,
+      'marketing': marketing.name,
+    };
   }
 }
 
@@ -250,6 +249,11 @@ final legacyNotificationsByTypeProvider = Provider.family<List<AppNotification>,
 
 @Deprecated('Use UnifiedNotificationProvider from unified_notification_provider.dart')
 class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState> {
+
+  LegacyUnifiedNotificationNotifier(this.ref) : super(NotificationState.initial()) {
+    _initCompleter = Completer<void>();
+    _initializeNotifications();
+  }
   final Ref ref;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
@@ -264,11 +268,6 @@ class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState>
 
   // CRITICAL: Resource tracking for disposal
   StreamSubscription<String>? _tokenRefreshSubscription;
-
-  LegacyUnifiedNotificationNotifier(this.ref) : super(NotificationState.initial()) {
-    _initCompleter = Completer<void>();
-    _initializeNotifications();
-  }
 
   // ============= INITIALIZATION =============
 
@@ -497,7 +496,7 @@ class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState>
 
       if (currentUser?.uid == null) return;
 
-      final deviceInfo = await _getDeviceInfo();
+      final deviceInfo = _getDeviceInfo();
 
       await _firestore
           .collection('notification_subscriptions')

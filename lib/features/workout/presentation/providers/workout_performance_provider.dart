@@ -1,23 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: workout
- * 🔧 Type: provider (PERFORMANCE MONITORING & MEMOIZATION)
- * 🌍 Localization: ✅ N/A (utility provider)
- * 🎨 Theme: ✅ N/A (utility provider)
- * 📱 Platform: iOS/Android/Universal
- * 
- * Dependencies:
- * - Riverpod: Memoization and caching
- * - Performance: Memory and CPU optimization
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: workout
+/// 🔧 Type: provider (PERFORMANCE MONITORING & MEMOIZATION)
+/// 🌍 Localization: ✅ N/A (utility provider)
+/// 🎨 Theme: ✅ N/A (utility provider)
+/// 📱 Platform: iOS/Android/Universal
+/// 
+/// Dependencies:
+/// - Riverpod: Memoization and caching
+/// - Performance: Memory and CPU optimization
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
-import '../../domain/entities/workout.dart';
-import '../../domain/entities/exercise.dart';
-import 'workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 // 🚀 PERFORMANCE MONITORING & MEMOIZATION PROVIDERS
 
@@ -309,11 +308,6 @@ class PerformanceMonitor extends StateNotifier<PerformanceMetrics> {
 // 📊 DATA CLASSES
 
 class PersonalRecord {
-  final String exerciseName;
-  final double weight;
-  final int reps;
-  final double volume;
-  final DateTime date;
 
   PersonalRecord({
     required this.exerciseName,
@@ -322,16 +316,14 @@ class PersonalRecord {
     required this.volume,
     required this.date,
   });
+  final String exerciseName;
+  final double weight;
+  final int reps;
+  final double volume;
+  final DateTime date;
 }
 
 class ExerciseProgression {
-  final String exerciseName;
-  final double weightProgression; // Percentage change
-  final double volumeProgression; // Percentage change
-  final int workoutCount;
-  final DateTime firstWorkoutDate;
-  final DateTime lastWorkoutDate;
-  final ProgressionTrend trend;
 
   ExerciseProgression({
     required this.exerciseName,
@@ -342,6 +334,13 @@ class ExerciseProgression {
     required this.lastWorkoutDate,
     required this.trend,
   });
+  final String exerciseName;
+  final double weightProgression; // Percentage change
+  final double volumeProgression; // Percentage change
+  final int workoutCount;
+  final DateTime firstWorkoutDate;
+  final DateTime lastWorkoutDate;
+  final ProgressionTrend trend;
 }
 
 enum ProgressionTrend {
@@ -351,10 +350,6 @@ enum ProgressionTrend {
 }
 
 class WorkoutExerciseData {
-  final DateTime date;
-  final double maxWeight;
-  final double totalVolume;
-  final int totalSets;
 
   WorkoutExerciseData({
     required this.date,
@@ -362,14 +357,13 @@ class WorkoutExerciseData {
     required this.totalVolume,
     required this.totalSets,
   });
+  final DateTime date;
+  final double maxWeight;
+  final double totalVolume;
+  final int totalSets;
 }
 
 class PerformanceMetrics {
-  final Map<String, int> widgetRebuilds;
-  final Map<String, int> providerWatches;
-  final Map<String, DateTime> lastRebuildTimestamps;
-  final int totalRebuilds;
-  final int totalProviderWatches;
 
   PerformanceMetrics({
     this.widgetRebuilds = const {},
@@ -378,6 +372,11 @@ class PerformanceMetrics {
     this.totalRebuilds = 0,
     this.totalProviderWatches = 0,
   });
+  final Map<String, int> widgetRebuilds;
+  final Map<String, int> providerWatches;
+  final Map<String, DateTime> lastRebuildTimestamps;
+  final int totalRebuilds;
+  final int totalProviderWatches;
 
   PerformanceMetrics copyWith({
     Map<String, int>? widgetRebuilds,
@@ -399,14 +398,14 @@ class PerformanceMetrics {
 // 🎯 PERFORMANCE DEBUG WIDGET (Development only)
 // Use this to monitor rebuilds in debug mode
 class PerformanceDebugWidget extends ConsumerWidget {
-  final String widgetName;
-  final Widget child;
 
   const PerformanceDebugWidget({
     super.key,
     required this.widgetName,
     required this.child,
   });
+  final String widgetName;
+  final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: buddy_matching
- * 🔧 Type: entity
- * 🌍 Localization: N/A - Entity class
- * 🎨 Theme: N/A - Entity class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: entity
+/// 🌍 Localization: N/A - Entity class
+/// 🎨 Theme: N/A - Entity class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -79,9 +78,6 @@ class BuddyMatch with _$BuddyMatch {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _BuddyMatch;
-
-  factory BuddyMatch.fromJson(Map<String, dynamic> json) =>
-      _$BuddyMatchFromJson(json);
 
   /// Create a new match when first user likes second user
   factory BuddyMatch.create({
@@ -161,6 +157,14 @@ class BuddyMatch with _$BuddyMatch {
           : null,
     );
   }
+
+  const BuddyMatch._(); // Private constructor for adding methods
+
+  factory BuddyMatch.fromJson(Map<String, dynamic> json) =>
+      _$BuddyMatchFromJson(json);
+
+  /// Check if this is a mutual match (both users liked each other)
+  bool get isMutualMatch => user1LikedAt != null && user2LikedAt != null;
 }
 
 extension BuddyMatchX on BuddyMatch {

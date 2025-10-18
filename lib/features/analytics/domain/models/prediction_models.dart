@@ -17,11 +17,6 @@ enum ReliabilityLevel {
 
 /// Confidence interval for predictions
 class ConfidenceInterval extends Equatable {
-  final double lower;
-  final double median;
-  final double upper;
-  final double confidence; // e.g., 0.95 for 95% CI
-  final String unit;
 
   const ConfidenceInterval({
     required this.lower,
@@ -30,6 +25,11 @@ class ConfidenceInterval extends Equatable {
     this.confidence = 0.95,
     this.unit = 'kg',
   });
+  final double lower;
+  final double median;
+  final double upper;
+  final double confidence; // e.g., 0.95 for 95% CI
+  final String unit;
 
   @override
   List<Object?> get props => [lower, median, upper, confidence, unit];
@@ -46,10 +46,6 @@ class ConfidenceInterval extends Equatable {
 
 /// Scenario-based prediction
 class ScenarioPrediction extends Equatable {
-  final String scenario;
-  final double value;
-  final String description;
-  final Map<String, String> assumptions;
 
   const ScenarioPrediction({
     required this.scenario,
@@ -57,6 +53,10 @@ class ScenarioPrediction extends Equatable {
     required this.description,
     this.assumptions = const {},
   });
+  final String scenario;
+  final double value;
+  final String description;
+  final Map<String, String> assumptions;
 
   @override
   List<Object?> get props => [scenario, value, description, assumptions];
@@ -64,14 +64,6 @@ class ScenarioPrediction extends Equatable {
 
 /// Enhanced prediction with transparency
 class TransparentPrediction extends Equatable {
-  final String metric;
-  final ConfidenceInterval? interval;
-  final List<ScenarioPrediction> scenarios;
-  final ReliabilityLevel reliability;
-  final String methodology;
-  final List<String> limitations;
-  final Map<String, dynamic> rawData;
-  final DateTime generatedAt;
 
   TransparentPrediction({
     required this.metric,
@@ -83,6 +75,14 @@ class TransparentPrediction extends Equatable {
     this.rawData = const {},
     DateTime? generatedAt,
   }) : generatedAt = generatedAt ?? DateTime.now();
+  final String metric;
+  final ConfidenceInterval? interval;
+  final List<ScenarioPrediction> scenarios;
+  final ReliabilityLevel reliability;
+  final String methodology;
+  final List<String> limitations;
+  final Map<String, dynamic> rawData;
+  final DateTime generatedAt;
 
   @override
   List<Object?> get props => [
@@ -100,7 +100,7 @@ class TransparentPrediction extends Equatable {
   ScenarioPrediction? get optimistic => 
     scenarios.firstWhere(
       (s) => s.scenario == 'optimistic',
-      orElse: () => scenarios.isNotEmpty ? scenarios.first : ScenarioPrediction(
+      orElse: () => scenarios.isNotEmpty ? scenarios.first : const ScenarioPrediction(
         scenario: 'unknown',
         value: 0,
         description: 'No data',
@@ -111,7 +111,7 @@ class TransparentPrediction extends Equatable {
   ScenarioPrediction? get pessimistic =>
     scenarios.firstWhere(
       (s) => s.scenario == 'pessimistic',
-      orElse: () => scenarios.isNotEmpty ? scenarios.last : ScenarioPrediction(
+      orElse: () => scenarios.isNotEmpty ? scenarios.last : const ScenarioPrediction(
         scenario: 'unknown',
         value: 0,
         description: 'No data',
@@ -132,12 +132,6 @@ class TransparentPrediction extends Equatable {
 
 /// Educational information for users
 class EducationalInfo extends Equatable {
-  final String title;
-  final String explanation;
-  final String formula;
-  final List<String> factors;
-  final String disclaimer;
-  final List<String> references;
 
   const EducationalInfo({
     required this.title,
@@ -147,6 +141,12 @@ class EducationalInfo extends Equatable {
     required this.disclaimer,
     this.references = const [],
   });
+  final String title;
+  final String explanation;
+  final String formula;
+  final List<String> factors;
+  final String disclaimer;
+  final List<String> references;
 
   @override
   List<Object?> get props => [
@@ -161,15 +161,6 @@ class EducationalInfo extends Equatable {
 
 /// Enhanced insight with transparency
 class TransparentInsight extends Equatable {
-  final String id;
-  final String title;
-  final String message;
-  final String recommendation;
-  final ReliabilityLevel reliability;
-  final String reasoning;
-  final EducationalInfo? education;
-  final Map<String, dynamic> supportingData;
-  final DateTime generatedAt;
 
   TransparentInsight({
     String? id,
@@ -183,6 +174,15 @@ class TransparentInsight extends Equatable {
     DateTime? generatedAt,
   }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
        generatedAt = generatedAt ?? DateTime.now();
+  final String id;
+  final String title;
+  final String message;
+  final String recommendation;
+  final ReliabilityLevel reliability;
+  final String reasoning;
+  final EducationalInfo? education;
+  final Map<String, dynamic> supportingData;
+  final DateTime generatedAt;
 
   @override
   List<Object?> get props => [
@@ -214,13 +214,6 @@ class TransparentInsight extends Equatable {
 
 /// Science-based recommendations
 class EvidenceBasedRecommendation extends Equatable {
-  final String topic;
-  final String recommendation;
-  final String evidence;
-  final String source;
-  final int yearPublished;
-  final double effectSize; // Cohen's d or similar
-  final String applicability;
 
   const EvidenceBasedRecommendation({
     required this.topic,
@@ -231,6 +224,13 @@ class EvidenceBasedRecommendation extends Equatable {
     this.effectSize = 0,
     required this.applicability,
   });
+  final String topic;
+  final String recommendation;
+  final String evidence;
+  final String source;
+  final int yearPublished;
+  final double effectSize; // Cohen's d or similar
+  final String applicability;
 
   @override
   List<Object?> get props => [

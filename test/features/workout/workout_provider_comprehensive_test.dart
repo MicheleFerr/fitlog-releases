@@ -25,8 +25,12 @@ void main() {
     
     when(() => mockUser.uid).thenReturn('test-user-id');
     when(() => mockRepository.saveWorkout(any())).thenAnswer((_) async => 'workout-id');
-    when(() => mockRepository.updateWorkout(any())).thenAnswer((_) async {});
-    when(() => mockRepository.deleteWorkout(any())).thenAnswer((_) async {});
+    when(() => mockRepository.updateWorkout(any())).thenAnswer((_) async {
+      return null;
+    });
+    when(() => mockRepository.deleteWorkout(any())).thenAnswer((_) async {
+      return null;
+    });
     
     container = ProviderContainer(
       overrides: [
@@ -221,7 +225,7 @@ void main() {
         orderIndex: 0,
       ));
       
-      await notifier.completeWorkout();
+      notifier.completeWorkout();
       
       final workout = container.read(currentWorkoutProvider);
       expect(workout!.isActive, false);
@@ -303,7 +307,7 @@ void main() {
       // Simulate some time passing
       await Future.delayed(const Duration(seconds: 2));
       
-      await notifier.completeWorkout();
+      notifier.completeWorkout();
       
       final workout = container.read(currentWorkoutProvider);
       expect(workout!.duration, isNotNull);

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:collection/collection.dart';
 
 class ExerciseStatsCard extends StatelessWidget {
-  final List<ExerciseActivity> activities;
-  final String userEmail;
 
   const ExerciseStatsCard({
     super.key,
-    required this.activities,
-    required this.userEmail,
+    required this.workouts,
   });
+  final List<Workout> workouts;
 
   @override
   Widget build(BuildContext context) {
@@ -71,20 +70,15 @@ class ExerciseStatsCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(0x4D),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
           // Exercise image or icon
-          CircleAvatar(
+          const CircleAvatar(
             radius: 20,
-            backgroundImage: stat.imageUrl != null 
-                ? NetworkImage(stat.imageUrl!)
-                : null,
-            child: stat.imageUrl == null
-                ? const Icon(Icons.fitness_center, size: 20)
-                : null,
+            child: Icon(Icons.fitness_center, size: 20),
           ),
           const SizedBox(width: 12),
           
@@ -201,13 +195,8 @@ class ExerciseStatsCard extends StatelessWidget {
                         padding: const EdgeInsets.all(12),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              backgroundImage: stat.imageUrl != null 
-                                  ? NetworkImage(stat.imageUrl!)
-                                  : null,
-                              child: stat.imageUrl == null
-                                  ? const Icon(Icons.fitness_center)
-                                  : null,
+                            const CircleAvatar(
+                              child: Icon(Icons.fitness_center),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -257,61 +246,53 @@ class ExerciseStatsCard extends StatelessWidget {
   }
 
   List<ExerciseStat> _calculateExerciseStats() {
-    final Map<String, List<ExerciseActivity>> exerciseGroups = {};
-    
-    // Group by exercise name
-    for (final activity in activities) {
-      exerciseGroups.putIfAbsent(activity.exerciseName, () => []).add(activity);
-    }
-    
-    // Calculate stats for each exercise
+    final allExercises = workouts.expand((workout) => workout.exercises).toList();
+
+    final exercisesByName = groupBy(allExercises, (exercise) => exercise.name);
+
     final List<ExerciseStat> stats = [];
-    for (final entry in exerciseGroups.entries) {
+
+    for (final entry in exercisesByName.entries) {
       final exerciseName = entry.key;
-      final exerciseActivities = entry.value;
-      
+      final exercises = entry.value;
+
       double maxWeight = 0;
       double totalVolume = 0;
       int totalSets = 0;
-      String? imageUrl = exerciseActivities.first.exerciseImage;
-      
-      for (final activity in exerciseActivities) {
-        for (final set in activity.sets) {
-          if (set.done) {
-            final weight = double.tryParse(set.weight) ?? 0;
-            final reps = int.tryParse(set.reps) ?? 0;
-            
-            maxWeight = maxWeight > weight ? maxWeight : weight;
+      final int sessions = workouts.where((w) => w.exercises.any((e) => e.name == exerciseName)).length;
+
+
+      for (final exercise in exercises) {
+        for (final set in exercise.sets) {
+          if (set.isCompleted) {
+            final weight = set.weight ?? 0.0;
+            final reps = set.actualReps ?? set.reps ?? 0;
+            if (weight > maxWeight) {
+              maxWeight = weight;
+            }
             totalVolume += weight * reps;
             totalSets++;
           }
         }
       }
-      
+
       stats.add(ExerciseStat(
         exerciseName: exerciseName,
-        sessions: exerciseActivities.length,
+        sessions: sessions,
         totalSets: totalSets,
         maxWeight: maxWeight,
         totalVolume: totalVolume,
-        imageUrl: imageUrl,
       ));
     }
-    
+
     // Sort by total volume descending
     stats.sort((a, b) => b.totalVolume.compareTo(a.totalVolume));
-    
+
     return stats;
   }
 }
 
 class ExerciseStat {
-  final String exerciseName;
-  final int sessions;
-  final int totalSets;
-  final double maxWeight;
-  final double totalVolume;
-  final String? imageUrl;
 
   ExerciseStat({
     required this.exerciseName,
@@ -319,6 +300,10 @@ class ExerciseStat {
     required this.totalSets,
     required this.maxWeight,
     required this.totalVolume,
-    this.imageUrl,
   });
+  final String exerciseName;
+  final int sessions;
+  final int totalSets;
+  final double maxWeight;
+  final double totalVolume;
 }

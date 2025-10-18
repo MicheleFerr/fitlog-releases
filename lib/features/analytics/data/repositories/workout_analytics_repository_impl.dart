@@ -1,46 +1,58 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data
- * 🎯 Feature: analytics
- * 🔧 Type: repository implementation
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Firebase: Firestore
- * - Hive: Local storage
- * - workout/domain/entities: Workout
- * - analytics/domain: Repository, Entities, Services
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data
+/// 🎯 Feature: analytics
+/// 🔧 Type: repository implementation
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Firebase: Firestore
+/// - Hive: Local storage
+/// - workout/domain/entities: Workout
+/// - analytics/domain: Repository, Entities, Services
+library;
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/workout_analytics_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:flutter/foundation.dart';
 
 /// Firebase and Hive implementation of WorkoutAnalyticsRepository
 class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
+
+  WorkoutAnalyticsRepositoryImpl({
+    FirebaseFirestore? firestore,
+    required Box metricsCache,
+    PRTracker? prTracker,
+    HiveWorkoutDataSource? hiveWorkoutDataSource,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+        _metricsCache = metricsCache,
+        _prTracker = prTracker ?? PRTracker(),
+        _hiveWorkoutDataSource = hiveWorkoutDataSource ?? HiveWorkoutDataSource();
   final FirebaseFirestore _firestore;
-  final Box<Map<String, dynamic>> _metricsCache;
+  final Box _metricsCache;
   final PRTracker _prTracker;
+  final HiveWorkoutDataSource _hiveWorkoutDataSource;
 
   // Stream controllers for real-time updates
   final Map<String, StreamController<WorkoutAnalyticsUpdate>> _updateControllers = {};
 
-  WorkoutAnalyticsRepositoryImpl({
-    FirebaseFirestore? firestore,
-    required Box<Map<String, dynamic>> metricsCache,
-    PRTracker? prTracker,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-        _metricsCache = metricsCache,
-        _prTracker = prTracker ?? PRTracker();
+  // Sync progress callback (can be set externally)
+  Function(int current, int total)? _syncProgressCallback;
+
+  /// Set sync progress callback
+  void setSyncProgressCallback(Function(int current, int total)? callback) {
+    _syncProgressCallback = callback;
+  }
 
   @override
   Future<List<Workout>> getHistoricalWorkouts(
@@ -49,105 +61,338 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
     DateTime? since,
   }) async {
     try {
-      // First try to get workouts from local Hive storage
+      // 🔧 SAFETY CHECK: Ensure Hive is initialized before ANY operations
+      if (!Hive.isBoxOpen('workouts')) {
+        try {
+          await HiveWorkoutDataSource.initialize();
+        } catch (initError) {
+          if (kDebugMode) {
+            debugPrint('❌ [Analytics] Failed to initialize Hive: $initError');
+          }
+        }
+      }
+
+      // 🎯 SMART SYNC: Check if Firebase has more workouts than Hive
+      final firebaseCount = await _getFirebaseWorkoutCount(userId);
+      final hiveCount = await _getHiveWorkoutCount(userId);
+
+      if (kDebugMode) {
+        debugPrint('📊 [Analytics] Workout count - Firebase: $firebaseCount, Hive: $hiveCount');
+      }
+
+      // If Firebase has more workouts, sync is needed
+      if (firebaseCount > hiveCount) {
+        await _syncFirebaseToHive(
+          userId,
+          totalCount: firebaseCount,
+          onProgress: _syncProgressCallback,
+        );
+      } else {
+        if (kDebugMode) {
+          debugPrint('✅ [Analytics] Hive is up to date ($hiveCount workouts)');
+        }
+      }
+
+      // Get workouts from Hive (now synced)
       final localWorkouts = await _getLocalWorkouts(userId, limit: limit, since: since);
-      
+
       if (localWorkouts.isNotEmpty) {
-        print('📊 Analytics: Using ${localWorkouts.length} local workouts from Hive');
+        if (kDebugMode) {
+          debugPrint('📊 Analytics: Returning ${localWorkouts.length} workouts from Hive');
+        }
         return localWorkouts;
       }
-      
-      // If no local workouts, try Firestore (for backward compatibility)
-      print('📊 Analytics: No local workouts, trying Firestore...');
-      Query query = _firestore
-          .collection('workouts')
-          .where('userId', isEqualTo: userId)
-          .where('status', isEqualTo: 'completed')
-          .orderBy('endTime', descending: true)
-          .limit(limit);
 
-      if (since != null) {
-        query = query.where('endTime', isGreaterThan: Timestamp.fromDate(since));
+      return [];
+
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ Error fetching historical workouts: $e');
       }
-
-      final snapshot = await query.get();
-      
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Workout.fromJson(data);
-      }).toList();
-      
-    } catch (e) {
-      print('Error fetching historical workouts: $e');
+      if (kDebugMode) {
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
       return [];
     }
   }
+
+  /// Get count of completed workouts on Firebase (fast query)
+  /// Note: Many workouts on Firebase have status=null, so we query for both
+  /// completed status and null status (treating null as completed)
+  Future<int> _getFirebaseWorkoutCount(String userId) async {
+    try {
+      // Query for ALL workouts for this user (many have status=null on Firebase)
+      // We'll filter on the client side to only count completed/null workouts
+      final snapshot = await _firestore
+          .collection('workouts')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      // Count workouts that should be synced
+      // Since Firebase workouts have status=null and often no endTime,
+      // we need to be more permissive and check for actual workout data
+      int validWorkoutCount = 0;
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final exercises = data['exercises'] as List?;
+        final name = data['name'] as String?;
+
+        // Consider a workout valid for analytics if:
+        // 1. It has exercises (actual workout data), OR
+        // 2. It has a non-empty name (named workout)
+        // This filters out empty/placeholder workouts
+        final hasExercises = exercises != null && exercises.isNotEmpty;
+        final hasName = name != null && name.isNotEmpty;
+
+        if (hasExercises || hasName) {
+          validWorkoutCount++;
+        }
+      }
+
+      return validWorkoutCount;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [Count] Failed to get Firebase count: $e');
+      }
+      return 0;
+    }
+  }
+
+  /// Get count of workouts in local Hive storage
+  Future<int> _getHiveWorkoutCount(String userId) async {
+    try {
+      final workoutModels = await _hiveWorkoutDataSource.getWorkoutsForAnalytics(
+        userId,
+        limit: null, // Get all to count
+      );
+
+      // Count only completed workouts
+      final completedCount = workoutModels
+          .where((model) => model.status == 'completed')
+          .length;
+
+      return completedCount;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [Count] Failed to get Hive count: $e');
+      }
+      return 0;
+    }
+  }
+
+  /// Sync workouts from Firebase to Hive with progress tracking
+  Future<void> _syncFirebaseToHive(
+    String userId, {
+    int? totalCount,
+    Function(int current, int total)? onProgress,
+  }) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('🔄 [Sync] Starting Firebase → Hive sync for user: $userId');
+      }
+
+      // Get ALL workouts from Firebase (many have status=null)
+      // We can't use .where('status', isEqualTo: 'completed') because many workouts have null status
+      final snapshot = await _firestore
+          .collection('workouts')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      if (kDebugMode) {
+        debugPrint('🔄 [Sync] Found ${snapshot.docs.length} total workouts in Firebase');
+      }
+
+      if (snapshot.docs.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [Sync] No workouts found in Firebase for user: $userId');
+        }
+        return;
+      }
+
+      // Filter to only workouts with actual data (exercises or name)
+      final validDocs = snapshot.docs.where((doc) {
+        final data = doc.data();
+        final exercises = data['exercises'] as List?;
+        final name = data['name'] as String?;
+
+        final hasExercises = exercises != null && exercises.isNotEmpty;
+        final hasName = name != null && name.isNotEmpty;
+
+        return hasExercises || hasName;
+      }).toList();
+
+      // Sort by createdAt or updatedAt descending
+      validDocs.sort((a, b) {
+        final aData = a.data();
+        final bData = b.data();
+
+        // Try endTime first, then updatedAt, then createdAt
+        final aTime = aData['endTime'] ?? aData['updatedAt'] ?? aData['createdAt'];
+        final bTime = bData['endTime'] ?? bData['updatedAt'] ?? bData['createdAt'];
+
+        if (aTime == null || bTime == null) return 0;
+
+        if (aTime is Timestamp && bTime is Timestamp) {
+          return bTime.compareTo(aTime);
+        }
+
+        return 0;
+      });
+
+      final total = totalCount ?? validDocs.length;
+      if (kDebugMode) {
+        debugPrint('🔄 [Sync] Found ${validDocs.length} valid workouts to sync (with exercises/name)');
+      }
+
+      if (validDocs.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [Sync] No valid workouts found in Firebase for user: $userId');
+        }
+        return;
+      }
+
+      // Convert valid docs to WorkoutModel and save to Hive
+      int savedCount = 0;
+      for (final doc in validDocs) {
+        try {
+          final data = doc.data();
+          data['id'] = doc.id;
+
+          // Parse WorkoutModel from Firebase data
+          final workoutModel = WorkoutModel.fromJson(data);
+
+          // Save to Hive
+          await _hiveWorkoutDataSource.saveWorkout(workoutModel, userId);
+          savedCount++;
+
+          // Notify progress
+          if (onProgress != null) {
+            onProgress(savedCount, total);
+          }
+
+          if (kDebugMode) {
+            debugPrint('💾 [Sync] Saved workout ${doc.id} ($savedCount/$total)');
+          }
+        } catch (e, stackTrace) {
+          if (kDebugMode) {
+            debugPrint('❌ [Sync] Failed to parse/save workout ${doc.id}: $e');
+          }
+          if (kDebugMode) {
+            debugPrint('📍 Stack trace: $stackTrace');
+          }
+          // Continue with next workout instead of failing completely
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ [Sync] Successfully synced $savedCount/$total workouts to Hive');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [Sync] Firebase → Hive sync failed: $e');
+      }
+      if (kDebugMode) {
+        debugPrint('📍 [Sync] Stack trace: $stackTrace');
+      }
+      rethrow; // Re-throw to allow error handling in UI
+    }
+  }
   
-  /// Get workouts from local Hive storage
+  /// Get workouts from local Hive storage via HiveWorkoutDataSource
   Future<List<Workout>> _getLocalWorkouts(
     String userId, {
     int? limit,
     DateTime? since,
   }) async {
     try {
-      final box = await Hive.openBox<Map>('workouts');
-      
-      // Get all workouts for this user
-      var workouts = box.keys
-          .where((key) => key.toString().startsWith('${userId}_'))
-          .map((key) {
-            final data = box.get(key);
-            if (data == null) return null;
-            
-            try {
-              // Convert Map<dynamic, dynamic> to Map<String, dynamic>
-              final Map<String, dynamic> jsonData;
-              if (data is Map<String, dynamic>) {
-                jsonData = data;
-              } else if (data is Map) {
-                jsonData = Map<String, dynamic>.from(
-                  data.map((key, value) => MapEntry(key.toString(), value))
-                );
-              } else {
-                return null;
-              }
-              
-              // Convert to domain entity
-              final workoutModel = WorkoutModel.fromJson(jsonData);
-              return workoutModel.toDomain();
-            } catch (e) {
-              print('Error parsing workout: $e');
-              return null;
-            }
-          })
-          .where((workout) => workout != null)
-          .cast<Workout>()
-          .toList();
-      
-      // Filter by status (only completed)
-      workouts = workouts.where((w) => w.status == WorkoutStatus.completed).toList();
-      
-      // Filter by date if specified
-      if (since != null) {
-        workouts = workouts.where((w) => 
-          w.endTime != null && w.endTime!.isAfter(since)
-        ).toList();
+      if (kDebugMode) {
+        debugPrint('📊 [Analytics] Attempting to get local workouts via HiveWorkoutDataSource for user: $userId');
       }
-      
+
+      // 🔧 CRITICAL FIX: Ensure Hive boxes are initialized before accessing
+      if (!Hive.isBoxOpen('workouts')) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [Analytics] Workouts box not open, initializing HiveWorkoutDataSource...');
+        }
+        await HiveWorkoutDataSource.initialize();
+      }
+
+      // 🔧 CRITICAL FIX: Use HiveWorkoutDataSource directly for consistency
+      final workoutModels = await _hiveWorkoutDataSource.getWorkoutsForAnalytics(
+        userId,
+        limit: limit,
+        since: since,
+      );
+
+      if (kDebugMode) {
+        debugPrint('📊 [Analytics] Retrieved ${workoutModels.length} workout models from HiveWorkoutDataSource');
+      }
+
+      // Convert to domain entities and filter by completion status
+      final workouts = workoutModels
+          .map((model) => model.toDomain())
+          .where((workout) => workout.status == WorkoutStatus.completed)
+          .toList();
+
+      if (kDebugMode) {
+        debugPrint('📊 [Analytics] Found ${workouts.length} completed workouts');
+      }
+
       // Sort by date (most recent first)
-      workouts.sort((a, b) => 
+      workouts.sort((a, b) =>
         (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt)
       );
-      
-      // Apply limit
-      if (limit != null && workouts.length > limit) {
-        workouts = workouts.take(limit).toList();
+
+      if (kDebugMode) {
+        debugPrint('✅ [Analytics] Returning ${workouts.length} local workouts via HiveWorkoutDataSource');
       }
-      
       return workouts;
-    } catch (e) {
-      print('Error fetching local workouts: $e');
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [Analytics] CRITICAL ERROR fetching local workouts via HiveWorkoutDataSource: $e');
+      }
+      if (kDebugMode) {
+        debugPrint('📍 [Analytics] Stack trace: $stackTrace');
+      }
+
+      // Check if it's a Hive box error
+      if (e.toString().contains('Box not found') || e.toString().contains('HiveError')) {
+        if (kDebugMode) {
+          debugPrint('🔧 [Analytics] Hive box error detected. Attempting to reinitialize...');
+        }
+        try {
+          await HiveWorkoutDataSource.initialize();
+          if (kDebugMode) {
+            debugPrint('✅ [Analytics] Hive reinitialized successfully. Retrying...');
+          }
+
+          // Retry after initialization
+          final workoutModels = await _hiveWorkoutDataSource.getWorkoutsForAnalytics(
+            userId,
+            limit: limit,
+            since: since,
+          );
+
+          final workouts = workoutModels
+              .map((model) => model.toDomain())
+              .where((workout) => workout.status == WorkoutStatus.completed)
+              .toList();
+
+          workouts.sort((a, b) =>
+            (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt)
+          );
+
+          if (kDebugMode) {
+            debugPrint('✅ [Analytics] Retry successful! Returning ${workouts.length} workouts');
+          }
+          return workouts;
+        } catch (retryError) {
+          if (kDebugMode) {
+            debugPrint('❌ [Analytics] Retry failed: $retryError');
+          }
+        }
+      }
+
       return [];
     }
   }
@@ -228,7 +473,9 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
       }).toList();
       
     } catch (e) {
-      print('Error fetching workout metrics history: $e');
+      if (kDebugMode) {
+        debugPrint('Error fetching workout metrics history: $e');
+      }
       return [];
     }
   }
@@ -239,7 +486,9 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
       final data = _workoutMetricsToMap(metrics);
       await _metricsCache.put(metrics.workoutId, data);
     } catch (e) {
-      print('Error caching workout metrics: $e');
+      if (kDebugMode) {
+        debugPrint('Error caching workout metrics: $e');
+      }
     }
   }
 
@@ -251,7 +500,9 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
       
       return _workoutMetricsFromMap(data);
     } catch (e) {
-      print('Error getting cached workout metrics: $e');
+      if (kDebugMode) {
+        debugPrint('Error getting cached workout metrics: $e');
+      }
       return null;
     }
   }
@@ -263,7 +514,9 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
       final workouts = await getHistoricalWorkouts(userId, limit: 1000);
       final prs = await getUserPRs(userId);
       
-      print('📊 Analytics Stats: Found ${workouts.length} total workouts for stats calculation');
+      if (kDebugMode) {
+        debugPrint('📊 Analytics Stats: Found ${workouts.length} total workouts for stats calculation');
+      }
 
       if (workouts.isEmpty) {
         return const WorkoutAnalyticsStats(
@@ -317,7 +570,9 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
       );
 
     } catch (e) {
-      print('Error calculating analytics stats: $e');
+      if (kDebugMode) {
+        debugPrint('Error calculating analytics stats: $e');
+      }
       return const WorkoutAnalyticsStats(
         totalWorkouts: 0,
         totalPRs: 0,
@@ -350,6 +605,25 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
         timestamp: DateTime.now(),
       ));
     }
+  }
+
+  @override
+  Future<void> syncWorkoutsFromFirebase(String userId, {
+    Function(int current, int total)? onProgress,
+  }) async {
+    await _syncFirebaseToHive(userId, onProgress: onProgress);
+  }
+
+  /// Get sync status (counts comparison)
+  Future<({int firebase, int hive, bool needsSync})> getSyncStatus(String userId) async {
+    final firebaseCount = await _getFirebaseWorkoutCount(userId);
+    final hiveCount = await _getHiveWorkoutCount(userId);
+
+    return (
+      firebase: firebaseCount,
+      hive: hiveCount,
+      needsSync: firebaseCount > hiveCount,
+    );
   }
 
   /// Notify subscribers of PR achievement
@@ -385,7 +659,9 @@ class WorkoutAnalyticsRepositoryImpl implements WorkoutAnalyticsRepository {
       final data = _workoutMetricsToFirestore(metrics, userId);
       await _firestore.collection('workoutMetrics').add(data);
     } catch (e) {
-      print('Error saving workout metrics: $e');
+      if (kDebugMode) {
+        debugPrint('Error saving workout metrics: $e');
+      }
     }
   }
 

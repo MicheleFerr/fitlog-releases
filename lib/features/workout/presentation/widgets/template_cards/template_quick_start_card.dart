@@ -1,24 +1,19 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: workout
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: iOS/Android/Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: workout
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: iOS/Android/Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
 
 class TemplateQuickStartCard extends StatelessWidget {
-  final wt.WorkoutTemplate template;
-  final VoidCallback onTap;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
 
   const TemplateQuickStartCard({
     super.key,
@@ -27,6 +22,10 @@ class TemplateQuickStartCard extends StatelessWidget {
     this.onEdit,
     this.onDelete,
   });
+  final wt.WorkoutTemplate template;
+  final VoidCallback onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -177,8 +176,8 @@ class TemplateQuickStartCard extends StatelessWidget {
           _buildMenuOption(
             context,
             icon: Icons.play_arrow,
-            title: AppLocalizations.of(context)!.startWorkout,
-            subtitle: AppLocalizations.of(context)!.startWorkoutNow,
+            title: AppLocalizations.of(context).startWorkout,
+            subtitle: AppLocalizations.of(context).startWorkoutNow,
             color: Theme.of(context).colorScheme.primary,
             onTap: () {
               Navigator.of(context).pop();
@@ -189,8 +188,8 @@ class TemplateQuickStartCard extends StatelessWidget {
             _buildMenuOption(
               context,
               icon: Icons.edit,
-              title: AppLocalizations.of(context)!.editTemplate,
-              subtitle: AppLocalizations.of(context)!.editTemplateDescription,
+              title: AppLocalizations.of(context).editTemplate,
+              subtitle: AppLocalizations.of(context).editTemplateDescription,
               color: Theme.of(context).colorScheme.secondary,
               onTap: () {
                 Navigator.of(context).pop();
@@ -201,8 +200,8 @@ class TemplateQuickStartCard extends StatelessWidget {
             _buildMenuOption(
               context,
               icon: Icons.delete,
-              title: AppLocalizations.of(context)!.deleteTemplate,
-              subtitle: AppLocalizations.of(context)!.deleteTemplatePermanently,
+              title: AppLocalizations.of(context).deleteTemplate,
+              subtitle: AppLocalizations.of(context).deleteTemplatePermanently,
               color: Theme.of(context).colorScheme.error,
               onTap: () {
                 Navigator.of(context).pop();

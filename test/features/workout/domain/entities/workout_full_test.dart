@@ -627,7 +627,7 @@ void main() {
 
     group('🎯 WorkoutStatus Enum', () {
       test('all status values are unique', () {
-        final statuses = WorkoutStatus.values;
+        const statuses = WorkoutStatus.values;
         final uniqueStatuses = statuses.toSet();
         expect(uniqueStatuses.length, statuses.length);
       });

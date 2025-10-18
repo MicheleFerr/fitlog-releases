@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: auth
- * 🔧 Type: provider
- * 🌍 Localization: N/A - Provider class
- * 🎨 Theme: N/A - Provider class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: Provider
- * - Firebase: Auth
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: auth
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A - Provider class
+/// 🎨 Theme: N/A - Provider class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: Provider
+/// - Firebase: Auth
+/// - Hive: None
+library;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

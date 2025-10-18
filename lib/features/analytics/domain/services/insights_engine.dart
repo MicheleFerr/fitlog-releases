@@ -3,12 +3,15 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/scientific_metrics_service.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_analyzer.dart';
 
 /// Types of insights
 enum InsightType {
   achievement,  // Positive milestone reached
   warning,      // Potential issue detected
   suggestion,   // Improvement opportunity
+  improvement,  // Performance improvement detected
   info,         // General information
   motivation,   // Motivational message
 }
@@ -22,14 +25,6 @@ enum InsightPriority {
 
 /// Training insight
 class TrainingInsight {
-  final String id;
-  final InsightType type;
-  final InsightPriority priority;
-  final String title;
-  final String message;
-  final String recommendation;
-  final DateTime generatedAt;
-  final Map<String, dynamic> metadata;
 
   TrainingInsight({
     String? id,
@@ -42,11 +37,20 @@ class TrainingInsight {
     this.metadata = const {},
   })  : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
         generatedAt = generatedAt ?? DateTime.now();
+  final String id;
+  final InsightType type;
+  final InsightPriority priority;
+  final String title;
+  final String message;
+  final String recommendation;
+  final DateTime generatedAt;
+  final Map<String, dynamic> metadata;
 
   /// Get icon for insight type
   String get icon {
     switch (type) {
       case InsightType.achievement:
+      case InsightType.improvement:
         return '🏆';
       case InsightType.warning:
         return '⚠️';
@@ -63,6 +67,7 @@ class TrainingInsight {
   String get colorName {
     switch (type) {
       case InsightType.achievement:
+      case InsightType.improvement:
         return 'success';
       case InsightType.warning:
         return 'warning';
@@ -78,15 +83,15 @@ class TrainingInsight {
 
 /// Muscle group balance data
 class MuscleGroupBalance {
-  final Map<String, double> volumeDistribution;
-  final Map<String, double> idealDistribution;
-  final Map<String, double> imbalanceScores;
 
   MuscleGroupBalance({
     required this.volumeDistribution,
     required this.idealDistribution,
     required this.imbalanceScores,
   });
+  final Map<String, double> volumeDistribution;
+  final Map<String, double> idealDistribution;
+  final Map<String, double> imbalanceScores;
 
   /// Get most neglected muscle group
   String? get mostNeglected {
@@ -138,7 +143,10 @@ class InsightsEngine {
     
     // Muscle balance insights
     insights.addAll(_generateMuscleBalanceInsights(activities));
-    
+
+    // Scientific metrics insights (NEW)
+    insights.addAll(_generateScientificMetricsInsights(activities));
+
     // Recovery insights
     insights.addAll(_generateRecoveryInsights(activities));
     
@@ -944,9 +952,216 @@ class InsightsEngine {
     return insights;
   }
 
+  /// Generate insights from scientific metrics (Tier-1)
+  ///
+  /// Based on peer-reviewed research:
+  /// - Progressive Overload (Kraemer & Ratamess, 2004)
+  /// - Volume Load Index (Schoenfeld et al., 2017)
+  /// - Relative Intensity (Reynolds et al., 2006)
+  static List<TrainingInsight> _generateScientificMetricsInsights(
+    List<ExerciseActivity> activities,
+  ) {
+    final insights = <TrainingInsight>[];
+
+    if (activities.isEmpty) return insights;
+
+    // 1. PROGRESSIVE OVERLOAD ANALYSIS
+    // Group by exercise and check recent progression
+    final exerciseGroups = <String, List<ExerciseActivity>>{};
+    for (final activity in activities) {
+      exerciseGroups[activity.exerciseId] ??= [];
+      exerciseGroups[activity.exerciseId]!.add(activity);
+    }
+
+    for (final entry in exerciseGroups.entries.take(3)) {
+      final exerciseActivities = entry.value;
+      if (exerciseActivities.length < 2) continue;
+
+      final current = exerciseActivities.take(1).toList();
+      final previous = exerciseActivities.skip(1).take(1).toList();
+
+      final overload = ScientificMetricsService.calculateProgressiveOverload(
+        currentSession: current,
+        previousSession: previous,
+        exerciseId: entry.key,
+      );
+
+      if (!overload.hasData) continue;
+
+      // Generate insight based on overload
+      if (overload.overloadPercent < 0) {
+        insights.add(TrainingInsight(
+          type: InsightType.warning,
+          priority: InsightPriority.medium,
+          title: 'insightProgressiveOverloadRegressionTitle',
+          message: 'insightProgressiveOverloadRegressionMessage',
+          recommendation: 'insightProgressiveOverloadRegressionRec',
+          metadata: {
+            'exerciseName': overload.exerciseName,
+            'overloadPercent': overload.overloadPercent.abs().toStringAsFixed(1),
+            'currentVolume': (overload.currentVolume / 1000).toStringAsFixed(1),
+            'previousVolume': (overload.previousVolume / 1000).toStringAsFixed(1),
+            'reference': 'Kraemer & Ratamess (2004)',
+          },
+        ));
+      } else if (overload.overloadPercent > 10) {
+        insights.add(TrainingInsight(
+          type: InsightType.warning,
+          priority: InsightPriority.high,
+          title: 'insightProgressiveOverloadExcessiveTitle',
+          message: 'insightProgressiveOverloadExcessiveMessage',
+          recommendation: 'insightProgressiveOverloadExcessiveRec',
+          metadata: {
+            'exerciseName': overload.exerciseName,
+            'overloadPercent': overload.overloadPercent.toStringAsFixed(1),
+            'currentVolume': (overload.currentVolume / 1000).toStringAsFixed(1),
+            'reference': 'ACSM (2009)',
+          },
+        ));
+      } else if (overload.isOptimal) {
+        insights.add(TrainingInsight(
+          type: InsightType.achievement,
+          priority: InsightPriority.low,
+          title: 'insightProgressiveOverloadOptimalTitle',
+          message: 'insightProgressiveOverloadOptimalMessage',
+          recommendation: 'insightProgressiveOverloadOptimalRec',
+          metadata: {
+            'exerciseName': overload.exerciseName,
+            'overloadPercent': overload.overloadPercent.toStringAsFixed(1),
+            'reference': 'Kraemer & Ratamess (2004)',
+          },
+        ));
+      }
+    }
+
+    // 2. VOLUME LOAD INDEX ANALYSIS
+    final lastWeek = activities.where((a) {
+      return DateTime.now().difference(a.createdAt).inDays <= 7;
+    }).toList();
+
+    if (lastWeek.isNotEmpty) {
+      final volumeLoads = ScientificMetricsService.calculateVolumeLoadIndex(lastWeek);
+
+      for (final entry in volumeLoads.entries) {
+        final muscleGroup = entry.key;
+        final result = entry.value;
+
+        // Check against hypertrophy standards (most common goal)
+        if (result.totalSets < 10) {
+          insights.add(TrainingInsight(
+            type: InsightType.info,
+            priority: InsightPriority.medium,
+            title: 'insightVolumeLowTitle',
+            message: 'insightVolumeLowMessage',
+            recommendation: 'insightVolumeLowRec',
+            metadata: {
+              'muscleGroup': muscleGroup,
+              'currentSets': result.totalSets.toString(),
+              'targetMin': '10-12',
+              'reference': 'Schoenfeld et al. (2017)',
+            },
+          ));
+        } else if (result.totalSets > 25) {
+          insights.add(TrainingInsight(
+            type: InsightType.warning,
+            priority: InsightPriority.medium,
+            title: 'insightVolumeExcessiveTitle',
+            message: 'insightVolumeExcessiveMessage',
+            recommendation: 'insightVolumeExcessiveRec',
+            metadata: {
+              'muscleGroup': muscleGroup,
+              'currentSets': result.totalSets.toString(),
+              'maxRecommended': '25',
+              'reference': 'Schoenfeld et al. (2017)',
+            },
+          ));
+        }
+      }
+    }
+
+    // 3. RELATIVE INTENSITY ANALYSIS
+    // Check recent working sets for intensity
+    for (final activity in activities.take(5)) {
+      for (final set in activity.sets.where((s) => s.done && !s.isWarmup).take(1)) {
+        final weight = double.tryParse(set.weight) ?? 0;
+        final reps = int.tryParse(set.actualReps ?? set.reps) ?? 0;
+
+        if (weight > 0 && reps > 0 && reps <= 15) {
+          final intensity = ScientificMetricsService.calculateRelativeIntensity(
+            weight: weight,
+            reps: reps,
+          );
+
+          if (!intensity.isValid) continue;
+
+          // Generate insight if intensity doesn't match common goals
+          if (intensity.percentOf1RM < 67) {
+            insights.add(TrainingInsight(
+              type: InsightType.info,
+              priority: InsightPriority.low,
+              title: 'insightIntensityLowTitle',
+              message: 'insightIntensityLowMessage',
+              recommendation: 'insightIntensityLowRec',
+              metadata: {
+                'exerciseName': activity.exerciseName,
+                'percentOf1RM': intensity.percentOf1RM.toStringAsFixed(0),
+                'reps': reps.toString(),
+                'weight': weight.toStringAsFixed(1),
+                'formula': intensity.formula,
+                'reference': 'Reynolds et al. (2006)',
+              },
+            ));
+            break; // One intensity insight is enough
+          }
+        }
+      }
+    }
+
+    // 4. PUSH:PULL BALANCE (Scientific Ratio)
+    final pushPull = MuscleBalanceAnalyzer.analyzePushPullBalance(activities);
+    if (!pushPull.isBalanced && (pushPull.pushSets > 0 || pushPull.pullSets > 0)) {
+      insights.add(TrainingInsight(
+        type: InsightType.info,
+        priority: InsightPriority.medium,
+        title: 'insightPushPullImbalanceTitle',
+        message: 'insightPushPullImbalanceMessage',
+        recommendation: 'insightPushPullImbalanceRec',
+        metadata: {
+          'ratio': pushPull.ratio.toStringAsFixed(2),
+          'pushSets': pushPull.pushSets.toString(),
+          'pullSets': pushPull.pullSets.toString(),
+          'targetRange': '0.8-1.2',
+          'feedback': MuscleBalanceAnalyzer.getPushPullFeedback(pushPull.ratio),
+          'reference': 'Boyle (2016)',
+        },
+      ));
+    }
+
+    // 5. QUAD:HAMSTRING BALANCE (Injury Prevention)
+    final quadHam = MuscleBalanceAnalyzer.analyzeQuadHamstringBalance(activities);
+    if (quadHam.isHighRisk) {
+      insights.add(TrainingInsight(
+        type: InsightType.warning,
+        priority: InsightPriority.high,
+        title: 'insightQuadHamHighRiskTitle',
+        message: 'insightQuadHamHighRiskMessage',
+        recommendation: 'insightQuadHamHighRiskRec',
+        metadata: {
+          'ratio': quadHam.ratio.toStringAsFixed(2),
+          'quadSets': quadHam.quadSets.toString(),
+          'hamSets': quadHam.hamstringSets.toString(),
+          'riskMultiplier': '17x',
+          'reference': 'Croisier et al. (2008)',
+        },
+      ));
+    }
+
+    return insights;
+  }
+
   static String _categorizeExercise(String exerciseName) {
     final name = exerciseName.toLowerCase();
-    
+
     if (name.contains('chest') || name.contains('bench') || name.contains('fly')) {
       return 'Chest';
     } else if (name.contains('back') || name.contains('row') || name.contains('pull')) {

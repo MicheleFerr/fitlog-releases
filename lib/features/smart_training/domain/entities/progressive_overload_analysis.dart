@@ -1,21 +1,8 @@
 import 'package:uuid/uuid.dart';
-import 'smart_training_metrics.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
 
 /// Progressive overload analysis and recommendations
 class ProgressiveOverloadAnalysis {
-  final String id;
-  final String userId;
-  final String exerciseName;
-  final DateTime analysisDate;
-  final List<OverloadRecommendation> recommendations;
-  final OverloadTrend trend;
-  final double progressRate; // Progress per week (0-1 scale)
-  final int stallWeeks; // Weeks since last progress
-  final bool isProgressing;
-  final bool needsDeload;
-  final DateTime nextProgressionDate;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   ProgressiveOverloadAnalysis({
     String? id,
@@ -36,24 +23,6 @@ class ProgressiveOverloadAnalysis {
     createdAt = createdAt ?? DateTime.now(),
     updatedAt = updatedAt ?? DateTime.now();
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'userId': userId,
-      'exerciseName': exerciseName,
-      'analysisDate': analysisDate.toIso8601String(),
-      'recommendations': recommendations.map((r) => r.toJson()).toList(),
-      'trend': trend.toJson(),
-      'progressRate': progressRate,
-      'stallWeeks': stallWeeks,
-      'isProgressing': isProgressing,
-      'needsDeload': needsDeload,
-      'nextProgressionDate': nextProgressionDate.toIso8601String(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
-  }
-
   factory ProgressiveOverloadAnalysis.fromJson(Map<String, dynamic> json) {
     return ProgressiveOverloadAnalysis(
       id: json['id'],
@@ -73,17 +42,41 @@ class ProgressiveOverloadAnalysis {
       updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
+  final String id;
+  final String userId;
+  final String exerciseName;
+  final DateTime analysisDate;
+  final List<OverloadRecommendation> recommendations;
+  final OverloadTrend trend;
+  final double progressRate; // Progress per week (0-1 scale)
+  final int stallWeeks; // Weeks since last progress
+  final bool isProgressing;
+  final bool needsDeload;
+  final DateTime nextProgressionDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'exerciseName': exerciseName,
+      'analysisDate': analysisDate.toIso8601String(),
+      'recommendations': recommendations.map((r) => r.toJson()).toList(),
+      'trend': trend.toJson(),
+      'progressRate': progressRate,
+      'stallWeeks': stallWeeks,
+      'isProgressing': isProgressing,
+      'needsDeload': needsDeload,
+      'nextProgressionDate': nextProgressionDate.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
 }
 
 /// Specific overload recommendation
 class OverloadRecommendation {
-  final OverloadMethod method;
-  final String description;
-  final Map<String, dynamic> parameters;
-  final double confidence; // 0-1 scale
-  final int priority; // 1-5 scale
-  final String reasoning;
-  final List<String> preconditions;
 
   OverloadRecommendation({
     required this.method,
@@ -94,18 +87,6 @@ class OverloadRecommendation {
     required this.reasoning,
     required this.preconditions,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'method': method.name,
-      'description': description,
-      'parameters': parameters,
-      'confidence': confidence,
-      'priority': priority,
-      'reasoning': reasoning,
-      'preconditions': preconditions,
-    };
-  }
 
   factory OverloadRecommendation.fromJson(Map<String, dynamic> json) {
     return OverloadRecommendation(
@@ -120,18 +101,29 @@ class OverloadRecommendation {
       preconditions: List<String>.from(json['preconditions']),
     );
   }
+  final OverloadMethod method;
+  final String description;
+  final Map<String, dynamic> parameters;
+  final double confidence; // 0-1 scale
+  final int priority; // 1-5 scale
+  final String reasoning;
+  final List<String> preconditions;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'method': method.name,
+      'description': description,
+      'parameters': parameters,
+      'confidence': confidence,
+      'priority': priority,
+      'reasoning': reasoning,
+      'preconditions': preconditions,
+    };
+  }
 }
 
 /// Trend analysis for progression
 class OverloadTrend {
-  final double volumeTrend; // Weekly volume change (%)
-  final double intensityTrend; // Weekly intensity change (%)
-  final double oneRMTrend; // Estimated 1RM progression
-  final double fatigueIndex; // Accumulated fatigue
-  final int consistencyScore; // 1-10 scale
-  final List<TrendDataPoint> volumeHistory;
-  final List<TrendDataPoint> intensityHistory;
-  final List<TrendDataPoint> oneRMHistory;
 
   OverloadTrend({
     required this.volumeTrend,
@@ -143,19 +135,6 @@ class OverloadTrend {
     required this.intensityHistory,
     required this.oneRMHistory,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'volumeTrend': volumeTrend,
-      'intensityTrend': intensityTrend,
-      'oneRMTrend': oneRMTrend,
-      'fatigueIndex': fatigueIndex,
-      'consistencyScore': consistencyScore,
-      'volumeHistory': volumeHistory.map((p) => p.toJson()).toList(),
-      'intensityHistory': intensityHistory.map((p) => p.toJson()).toList(),
-      'oneRMHistory': oneRMHistory.map((p) => p.toJson()).toList(),
-    };
-  }
 
   factory OverloadTrend.fromJson(Map<String, dynamic> json) {
     return OverloadTrend(
@@ -175,27 +154,37 @@ class OverloadTrend {
           .toList(),
     );
   }
+  final double volumeTrend; // Weekly volume change (%)
+  final double intensityTrend; // Weekly intensity change (%)
+  final double oneRMTrend; // Estimated 1RM progression
+  final double fatigueIndex; // Accumulated fatigue
+  final int consistencyScore; // 1-10 scale
+  final List<TrendDataPoint> volumeHistory;
+  final List<TrendDataPoint> intensityHistory;
+  final List<TrendDataPoint> oneRMHistory;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'volumeTrend': volumeTrend,
+      'intensityTrend': intensityTrend,
+      'oneRMTrend': oneRMTrend,
+      'fatigueIndex': fatigueIndex,
+      'consistencyScore': consistencyScore,
+      'volumeHistory': volumeHistory.map((p) => p.toJson()).toList(),
+      'intensityHistory': intensityHistory.map((p) => p.toJson()).toList(),
+      'oneRMHistory': oneRMHistory.map((p) => p.toJson()).toList(),
+    };
+  }
 }
 
 /// Data point for trend analysis
 class TrendDataPoint {
-  final DateTime date;
-  final double value;
-  final String? annotation;
 
   TrendDataPoint({
     required this.date,
     required this.value,
     this.annotation,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'date': date.toIso8601String(),
-      'value': value,
-      'annotation': annotation,
-    };
-  }
 
   factory TrendDataPoint.fromJson(Map<String, dynamic> json) {
     return TrendDataPoint(
@@ -204,16 +193,21 @@ class TrendDataPoint {
       annotation: json['annotation'],
     );
   }
+  final DateTime date;
+  final double value;
+  final String? annotation;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date.toIso8601String(),
+      'value': value,
+      'annotation': annotation,
+    };
+  }
 }
 
 /// Plateau detection results
 class PlateauDetection {
-  final bool isPlateaued;
-  final int plateauWeeks;
-  final PlateauType type;
-  final double confidenceScore;
-  final List<PlateauIndicator> indicators;
-  final List<PlateauBreaker> recommendations;
 
   PlateauDetection({
     required this.isPlateaued,
@@ -223,17 +217,6 @@ class PlateauDetection {
     required this.indicators,
     required this.recommendations,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'isPlateaued': isPlateaued,
-      'plateauWeeks': plateauWeeks,
-      'type': type.name,
-      'confidenceScore': confidenceScore,
-      'indicators': indicators.map((i) => i.toJson()).toList(),
-      'recommendations': recommendations.map((r) => r.toJson()).toList(),
-    };
-  }
 
   factory PlateauDetection.fromJson(Map<String, dynamic> json) {
     return PlateauDetection(
@@ -251,6 +234,23 @@ class PlateauDetection {
           .toList(),
     );
   }
+  final bool isPlateaued;
+  final int plateauWeeks;
+  final PlateauType type;
+  final double confidenceScore;
+  final List<PlateauIndicator> indicators;
+  final List<PlateauBreaker> recommendations;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isPlateaued': isPlateaued,
+      'plateauWeeks': plateauWeeks,
+      'type': type.name,
+      'confidenceScore': confidenceScore,
+      'indicators': indicators.map((i) => i.toJson()).toList(),
+      'recommendations': recommendations.map((r) => r.toJson()).toList(),
+    };
+  }
 }
 
 /// Types of plateaus
@@ -264,11 +264,6 @@ enum PlateauType {
 
 /// Plateau indicator
 class PlateauIndicator {
-  final String name;
-  final double value;
-  final double threshold;
-  final bool isTriggered;
-  final String description;
 
   PlateauIndicator({
     required this.name,
@@ -277,16 +272,6 @@ class PlateauIndicator {
     required this.isTriggered,
     required this.description,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'value': value,
-      'threshold': threshold,
-      'isTriggered': isTriggered,
-      'description': description,
-    };
-  }
 
   factory PlateauIndicator.fromJson(Map<String, dynamic> json) {
     return PlateauIndicator(
@@ -297,16 +282,25 @@ class PlateauIndicator {
       description: json['description'],
     );
   }
+  final String name;
+  final double value;
+  final double threshold;
+  final bool isTriggered;
+  final String description;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'value': value,
+      'threshold': threshold,
+      'isTriggered': isTriggered,
+      'description': description,
+    };
+  }
 }
 
 /// Plateau breaking strategy
 class PlateauBreaker {
-  final String strategy;
-  final String description;
-  final Map<String, dynamic> implementation;
-  final int durationWeeks;
-  final double expectedImprovement;
-  final List<String> requirements;
 
   PlateauBreaker({
     required this.strategy,
@@ -317,17 +311,6 @@ class PlateauBreaker {
     required this.requirements,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'strategy': strategy,
-      'description': description,
-      'implementation': implementation,
-      'durationWeeks': durationWeeks,
-      'expectedImprovement': expectedImprovement,
-      'requirements': requirements,
-    };
-  }
-
   factory PlateauBreaker.fromJson(Map<String, dynamic> json) {
     return PlateauBreaker(
       strategy: json['strategy'],
@@ -337,5 +320,22 @@ class PlateauBreaker {
       expectedImprovement: (json['expectedImprovement'] as num).toDouble(),
       requirements: List<String>.from(json['requirements']),
     );
+  }
+  final String strategy;
+  final String description;
+  final Map<String, dynamic> implementation;
+  final int durationWeeks;
+  final double expectedImprovement;
+  final List<String> requirements;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'strategy': strategy,
+      'description': description,
+      'implementation': implementation,
+      'durationWeeks': durationWeeks,
+      'expectedImprovement': expectedImprovement,
+      'requirements': requirements,
+    };
   }
 }

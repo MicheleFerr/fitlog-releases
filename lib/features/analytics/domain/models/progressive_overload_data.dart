@@ -2,6 +2,86 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Model for Progressive Overload tracking and cloud sync
 class ProgressiveOverloadData {
+
+  ProgressiveOverloadData({
+    required this.userId,
+    required this.weekStart,
+    required this.weekEnd,
+    required this.weekNumber,
+    required this.year,
+    required this.totalVolume,
+    required this.avgIntensity,
+    required this.progressiveOverloadScore,
+    required this.previousWeekScore,
+    required this.e1RMProgression,
+    required this.effectiveVolume,
+    this.bestSet,
+    required this.fatigueRatings,
+    required this.avgMuscleEfficiency,
+    required this.createdAt,
+    this.syncedAt,
+    this.isPremiumData = false,
+  });
+
+  /// Create from Firestore document
+  factory ProgressiveOverloadData.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    
+    return ProgressiveOverloadData(
+      userId: data['userId'] as String,
+      weekStart: (data['weekStart'] as Timestamp).toDate(),
+      weekEnd: (data['weekEnd'] as Timestamp).toDate(),
+      weekNumber: data['weekNumber'] as int,
+      year: data['year'] as int,
+      totalVolume: (data['totalVolume'] as num).toDouble(),
+      avgIntensity: (data['avgIntensity'] as num).toDouble(),
+      progressiveOverloadScore: (data['progressiveOverloadScore'] as num).toDouble(),
+      previousWeekScore: (data['previousWeekScore'] as num).toDouble(),
+      e1RMProgression: Map<String, double>.from(data['e1RMProgression'] as Map),
+      effectiveVolume: (data['effectiveVolume'] as num).toDouble(),
+      bestSet: data['bestSet'] != null 
+          ? BestSetPerformance.fromMap(data['bestSet'] as Map<String, dynamic>)
+          : null,
+      fatigueRatings: (data['fatigueRatings'] as List)
+          .map((e) => FatigueEntry.fromMap(e as Map<String, dynamic>))
+          .toList(),
+      avgMuscleEfficiency: (data['avgMuscleEfficiency'] as num).toDouble(),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      syncedAt: data['syncedAt'] != null 
+          ? (data['syncedAt'] as Timestamp).toDate()
+          : null,
+      isPremiumData: data['isPremiumData'] as bool? ?? false,
+    );
+  }
+
+  /// Create from JSON (local storage)
+  factory ProgressiveOverloadData.fromJson(Map<String, dynamic> json) {
+    return ProgressiveOverloadData(
+      userId: json['userId'] as String,
+      weekStart: DateTime.parse(json['weekStart'] as String),
+      weekEnd: DateTime.parse(json['weekEnd'] as String),
+      weekNumber: json['weekNumber'] as int,
+      year: json['year'] as int,
+      totalVolume: (json['totalVolume'] as num).toDouble(),
+      avgIntensity: (json['avgIntensity'] as num).toDouble(),
+      progressiveOverloadScore: (json['progressiveOverloadScore'] as num).toDouble(),
+      previousWeekScore: (json['previousWeekScore'] as num).toDouble(),
+      e1RMProgression: Map<String, double>.from(json['e1RMProgression'] as Map),
+      effectiveVolume: (json['effectiveVolume'] as num).toDouble(),
+      bestSet: json['bestSet'] != null 
+          ? BestSetPerformance.fromMap(json['bestSet'] as Map<String, dynamic>)
+          : null,
+      fatigueRatings: (json['fatigueRatings'] as List)
+          .map((e) => FatigueEntry.fromMap(e as Map<String, dynamic>))
+          .toList(),
+      avgMuscleEfficiency: (json['avgMuscleEfficiency'] as num).toDouble(),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      syncedAt: json['syncedAt'] != null 
+          ? DateTime.parse(json['syncedAt'] as String)
+          : null,
+      isPremiumData: json['isPremiumData'] as bool? ?? false,
+    );
+  }
   final String userId;
   final DateTime weekStart;
   final DateTime weekEnd;
@@ -27,26 +107,6 @@ class ProgressiveOverloadData {
   final DateTime createdAt;
   final DateTime? syncedAt;
   final bool isPremiumData;
-
-  ProgressiveOverloadData({
-    required this.userId,
-    required this.weekStart,
-    required this.weekEnd,
-    required this.weekNumber,
-    required this.year,
-    required this.totalVolume,
-    required this.avgIntensity,
-    required this.progressiveOverloadScore,
-    required this.previousWeekScore,
-    required this.e1RMProgression,
-    required this.effectiveVolume,
-    this.bestSet,
-    required this.fatigueRatings,
-    required this.avgMuscleEfficiency,
-    required this.createdAt,
-    this.syncedAt,
-    this.isPremiumData = false,
-  });
 
   /// Calculate Progressive Overload Score
   /// PO Score = (Volume_Week × Avg_Intensity) / Previous_Week_Score
@@ -104,37 +164,6 @@ class ProgressiveOverloadData {
     'isPremiumData': isPremiumData,
   };
 
-  /// Create from Firestore document
-  factory ProgressiveOverloadData.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    
-    return ProgressiveOverloadData(
-      userId: data['userId'] as String,
-      weekStart: (data['weekStart'] as Timestamp).toDate(),
-      weekEnd: (data['weekEnd'] as Timestamp).toDate(),
-      weekNumber: data['weekNumber'] as int,
-      year: data['year'] as int,
-      totalVolume: (data['totalVolume'] as num).toDouble(),
-      avgIntensity: (data['avgIntensity'] as num).toDouble(),
-      progressiveOverloadScore: (data['progressiveOverloadScore'] as num).toDouble(),
-      previousWeekScore: (data['previousWeekScore'] as num).toDouble(),
-      e1RMProgression: Map<String, double>.from(data['e1RMProgression'] as Map),
-      effectiveVolume: (data['effectiveVolume'] as num).toDouble(),
-      bestSet: data['bestSet'] != null 
-          ? BestSetPerformance.fromMap(data['bestSet'] as Map<String, dynamic>)
-          : null,
-      fatigueRatings: (data['fatigueRatings'] as List)
-          .map((e) => FatigueEntry.fromMap(e as Map<String, dynamic>))
-          .toList(),
-      avgMuscleEfficiency: (data['avgMuscleEfficiency'] as num).toDouble(),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      syncedAt: data['syncedAt'] != null 
-          ? (data['syncedAt'] as Timestamp).toDate()
-          : null,
-      isPremiumData: data['isPremiumData'] as bool? ?? false,
-    );
-  }
-
   /// Convert to JSON for local storage
   Map<String, dynamic> toJson() => {
     'userId': userId,
@@ -155,45 +184,10 @@ class ProgressiveOverloadData {
     'syncedAt': syncedAt?.toIso8601String(),
     'isPremiumData': isPremiumData,
   };
-
-  /// Create from JSON (local storage)
-  factory ProgressiveOverloadData.fromJson(Map<String, dynamic> json) {
-    return ProgressiveOverloadData(
-      userId: json['userId'] as String,
-      weekStart: DateTime.parse(json['weekStart'] as String),
-      weekEnd: DateTime.parse(json['weekEnd'] as String),
-      weekNumber: json['weekNumber'] as int,
-      year: json['year'] as int,
-      totalVolume: (json['totalVolume'] as num).toDouble(),
-      avgIntensity: (json['avgIntensity'] as num).toDouble(),
-      progressiveOverloadScore: (json['progressiveOverloadScore'] as num).toDouble(),
-      previousWeekScore: (json['previousWeekScore'] as num).toDouble(),
-      e1RMProgression: Map<String, double>.from(json['e1RMProgression'] as Map),
-      effectiveVolume: (json['effectiveVolume'] as num).toDouble(),
-      bestSet: json['bestSet'] != null 
-          ? BestSetPerformance.fromMap(json['bestSet'] as Map<String, dynamic>)
-          : null,
-      fatigueRatings: (json['fatigueRatings'] as List)
-          .map((e) => FatigueEntry.fromMap(e as Map<String, dynamic>))
-          .toList(),
-      avgMuscleEfficiency: (json['avgMuscleEfficiency'] as num).toDouble(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      syncedAt: json['syncedAt'] != null 
-          ? DateTime.parse(json['syncedAt'] as String)
-          : null,
-      isPremiumData: json['isPremiumData'] as bool? ?? false,
-    );
-  }
 }
 
 /// Best set performance of the week
 class BestSetPerformance {
-  final String exerciseName;
-  final double weight;
-  final int reps;
-  final double e1RM; // Estimated 1 Rep Max
-  final DateTime performedAt;
-  final bool isPR;
 
   BestSetPerformance({
     required this.exerciseName,
@@ -203,6 +197,23 @@ class BestSetPerformance {
     required this.performedAt,
     this.isPR = false,
   });
+
+  factory BestSetPerformance.fromMap(Map<String, dynamic> map) {
+    return BestSetPerformance(
+      exerciseName: map['exerciseName'] as String,
+      weight: (map['weight'] as num).toDouble(),
+      reps: map['reps'] as int,
+      e1RM: (map['e1RM'] as num).toDouble(),
+      performedAt: DateTime.parse(map['performedAt'] as String),
+      isPR: map['isPR'] as bool? ?? false,
+    );
+  }
+  final String exerciseName;
+  final double weight;
+  final int reps;
+  final double e1RM; // Estimated 1 Rep Max
+  final DateTime performedAt;
+  final bool isPR;
 
   /// Calculate estimated 1RM using Epley formula
   static double calculateE1RM(double weight, int reps) {
@@ -221,26 +232,10 @@ class BestSetPerformance {
     'performedAt': performedAt.toIso8601String(),
     'isPR': isPR,
   };
-
-  factory BestSetPerformance.fromMap(Map<String, dynamic> map) {
-    return BestSetPerformance(
-      exerciseName: map['exerciseName'] as String,
-      weight: (map['weight'] as num).toDouble(),
-      reps: map['reps'] as int,
-      e1RM: (map['e1RM'] as num).toDouble(),
-      performedAt: DateTime.parse(map['performedAt'] as String),
-      isPR: map['isPR'] as bool? ?? false,
-    );
-  }
 }
 
 /// Fatigue entry for a specific day
 class FatigueEntry {
-  final DateTime date;
-  final int fatigueLevel;
-  final double volume;
-  final double muscleEfficiency;
-  final String? notes;
 
   FatigueEntry({
     required this.date,
@@ -249,14 +244,6 @@ class FatigueEntry {
     required this.muscleEfficiency,
     this.notes,
   });
-
-  Map<String, dynamic> toMap() => {
-    'date': date.toIso8601String(),
-    'fatigueLevel': fatigueLevel,
-    'volume': volume,
-    'muscleEfficiency': muscleEfficiency,
-    'notes': notes,
-  };
 
   factory FatigueEntry.fromMap(Map<String, dynamic> map) {
     return FatigueEntry(
@@ -267,6 +254,19 @@ class FatigueEntry {
       notes: map['notes'] as String?,
     );
   }
+  final DateTime date;
+  final int fatigueLevel;
+  final double volume;
+  final double muscleEfficiency;
+  final String? notes;
+
+  Map<String, dynamic> toMap() => {
+    'date': date.toIso8601String(),
+    'fatigueLevel': fatigueLevel,
+    'volume': volume,
+    'muscleEfficiency': muscleEfficiency,
+    'notes': notes,
+  };
 }
 
 /// Effective Volume calculation
@@ -303,9 +303,9 @@ class EffectiveVolume {
 
 /// Placeholder for set data
 class SetData {
+
+  SetData({required this.weight, required this.reps, this.rpe});
   final double weight;
   final int reps;
   final int? rpe;
-
-  SetData({required this.weight, required this.reps, this.rpe});
 }

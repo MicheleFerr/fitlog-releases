@@ -1,13 +1,5 @@
 /// Model for tracking workout fatigue and recovery data
 class WorkoutFatigue {
-  final String workoutId;
-  final DateTime date;
-  final int fatigueLevel; // 1-5 scale
-  final double totalVolume;
-  final List<String> exercisesPerformed;
-  final Map<String, double> muscleGroupVolume;
-  final String? notes;
-  final DateTime? recoveryCompletedAt;
 
   const WorkoutFatigue({
     required this.workoutId,
@@ -19,6 +11,27 @@ class WorkoutFatigue {
     this.notes,
     this.recoveryCompletedAt,
   });
+
+  factory WorkoutFatigue.fromJson(Map<String, dynamic> json) => WorkoutFatigue(
+    workoutId: json['workoutId'] as String,
+    date: DateTime.parse(json['date'] as String),
+    fatigueLevel: json['fatigueLevel'] as int,
+    totalVolume: (json['totalVolume'] as num).toDouble(),
+    exercisesPerformed: (json['exercisesPerformed'] as List).cast<String>(),
+    muscleGroupVolume: (json['muscleGroupVolume'] as Map).cast<String, double>(),
+    notes: json['notes'] as String?,
+    recoveryCompletedAt: json['recoveryCompletedAt'] != null
+        ? DateTime.parse(json['recoveryCompletedAt'] as String)
+        : null,
+  );
+  final String workoutId;
+  final DateTime date;
+  final int fatigueLevel; // 1-5 scale
+  final double totalVolume;
+  final List<String> exercisesPerformed;
+  final Map<String, double> muscleGroupVolume;
+  final String? notes;
+  final DateTime? recoveryCompletedAt;
 
   /// Calculate Muscle Efficiency Score
   /// Higher score = better efficiency (more volume with less fatigue)
@@ -63,19 +76,6 @@ class WorkoutFatigue {
     'notes': notes,
     'recoveryCompletedAt': recoveryCompletedAt?.toIso8601String(),
   };
-
-  factory WorkoutFatigue.fromJson(Map<String, dynamic> json) => WorkoutFatigue(
-    workoutId: json['workoutId'] as String,
-    date: DateTime.parse(json['date'] as String),
-    fatigueLevel: json['fatigueLevel'] as int,
-    totalVolume: (json['totalVolume'] as num).toDouble(),
-    exercisesPerformed: (json['exercisesPerformed'] as List).cast<String>(),
-    muscleGroupVolume: (json['muscleGroupVolume'] as Map).cast<String, double>(),
-    notes: json['notes'] as String?,
-    recoveryCompletedAt: json['recoveryCompletedAt'] != null
-        ? DateTime.parse(json['recoveryCompletedAt'] as String)
-        : null,
-  );
 }
 
 /// Enum for fatigue levels with descriptions

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../providers/zen_mode_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/zen_mode_provider.dart';
 
 class ZenModeSettingsDialog extends ConsumerWidget {
   const ZenModeSettingsDialog({super.key});
@@ -11,7 +11,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
     final zenState = ref.watch(zenModeProvider);
     final zenNotifier = ref.read(zenModeProvider.notifier);
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Dialog(
       shape: RoundedRectangleBorder(

@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/features/settings
- * 🎯 Feature: settings screen simple tests
- * 🔧 Type: widget test
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ ColorScheme tested
- * 📱 Platform: Universal
- * 
- * SIMPLIFIED SETTINGS TESTS - Focus on testable components
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/features/settings
+/// 🎯 Feature: settings screen simple tests
+/// 🔧 Type: widget test
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ ColorScheme tested
+/// 📱 Platform: Universal
+/// 
+/// SIMPLIFIED SETTINGS TESTS - Focus on testable components
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,8 +27,8 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            appBar: AppBar(title: Text('Settings')),
-            body: Center(child: Text('Settings Screen Placeholder')),
+            appBar: AppBar(title: const Text('Settings')),
+            body: const Center(child: Text('Settings Screen Placeholder')),
           ),
         ),
       );
@@ -50,20 +49,20 @@ void main() {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text(AppLocalizations.of(context)!.chooseTheme),
+                      title: Text(AppLocalizations.of(context).chooseTheme),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ListTile(
-                            title: Text(AppLocalizations.of(context)!.themeLight),
+                            title: Text(AppLocalizations.of(context).themeLight),
                             onTap: () => Navigator.pop(context),
                           ),
                           ListTile(
-                            title: Text(AppLocalizations.of(context)!.themeDark),
+                            title: Text(AppLocalizations.of(context).themeDark),
                             onTap: () => Navigator.pop(context),
                           ),
                           ListTile(
-                            title: Text(AppLocalizations.of(context)!.themeSystem),
+                            title: Text(AppLocalizations.of(context).themeSystem),
                             onTap: () => Navigator.pop(context),
                           ),
                         ],
@@ -71,7 +70,7 @@ void main() {
                     ),
                   );
                 },
-                child: Text('Show Theme Dialog'),
+                child: const Text('Show Theme Dialog'),
               ),
             ),
           ),
@@ -101,16 +100,16 @@ void main() {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text(AppLocalizations.of(context)!.chooseLanguage),
+                      title: Text(AppLocalizations.of(context).chooseLanguage),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ListTile(
-                            title: Text(AppLocalizations.of(context)!.languageEnglish),
+                            title: Text(AppLocalizations.of(context).languageEnglish),
                             onTap: () => Navigator.pop(context),
                           ),
                           ListTile(
-                            title: Text(AppLocalizations.of(context)!.languageItalian),
+                            title: Text(AppLocalizations.of(context).languageItalian),
                             onTap: () => Navigator.pop(context),
                           ),
                         ],
@@ -118,7 +117,7 @@ void main() {
                     ),
                   );
                 },
-                child: Text('Show Language Dialog'),
+                child: const Text('Show Language Dialog'),
               ),
             ),
           ),
@@ -147,21 +146,21 @@ void main() {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text(AppLocalizations.of(context)!.signOutDesc),
+                      title: Text(AppLocalizations.of(context).signOutDesc),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel'),
+                          child: const Text('Cancel'),
                         ),
                         FilledButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text(AppLocalizations.of(context)!.signOut),
+                          child: Text(AppLocalizations.of(context).signOut),
                         ),
                       ],
                     ),
                   );
                 },
-                child: Text('Sign Out'),
+                child: const Text('Sign Out'),
               ),
             ),
           ),
@@ -181,7 +180,7 @@ void main() {
 
   group('AppConfig Model Tests', () {
     test('creates default config', () {
-      final config = AppConfigPresets.defaultConfig;
+      const config = AppConfigPresets.defaultConfig;
 
       expect(config.themeMode, ThemeMode.system);
       expect(config.languageCode, 'en');
@@ -193,7 +192,7 @@ void main() {
     });
 
     test('copyWith preserves unchanged values', () {
-      final original = AppConfigPresets.defaultConfig;
+      const original = AppConfigPresets.defaultConfig;
       final modified = original.copyWith(
         themeMode: ThemeMode.dark,
         measurementUnit: 'lbs',
@@ -207,11 +206,11 @@ void main() {
 
     test('converts weight between units', () {
       // kg to lbs
-      final kgToLbs = 100.0 * 2.20462;
+      const kgToLbs = 100.0 * 2.20462;
       expect(kgToLbs, closeTo(220.462, 0.001));
 
       // lbs to kg
-      final lbsToKg = 220.0 / 2.20462;
+      const lbsToKg = 220.0 / 2.20462;
       expect(lbsToKg, closeTo(99.79, 0.01));
     });
 
@@ -228,7 +227,7 @@ void main() {
     });
 
     test('serializes to JSON', () {
-      final config = AppConfigPresets.defaultConfig;
+      const config = AppConfigPresets.defaultConfig;
       final json = config.toJson();
 
       expect(json['themeMode'], 'system');
@@ -299,9 +298,9 @@ void main() {
     });
 
     test('formats app version correctly', () {
-      final version = '1.2.3';
-      final buildNumber = '456';
-      final formatted = '$version ($buildNumber)';
+      const version = '1.2.3';
+      const buildNumber = '456';
+      const formatted = '$version ($buildNumber)';
       
       expect(formatted, '1.2.3 (456)');
     });
@@ -324,7 +323,7 @@ void main() {
 
     test('validates deletion confirmation', () {
       const confirmationText = 'DELETE';
-      final userInput = 'DELETE';
+      const userInput = 'DELETE';
       
       expect(userInput == confirmationText, true);
       expect('delete' == confirmationText, false); // Case sensitive

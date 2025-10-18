@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
-import 'package:gymbro_flutter_new/main.dart' as app;
+import 'package:gymbro_flutter_new/app/app.dart' as app;
 import '../helpers/test_base.dart';
 import '../pages/workout_page.dart';
 import '../pages/timer_page.dart';
@@ -8,16 +10,13 @@ import '../pages/timer_page.dart';
 void main() {
   patrolTest(
     'Live Activity shows timer during workout rest periods on iOS',
-    config: const PatrolTestConfig(
-      appName: 'GymBro',
-    ),
-    nativeAutomation: true,
+
     ($) async {
       // Setup test environment
       await TestBase.setupTestEnvironment();
       
       // Start app
-      await $.pumpWidgetAndSettle(const app.MyApp());
+      await $.pumpWidgetAndSettle(const app.GymBroApp());
       
       // Initialize page objects
       final workoutPage = WorkoutPage($);
@@ -40,9 +39,10 @@ void main() {
       // Verify rest timer started
       expect(await timerPage.isTimerRunning(), isTrue,
           reason: 'Rest timer should start after completing a set');
-      
+
       // Only test Live Activity on iOS
-      if (await $.native.isIOS()) {
+      // TODO: Patrol 3.x - isIOS() removed, using Platform.isIOS
+      if (Platform.isIOS) {
         // Put app in background to trigger Live Activity
         await $.native.pressHome();
         
@@ -87,18 +87,16 @@ void main() {
   
   patrolTest(
     'Live Activity updates with timer controls on iOS',
-    config: const PatrolTestConfig(
-      appName: 'GymBro',
-    ),
-    nativeAutomation: true,
+
     ($) async {
       // Only run on iOS
-      if (!await $.native.isIOS()) {
+      // TODO: Patrol 3.x - isIOS() removed, using Platform.isIOS
+      if (!Platform.isIOS) {
         return;
       }
       
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.MyApp());
+      await $.pumpWidgetAndSettle(const app.GymBroApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -158,13 +156,11 @@ void main() {
   
   patrolTest(
     'Dynamic Island shows compact timer on supported devices',
-    config: const PatrolTestConfig(
-      appName: 'GymBro',
-    ),
-    nativeAutomation: true,
+
     ($) async {
       // Only test on iOS
-      if (!await $.native.isIOS()) {
+      // TODO: Patrol 3.x - isIOS() removed, using Platform.isIOS
+      if (!Platform.isIOS) {
         return;
       }
       
@@ -172,7 +168,7 @@ void main() {
       // This test would need device-specific checks
       
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.MyApp());
+      await $.pumpWidgetAndSettle(const app.GymBroApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);

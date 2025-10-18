@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          # Enable explicitToJson for nested object serialization (used by Freezed)
+          explicit_to_json: true

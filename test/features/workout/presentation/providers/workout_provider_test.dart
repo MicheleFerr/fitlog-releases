@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:mocktail/mocktail.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -99,7 +98,7 @@ void main() {
         name: 'Push Day',
         description: 'Upper body push workout',
         exercises: [
-          wt.ExerciseTemplate(
+          const wt.ExerciseTemplate(
             exerciseId: 'ex-1',
             exerciseName: 'Bench Press',
             type: ExerciseType.single,
@@ -109,7 +108,7 @@ void main() {
               wt.SetTemplate(setNumber: 2, targetWeight: 65, targetReps: 8),
             ],
           ),
-          wt.ExerciseTemplate(
+          const wt.ExerciseTemplate(
             exerciseId: 'ex-2',
             exerciseName: 'Shoulder Press',
             type: ExerciseType.single,

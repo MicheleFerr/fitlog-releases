@@ -1,29 +1,23 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: workout
- * 🔧 Type: provider
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Debug provider to check local Hive data
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: workout
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Debug provider to check local Hive data
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
-import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
+import 'package:flutter/foundation.dart';
 
 /// Debug state for local data inspection
 class LocalDataDebugState {
-  final int totalWorkouts;
-  final int unsyncedWorkouts;
-  final List<String> workoutSummaries;
-  final Map<String, dynamic> debugInfo;
-  final bool isLoading;
   
   LocalDataDebugState({
     this.totalWorkouts = 0,
@@ -32,6 +26,11 @@ class LocalDataDebugState {
     this.debugInfo = const {},
     this.isLoading = true,
   });
+  final int totalWorkouts;
+  final int unsyncedWorkouts;
+  final List<String> workoutSummaries;
+  final Map<String, dynamic> debugInfo;
+  final bool isLoading;
 }
 
 /// Debug provider to inspect local data
@@ -43,13 +42,13 @@ final localDataDebugProvider = StateNotifierProvider<LocalDataDebugNotifier, Loc
 });
 
 class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
-  final String? userId;
   
   LocalDataDebugNotifier(this.userId) : super(LocalDataDebugState()) {
     if (userId != null) {
       inspectLocalData();
     }
   }
+  final String? userId;
   
   Future<void> inspectLocalData() async {
     state = LocalDataDebugState(isLoading: true);
@@ -107,13 +106,23 @@ class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
       );
       
       // Print debug info to console
-      print('🔍 LOCAL DATA DEBUG:');
-      print('Total workouts: ${allWorkouts.length}');
-      print('Unsynced workouts: ${unsyncedWorkouts.length}');
-      print('Debug info: $debugInfo');
+      if (kDebugMode) {
+        debugPrint('🔍 LOCAL DATA DEBUG:');
+      }
+      if (kDebugMode) {
+        debugPrint('Total workouts: ${allWorkouts.length}');
+      }
+      if (kDebugMode) {
+        debugPrint('Unsynced workouts: ${unsyncedWorkouts.length}');
+      }
+      if (kDebugMode) {
+        debugPrint('Debug info: $debugInfo');
+      }
       
     } catch (e) {
-      print('❌ Error inspecting local data: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error inspecting local data: $e');
+      }
       state = LocalDataDebugState(
         isLoading: false,
         debugInfo: {'error': e.toString()},
@@ -140,11 +149,15 @@ class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
         }
       }
       
-      print('✅ Marked ${userKeys.length} workouts as unsynced');
+      if (kDebugMode) {
+        debugPrint('✅ Marked ${userKeys.length} workouts as unsynced');
+      }
       await inspectLocalData(); // Refresh state
       
     } catch (e) {
-      print('❌ Error marking workouts as unsynced: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error marking workouts as unsynced: $e');
+      }
     }
   }
 }

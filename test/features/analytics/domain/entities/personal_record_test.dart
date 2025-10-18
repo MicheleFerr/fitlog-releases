@@ -280,7 +280,7 @@ void main() {
 
     test('should handle exercise with no historical PRs', () {
       // Arrange
-      final detector = PRDetector(historicalPRs: {});
+      const detector = PRDetector(historicalPRs: {});
 
       final exercise = Exercise(
         id: 'new_ex',
@@ -310,7 +310,7 @@ void main() {
 
     test('should ignore warmup sets for PR detection', () {
       // Arrange
-      final detector = PRDetector(historicalPRs: {});
+      const detector = PRDetector(historicalPRs: {});
 
       final exercise = Exercise(
         id: 'ex1',
@@ -363,7 +363,7 @@ void main() {
         status: PRStatus.newPR,
       );
 
-      final nearPRResult = PRDetectionResult(
+      const nearPRResult = PRDetectionResult(
         exerciseId: 'ex2',
         exerciseName: 'Bench Press',
         status: PRStatus.nearPR,

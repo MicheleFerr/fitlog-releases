@@ -1,28 +1,24 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../../../shared/domain/entities/italian_city.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
 
 class CityPickerWidget extends ConsumerStatefulWidget {
-  final ItalianCity? selectedCity;
-  final String? selectedZone;
-  final Function(ItalianCity, String?) onCitySelected;
 
   const CityPickerWidget({
     super.key,
@@ -30,6 +26,9 @@ class CityPickerWidget extends ConsumerStatefulWidget {
     this.selectedZone,
     required this.onCitySelected,
   });
+  final ItalianCity? selectedCity;
+  final String? selectedZone;
+  final Function(ItalianCity, String?) onCitySelected;
 
   @override
   ConsumerState<CityPickerWidget> createState() => _CityPickerWidgetState();
@@ -86,7 +85,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -148,7 +147,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                     borderSide: BorderSide(color: colorScheme.primary, width: 2),
                   ),
                   filled: true,
-                  fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+                  fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
                 ),
               ),
             ),
@@ -274,7 +273,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                           : null,
                       onTap: () => _selectZone(zone),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

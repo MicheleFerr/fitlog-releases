@@ -8,16 +8,17 @@ class DebugLogger {
   
   // 📊 CATEGORIE DI LOG (attiva/disattiva singole categorie)
   static const Map<LogCategory, bool> _categorySettings = {
-    LogCategory.lifecycle: false,  // 📱 App lifecycle events
-    LogCategory.timer: false,       // ⏰ Timer operations
-    LogCategory.notification: false, // 🔔 Notifications
-    LogCategory.liveActivity: false, // 🔄 Live Activity updates
-    LogCategory.audio: false,        // 🔊 Audio playback
-    LogCategory.background: false,   // 🔧 Background execution
-    LogCategory.sync: false,         // 🔄 Sync operations
-    LogCategory.firebase: true,      // 🔥 Firebase operations
-    LogCategory.network: true,       // 🌐 Network requests
-    LogCategory.error: true,         // ❌ Errors (sempre attivi)
+    LogCategory.lifecycle: false,     // 📱 App lifecycle events
+    LogCategory.timer: false,         // ⏰ Timer operations
+    LogCategory.notification: false,  // 🔔 Notifications
+    LogCategory.liveActivity: false,  // 🔄 Live Activity updates
+    LogCategory.audio: false,         // 🔊 Audio playback
+    LogCategory.background: false,    // 🔧 Background execution
+    LogCategory.sync: false,          // 🔄 Sync operations
+    LogCategory.firebase: true,       // 🔥 Firebase operations
+    LogCategory.network: true,        // 🌐 Network requests
+    LogCategory.error: true,          // ❌ Errors (sempre attivi)
+    LogCategory.performance: true,    // 🚀 Performance monitoring
   };
 
   /// Log con categoria specifica
@@ -27,21 +28,29 @@ class DebugLogger {
     
     final prefix = emoji ?? _getCategoryEmoji(category);
     // ignore: avoid_print
-    print('$prefix $message');
+    if (kDebugMode) {
+      debugPrint('$prefix $message');
+    }
   }
 
   /// Log di errore (sempre attivo in debug)
   static void error(String message, [Object? error, StackTrace? stackTrace]) {
     if (!_enableLogging) return;
     // ignore: avoid_print
-    print('❌ ERROR: $message');
+    if (kDebugMode) {
+      debugPrint('❌ ERROR: $message');
+    }
     if (error != null) {
       // ignore: avoid_print
-      print('❌ Details: $error');
+      if (kDebugMode) {
+        debugPrint('❌ Details: $error');
+      }
     }
     if (stackTrace != null && kDebugMode) {
       // ignore: avoid_print
-      print('❌ Stack trace:\n$stackTrace');
+      if (kDebugMode) {
+        debugPrint('❌ Stack trace:\n$stackTrace');
+      }
     }
   }
 
@@ -50,7 +59,9 @@ class DebugLogger {
     if (!_enableLogging) return;
     if (!kDebugMode) return;
     // ignore: avoid_print
-    print('🐛 DEBUG: $message');
+    if (kDebugMode) {
+      debugPrint('🐛 DEBUG: $message');
+    }
   }
 
   static String _getCategoryEmoji(LogCategory category) {
@@ -75,6 +86,8 @@ class DebugLogger {
         return '🌐';
       case LogCategory.error:
         return '❌';
+      case LogCategory.performance:
+        return '🚀';
     }
   }
 }
@@ -91,4 +104,5 @@ enum LogCategory {
   firebase,      // Firebase operations
   network,       // Network requests
   error,         // Errors
+  performance,   // Performance monitoring
 }

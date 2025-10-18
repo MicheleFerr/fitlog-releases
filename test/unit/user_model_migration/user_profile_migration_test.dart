@@ -1,16 +1,15 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/unit
- * 🎯 Feature: auth migration
- * 🔧 Type: unit test
- * 🌍 Localization: N/A - Test file
- * 🎨 Theme: N/A - Test file
- * 📱 Platform: Universal
- * 
- * CRITICAL UNIT TESTS for User Model Migration
- * Tests backwards compatibility and new UserProfile functionality
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/unit
+/// 🎯 Feature: auth migration
+/// 🔧 Type: unit test
+/// 🌍 Localization: N/A - Test file
+/// 🎨 Theme: N/A - Test file
+/// 📱 Platform: Universal
+/// 
+/// CRITICAL UNIT TESTS for User Model Migration
+/// Tests backwards compatibility and new UserProfile functionality
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,13 +40,13 @@ class UserProfileFactory {
       isGuest: false,
       createdAt: DateTime.now(),
       lastLoginAt: DateTime.now(),
-      templateQuota: TemplateQuota(
+      templateQuota: const TemplateQuota(
         maxPrivateTemplates: 10,
         maxPublicTemplates: 5,
         usedPrivateTemplates: 0,
         usedPublicTemplates: 0,
       ),
-      stats: UserStats(
+      stats: const UserStats(
         totalWorkouts: 0,
         currentStreak: 0,
         longestStreak: 0,
@@ -55,7 +54,7 @@ class UserProfileFactory {
         totalExercises: 0,
         achievements: {},
       ),
-      preferences: UserPreferences(
+      preferences: const UserPreferences(
         language: 'en',
         theme: 'light',
         notificationsEnabled: true,
@@ -78,13 +77,13 @@ class UserProfileFactory {
       isGuest: false,
       createdAt: DateTime.now(),
       lastLoginAt: DateTime.now(),
-      templateQuota: TemplateQuota(
+      templateQuota: const TemplateQuota(
         maxPrivateTemplates: 50,
         maxPublicTemplates: 25,
         usedPrivateTemplates: 0,
         usedPublicTemplates: 0,
       ),
-      stats: UserStats(
+      stats: const UserStats(
         totalWorkouts: 0,
         currentStreak: 0,
         longestStreak: 0,
@@ -92,7 +91,7 @@ class UserProfileFactory {
         totalExercises: 0,
         achievements: {},
       ),
-      preferences: UserPreferences(
+      preferences: const UserPreferences(
         language: 'en',
         theme: 'light',
         notificationsEnabled: true,
@@ -393,9 +392,9 @@ void main() {
       
       // Test all states
       final authenticated = UserAuthenticated(profile);
-      final anonymous = UserAnonymous();
-      final unauthenticated = UserUnauthenticated();
-      final loading = UserLoading();
+      const anonymous = UserAnonymous();
+      const unauthenticated = UserUnauthenticated();
+      const loading = UserLoading();
       final error = UserError('Test error', StackTrace.current);
 
       // Test type checks

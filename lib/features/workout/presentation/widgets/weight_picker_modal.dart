@@ -1,310 +1,202 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
-class WeightPickerModal extends ConsumerStatefulWidget {
-  final double initialWeight;
-  final String unit;
-  final Function(double) onWeightSelected;
-
-  const WeightPickerModal({
-    super.key,
-    required this.initialWeight,
-    required this.unit,
-    required this.onWeightSelected,
-  });
-
-  @override
-  ConsumerState<WeightPickerModal> createState() => _WeightPickerModalState();
+class WeightPickerModal {
+  static Future<double?> show(
+    BuildContext context, {
+    required double initialWeight,
+  }) {
+    return showModalBottomSheet<double>(
+      context: context,
+      builder: (context) => _WeightPicker(
+        initialWeight: initialWeight,
+      ),
+    );
+  }
 }
 
-class _WeightPickerModalState extends ConsumerState<WeightPickerModal> {
-  late FixedExtentScrollController _controller;
-  late double _selectedWeight;
-  
-  // Generate weight options from 0 to 500 with 0.5 increments
-  static const double _minWeight = 0.0;
-  static const double _maxWeight = 500.0;
-  static const double _increment = 0.5;
-  
-  late List<double> _weightOptions;
-  late int _selectedIndex;
+class _WeightPicker extends ConsumerStatefulWidget {
+
+  const _WeightPicker({
+    required this.initialWeight,
+  });
+  final double initialWeight;
+
+  @override
+  ConsumerState<_WeightPicker> createState() => _WeightPickerState();
+}
+
+class _WeightPickerState extends ConsumerState<_WeightPicker> {
+  late double selectedWeight;
+  late FixedExtentScrollController controller;
 
   @override
   void initState() {
     super.initState();
-    
-    // Generate weight options
-    _weightOptions = [];
-    for (double weight = _minWeight; weight <= _maxWeight; weight += _increment) {
-      _weightOptions.add(weight);
-    }
-    
-    // Find initial weight index
-    _selectedWeight = widget.initialWeight;
-    _selectedIndex = _findClosestWeightIndex(_selectedWeight);
-    
-    _controller = FixedExtentScrollController(initialItem: _selectedIndex);
-  }
+    final unit = ref.read(measurementUnitProvider);
 
-  int _findClosestWeightIndex(double weight) {
-    int closestIndex = 0;
-    double closestDiff = double.infinity;
-    
-    for (int i = 0; i < _weightOptions.length; i++) {
-      double diff = (_weightOptions[i] - weight).abs();
-      if (diff < closestDiff) {
-        closestDiff = diff;
-        closestIndex = i;
-      }
-    }
-    
-    return closestIndex;
+    selectedWeight = widget.initialWeight.toDisplayUnit(unit);
+
+    controller = FixedExtentScrollController(
+      initialItem: WeightHelper.weightToIndex(selectedWeight, unit),
+    );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(2),
+    final theme = context.theme;
+    final l10n = context.l10n;
+    final unit = ref.watch(measurementUnitProvider);
+
+    // This is needed to update the picker when the unit changes
+    // or when quick jumps are used.
+    final currentWeightInDisplayUnit = selectedWeight;
+
+    return StatefulBuilder(
+      builder: (context, setModalState) => Container(
+        height: 380,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            // Handle bar
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.outline.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
+            // Title and current weight
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Select Weight',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Scroll to select weight in ${widget.unit}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                FilledButton(
-                  onPressed: _selectWeight,
-                  child: const Text('Select'),
-                ),
-              ],
-            ),
-          ),
-          
-          // Current selection display
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.fitness_center,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                const SizedBox(width: 12),
                 Text(
-                  '${_selectedWeight.toStringAsFixed(_selectedWeight % 1 == 0 ? 0 : 1)} ${widget.unit}',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  l10n.weight,
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                Text(
+                  '${WeightHelper.formatPickerWeight(currentWeightInDisplayUnit, unit)} $unit',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
               ],
             ),
-          ),
-          
-          const SizedBox(height: 20),
-          
-          // Weight picker wheel
-          Expanded(
-            child: Stack(
-              children: [
-                // Selection indicator overlay
-                Center(
-                  child: Container(
-                    height: 60,
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                        width: 2,
-                      ),
+            const SizedBox(height: 12),
+
+            // Quick jump buttons
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
+              children: WeightHelper.getQuickJumps(currentWeightInDisplayUnit, unit)
+                  .map((jump) {
+                return OutlinedButton(
+                  onPressed: () {
+                    final newWeight = WeightHelper.applyQuickJump(
+                      currentWeight: currentWeightInDisplayUnit,
+                      jump: jump,
+                      unit: unit,
+                    );
+                    setModalState(() => selectedWeight = newWeight);
+                    controller.animateToItem(
+                      WeightHelper.weightToIndex(newWeight, unit),
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                    HapticFeedback.mediumImpact();
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    minimumSize: const Size(60, 36),
+                  ),
+                  child: Text(
+                    jump > 0 ? '+$jump' : '$jump',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: jump > 0
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.error,
                     ),
                   ),
-                ),
-                
-                // ListWheelScrollView for weight selection
-                ListWheelScrollView.useDelegate(
-                  controller: _controller,
-                  itemExtent: 60,
-                  perspective: 0.003,
-                  diameterRatio: 1.5,
-                  physics: const FixedExtentScrollPhysics(),
-                  onSelectedItemChanged: (index) {
-                    setState(() {
-                      _selectedIndex = index;
-                      _selectedWeight = _weightOptions[index];
-                    });
+                );
+              }).toList(),
+            ),
+
+            const SizedBox(height: 16),
+            // Picker
+            Expanded(
+              child: ListWheelScrollView.useDelegate(
+                controller: controller,
+                itemExtent: 50,
+                perspective: 0.005,
+                diameterRatio: 1.2,
+                physics: const FixedExtentScrollPhysics(),
+                childDelegate: ListWheelChildBuilderDelegate(
+                  childCount: WeightConversion.getChildCount(unit),
+                  builder: (context, index) {
+                    final weight = WeightHelper.indexToWeight(index, unit);
+                    final isSelected =
+                        (weight - currentWeightInDisplayUnit).abs() < 0.05;
+                    final displayText = WeightHelper.formatPickerWeight(weight, unit);
+
+                    return Center(
+                      child: Text(
+                        displayText,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    );
                   },
-                  childDelegate: ListWheelChildBuilderDelegate(
-                    builder: (context, index) {
-                      if (index < 0 || index >= _weightOptions.length) {
-                        return null;
-                      }
-                      
-                      final weight = _weightOptions[index];
-                      final isSelected = index == _selectedIndex;
-                      
-                      return Center(
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          child: Text(
-                            weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1),
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                              color: isSelected 
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                              fontSize: isSelected ? 24 : 20,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: _weightOptions.length,
-                  ),
                 ),
-              ],
+                onSelectedItemChanged: (index) {
+                  setModalState(() =>
+                      selectedWeight = WeightHelper.indexToWeight(index, unit));
+                  HapticFeedback.selectionClick();
+                },
+              ),
             ),
-          ),
-          
-          // Quick selection buttons
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Quick Select',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: _getQuickSelectWeights().map((weight) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: FilterChip(
-                          label: Text('${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} ${widget.unit}'),
-                          selected: _selectedWeight == weight,
-                          onSelected: (selected) {
-                            if (selected) {
-                              _jumpToWeight(weight);
-                            }
-                          },
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
+            const SizedBox(height: 16),
+            // Confirm button
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () {
+                  final weightInKg = selectedWeight.fromDisplayUnit(unit);
+                  Navigator.of(context).pop(weightInKg);
+                  HapticFeedback.mediumImpact();
+                },
+                child: Text(l10n.confirm),
+              ),
             ),
-          ),
-          
-          // Bottom padding for safe area
-          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-        ],
-      ),
-    );
-  }
-
-  List<double> _getQuickSelectWeights() {
-    // Common weight plates and increments
-    if (widget.unit == 'kg') {
-      return [0, 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100];
-    } else {
-      // lbs
-      return [0, 10, 25, 45, 65, 85, 115, 135, 155, 185, 205, 225];
-    }
-  }
-
-  void _jumpToWeight(double weight) {
-    final index = _findClosestWeightIndex(weight);
-    _controller.animateToItem(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _selectWeight() {
-    widget.onWeightSelected(_selectedWeight);
-    Navigator.pop(context);
-  }
-}
-
-// Extension for easy modal showing
-extension WeightPickerModalExtension on BuildContext {
-  Future<void> showWeightPicker({
-    required double initialWeight,
-    required String unit,
-    required Function(double) onWeightSelected,
-  }) {
-    return showModalBottomSheet(
-      context: this,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => WeightPickerModal(
-        initialWeight: initialWeight,
-        unit: unit,
-        onWeightSelected: onWeightSelected,
+          ],
+        ),
       ),
     );
   }

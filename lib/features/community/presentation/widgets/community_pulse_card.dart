@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
-import '../../domain/entities/community_contribution.dart';
-import '../providers/community_provider.dart';
-import 'community_initializer.dart';
-import 'voting_card.dart';
+import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_initializer.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
-  final VoidCallback? onViewAll;
   
   const CommunityPulseCard({
     super.key,
     this.onViewAll,
   });
+  final VoidCallback? onViewAll;
 
   @override
   ConsumerState<CommunityPulseCard> createState() => _CommunityPulseCardState();
@@ -504,10 +503,6 @@ class _AnimatedIconState extends State<_AnimatedIcon>
 }
 
 class _StatItem extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
   
   const _StatItem({
     required this.icon,
@@ -515,6 +510,10 @@ class _StatItem extends StatelessWidget {
     required this.label,
     required this.color,
   });
+  final IconData icon;
+  final String value;
+  final String label;
+  final Color color;
   
   @override
   Widget build(BuildContext context) {
@@ -547,13 +546,13 @@ class _StatItem extends StatelessWidget {
 }
 
 class _MiniContributionCard extends StatelessWidget {
-  final CommunityContribution contribution;
-  final Function(bool) onVote;
   
   const _MiniContributionCard({
     required this.contribution,
     required this.onVote,
   });
+  final CommunityContribution contribution;
+  final Function(bool) onVote;
   
   @override
   Widget build(BuildContext context) {

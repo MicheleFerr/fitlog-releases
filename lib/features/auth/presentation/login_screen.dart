@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:io';
-import 'providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -41,12 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         error: (error, _) {
           // Show error message
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(error.toString()),
-                backgroundColor: Colors.red,
-              ),
-            );
+            SnackBarService.showError(context, error.toString());
           }
         },
       );
@@ -58,9 +55,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           padding: const EdgeInsets.all(24.0),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height - 
-                MediaQuery.of(context).padding.top - 
-                MediaQuery.of(context).padding.bottom - 48, // Account for padding
+              minHeight: context.screenHeight -
+                context.topPadding -
+                context.bottomPadding - 48, // Account for padding
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -70,31 +67,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: context.colors.primary.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.fitness_center,
                   size: 60,
-                  color: Theme.of(context).primaryColor,
+                  color: context.colors.primary,
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // App Title
               Text(
-                'GymBro TrackLog',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                context.l10n.appTitle,
+                style: context.textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+                  color: context.colors.primary,
                 ),
               ),
-              
+
               const SizedBox(height: 8),
               Text(
-                'Track your fitness journey',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                context.l10n.appSubtitle,
+                style: context.textTheme.bodyLarge?.copyWith(
+                  color: context.colors.onSurface.withOpacity(0.7),
                 ),
               ),
               
@@ -109,20 +106,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Icon(
                         Icons.waving_hand,
                         size: 32,
-                        color: Theme.of(context).primaryColor,
+                        color: context.colors.primary,
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Welcome to your new fitness companion!',
+                        context.l10n.welcomeToGymBro,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: context.textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Track workouts, time your rest periods, and sync with Apple Health.',
+                        context.l10n.welcomeDescription,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.colors.onSurface.withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -141,19 +138,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // Email Field
                       TextFormField(
                         controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          hintText: 'Enter your email',
-                          prefixIcon: Icon(Icons.email),
+                        decoration: InputDecoration(
+                          labelText: context.l10n.emailLabel,
+                          hintText: context.l10n.emailHint,
+                          prefixIcon: const Icon(Icons.email),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Please enter your email';
+                            return context.l10n.pleaseEnterEmail;
                           }
                           if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                            return 'Please enter a valid email';
+                            return context.l10n.pleaseEnterValidEmail;
                           }
                           return null;
                         },
@@ -164,8 +161,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter your password',
+                          labelText: context.l10n.passwordLabel,
+                          hintText: context.l10n.passwordHint,
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
@@ -176,7 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         textInputAction: TextInputAction.done,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return context.l10n.pleaseEnterPassword;
                           }
                           return null;
                         },
@@ -194,23 +191,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   width: 20,
                                   child: CircularProgressIndicator(strokeWidth: 2),
                                 )
-                              : const Text('Sign In'),
+                              : Text(context.l10n.signInButton),
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Forgot Password
                       TextButton(
                         onPressed: _handleForgotPassword,
-                        child: const Text('Forgot Password?'),
+                        child: Text(context.l10n.forgotPassword),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Back to options
                       TextButton.icon(
                         onPressed: () => setState(() => _showLoginForm = false),
                         icon: const Icon(Icons.arrow_back),
-                        label: const Text('Back to options'),
+                        label: Text(context.l10n.backToOptions),
                       ),
                     ],
                   ),
@@ -221,19 +218,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: FilledButton.icon(
                     onPressed: authController.isLoading ? null : _signInWithGoogle,
-                    icon: authController.isLoading 
+                    icon: authController.isLoading
                         ? const SizedBox(
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.g_mobiledata, size: 24),
-                    label: const Text('Sign in with Google'),
+                    label: Text(context.l10n.signInWithGoogle),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Apple Sign In Button (iOS only)
                 if (Platform.isIOS) ...[
                   SizedBox(
@@ -244,41 +241,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         backgroundColor: Colors.black,
                         foregroundColor: Colors.white,
                       ),
-                      icon: authController.isLoading 
+                      icon: authController.isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.apple),
-                      label: const Text('Sign in with Apple'),
+                      label: Text(context.l10n.signInWithApple),
                     ),
                   ),
                   const SizedBox(height: 16),
                 ],
-                
+
                 // Email Sign In Button
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => setState(() => _showLoginForm = true),
                     icon: const Icon(Icons.email),
-                    label: const Text('Sign in with Email'),
+                    label: Text(context.l10n.signInWithEmail),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Register Button
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => context.pushNamed('register'),
                     icon: const Icon(Icons.person_add),
-                    label: const Text('Registrati'),
+                    label: Text(context.l10n.signUpButton),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Theme.of(context).primaryColor,
-                      side: BorderSide(color: Theme.of(context).primaryColor),
+                      foregroundColor: context.colors.primary,
+                      side: BorderSide(color: context.colors.primary),
                     ),
                   ),
                 ),
@@ -292,18 +289,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   _FeatureIcon(
                     icon: Icons.timer,
-                    label: 'Smart Timer',
-                    color: Theme.of(context).colorScheme.primary,
+                    label: context.l10n.featureSmartTimer,
+                    color: context.colors.primary,
                   ),
                   _FeatureIcon(
                     icon: Icons.phone_iphone,
-                    label: 'Live Activities',
-                    color: Theme.of(context).colorScheme.secondary,
+                    label: context.l10n.featureLiveActivities,
+                    color: context.colors.secondary,
                   ),
                   _FeatureIcon(
                     icon: Icons.favorite,
-                    label: 'Apple Health',
-                    color: Theme.of(context).colorScheme.tertiary,
+                    label: context.l10n.featureAppleHealth,
+                    color: context.colors.tertiary,
                   ),
                 ],
               ),
@@ -334,12 +331,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleForgotPassword() async {
     if (_emailController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email first'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      SnackBarService.showWarning(context, context.l10n.pleaseEnterEmailFirst);
       return;
     }
 
@@ -347,23 +339,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await ref.read(authControllerProvider.notifier).sendPasswordResetEmail(
         _emailController.text.trim(),
       );
-      
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Password reset email sent! Check your inbox.'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        SnackBarService.showSuccess(context, context.l10n.passwordResetEmailSent);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Colors.red,
-          ),
-        );
+        SnackBarService.showError(context, e.toString());
       }
     }
   }
@@ -371,15 +353,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 }
 
 class _FeatureIcon extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
 
   const _FeatureIcon({
     required this.icon,
     required this.label,
     required this.color,
   });
+  final IconData icon;
+  final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -402,8 +384,8 @@ class _FeatureIcon extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+          style: context.textTheme.labelSmall?.copyWith(
+            color: context.colors.onSurface.withOpacity(0.7),
           ),
         ),
       ],

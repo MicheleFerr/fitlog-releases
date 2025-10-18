@@ -1,25 +1,6 @@
-import '../../domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 
 class ExerciseModel {
-  final String id;
-  final String nome;
-  final String focus;
-  final String? imageUrl;
-  final String muscoliSecondari;
-  final String difficolta;
-  final String tipoEsercizio;
-  final String attrezzatura;
-  final String patternMovimento;
-  final String rangeRipetizioni;
-  final String? noteTecniche;
-  final String? mobilitaPre;
-  final String? attivazionePre;
-  final String? warmupSets;
-  final String? tempoWarmup;
-  final String? drillTecnico;
-  final String? prevenzioneInfortuni;
-  final String? cooldownConsigliato;
-  final String? spiegazioneTermini;
 
   const ExerciseModel({
     required this.id,
@@ -67,6 +48,49 @@ class ExerciseModel {
     );
   }
 
+  factory ExerciseModel.fromEntity(Exercise exercise) {
+    return ExerciseModel(
+      id: exercise.id,
+      nome: exercise.nome,
+      focus: exercise.focus.join(', '),
+      imageUrl: exercise.imageUrl,
+      muscoliSecondari: exercise.muscoliSecondari.join(', '),
+      difficolta: exercise.difficolta,
+      tipoEsercizio: exercise.tipoEsercizio,
+      attrezzatura: exercise.attrezzatura,
+      patternMovimento: exercise.patternMovimento,
+      rangeRipetizioni: exercise.rangeRipetizioni,
+      noteTecniche: exercise.noteTecniche,
+      mobilitaPre: exercise.mobilitaPre,
+      attivazionePre: exercise.attivazionePre,
+      warmupSets: exercise.warmupSets,
+      tempoWarmup: exercise.tempoWarmup,
+      drillTecnico: exercise.drillTecnico,
+      prevenzioneInfortuni: exercise.prevenzioneInfortuni,
+      cooldownConsigliato: exercise.cooldownConsigliato,
+      spiegazioneTermini: exercise.spiegazioneTermini,
+    );
+  }
+  final String id;
+  final String nome;
+  final String focus;
+  final String? imageUrl;
+  final String muscoliSecondari;
+  final String difficolta;
+  final String tipoEsercizio;
+  final String attrezzatura;
+  final String patternMovimento;
+  final String rangeRipetizioni;
+  final String? noteTecniche;
+  final String? mobilitaPre;
+  final String? attivazionePre;
+  final String? warmupSets;
+  final String? tempoWarmup;
+  final String? drillTecnico;
+  final String? prevenzioneInfortuni;
+  final String? cooldownConsigliato;
+  final String? spiegazioneTermini;
+
   Exercise toEntity() {
     return Exercise(
       id: id,
@@ -89,5 +113,29 @@ class ExerciseModel {
       cooldownConsigliato: cooldownConsigliato,
       spiegazioneTermini: spiegazioneTermini,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nome': nome,
+      'focus': focus,
+      'imageUrl': imageUrl,
+      'muscoliSecondari': muscoliSecondari,
+      'difficolta': difficolta,
+      'tipoEsercizio': tipoEsercizio,
+      'attrezzatura': attrezzatura,
+      'patternMovimento': patternMovimento,
+      'rangeRipetizioni': rangeRipetizioni,
+      'noteTecniche': noteTecniche,
+      'mobilitaPre': mobilitaPre,
+      'attivazionePre': attivazionePre,
+      'warmupSets': warmupSets,
+      'tempoWarmup': tempoWarmup,
+      'drillTecnico': drillTecnico,
+      'prevenzioneInfortuni': prevenzioneInfortuni,
+      'cooldownConsigliato': cooldownConsigliato,
+      'spiegazioneTermini': spiegazioneTermini,
+    };
   }
 }

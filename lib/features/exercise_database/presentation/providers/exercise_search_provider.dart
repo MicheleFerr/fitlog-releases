@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../workout/domain/entities/exercise.dart';
-import '../../data/repositories/exercise_repository.dart';
-import '../../domain/entities/exercise_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_search_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 // Search query state provider
 final exerciseSearchQueryProvider = StateProvider<String>((ref) => '');
@@ -91,17 +93,30 @@ final muscleGroupsProvider = Provider<List<String>>((ref) {
   ];
 });
 
+// Exercise search service provider
+final exerciseSearchServiceProvider = Provider<ExerciseSearchService>((ref) {
+  final locale = ref.watch(localeProvider);
+  final service = ExerciseSearchService();
+  service.loadExercises(locale); // Preload exercises with correct locale
+  return service;
+});
+
+// Improved search results provider using the search service
+final improvedExerciseSearchProvider = FutureProvider<List<ExerciseTemplate>>((ref) async {
+  final searchService = ref.watch(exerciseSearchServiceProvider);
+  final query = ref.watch(exerciseSearchQueryProvider);
+  final locale = ref.watch(localeProvider);
+
+  // The searchExercises method now handles loading internally with correct locale
+  return await searchService.searchExercises(query, locale);
+});
+
 // Exercise search state notifier for complex filtering
 final exerciseSearchStateProvider = StateNotifierProvider<ExerciseSearchNotifier, ExerciseSearchState>((ref) {
   return ExerciseSearchNotifier(ref);
 });
 
 class ExerciseSearchState {
-  final String query;
-  final ExerciseCategory? categoryFilter;
-  final String? muscleGroupFilter;
-  final List<String> equipmentFilter;
-  final bool showFavorites;
 
   const ExerciseSearchState({
     this.query = '',
@@ -110,6 +125,11 @@ class ExerciseSearchState {
     this.equipmentFilter = const [],
     this.showFavorites = false,
   });
+  final String query;
+  final ExerciseCategory? categoryFilter;
+  final String? muscleGroupFilter;
+  final List<String> equipmentFilter;
+  final bool showFavorites;
 
   ExerciseSearchState copyWith({
     String? query,

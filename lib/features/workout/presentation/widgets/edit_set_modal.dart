@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/exercise.dart';
-import '../../../../shared/presentation/providers/app_config_provider.dart';
-import '../../../../shared/domain/entities/app_config.dart';
-import 'weight_picker_modal.dart';
-import 'reps_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/suggestion_accuracy.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/questionnaire_analytics_datasource.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class EditSetModal extends ConsumerStatefulWidget {
-  final ExerciseSet exerciseSet;
-  final Function(ExerciseSet) onSave;
 
   const EditSetModal({
     super.key,
     required this.exerciseSet,
     required this.onSave,
+    this.exercise,
+    this.previousSet,
+    this.suggestedWeight,
+    this.suggestedReps,
   });
+  final ExerciseSet exerciseSet;
+  final Function(ExerciseSet) onSave;
+  final Exercise? exercise;
+  final ExerciseSet? previousSet;
+  final double? suggestedWeight;
+  final int? suggestedReps;
 
   @override
   ConsumerState<EditSetModal> createState() => _EditSetModalState();
@@ -26,9 +44,15 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
   late TextEditingController _actualRepsController;
   late TextEditingController _secondsController;
   late TextEditingController _notesController;
-  
+
   bool _isCompleted = false;
   int? _selectedRpe;
+
+  // APRE suggestion state
+  RestTimeSuggestion? _restTimeSuggestion;
+  bool _showRestSuggestionBanner = false;
+  double? _suggestedWeight;
+  bool _showWeightSuggestionBanner = false;
 
   @override
   void initState() {
@@ -108,7 +132,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             children: [
               Text(
                 'Edit Set ${widget.exerciseSet.setNumber}',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: context.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -135,8 +159,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               secondary: Icon(
                 _isCompleted ? Icons.check_circle : Icons.circle_outlined,
                 color: _isCompleted 
-                    ? Theme.of(context).colorScheme.tertiary 
-                    : Theme.of(context).colorScheme.outline,
+                    ? context.colors.tertiary 
+                    : context.colors.outline,
               ),
             ),
           ),
@@ -154,6 +178,18 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               ),
             ],
           ),
+
+          if (widget.previousSet != null) ...[
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: TextButton.icon(
+                onPressed: _copyPreviousSet,
+                icon: const Icon(Icons.copy, size: 16),
+                label: Text(context.l10n.copyPreviousSet),
+              ),
+            ),
+          ],
           const SizedBox(height: 16),
           
           // Actual Reps (if set is completed)
@@ -180,8 +216,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
                 borderRadius: BorderRadius.circular(8),
               ),
               helperText: 'Tap "Done" on keyboard to close',
-              helperStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              helperStyle: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
               ),
             ),
           ),
@@ -191,7 +227,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           if (_isCompleted) ...[
             Text(
               'RPE (Rate of Perceived Exertion)',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              style: context.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -219,8 +255,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               const SizedBox(height: 8),
               Text(
                 'RIR: ${10 - _selectedRpe!} reps in reserve',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.primary,
                 ),
               ),
             ],
@@ -228,7 +264,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             // Old quick RPE buttons for notes (when not completed)
             Text(
               'Quick RPE (add to notes)',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              style: context.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -282,13 +318,34 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               ),
             ],
           ),
-          
+
+          // Rest Time Suggestion Banner
+          if (_showRestSuggestionBanner && _restTimeSuggestion != null) ...[
+            const SizedBox(height: 16),
+            _buildRestTimeSuggestionBanner(context),
+          ],
+
+          // Weight Adjustment Suggestion Banner
+          if (_showWeightSuggestionBanner && _suggestedWeight != null) ...[
+            const SizedBox(height: 16),
+            _buildWeightSuggestionBanner(context),
+          ],
+
           // Bottom padding for safe area
-          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+          SizedBox(height: context.mediaQuery.viewInsets.bottom),
         ],
       ),
       ),
     );
+  }
+
+  void _copyPreviousSet() {
+    if (widget.previousSet != null) {
+      setState(() {
+        _weightController.text = widget.previousSet!.weight?.toString() ?? '';
+        _repsController.text = widget.previousSet!.reps?.toString() ?? '';
+      });
+    }
   }
 
   void _saveSet() {
@@ -330,13 +387,6 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       
       final notes = _notesController.text.trim();
 
-      // Ensure we have valid data before creating updated set
-      if (widget.exerciseSet == null) {
-        debugPrint('Error: exerciseSet is null');
-        Navigator.pop(context);
-        return;
-      }
-
       final updatedSet = widget.exerciseSet.copyWith(
         weight: weight,
         reps: reps,
@@ -350,38 +400,149 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       );
 
       // Ensure onSave callback exists
-      if (widget.onSave != null) {
-        widget.onSave(updatedSet);
+      widget.onSave(updatedSet);
+
+      // Track suggestion accuracy if set is completed
+      if (_isCompleted &&
+          widget.suggestedWeight != null &&
+          weight != null &&
+          widget.exercise != null) {
+        _trackSuggestionAccuracy(
+          actualWeight: weight,
+          actualReps: actualReps ?? reps ?? 0,
+        );
       }
-      
-      // Check if context is still mounted before navigation
+
+      // Check for APRE suggestions (rest time and weight adjustments)
+      if (_isCompleted && widget.exercise != null) {
+        final config = ref.read(appConfigProvider);
+        final autoAdjustEnabled = config.autoAdjustRestTime ?? false;
+
+        // Check for rest time suggestion
+        if (widget.previousSet != null && weight != null) {
+          final previousWeight = widget.previousSet!.weight ?? weight;
+
+          final restSuggestion = RestTimeSuggestionService.checkRestTimeSuggestion(
+            exercise: widget.exercise!,
+            newWeight: weight,
+            lastWeight: previousWeight,
+            currentRestTime: widget.exercise!.restTime ?? 90,
+            autoAdjustEnabled: autoAdjustEnabled,
+          );
+
+          if (restSuggestion != null) {
+            setState(() {
+              _restTimeSuggestion = restSuggestion;
+              _showRestSuggestionBanner = true;
+            });
+            return; // Don't close modal yet, show suggestion
+          }
+        }
+
+        // Check for APRE weight adjustment
+        if (widget.exercise!.autoAdjustmentType == AutoAdjustmentType.apre &&
+            reps != null &&
+            actualReps != null &&
+            weight != null) {
+          final targetReps = reps;
+          final protocol = widget.exercise!.apreProtocol ??
+              APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
+
+          final suggestedWeight = APREAutoRegulationService.calculateNextSetWeight(
+            protocol: protocol,
+            currentWeight: weight,
+            targetReps: targetReps,
+            actualReps: actualReps,
+          );
+
+          // Show suggestion if weight changed
+          if ((suggestedWeight - weight).abs() > 0.1) {
+            setState(() {
+              _suggestedWeight = suggestedWeight;
+              _showWeightSuggestionBanner = true;
+            });
+            return; // Don't close modal yet, show suggestion
+          }
+        }
+      }
+
+      // No suggestions, close normally
       if (mounted) {
         Navigator.pop(context);
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Set ${widget.exerciseSet.setNumber} updated'),
-            backgroundColor: Theme.of(context).colorScheme.tertiary,
-          ),
+
+        SnackBarService.showSuccess(
+          context,
+          'Set ${widget.exerciseSet.setNumber} updated',
         );
       }
     } catch (e, stackTrace) {
       debugPrint('Error saving set: $e');
       debugPrint('Stack trace: $stackTrace');
-      
+
       // Show error message to user
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Error updating set. Please try again.'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        SnackBarService.showError(
+          context,
+          'Error updating set. Please try again.',
         );
       }
     }
   }
-  
+  /// Track suggestion accuracy for adaptive learning
+  Future<void> _trackSuggestionAccuracy({
+    required double actualWeight,
+    required int actualReps,
+  }) async {
+    try {
+      // Get current user
+      final userAsync = ref.read(firebaseUserProvider);
+      final user = userAsync.value;
+      if (user == null) return;
+
+      // Get user's fitness questionnaire for experience level and goal
+      final questionnaire = ref.read(userFitnessQuestionnaireProvider);
+      if (questionnaire == null) return;
+
+      // Calculate errors
+      final weightError = ((actualWeight - widget.suggestedWeight!).abs() / widget.suggestedWeight!) * 100.0;
+      final repsError = actualReps - (widget.suggestedReps ?? 0);
+
+      // Create accuracy record
+      final datasource = QuestionnaireAnalyticsDataSource();
+      final accuracy = SuggestionAccuracy(
+        id: datasource.generateId(),
+        userId: user.uid,
+        exerciseId: widget.exercise!.id,
+        suggestedWeight: widget.suggestedWeight!,
+        actualWeight: actualWeight,
+        suggestedReps: widget.suggestedReps ?? 0,
+        actualReps: actualReps,
+        weightErrorPercent: weightError,
+        repsError: repsError,
+        timestamp: DateTime.now(),
+        experienceLevel: questionnaire.experienceLevel.name,
+        trainingGoal: questionnaire.trainingGoal.name,
+        perceivedExertion: _selectedRpe,
+      );
+
+      // Save to datasource
+      await datasource.saveSuggestionAccuracy(accuracy);
+
+      if (kDebugMode) {
+        debugPrint('✅ Tracked suggestion accuracy: ${widget.exercise!.name}');
+        debugPrint('   Suggested: ${widget.suggestedWeight}kg → Actual: ${actualWeight}kg');
+        debugPrint('   Error: ${weightError.toStringAsFixed(1)}%');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ Error tracking suggestion accuracy: $e');
+        debugPrint('Stack trace: $stackTrace');
+      }
+      // Don't show error to user - this is background tracking
+    }
+  }
+
   Color _getRpeChipColor(int rpe) {
     if (rpe <= 6) return Colors.green;
     if (rpe <= 7) return Colors.lightGreen;
@@ -401,12 +562,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: hasWeight 
-              ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
+              ? context.colors.primaryContainer.withOpacity(0.3)
+              : context.colors.surfaceContainerHighest,
           border: Border.all(
             color: hasWeight 
-                ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
-                : Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                ? context.colors.primary.withOpacity(0.3)
+                : context.colors.outline.withOpacity(0.2),
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -417,8 +578,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               Icons.fitness_center,
               size: 18,
               color: hasWeight 
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+                  ? context.colors.primary
+                  : context.colors.onSurfaceVariant,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -426,11 +587,11 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
                 hasWeight 
                     ? '${currentWeight.toStringAsFixed(currentWeight % 1 == 0 ? 0 : 1)} ${config.measurementUnit}'
                     : 'Weight',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                style: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: hasWeight ? FontWeight.w600 : FontWeight.normal,
                   color: hasWeight 
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ? context.colors.onSurface
+                      : context.colors.onSurfaceVariant,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -439,7 +600,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               Icon(
                 Icons.add_circle_outline,
                 size: 16,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.colors.onSurfaceVariant,
               ),
           ],
         ),
@@ -447,18 +608,19 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     );
   }
 
-  void _openWeightPicker(BuildContext context, AppConfig config) {
+  void _openWeightPicker(BuildContext context, AppConfig config) async {
     final currentWeight = double.tryParse(_weightController.text) ?? 0.0;
-    
-    context.showWeightPicker(
+
+    final selectedWeight = await WeightPickerModal.show(
+      context,
       initialWeight: currentWeight,
-      unit: config.measurementUnit,
-      onWeightSelected: (selectedWeight) {
-        setState(() {
-          _weightController.text = selectedWeight.toString();
-        });
-      },
     );
+
+    if (selectedWeight != null) {
+      setState(() {
+        _weightController.text = selectedWeight.toString();
+      });
+    }
   }
 
   Widget _buildRepsSelector(BuildContext context) {
@@ -472,12 +634,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: hasReps 
-              ? Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.3)
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
+              ? context.colors.secondaryContainer.withOpacity(0.3)
+              : context.colors.surfaceContainerHighest,
           border: Border.all(
             color: hasReps 
-                ? Theme.of(context).colorScheme.secondary.withOpacity(0.3)
-                : Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                ? context.colors.secondary.withOpacity(0.3)
+                : context.colors.outline.withOpacity(0.2),
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -488,8 +650,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               Icons.repeat,
               size: 18,
               color: hasReps 
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+                  ? context.colors.secondary
+                  : context.colors.onSurfaceVariant,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -497,11 +659,11 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
                 hasReps 
                     ? '$currentReps reps'
                     : 'Reps',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                style: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: hasReps ? FontWeight.w600 : FontWeight.normal,
                   color: hasReps 
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ? context.colors.onSurface
+                      : context.colors.onSurfaceVariant,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -510,7 +672,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               Icon(
                 Icons.add_circle_outline,
                 size: 16,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.colors.onSurfaceVariant,
               ),
           ],
         ),
@@ -518,17 +680,19 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     );
   }
 
-  void _openRepsPicker(BuildContext context) {
+  void _openRepsPicker(BuildContext context) async {
     final currentReps = int.tryParse(_repsController.text) ?? 10;
-    
-    context.showRepsPicker(
+
+    final selectedReps = await RepsPickerModal.show(
+      context,
       initialReps: currentReps,
-      onRepsSelected: (selectedReps) {
-        setState(() {
-          _repsController.text = selectedReps.toString();
-        });
-      },
     );
+
+    if (selectedReps != null) {
+      setState(() {
+        _repsController.text = selectedReps.toString();
+      });
+    }
   }
 
   Widget _buildActualRepsField(BuildContext context) {
@@ -564,15 +728,15 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           Icons.timer,
           size: 18,
           color: hasDuration 
-              ? Theme.of(context).colorScheme.tertiary
-              : Theme.of(context).colorScheme.onSurfaceVariant,
+              ? context.colors.tertiary
+              : context.colors.onSurfaceVariant,
         ),
         suffixText: hasDuration ? 's' : null,
         helperText: isAutoTracked 
             ? '⏱️ Tracked automatically (seconds,centiseconds)' 
             : 'Format: seconds,centiseconds (e.g., 12,34 = 12.34s)',
         helperStyle: TextStyle(
-          color: Theme.of(context).colorScheme.primary,
+          color: context.colors.primary,
           fontSize: 11,
         ),
         isDense: true,
@@ -582,8 +746,148 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         ),
       ),
       keyboardType: TextInputType.number,
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+      style: context.textTheme.bodyMedium?.copyWith(
         fontWeight: hasDuration ? FontWeight.w600 : FontWeight.normal,
+      ),
+    );
+  }
+
+  /// Build rest time suggestion banner
+  Widget _buildRestTimeSuggestionBanner(BuildContext context) {
+    final l10n = context.l10n;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        border: Border.all(color: Colors.orange),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.timer, color: Colors.orange),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.restTimeSuggestion,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _restTimeSuggestion!.message,
+            style: context.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _showRestSuggestionBanner = false;
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text(l10n.dismiss),
+              ),
+              const SizedBox(width: 8),
+              FilledButton(
+                onPressed: () {
+                  setState(() {
+                    _showRestSuggestionBanner = false;
+                  });
+                  // Apply suggestion logic would go here in workout_provider
+                  Navigator.pop(context);
+                },
+                child: Text(l10n.accept),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build weight adjustment suggestion banner
+  Widget _buildWeightSuggestionBanner(BuildContext context) {
+    final l10n = context.l10n;
+    final weightDiff = _suggestedWeight! - double.parse(_weightController.text);
+    final isIncrease = weightDiff > 0;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isIncrease
+            ? Colors.green.withOpacity(0.1)
+            : Colors.blue.withOpacity(0.1),
+        border: Border.all(
+          color: isIncrease ? Colors.green : Colors.blue,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                isIncrease ? Icons.trending_up : Icons.trending_down,
+                color: isIncrease ? Colors.green : Colors.blue,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'APRE Weight Adjustment',
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: isIncrease ? Colors.green : Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Suggested weight for next set: ${_suggestedWeight!.toStringAsFixed(1)}kg '
+            '(${weightDiff > 0 ? "+" : ""}${weightDiff.toStringAsFixed(1)}kg)',
+            style: context.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _showWeightSuggestionBanner = false;
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text(l10n.dismiss),
+              ),
+              const SizedBox(width: 8),
+              FilledButton(
+                onPressed: () {
+                  setState(() {
+                    _weightController.text = _suggestedWeight!.toStringAsFixed(1);
+                    _showWeightSuggestionBanner = false;
+                  });
+                  // Don't close modal, let user review the updated weight
+                },
+                child: Text(l10n.accept),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -593,25 +897,27 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
 extension EditSetModalExtension on BuildContext {
   Future<void> showEditSetModal(
     ExerciseSet? exerciseSet,
-    Function(ExerciseSet)? onSave,
-  ) async {
+    Function(ExerciseSet)? onSave, {
+    Exercise? exercise,
+    ExerciseSet? previousSet,
+    double? suggestedWeight,
+    int? suggestedReps,
+  }) async {
     // Validate inputs
     if (exerciseSet == null) {
       debugPrint('Error: Cannot show EditSetModal with null exerciseSet');
-      ScaffoldMessenger.of(this).showSnackBar(
-        const SnackBar(
-          content: Text('Error: Unable to edit this set'),
-          backgroundColor: Colors.red,
-        ),
+      SnackBarService.showError(
+        this,
+        'Error: Unable to edit this set',
       );
       return;
     }
-    
+
     if (onSave == null) {
       debugPrint('Error: Cannot show EditSetModal with null onSave callback');
       return;
     }
-    
+
     try {
       await showModalBottomSheet(
         context: this,
@@ -622,19 +928,21 @@ extension EditSetModalExtension on BuildContext {
         builder: (context) => EditSetModal(
           exerciseSet: exerciseSet,
           onSave: onSave,
+          exercise: exercise,
+          previousSet: previousSet,
+          suggestedWeight: suggestedWeight,
+          suggestedReps: suggestedReps,
         ),
       );
     } catch (e, stackTrace) {
       debugPrint('Error showing EditSetModal: $e');
       debugPrint('Stack trace: $stackTrace');
-      
+
       // Show error message to user
       if (mounted) {
-        ScaffoldMessenger.of(this).showSnackBar(
-          const SnackBar(
-            content: Text('Error opening edit dialog. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
+        SnackBarService.showError(
+          this,
+          'Error opening edit dialog. Please try again.',
         );
       }
     }

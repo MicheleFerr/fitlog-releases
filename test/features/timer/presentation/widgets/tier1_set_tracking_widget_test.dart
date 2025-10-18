@@ -60,7 +60,7 @@ void main() {
           setVelocityDropProvider.overrideWith((ref) => velocityDrop),
           tier1SetTrackingProvider.overrideWith((ref) => mockNotifier),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -142,7 +142,7 @@ void main() {
               isTrackingSetProvider.overrideWith((ref) => true),
               currentSetMetricsProvider.overrideWith((ref) => testLiveMetrics),
             ],
-            child: MaterialApp(
+            child: const MaterialApp(
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(
@@ -440,7 +440,7 @@ void main() {
               ),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: Scaffold(
+              home: const Scaffold(
                 body: Tier1SetTrackingWidget(
                   exerciseId: testExerciseId,
                   setNumber: testSetNumber,

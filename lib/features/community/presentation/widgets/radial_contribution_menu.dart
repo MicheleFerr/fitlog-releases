@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import '../../domain/entities/community_contribution.dart';
 
 class RadialContributionMenu extends StatefulWidget {
-  final VoidCallback onTip;
-  final VoidCallback onWarning;
-  final VoidCallback onCorrection;
-  final VoidCallback onTechnique;
-  final VoidCallback onClose;
   
   const RadialContributionMenu({
     super.key,
@@ -18,6 +12,11 @@ class RadialContributionMenu extends StatefulWidget {
     required this.onTechnique,
     required this.onClose,
   });
+  final VoidCallback onTip;
+  final VoidCallback onWarning;
+  final VoidCallback onCorrection;
+  final VoidCallback onTechnique;
+  final VoidCallback onClose;
 
   @override
   State<RadialContributionMenu> createState() => _RadialContributionMenuState();
@@ -94,7 +93,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
       _menuItems.length,
       (index) {
         final angle = (index * 2 * math.pi) / _menuItems.length - math.pi / 2;
-        final radius = 100.0;
+        const radius = 100.0;
         return Tween<Offset>(
           begin: Offset.zero,
           end: Offset(
@@ -283,13 +282,13 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
 }
 
 class _RadialMenuItem extends StatefulWidget {
-  final _MenuItem item;
-  final VoidCallback onTap;
   
   const _RadialMenuItem({
     required this.item,
     required this.onTap,
   });
+  final _MenuItem item;
+  final VoidCallback onTap;
   
   @override
   State<_RadialMenuItem> createState() => _RadialMenuItemState();
@@ -402,10 +401,6 @@ class _RadialMenuItemState extends State<_RadialMenuItem>
 }
 
 class _MenuItem {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
   
   _MenuItem({
     required this.icon,
@@ -413,6 +408,10 @@ class _MenuItem {
     required this.color,
     required this.onTap,
   });
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
 }
 
 // Helper function to show the radial menu

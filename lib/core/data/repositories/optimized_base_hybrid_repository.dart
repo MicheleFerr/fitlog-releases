@@ -1,12 +1,11 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: core/data/repositories
- * 🎯 Feature: core
- * 🔧 Type: base repository (OPTIMIZED VERSION)
- * 
- * OPTIMIZED: Riduce query Firebase per controllo premium
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: core/data/repositories
+/// 🎯 Feature: core
+/// 🔧 Type: base repository (OPTIMIZED VERSION)
+/// 
+/// OPTIMIZED: Riduce query Firebase per controllo premium
+library;
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +16,17 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 
 /// Optimized Base repository with smart premium detection
 abstract class OptimizedBaseHybridRepository<T> {
+  
+  OptimizedBaseHybridRepository({
+    required this.featureName,
+    required this.collectionName,
+    this.requiresPremiumForCloud = true,
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance {
+    _initialize();
+  }
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   late Box<Map> _localBox;
@@ -39,18 +49,15 @@ abstract class OptimizedBaseHybridRepository<T> {
   // Sync configuration
   final StreamController<SyncEvent> _syncEventController = StreamController.broadcast();
   Stream<SyncEvent> get syncEvents => _syncEventController.stream;
-  
-  OptimizedBaseHybridRepository({
-    required this.featureName,
-    required this.collectionName,
-    this.requiresPremiumForCloud = true,
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance {
-    _initialize();
-  }
-  
+
+  /// Protected getter for Firestore instance
+  @protected
+  FirebaseFirestore get firestore => _firestore;
+
+  /// Protected getter for FirebaseAuth instance
+  @protected
+  FirebaseAuth get auth => _auth;
+
   /// Initialize with optimized profile loading
   Future<void> _initialize() async {
     // Initialize Hive boxes
@@ -75,26 +82,60 @@ abstract class OptimizedBaseHybridRepository<T> {
       // Check local cache first
       final cacheBox = await Hive.openBox<Map>('user_profile_cache');
       final cachedData = cacheBox.get('profile');
-      
+
       if (cachedData != null) {
         final cacheTime = DateTime.parse(cachedData['cacheTime'] ?? '');
         final now = DateTime.now();
-        
+
         // Use cache if still valid (24 hours)
         if (now.difference(cacheTime) < _cacheValidity) {
-          _cachedUserProfile = UserProfile.fromJson(Map<String, dynamic>.from(cachedData['profile']));
+          // Deep cast: convert nested Map<dynamic, dynamic> to Map<String, dynamic>
+          final profileData = _deepCastMap(cachedData['profile']);
+          _cachedUserProfile = UserProfile.fromJson(profileData);
           _profileCacheTime = cacheTime;
           debugPrint('📱 Using cached profile (saved ${now.difference(cacheTime).inHours}h ago)');
           return;
         }
       }
-      
+
       // Cache expired or doesn't exist, load from Firestore
       await _refreshProfileFromFirestore();
-      
+
     } catch (e) {
       debugPrint('⚠️ Failed to load cached profile: $e');
+      // Clear corrupted cache and retry from Firestore
+      try {
+        final cacheBox = await Hive.openBox<Map>('user_profile_cache');
+        await cacheBox.delete('profile');
+        debugPrint('🗑️ Cleared corrupted cache');
+      } catch (_) {}
+      await _refreshProfileFromFirestore();
     }
+  }
+
+  /// Deep cast Map<dynamic, dynamic> to Map<String, dynamic> recursively
+  Map<String, dynamic> _deepCastMap(dynamic data) {
+    if (data is Map) {
+      return data.map((key, value) {
+        final stringKey = key.toString();
+        final castedValue = _deepCastValue(value);
+        return MapEntry(stringKey, castedValue);
+      });
+    }
+    throw ArgumentError('Expected Map but got ${data.runtimeType}');
+  }
+
+  /// Deep cast any value, handling nested structures and Firestore Timestamp
+  dynamic _deepCastValue(dynamic value) {
+    if (value is Map) {
+      return _deepCastMap(value);
+    } else if (value is List) {
+      return value.map((item) => _deepCastValue(item)).toList();
+    } else if (value is Timestamp) {
+      // ✅ FIX: Convert Firestore Timestamp to ISO8601 string for JSON serialization
+      return value.toDate().toIso8601String();
+    }
+    return value;
   }
   
   /// OPTIMIZED: Only refresh from Firestore when necessary
@@ -106,7 +147,7 @@ abstract class OptimizedBaseHybridRepository<T> {
       // Check if we really need to refresh
       if (_profileCacheTime != null) {
         final timeSinceLastRefresh = DateTime.now().difference(_profileCacheTime!);
-        if (timeSinceLastRefresh < Duration(minutes: 30)) {
+        if (timeSinceLastRefresh < const Duration(minutes: 30)) {
           debugPrint('⏭️ Skipping profile refresh (last refresh ${timeSinceLastRefresh.inMinutes} min ago)');
           return;
         }
@@ -137,11 +178,17 @@ abstract class OptimizedBaseHybridRepository<T> {
   /// OPTIMIZED: Save profile to local cache
   Future<void> _saveProfileToCache() async {
     if (_cachedUserProfile == null) return;
-    
+
     try {
       final cacheBox = await Hive.openBox<Map>('user_profile_cache');
+
+      // ✅ FIX: Convert Timestamp objects to strings BEFORE caching
+      // This prevents type cast errors when reading from Hive
+      final profileMap = _cachedUserProfile!.toFirestore();
+      final serializedProfile = _deepCastMap(profileMap);
+
       await cacheBox.put('profile', {
-        'profile': _cachedUserProfile!.toFirestore(),
+        'profile': serializedProfile,
         'cacheTime': DateTime.now().toIso8601String(),
       });
     } catch (e) {
@@ -229,7 +276,7 @@ abstract class OptimizedBaseHybridRepository<T> {
       final cacheAge = DateTime.now().difference(_profileCacheTime!);
       
       // If cache is recent (< 1 hour), trust it
-      if (cacheAge < Duration(hours: 1)) {
+      if (cacheAge < const Duration(hours: 1)) {
         debugPrint('✅ Using cached premium status (${cacheAge.inMinutes} min old)');
         return isPremiumUser;
       }
@@ -346,6 +393,14 @@ extension UserProfileJson on UserProfile {
   }
   
   static UserProfile fromJson(Map<String, dynamic> json) {
+    // Helper to parse DateTime from various formats (Timestamp or String)
+    DateTime parseDateTime(dynamic value, DateTime fallback) {
+      if (value == null) return fallback;
+      if (value is Timestamp) return value.toDate();
+      if (value is String) return DateTime.parse(value);
+      return fallback;
+    }
+
     // Create a mock DocumentSnapshot for parsing
     return UserProfile(
       uid: json['uid'],
@@ -357,12 +412,8 @@ extension UserProfileJson on UserProfile {
         orElse: () => AccountTier.free,
       ),
       templateQuota: TemplateQuota.fromJson(json['templateQuota'] ?? {}),
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      lastLoginAt: json['lastLoginAt'] != null
-          ? DateTime.parse(json['lastLoginAt'])
-          : DateTime.now(),
+      createdAt: parseDateTime(json['createdAt'], DateTime.now()),
+      lastLoginAt: parseDateTime(json['lastLoginAt'], DateTime.now()),
       preferences: json['preferences'] ?? {},
       stats: json['stats'] ?? {},
       isGuest: json['isGuest'] ?? false,
@@ -372,11 +423,6 @@ extension UserProfileJson on UserProfile {
 
 /// Sync event for monitoring
 class SyncEvent {
-  final SyncEventType type;
-  final String? entityId;
-  final bool isLocal;
-  final bool willSync;
-  final DateTime timestamp;
   
   SyncEvent({
     required this.type,
@@ -384,6 +430,11 @@ class SyncEvent {
     required this.isLocal,
     required this.willSync,
   }) : timestamp = DateTime.now();
+  final SyncEventType type;
+  final String? entityId;
+  final bool isLocal;
+  final bool willSync;
+  final DateTime timestamp;
 }
 
 enum SyncEventType {

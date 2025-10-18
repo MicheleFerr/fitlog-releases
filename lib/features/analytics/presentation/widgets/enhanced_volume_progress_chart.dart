@@ -5,24 +5,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_progress_chart_3d.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_efficiency_calculator.dart';
-import 'fatigue_rating_dialog.dart';
-import '../../domain/models/workout_fatigue.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 
 /// Enhanced Volume Progress Chart with interactive date selection and detailed views
 class EnhancedVolumeProgressChart extends ConsumerStatefulWidget {
-  final List<ExerciseActivity> activities;
-  final bool isPremium;
   
   const EnhancedVolumeProgressChart({
     super.key,
-    required this.activities,
+    required this.workouts,
     this.isPremium = false,
   });
+  final List<Workout> workouts;
+  final bool isPremium;
 
   @override
   ConsumerState<EnhancedVolumeProgressChart> createState() => _EnhancedVolumeProgressChartState();
@@ -78,7 +75,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     
     return Column(
       children: [
@@ -520,7 +517,6 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               fitInsideHorizontally: true,
               fitInsideVertically: true,
               tooltipPadding: const EdgeInsets.all(8),
-              tooltipRoundedRadius: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 if (groupIndex >= processedData.length) return null;
                 
@@ -1496,34 +1492,36 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }
   
   // Helper methods
-  List<ExerciseActivity> _getFilteredData() {
+  List<Workout> _getFilteredData() {
     switch (_currentChartType) {
       case VolumeChartType.daily:
-        return widget.activities.where((activity) {
-          return _isSameDay(activity.createdAt, _selectedDate);
+        return widget.workouts.where((workout) {
+          return _isSameDay(workout.endTime ?? workout.createdAt, _selectedDate);
         }).toList();
         
       case VolumeChartType.weekly:
         final weekStart = _getWeekStart(_selectedWeek, _selectedYear);
         final weekEnd = weekStart.add(const Duration(days: 6));
-        return widget.activities.where((activity) {
-          return activity.createdAt.isAfter(weekStart.subtract(const Duration(days: 1))) &&
-                 activity.createdAt.isBefore(weekEnd.add(const Duration(days: 1)));
+        return widget.workouts.where((workout) {
+          final workoutDate = workout.endTime ?? workout.createdAt;
+          return workoutDate.isAfter(weekStart.subtract(const Duration(days: 1))) &&
+                 workoutDate.isBefore(weekEnd.add(const Duration(days: 1)));
         }).toList();
         
       case VolumeChartType.monthly:
-        return widget.activities.where((activity) {
-          return activity.createdAt.year == _selectedYear &&
-                 activity.createdAt.month == _selectedMonth;
+        return widget.workouts.where((workout) {
+          final workoutDate = workout.endTime ?? workout.createdAt;
+          return workoutDate.year == _selectedYear &&
+                 workoutDate.month == _selectedMonth;
         }).toList();
     }
   }
   
-  List<ProcessedVolumeData> _processData(List<ExerciseActivity> activities) {
+  List<ProcessedVolumeData> _processData(List<Workout> workouts) {
     final Map<DateTime, ProcessedVolumeData> grouped = {};
     
-    for (final activity in activities) {
-      final key = _getGroupKey(activity.createdAt);
+    for (final workout in workouts) {
+      final key = _getGroupKey(workout.endTime ?? workout.createdAt);
       
       if (!grouped.containsKey(key)) {
         grouped[key] = ProcessedVolumeData(
@@ -1534,18 +1532,16 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         );
       }
       
-      final volume = activity.sets.fold(0.0, (sum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return sum + (weight * reps);
-      });
+      final volume = workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume);
       
       grouped[key]!.totalVolume += volume;
       grouped[key]!.workoutCount++;
       
-      final muscle = _getMuscleGroup(activity.exerciseName);
-      grouped[key]!.muscleGroupVolumes[muscle] = 
-          (grouped[key]!.muscleGroupVolumes[muscle] ?? 0) + volume;
+      for (final exercise in workout.exercises) {
+        final muscle = _getMuscleGroup(exercise.name);
+        grouped[key]!.muscleGroupVolumes[muscle] = 
+            (grouped[key]!.muscleGroupVolumes[muscle] ?? 0) + exercise.totalVolume;
+      }
     }
     
     final sorted = grouped.values.toList()
@@ -1601,33 +1597,32 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }
   
   List<Map<String, dynamic>> _getExerciseDetailsForDate(DateTime date) {
-    // For daily view, get all activities for that specific day
-    final activities = widget.activities.where((a) => 
-      _isSameDay(a.createdAt, date)
-    ).toList();
+    final workoutsForDate = widget.workouts.where((w) => _isSameDay(w.endTime ?? w.createdAt, date)).toList();
     
     final exerciseMap = <String, Map<String, dynamic>>{};
     
-    for (final activity in activities) {
-      if (!exerciseMap.containsKey(activity.exerciseName)) {
-        exerciseMap[activity.exerciseName] = {
-          'name': activity.exerciseName,
-          'sets': 0,
-          'totalReps': 0,
-          'totalWeight': 0.0,
-          'volume': 0.0,
-        };
-      }
-      
-      final data = exerciseMap[activity.exerciseName]!;
-      data['sets'] = (data['sets'] as int) + activity.sets.length;
-      
-      for (final set in activity.sets) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        data['totalReps'] = (data['totalReps'] as int) + reps;
-        data['totalWeight'] = (data['totalWeight'] as double) + weight;
-        data['volume'] = (data['volume'] as double) + (weight * reps);
+    for (final workout in workoutsForDate) {
+      for (final exercise in workout.exercises) {
+        if (!exerciseMap.containsKey(exercise.name)) {
+          exerciseMap[exercise.name] = {
+            'name': exercise.name,
+            'sets': 0,
+            'totalReps': 0,
+            'totalWeight': 0.0,
+            'volume': 0.0,
+          };
+        }
+        
+        final data = exerciseMap[exercise.name]!;
+        final completedSets = exercise.sets.where((s) => s.isCompleted).toList();
+
+        data['sets'] = (data['sets'] as int) + completedSets.length;
+        
+        for (final set in completedSets) {
+          data['totalReps'] = (data['totalReps'] as int) + (set.reps ?? 0);
+          data['totalWeight'] = (data['totalWeight'] as double) + (set.weight ?? 0.0);
+          data['volume'] = (data['volume'] as double) + set.volume;
+        }
       }
     }
     
@@ -1647,29 +1642,26 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
     final weekStart = _getWeekStart(_selectedWeek, _selectedYear);
     final weekEnd = weekStart.add(const Duration(days: 6));
     
-    final activities = widget.activities.where((activity) {
-      return activity.createdAt.isAfter(weekStart.subtract(const Duration(days: 1))) &&
-             activity.createdAt.isBefore(weekEnd.add(const Duration(days: 1)));
+    final workoutsForWeek = widget.workouts.where((workout) {
+      final workoutDate = workout.endTime ?? workout.createdAt;
+      return workoutDate.isAfter(weekStart.subtract(const Duration(days: 1))) &&
+             workoutDate.isBefore(weekEnd.add(const Duration(days: 1)));
     }).toList();
     
     final workoutMap = <String, Map<String, dynamic>>{};
     
-    for (final activity in activities) {
-      final dateKey = DateFormat('yyyy-MM-dd').format(activity.createdAt);
+    for (final workout in workoutsForWeek) {
+      final dateKey = DateFormat('yyyy-MM-dd').format(workout.endTime ?? workout.createdAt);
       
       if (!workoutMap.containsKey(dateKey)) {
         workoutMap[dateKey] = {
-          'date': DateTime(activity.createdAt.year, activity.createdAt.month, activity.createdAt.day),
-          'name': activity.schedaName,
+          'date': workout.endTime ?? workout.createdAt,
+          'name': workout.name,
           'volume': 0.0,
         };
       }
       
-      final volume = activity.sets.fold(0.0, (sum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return sum + (weight * reps);
-      });
+      final volume = workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume);
       
       workoutMap[dateKey]!['volume'] = (workoutMap[dateKey]!['volume'] as double) + volume;
     }
@@ -1681,25 +1673,22 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }
   
   Map<String, dynamic> _getMonthStats(DateTime date) {
-    final activities = widget.activities.where((activity) {
-      return activity.createdAt.year == _selectedYear &&
-             activity.createdAt.month == _selectedMonth;
+    final workoutsForMonth = widget.workouts.where((workout) {
+      final workoutDate = workout.endTime ?? workout.createdAt;
+      return workoutDate.year == _selectedYear &&
+             workoutDate.month == _selectedMonth;
     }).toList();
     
-    final workouts = activities.map((a) => a.schedaName).toSet().length;
-    final exercises = activities.length;
-    final sets = activities.fold(0, (sum, a) => sum + a.sets.length);
-    final totalVolume = activities.fold(0.0, (sum, activity) {
-      return sum + activity.sets.fold(0.0, (setSum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return setSum + (weight * reps);
-      });
-    });
+    final workouts = workoutsForMonth.length;
+    final exercises = workoutsForMonth.fold(0, (sum, w) => sum + w.exercises.length);
+    final sets = workoutsForMonth.fold(0, (sum, w) => sum + w.exercises.fold(0, (exSum, e) => exSum + e.sets.where((s) => s.isCompleted).length));
+    final totalVolume = workoutsForMonth.fold(0.0, (sum, w) => sum + w.exercises.fold(0.0, (exSum, e) => exSum + e.totalVolume));
     
     final exerciseCount = <String, int>{};
-    for (final activity in activities) {
-      exerciseCount[activity.exerciseName] = (exerciseCount[activity.exerciseName] ?? 0) + 1;
+    for (final workout in workoutsForMonth) {
+      for (final exercise in workout.exercises) {
+        exerciseCount[exercise.name] = (exerciseCount[exercise.name] ?? 0) + 1;
+      }
     }
     
     final topExercises = exerciseCount.entries
@@ -1870,25 +1859,21 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   
   // Get previous performance for a specific exercise
   double? _getPreviousPerformance(String exerciseName, DateTime currentDate) {
-    // Find activities for this exercise before the current date
-    final previousActivities = widget.activities
-        .where((activity) => 
-            activity.exerciseName == exerciseName && 
-            activity.createdAt.isBefore(currentDate))
+    // Find workouts for this exercise before the current date
+    final previousWorkouts = widget.workouts
+        .where((workout) => 
+            (workout.endTime ?? workout.createdAt).isBefore(currentDate) &&
+            workout.exercises.any((e) => e.name == exerciseName))
         .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt)); // Most recent first
+      ..sort((a, b) => (b.endTime ?? b.createdAt).compareTo(a.endTime ?? a.createdAt)); // Most recent first
     
-    if (previousActivities.isEmpty) return null;
+    if (previousWorkouts.isEmpty) return null;
     
     // Get the most recent previous performance
-    final mostRecent = previousActivities.first;
-    final volume = mostRecent.sets.fold(0.0, (sum, set) {
-      final weight = double.tryParse(set.weight) ?? 0.0;
-      final reps = int.tryParse(set.reps) ?? 0;
-      return sum + (weight * reps);
-    });
+    final mostRecentWorkout = previousWorkouts.first;
+    final exercise = mostRecentWorkout.exercises.firstWhere((e) => e.name == exerciseName);
     
-    return volume;
+    return exercise.totalVolume;
   }
   
   // Show fatigue rating dialog
@@ -2230,11 +2215,6 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
 
 // Tier-1 Exercise Details Dialog Widget
 class ExerciseDetailsDialog extends ConsumerStatefulWidget {
-  final String exerciseName;
-  final DateTime date;
-  final Map<String, dynamic> exerciseData;
-  final List<Map<String, dynamic>> sets;
-  final AppLocalizations localizations;
 
   const ExerciseDetailsDialog({
     super.key,
@@ -2244,6 +2224,11 @@ class ExerciseDetailsDialog extends ConsumerStatefulWidget {
     required this.sets,
     required this.localizations,
   });
+  final String exerciseName;
+  final DateTime date;
+  final Map<String, dynamic> exerciseData;
+  final List<Map<String, dynamic>> sets;
+  final AppLocalizations localizations;
   
   @override
   ConsumerState<ExerciseDetailsDialog> createState() => _ExerciseDetailsDialogState();
@@ -2305,7 +2290,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.fitness_center,
                     color: Colors.white,
                     size: 20,
@@ -2334,7 +2319,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.close,
                       color: Colors.white,
                       size: 20,

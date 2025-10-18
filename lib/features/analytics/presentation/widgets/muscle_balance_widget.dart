@@ -5,16 +5,16 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 
 /// Widget showing muscle group balance analysis
 class MuscleBalanceWidget extends StatelessWidget {
-  final MuscleGroupBalance balance;
 
   const MuscleBalanceWidget({
     super.key,
     required this.balance,
   });
+  final MuscleGroupBalance balance;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     if (balance.volumeDistribution.isEmpty) {
@@ -232,13 +232,13 @@ class MuscleBalanceWidget extends StatelessWidget {
 
 /// Custom painter for muscle balance radar chart
 class _MuscleBalanceRadarPainter extends CustomPainter {
-  final MuscleGroupBalance balance;
-  final ColorScheme colorScheme;
 
   _MuscleBalanceRadarPainter({
     required this.balance,
     required this.colorScheme,
   });
+  final MuscleGroupBalance balance;
+  final ColorScheme colorScheme;
 
   @override
   void paint(Canvas canvas, Size size) {

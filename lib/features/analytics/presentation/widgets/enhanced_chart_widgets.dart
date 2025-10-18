@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 /// Enhanced Volume Chart with Material 3 styling
 class EnhancedVolumeChart extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const EnhancedVolumeChart({
     super.key,
     required this.activities,
   });
+  final List<ExerciseActivity> activities;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final volumeData = _prepareVolumeData();
 
@@ -99,7 +99,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                               interval: 1,
                               getTitlesWidget: (value, meta) {
                                 return SideTitleWidget(
-                                  axisSide: meta.axisSide,
+                                  meta: meta,
                                   child: Text(
                                     _getWeekLabel(value.toInt()),
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -117,7 +117,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                               interval: _calculateYInterval(volumeData),
                               getTitlesWidget: (value, meta) {
                                 return SideTitleWidget(
-                                  axisSide: meta.axisSide,
+                                  meta: meta,
                                   child: Text(
                                     '${(value / 1000).toStringAsFixed(0)}k',
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -206,7 +206,7 @@ class EnhancedVolumeChart extends StatelessWidget {
   }
 
   Widget _buildVolumeInsights(BuildContext context, List<FlSpot> volumeData) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     
     if (volumeData.isEmpty) return const SizedBox.shrink();
@@ -308,16 +308,16 @@ class EnhancedVolumeChart extends StatelessWidget {
 
 /// Enhanced Frequency Chart showing workout frequency
 class EnhancedFrequencyChart extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const EnhancedFrequencyChart({
     super.key,
     required this.activities,
   });
+  final List<ExerciseActivity> activities;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final frequencyData = _prepareFrequencyData();
 
@@ -380,7 +380,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
                                 return SideTitleWidget(
-                                  axisSide: meta.axisSide,
+                                  meta: meta,
                                   child: Text(
                                     _getDayAbbreviation(value.toInt(), localizations),
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -397,7 +397,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
                               reservedSize: 40,
                               getTitlesWidget: (value, meta) {
                                 return SideTitleWidget(
-                                  axisSide: meta.axisSide,
+                                  meta: meta,
                                   child: Text(
                                     value.toInt().toString(),
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -447,7 +447,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
   }
 
   Widget _buildFrequencyInsights(BuildContext context, List<int> frequencyData) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     
     final bestDay = frequencyData.indexOf(frequencyData.reduce((a, b) => a > b ? a : b));
@@ -563,16 +563,16 @@ class EnhancedFrequencyChart extends StatelessWidget {
 
 /// Body Part Distribution Chart
 class EnhancedBodyPartChart extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const EnhancedBodyPartChart({
     super.key,
     required this.activities,
   });
+  final List<ExerciseActivity> activities;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final bodyPartData = _prepareBodyPartData();
 
@@ -755,13 +755,13 @@ class EnhancedBodyPartChart extends StatelessWidget {
 
 // Data classes
 class BodyPartSection {
-  final String category;
-  final int count;
-  final double percentage;
 
   BodyPartSection({
     required this.category,
     required this.count,
     required this.percentage,
   });
+  final String category;
+  final int count;
+  final double percentage;
 }

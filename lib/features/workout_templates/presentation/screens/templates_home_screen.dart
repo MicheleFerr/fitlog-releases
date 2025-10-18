@@ -1,28 +1,35 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: workout_templates
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: Through providers
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: workout_templates
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: Through providers
+/// - Hive: None
+library;
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/workout_template.dart';
-import '../providers/template_provider.dart';
-import '../widgets/template_card.dart';
-import '../widgets/template_quota_indicator.dart';
+import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_card.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_quota_indicator.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/exercise_selection_dialog.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
@@ -34,26 +41,33 @@ class TemplatesHomeScreen extends ConsumerStatefulWidget {
 class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen> 
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
+  bool _isGridView = true; // State for view mode
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    // Add listener to rebuild UI when tab changes, to show/hide the view toggle button
+    _tabController.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final templateState = ref.watch(templateProvider);
-    
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -63,7 +77,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'Workout Templates',
+                l10n.workoutTemplates,
                 style: TextStyle(
                   color: colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,
@@ -82,7 +96,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 ),
                 child: Stack(
                   children: [
-                    // Pattern decorativo
+                    // Decorative pattern
                     Positioned(
                       right: -50,
                       top: -50,
@@ -106,19 +120,19 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                           _buildStat(
                             icon: Icons.folder_outlined,
                             value: '${templateState.userTemplates.length}',
-                            label: 'My Templates',
+                            label: l10n.myTemplates,
                             colorScheme: colorScheme,
                           ),
                           _buildStat(
                             icon: Icons.public,
                             value: '${templateState.publicTemplates.length}',
-                            label: 'Discover',
+                            label: l10n.discover,
                             colorScheme: colorScheme,
                           ),
                           _buildStat(
                             icon: Icons.star,
                             value: '4.8',
-                            label: 'Avg Rating',
+                            label: l10n.avgRating,
                             colorScheme: colorScheme,
                           ),
                         ],
@@ -128,6 +142,19 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 ),
               ),
             ),
+            actions: [
+              // Show view toggle button only on "My Templates" tab
+              if (_tabController.index == 0)
+                IconButton(
+                  icon: Icon(_isGridView ? Icons.view_list : Icons.grid_view),
+                  tooltip: _isGridView ? l10n.listView : l10n.gridView,
+                  onPressed: () {
+                    setState(() {
+                      _isGridView = !_isGridView;
+                    });
+                  },
+                ),
+            ],
             bottom: TabBar(
               controller: _tabController,
               indicatorColor: colorScheme.secondary,
@@ -135,15 +162,15 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               tabs: [
                 Tab(
                   icon: const Icon(Icons.person),
-                  text: 'My Templates',
+                  text: l10n.myTemplates,
                 ),
                 Tab(
                   icon: const Icon(Icons.explore),
-                  text: 'Discover',
+                  text: l10n.discover,
                 ),
                 Tab(
                   icon: const Icon(Icons.trending_up),
-                  text: 'Trending',
+                  text: l10n.trending,
                 ),
               ],
             ),
@@ -162,13 +189,13 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ? FloatingActionButton.extended(
               onPressed: () => _createNewTemplate(context),
               icon: const Icon(Icons.add),
-              label: const Text('New Template'),
+              label: Text(l10n.newTemplate),
               backgroundColor: colorScheme.primary,
             )
           : null,
     );
   }
-  
+
   Widget _buildStat({
     required IconData icon,
     required String value,
@@ -197,16 +224,17 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       ],
     );
   }
-  
+
   Widget _buildMyTemplatesTab(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final templateState = ref.watch(templateProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     if (templateState.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: LoadingIndicator());
     }
-    
+
     return RefreshIndicator(
       onRefresh: () => ref.read(templateProvider.notifier).loadUserTemplates(),
       child: CustomScrollView(
@@ -227,8 +255,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               ),
             ),
           ),
-          
-          // Templates grid
+
+          // Templates content (Grid or List)
           if (templateState.userTemplates.isEmpty)
             SliverFillRemaining(
               child: Center(
@@ -242,14 +270,14 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'No templates yet',
+                      l10n.noTemplatesYet,
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Create your first workout template',
+                      l10n.createFirstTemplate,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant.withOpacity(0.7),
                       ),
@@ -258,45 +286,103 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     FilledButton.icon(
                       onPressed: () => _createNewTemplate(context),
                       icon: const Icon(Icons.add),
-                      label: const Text('Create Template'),
+                      label: Text(l10n.createTemplate),
                     ),
                   ],
                 ),
               ),
             )
           else
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.85,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final template = templateState.userTemplates[index];
-                    return TemplateCard(
-                      template: template,
-                      onTap: () => _openTemplate(context, template),
-                      onEdit: () => _editTemplate(context, template),
-                      onDelete: () => _deleteTemplate(context, template),
-                      onShare: template.visibility == TemplateVisibility.public
-                          ? () => _shareTemplate(context, template)
-                          : null,
-                    );
-                  },
-                  childCount: templateState.userTemplates.length,
-                ),
-              ),
-            ),
+            _isGridView
+                ? _buildMyTemplatesGrid(templateState.userTemplates, context)
+                : _buildMyTemplatesList(templateState.userTemplates, context),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMyTemplatesGrid(List<WorkoutTemplate> templates, BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverGrid(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.85,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final template = templates[index];
+            return TemplateCard(
+              template: template,
+              onTap: () => _openTemplate(context, template),
+              onEdit: () => _editTemplate(context, template),
+              onDelete: () => _deleteTemplate(context, template),
+              onShare: template.visibility == TemplateVisibility.public
+                  ? () => _shareTemplate(context, template)
+                  : null,
+            );
+          },
+          childCount: templates.length,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMyTemplatesList(List<WorkoutTemplate> templates, BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final template = templates[index];
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: ListTile(
+                leading: CircleAvatar(
+                  child: Icon(
+                    template.category.icon,
+                    size: 20,
+                  ),
+                ),
+                title: Text(template.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text(
+                  template.description != null && template.description!.isNotEmpty
+                      ? template.description!
+                      : l10n.noDescription,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'edit') _editTemplate(context, template);
+                    if (value == 'delete') _deleteTemplate(context, template);
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'edit',
+                      child: ListTile(leading: const Icon(Icons.edit), title: Text(l10n.edit)),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'delete',
+                      child: ListTile(leading: const Icon(Icons.delete), title: Text(l10n.delete)),
+                    ),
+                  ],
+                ),
+                onTap: () => _openTemplate(context, template),
+              ),
+            );
+          },
+          childCount: templates.length,
+        ),
       ),
     );
   }
   
   Widget _buildDiscoverTab(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final templateState = ref.watch(templateProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -311,7 +397,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               padding: const EdgeInsets.all(16),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search templates...',
+                  hintText: l10n.searchTemplates,
                   prefixIcon: const Icon(Icons.search),
                   filled: true,
                   fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.5),
@@ -365,9 +451,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           
           // Public templates
           if (templateState.publicTemplates.isEmpty)
-            const SliverFillRemaining(
+            SliverFillRemaining(
               child: Center(
-                child: Text('No public templates found'),
+                child: Text(l10n.noPublicTemplatesFound),
               ),
             )
           else
@@ -393,32 +479,74 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
   
   Widget _buildTrendingTab(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     // Templates più popolari
-    return const Center(
-      child: Text('Trending templates coming soon!'),
+    return Center(
+      child: Text(l10n.trendingComingSoon),
     );
   }
   
   void _createNewTemplate(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     final availablePrivate = ref.read(templateProvider.notifier)
         .getAvailableTemplateCount(TemplateVisibility.private);
     
     if (availablePrivate <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('You have reached the maximum number of templates'),
-          action: SnackBarAction(
-            label: 'Upgrade',
-            onPressed: () {
-              // TODO: Navigate to premium screen
-            },
-          ),
-        ),
+      SnackBarService.showCustom(
+        context,
+        message: l10n.maxTemplatesReached,
+        actionLabel: l10n.upgrade,
+        onAction: () {
+          // TODO: Navigate to premium screen
+        },
       );
       return;
     }
     
-    context.push('/templates/create');
+    // Show options dialog
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.createTemplate,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.edit, color: colorScheme.primary),
+              title: Text(l10n.createManually),
+              subtitle: Text(l10n.buildFromScratch),
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/templates/create');
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.upload_file, color: colorScheme.secondary),
+              title: Text(l10n.importFromJSON),
+              subtitle: Text(l10n.importJSONDescription),
+              onTap: () {
+                Navigator.pop(context);
+                _showJsonImportDialog(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
   
   void _openTemplate(BuildContext context, WorkoutTemplate template) {
@@ -430,22 +558,23 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
   
   Future<void> _deleteTemplate(BuildContext context, WorkoutTemplate template) async {
+    final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Template'),
-        content: Text('Are you sure you want to delete "${template.name}"?'),
+        title: Text(l10n.deleteTemplate),
+        content: Text(l10n.confirmDeleteTemplate(template.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -453,17 +582,20 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     
     if (confirm == true) {
       // TODO: Implement delete
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Template deleted')),
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${l10n.templateDeleted}',
       );
     }
   }
   
   void _shareTemplate(BuildContext context, WorkoutTemplate template) {
+    final l10n = AppLocalizations.of(context);
     // TODO: Implement share
     HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Share link copied to clipboard!')),
+    SnackBarService.showSuccess(
+      context,
+      '🔗 ${l10n.shareLinkCopied}',
     );
   }
   
@@ -472,24 +604,21 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
   
   Future<void> _downloadTemplate(BuildContext context, WorkoutTemplate template) async {
+    final l10n = AppLocalizations.of(context);
     HapticFeedback.mediumImpact();
     
     final success = await ref.read(templateProvider.notifier)
         .downloadTemplate(template.id);
     
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Template "${template.name}" downloaded!'),
-          backgroundColor: Theme.of(context).colorScheme.tertiary,
-        ),
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${l10n.templateDownloaded(template.name)}',
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to download template'),
-          backgroundColor: Colors.red,
-        ),
+      SnackBarService.showError(
+        context,
+        l10n.failedToDownload,
       );
     }
   }
@@ -500,6 +629,333 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       builder: (context) => const TemplateFiltersSheet(),
     );
   }
+
+  void _showJsonImportDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final jsonController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.importFromJSON),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.pasteWorkoutJSON,
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 8),
+              
+              // Show JSON format example
+              ExpansionTile(
+                title: Text(
+                  l10n.viewJSONFormat,
+                  style: TextStyle(
+                    color: colorScheme.primary,
+                    fontSize: 14,
+                  ),
+                ),
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SelectableText(
+                          _getJsonFormatExample(),
+                          style: TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 12,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.copy,
+                            size: 18,
+                            color: colorScheme.primary,
+                          ),
+                          tooltip: l10n.copyExample,
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: _getJsonFormatExample()));
+                            SnackBarService.showSuccess(
+                              context,
+                              '📋 ${l10n.exampleCopied}',
+                              duration: const Duration(seconds: 2),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 16),
+              
+              TextField(
+                controller: jsonController,
+                maxLines: 10,
+                decoration: InputDecoration(
+                  hintText: l10n.pasteJSONHere,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  filled: true,
+                  fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                ),
+                style: const TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final jsonText = jsonController.text.trim();
+              if (jsonText.isEmpty) {
+                SnackBarService.showWarning(
+                  context,
+                  l10n.pleaseProvideJSON,
+                );
+                return;
+              }
+
+              Navigator.pop(dialogContext);
+              await _importFromJson(context, jsonText);
+            },
+            child: Text(l10n.import),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getJsonFormatExample() {
+    return '''{
+  "name": "Push Day - Chest, Shoulders, Triceps",
+  "description": "Upper body push workout",
+  "exercises": [
+    {
+      "name": "Bench Press",
+      "sets": [
+        {"reps": 5, "weight": 80},
+        {"reps": 5, "weight": 82.5},
+        {"reps": 5, "weight": 85}
+      ],
+      "rest_seconds": 180
+    },
+    {
+      "name": "Overhead Press",
+      "sets": [
+        {"reps": 8, "weight": 50},
+        {"reps": 8, "weight": 50},
+        {"reps": 8, "weight": 50}
+      ],
+      "rest_seconds": 120
+    },
+    {
+      "name": "Dumbbell Flyes",
+      "sets": [
+        {"reps": 12, "weight": 15},
+        {"reps": 12, "weight": 15},
+        {"reps": 12, "weight": 15}
+      ],
+      "rest_seconds": 90
+    }
+  ]
+}''';
+  }
+
+  Future<void> _importFromJson(BuildContext context, String jsonText) async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      // Parse JSON
+      final json = jsonDecode(jsonText) as Map<String, dynamic>;
+      
+      // Validate required fields
+      if (!json.containsKey('name') || !json.containsKey('exercises')) {
+        throw Exception('Invalid JSON format. Required fields: name, exercises');
+      }
+      
+      // Create exercises from JSON with intelligent matching
+      final exercisesJson = json['exercises'] as List;
+      final exercises = <Exercise>[];
+      
+      for (int i = 0; i < exercisesJson.length; i++) {
+        final exerciseJson = exercisesJson[i] as Map<String, dynamic>;
+        
+        // Validate exercise fields
+        if (!exerciseJson.containsKey('name') || !exerciseJson.containsKey('sets')) {
+          throw Exception('Invalid exercise at index $i. Required fields: name, sets');
+        }
+        
+        final exerciseName = exerciseJson['name'] as String;
+        
+        // Try to find exact match first
+        final exactMatch = await ExerciseMatchingService.instance.findExactMatch(exerciseName);
+        
+        String finalExerciseName = exerciseName;
+        ExerciseCategory finalCategory = ExerciseCategory.other;
+        
+        if (exactMatch != null) {
+          // Use exact match
+          finalExerciseName = exactMatch.nome;
+          finalCategory = _mapFocusToCategory(exactMatch.focus);
+        } else {
+          // Find suggested matches
+          final matches = await ExerciseMatchingService.instance.findMatches(exerciseName);
+          
+          if (matches.isNotEmpty) {
+            // Show selection dialog
+            final selectedExercise = await _showExerciseSelectionDialog(
+              context,
+              exerciseName,
+              matches,
+            );
+            
+            if (selectedExercise != null) {
+              finalExerciseName = selectedExercise['name'] as String;
+              finalCategory = _mapFocusToCategory(selectedExercise['focus'] as String);
+            }
+            // If user skipped or cancelled, use original name with default category
+          }
+        }
+        
+        // Create sets from JSON
+        final setsJson = exerciseJson['sets'] as List;
+        final sets = <ExerciseSet>[];
+        
+        for (int j = 0; j < setsJson.length; j++) {
+          final setJson = setsJson[j] as Map<String, dynamic>;
+          
+          // Validate set fields
+          if (!setJson.containsKey('reps')) {
+            throw Exception('Invalid set at exercise $i, set $j. Required field: reps');
+          }
+          
+          final set = ExerciseSet(
+            setNumber: j + 1,
+            reps: setJson['reps'] as int,
+            weight: setJson['weight']?.toDouble(),
+          );
+          
+          sets.add(set);
+        }
+        
+        // Create exercise
+        final exercise = Exercise(
+          name: finalExerciseName,
+          type: ExerciseType.single,
+          category: finalCategory,
+          sets: sets,
+          restTime: exerciseJson['rest_seconds'] as int?,
+          notes: exerciseJson['notes'] as String?,
+        );
+        
+        exercises.add(exercise);
+      }
+      
+      // Create workout template
+      final template = WorkoutTemplate(
+        id: const Uuid().v4(),
+        userId: 'local_user', // For local templates
+        name: json['name'] as String,
+        description: json['description'] as String?,
+        exercises: exercises,
+        category: TemplateCategory.custom,
+        visibility: TemplateVisibility.private,
+        createdAt: DateTime.now(),
+      );
+      
+      // Save template using provider
+      final templateId = await ref.read(templateProvider.notifier).createTemplate(template);
+      
+      if (templateId != null) {
+        SnackBarService.showSuccess(
+          context,
+          '✅ ${l10n.templateImportedSuccessfully(template.name)}',
+        );
+      } else {
+        throw Exception('Failed to save template');
+      }
+
+    } catch (e) {
+      SnackBarService.showError(
+        context,
+        l10n.errorImportingJSON(e.toString()),
+      );
+    }
+  }
+
+  // Show exercise selection dialog for ambiguous matches
+  Future<Map<String, dynamic>?> _showExerciseSelectionDialog(
+    BuildContext context,
+    String originalExerciseName,
+    List<ExerciseMatch> matches,
+  ) async {
+    return showDialog<Map<String, dynamic>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return ExerciseSelectionDialog(
+          originalExerciseName: originalExerciseName,
+          suggestedMatches: matches,
+          onExerciseSelected: (exerciseId, exerciseName) {
+            // Find the selected exercise details
+            final selectedMatch = matches.firstWhere(
+              (match) => match.exercise.id == exerciseId,
+            );
+            
+            Navigator.of(context).pop({
+              'id': exerciseId,
+              'name': exerciseName,
+              'focus': selectedMatch.exercise.focus,
+            });
+          },
+          onSkipExercise: () {
+            Navigator.of(context).pop(null); // Skip this exercise
+          },
+          onCreateNew: () {
+            // TODO: Implement create new exercise functionality
+            Navigator.of(context).pop({
+              'id': 'custom',
+              'name': originalExerciseName,
+              'focus': 'OTHER',
+            });
+          },
+        );
+      },
+    );
+  }
+
+  // Map muscle focus from database to ExerciseCategory
+  ExerciseCategory _mapFocusToCategory(String focus) {
+    // Split focus string by comma to create a list (handles both single and multi-muscle)
+    final focusList = focus.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+
+    // Use centralized converter for consistent category mapping
+    return ExerciseConverter.mapFocusToCategory(focusList);
+  }
 }
 
 // Placeholder widgets (da implementare)
@@ -508,17 +964,15 @@ class TemplateFiltersSheet extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
-      child: const Text('Filters coming soon'),
+      child: Text(l10n.filtersComingSoon),
     );
   }
 }
 
 class PublicTemplateCard extends StatelessWidget {
-  final WorkoutTemplate template;
-  final VoidCallback onTap;
-  final VoidCallback onDownload;
   
   const PublicTemplateCard({
     super.key,
@@ -526,9 +980,13 @@ class PublicTemplateCard extends StatelessWidget {
     required this.onTap,
     required this.onDownload,
   });
+  final WorkoutTemplate template;
+  final VoidCallback onTap;
+  final VoidCallback onDownload;
   
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -564,7 +1022,7 @@ class PublicTemplateCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'by ${template.authorName ?? "Anonymous"}',
+                          l10n.byAuthor(template.authorName ?? l10n.anonymous),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -593,7 +1051,7 @@ class PublicTemplateCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Icon(Icons.star, size: 16, color: Colors.amber),
+                  const Icon(Icons.star, size: 16, color: Colors.amber),
                   const SizedBox(width: 4),
                   Text(
                     template.averageRating.toStringAsFixed(1),
@@ -619,7 +1077,7 @@ class PublicTemplateCard extends StatelessWidget {
                   Icon(Icons.fitness_center, size: 16, color: colorScheme.onSurfaceVariant),
                   const SizedBox(width: 4),
                   Text(
-                    '${template.exercises.length} exercises',
+                    l10n.exercisesCount(template.exercises.length),
                     style: theme.textTheme.bodySmall,
                   ),
                 ],

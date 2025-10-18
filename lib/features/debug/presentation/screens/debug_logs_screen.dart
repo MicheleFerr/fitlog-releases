@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/core/utils/persistent_logger.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
 class DebugLogsScreen extends StatefulWidget {
@@ -88,7 +86,7 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              color: Theme.of(context).colorScheme.surfaceVariant,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               child: const Text(
                 'Timer Debug Logs - Auto-refresh every 2s\n'
                 'Look for [KEEP-ALIVE] and [COMPLETION] tags',

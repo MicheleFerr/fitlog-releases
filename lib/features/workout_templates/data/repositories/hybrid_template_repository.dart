@@ -1,75 +1,130 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: workout_templates
- * 🔧 Type: repository
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Hive (local storage)
- * - Firebase (cloud sync for premium)
- * - Domain entities
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: workout_templates
+/// 🔧 Type: repository
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Hive (local storage)
+/// - Firebase (cloud sync for premium)
+/// - Domain entities
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/unified_workout_template.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+
+/// Debug logger for hybrid template repository (TEMPORARY FOR DEBUGGING)
+class _HybridTemplateLogger {
+  static const bool _enableDebugLogs = kDebugMode; // Only in debug mode
+
+  static void log(String message) {
+    if (_enableDebugLogs) {
+      final timestamp = DateTime.now().toIso8601String();
+      debugPrint('🔄 HYBRID_REPO [$timestamp] $message');
+    }
+  }
+
+  static void error(String message, [Object? error]) {
+    if (_enableDebugLogs) {
+      final timestamp = DateTime.now().toIso8601String();
+      debugPrint('❌ HYBRID_REPO_ERROR [$timestamp] $message${error != null ? ' - $error' : ''}');
+    }
+  }
+
+  static void step(String step, String message) {
+    if (_enableDebugLogs) {
+      final timestamp = DateTime.now().toIso8601String();
+      debugPrint('📍 HYBRID_STEP [$timestamp] $step: $message');
+    }
+  }
+
+  static void hive(String message) {
+    if (_enableDebugLogs) {
+      final timestamp = DateTime.now().toIso8601String();
+      debugPrint('📦 HIVE [$timestamp] $message');
+    }
+  }
+
+  static void firebase(String message) {
+    if (_enableDebugLogs) {
+      final timestamp = DateTime.now().toIso8601String();
+      debugPrint('🔥 FIREBASE [$timestamp] $message');
+    }
+  }
+}
 
 /// Hybrid repository for workout templates
 /// - FREE users: Local storage only (unlimited local templates)
 /// - PREMIUM users: Local + Cloud sync + Community access
 class HybridTemplateRepository {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _auth;
-  late Box<Map> _templatesBox;
-  late Box<Map> _templateSyncBox;
-  
-  // Cache user profile
-  UserProfile? _userProfile;
-  
+
   HybridTemplateRepository({
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance {
-    _initializeBoxes();
-    _loadUserProfile();
+    Ref? ref,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _auth = auth ?? FirebaseAuth.instance,
+        _ref = ref {
+    _HybridTemplateLogger.log('🚀 HybridTemplateRepository constructor called');
+    _HybridTemplateLogger.log('  - Firestore: ${_firestore.runtimeType}');
+    _HybridTemplateLogger.log('  - Auth: ${_auth.runtimeType}');
+    _HybridTemplateLogger.log('  - Current user: ${_auth.currentUser?.email ?? 'null'}');
+
+    _HybridTemplateLogger.log('Starting initialization sequence...');
+    // Store the initialization future to await it later
+    _initializationFuture = _initializeBoxes();
   }
-  
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+  final Ref? _ref; // Optional ref for accessing user profile provider
+  late Box<Map> _templatesBox;
+  late Box<Map> _templateSyncBox;
+
+  // Initialization state tracking
+  Future<void>? _initializationFuture;
+
   /// Initialize Hive boxes
   Future<void> _initializeBoxes() async {
-    _templatesBox = await Hive.openBox<Map>('templates');
-    _templateSyncBox = await Hive.openBox<Map>('template_sync_queue');
-  }
-  
-  /// Load user profile to check premium status
-  Future<void> _loadUserProfile() async {
+    _HybridTemplateLogger.step('HIVE_INIT', 'Starting Hive box initialization...');
     try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        final doc = await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .get();
-        
-        if (doc.exists) {
-          _userProfile = UserProfile.fromFirestore(doc);
-        }
-      }
-    } catch (e) {
-      print('Failed to load user profile: $e');
+      _HybridTemplateLogger.hive('Opening templates box...');
+      _templatesBox = await Hive.openBox<Map>('templates');
+      _HybridTemplateLogger.hive('✅ Templates box opened: ${_templatesBox.keys.length} existing entries');
+
+      _HybridTemplateLogger.hive('Opening template sync queue box...');
+      _templateSyncBox = await Hive.openBox<Map>('template_sync_queue');
+      _HybridTemplateLogger.hive('✅ Template sync box opened: ${_templateSyncBox.keys.length} pending syncs');
+
+      _HybridTemplateLogger.step('HIVE_INIT', '✅ Hive initialization completed successfully');
+    } catch (e, stackTrace) {
+      _HybridTemplateLogger.error('❌ Error initializing Hive boxes', e);
+      _HybridTemplateLogger.error('Stack trace: $stackTrace');
+      // Re-throw to prevent silent failures
+      rethrow;
     }
   }
-  
-  /// Check if user is premium
+
+  /// Check if user is premium (reads from provider to avoid duplicate fetch)
   bool get _isPremiumUser {
-    return _userProfile?.accountTier == AccountTier.premium ||
-           _userProfile?.accountTier == AccountTier.pro;
+    if (_ref == null) return false;
+
+    final profileAsync = _ref.read(userProfileProvider);
+    return profileAsync.when(
+      data: (profile) => profile?.accountTier == AccountTier.premium ||
+                         profile?.accountTier == AccountTier.pro,
+      loading: () => false,
+      error: (_, __) => false,
+    );
   }
   
   /// Create a new template (LOCAL FIRST!)
@@ -81,18 +136,15 @@ class HybridTemplateRepository {
     final templateId = template.id ?? DateTime.now().millisecondsSinceEpoch.toString();
     
     final newTemplate = template.copyWith(
-      id: templateId,
       userId: userId,
-      createdAt: template.createdAt ?? DateTime.now(),
       authorName: _auth.currentUser?.displayName,
-      authorPhotoUrl: _auth.currentUser?.photoURL,
     );
     
     // 1. ALWAYS save locally first (instant!)
     await _saveTemplateLocally(newTemplate);
     
     // 2. If premium and template is public, sync to cloud
-    if (_isPremiumUser && template.visibility == TemplateVisibility.public) {
+    if (_isPremiumUser && template.isPublic) {
       _syncTemplateToCloud(newTemplate);
     }
     
@@ -126,9 +178,9 @@ class HybridTemplateRepository {
         // Remove from sync queue on success
         await _templateSyncBox.delete(template.id);
         
-        print('✅ Template synced to cloud: ${template.id}');
+        // print('✅ Template synced to cloud: ${template.id}');
       } catch (e) {
-        print('⚠️ Template cloud sync failed (will retry): $e');
+        // print('⚠️ Template cloud sync failed (will retry): $e');
         // Keep in sync queue for retry
       }
     });
@@ -136,23 +188,55 @@ class HybridTemplateRepository {
   
   /// Get user's templates (LOCAL + CLOUD if premium)
   Future<List<WorkoutTemplate>> getUserTemplates() async {
-    final userId = _auth.currentUser?.uid;
-    if (userId == null) return [];
-    
-    // 1. Get local templates
-    final localTemplates = await _getLocalTemplates(userId);
-    
-    // 2. If premium, merge with cloud templates
-    if (_isPremiumUser) {
-      try {
-        final cloudTemplates = await _getCloudTemplates(userId);
-        return _mergeTemplates(localTemplates, cloudTemplates);
-      } catch (e) {
-        print('Cloud fetch failed, using local only: $e');
-      }
+    _HybridTemplateLogger.log('📥 getUserTemplates() called');
+
+    // Ensure initialization is complete before proceeding
+    if (_initializationFuture != null) {
+      _HybridTemplateLogger.step('INIT_WAIT', 'Waiting for initialization to complete...');
+      await _initializationFuture;
+      _HybridTemplateLogger.step('INIT_WAIT', '✅ Initialization completed');
     }
-    
-    return localTemplates;
+
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        _HybridTemplateLogger.error('❌ No authenticated user');
+        return [];
+      }
+
+      _HybridTemplateLogger.log('✅ Authenticated user: $userId');
+      _HybridTemplateLogger.log('Premium status: ${_isPremiumUser ? 'PREMIUM' : 'FREE'}');
+
+      // 1. Get local templates
+      _HybridTemplateLogger.step('LOCAL', 'Fetching local templates...');
+      final localTemplates = await _getLocalTemplates(userId);
+      _HybridTemplateLogger.step('LOCAL', 'Found ${localTemplates.length} local templates');
+
+      // 2. If premium, merge with cloud templates
+      if (_isPremiumUser) {
+        _HybridTemplateLogger.step('CLOUD', 'User is premium, fetching cloud templates...');
+        try {
+          final cloudTemplates = await _getCloudTemplates(userId);
+          _HybridTemplateLogger.step('CLOUD', 'Found ${cloudTemplates.length} cloud templates');
+
+          final merged = _mergeTemplates(localTemplates, cloudTemplates);
+          _HybridTemplateLogger.log('✅ Merged ${merged.length} total templates (local + cloud)');
+          return merged;
+        } catch (e, stackTrace) {
+          _HybridTemplateLogger.error('Cloud fetch failed, using local only', e);
+          _HybridTemplateLogger.error('Stack trace: $stackTrace');
+        }
+      } else {
+        _HybridTemplateLogger.step('CLOUD', 'User is free, skipping cloud templates');
+      }
+
+      _HybridTemplateLogger.log('✅ Returning ${localTemplates.length} local templates');
+      return localTemplates;
+    } catch (e, stackTrace) {
+      _HybridTemplateLogger.error('Fatal error in getUserTemplates()', e);
+      _HybridTemplateLogger.error('Stack trace: $stackTrace');
+      return []; // Return empty list instead of throwing
+    }
   }
   
   /// Get local templates
@@ -193,7 +277,7 @@ class HybridTemplateRepository {
   
   /// Get public/community templates (PREMIUM ONLY)
   Future<List<WorkoutTemplate>> getPublicTemplates({
-    TemplateCategory? category,
+    UnifiedTemplateCategory? category,
     String? searchQuery,
     List<String>? tags,
     String? difficultyLevel,
@@ -206,7 +290,7 @@ class HybridTemplateRepository {
     
     Query query = _firestore
         .collection('workout_templates')
-        .where('visibility', isEqualTo: TemplateVisibility.public.name);
+        .where('isPublic', isEqualTo: true);
     
     if (category != null) {
       query = query.where('category', isEqualTo: category.name);
@@ -256,7 +340,7 @@ class HybridTemplateRepository {
             .doc(template.id)
             .update(template.toJson());
       } catch (e) {
-        print('Template cloud update failed: $e');
+        // print('Template cloud update failed: $e');
       }
     });
   }
@@ -281,7 +365,7 @@ class HybridTemplateRepository {
             .doc(templateId)
             .delete();
       } catch (e) {
-        print('Template cloud deletion failed: $e');
+        // print('Template cloud deletion failed: $e');
       }
     });
   }
@@ -295,25 +379,23 @@ class HybridTemplateRepository {
     
     // Add local templates
     for (final template in local) {
-      merged[template.id!] = template;
+      merged[template.id] = template;
     }
     
     // Merge cloud templates (cloud wins on conflict)
     for (final template in cloud) {
       final localVersion = merged[template.id];
       if (localVersion == null) {
-        merged[template.id!] = template;
+        merged[template.id] = template;
       } else {
         // Use most recently updated version
         final localUpdated = localVersion.updatedAt ?? localVersion.createdAt;
         final cloudUpdated = template.updatedAt ?? template.createdAt;
         
-        if (cloudUpdated != null && localUpdated != null) {
-          if (cloudUpdated.isAfter(localUpdated)) {
-            merged[template.id!] = template;
-          }
+        if (cloudUpdated.isAfter(localUpdated)) {
+          merged[template.id] = template;
         }
-      }
+            }
     }
     
     final result = merged.values.toList();
@@ -353,7 +435,7 @@ class HybridTemplateRepository {
         // Remove from sync queue on success
         await _templateSyncBox.delete(templateId);
       } catch (e) {
-        print('Sync queue processing failed for $templateId: $e');
+        // print('Sync queue processing failed for $templateId: $e');
         // Increment retry count
         item['retryCount'] = (item['retryCount'] ?? 0) + 1;
         await _templateSyncBox.put(templateId, item);
@@ -370,13 +452,15 @@ class HybridTemplateRepository {
     
     return {
       'totalTemplates': templates.length,
-      'publicTemplates': templates.where((t) => t.visibility == TemplateVisibility.public).length,
-      'privateTemplates': templates.where((t) => t.visibility == TemplateVisibility.private).length,
-      'totalDownloads': templates.fold(0, (sum, t) => sum + (t.downloadCount ?? 0)),
-      'averageRating': templates.where((t) => t.rating != null).fold(
-        0.0, 
-        (sum, t) => sum + (t.rating ?? 0),
-      ) / templates.where((t) => t.rating != null).length,
+      'publicTemplates': templates.where((t) => t.isPublic).length,
+      'privateTemplates': templates.where((t) => !t.isPublic).length,
+      'totalDownloads': templates.fold(0, (sum, t) => sum + t.downloadCount),
+      'averageRating': templates.where((t) => t.averageRating > 0).isNotEmpty
+        ? templates.where((t) => t.averageRating > 0).fold(
+            0.0,
+            (sum, t) => sum + t.averageRating,
+          ) / templates.where((t) => t.averageRating > 0).length
+        : 0.0,
     };
   }
   

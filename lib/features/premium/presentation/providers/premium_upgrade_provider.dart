@@ -1,30 +1,25 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: premium
- * 🔧 Type: provider (purchase management)
- * 
- * Handles premium subscription purchases through Apple/Google payment systems
- * with automatic profile refresh and error handling
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: premium
+/// 🔧 Type: provider (purchase management)
+/// 
+/// Handles premium subscription purchases through Apple/Google payment systems
+/// with automatic profile refresh and error handling
+library;
 
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+// TODO: Add in_app_purchase package to pubspec.yaml to enable premium purchases
+// import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import '../../../auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 
 /// Premium upgrade state
 class PremiumUpgradeState {
-  final bool isProcessing;
-  final String? errorMessage;
-  final List<ProductDetails> availableProducts;
-  final bool isRestoring;
-  final PurchaseStatus? lastPurchaseStatus;
   
   const PremiumUpgradeState({
     this.isProcessing = false,
@@ -33,6 +28,11 @@ class PremiumUpgradeState {
     this.isRestoring = false,
     this.lastPurchaseStatus,
   });
+  final bool isProcessing;
+  final String? errorMessage;
+  final List<ProductDetails> availableProducts;
+  final bool isRestoring;
+  final PurchaseStatus? lastPurchaseStatus;
   
   PremiumUpgradeState copyWith({
     bool? isProcessing,
@@ -60,6 +60,10 @@ enum PremiumPlan {
 
 /// Premium upgrade provider
 class PremiumUpgradeNotifier extends StateNotifier<PremiumUpgradeState> {
+  
+  PremiumUpgradeNotifier(this._ref) : super(const PremiumUpgradeState()) {
+    _initialize();
+  }
   final Ref _ref;
   final InAppPurchase _iap = InAppPurchase.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
@@ -77,10 +81,6 @@ class PremiumUpgradeNotifier extends StateNotifier<PremiumUpgradeState> {
     PremiumPlan.yearly: 'premium_yearly',
     PremiumPlan.lifetime: 'premium_lifetime',
   };
-  
-  PremiumUpgradeNotifier(this._ref) : super(const PremiumUpgradeState()) {
-    _initialize();
-  }
   
   /// Initialize IAP and load products
   Future<void> _initialize() async {

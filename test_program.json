@@ -1,0 +1,86 @@
+{
+  "programName": "PPL Program Test",
+  "days": [
+    {
+      "name": "Push",
+      "description": "Chest, Shoulders, Triceps",
+      "exercises": [
+        {
+          "nome": "Bench Press",
+          "serie": "4",
+          "ripetizioni": "8-10",
+          "riposo": "90",
+          "note": "Focus on form"
+        },
+        {
+          "nome": "Shoulder Press",
+          "serie": "3",
+          "ripetizioni": "10-12",
+          "riposo": "60",
+          "note": "Military press"
+        },
+        {
+          "nome": "Dips",
+          "serie": "3",
+          "ripetizioni": "12-15",
+          "riposo": "60",
+          "note": "Bodyweight or weighted"
+        }
+      ]
+    },
+    {
+      "name": "Pull",
+      "description": "Back, Biceps",
+      "exercises": [
+        {
+          "nome": "Pull Ups",
+          "serie": "4",
+          "ripetizioni": "6-8",
+          "riposo": "90",
+          "note": "Wide grip preferred"
+        },
+        {
+          "nome": "Bent Over Row",
+          "serie": "4",
+          "ripetizioni": "8-10",
+          "riposo": "90",
+          "note": "Barbell row"
+        },
+        {
+          "nome": "Bicep Curl",
+          "serie": "3",
+          "ripetizioni": "12-15",
+          "riposo": "45",
+          "note": "Dumbbell curls"
+        }
+      ]
+    },
+    {
+      "name": "Legs",
+      "description": "Quadriceps, Hamstrings, Glutes",
+      "exercises": [
+        {
+          "nome": "Squat",
+          "serie": "4",
+          "ripetizioni": "8-10",
+          "riposo": "120",
+          "note": "Back squat"
+        },
+        {
+          "nome": "Deadlift",
+          "serie": "3",
+          "ripetizioni": "5-6",
+          "riposo": "120",
+          "note": "Conventional deadlift"
+        },
+        {
+          "nome": "Leg Curl",
+          "serie": "3",
+          "ripetizioni": "12-15",
+          "riposo": "60",
+          "note": "Seated or lying"
+        }
+      ]
+    }
+  ]
+}

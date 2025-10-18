@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../domain/entities/exercise.dart';
-import '../data/repositories/json_exercise_repository.dart';
-import '../../workout/domain/entities/exercise.dart' as WorkoutExercise;
-import '../../workout/presentation/providers/workout_provider.dart';
-import 'widgets/exercise_customization_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_customization_screen.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_search_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_search_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
-class ExerciseSearchScreen extends ConsumerStatefulWidget {
-  final Function(WorkoutExercise.Exercise)? onExerciseAdded; // 🔥 FIX: Add callback parameter
-  
+class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
+
   const ExerciseSearchScreen({
     super.key,
     this.onExerciseAdded,
+    this.multiSelectMode = false,
+    this.selectionMode = false,
   });
+  final Function(WorkoutExercise.Exercise)? onExerciseAdded; // 🔥 FIX: Add callback parameter
+  final bool multiSelectMode; // New: Support multi-select for superset builder
+  final bool selectionMode;
 
   @override
   ConsumerState<ExerciseSearchScreen> createState() => _ExerciseSearchScreenState();
@@ -25,11 +36,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   
   String _searchQuery = '';
   List<String> _selectedFocus = [];
+  final List<String> _selectedMuscleGroups = [];
   List<String> _selectedEquipment = [];
-  List<String> _selectedDifficulty = [];
+  final List<String> _selectedDifficulty = [];
   String? _selectedType;
-  
+
   bool _showFilters = false;
+  bool _showMuscleGroupsFilter = false;
+  bool _showDifficultyFilter = false;
+  bool _showEquipmentFilter = false;
 
   @override
   void dispose() {
@@ -39,11 +54,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Use both the old and new search systems
     final exercisesAsync = ref.watch(jsonExerciseRepositoryProvider);
+    final improvedSearchAsync = ref.watch(improvedExerciseSearchProvider);
+    final l10n = context.l10n;
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cerca Esercizi (${_selectedExercises.length})'),
+        title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -58,14 +76,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         actions: [
           if (_selectedExercises.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _addSelectedToWorkout,
-              tooltip: 'Aggiungi alla Scheda',
+              icon: Icon(widget.multiSelectMode ? Icons.check : Icons.add),
+              onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
+              tooltip: widget.multiSelectMode ? 'Select Exercises' : l10n.addToWorkout,
             ),
           IconButton(
             icon: Icon(_showFilters ? Icons.filter_list : Icons.filter_list_outlined),
             onPressed: () => setState(() => _showFilters = !_showFilters),
-            tooltip: 'Filtri',
+            tooltip: l10n.filters,
           ),
         ],
       ),
@@ -77,7 +95,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Cerca esercizi...',
+                hintText: l10n.searchExercisesHint,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -94,6 +112,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
               onChanged: (value) {
                 setState(() => _searchQuery = value.toLowerCase());
+                // Update the provider for improved search
+                ref.read(exerciseSearchQueryProvider.notifier).state = value;
               },
             ),
           ),
@@ -108,32 +128,32 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   const Divider(),
                   const SizedBox(height: 8),
                   Text(
-                    'Filtri',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    l10n.filters,
+                    style: context.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 12),
                   
-                  // Quick Filters Row
+                  // Quick Filters Row - Improved with smart categories
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        _buildQuickFilter('Tutti', _clearAllFilters, 
+                        _buildQuickFilter('Tutti', _clearAllFilters,
                           isActive: _isAllFiltersEmpty()),
                         const SizedBox(width: 8),
-                        _buildQuickFilter('Upper Body', () => _applyQuickFilter(['PETTO', 'SPALLE', 'BICIPITI', 'TRICIPITI', 'DORSO']), 
-                          isActive: false),
-                        const SizedBox(width: 8),
-                        _buildQuickFilter('Lower Body', () => _applyQuickFilter(['QUAD', 'GLUT', 'FEMOR', 'POLP']), 
-                          isActive: false),
-                        const SizedBox(width: 8),
-                        _buildQuickFilter('Core', () => _applyQuickFilter(['CORE', 'ADDOME']), 
-                          isActive: false),
-                        const SizedBox(width: 8),
-                        _buildQuickFilter('Corpo Libero', () => _applyEquipmentFilter(['Corpo Libero']), 
-                          isActive: _selectedEquipment.contains('Corpo Libero')),
+                        ...ExerciseSearchService.quickFilters.map((filter) =>
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: _buildQuickFilterChip(
+                              label: filter['label'],
+                              icon: filter['icon'],
+                              onTap: () => _applySmartFilter(filter['query']),
+                              isActive: _searchQuery == filter['query'],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -154,69 +174,98 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           
           // Results
           Expanded(
-            child: exercisesAsync.when(
-              data: (exercises) {
-                final filteredExercises = _filterExercises(exercises);
-                
-                if (filteredExercises.isEmpty) {
-                  return _buildEmptyState();
+            child: improvedSearchAsync.when(
+              data: (improvedResults) {
+                // If we have results from improved search, use them
+                // Otherwise fall back to the old system
+                final useImprovedSearch = _searchQuery.isNotEmpty;
+
+                if (useImprovedSearch && improvedResults.isNotEmpty) {
+                  // Convert ExerciseTemplate to Exercise for compatibility
+                  final convertedExercises = improvedResults.map((template) {
+                    return Exercise(
+                      id: template.id,
+                      nome: template.name,
+                      focus: template.muscleGroups.map((m) => _mapMuscleNameToCode(m)).toList(),
+                      imageUrl: template.imageUrl,
+                      muscoliSecondari: [],
+                      difficolta: template.difficulty ?? 'Intermedio',
+                      tipoEsercizio: 'Compound',
+                      attrezzatura: template.equipment.isNotEmpty ? template.equipment.first : 'Vario',
+                      patternMovimento: '',
+                      rangeRipetizioni: '8-12',
+                      noteTecniche: template.instructions?.join(' '),
+                      mobilitaPre: null,
+                      attivazionePre: null,
+                      warmupSets: null,
+                      tempoWarmup: null,
+                      drillTecnico: null,
+                      prevenzioneInfortuni: null,
+                      cooldownConsigliato: null,
+                      spiegazioneTermini: null,
+                      tempoEsecuzione: null,
+                      tempoNote: null,
+                    );
+                  }).toList();
+
+                  // Apply filters to the converted exercises
+                  final filteredResults = _filterExercises(convertedExercises);
+
+                  if (filteredResults.isEmpty) {
+                    return _buildEmptyState();
+                  }
+
+                  return _buildSearchResults(filteredResults);
                 }
-                
-                return Column(
-                  children: [
-                    // Results count
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-                      child: Text(
-                        '${filteredExercises.length} esercizi trovati',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ),
-                    
-                    // Exercise List
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: filteredExercises.length,
-                        itemBuilder: (context, index) {
-                          final exercise = filteredExercises[index];
-                          final isSelected = _selectedExercises.contains(exercise);
-                          
-                          return _buildExerciseCard(exercise, isSelected);
-                        },
-                      ),
-                    ),
-                  ],
+
+                // Fall back to old system for browsing all or when improved search has no results
+                return exercisesAsync.when(
+                  data: (exercises) {
+                    final filteredExercises = _filterExercises(exercises);
+
+                    if (filteredExercises.isEmpty) {
+                      return _buildEmptyState();
+                    }
+
+                    return _buildSearchResults(filteredExercises);
+                  },
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => _buildErrorState(error),
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                    const SizedBox(height: 16),
-                    Text('Errore nel caricamento: $error'),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => ref.refresh(jsonExerciseRepositoryProvider),
-                      child: const Text('Riprova'),
-                    ),
-                  ],
-                ),
+              loading: () => exercisesAsync.when(
+                data: (exercises) {
+                  final filteredExercises = _filterExercises(exercises);
+                  if (filteredExercises.isEmpty) {
+                    return _buildEmptyState();
+                  }
+                  return _buildSearchResults(filteredExercises);
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, stack) => _buildErrorState(error),
+              ),
+              error: (error, stack) => exercisesAsync.when(
+                data: (exercises) {
+                  final filteredExercises = _filterExercises(exercises);
+                  if (filteredExercises.isEmpty) {
+                    return _buildEmptyState();
+                  }
+                  return _buildSearchResults(filteredExercises);
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error2, stack2) => _buildErrorState(error),
               ),
             ),
           ),
         ],
       ),
-      
+
       // Selected Exercises Count
       bottomNavigationBar: _selectedExercises.isNotEmpty
           ? Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: context.colors.primaryContainer,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: SafeArea(
@@ -224,16 +273,16 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        '${_selectedExercises.length} esercizi selezionati',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        '${_selectedExercises.length} ${l10n.exercisesSelected}',
+                        style: context.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     FilledButton.icon(
-                      onPressed: _addSelectedToWorkout,
-                      icon: const Icon(Icons.add),
-                      label: const Text('Aggiungi'),
+                      onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
+                      icon: Icon(widget.multiSelectMode ? Icons.check : Icons.add),
+                      label: Text(widget.multiSelectMode ? l10n.confirm : l10n.add),
                     ),
                   ],
                 ),
@@ -243,28 +292,367 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     );
   }
 
+  Widget _buildSearchResults(List<Exercise> exercises) {
+    final l10n = context.l10n;
+
+    return Column(
+      children: [
+        // Results count
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          color: context.colors.surfaceContainerHighest.withOpacity(0.5),
+          child: Text(
+            '${exercises.length} ${l10n.exercisesFound}',
+            style: context.textTheme.bodySmall,
+          ),
+        ),
+
+        // Exercise List + Missing Exercise Widget
+        Expanded(
+          child: ListView.builder(
+            itemCount: exercises.length + 1, // +1 for missing exercise widget
+            itemBuilder: (context, index) {
+              // Show missing exercise widget as last item
+              if (index == exercises.length) {
+                return _buildMissingExerciseWidget();
+              }
+
+              final exercise = exercises[index];
+              final isSelected = _selectedExercises.contains(exercise);
+
+              return _buildExerciseCard(exercise, isSelected);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMissingExerciseWidget() {
+    final l10n = context.l10n;
+
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.colors.outline.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.help_outline,
+                color: context.colors.primary,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.exerciseNotFound,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l10n.exerciseNotFoundHelpText,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: _showAddTemporaryExerciseDialog,
+              icon: const Icon(Icons.add_circle_outline),
+              label: Text(l10n.addTemporaryExercise),
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.primaryContainer,
+                foregroundColor: context.colors.onPrimaryContainer,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddTemporaryExerciseDialog() {
+    final l10n = context.l10n;
+    final TextEditingController nameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(
+              Icons.fitness_center,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(l10n.addTemporaryExercise),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.exerciseNotFoundHelpText,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: nameController,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: l10n.enterExerciseName,
+                hintText: 'es. Bulgarian Split Squat',
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.edit),
+              ),
+              textCapitalization: TextCapitalization.words,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton.icon(
+            onPressed: () {
+              final exerciseName = nameController.text.trim();
+              if (exerciseName.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.enterExerciseName),
+                    backgroundColor: context.colors.error,
+                  ),
+                );
+                return;
+              }
+
+              // Generate ID from exercise name
+              final exerciseId = _generateExerciseId(exerciseName);
+
+              // Create temporary exercise
+              final temporaryExercise = Exercise(
+                id: exerciseId,
+                nome: exerciseName,
+                focus: ['VARIO'],
+                imageUrl: null,
+                muscoliSecondari: [],
+                difficolta: 'Intermedio',
+                tipoEsercizio: 'Compound',
+                attrezzatura: 'Vario',
+                patternMovimento: '',
+                rangeRipetizioni: '8-12',
+                noteTecniche: 'Esercizio temporaneo - In attesa di approvazione',
+                mobilitaPre: null,
+                attivazionePre: null,
+                warmupSets: null,
+                tempoWarmup: null,
+                drillTecnico: null,
+                prevenzioneInfortuni: null,
+                cooldownConsigliato: null,
+                spiegazioneTermini: null,
+                tempoEsecuzione: null,
+                tempoNote: null,
+              );
+
+              // Add to selected exercises so user can use it immediately
+              setState(() {
+                _selectedExercises.add(temporaryExercise);
+              });
+
+              // Send report to Firebase for admin review
+              _sendMissingExerciseReport(exerciseName, exerciseId);
+
+              Navigator.of(context).pop();
+
+              // Show confirmation
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n.temporaryExerciseAdded),
+                  backgroundColor: context.colors.primary,
+                  duration: const Duration(seconds: 3),
+                  action: SnackBarAction(
+                    label: l10n.add,
+                    textColor: context.colors.onPrimary,
+                    onPressed: () {
+                      // Add to workout directly
+                      _addSelectedToWorkout();
+                    },
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.check),
+            label: Text(l10n.add),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _generateExerciseId(String exerciseName) {
+    // Convert exercise name to ID format
+    // Example: "Bulgarian Split Squat" -> "bulgarian_split_squat_temp"
+    return '${exerciseName.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '_')}_temp';
+  }
+
+  Future<void> _sendMissingExerciseReport(
+      String exerciseName, String exerciseId) async {
+    try {
+      final service = ref.read(missingExerciseServiceProvider);
+      await service.submitRequest(
+        exerciseName: exerciseName,
+        exerciseId: exerciseId,
+      );
+    } catch (e) {
+      // Silent fail - don't interrupt user flow
+      // The temporary exercise is already added
+      debugPrint('Failed to submit missing exercise request: $e');
+    }
+  }
+
+  Widget _buildErrorState(dynamic error) {
+    final l10n = context.l10n;
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+          const SizedBox(height: 16),
+          Text('${l10n.errorLoadingData}: $error'),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => ref.refresh(jsonExerciseRepositoryProvider),
+            child: Text(l10n.retry),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildQuickFilter(String label, VoidCallback onTap, {required bool isActive}) {
     return FilterChip(
       label: Text(label),
       selected: isActive,
       onSelected: (_) => onTap(),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      selectedColor: Theme.of(context).colorScheme.primaryContainer,
+      backgroundColor: context.colors.surface,
+      selectedColor: context.colors.primaryContainer,
     );
   }
 
+  String _normalizedMuscleCode(String muscleCode) {
+    // Normalize muscle codes to canonical form
+    final normalized = muscleCode.toUpperCase().trim();
+
+    // Map variations to canonical codes
+    switch (normalized) {
+      case 'BICI': return 'BIC';
+      case 'PETT': return 'PET';
+      case 'AVA': return 'AVAMB';
+      case 'ADDO': return 'ADD';
+      default: return normalized;
+    }
+  }
+
+  String _getMuscleGroupLocalizedName(String muscleCode) {
+    final l10n = context.l10n;
+    final normalized = _normalizedMuscleCode(muscleCode);
+
+    // Map muscle codes to localized names
+    switch (normalized) {
+      case 'PET':
+        return l10n.musclePectorals;
+      case 'LAT':
+      case 'SCH':
+      case 'DORS':
+      case 'DORSO':
+        return l10n.muscleLats;
+      case 'DELT':
+      case 'DEL':
+      case 'SPALLA':
+        return l10n.muscleDeltoids;
+      case 'BIC':
+        return l10n.muscleBiceps;
+      case 'TRIC':
+        return l10n.muscleTriceps;
+      case 'TRAP':
+        return l10n.muscleTrapezius;
+      case 'ROMBOIDI':
+        return l10n.muscleRhomboids;
+      case 'QUAD':
+        return l10n.muscleQuads;
+      case 'GLUT':
+      case 'GLUTEI':
+        return l10n.muscleGlutes;
+      case 'FEMOR':
+        return l10n.muscleHamstrings;
+      case 'POLP':
+        return l10n.muscleCalves;
+      case 'ADDOM':
+      case 'ABD':
+      case 'ADD':
+        return l10n.muscleAbs;
+      case 'OBLIQ':
+        return l10n.muscleObliques;
+      case 'CORE':
+        return l10n.muscleCore;
+      case 'AVAMB':
+        return l10n.muscleForearms;
+      case 'ADDU':
+        return l10n.muscleAdductors;
+      case 'LOM':
+        return l10n.muscleLowerBack;
+      default:
+        return muscleCode;
+    }
+  }
+
   Widget _buildAdvancedFilters(List<Exercise> exercises) {
-    // Extract unique values for filters
-    final focusOptions = exercises
-        .expand((e) => e.focus)
-        .toSet()
-        .toList()..sort();
-    
+    final l10n = context.l10n;
+
+    // Extract unique muscle groups and map to localized names
+    final muscleGroupsMap = <String, String>{};
+    for (final exercise in exercises) {
+      for (final muscleCode in exercise.focus) {
+        final normalized = _normalizedMuscleCode(muscleCode);
+        final localizedName = _getMuscleGroupLocalizedName(muscleCode);
+        muscleGroupsMap[normalized] = localizedName;
+      }
+    }
+    // Sort by localized name
+    final muscleGroupOptions = muscleGroupsMap.entries.toList()
+      ..sort((a, b) => a.value.compareTo(b.value));
+
     final equipmentOptions = exercises
         .map((e) => e.attrezzatura)
         .toSet()
         .toList()..sort();
-        
+
     final difficultyOptions = exercises
         .map((e) => e.difficolta)
         .toSet()
@@ -273,68 +661,272 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Difficulty Filter
-        Text('Difficoltà:', style: Theme.of(context).textTheme.labelLarge),
-        const SizedBox(height: 4),
-        Wrap(
-          spacing: 8,
-          children: difficultyOptions.map((difficulty) {
-            final isSelected = _selectedDifficulty.contains(difficulty);
-            return FilterChip(
-              label: Text(difficulty),
-              selected: isSelected,
-              onSelected: (selected) {
-                setState(() {
-                  if (selected) {
-                    _selectedDifficulty.add(difficulty);
-                  } else {
-                    _selectedDifficulty.remove(difficulty);
-                  }
-                });
-              },
-            );
-          }).toList(),
+        // Muscle Groups Filter (Collapsible)
+        InkWell(
+          onTap: () => setState(() => _showMuscleGroupsFilter = !_showMuscleGroupsFilter),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(
+                  _showMuscleGroupsFilter ? Icons.expand_more : Icons.chevron_right,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.muscleGroups,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (_selectedMuscleGroups.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: context.colors.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${_selectedMuscleGroups.length}',
+                      style: TextStyle(
+                        color: context.colors.onPrimary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
-        const SizedBox(height: 12),
-        
-        // Equipment Filter
-        Text('Attrezzatura:', style: Theme.of(context).textTheme.labelLarge),
-        const SizedBox(height: 4),
-        Wrap(
-          spacing: 8,
-          children: equipmentOptions.map((equipment) {
-            final isSelected = _selectedEquipment.contains(equipment);
-            return FilterChip(
-              label: Text(equipment),
-              selected: isSelected,
-              onSelected: (selected) {
-                setState(() {
-                  if (selected) {
-                    _selectedEquipment.add(equipment);
-                  } else {
-                    _selectedEquipment.remove(equipment);
-                  }
-                });
-              },
-            );
-          }).toList(),
+        if (_showMuscleGroupsFilter) ...[
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: muscleGroupOptions.map((entry) {
+              final muscleCode = entry.key;
+              final localizedName = entry.value;
+              final isSelected = _selectedMuscleGroups.contains(muscleCode);
+              return FilterChip(
+                label: Text(localizedName),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      _selectedMuscleGroups.add(muscleCode);
+                    } else {
+                      _selectedMuscleGroups.remove(muscleCode);
+                    }
+                  });
+                },
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 12),
+        ],
+
+        // Difficulty Filter (Collapsible)
+        InkWell(
+          onTap: () => setState(() => _showDifficultyFilter = !_showDifficultyFilter),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(
+                  _showDifficultyFilter ? Icons.expand_more : Icons.chevron_right,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.difficulty,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (_selectedDifficulty.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: context.colors.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${_selectedDifficulty.length}',
+                      style: TextStyle(
+                        color: context.colors.onPrimary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
+        if (_showDifficultyFilter) ...[
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            children: difficultyOptions.map((difficulty) {
+              final isSelected = _selectedDifficulty.contains(difficulty);
+              return FilterChip(
+                label: Text(difficulty),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      _selectedDifficulty.add(difficulty);
+                    } else {
+                      _selectedDifficulty.remove(difficulty);
+                    }
+                  });
+                },
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 12),
+        ],
+
+        // Equipment Filter (Collapsible)
+        InkWell(
+          onTap: () => setState(() => _showEquipmentFilter = !_showEquipmentFilter),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(
+                  _showEquipmentFilter ? Icons.expand_more : Icons.chevron_right,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.equipment,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (_selectedEquipment.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: context.colors.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${_selectedEquipment.length}',
+                      style: TextStyle(
+                        color: context.colors.onPrimary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        if (_showEquipmentFilter) ...[
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            children: equipmentOptions.map((equipment) {
+              final isSelected = _selectedEquipment.contains(equipment);
+              return FilterChip(
+                label: Text(equipment),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      _selectedEquipment.add(equipment);
+                    } else {
+                      _selectedEquipment.remove(equipment);
+                    }
+                  });
+                },
+              );
+            }).toList(),
+          ),
+        ],
       ],
     );
+  }
+
+  Widget _buildExerciseLeading(Exercise exercise, bool isSelected) {
+    if (isSelected) {
+      return CircleAvatar(
+        backgroundColor: context.colors.primary,
+        child: const Icon(Icons.check, color: Colors.white),
+      );
+    }
+    
+    // Se c'è un'immagine, mostra quella, altrimenti l'icona
+    if (exercise.imageUrl != null && exercise.imageUrl!.isNotEmpty) {
+      return CircleAvatar(
+        backgroundColor: context.colors.surfaceContainerHighest,
+        radius: 20,
+        child: ClipOval(
+          child: Image.network(
+            exercise.imageUrl!,
+            width: 40,
+            height: 40,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              // Fallback all'icona se l'immagine non carica
+              return Container(
+                width: 40,
+                height: 40,
+                color: context.colors.surfaceContainerHighest,
+                child: Center(
+                  child: Text(
+                    exercise.attrezzaturaIcon,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
+              );
+            },
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                width: 40,
+                height: 40,
+                color: context.colors.surfaceContainerHighest,
+                child: Center(
+                  child: SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    } else {
+      return CircleAvatar(
+        backgroundColor: context.colors.surfaceContainerHighest,
+        child: Text(exercise.attrezzaturaIcon),
+      );
+    }
   }
 
   Widget _buildExerciseCard(Exercise exercise, bool isSelected) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: isSelected 
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.surfaceVariant,
-          child: isSelected
-              ? const Icon(Icons.check, color: Colors.white)
-              : Text(exercise.attrezzaturaIcon),
-        ),
+        leading: _buildExerciseLeading(exercise, isSelected),
         title: Text(
           exercise.nome,
           style: TextStyle(
@@ -366,16 +958,23 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 const SizedBox(width: 8),
                 Text(
                   exercise.attrezzatura,
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: context.textTheme.bodySmall,
                 ),
               ],
             ),
           ],
         ),
         trailing: isSelected
-            ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
-            : const Icon(Icons.radio_button_unchecked),
+            ? Icon(Icons.check_circle, color: context.colors.primary)
+            : (widget.selectionMode ? const Icon(Icons.arrow_forward_ios, size: 16) : const Icon(Icons.radio_button_unchecked)),
         onTap: () {
+          // Selection mode: return exercise and close
+          if (widget.selectionMode) {
+            Navigator.of(context).pop(exercise);
+            return;
+          }
+
+          // Multi-select mode or normal mode: toggle selection
           setState(() {
             if (isSelected) {
               _selectedExercises.remove(exercise);
@@ -384,47 +983,51 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             }
           });
         },
-        onLongPress: () => _showExerciseDetails(exercise),
+        onLongPress: widget.selectionMode ? null : () => _showExerciseOptionsModal(exercise),
       ),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.search_off,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+    final l10n = context.l10n;
+    return ListView(
+      children: [
+        const SizedBox(height: 64),
+        Icon(
+          Icons.search_off,
+          size: 64,
+          color: context.colors.onSurface.withOpacity(0.5),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          l10n.noExercisesFound,
+          style: context.textTheme.headlineSmall,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l10n.tryModifyingFilters,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: context.colors.onSurface.withOpacity(0.7),
           ),
-          const SizedBox(height: 16),
-          Text(
-            'Nessun esercizio trovato',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Prova a modificare i filtri di ricerca',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
-          ),
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: _clearAllFilters,
-            child: const Text('Rimuovi tutti i filtri'),
-          ),
-        ],
-      ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 24),
+        TextButton(
+          onPressed: _clearAllFilters,
+          child: Text(l10n.clearAllFilters),
+        ),
+        const SizedBox(height: 24),
+        _buildMissingExerciseWidget(),
+      ],
     );
   }
 
   List<Exercise> _filterExercises(List<Exercise> exercises) {
     return exercises.where((exercise) {
-      // Search query filter
-      if (_searchQuery.isNotEmpty) {
+      // Search query filter - skip if it's a smart filter
+      // (improved search already handled it)
+      if (_searchQuery.isNotEmpty && !_isSmartFilter(_searchQuery)) {
         final query = _searchQuery.toLowerCase();
         if (!exercise.nome.toLowerCase().contains(query) &&
             !exercise.focusDisplayName.toLowerCase().contains(query) &&
@@ -436,6 +1039,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       // Focus filter
       if (_selectedFocus.isNotEmpty) {
         if (!exercise.focus.any((focus) => _selectedFocus.contains(focus))) {
+          return false;
+        }
+      }
+
+      // Muscle groups filter
+      if (_selectedMuscleGroups.isNotEmpty) {
+        final normalizedFocus = exercise.focus.map(_normalizedMuscleCode).toList();
+        if (!normalizedFocus.any((focus) => _selectedMuscleGroups.contains(focus))) {
           return false;
         }
       }
@@ -481,6 +1092,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   void _clearAllFilters() {
     setState(() {
       _selectedFocus.clear();
+      _selectedMuscleGroups.clear();
       _selectedEquipment.clear();
       _selectedDifficulty.clear();
       _selectedType = null;
@@ -491,15 +1103,22 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
   bool _isAllFiltersEmpty() {
     return _selectedFocus.isEmpty &&
+        _selectedMuscleGroups.isEmpty &&
         _selectedEquipment.isEmpty &&
         _selectedDifficulty.isEmpty &&
         _selectedType == null &&
         _searchQuery.isEmpty;
   }
 
+  bool _isSmartFilter(String query) {
+    return ExerciseSearchService.quickFilters
+        .any((filter) => filter['query'] == query.toLowerCase());
+  }
+
   void _applyQuickFilter(List<String> focusGroups) {
     setState(() {
       _selectedFocus = focusGroups;
+      _selectedMuscleGroups.clear();
       _selectedEquipment.clear();
       _selectedDifficulty.clear();
     });
@@ -509,14 +1128,46 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     setState(() {
       _selectedEquipment = equipment;
       _selectedFocus.clear();
+      _selectedMuscleGroups.clear();
       _selectedDifficulty.clear();
     });
+  }
+
+  void _applySmartFilter(String query) {
+    setState(() {
+      _searchQuery = query;
+      _searchController.text = query;
+    });
+    // 🔥 FIX: Update provider to trigger improved search
+    ref.read(exerciseSearchQueryProvider.notifier).state = query;
+  }
+
+  Widget _buildQuickFilterChip({
+    required String label,
+    required String icon,
+    required VoidCallback onTap,
+    required bool isActive,
+  }) {
+    return FilterChip(
+      avatar: Text(icon, style: const TextStyle(fontSize: 16)),
+      label: Text(label),
+      selected: isActive,
+      onSelected: (_) => onTap(),
+      selectedColor: context.colors.primaryContainer,
+      checkmarkColor: context.colors.primary,
+      labelStyle: TextStyle(
+        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+        color: isActive
+          ? context.colors.onPrimaryContainer
+          : context.colors.onSurfaceVariant,
+      ),
+    );
   }
 
   void _addSelectedToWorkout() {
     if (_selectedExercises.isEmpty) return;
     
-    print('🔍 EXERCISE_SEARCH: Selected ${_selectedExercises.length} exercises, callback: ${widget.onExerciseAdded != null}');
+    // Navigate to customization screen with selected exercises
     
     // Navigate to customization screen and pass callback
     Navigator.of(context).push(
@@ -528,112 +1179,51 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       ),
     );
   }
+  
+  void _selectExercises() {
+    if (_selectedExercises.isEmpty) return;
+    
+    // Return selected exercises directly to caller (for superset builder)
+    Navigator.of(context).pop(_selectedExercises.toList());
+  }
 
   WorkoutExercise.Exercise _convertToWorkoutExercise(Exercise exercise) {
-    // Map focus to category
-    final category = _mapFocusToCategory(exercise.focus);
-    
-    return WorkoutExercise.Exercise(
-      name: exercise.nome,
-      type: WorkoutExercise.ExerciseType.single,
-      category: category,
-      notes: exercise.noteTecniche,
-      sets: [
-        WorkoutExercise.ExerciseSet(setNumber: 1, weight: 0, reps: 10),
-        WorkoutExercise.ExerciseSet(setNumber: 2, weight: 0, reps: 10),
-        WorkoutExercise.ExerciseSet(setNumber: 3, weight: 0, reps: 10),
-      ],
-    );
+    // Use centralized converter
+    return ExerciseConverter.fromDatabaseExercise(exercise);
   }
 
   WorkoutExercise.ExerciseCategory _mapFocusToCategory(List<String> focus) {
-    // Map our exercise focus to workout categories
-    if (focus.any((f) => ['PETTO', 'CHEST'].contains(f.toUpperCase()))) {
-      return WorkoutExercise.ExerciseCategory.chest;
-    }
-    if (focus.any((f) => ['DORSO', 'BACK', 'LAT'].contains(f.toUpperCase()))) {
-      return WorkoutExercise.ExerciseCategory.back;
-    }
-    if (focus.any((f) => ['SPALLE', 'DELT', 'SHOULDERS'].contains(f.toUpperCase()))) {
-      return WorkoutExercise.ExerciseCategory.shoulders;
-    }
-    if (focus.any((f) => ['BICIPITI', 'TRICIPITI', 'ARMS', 'BRACCI'].contains(f.toUpperCase()))) {
-      return WorkoutExercise.ExerciseCategory.arms;
-    }
-    if (focus.any((f) => ['QUAD', 'GLUT', 'FEMOR', 'POLP', 'LEGS'].contains(f.toUpperCase()))) {
-      return WorkoutExercise.ExerciseCategory.legs;
-    }
-    if (focus.any((f) => ['CORE', 'ADDOME', 'ABS'].contains(f.toUpperCase()))) {
-      return WorkoutExercise.ExerciseCategory.abs;
-    }
-    
-    return WorkoutExercise.ExerciseCategory.other;
+    // Use centralized converter
+    return ExerciseConverter.mapFocusToCategory(focus);
   }
 
-  void _showExerciseDetails(Exercise exercise) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.9,
-        minChildSize: 0.5,
-        builder: (context, scrollController) => SingleChildScrollView(
-          controller: scrollController,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  exercise.nome,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Focus: ${exercise.focusDisplayName}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 16),
-                
-                if (exercise.noteTecniche != null) ...[
-                  Text('Note Tecniche:', style: Theme.of(context).textTheme.titleSmall),
-                  Text(exercise.noteTecniche!),
-                  const SizedBox(height: 12),
-                ],
-                
-                if (exercise.mobilitaPre != null) ...[
-                  Text('Mobilità Pre-Workout:', style: Theme.of(context).textTheme.titleSmall),
-                  Text(exercise.mobilitaPre!),
-                  const SizedBox(height: 12),
-                ],
-                
-                if (exercise.attivazionePre != null) ...[
-                  Text('Attivazione Pre-Workout:', style: Theme.of(context).textTheme.titleSmall),
-                  Text(exercise.attivazionePre!),
-                  const SizedBox(height: 12),
-                ],
-              ],
-            ),
+  String _mapMuscleNameToCode(String muscleName) {
+    // Use centralized converter
+    return ExerciseConverter.mapMuscleNameToCode(muscleName);
+  }
+
+  void _showExerciseOptionsModal(Exercise exercise) {
+    // Converto l'esercizio del database in un esercizio workout per il modal
+    final workoutExercise = _convertToWorkoutExercise(exercise);
+    final locale = ref.read(localeProvider);
+
+    ExerciseOptionsModal.show(
+      context,
+      workoutExercise,
+      onHistory: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => ExerciseHistoryBottomSheet(
+            exerciseName: exercise.nome,
           ),
-        ),
-      ),
+        );
+      },
+      imageUrl: exercise.imageUrl,
+      languageCode: locale.languageCode,
     );
   }
+
+
 }

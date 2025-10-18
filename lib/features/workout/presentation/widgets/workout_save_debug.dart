@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/repositories/exercise_activity_repository.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 
 /// Widget di debug per mostrare gli allenamenti salvati in Firestore
 class WorkoutSaveDebug extends ConsumerWidget {

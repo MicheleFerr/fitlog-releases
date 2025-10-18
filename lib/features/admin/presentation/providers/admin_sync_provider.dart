@@ -1,58 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: admin
- * 🔧 Type: provider
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Provider for admin sync monitoring
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: admin
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Provider for admin sync monitoring
+library;
 
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_workout_repository_impl.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/hybrid_template_repository.dart';
-import 'package:gymbro_flutter_new/features/home/data/repositories/hybrid_achievement_repository.dart';
-import 'package:gymbro_flutter_new/features/community/data/repositories/hybrid_community_repository.dart';
-import 'package:gymbro_flutter_new/features/premium/services/premium_sync_manager.dart';
 
 // Dashboard data model
 class SyncDashboardData {
-  // User stats
-  final int totalUsers;
-  final int freeUsers;
-  final int premiumUsers;
-  final int proUsers;
-  final int activeSyncUsers;
-  
-  // Sync stats
-  final int activeSyncs;
-  final int pendingSyncs;
-  final int completedSyncs;
-  final int failedSyncs;
-  final double syncPercentage;
-  final String lastSyncTime;
-  
-  // Storage stats
-  final int localDataSize;
-  final int cloudDataSize;
-  final int localEntities;
-  final int cloudEntities;
-  
-  // Feature-specific stats
-  final Map<String, FeatureSyncStats> featureStats;
-  
-  // Activity
-  final List<SyncActivity> recentActivities;
-  final List<int> syncHistory; // Hourly sync counts for chart
-  
-  // System health
-  final SystemHealth systemHealth;
   
   SyncDashboardData({
     required this.totalUsers,
@@ -99,16 +63,39 @@ class SyncDashboardData {
       systemHealth: SystemHealth.unknown(),
     );
   }
+  // User stats
+  final int totalUsers;
+  final int freeUsers;
+  final int premiumUsers;
+  final int proUsers;
+  final int activeSyncUsers;
+  
+  // Sync stats
+  final int activeSyncs;
+  final int pendingSyncs;
+  final int completedSyncs;
+  final int failedSyncs;
+  final double syncPercentage;
+  final String lastSyncTime;
+  
+  // Storage stats
+  final int localDataSize;
+  final int cloudDataSize;
+  final int localEntities;
+  final int cloudEntities;
+  
+  // Feature-specific stats
+  final Map<String, FeatureSyncStats> featureStats;
+  
+  // Activity
+  final List<SyncActivity> recentActivities;
+  final List<int> syncHistory; // Hourly sync counts for chart
+  
+  // System health
+  final SystemHealth systemHealth;
 }
 
 class FeatureSyncStats {
-  final String featureName;
-  final int localEntities;
-  final int cloudEntities;
-  final int pendingSync;
-  final double syncPercentage;
-  final String lastSync;
-  final bool isHealthy;
   
   FeatureSyncStats({
     required this.featureName,
@@ -119,15 +106,16 @@ class FeatureSyncStats {
     required this.lastSync,
     required this.isHealthy,
   });
+  final String featureName;
+  final int localEntities;
+  final int cloudEntities;
+  final int pendingSync;
+  final double syncPercentage;
+  final String lastSync;
+  final bool isHealthy;
 }
 
 class SyncActivity {
-  final String userId;
-  final String feature;
-  final String operation;
-  final String description;
-  final String timestamp;
-  final bool isSuccess;
   
   SyncActivity({
     required this.userId,
@@ -137,12 +125,15 @@ class SyncActivity {
     required this.timestamp,
     required this.isSuccess,
   });
+  final String userId;
+  final String feature;
+  final String operation;
+  final String description;
+  final String timestamp;
+  final bool isSuccess;
 }
 
 class SystemHealth {
-  final bool isHealthy;
-  final String message;
-  final Map<String, String> metrics;
   
   SystemHealth({
     required this.isHealthy,
@@ -157,6 +148,9 @@ class SystemHealth {
       metrics: {},
     );
   }
+  final bool isHealthy;
+  final String message;
+  final Map<String, String> metrics;
 }
 
 // Provider for sync monitoring
@@ -165,13 +159,13 @@ final syncMonitorProvider = StateNotifierProvider<SyncMonitorNotifier, AsyncValu
 });
 
 class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
-  final Ref _ref;
-  Timer? _refreshTimer;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   SyncMonitorNotifier(this._ref) : super(const AsyncValue.loading()) {
     _loadDashboardData();
   }
+  final Ref _ref;
+  Timer? _refreshTimer;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   void startMonitoring() {
     // Refresh every 30 seconds
@@ -334,7 +328,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         'completed': completedTotal,
         'failed': 0, // Would need error tracking
         'percentage': percentage,
-        'lastSync': _formatTimeAgo(DateTime.now().subtract(Duration(minutes: 5))),
+        'lastSync': _formatTimeAgo(DateTime.now().subtract(const Duration(minutes: 5))),
       };
     } catch (e) {
       // Return mock data for development
@@ -420,7 +414,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
           cloudEntities: cloudCount,
           pendingSync: pending,
           syncPercentage: syncPercentage,
-          lastSync: _formatTimeAgo(DateTime.now().subtract(Duration(minutes: 10))),
+          lastSync: _formatTimeAgo(DateTime.now().subtract(const Duration(minutes: 10))),
           isHealthy: pending < 10 && syncPercentage > 90,
         );
       } catch (e) {
@@ -449,7 +443,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         feature: 'Workouts',
         operation: 'sync',
         description: 'Synced 5 workouts to cloud',
-        timestamp: _formatTimeAgo(DateTime.now().subtract(Duration(minutes: 2))),
+        timestamp: _formatTimeAgo(DateTime.now().subtract(const Duration(minutes: 2))),
         isSuccess: true,
       ),
       SyncActivity(
@@ -457,7 +451,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         feature: 'Templates',
         operation: 'create',
         description: 'Created new template "Upper Body"',
-        timestamp: _formatTimeAgo(DateTime.now().subtract(Duration(minutes: 5))),
+        timestamp: _formatTimeAgo(DateTime.now().subtract(const Duration(minutes: 5))),
         isSuccess: true,
       ),
       SyncActivity(
@@ -465,7 +459,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         feature: 'Achievements',
         operation: 'unlock',
         description: 'Unlocked "100 Workouts" achievement',
-        timestamp: _formatTimeAgo(DateTime.now().subtract(Duration(minutes: 8))),
+        timestamp: _formatTimeAgo(DateTime.now().subtract(const Duration(minutes: 8))),
         isSuccess: true,
       ),
       SyncActivity(
@@ -473,7 +467,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         feature: 'Community',
         operation: 'sync',
         description: 'Failed to sync contribution',
-        timestamp: _formatTimeAgo(DateTime.now().subtract(Duration(minutes: 12))),
+        timestamp: _formatTimeAgo(DateTime.now().subtract(const Duration(minutes: 12))),
         isSuccess: false,
       ),
       SyncActivity(
@@ -481,7 +475,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         feature: 'Workouts',
         operation: 'batch',
         description: 'Batch synced 20 workouts',
-        timestamp: _formatTimeAgo(DateTime.now().subtract(Duration(minutes: 15))),
+        timestamp: _formatTimeAgo(DateTime.now().subtract(const Duration(minutes: 15))),
         isSuccess: true,
       ),
     ];

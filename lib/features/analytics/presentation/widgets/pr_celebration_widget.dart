@@ -1,37 +1,37 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: analytics
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Material: AnimatedContainer, Card
- * - analytics/presentation/providers: workoutAnalyticsProvider
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: analytics
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Material: AnimatedContainer, Card
+/// - analytics/presentation/providers: workoutAnalyticsProvider
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 /// Widget for celebrating personal record achievements
 class PRCelebrationWidget extends ConsumerWidget {
-  final bool isFullScreen;
   
   const PRCelebrationWidget({
     super.key,
     this.isFullScreen = false,
   });
+  final bool isFullScreen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -96,7 +96,7 @@ class PRCelebrationWidget extends ConsumerWidget {
               // PR List
               ...currentPRs.take(isFullScreen ? currentPRs.length : 3).map(
                 (pr) => _buildPRItem(context, theme, colorScheme, pr, l10n),
-              ).toList(),
+              ),
               
               // Show more indicator
               if (!isFullScreen && currentPRs.length > 3)
@@ -155,7 +155,7 @@ class PRCelebrationWidget extends ConsumerWidget {
                 Text(
                   pr.exerciseName,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.medium,
+                    fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -186,7 +186,7 @@ class PRCelebrationWidget extends ConsumerWidget {
                   pr.formattedImprovement,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.secondary,
-                    fontWeight: FontWeight.medium,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
             ],
@@ -238,7 +238,7 @@ class PRCelebrationDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -319,7 +319,7 @@ class PRCelebrationDialog extends ConsumerWidget {
                     color: colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Column(
+                  child: const Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       PRCelebrationWidget(isFullScreen: true),
@@ -375,7 +375,7 @@ class PRCelebrationDialog extends ConsumerWidget {
     WidgetRef ref,
     List<PersonalRecordAchieved> prs,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     // Generate sharing text
     final achievementText = prs.map((pr) {
@@ -428,14 +428,14 @@ $achievementText
 
 /// Floating PR notification
 class FloatingPRNotification extends ConsumerStatefulWidget {
-  final PersonalRecordAchieved pr;
-  final VoidCallback? onDismiss;
 
   const FloatingPRNotification({
     super.key,
     required this.pr,
     this.onDismiss,
   });
+  final PersonalRecordAchieved pr;
+  final VoidCallback? onDismiss;
 
   @override
   ConsumerState<FloatingPRNotification> createState() => _FloatingPRNotificationState();
@@ -497,7 +497,7 @@ class _FloatingPRNotificationState extends ConsumerState<FloatingPRNotification>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return SlideTransition(
       position: _slideAnimation,

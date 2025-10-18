@@ -1,13 +1,12 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/features/timer
- * 🎯 Feature: timer screen tests
- * 🔧 Type: widget test
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ ColorScheme tested
- * 📱 Platform: Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/features/timer
+/// 🎯 Feature: timer screen tests
+/// 🔧 Type: widget test
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ ColorScheme tested
+/// 📱 Platform: Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

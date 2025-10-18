@@ -207,22 +207,82 @@ class VolumeCalculator {
 
   // Helper methods
   
+  /// Categorize exercise by name with improved pattern matching
+  ///
+  /// Scientific Note: Muscle group categorization affects volume distribution
+  /// analysis for balance and injury prevention (Croisier et al., 2008)
   static String _categorizeExercise(String exerciseName) {
     final name = exerciseName.toLowerCase();
-    
-    if (name.contains('chest') || name.contains('bench') || name.contains('fly')) {
+
+    // CHEST patterns - order matters (specific first)
+    if (name.contains('bench') ||
+        name.contains('chest') ||
+        name.contains('fly') ||
+        name.contains('flyes') ||
+        name.contains('pec') ||
+        name.contains('dip') && !name.contains('shoulder')) {
       return 'Chest';
-    } else if (name.contains('back') || name.contains('row') || name.contains('pull')) {
+    }
+
+    // BACK patterns - distinguish from bench/chest
+    else if (name.contains('pull') && !name.contains('pullover') ||
+             name.contains('row') ||
+             name.contains('lat') ||
+             name.contains('back') ||
+             name.contains('deadlift') ||
+             name.contains('t-bar') ||
+             name.contains('chin')) {
       return 'Back';
-    } else if (name.contains('shoulder') || name.contains('press') || name.contains('delt')) {
+    }
+
+    // SHOULDERS patterns - distinguish from chest press
+    else if (name.contains('shoulder') ||
+             name.contains('delt') ||
+             name.contains('lateral') ||
+             name.contains('overhead') && name.contains('press') ||
+             name.contains('military') ||
+             name.contains('arnold') ||
+             name.contains('face pull') ||
+             name.contains('upright row')) {
       return 'Shoulders';
-    } else if (name.contains('squat') || name.contains('leg') || name.contains('calf')) {
+    }
+
+    // LEGS patterns - separate quad/hamstring when possible
+    else if (name.contains('squat') ||
+             name.contains('leg') ||
+             name.contains('quad') ||
+             name.contains('hamstring') ||
+             name.contains('glute') ||
+             name.contains('lunge') ||
+             name.contains('calf') ||
+             name.contains('rdl') ||
+             name.contains('hip thrust')) {
       return 'Legs';
-    } else if (name.contains('bicep') || name.contains('tricep') || name.contains('curl')) {
+    }
+
+    // ARMS patterns - separate biceps/triceps
+    else if (name.contains('curl') ||
+             name.contains('bicep') ||
+             name.contains('tricep') ||
+             name.contains('arm') ||
+             name.contains('pushdown') ||
+             name.contains('extension') && !name.contains('leg') ||
+             name.contains('kickback')) {
       return 'Arms';
-    } else if (name.contains('ab') || name.contains('core') || name.contains('plank')) {
+    }
+
+    // CORE patterns
+    else if (name.contains('ab') ||
+             name.contains('core') ||
+             name.contains('plank') ||
+             name.contains('crunch') ||
+             name.contains('sit up') ||
+             name.contains('russian twist') ||
+             name.contains('leg raise') && !name.contains('calf')) {
       return 'Core';
-    } else {
+    }
+
+    else {
       return 'Other';
     }
   }
@@ -250,10 +310,6 @@ class VolumeCalculator {
 
 /// Volume progression data
 class VolumeProgression {
-  final double weeklyChange;
-  final double monthlyChange;
-  final double currentWeekVolume;
-  final double currentMonthVolume;
 
   const VolumeProgression({
     required this.weeklyChange,
@@ -261,6 +317,10 @@ class VolumeProgression {
     required this.currentWeekVolume,
     required this.currentMonthVolume,
   });
+  final double weeklyChange;
+  final double monthlyChange;
+  final double currentWeekVolume;
+  final double currentMonthVolume;
 
   bool get isImproving => weeklyChange > 0 && monthlyChange > 0;
   bool get isPlateau => weeklyChange.abs() < 5 && monthlyChange.abs() < 5;
@@ -268,13 +328,6 @@ class VolumeProgression {
 
 /// Volume statistics
 class VolumeStats {
-  final double total;
-  final double average;
-  final double median;
-  final double min;
-  final double max;
-  final double standardDeviation;
-  final int count;
 
   const VolumeStats({
     required this.total,
@@ -297,6 +350,13 @@ class VolumeStats {
       count: 0,
     );
   }
+  final double total;
+  final double average;
+  final double median;
+  final double min;
+  final double max;
+  final double standardDeviation;
+  final int count;
 
   double get coefficientOfVariation {
     if (average == 0) return 0;

@@ -11,15 +11,15 @@ final class FeatureFlags {
         case useEnhancedLogging = "com.gymbro.feature.enhancedLogging"
         case useErrorRecovery = "com.gymbro.feature.errorRecovery"
         case showDebugInfo = "com.gymbro.feature.showDebugInfo"
-        case useOptimizedTimer = "com.gymbro.feature.optimizedTimer"
+        // REMOVED: useOptimizedTimer - optimization is now always active
         
         var defaultValue: Bool {
             switch self {
             case .useNewAudioManager:
                 #if DEBUG
-                return true  // Always use new implementation in debug
+                return false  // TEMP: Disabled while fixing audio session bug
                 #else
-                return false // Start with old implementation in production
+                return false // Use legacy implementation in production
                 #endif
                 
             case .useNewBackgroundTaskManager:
@@ -38,16 +38,13 @@ final class FeatureFlags {
                 
             case .useErrorRecovery:
                 return true  // Always enabled for safety
-                
+
             case .showDebugInfo:
                 #if DEBUG
                 return true
                 #else
                 return false
                 #endif
-                
-            case .useOptimizedTimer:
-                return true  // Tier 1 optimization - enabled by default
             }
         }
         
@@ -63,8 +60,6 @@ final class FeatureFlags {
                 return "Error Recovery System"
             case .showDebugInfo:
                 return "Show Debug Information"
-            case .useOptimizedTimer:
-                return "Optimized Timer (Tier 1)"
             }
         }
     }
@@ -108,11 +103,9 @@ final class FeatureFlags {
     static var showDebugInfo: Bool {
         return shared.isEnabled(.showDebugInfo)
     }
-    
-    static var useOptimizedTimer: Bool {
-        return shared.isEnabled(.useOptimizedTimer)
-    }
-    
+
+    // REMOVED: useOptimizedTimer accessor - feature is now permanently enabled
+
     // MARK: - Flag Management
     
     private func isEnabled(_ flag: FlagKey) -> Bool {

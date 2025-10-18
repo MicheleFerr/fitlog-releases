@@ -1,25 +1,22 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../domain/models/home_widget_config.dart';
-import 'unified_stats_card.dart';
-import '../../../community/presentation/widgets/community_pulse_card.dart';
-import '../../../workout/presentation/providers/workout_provider.dart';
-import '../../../workout/domain/entities/workout.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../progress/presentation/providers/progress_provider.dart';
-import '../../../analytics/presentation/analytics_screen.dart';
-import '../../../analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/unified_stats_card.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_pulse_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 // Removed duplicate import - currentWorkoutProvider is already available from workout_provider.dart
-import '../../../workout/domain/entities/exercise_activity.dart';
-import '../../../analytics/domain/services/insights_engine.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 // Nuovi widget tier-1
-import 'real_progress_stats_widget.dart';
-import 'enhanced_progress_stats_widget.dart';
-import 'streak_tracker_widget.dart';
-import 'recent_workouts_widget.dart';
-import 'weekly_goals_widget.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/enhanced_progress_stats_widget.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/streak_tracker_widget.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/recent_workouts_widget.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_goals_widget.dart';
+import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
 
 /// Factory class to build home widgets based on configuration
 class HomeWidgetFactory {
@@ -54,7 +51,8 @@ class HomeWidgetFactory {
         break;
         
       case HomeWidgetType.progressDashboard:
-        widget = _buildProgressDashboardWidget(context, ref);
+        // Widget rimosso - sostituito con placeholder
+        widget = _buildPlaceholderWidget(context, ref, config);
         break;
         
       case HomeWidgetType.communityPulse:
@@ -64,7 +62,7 @@ class HomeWidgetFactory {
         break;
         
       case HomeWidgetType.quickActions:
-        widget = _buildQuickActionsWidget(context, isPreview);
+        widget = _buildQuickActionsWidget(context, ref, isPreview);
         break;
         
       case HomeWidgetType.recentWorkouts:
@@ -103,16 +101,16 @@ class HomeWidgetFactory {
         
       case HomeWidgetType.exerciseStats:
         // TODO: Implementare ExerciseStatsWidget
-        widget = _buildPlaceholderWidget(context, config);
+        widget = _buildPlaceholderWidget(context, ref, config);
         break;
-        
+
       case HomeWidgetType.templateQuickAccess:
         // TODO: Implementare TemplateQuickAccessWidget
-        widget = _buildPlaceholderWidget(context, config);
+        widget = _buildPlaceholderWidget(context, ref, config);
         break;
-        
+
       default:
-        widget = _buildPlaceholderWidget(context, config);
+        widget = _buildPlaceholderWidget(context, ref, config);
     }
     
     // Apply size constraints based on config
@@ -429,12 +427,12 @@ class HomeWidgetFactory {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.discardWorkoutTitle),
-        content: Text(AppLocalizations.of(context)!.discardWorkoutMessage),
+        title: Text(AppLocalizations.of(context).discardWorkoutTitle),
+        content: Text(AppLocalizations.of(context).discardWorkoutMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -452,7 +450,7 @@ class HomeWidgetFactory {
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: Text(AppLocalizations.of(context)!.discard),
+            child: Text(AppLocalizations.of(context).discard),
           ),
         ],
       ),
@@ -463,15 +461,15 @@ class HomeWidgetFactory {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.endWorkoutTitle),
+        title: Text(AppLocalizations.of(context).endWorkoutTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.saveAndEndWorkout(workout.name)),
+            Text(AppLocalizations.of(context).saveAndEndWorkout(workout.name)),
             const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context)!.exercisesCompleted(workout.exercises.length),
+              AppLocalizations.of(context).exercisesCompleted(workout.exercises.length),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -613,7 +611,7 @@ class HomeWidgetFactory {
                     children: [
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.trending_up,
                             color: Colors.green,
                             size: 16,
@@ -998,8 +996,15 @@ class HomeWidgetFactory {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.of(context).pop();
+
+                        // 📱 Mostra Interstitial Ad prima di Analytics
+                        final adService = InterstitialAdService();
+                        await adService.showAdIfReady();
+
+                        if (!context.mounted) return;
+
                         context.push('/analytics');
                       },
                       child: const Text('Vedi Analytics'),
@@ -1233,7 +1238,7 @@ class HomeWidgetFactory {
                           ],
                         ),
                       );
-                    }).toList(),
+                    }),
                     const SizedBox(height: 8),
                   ],
                 );
@@ -1660,88 +1665,17 @@ class HomeWidgetFactory {
     );
   }
   
-  static Widget _buildProgressDashboardWidget(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    // Weekly workouts data - using recent workouts for now
-    // TODO: Replace with actual workout provider when available
-    final recentWorkouts = <dynamic>[];
-    
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.trending_up,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Progressi Settimanali',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildProgressStats(context, recentWorkouts.length),
-          ],
-        ),
-      ),
-    );
-  }
   
-  static Widget _buildProgressStats(BuildContext context, int workouts) {
+  static Widget _buildQuickActionsWidget(BuildContext context, WidgetRef ref, bool isPreview) {
     final theme = Theme.of(context);
-    final goal = 4; // Weekly goal
-    final progress = (workouts / goal).clamp(0.0, 1.0);
-    
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '$workouts / $goal allenamenti',
-              style: theme.textTheme.bodyLarge,
-            ),
-            Text(
-              '${(progress * 100).toInt()}%',
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: progress,
-          minHeight: 8,
-          borderRadius: BorderRadius.circular(4),
-          backgroundColor: theme.colorScheme.surfaceContainerHighest,
-          valueColor: AlwaysStoppedAnimation<Color>(
-            progress >= 1.0 ? Colors.green : theme.colorScheme.primary,
-          ),
-        ),
-      ],
-    );
-  }
-  
-  static Widget _buildQuickActionsWidget(BuildContext context, bool isPreview) {
-    final theme = Theme.of(context);
-    
+
     final actions = [
       {'icon': Icons.assignment, 'label': 'Template', 'route': '/workout-templates'},
       {'icon': Icons.history, 'label': 'Cronologia', 'route': '/history'},
       {'icon': Icons.analytics, 'label': 'Analytics', 'route': '/analytics'},
       {'icon': Icons.settings, 'label': 'Impostazioni', 'route': '/settings'},
     ];
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -1755,8 +1689,23 @@ class HomeWidgetFactory {
           itemCount: actions.length,
           itemBuilder: (context, index) {
             final action = actions[index];
+            final route = action['route'] as String;
+            final isAnalytics = route == '/analytics';
+
             return InkWell(
-              onTap: isPreview ? null : () => context.push(action['route'] as String),
+              onTap: isPreview
+                  ? null
+                  : () async {
+                      // 📱 Mostra Interstitial Ad prima di Analytics
+                      if (isAnalytics) {
+                        final adService = InterstitialAdService();
+                        await adService.showAdIfReady();
+
+                        if (!context.mounted) return;
+                      }
+
+                      context.push(route);
+                    },
               borderRadius: BorderRadius.circular(12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1944,7 +1893,7 @@ class HomeWidgetFactory {
     );
   }
   
-  static Widget _buildPlaceholderWidget(BuildContext context, HomeWidgetConfig config) {
+  static Widget _buildPlaceholderWidget(BuildContext context, WidgetRef ref, HomeWidgetConfig config) {
     final theme = Theme.of(context);
     
     return Card(
@@ -1976,9 +1925,9 @@ class HomeWidgetFactory {
 
 // Nuovo widget AI Coach con dati reali
 class _AICoachDialog extends ConsumerWidget {
-  final WidgetRef ref;
   
   const _AICoachDialog({required this.ref});
+  final WidgetRef ref;
   
   @override
   Widget build(BuildContext context, WidgetRef dialogRef) {
@@ -2107,8 +2056,15 @@ class _AICoachDialog extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.of(context).pop();
+
+                      // 📱 Mostra Interstitial Ad prima di Analytics
+                      final adService = InterstitialAdService();
+                      await adService.showAdIfReady();
+
+                      if (!context.mounted) return;
+
                       context.push('/analytics');
                     },
                     child: const Text('Vedi Analytics'),

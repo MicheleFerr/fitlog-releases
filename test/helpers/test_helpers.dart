@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -45,15 +43,15 @@ class MockUser {
 
 /// Mock Firebase Auth User
 class MockFirebaseUser {
-  final String uid;
-  final String? email;
-  final String? displayName;
   
   MockFirebaseUser({
     required this.uid,
     this.email,
     this.displayName,
   });
+  final String uid;
+  final String? email;
+  final String? displayName;
 }
 
 /// Test data generators

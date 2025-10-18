@@ -14,13 +14,6 @@ enum TimerDisplayMode {
 
 /// Layout configuration per ogni modalità display
 class TimerLayout {
-  final double width;
-  final double height;
-  final bool showProgress;
-  final bool showControls;
-  final bool showExtras;
-  final double borderRadius;
-  final double fontSize;
 
   const TimerLayout({
     required this.width,
@@ -31,6 +24,13 @@ class TimerLayout {
     this.borderRadius = 16,
     this.fontSize = 16,
   });
+  final double width;
+  final double height;
+  final bool showProgress;
+  final bool showControls;
+  final bool showExtras;
+  final double borderRadius;
+  final double fontSize;
 }
 
 /// Manager per layouts dei diversi stati del timer

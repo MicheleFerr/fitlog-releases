@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 class ExerciseCompatibilityService {
@@ -292,13 +291,13 @@ enum MovementPattern {
 }
 
 class ExerciseSuggestion {
-  final Exercise exercise;
-  final double compatibilityScore;
-  final String reason;
   
   const ExerciseSuggestion({
     required this.exercise,
     required this.compatibilityScore,
     required this.reason,
   });
+  final Exercise exercise;
+  final double compatibilityScore;
+  final String reason;
 }

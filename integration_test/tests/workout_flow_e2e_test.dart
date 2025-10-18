@@ -1,6 +1,8 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
-import 'package:gymbro_flutter_new/main.dart' as app;
+import 'package:gymbro_flutter_new/app/app.dart' as app;
 import '../helpers/test_base.dart';
 import '../pages/workout_page.dart';
 import '../pages/timer_page.dart';
@@ -8,21 +10,16 @@ import '../pages/timer_page.dart';
 void main() {
   patrolTest(
     'Complete workout flow from creation to completion',
-    config: const PatrolTestConfig(
-      appName: 'GymBro',
-      settleTimeout: Duration(seconds: 10),
-    ),
-    nativeAutomation: true,
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.MyApp());
+      await $.pumpWidgetAndSettle(const app.GymBroApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
       
       // Step 1: Login
       await TestBase.loginTestUser($);
-      print('✅ User logged in');
+      if (kDebugMode) debugPrint('✅ User logged in');
       
       // Step 2: Create a new workout
       await workoutPage.navigateToWorkouts();
@@ -30,12 +27,12 @@ void main() {
         name: 'Full Body E2E Test',
         exercises: ['Squat', 'Bench Press', 'Deadlift', 'Shoulder Press'],
       );
-      print('✅ Workout created with 4 exercises');
+      if (kDebugMode) debugPrint('✅ Workout created with 4 exercises');
       
       // Step 3: Start the workout
       await workoutPage.startWorkout('Full Body E2E Test');
       expect(await workoutPage.isWorkoutActive(), isTrue);
-      print('✅ Workout started');
+      if (kDebugMode) debugPrint('✅ Workout started');
       
       // Step 4: Complete first exercise (Squat) - 3 sets
       for (int set = 1; set <= 3; set++) {
@@ -44,13 +41,13 @@ void main() {
           reps: 12 - (set * 2), // Decreasing reps
           rpe: 6 + set, // Increasing RPE
         );
-        print('✅ Squat set $set completed');
+        if (kDebugMode) debugPrint('✅ Squat set $set completed');
         
         // Rest timer should start after each set except last
         if (set < 3) {
           expect(await timerPage.isTimerRunning(), isTrue);
-          print('  ⏱️ Rest timer started');
-          
+          if (kDebugMode) debugPrint('  ⏱️ Rest timer started');
+
           // Test timer controls
           if (set == 1) {
             // Test pause/resume on first rest
@@ -58,32 +55,32 @@ void main() {
             expect(await timerPage.isTimerPaused(), isTrue);
             await Future.delayed(const Duration(seconds: 2));
             await timerPage.resumeTimer();
-            print('  ⏸️ Timer pause/resume tested');
+            if (kDebugMode) debugPrint('  ⏸️ Timer pause/resume tested');
           } else if (set == 2) {
             // Test add 30 seconds on second rest
             await timerPage.addThirtySeconds();
-            print('  ➕ Added 30 seconds to timer');
+            if (kDebugMode) debugPrint('  ➕ Added 30 seconds to timer');
           }
-          
+
           // Skip rest timer to continue
           await timerPage.skipTimer();
-          print('  ⏭️ Rest timer skipped');
+          if (kDebugMode) debugPrint('  ⏭️ Rest timer skipped');
         }
       }
       
       // Step 5: Test background behavior during second exercise
-      print('Starting Bench Press...');
+      if (kDebugMode) debugPrint('Starting Bench Press...');
       await workoutPage.completeSet(weight: 80, reps: 10, rpe: 7);
       
       // Put app in background during rest
       await $.native.pressHome();
-      print('📱 App moved to background during rest');
+      if (kDebugMode) debugPrint('📱 App moved to background during rest');
       await Future.delayed(const Duration(seconds: 5));
       
       // Return to app
       await $.native.openApp();
       await $.pumpAndSettle();
-      print('📱 App returned to foreground');
+      if (kDebugMode) debugPrint('📱 App returned to foreground');
       
       // Timer should still be running
       expect(await timerPage.isTimerRunning(), isTrue);
@@ -96,20 +93,22 @@ void main() {
           await timerPage.skipTimer();
         }
       }
-      print('✅ Bench Press completed');
+      if (kDebugMode) debugPrint('✅ Bench Press completed');
       
       // Step 6: Test timer minimization during third exercise
-      print('Starting Deadlift...');
+      if (kDebugMode) debugPrint('Starting Deadlift...');
       await workoutPage.completeSet(weight: 140, reps: 5, rpe: 8);
       
       // Minimize timer
       await timerPage.minimizeTimer();
       expect(await timerPage.isTimerMinimized(), isTrue);
-      print('  🔽 Timer minimized');
-      
+      if (kDebugMode) debugPrint('  🔽 Timer minimized');
+
       // Do other actions while timer is minimized
-      await $.scrollTo(finder: find.text('Previous Sets'));
-      
+      await $.scrollUntilVisible(
+        finder: find.text('Previous Sets'),
+      );
+
       // Expand timer
       await timerPage.expandTimer();
       await timerPage.skipTimer();
@@ -118,34 +117,34 @@ void main() {
       for (int set = 2; set <= 3; set++) {
         await workoutPage.skipSet();
       }
-      print('✅ Deadlift completed (some sets skipped)');
+      if (kDebugMode) debugPrint('✅ Deadlift completed (some sets skipped)');
       
       // Step 7: Test pause/resume workout during last exercise
-      print('Starting Shoulder Press...');
+      if (kDebugMode) debugPrint('Starting Shoulder Press...');
       await workoutPage.completeSet(weight: 50, reps: 10);
       await timerPage.skipTimer();
       
       // Pause workout
       await workoutPage.pauseWorkout();
-      print('⏸️ Workout paused');
+      if (kDebugMode) debugPrint('⏸️ Workout paused');
       
       // Simulate user taking a break
       await Future.delayed(const Duration(seconds: 3));
       
       // Resume workout
       await workoutPage.resumeWorkout();
-      print('▶️ Workout resumed');
+      if (kDebugMode) debugPrint('▶️ Workout resumed');
       
       // Complete final sets
       await workoutPage.completeSet(weight: 50, reps: 8);
       await timerPage.skipTimer();
       await workoutPage.completeSet(weight: 45, reps: 10);
-      print('✅ Shoulder Press completed');
+      if (kDebugMode) debugPrint('✅ Shoulder Press completed');
       
       // Step 8: Finish workout
       await workoutPage.finishWorkout();
       expect(await workoutPage.isWorkoutCompleted(), isTrue);
-      print('🎉 Workout completed successfully!');
+      if (kDebugMode) debugPrint('🎉 Workout completed successfully!');
       
       // Step 9: Verify workout appears in history
       await workoutPage.navigateToWorkouts();
@@ -158,19 +157,15 @@ void main() {
       // Cleanup
       await TestBase.logoutUser($);
       await TestBase.cleanup();
-      print('✅ Test completed and cleaned up');
+      if (kDebugMode) debugPrint('✅ Test completed and cleaned up');
     },
   );
   
   patrolTest(
     'Workout with interruptions and recovery',
-    config: const PatrolTestConfig(
-      appName: 'GymBro',
-    ),
-    nativeAutomation: true,
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.MyApp());
+      await $.pumpWidgetAndSettle(const app.GymBroApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);
@@ -184,15 +179,15 @@ void main() {
       
       // Complete first set
       await workoutPage.completeSet(weight: 100, reps: 10);
-      
-      // Simulate phone call interruption (iOS)
-      if (await $.native.isIOS()) {
+
+      // Simulate phone call interruption (iOS only)
+      if (Platform.isIOS) {
         // Timer should continue during interruption
         await $.native.pressHome();
         await Future.delayed(const Duration(seconds: 10));
         await $.native.openApp();
         await $.pumpAndSettle();
-        
+
         // Verify timer continued
         expect(await timerPage.isTimerRunning(), isTrue);
       }
@@ -205,7 +200,7 @@ void main() {
       
       // "Kill" app (go to background as simulation)
       await $.native.pressHome();
-      print('App "killed" during workout');
+      if (kDebugMode) debugPrint('App "killed" during workout');
       await Future.delayed(const Duration(seconds: 5));
       
       // "Restart" app
@@ -232,13 +227,9 @@ void main() {
   
   patrolTest(
     'Workout with superset exercises',
-    config: const PatrolTestConfig(
-      appName: 'GymBro',
-    ),
-    nativeAutomation: true,
     ($) async {
       await TestBase.setupTestEnvironment();
-      await $.pumpWidgetAndSettle(const app.MyApp());
+      await $.pumpWidgetAndSettle(const app.GymBroApp());
       
       final workoutPage = WorkoutPage($);
       final timerPage = TimerPage($);

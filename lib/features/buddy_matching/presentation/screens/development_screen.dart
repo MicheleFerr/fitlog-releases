@@ -1,29 +1,28 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../data/demo_profiles.dart';
-import '../../domain/entities/buddy_profile.dart';
-import '../widgets/enhanced/verification_badges.dart';
-import '../widgets/enhanced/city_picker_widget.dart';
-import '../widgets/enhanced/ice_breaker_widget.dart';
-import '../widgets/enhanced/report_user_dialog.dart';
-import '../widgets/enhanced/super_like_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/data/demo_profiles.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/verification_badges.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/city_picker_widget.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/ice_breaker_widget.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/report_user_dialog.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/super_like_button.dart';
 
 class DevelopmentScreen extends ConsumerStatefulWidget {
   const DevelopmentScreen({super.key});
@@ -59,7 +58,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.clearDemoData),
+        content: Text(AppLocalizations.of(context).clearDemoData),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
@@ -90,7 +89,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -202,7 +201,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                         );
                       },
                       icon: const Icon(Icons.location_on),
-                      label: Text(AppLocalizations.of(context)!.openCityPicker),
+                      label: Text(AppLocalizations.of(context).openCityPicker),
                     ),
                   ],
                 ),
@@ -231,7 +230,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                         );
                       },
                       icon: const Icon(Icons.ac_unit),
-                      label: Text(AppLocalizations.of(context)!.openIceBreakers),
+                      label: Text(AppLocalizations.of(context).openIceBreakers),
                     ),
                   ],
                 ),

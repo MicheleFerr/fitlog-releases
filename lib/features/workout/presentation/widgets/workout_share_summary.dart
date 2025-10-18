@@ -12,12 +12,12 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class WorkoutShareSummary extends ConsumerStatefulWidget {
-  final Workout workout;
   
   const WorkoutShareSummary({
     super.key,
     required this.workout,
   });
+  final Workout workout;
   
   static Future<void> show(BuildContext context, Workout workout) {
     return showModalBottomSheet(
@@ -87,7 +87,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.errorPickingImage(e.toString()))),
+          SnackBar(content: Text(AppLocalizations.of(context).errorPickingImage(e.toString()))),
         );
       }
     }
@@ -100,11 +100,11 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
     
     try {
       // Capture the widget as image
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
+      final RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
       
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       
       if (byteData != null) {
         // Save to temporary file
@@ -116,8 +116,8 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
         await Share.shareXFiles(
           [XFile(file.path)],
           text: '💪 Just crushed my workout with FitLogPro! '
-              '${totalExercises} exercises, ${totalVolume.toStringAsFixed(0)}kg total volume, '
-              '${workoutDuration} duration. #FitLogPro #GymLife #Fitness',
+              '$totalExercises exercises, ${totalVolume.toStringAsFixed(0)}kg total volume, '
+              '$workoutDuration duration. #FitLogPro #GymLife #Fitness',
         );
         
         // Close the modal after sharing
@@ -128,7 +128,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.errorSharing(e.toString()))),
+          SnackBar(content: Text(AppLocalizations.of(context).errorSharing(e.toString()))),
         );
       }
     } finally {
@@ -329,7 +329,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                           ),
                                           _buildStatColumn(
                                             icon: Icons.monitor_weight,
-                                            value: '${(totalVolume / 1000).toStringAsFixed(1)}',
+                                            value: (totalVolume / 1000).toStringAsFixed(1),
                                             label: 'Tons',
                                           ),
                                           _buildStatColumn(

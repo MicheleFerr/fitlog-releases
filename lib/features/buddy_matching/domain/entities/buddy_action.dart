@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: buddy_matching
- * 🔧 Type: entity
- * 🌍 Localization: N/A - Entity class
- * 🎨 Theme: N/A - Entity class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: entity
+/// 🌍 Localization: N/A - Entity class
+/// 🎨 Theme: N/A - Entity class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

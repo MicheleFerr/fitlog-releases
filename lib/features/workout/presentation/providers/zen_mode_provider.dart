@@ -4,16 +4,6 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 /// Configuration for Zen Mode
 class ZenConfig {
-  final bool hideCommunitySuggestions;
-  final bool hideWarmupCards;
-  final bool hideExerciseChips;
-  final bool hideXPAnimations;
-  final bool hideTutorials;
-  final bool hideSmartSuggestions;
-  final bool keepScreenOn;
-  final bool showTUT; // Time Under Tension
-  final bool showVelocity;
-  final bool showVolume;
 
   const ZenConfig({
     this.hideCommunitySuggestions = true,
@@ -27,6 +17,29 @@ class ZenConfig {
     this.showVelocity = false,
     this.showVolume = true,
   });
+
+  factory ZenConfig.fromJson(Map<String, dynamic> json) => ZenConfig(
+    hideCommunitySuggestions: json['hideCommunitySuggestions'] ?? true,
+    hideWarmupCards: json['hideWarmupCards'] ?? true,
+    hideExerciseChips: json['hideExerciseChips'] ?? false,
+    hideXPAnimations: json['hideXPAnimations'] ?? true,
+    hideTutorials: json['hideTutorials'] ?? true,
+    hideSmartSuggestions: json['hideSmartSuggestions'] ?? true,
+    keepScreenOn: json['keepScreenOn'] ?? true,
+    showTUT: json['showTUT'] ?? false,
+    showVelocity: json['showVelocity'] ?? false,
+    showVolume: json['showVolume'] ?? true,
+  );
+  final bool hideCommunitySuggestions;
+  final bool hideWarmupCards;
+  final bool hideExerciseChips;
+  final bool hideXPAnimations;
+  final bool hideTutorials;
+  final bool hideSmartSuggestions;
+  final bool keepScreenOn;
+  final bool showTUT; // Time Under Tension
+  final bool showVelocity;
+  final bool showVolume;
 
   ZenConfig copyWith({
     bool? hideCommunitySuggestions,
@@ -66,32 +79,19 @@ class ZenConfig {
     'showVelocity': showVelocity,
     'showVolume': showVolume,
   };
-
-  factory ZenConfig.fromJson(Map<String, dynamic> json) => ZenConfig(
-    hideCommunitySuggestions: json['hideCommunitySuggestions'] ?? true,
-    hideWarmupCards: json['hideWarmupCards'] ?? true,
-    hideExerciseChips: json['hideExerciseChips'] ?? false,
-    hideXPAnimations: json['hideXPAnimations'] ?? true,
-    hideTutorials: json['hideTutorials'] ?? true,
-    hideSmartSuggestions: json['hideSmartSuggestions'] ?? true,
-    keepScreenOn: json['keepScreenOn'] ?? true,
-    showTUT: json['showTUT'] ?? false,
-    showVelocity: json['showVelocity'] ?? false,
-    showVolume: json['showVolume'] ?? true,
-  );
 }
 
 /// State for Zen Mode
 class ZenModeState {
-  final bool isEnabled;
-  final ZenConfig config;
-  final bool isKeepScreenOnActive;
 
   const ZenModeState({
     this.isEnabled = false,
     this.config = const ZenConfig(),
     this.isKeepScreenOnActive = false,
   });
+  final bool isEnabled;
+  final ZenConfig config;
+  final bool isKeepScreenOnActive;
 
   ZenModeState copyWith({
     bool? isEnabled,
@@ -108,13 +108,13 @@ class ZenModeState {
 
 /// Notifier for Zen Mode state management
 class ZenModeNotifier extends StateNotifier<ZenModeState> {
-  static const String _zenModeKey = 'zen_mode_enabled';
-  static const String _zenConfigKey = 'zen_mode_config';
-  static const String _keepScreenOnKey = 'keep_screen_on';
 
   ZenModeNotifier(Ref ref) : super(const ZenModeState()) {
     _loadPreferences();
   }
+  static const String _zenModeKey = 'zen_mode_enabled';
+  static const String _zenConfigKey = 'zen_mode_config';
+  static const String _keepScreenOnKey = 'keep_screen_on';
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();

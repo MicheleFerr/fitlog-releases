@@ -8,9 +8,6 @@ import 'dart:math' as math;
 /// Grafico interattivo per tracciare il progresso del peso
 /// con gesture support per zoom, pan e dettagli on-tap
 class InteractiveWeightChart extends ConsumerStatefulWidget {
-  final List<WeightData> data;
-  final double? targetWeight;
-  final Function(WeightData)? onDataPointTap;
   
   const InteractiveWeightChart({
     super.key,
@@ -18,6 +15,9 @@ class InteractiveWeightChart extends ConsumerStatefulWidget {
     this.targetWeight,
     this.onDataPointTap,
   });
+  final List<WeightData> data;
+  final double? targetWeight;
+  final Function(WeightData)? onDataPointTap;
 
   @override
   ConsumerState<InteractiveWeightChart> createState() => _InteractiveWeightChartState();
@@ -32,7 +32,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
   // Zoom and pan state
   double _minX = 0;
   double _maxX = 30;
-  double _touchedX = -1;
+  final double _touchedX = -1;
   int? _touchedIndex;
   
   // Period selection
@@ -573,10 +573,6 @@ enum ChartPeriod {
 }
 
 class WeightData {
-  final DateTime date;
-  final double weight;
-  final String? note;
-  final String? workoutId;
   
   const WeightData({
     required this.date,
@@ -584,4 +580,8 @@ class WeightData {
     this.note,
     this.workoutId,
   });
+  final DateTime date;
+  final double weight;
+  final String? note;
+  final String? workoutId;
 }

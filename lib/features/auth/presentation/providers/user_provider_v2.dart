@@ -1,22 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: auth
- * 🔧 Type: provider
- * 🌍 Localization: N/A - Provider class
- * 🎨 Theme: N/A - Provider class
- * 📱 Platform: Universal
- * 
- * CONSOLIDATED USER PROVIDER V2 - Type-safe user state management
- * This is the NEW standard provider - replaces both currentUserProvider and userProfileProvider
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: auth
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A - Provider class
+/// 🎨 Theme: N/A - Provider class
+/// 📱 Platform: Universal
+/// 
+/// CONSOLIDATED USER PROVIDER V2 - Type-safe user state management
+/// This is the NEW standard provider - replaces both currentUserProvider and userProfileProvider
+library;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile_consolidated.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Main user state provider - USE THIS FOR EVERYTHING
 /// Provides type-safe access to user state with proper error handling
@@ -51,7 +51,7 @@ final userStateProvider = StreamProvider<UserState>((ref) async* {
         }
       } catch (error, stackTrace) {
         // Log error but provide fallback
-        print('Error loading user profile: $error');
+        // print('Error loading user profile: $error');
         
         // Fallback to basic profile from Firebase Auth
         try {
@@ -86,8 +86,15 @@ final isAuthenticatedProvider = Provider<bool>((ref) {
   return state.isAuthenticated;
 });
 
-/// Quick check if user is premium
+/// Quick check if user is premium (or beta mode is enabled)
 final isPremiumUserProvider = Provider<bool>((ref) {
+  // Check beta mode first
+  final betaModeEnabled = ref.watch(betaModeEnabledProvider);
+  if (betaModeEnabled) {
+    return true; // Beta mode gives premium access
+  }
+
+  // Otherwise check actual premium status
   final state = ref.watch(currentUserStateProvider);
   return state.isPremium;
 });

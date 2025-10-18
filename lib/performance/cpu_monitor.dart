@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
-import '../core/utils/production_logger.dart';
+import 'package:gymbro_flutter_new/core/utils/production_logger.dart';
 
 /// CPU Performance Monitor - Tracks app performance and identifies bottlenecks
 class CPUMonitor {
-  static final CPUMonitor _instance = CPUMonitor._internal();
   factory CPUMonitor() => _instance;
   CPUMonitor._internal();
+  static final CPUMonitor _instance = CPUMonitor._internal();
 
   Timer? _monitorTimer;
   bool _isMonitoring = false;
@@ -101,10 +100,6 @@ class CPUMonitor {
 }
 
 class PerformanceMetric {
-  final DateTime timestamp;
-  final double memoryUsage;
-  final int activeTimers;
-  final int widgetRebuildCount;
   
   PerformanceMetric({
     required this.timestamp,
@@ -112,13 +107,13 @@ class PerformanceMetric {
     required this.activeTimers,
     required this.widgetRebuildCount,
   });
+  final DateTime timestamp;
+  final double memoryUsage;
+  final int activeTimers;
+  final int widgetRebuildCount;
 }
 
 class PerformanceSummary {
-  final double averageMemoryUsage;
-  final double peakMemoryUsage;
-  final int totalMetrics;
-  final int highUsageEvents;
   
   PerformanceSummary({
     required this.averageMemoryUsage,
@@ -135,4 +130,8 @@ class PerformanceSummary {
       highUsageEvents: 0,
     );
   }
+  final double averageMemoryUsage;
+  final double peakMemoryUsage;
+  final int totalMetrics;
+  final int highUsageEvents;
 }

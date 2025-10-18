@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/exercise.dart';
-import '../../domain/entities/workout.dart';
-import '../providers/workout_provider.dart';
-import '../providers/exercise_selection_provider.dart';
-import '../providers/add_exercise_provider.dart';
-import 'exercise_selection_sheet.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_selection_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
 
 /// 🚀 TIER-1: Enhanced Add Exercise Modal with database selection
 class EnhancedAddExerciseModal extends ConsumerStatefulWidget {
-  final Function(Exercise)? onExerciseAdded;
   
   const EnhancedAddExerciseModal({
     super.key,
     this.onExerciseAdded,
   });
+  final Function(Exercise)? onExerciseAdded;
 
   @override
   ConsumerState<EnhancedAddExerciseModal> createState() => _EnhancedAddExerciseModalState();
 }
 
-class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseModal> 
+class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseModal>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  
+
+  // GlobalKeys for onboarding
+  final _singleExerciseTabKey = GlobalKey();
+  final _selectExerciseButtonKey = GlobalKey();
+
   // Single exercise
   ExerciseData? _selectedSingleExercise;
   final List<ExerciseSet> _sets = [
@@ -62,6 +66,15 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+
+    // Start onboarding after widgets are rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) {
+          ref.read(exerciseOnboardingProvider.notifier).startOnboarding();
+        }
+      });
+    });
   }
 
   @override
@@ -148,20 +161,63 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
         break;
         
       case 1: // Superset
-        final exercises = _supersetExercises
+        final validExercises = _supersetExercises
             .where((e) => e != null)
-            .map((e) => Exercise(
-                  name: e!.nome,
-                  type: ExerciseType.single,
-                  category: _mapCategory(e.focus),
-                  sets: _supersetSets[_supersetExercises.indexOf(e)] ?? [],
-                ))
+            .cast<ExerciseData>()
             .toList();
         
-        if (exercises.length >= 2) {
+        if (validExercises.length >= 2) {
+          // Create exercises with unique IDs - they'll use shared superset sets
+          final exercises = validExercises.map((e) {
+            final exerciseId = '${DateTime.now().millisecondsSinceEpoch}_${e.nome}';
+            return Exercise(
+              id: exerciseId,
+              name: e.nome,
+              type: ExerciseType.single,
+              category: _mapCategory(e.focus),
+              sets: [], // No individual sets for superset exercises
+            );
+          }).toList();
+          
+          // Create shared superset sets - each set contains data for ALL exercises
+          final supersetSets = <SupersetSet>[];
+
+          // ✅ FIX: Genera timestamp UNA VOLTA per evitare ID duplicati
+          final baseTimestamp = DateTime.now().millisecondsSinceEpoch;
+
+          // Create 3 default superset sets
+          for (int setNumber = 1; setNumber <= 3; setNumber++) {
+            final exerciseData = <String, SupersetExerciseData>{};
+
+            // Add data for each exercise in the superset using their IDs
+            for (int i = 0; i < exercises.length; i++) {
+              final exercise = exercises[i];
+
+              exerciseData[exercise.id] = SupersetExerciseData(
+                exerciseId: exercise.id,
+                exerciseName: exercise.name,
+                targetWeight: 0, // Default weight
+                targetReps: 10,  // Default reps
+                actualWeight: null,
+                actualReps: null,
+                rpe: null,
+                isCompleted: false,
+              );
+            }
+
+            // ✅ FIX: Usa index (setNumber-1) per garantire ID univoco
+            supersetSets.add(SupersetSet(
+              id: 'superset_set_${baseTimestamp}_${setNumber - 1}_$setNumber',
+              setNumber: setNumber,
+              exerciseData: exerciseData,
+              isCompleted: false,
+            ));
+          }
+          
           newExercise = SupersetExercise(
             name: exercises.map((e) => e.name).join(' + '),
             exercises: exercises,
+            supersetSets: supersetSets,
             notes: _restBetweenSuperset > 0 ? 'Rest between exercises: ${_restBetweenSuperset}s' : null,
           );
         }
@@ -246,7 +302,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
         
         if (exercise.name.isNotEmpty && exercise.sets.isNotEmpty) {
           // Get completed sets with weights
-          final completedSets = exercise.sets.where((s) => s.isCompleted && s.weight > 0).toList();
+          final completedSets = exercise.sets.where((s) => s.isCompleted && (s.weight ?? 0) > 0).toList();
           
           if (completedSets.isNotEmpty) {
             setState(() {
@@ -256,14 +312,14 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                 final prevSet = completedSets[i];
                 _sets.add(ExerciseSet(
                   setNumber: i + 1,
-                  weight: prevSet.weight,
+                  weight: (prevSet.weight ?? 0).toDouble(),
                   reps: prevSet.actualReps ?? prevSet.reps,
                 ));
               }
               
               // If we have less than 3 sets, add default ones
               while (_sets.length < 3) {
-                final lastWeight = _sets.isNotEmpty ? _sets.last.weight : 0;
+                final lastWeight = _sets.isNotEmpty ? _sets.last.weight : 0.0;
                 final lastReps = _sets.isNotEmpty ? _sets.last.reps : 10;
                 _sets.add(ExerciseSet(
                   setNumber: _sets.length + 1,
@@ -277,7 +333,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.previousWeightsLoaded),
+                  content: Text(AppLocalizations.of(context).previousWeightsLoaded),
                   backgroundColor: Theme.of(context).colorScheme.tertiary,
                   duration: const Duration(seconds: 2),
                 ),
@@ -289,16 +345,18 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
       }
     } catch (e) {
       // If error loading previous weights, keep default sets
-      print('Error loading previous weights: $e');
+      debugPrint('Error loading previous weights: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-    
-    return Container(
+    final l10n = AppLocalizations.of(context);
+
+    return Stack(
+      children: [
+        Container(
       height: MediaQuery.of(context).size.height * 0.9,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -312,7 +370,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -359,7 +417,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
               labelColor: theme.colorScheme.onPrimary,
               unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
               tabs: [
-                Tab(text: l10n.single),
+                Tab(key: _singleExerciseTabKey, text: l10n.single),
                 Tab(text: l10n.superset),
                 Tab(text: l10n.dropset),
                 Tab(text: l10n.restPause),
@@ -381,12 +439,25 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
           ),
         ],
       ),
+        ),
+
+        // Onboarding overlay (steps 0-1 only visible in this modal)
+        // Steps 2-5 will be shown in ExerciseSelectionSheet
+        ExerciseOnboardingOverlay(
+          singleExerciseTabKey: _singleExerciseTabKey,
+          selectExerciseButtonKey: _selectExerciseButtonKey,
+          searchBarKey: GlobalKey(), // Dummy - used in ExerciseSelectionSheet
+          firstExerciseKey: GlobalKey(), // Dummy - used in ExerciseSelectionSheet
+          filtersKey: GlobalKey(), // Dummy - used in ExerciseSelectionSheet
+          confirmButtonKey: GlobalKey(), // Dummy - used in ExerciseSelectionSheet
+        ),
+      ],
     );
   }
 
   Widget _buildSingleTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -395,6 +466,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
         children: [
           // Exercise selection
           Card(
+            key: _selectExerciseButtonKey,
             child: ListTile(
               leading: const Icon(Icons.fitness_center),
               title: Text(_selectedSingleExercise?.nome ?? l10n.selectExercise),
@@ -487,7 +559,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
 
   Widget _buildSupersetTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -604,7 +676,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
 
   Widget _buildDropsetTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -744,7 +816,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
 
   Widget _buildRestPauseTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),

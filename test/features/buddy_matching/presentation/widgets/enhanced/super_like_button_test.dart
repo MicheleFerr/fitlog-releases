@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget test
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ ColorScheme tested
- * 📱 Platform: Universal
- * 
- * Testing SuperLikeButton widget with all its functionality
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget test
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ ColorScheme tested
+/// 📱 Platform: Universal
+/// 
+/// Testing SuperLikeButton widget with all its functionality
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

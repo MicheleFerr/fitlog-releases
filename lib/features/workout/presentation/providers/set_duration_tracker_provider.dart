@@ -1,20 +1,20 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: workout
- * 🔧 Type: provider
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: StateNotifierProvider
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: workout
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: StateNotifierProvider
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 
 /// Tracks the duration of each set from start to completion
 /// Tracks ONLY execution time, not rest time
@@ -24,29 +24,26 @@ class SetDurationTracker {
   
   // Track when rest timer ends for next set
   DateTime? _restTimerEndTime;
-  
-  /// Called when rest timer ends - marks the start of next set
-  void onRestTimerEnded() {
-    _restTimerEndTime = DateTime.now();
-    print('⏰ Rest timer ended at: ${_restTimerEndTime!.toIso8601String()}');
-  }
-  
+
   /// Called when starting a set (either from rest timer end or manual start)
   DateTime startSet(String exerciseId, int setNumber) {
     final key = '${exerciseId}_$setNumber';
-    
-    // Use rest timer end time if available and recent (within 30 seconds)
+
+    // Use rest timer end time if available (no time limit)
     DateTime startTime;
-    if (_restTimerEndTime != null && 
-        DateTime.now().difference(_restTimerEndTime!).inSeconds < 30) {
+    if (_restTimerEndTime != null) {
       startTime = _restTimerEndTime!;
-      print('🎯 Set $setNumber starting from rest timer end: ${startTime.toIso8601String()}');
+      if (kDebugMode) {
+        debugPrint('🎯 Set $setNumber starting from rest timer end: ${startTime.toIso8601String()}');
+      }
       _restTimerEndTime = null; // Clear after use
     } else {
       startTime = DateTime.now();
-      print('🎯 Set $setNumber starting now: ${startTime.toIso8601String()}');
+      if (kDebugMode) {
+        debugPrint('🎯 Set $setNumber starting now: ${startTime.toIso8601String()}');
+      }
     }
-    
+
     _setStartTimes[key] = startTime;
     return startTime;
   }
@@ -76,7 +73,9 @@ class SetDurationTracker {
   void markExerciseStarted(String exerciseId) {
     // Start tracking for set 1
     final timestamp = startSet(exerciseId, 1);
-    print('✅ Exercise $exerciseId started, set 1 timestamp: ${timestamp.toIso8601String()}');
+    if (kDebugMode) {
+      debugPrint('✅ Exercise $exerciseId started, set 1 timestamp: ${timestamp.toIso8601String()}');
+    }
   }
   
   /// Clear timestamps for an exercise when moving to next exercise
@@ -102,7 +101,9 @@ class SetDurationTracker {
   void setStartTime(String exerciseId, int setNumber, DateTime startTime) {
     final key = '${exerciseId}_$setNumber';
     _setStartTimes[key] = startTime;
-    print('⏰ Manually set start time for set $setNumber: ${startTime.toIso8601String()}');
+    if (kDebugMode) {
+      debugPrint('⏰ Manually set start time for set $setNumber: ${startTime.toIso8601String()}');
+    }
   }
   
   /// Get formatted duration string (e.g., "12.34s")
@@ -130,9 +131,9 @@ final setDurationTrackerProvider = Provider<SetDurationTracker>((ref) {
 
 /// State notifier for managing set durations during workout
 class SetDurationNotifier extends StateNotifier<Map<String, double>> {
-  final Ref ref;
   
   SetDurationNotifier(this.ref) : super({});
+  final Ref ref;
   
   /// Record a set duration
   void recordSetDuration(String exerciseId, int setNumber, double durationMillis) {

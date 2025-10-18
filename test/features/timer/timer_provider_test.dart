@@ -26,7 +26,7 @@ void main() {
     
     container = ProviderContainer(
       overrides: [
-        appConfigProvider.overrideWith((ref) => AppConfigNotifier()..state = AppConfig()),
+        appConfigProvider.overrideWith((ref) => AppConfigNotifier()..state = const AppConfig()),
       ],
     );
   });

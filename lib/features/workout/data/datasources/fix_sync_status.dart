@@ -1,17 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/datasources
- * 🎯 Feature: workout
- * 🔧 Type: utility
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Utility to fix sync status for existing workouts
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/datasources
+/// 🎯 Feature: workout
+/// 🔧 Type: utility
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Utility to fix sync status for existing workouts
+library;
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/foundation.dart';
 
 class SyncStatusFixer {
   static const String _workoutsBoxName = 'workouts';
@@ -44,12 +44,16 @@ class SyncStatusFixer {
           await box.put(key, data);
           fixedCount++;
           
-          print('Fixed workout: $key - set syncStatus to pending');
+          if (kDebugMode) {
+            debugPrint('Fixed workout: $key - set syncStatus to pending');
+          }
         }
       }
     }
     
-    print('✅ Fixed $fixedCount workouts out of ${userKeys.length} total');
+    if (kDebugMode) {
+      debugPrint('✅ Fixed $fixedCount workouts out of ${userKeys.length} total');
+    }
     return fixedCount;
   }
   
@@ -71,8 +75,9 @@ class SyncStatusFixer {
       if (data != null) {
         final syncStatus = data['syncStatus'];
         
-        if (syncStatus == 'pending') pending++;
-        else if (syncStatus == 'synced') synced++;
+        if (syncStatus == 'pending') {
+          pending++;
+        } else if (syncStatus == 'synced') synced++;
         else noStatus++;
         
         if (data['localOnly'] == true) localOnly++;

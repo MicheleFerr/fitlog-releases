@@ -1,23 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: auth
- * 🔧 Type: provider
- * 🌍 Localization: N/A - Provider logic
- * 🎨 Theme: N/A - Provider logic
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: StateNotifierProvider
- * - Firebase: Auth/Firestore
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: auth
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A - Provider logic
+/// 🎨 Theme: N/A - Provider logic
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: StateNotifierProvider
+/// - Firebase: Auth/Firestore
+/// - Hive: None
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 
 /// Stream provider for current user
 final currentUserProvider = StreamProvider<User?>((ref) {
@@ -26,15 +25,9 @@ final currentUserProvider = StreamProvider<User?>((ref) {
 
 /// Provider for user profile from Firestore
 final userProfileProvider = StreamProvider<UserProfile?>((ref) async* {
-  final userStream = ref.watch(currentUserProvider);
-  
-  await for (final userAsync in userStream) {
-    final user = userAsync.when(
-      data: (user) => user,
-      loading: () => null,
-      error: (_, __) => null,
-    );
-    
+  final userStream = ref.watch(currentUserProvider.stream);
+
+  await for (final user in userStream) {
     if (user == null) {
       yield null;
     } else {
@@ -52,38 +45,22 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) async* {
 });
 
 /// State notifier for managing user profile updates
+/// Now uses the existing userProfileProvider stream instead of duplicate fetch
 class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
-  UserProfileNotifier() : super(const AsyncValue.loading()) {
+
+  UserProfileNotifier(this._ref) : super(const AsyncValue.loading()) {
     _init();
   }
-  
+  final Ref _ref;
+
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  
+
   void _init() {
-    _auth.authStateChanges().listen((user) {
-      if (user == null) {
-        state = const AsyncValue.data(null);
-      } else {
-        _loadUserProfile(user.uid);
-      }
+    // Listen to the existing userProfileProvider stream instead of duplicate fetch
+    _ref.listen(userProfileProvider, (previous, next) {
+      state = next;
     });
-  }
-  
-  Future<void> _loadUserProfile(String uid) async {
-    try {
-      final doc = await _firestore.collection('users').doc(uid).get();
-      
-      if (doc.exists) {
-        final profile = UserProfile.fromFirestore(doc);
-        state = AsyncValue.data(profile);
-      } else {
-        // Create default profile if doesn't exist
-        await _createDefaultProfile(uid);
-      }
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current);
-    }
   }
   
   Future<void> _createDefaultProfile(String uid) async {
@@ -113,10 +90,10 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
   Future<void> updateProfile(Map<String, dynamic> updates) async {
     final currentProfile = state.valueOrNull;
     if (currentProfile == null) return;
-    
+
     try {
       await _firestore.collection('users').doc(currentProfile.uid).update(updates);
-      await _loadUserProfile(currentProfile.uid);
+      // No need to manually refresh - userProfileProvider stream will auto-update
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
@@ -253,9 +230,9 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
 }
 
 /// Provider for user profile notifier
-final userProfileNotifierProvider = 
+final userProfileNotifierProvider =
     StateNotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>((ref) {
-  return UserProfileNotifier();
+  return UserProfileNotifier(ref);
 });
 
 /// Convenient provider for checking template quota

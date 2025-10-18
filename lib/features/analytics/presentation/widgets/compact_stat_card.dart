@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/info_tooltip.dart';
 
 /// Compact stat card for displaying key metrics in a grid layout
 class CompactStatCard extends StatelessWidget {
-  final String value;
-  final String label;
-  final IconData icon;
-  final Color? color;
-  final VoidCallback? onTap;
-  final String? subtitle;
-  final Widget? trend;
-  
+
   const CompactStatCard({
     super.key,
     required this.value,
@@ -19,7 +13,18 @@ class CompactStatCard extends StatelessWidget {
     this.onTap,
     this.subtitle,
     this.trend,
+    this.tooltipTitle,
+    this.tooltipDescription,
   });
+  final String value;
+  final String label;
+  final IconData icon;
+  final Color? color;
+  final VoidCallback? onTap;
+  final String? subtitle;
+  final Widget? trend;
+  final String? tooltipTitle;
+  final String? tooltipDescription;
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +78,26 @@ class CompactStatCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              // Label
-              Text(
-                label,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+              // Label with optional tooltip
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  if (tooltipTitle != null && tooltipDescription != null) ...[
+                    const SizedBox(width: 4),
+                    InfoTooltip(
+                      title: tooltipTitle!,
+                      description: tooltipDescription!,
+                      iconSize: 16,
+                    ),
+                  ],
+                ],
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 2),

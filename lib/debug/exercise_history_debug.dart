@@ -1,22 +1,21 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: debug
- * 🎯 Feature: workout
- * 🔧 Type: debug_tool
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Hive (local storage)
- * - Workout models
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: debug
+/// 🎯 Feature: workout
+/// 🔧 Type: debug_tool
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Hive (local storage)
+/// - Workout models
+library;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../features/workout/data/models/workout_model.dart';
-import '../features/workout/data/services/exercise_history_service.dart';
+import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 
 class ExerciseHistoryDebug {
   static const String _workoutsBoxName = 'workouts';
@@ -78,14 +77,12 @@ class ExerciseHistoryDebug {
         final Map<String, dynamic> jsonData;
         if (data is Map<String, dynamic>) {
           jsonData = data;
-        } else if (data is Map) {
-          jsonData = Map<String, dynamic>.from(
-            data.map((key, value) => MapEntry(key.toString(), value))
-          );
         } else {
-          debugPrint('❌ Invalid data type: ${data.runtimeType}');
-          return;
+          jsonData = Map<String, dynamic>.from(
+          data.map((key, value) => MapEntry(key.toString(), value))
+        );
         }
+      
         
         workout = WorkoutModel.fromJson(jsonData);
         debugPrint('✅ Successfully parsed workout: ${workout.name}');
@@ -136,7 +133,7 @@ class ExerciseHistoryDebug {
       debugPrint('🔍 Exercise: $exerciseName');
       debugPrint('🔍 User: $userId');
       
-      final service = ExerciseHistoryService();
+      const service = ExerciseHistoryService();
       
       // Test different methods
       debugPrint('\n📊 Testing getExerciseHistory...');
@@ -191,13 +188,12 @@ class ExerciseHistoryDebug {
               final Map<String, dynamic> jsonData;
               if (data is Map<String, dynamic>) {
                 jsonData = data;
-              } else if (data is Map) {
-                jsonData = Map<String, dynamic>.from(
-                  data.map((key, value) => MapEntry(key.toString(), value))
-                );
               } else {
-                return null;
+                jsonData = Map<String, dynamic>.from(
+                data.map((key, value) => MapEntry(key.toString(), value))
+              );
               }
+            
               return WorkoutModel.fromJson(jsonData);
             } catch (e) {
               return null;
@@ -253,13 +249,12 @@ class ExerciseHistoryDebug {
           final Map<String, dynamic> jsonData;
           if (data is Map<String, dynamic>) {
             jsonData = data;
-          } else if (data is Map) {
-            jsonData = Map<String, dynamic>.from(
-              data.map((key, value) => MapEntry(key.toString(), value))
-            );
           } else {
-            continue;
+            jsonData = Map<String, dynamic>.from(
+            data.map((key, value) => MapEntry(key.toString(), value))
+          );
           }
+        
           
           final workout = WorkoutModel.fromJson(jsonData);
           final exerciseNames = <String>[];
@@ -269,10 +264,10 @@ class ExerciseHistoryDebug {
             
             // Check for exact match, case-insensitive match, and partial match
             if (exercise.name.toLowerCase() == exerciseName.toLowerCase()) {
-              debugPrint('✅ Exact match found in workout: ${workout.name} (${key})');
+              debugPrint('✅ Exact match found in workout: ${workout.name} ($key)');
               debugPrint('   Exercise: "${exercise.name}" (sets: ${exercise.sets.length}, completed: ${exercise.sets.where((s) => s.isCompleted).length})');
             } else if (exercise.name.toLowerCase().contains(exerciseName.toLowerCase())) {
-              debugPrint('🔍 Partial match found in workout: ${workout.name} (${key})');
+              debugPrint('🔍 Partial match found in workout: ${workout.name} ($key)');
               debugPrint('   Exercise: "${exercise.name}" (sets: ${exercise.sets.length}, completed: ${exercise.sets.where((s) => s.isCompleted).length})');
             }
           }

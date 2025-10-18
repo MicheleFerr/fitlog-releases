@@ -1,21 +1,20 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * Tutorial overlay per spiegare il drag del FAB
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// Tutorial overlay per spiegare il drag del FAB
+library;
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DraggableTutorialOverlay extends StatefulWidget {
-  final Widget child;
-  final String tutorialKey;
   
   const DraggableTutorialOverlay({
     super.key,
     required this.child,
     required this.tutorialKey,
   });
+  final Widget child;
+  final String tutorialKey;
   
   @override
   State<DraggableTutorialOverlay> createState() => _DraggableTutorialOverlayState();

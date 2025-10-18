@@ -51,7 +51,7 @@ Map<String, dynamic> _$$WorkoutTemplateImplToJson(
       'userId': instance.userId,
       'name': instance.name,
       'description': instance.description,
-      'exercises': instance.exercises,
+      'exercises': instance.exercises.map((e) => e.toJson()).toList(),
       'category': _$TemplateCategoryEnumMap[instance.category]!,
       'visibility': _$TemplateVisibilityEnumMap[instance.visibility]!,
       'createdAt': instance.createdAt.toIso8601String(),

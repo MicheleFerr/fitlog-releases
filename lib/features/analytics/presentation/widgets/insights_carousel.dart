@@ -5,12 +5,12 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 
 /// Carousel widget for displaying training insights
 class InsightsCarousel extends StatefulWidget {
-  final List<TrainingInsight> insights;
 
   const InsightsCarousel({
     super.key,
     required this.insights,
   });
+  final List<TrainingInsight> insights;
 
   @override
   State<InsightsCarousel> createState() => _InsightsCarouselState();
@@ -40,7 +40,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
     
     // Localize insights
     final localizedInsights = InsightLocalizer.localizeInsights(context, widget.insights);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       children: [
@@ -90,7 +90,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
           ),
         ),
         const SizedBox(height: 12),
-        _buildPageIndicator(),
+        _buildPageIndicator(localizedInsights.length),
       ],
     );
   }
@@ -141,7 +141,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                         ),
                         if (insight.priority == InsightPriority.high)
                           Text(
-                            AppLocalizations.of(context)!.highPriority,
+                            AppLocalizations.of(context).highPriority,
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -202,11 +202,11 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
     );
   }
 
-  Widget _buildPageIndicator() {
+  Widget _buildPageIndicator(int count) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
-        localizedInsights.length,
+        count,
         (index) => Container(
           width: _currentPage == index ? 24 : 8,
           height: 8,
@@ -264,9 +264,9 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
 }
 
 class _InsightDetailsSheet extends StatelessWidget {
-  final TrainingInsight insight;
 
   const _InsightDetailsSheet({required this.insight});
+  final TrainingInsight insight;
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +304,7 @@ class _InsightDetailsSheet extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      _getPriorityLabel(insight.priority),
+                      _getPriorityLabel(context, insight.priority),
                       style: TextStyle(
                         color: color,
                         fontWeight: FontWeight.bold,
@@ -317,7 +317,7 @@ class _InsightDetailsSheet extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            AppLocalizations.of(context)!.insight,
+            AppLocalizations.of(context).insight,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -329,7 +329,7 @@ class _InsightDetailsSheet extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            AppLocalizations.of(context)!.recommendation,
+            AppLocalizations.of(context).recommendation,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -368,7 +368,7 @@ class _InsightDetailsSheet extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text(AppLocalizations.of(context)!.gotIt),
+              child: Text(AppLocalizations.of(context).gotIt),
             ),
           ),
         ],
@@ -391,8 +391,8 @@ class _InsightDetailsSheet extends StatelessWidget {
     }
   }
 
-  String _getPriorityLabel(InsightPriority priority) {
-    final l10n = AppLocalizations.of(context)!;
+  String _getPriorityLabel(BuildContext context, InsightPriority priority) {
+    final l10n = AppLocalizations.of(context);
     switch (priority) {
       case InsightPriority.high:
         return l10n.highPriority;

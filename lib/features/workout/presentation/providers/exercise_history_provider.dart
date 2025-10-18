@@ -1,28 +1,27 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: workout
- * 🔧 Type: provider
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: StateNotifierProvider
- * - Exercise History Service
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: workout
+/// 🔧 Type: provider
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: StateNotifierProvider
+/// - Exercise History Service
+library;
 
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../data/services/exercise_history_service.dart';
-import '../../data/services/workout_history_service.dart';
-import '../../data/repositories/exercise_activity_repository.dart';
-import '../../domain/entities/exercise_activity.dart';
-import '../../../auth/presentation/providers/user_provider_v2.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import 'workout_provider.dart'; // Import for hybridExerciseActivityRepositoryProvider
+import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/workout_history_service.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart'; // Import for hybridExerciseActivityRepositoryProvider
 
 // Service provider (OLD - uses Hive local storage)
 final exerciseHistoryServiceProvider = Provider<ExerciseHistoryService>((ref) {

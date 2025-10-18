@@ -1,26 +1,25 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: Via repository
- * - Location: GPS permission
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: Via repository
+/// - Location: GPS permission
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/buddy_preferences.dart';
-import '../providers/buddy_matching_provider.dart';
-import '../widgets/enhanced/city_picker_widget.dart';
-import '../../data/services/location_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/city_picker_widget.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/data/services/location_service.dart';
 
 class EditBuddyProfileScreen extends ConsumerStatefulWidget {
   const EditBuddyProfileScreen({super.key});
@@ -108,7 +107,7 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     if (_isLoading) {
       return Scaffold(
@@ -382,10 +381,10 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
                 title: l10n.instagramHandle,
                 child: TextFormField(
                   controller: _instagramController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '@username',
-                    prefixIcon: const Icon(Icons.alternate_email),
-                    border: const OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.alternate_email),
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
@@ -442,15 +441,15 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
   Future<void> _savePreferences() async {
     if (!_formKey.currentState!.validate()) return;
     if (_goals.isEmpty) {
-      _showError(l10n.pleaseSelectAtLeastOneGoal);
+      _showError(AppLocalizations.of(context).pleaseSelectAtLeastOneGoal);
       return;
     }
     if (_preferredTimes.isEmpty) {
-      _showError(l10n.pleaseSelectPreferredTimes);
+      _showError(AppLocalizations.of(context).pleaseSelectPreferredTimes);
       return;
     }
     if (_selectedCityCode == null) {
-      _showError(l10n.pleaseSelectYourCity);
+      _showError(AppLocalizations.of(context).pleaseSelectYourCity);
       return;
     }
 
@@ -493,7 +492,7 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(l10n.profileUpdatedSuccessfully),
+            content: Text(AppLocalizations.of(context).profileUpdatedSuccessfully),
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
         );
@@ -518,7 +517,7 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
   }
 
   Future<void> _updateCurrentLocation() async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     try {
       final locationService = ref.read(locationServiceProvider);

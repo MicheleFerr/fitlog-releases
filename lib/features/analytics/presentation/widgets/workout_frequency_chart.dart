@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
+import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 class WorkoutFrequencyChart extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const WorkoutFrequencyChart({
     super.key,
-    required this.activities,
+    required this.workouts,
+    this.onWeekTap,
   });
+  final List<Workout> workouts;
+  final Function(DateTime weekStart, int count, List<Workout> workoutsInWeek)? onWeekTap;
 
   @override
   Widget build(BuildContext context) {
@@ -70,51 +73,79 @@ class WorkoutFrequencyChart extends StatelessWidget {
       children: data.map((weekData) {
         final height = (weekData.workoutCount / maxValue) * 150;
         final isCurrentWeek = _isCurrentWeek(weekData.weekStart);
-        
+        final workoutsInWeek = _getWorkoutsForWeek(weekData.weekStart);
+
         return Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // Bar
-                Container(
-                  height: height.clamp(4.0, 150.0),
-                  decoration: BoxDecoration(
-                    color: isCurrentWeek
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+            child: GestureDetector(
+              onTap: weekData.workoutCount > 0 && onWeekTap != null
+                  ? () {
+                      HapticFeedback.lightImpact();
+                      onWeekTap!(weekData.weekStart, weekData.workoutCount, workoutsInWeek);
+                    }
+                  : null,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // Bar
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: height.clamp(4.0, 150.0),
+                    decoration: BoxDecoration(
+                      color: isCurrentWeek
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                      boxShadow: weekData.workoutCount > 0 && onWeekTap != null
+                          ? [
+                              BoxShadow(
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ]
+                          : null,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                
-                // Week label
-                Text(
-                  _formatWeekLabel(weekData.weekStart),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isCurrentWeek
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    fontWeight: isCurrentWeek ? FontWeight.bold : FontWeight.normal,
+                  const SizedBox(height: 8),
+
+                  // Week label
+                  Text(
+                    _formatWeekLabel(weekData.weekStart),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: isCurrentWeek
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      fontWeight: isCurrentWeek ? FontWeight.bold : FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                
-                // Count
-                Text(
-                  weekData.workoutCount.toString(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
+
+                  // Count
+                  Text(
+                    weekData.workoutCount.toString(),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
       }).toList(),
     );
+  }
+
+  List<Workout> _getWorkoutsForWeek(DateTime weekStart) {
+    final weekEnd = weekStart.add(const Duration(days: 7));
+    return workouts.where((workout) {
+      final workoutDate = workout.createdAt;
+      return workoutDate.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
+             workoutDate.isBefore(weekEnd);
+    }).toList();
   }
 
   Widget _buildLegend(BuildContext context, List<WeeklyData> data) {
@@ -177,26 +208,19 @@ class WorkoutFrequencyChart extends StatelessWidget {
   }
 
   List<WeeklyData> _calculateWeeklyFrequency() {
-    if (activities.isEmpty) return [];
+    if (workouts.isEmpty) return [];
 
-    // Group activities by workout sessions (schedaName + date)
-    final Map<String, DateTime> workoutSessions = {};
-    for (final activity in activities) {
-      final sessionKey = '${activity.schedaName}_${_formatDateKey(activity.createdAt)}';
-      workoutSessions.putIfAbsent(sessionKey, () => activity.createdAt);
-    }
-
-    // Group sessions by week
-    final Map<String, int> weeklyWorkouts = {};
-    for (final sessionDate in workoutSessions.values) {
-      final weekStart = _getWeekStart(sessionDate);
+    // Group workouts by week
+    final Map<String, int> weeklyActivities = {};
+    for (final workout in workouts) {
+      final weekStart = _getWeekStart(workout.createdAt);
       final weekKey = _formatDateKey(weekStart);
-      weeklyWorkouts[weekKey] = (weeklyWorkouts[weekKey] ?? 0) + 1;
+      weeklyActivities[weekKey] = (weeklyActivities[weekKey] ?? 0) + 1;
     }
 
     // Convert to list and sort by date
     final List<WeeklyData> result = [];
-    for (final entry in weeklyWorkouts.entries) {
+    for (final entry in weeklyActivities.entries) {
       final weekStart = DateTime.parse(entry.key);
       result.add(WeeklyData(
         weekStart: weekStart,
@@ -247,11 +271,11 @@ class WorkoutFrequencyChart extends StatelessWidget {
 }
 
 class WeeklyData {
-  final DateTime weekStart;
-  final int workoutCount;
 
   WeeklyData({
     required this.weekStart,
     required this.workoutCount,
   });
+  final DateTime weekStart;
+  final int workoutCount;
 }

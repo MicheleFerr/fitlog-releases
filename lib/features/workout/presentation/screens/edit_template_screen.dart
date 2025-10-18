@@ -1,21 +1,30 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../../shared/presentation/widgets/premium_action_button.dart';
-import '../../domain/entities/workout_template.dart';
-import '../../domain/entities/exercise.dart';
-import '../providers/workout_template_provider.dart';
-import '../widgets/add_exercise_modal.dart';
-import '../widgets/rest_time_picker_modal.dart';
+import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/unified_workout_template.dart' as unified;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
-  final WorkoutTemplate template;
 
   const EditTemplateScreen({
     super.key,
     required this.template,
   });
+  final WorkoutTemplate template;
 
   @override
   ConsumerState<EditTemplateScreen> createState() => _EditTemplateScreenState();
@@ -29,13 +38,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   bool _hasChanges = false;
   bool _isPublic = false;
 
+  // Track which exercises are expanded
+  final Map<int, bool> _expandedExercises = {};
+
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.template.name);
-    _descriptionController = TextEditingController(text: widget.template.description);
+    _descriptionController =
+        TextEditingController(text: widget.template.description);
     _exercises = List.from(widget.template.exercises);
     _isPublic = widget.template.isPublic;
+
+    // Start first exercise expanded for immediate feedback
+    if (_exercises.isNotEmpty) {
+      _expandedExercises[0] = true;
+    }
   }
 
   @override
@@ -56,7 +74,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.edit),
+          title: Text(context.l10n.edit),
           actions: [
             if (_hasChanges)
               TextButton(
@@ -65,9 +83,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     ? const SizedBox(
                         width: 16,
                         height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: LoadingIndicator(),
                       )
-                    : Text(AppLocalizations.of(context)!.save),
+                    : Text(context.l10n.save),
               ),
           ],
         ),
@@ -98,7 +116,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                   ),
                   const SizedBox(height: 12),
                   // Toggle pubblico/privato
-                  Card(
+                  /* Card(
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(
@@ -109,14 +127,17 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               Icon(
                                 _isPublic ? Icons.public : Icons.lock,
                                 size: 20,
-                                color: _isPublic 
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                color: _isPublic
+                                    ? context.colors.primary
+                                    : context.colors.onSurface
+                                        .withOpacity(0.6),
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                _isPublic ? 'Template Pubblico' : 'Template Privato',
-                                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                _isPublic
+                                    ? 'Template Pubblico'
+                                    : 'Template Privato',
+                                style: context.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -134,11 +155,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            _isPublic 
+                            _isPublic
                                 ? 'Altri utenti potranno trovare e utilizzare questo template'
                                 : 'Solo tu puoi vedere e utilizzare questo template',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color:
+                                  context.colors.onSurface.withOpacity(0.6),
                             ),
                           ),
                           if (_isPublic) ...[
@@ -146,10 +168,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                                color: context.colors.primaryContainer
+                                    .withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                                  color: context.colors.primary
+                                      .withOpacity(0.2),
                                 ),
                               ),
                               child: Row(
@@ -157,7 +181,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                   Icon(
                                     Icons.info_outline,
                                     size: 16,
-                                    color: Theme.of(context).colorScheme.primary,
+                                    color: context.colors.primary,
                                   ),
                                   const SizedBox(width: 8),
                                   Expanded(
@@ -165,7 +189,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                       'Assicurati che il template sia completo e ben descritto',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                        color:
+                                            context.colors.onPrimaryContainer,
                                       ),
                                     ),
                                   ),
@@ -176,240 +201,33 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         ],
                       ),
                     ),
-                  ),
+                  ), */
                 ],
               ),
             ),
-            
-            // Lista esercizi
+
+            // Lista esercizi con riordinamento
             Expanded(
               child: _exercises.isEmpty
                   ? _buildEmptyState()
-                  : ListView.builder(
+                  : ReorderableListView.builder(
                       padding: const EdgeInsets.all(16),
                       itemCount: _exercises.length,
+                      onReorder: _reorderExercises,
+                      buildDefaultDragHandles: false,
                       itemBuilder: (context, index) {
-                        final exerciseTemplate = _exercises[index];
-                        
-                        // Converte ExerciseTemplate in Exercise per la UI
-                        final exercise = Exercise(
-                          id: exerciseTemplate.exerciseId,
-                          name: exerciseTemplate.exerciseName,
-                          category: exerciseTemplate.category,
-                          type: exerciseTemplate.type ?? ExerciseType.single,
-                          sets: exerciseTemplate.sets.map((setTemplate) {
-                            return ExerciseSet(
-                              setNumber: setTemplate.setNumber,
-                              weight: setTemplate.targetWeight,
-                              reps: setTemplate.targetReps,
-                              notes: setTemplate.notes,
-                            );
-                          }).toList(),
-                          notes: exerciseTemplate.notes,
-                          restTime: exerciseTemplate.restTime,
-                        );
-                        
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: Dismissible(
-                            key: Key('exercise_${exercise.id}_$index'),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                    size: 28,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    AppLocalizations.of(context)!.delete,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            confirmDismiss: (direction) async {
-                              return await showDialog<bool>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text(AppLocalizations.of(context)!.removeExercise),
-                                  content: Text(AppLocalizations.of(context)!.confirmRemoveExercise(exercise.name)),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                      child: Text(AppLocalizations.of(context)!.cancel),
-                                    ),
-                                    FilledButton(
-                                      onPressed: () => Navigator.of(context).pop(true),
-                                      style: FilledButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                      ),
-                                      child: Text(AppLocalizations.of(context)!.delete),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            onDismissed: (direction) {
-                              _removeExercise(index);
-                            },
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            exercise.name,
-                                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        // Pulsante timer dedicato
-                                        IconButton.filledTonal(
-                                          onPressed: () => _showRestTimePicker(index),
-                                          icon: const Icon(Icons.timer),
-                                          iconSize: 20,
-                                          tooltip: 'Timer Recupero',
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${exercise.sets.length} set • ${exercise.category.name}',
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                                          ),
-                                        ),
-                                        if (exerciseTemplate.restTime != null) ...[
-                                          const SizedBox(width: 8),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                                              borderRadius: BorderRadius.circular(8),
-                                              border: Border.all(
-                                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Icon(
-                                                  Icons.timer,
-                                                  size: 12,
-                                                  color: Theme.of(context).colorScheme.primary,
-                                                ),
-                                                const SizedBox(width: 2),
-                                                Text(
-                                                  _formatRestTime(exerciseTemplate.restTime!),
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Theme.of(context).colorScheme.primary,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    // Mostra set in formato verticale
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: exercise.sets.map((set) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(bottom: 4),
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                                              borderRadius: BorderRadius.circular(8),
-                                              border: Border.all(
-                                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                                                width: 0.5,
-                                              ),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 28,
-                                                  height: 28,
-                                                  decoration: BoxDecoration(
-                                                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                                                    borderRadius: BorderRadius.circular(6),
-                                                    border: Border.all(
-                                                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '${set.setNumber}',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Theme.of(context).colorScheme.primary,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 12),
-                                                Expanded(
-                                                  child: Text(
-                                                    '${set.weight ?? 0}kg × ${set.reps ?? 0} reps',
-                                                    style: const TextStyle(
-                                                      fontSize: 13,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
+                        return _buildExerciseCard(context, index);
                       },
                     ),
             ),
           ],
         ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: PremiumActionButton(
-            onPressed: _showAddExercise,
-            icon: Icons.add,
-            label: AppLocalizations.of(context)!.addExercise,
-          ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: _showAddExercise,
+          child: const Icon(Icons.add),
         ),
+
       ),
     );
   }
@@ -422,27 +240,348 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           Icon(
             Icons.fitness_center_outlined,
             size: 64,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+            color: context.colors.onSurface.withOpacity(0.3),
           ),
           const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.noExercisesYet,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            context.l10n.noExercisesYet,
+            style: context.textTheme.headlineSmall?.copyWith(
+              color: context.colors.onSurface.withOpacity(0.5),
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context)!.tapToAddExercise,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            context.l10n.tapToAddExercise,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurface.withOpacity(0.5),
             ),
           ),
           const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _showAddExercise,
             icon: const Icon(Icons.add),
-            label: Text(AppLocalizations.of(context)!.addExercise),
+            label: Text(context.l10n.addExercise),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExerciseCard(BuildContext context, int index) {
+    final exerciseTemplate = _exercises[index];
+    final isExpanded = _expandedExercises[index] ?? false;
+
+    return Padding(
+      key: Key('exercise_$index'),
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Dismissible(
+        key: Key('dismissible_exercise_$index'),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.delete, color: Colors.white, size: 28),
+              const SizedBox(height: 4),
+              Text(
+                context.l10n.delete,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+        confirmDismiss: (direction) async {
+          return await ModalService.showConfirmDialog(
+            context,
+            title: context.l10n.removeExercise,
+            message:
+                context.l10n.confirmRemoveExercise(exerciseTemplate.exerciseName),
+            isDangerous: true,
+          );
+        },
+        onDismissed: (direction) => _removeExercise(index),
+        child: Card(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Exercise header
+              InkWell(
+                onTap: () => _toggleExpanded(index),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      // Drag handle
+                      ReorderableDragStartListener(
+                        index: index,
+                        child: Icon(
+                          Icons.drag_handle,
+                          color: context.colors.onSurface.withOpacity(0.5),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Exercise info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              exerciseTemplate.exerciseName,
+                              style: context.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text(
+                                  '${exerciseTemplate.sets.length} set • ${exerciseTemplate.category.name}',
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: context.colors.onSurface
+                                        .withOpacity(0.7),
+                                  ),
+                                ),
+                                if (exerciseTemplate.restTime != null) ...[
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: context.colors.primary
+                                          .withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: context.colors.primary
+                                            .withOpacity(0.3),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.timer,
+                                          size: 12,
+                                          color: context.colors.primary,
+                                        ),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          _formatRestTime(
+                                              exerciseTemplate.restTime!),
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                            color: context.colors.primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Rest timer button
+                      IconButton.filledTonal(
+                        onPressed: () => _showRestTimePicker(index),
+                        icon: const Icon(Icons.timer),
+                        iconSize: 20,
+                        tooltip: 'Timer Recupero',
+                      ),
+                      const SizedBox(width: 8),
+                      // Expand/collapse icon
+                      Icon(
+                        isExpanded ? Icons.expand_less : Icons.expand_more,
+                        color: context.colors.primary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Expanded sets editor
+              if (isExpanded) _buildSetsEditor(index, exerciseTemplate),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPickerButton({
+    required String label,
+    required String value,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: color.withOpacity(0.3),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 12, color: color),
+                const SizedBox(width: 4),
+                Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 10,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 2),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSetsEditor(
+      int exerciseIndex, ExerciseTemplate exerciseTemplate) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withOpacity(0.3),
+        border: Border(
+          top: BorderSide(
+            color: context.colors.outline.withOpacity(0.2),
+          ),
+        ),
+      ),
+      child: Column(
+        children: [
+          // Sets list
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            itemCount: exerciseTemplate.sets.length,
+            itemBuilder: (context, setIndex) {
+              final set = exerciseTemplate.sets[setIndex];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    // Set number
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: context.colors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: context.colors.primary.withOpacity(0.3),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${set.setNumber}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Weight Picker Button
+                    Expanded(
+                      child: _buildPickerButton(
+                        label: context.l10n.weight,
+                        value: set.targetWeight == 0
+                            ? '-'
+                            : '${set.targetWeight?.toStringAsFixed(1)} kg',
+                        icon: Icons.fitness_center,
+                        color: context.colors.primary,
+                        onTap: () async {
+                          final newWeight = await WeightPickerModal.show(
+                            context,
+                            initialWeight: set.targetWeight ?? 0,
+                          );
+                          if (newWeight != null) {
+                            _updateSetWeight(exerciseIndex, setIndex, newWeight);
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 8),
+                    // Reps Picker Button
+                    Expanded(
+                      child: _buildPickerButton(
+                        label: context.l10n.reps,
+                        value: '${set.targetReps ?? 0}',
+                        icon: Icons.repeat,
+                        color: context.colors.secondary,
+                        onTap: () async {
+                          final newReps = await RepsPickerModal.show(
+                            context,
+                            initialReps: set.targetReps ?? 0,
+                          );
+                          if (newReps != null) {
+                            _updateSetReps(exerciseIndex, setIndex, newReps);
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Remove set button
+                    if (exerciseTemplate.sets.length > 1)
+                      IconButton(
+                        onPressed: () => _removeSet(exerciseIndex, setIndex),
+                        icon: const Icon(Icons.remove_circle_outline),
+                        color: Colors.red,
+                        iconSize: 20,
+                        tooltip: context.l10n.removeSet,
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
+          // Add set button
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: OutlinedButton.icon(
+              onPressed: () => _addSet(exerciseIndex),
+              icon: const Icon(Icons.add),
+              label: Text(context.l10n.addSet),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 40),
+              ),
+            ),
           ),
         ],
       ),
@@ -455,14 +594,102 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     }
   }
 
+  void _toggleExpanded(int index) {
+    setState(() {
+      _expandedExercises[index] = !(_expandedExercises[index] ?? false);
+    });
+  }
+
+  void _reorderExercises(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final exercise = _exercises.removeAt(oldIndex);
+      _exercises.insert(newIndex, exercise);
+    });
+    _markAsChanged();
+  }
+
+  void _addSet(int exerciseIndex) {
+    final exerciseTemplate = _exercises[exerciseIndex];
+    final newSetNumber = exerciseTemplate.sets.length + 1;
+
+    final newSet = SetTemplate(
+      setNumber: newSetNumber,
+      targetWeight: exerciseTemplate.sets.lastOrNull?.targetWeight ?? 0,
+      targetReps: exerciseTemplate.sets.lastOrNull?.targetReps ?? 0,
+    );
+
+    setState(() {
+      _exercises[exerciseIndex] = exerciseTemplate.copyWith(
+        sets: [...exerciseTemplate.sets, newSet],
+      );
+    });
+    _markAsChanged();
+  }
+
+  void _removeSet(int exerciseIndex, int setIndex) {
+    final exerciseTemplate = _exercises[exerciseIndex];
+
+    final updatedSets = List<SetTemplate>.from(exerciseTemplate.sets);
+    updatedSets.removeAt(setIndex);
+
+    // Renumber sets
+    for (int i = 0; i < updatedSets.length; i++) {
+      updatedSets[i] = SetTemplate(
+        setNumber: i + 1,
+        targetWeight: updatedSets[i].targetWeight,
+        targetReps: updatedSets[i].targetReps,
+        targetRpe: updatedSets[i].targetRpe,
+        notes: updatedSets[i].notes,
+      );
+    }
+
+    setState(() {
+      _exercises[exerciseIndex] = exerciseTemplate.copyWith(sets: updatedSets);
+    });
+    _markAsChanged();
+  }
+
+  void _updateSetWeight(int exerciseIndex, int setIndex, double weight) {
+    final exerciseTemplate = _exercises[exerciseIndex];
+    final updatedSets = List<SetTemplate>.from(exerciseTemplate.sets);
+    updatedSets[setIndex] = SetTemplate(
+      setNumber: updatedSets[setIndex].setNumber,
+      targetWeight: weight,
+      targetReps: updatedSets[setIndex].targetReps,
+      targetRpe: updatedSets[setIndex].targetRpe,
+      notes: updatedSets[setIndex].notes,
+    );
+
+    setState(() {
+      _exercises[exerciseIndex] = exerciseTemplate.copyWith(sets: updatedSets);
+    });
+    _markAsChanged();
+  }
+
+  void _updateSetReps(int exerciseIndex, int setIndex, int reps) {
+    final exerciseTemplate = _exercises[exerciseIndex];
+    final updatedSets = List<SetTemplate>.from(exerciseTemplate.sets);
+    updatedSets[setIndex] = SetTemplate(
+      setNumber: updatedSets[setIndex].setNumber,
+      targetWeight: updatedSets[setIndex].targetWeight,
+      targetReps: reps,
+      targetRpe: updatedSets[setIndex].targetRpe,
+      notes: updatedSets[setIndex].notes,
+    );
+
+    setState(() {
+      _exercises[exerciseIndex] = exerciseTemplate.copyWith(sets: updatedSets);
+    });
+    _markAsChanged();
+  }
+
   void _showAddExercise() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => AddExerciseModal(
+    ModalService.showBottomSheet(
+      context,
+      child: AddExerciseModal(
         onExerciseAdded: (exercise) {
           _addExercise(exercise);
         },
@@ -472,8 +699,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
 
   void _addExercise(Exercise exercise) {
     final exerciseTemplate = ExerciseTemplate(
-      exerciseId: exercise.name.toLowerCase().replaceAll(' ', '_'),
-      exerciseName: exercise.name,
+      exerciseId: exercise.id,  // ✅ Use original ID (e.g., "barbell_bench_press")
+      exerciseName: exercise.name,  // Exercise name
       category: exercise.category,
       type: exercise.type,
       sets: exercise.sets.map((set) {
@@ -505,26 +732,68 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
 
   Future<void> _saveTemplate() async {
     if (_nameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Il nome del template è obbligatorio'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      SnackBarService.showError(context, 'Il nome del template è obbligatorio');
       return;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      final updatedTemplate = widget.template.copyWith(
-        name: _nameController.text.trim(),
-        description: _descriptionController.text.trim(),
-        exercises: _exercises,
-        isPublic: _isPublic,
-      );
+      final unifiedRepository = ref.read(unifiedTemplateRepositoryProvider);
+      final existingTemplate =
+          await unifiedRepository.getTemplateById(widget.template.id);
 
-      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(updatedTemplate);
+      final unified.UnifiedWorkoutTemplate templateToSave;
+
+      if (existingTemplate != null) {
+        // Template exists in unified repo, update it
+        templateToSave = existingTemplate.copyWith(
+          name: _nameController.text.trim(),
+          description: _descriptionController.text.trim(),
+          exercisesRaw: _exercises.map((e) => e.toJson()).toList(),
+          isPublic: _isPublic,
+          visibility: _isPublic
+              ? unified.UnifiedTemplateVisibility.public
+              : unified.UnifiedTemplateVisibility.private,
+          updatedAt: DateTime.now(),
+          version: (existingTemplate.version ?? 0) + 1,
+        );
+      } else {
+        // Template not found, this is a legacy template being migrated.
+        // Create a new UnifiedWorkoutTemplate from the screen data.
+        final user = ref.read(authStateProvider).value;
+        templateToSave = unified.UnifiedWorkoutTemplate(
+          id: widget.template.id, // IMPORTANT: Keep the original ID
+          name: _nameController.text.trim(),
+          description: _descriptionController.text.trim(),
+          exercisesRaw: _exercises.map((e) => e.toJson()).toList(),
+          isPublic: _isPublic,
+          visibility: _isPublic
+              ? unified.UnifiedTemplateVisibility.public
+              : unified.UnifiedTemplateVisibility.private,
+          createdAt: widget.template.createdAt,
+          updatedAt: DateTime.now(),
+          version: 1,
+          isCustom: widget.template.isCustom,
+          userId: widget.template.userId ?? user?.uid,
+          authorName: widget.template.authorName,
+          source: unified.TemplateSource.legacy, // Mark as migrated
+          // Copy other relevant fields from the legacy template
+          tags: widget.template.tags,
+          estimatedDuration: widget.template.estimatedDuration,
+          usageCount: widget.template.usageCount,
+          downloadCount: widget.template.downloadCount,
+          averageRating: widget.template.averageRating,
+          reviewCount: widget.template.reviewCount,
+          difficulty: widget.template.difficulty,
+          imageUrl: widget.template.imageUrl,
+        );
+      }
+
+      await unifiedRepository.updateTemplate(templateToSave);
+
+      ref.invalidate(userTemplatesProvider);
+      ref.invalidate(customWorkoutTemplatesProvider); // Invalidate this too
 
       setState(() {
         _isLoading = false;
@@ -532,62 +801,37 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Template salvato con successo'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        SnackBarService.showSuccess(context, 'Template salvato con successo');
         context.pop();
       }
     } catch (e) {
       setState(() => _isLoading = false);
-      
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Errore nel salvataggio: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        SnackBarService.showError(context, 'Errore nel salvataggio: $e');
       }
     }
   }
 
-  void _showDiscardChangesDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Modifiche non salvate'),
-        content: const Text('Hai delle modifiche non salvate. Vuoi scartarle?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              context.pop();
-            },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Scarta'),
-          ),
-        ],
-      ),
+  Future<void> _showDiscardChangesDialog() async {
+    final confirmed = await ModalService.showConfirmDialog(
+      context,
+      title: 'Modifiche non salvate',
+      message: 'Hai delle modifiche non salvate. Vuoi scartarle?',
+      isDangerous: true,
     );
+
+    if (confirmed && mounted) {
+      context.pop();
+    }
   }
 
   void _showRestTimePicker(int exerciseIndex) {
     final exerciseTemplate = _exercises[exerciseIndex];
-    
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => RestTimePickerModal(
+
+    ModalService.showBottomSheet(
+      context,
+      child: RestTimePickerModal(
         initialRestTime: exerciseTemplate.restTime,
         onRestTimeSelected: (restTime) {
           setState(() {
@@ -603,10 +847,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
 
   String _formatRestTime(int seconds) {
     if (seconds == 0) return '0s';
-    
+
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
-    
+
     if (minutes == 0) {
       return '${seconds}s';
     } else if (remainingSeconds == 0) {

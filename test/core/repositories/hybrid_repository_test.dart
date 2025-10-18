@@ -86,6 +86,15 @@ class TestEntity {
     required this.value,
   });
 
+  factory TestEntity.fromJson(Map<String, dynamic> json) {
+    return TestEntity(
+      id: json['id'],
+      name: json['name'],
+      createdAt: DateTime.parse(json['createdAt']),
+      value: json['value'],
+    );
+  }
+
   final String id;
   final String name;
   final DateTime createdAt;
@@ -97,15 +106,6 @@ class TestEntity {
     'createdAt': createdAt.toIso8601String(),
     'value': value,
   };
-
-  factory TestEntity.fromJson(Map<String, dynamic> json) {
-    return TestEntity(
-      id: json['id'],
-      name: json['name'],
-      createdAt: DateTime.parse(json['createdAt']),
-      value: json['value'],
-    );
-  }
 
   TestEntity copyWith({String? name, int? value}) {
     return TestEntity(
@@ -119,11 +119,6 @@ class TestEntity {
 
 // Test repository implementation
 class TestHybridRepository extends BaseHybridRepository<TestEntity> {
-  // Store a test user profile for mocking
-  UserProfile? _testUserProfile;
-  bool _isInitialized = false;
-  late Box<Map> _mockLocalBox;
-  late Box<Map> _mockSyncQueueBox;
   
   TestHybridRepository({
     super.firestore,
@@ -138,6 +133,11 @@ class TestHybridRepository extends BaseHybridRepository<TestEntity> {
     if (localBox != null) _mockLocalBox = localBox;
     if (syncQueueBox != null) _mockSyncQueueBox = syncQueueBox;
   }
+  // Store a test user profile for mocking
+  UserProfile? _testUserProfile;
+  bool _isInitialized = false;
+  late Box<Map> _mockLocalBox;
+  late Box<Map> _mockSyncQueueBox;
 
   @override
   Map<String, dynamic> toJson(TestEntity entity) => entity.toJson();
@@ -507,7 +507,7 @@ void main() {
       final localEntity = TestEntity(
         id: 'conflict_1',
         name: 'Local Version',
-        createdAt: DateTime.now().subtract(Duration(hours: 2)),
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
         value: 100,
       );
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/exercise_optimization_provider.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_optimization_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// 🎯 TIER-1 WORKOUT ACTION BAR
 /// Undo/Redo system with batch operations
@@ -65,7 +66,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     final undoRedoState = ref.watch(undoRedoProvider);
     final offlineState = ref.watch(offlineSyncProvider);
@@ -132,9 +133,14 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                             pendingCount: offlineState.pendingActions.length,
                           ),
                         
+                        // Screen always on toggle
+                        _ScreenAlwaysOnToggle(),
+
+                        const SizedBox(width: 8),
+
                         // Batch operations menu
                         _BatchOperationsMenu(),
-                        
+
                         // Expand/Collapse button
                         IconButton(
                           icon: AnimatedRotation(
@@ -192,10 +198,6 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
 }
 
 class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool enabled;
-  final VoidCallback onTap;
   
   const _ActionButton({
     required this.icon,
@@ -203,6 +205,10 @@ class _ActionButton extends StatelessWidget {
     required this.enabled,
     required this.onTap,
   });
+  final IconData icon;
+  final String label;
+  final bool enabled;
+  final VoidCallback onTap;
   
   @override
   Widget build(BuildContext context) {
@@ -246,9 +252,9 @@ class _ActionButton extends StatelessWidget {
 }
 
 class _OfflineIndicator extends StatefulWidget {
-  final int pendingCount;
   
   const _OfflineIndicator({required this.pendingCount});
+  final int pendingCount;
   
   @override
   State<_OfflineIndicator> createState() => _OfflineIndicatorState();
@@ -317,7 +323,7 @@ class _BatchOperationsMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return PopupMenuButton<BatchOperation>(
       icon: Icon(
@@ -336,7 +342,7 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.completeAll,
           child: Row(
             children: [
-              Icon(Icons.done_all, size: 20),
+              const Icon(Icons.done_all, size: 20),
               const SizedBox(width: 12),
               Text(l10n.completeAllSets),
             ],
@@ -346,7 +352,7 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.clearAll,
           child: Row(
             children: [
-              Icon(Icons.clear_all, size: 20),
+              const Icon(Icons.clear_all, size: 20),
               const SizedBox(width: 12),
               Text(l10n.clearAllSets),
             ],
@@ -356,7 +362,7 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.copyFromLast,
           child: Row(
             children: [
-              Icon(Icons.content_copy, size: 20),
+              const Icon(Icons.content_copy, size: 20),
               const SizedBox(width: 12),
               Text(l10n.copyFromLastWorkout),
             ],
@@ -366,7 +372,7 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.progressiveOverload,
           child: Row(
             children: [
-              Icon(Icons.trending_up, size: 20),
+              const Icon(Icons.trending_up, size: 20),
               const SizedBox(width: 12),
               Text(l10n.applyProgressiveOverload),
             ],
@@ -404,9 +410,9 @@ enum BatchOperation {
 }
 
 class _ActionHistory extends StatelessWidget {
-  final List<WorkoutCommand> actions;
   
   const _ActionHistory({required this.actions});
+  final List<WorkoutCommand> actions;
   
   @override
   Widget build(BuildContext context) {
@@ -477,13 +483,13 @@ class _ActionHistory extends StatelessWidget {
 }
 
 class _ActionToast extends StatefulWidget {
-  final String message;
-  final VoidCallback onDismiss;
   
   const _ActionToast({
     required this.message,
     required this.onDismiss,
   });
+  final String message;
+  final VoidCallback onDismiss;
   
   @override
   State<_ActionToast> createState() => _ActionToastState();
@@ -593,20 +599,20 @@ class _ActionToastState extends State<_ActionToast>
 }
 
 class _ConfirmationDialog extends StatelessWidget {
-  final String title;
-  final String message;
-  final VoidCallback onConfirm;
   
   const _ConfirmationDialog({
     required this.title,
     required this.message,
     required this.onConfirm,
   });
+  final String title;
+  final String message;
+  final VoidCallback onConfirm;
   
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return AlertDialog(
       shape: RoundedRectangleBorder(
@@ -630,6 +636,66 @@ class _ConfirmationDialog extends StatelessWidget {
           child: Text(l10n.confirm),
         ),
       ],
+    );
+  }
+}
+
+class _ScreenAlwaysOnToggle extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final wakelockState = ref.watch(screenWakelockProvider);
+
+    return Tooltip(
+      message: wakelockState.isEnabled
+        ? l10n.keepScreenOn
+        : l10n.keepScreenOn,
+      child: Material(
+        color: wakelockState.isEnabled
+          ? theme.colorScheme.primaryContainer
+          : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.lightImpact();
+            ref.read(screenWakelockProvider.notifier).toggleEnabled();
+
+            // Show feedback toast
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  wakelockState.isEnabled
+                    ? 'Schermo sempre acceso disattivato'
+                    : 'Schermo sempre acceso attivato',
+                ),
+                duration: const Duration(seconds: 2),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          },
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                wakelockState.isEnabled
+                  ? Icons.mobile_screen_share
+                  : Icons.mobile_off,
+                key: ValueKey(wakelockState.isEnabled),
+                size: 20,
+                color: wakelockState.isEnabled
+                  ? theme.colorScheme.onPrimaryContainer
+                  : theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

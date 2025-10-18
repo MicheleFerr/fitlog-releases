@@ -1,29 +1,20 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: shared
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Premium action button per sostituire i FAB extended brutti
- * Design Tier 1 con animazioni fluide
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: shared
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Premium action button per sostituire i FAB extended brutti
+/// Design Tier 1 con animazioni fluide
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PremiumActionButton extends StatefulWidget {
-  final VoidCallback onPressed;
-  final IconData icon;
-  final String label;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final bool isCompact;
-  final bool showShadow;
-  final double? width;
   
   const PremiumActionButton({
     super.key,
@@ -36,6 +27,14 @@ class PremiumActionButton extends StatefulWidget {
     this.showShadow = true,
     this.width,
   });
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String label;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final bool isCompact;
+  final bool showShadow;
+  final double? width;
   
   @override
   State<PremiumActionButton> createState() => _PremiumActionButtonState();
@@ -174,13 +173,6 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
 
 /// Versione più compatta per spazi ridotti
 class CompactActionButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final IconData icon;
-  final String? tooltip;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final bool showBadge;
-  final String? badgeText;
   
   const CompactActionButton({
     super.key,
@@ -192,6 +184,13 @@ class CompactActionButton extends StatelessWidget {
     this.showBadge = false,
     this.badgeText,
   });
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String? tooltip;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final bool showBadge;
+  final String? badgeText;
   
   @override
   Widget build(BuildContext context) {
@@ -269,14 +268,14 @@ class CompactActionButton extends StatelessWidget {
 
 /// Bottom action bar per azioni multiple (alternativa al FAB)
 class PremiumBottomActionBar extends StatelessWidget {
-  final List<ActionItem> actions;
-  final Color? backgroundColor;
   
   const PremiumBottomActionBar({
     super.key,
     required this.actions,
     this.backgroundColor,
   });
+  final List<ActionItem> actions;
+  final Color? backgroundColor;
   
   @override
   Widget build(BuildContext context) {
@@ -332,11 +331,6 @@ class PremiumBottomActionBar extends StatelessWidget {
 }
 
 class ActionItem {
-  final VoidCallback onPressed;
-  final IconData icon;
-  final String label;
-  final bool isPrimary;
-  final Color? backgroundColor;
   
   const ActionItem({
     required this.onPressed,
@@ -345,4 +339,9 @@ class ActionItem {
     this.isPrimary = false,
     this.backgroundColor,
   });
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String label;
+  final bool isPrimary;
+  final Color? backgroundColor;
 }

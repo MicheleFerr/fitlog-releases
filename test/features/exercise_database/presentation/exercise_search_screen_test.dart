@@ -1,13 +1,12 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/features/exercise_database
- * 🎯 Feature: exercise search screen tests
- * 🔧 Type: widget test
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ ColorScheme tested
- * 📱 Platform: Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/features/exercise_database
+/// 🎯 Feature: exercise search screen tests
+/// 🔧 Type: widget test
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ ColorScheme tested
+/// 📱 Platform: Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,7 +30,7 @@ class MockExerciseRepository extends Mock {
 
   Future<List<Exercise>> getAllExercises() async {
     return [
-      Exercise(
+      const Exercise(
         id: '1',
         name: 'Bench Press',
         muscleGroup: 'Chest',
@@ -40,7 +39,7 @@ class MockExerciseRepository extends Mock {
         instructions: ['Lie on bench', 'Lower bar to chest', 'Press up'],
         category: 'Strength',
       ),
-      Exercise(
+      const Exercise(
         id: '2',
         name: 'Squat',
         muscleGroup: 'Legs',
@@ -49,7 +48,7 @@ class MockExerciseRepository extends Mock {
         instructions: ['Stand with bar on back', 'Squat down', 'Stand up'],
         category: 'Strength',
       ),
-      Exercise(
+      const Exercise(
         id: '3',
         name: 'Deadlift',
         muscleGroup: 'Back',
@@ -58,7 +57,7 @@ class MockExerciseRepository extends Mock {
         instructions: ['Stand over bar', 'Lift with legs and back', 'Stand tall'],
         category: 'Strength',
       ),
-      Exercise(
+      const Exercise(
         id: '4',
         name: 'Pull-up',
         muscleGroup: 'Back',
@@ -67,7 +66,7 @@ class MockExerciseRepository extends Mock {
         instructions: ['Hang from bar', 'Pull up', 'Lower down'],
         category: 'Strength',
       ),
-      Exercise(
+      const Exercise(
         id: '5',
         name: 'Dumbbell Curl',
         muscleGroup: 'Arms',
@@ -103,7 +102,7 @@ void main() {
     });
 
     Widget createTestWidget() {
-      return MaterialApp(
+      return const MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: ProviderScope(
@@ -187,7 +186,7 @@ void main() {
     });
 
     test('Exercise model stores all required data', () {
-      final exercise = Exercise(
+      const exercise = Exercise(
         id: 'test-1',
         name: 'Test Exercise',
         muscleGroup: 'Test Group',

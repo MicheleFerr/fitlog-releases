@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 class WorkoutHeader extends StatefulWidget {
-  final Workout workout;
 
   const WorkoutHeader({
     super.key,
     required this.workout,
   });
+  final Workout workout;
 
   @override
   State<WorkoutHeader> createState() => _WorkoutHeaderState();

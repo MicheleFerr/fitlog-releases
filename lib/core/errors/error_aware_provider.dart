@@ -102,12 +102,12 @@ extension ErrorHandlerExtension<T> on StateNotifier<T> {
 
 /// Widget wrapper that provides error handling context
 class ErrorHandlerWrapper extends ConsumerWidget {
-  final Widget child;
 
   const ErrorHandlerWrapper({
     super.key,
     required this.child,
   });
+  final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

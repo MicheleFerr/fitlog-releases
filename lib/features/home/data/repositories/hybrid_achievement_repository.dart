@@ -1,24 +1,20 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: achievements
- * 🔧 Type: repository
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - BaseHybridRepository (local + premium sync)
- * - Hive (local storage)
- * - Firebase (premium cloud sync)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: achievements
+/// 🔧 Type: repository
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - BaseHybridRepository (local + premium sync)
+/// - Hive (local storage)
+/// - Firebase (premium cloud sync)
+library;
 
 import 'package:gymbro_flutter_new/core/data/repositories/base_hybrid_repository.dart';
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Hybrid repository for achievements and XP
@@ -26,14 +22,12 @@ import 'package:flutter/material.dart';
 /// - PREMIUM users: Local + Cloud sync
 class HybridAchievementRepository extends BaseHybridRepository<UserAchievementData> {
   HybridAchievementRepository({
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
+    super.firestore,
+    super.auth,
   }) : super(
     featureName: 'achievements',
     collectionName: 'user_achievements',
     requiresPremiumForCloud: true,
-    firestore: firestore,
-    auth: auth,
   );
 
   @override
@@ -65,14 +59,12 @@ class HybridAchievementRepository extends BaseHybridRepository<UserAchievementDa
     UserAchievementData? userData = await get(userId);
     
     // Create new data if first achievement
-    if (userData == null) {
-      userData = UserAchievementData(
+    userData ??= UserAchievementData(
         userId: userId,
         achievements: {},
         totalXP: 0,
         lastUpdated: DateTime.now(),
       );
-    }
 
     // Check if already unlocked
     if (userData.achievements.containsKey(achievementId)) {
@@ -243,10 +235,6 @@ class HybridAchievementRepository extends BaseHybridRepository<UserAchievementDa
 
 /// User achievement data model
 class UserAchievementData {
-  final String userId;
-  final Map<String, UnlockedAchievement> achievements;
-  final int totalXP;
-  final DateTime lastUpdated;
 
   UserAchievementData({
     required this.userId,
@@ -254,13 +242,6 @@ class UserAchievementData {
     required this.totalXP,
     required this.lastUpdated,
   });
-
-  Map<String, dynamic> toJson() => {
-    'userId': userId,
-    'achievements': achievements.map((k, v) => MapEntry(k, v.toJson())),
-    'totalXP': totalXP,
-    'lastUpdated': lastUpdated.toIso8601String(),
-  };
 
   factory UserAchievementData.fromJson(Map<String, dynamic> json) {
     return UserAchievementData(
@@ -274,6 +255,17 @@ class UserAchievementData {
           : DateTime.now(),
     );
   }
+  final String userId;
+  final Map<String, UnlockedAchievement> achievements;
+  final int totalXP;
+  final DateTime lastUpdated;
+
+  Map<String, dynamic> toJson() => {
+    'userId': userId,
+    'achievements': achievements.map((k, v) => MapEntry(k, v.toJson())),
+    'totalXP': totalXP,
+    'lastUpdated': lastUpdated.toIso8601String(),
+  };
 
   UserAchievementData copyWith({
     Map<String, UnlockedAchievement>? achievements,
@@ -291,10 +283,6 @@ class UserAchievementData {
 
 /// Unlocked achievement data
 class UnlockedAchievement {
-  final String achievementId;
-  final DateTime unlockedAt;
-  final int xpAwarded;
-  final DateTime? viewedAt;
 
   UnlockedAchievement({
     required this.achievementId,
@@ -302,13 +290,6 @@ class UnlockedAchievement {
     required this.xpAwarded,
     this.viewedAt,
   });
-
-  Map<String, dynamic> toJson() => {
-    'achievementId': achievementId,
-    'unlockedAt': unlockedAt.toIso8601String(),
-    'xpAwarded': xpAwarded,
-    'viewedAt': viewedAt?.toIso8601String(),
-  };
 
   factory UnlockedAchievement.fromJson(Map<String, dynamic> json) {
     return UnlockedAchievement(
@@ -322,6 +303,17 @@ class UnlockedAchievement {
           : null,
     );
   }
+  final String achievementId;
+  final DateTime unlockedAt;
+  final int xpAwarded;
+  final DateTime? viewedAt;
+
+  Map<String, dynamic> toJson() => {
+    'achievementId': achievementId,
+    'unlockedAt': unlockedAt.toIso8601String(),
+    'xpAwarded': xpAwarded,
+    'viewedAt': viewedAt?.toIso8601String(),
+  };
 
   UnlockedAchievement copyWith({
     DateTime? viewedAt,

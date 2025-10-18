@@ -1,29 +1,23 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../domain/entities/buddy_preferences.dart';
-import '../fitness_level_badge.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
 
 class FitnessLevelStep extends StatelessWidget {
-  final FitnessLevel selectedLevel;
-  final Function(FitnessLevel) onLevelChanged;
-  final VoidCallback? onNext;
-  final VoidCallback? onBack;
 
   const FitnessLevelStep({
     super.key,
@@ -32,11 +26,15 @@ class FitnessLevelStep extends StatelessWidget {
     this.onNext,
     this.onBack,
   });
+  final FitnessLevel selectedLevel;
+  final Function(FitnessLevel) onLevelChanged;
+  final VoidCallback? onNext;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -79,7 +77,7 @@ class FitnessLevelStep extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: Text('Indietro'),
+                    child: const Text('Indietro'),
                   ),
                 ),
               
@@ -91,7 +89,7 @@ class FitnessLevelStep extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text('Continua'),
+                  child: const Text('Continua'),
                 ),
               ),
             ],

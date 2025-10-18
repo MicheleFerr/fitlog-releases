@@ -1,16 +1,15 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: auth
- * 🔧 Type: entity
- * 🌍 Localization: N/A - Entity class
- * 🎨 Theme: N/A - Entity class
- * 📱 Platform: Universal
- * 
- * CONSOLIDATED USER MODEL - Single source of truth for user data
- * This replaces both UserModel and old UserProfile
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: auth
+/// 🔧 Type: entity
+/// 🌍 Localization: N/A - Entity class
+/// 🎨 Theme: N/A - Entity class
+/// 📱 Platform: Universal
+/// 
+/// CONSOLIDATED USER MODEL - Single source of truth for user data
+/// This replaces both UserModel and old UserProfile
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -24,10 +23,6 @@ enum AccountTier {
 
 /// Template quota information
 class TemplateQuota {
-  final int maxPrivateTemplates;
-  final int maxPublicTemplates;
-  final int usedPrivateTemplates;
-  final int usedPublicTemplates;
   
   const TemplateQuota({
     required this.maxPrivateTemplates,
@@ -35,11 +30,6 @@ class TemplateQuota {
     this.usedPrivateTemplates = 0,
     this.usedPublicTemplates = 0,
   });
-  
-  bool get canSavePrivate => usedPrivateTemplates < maxPrivateTemplates;
-  bool get canSavePublic => usedPublicTemplates < maxPublicTemplates;
-  int get remainingPrivate => maxPrivateTemplates - usedPrivateTemplates;
-  int get remainingPublic => maxPublicTemplates - usedPublicTemplates;
   
   factory TemplateQuota.forTier(AccountTier tier, {
     int usedPrivate = 0,
@@ -70,13 +60,6 @@ class TemplateQuota {
     }
   }
   
-  Map<String, dynamic> toJson() => {
-    'maxPrivateTemplates': maxPrivateTemplates,
-    'maxPublicTemplates': maxPublicTemplates,
-    'usedPrivateTemplates': usedPrivateTemplates,
-    'usedPublicTemplates': usedPublicTemplates,
-  };
-  
   factory TemplateQuota.fromJson(Map<String, dynamic> json) {
     return TemplateQuota(
       maxPrivateTemplates: json['maxPrivateTemplates'] ?? 10,
@@ -85,14 +68,26 @@ class TemplateQuota {
       usedPublicTemplates: json['usedPublicTemplates'] ?? 0,
     );
   }
+  final int maxPrivateTemplates;
+  final int maxPublicTemplates;
+  final int usedPrivateTemplates;
+  final int usedPublicTemplates;
+  
+  bool get canSavePrivate => usedPrivateTemplates < maxPrivateTemplates;
+  bool get canSavePublic => usedPublicTemplates < maxPublicTemplates;
+  int get remainingPrivate => maxPrivateTemplates - usedPrivateTemplates;
+  int get remainingPublic => maxPublicTemplates - usedPublicTemplates;
+  
+  Map<String, dynamic> toJson() => {
+    'maxPrivateTemplates': maxPrivateTemplates,
+    'maxPublicTemplates': maxPublicTemplates,
+    'usedPrivateTemplates': usedPrivateTemplates,
+    'usedPublicTemplates': usedPublicTemplates,
+  };
 }
 
 /// User preferences
 class UserPreferences {
-  final String? language;
-  final String? theme;
-  final bool? notificationsEnabled;
-  final Map<String, dynamic> customSettings;
 
   const UserPreferences({
     this.language,
@@ -111,6 +106,10 @@ class UserPreferences {
       ),
     );
   }
+  final String? language;
+  final String? theme;
+  final bool? notificationsEnabled;
+  final Map<String, dynamic> customSettings;
 
   Map<String, dynamic> toMap() => {
     'language': language,
@@ -122,12 +121,6 @@ class UserPreferences {
 
 /// User statistics
 class UserStats {
-  final int totalWorkouts;
-  final int currentStreak;
-  final int longestStreak;
-  final double totalVolume;
-  final int totalExercises;
-  final Map<String, dynamic> achievements;
 
   const UserStats({
     this.totalWorkouts = 0,
@@ -150,6 +143,12 @@ class UserStats {
       ),
     );
   }
+  final int totalWorkouts;
+  final int currentStreak;
+  final int longestStreak;
+  final double totalVolume;
+  final int totalExercises;
+  final Map<String, dynamic> achievements;
 
   Map<String, dynamic> toMap() => {
     'totalWorkouts': totalWorkouts,
@@ -164,22 +163,6 @@ class UserStats {
 /// CONSOLIDATED USER PROFILE - Single source of truth
 /// This is the ONLY user model to use throughout the app
 class UserProfile {
-  // Core identification
-  final String uid;
-  final String email;
-  final String displayName;
-  final String? photoURL;
-  
-  // Account metadata
-  final AccountTier accountTier;
-  final TemplateQuota templateQuota;
-  final DateTime createdAt;
-  final DateTime lastLoginAt;
-  final bool isGuest;
-  
-  // User data
-  final UserPreferences preferences;
-  final UserStats stats;
   
   const UserProfile({
     required this.uid,
@@ -197,7 +180,7 @@ class UserProfile {
   
   /// Create from Firebase Auth User (for initial creation)
   factory UserProfile.fromFirebaseUser(firebase_auth.User user) {
-    final tier = AccountTier.free;
+    const tier = AccountTier.free;
     return UserProfile(
       uid: user.uid,
       email: user.email ?? '',
@@ -267,6 +250,22 @@ class UserProfile {
       ),
     );
   }
+  // Core identification
+  final String uid;
+  final String email;
+  final String displayName;
+  final String? photoURL;
+  
+  // Account metadata
+  final AccountTier accountTier;
+  final TemplateQuota templateQuota;
+  final DateTime createdAt;
+  final DateTime lastLoginAt;
+  final bool isGuest;
+  
+  // User data
+  final UserPreferences preferences;
+  final UserStats stats;
   
   /// Convert to Firestore document
   Map<String, dynamic> toFirestore() {

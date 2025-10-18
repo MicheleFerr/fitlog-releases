@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../analytics/presentation/providers/analytics_provider.dart';
-import '../../domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:intl/intl.dart';
 
 class RealProgressStatsWidget extends ConsumerWidget {
-  final WidgetSize size;
   
   const RealProgressStatsWidget({
     super.key,
     required this.size,
   });
+  final WidgetSize size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -543,7 +543,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.toStringAsFixed(0)} kg',
-                TextStyle(
+                const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,

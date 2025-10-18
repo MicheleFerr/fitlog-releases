@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../workout/data/repositories/exercise_activity_repository.dart';
-import '../../workout/domain/entities/exercise_activity.dart';
-import '../../workout/presentation/providers/workout_provider.dart';
-import '../../auth/presentation/providers/auth_provider.dart';
-import 'widgets/analytics_overview_card.dart';
-import 'widgets/recent_workouts_card.dart';
-import 'widgets/exercise_stats_card.dart';
-import 'widgets/workout_frequency_chart.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/analytics_overview_card.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/recent_workouts_card.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_stats_card.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
+import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -16,7 +17,6 @@ class AnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
-    final firebaseUser = ref.watch(firebaseUserProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,38 +36,28 @@ class AnalyticsScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Force refresh by rebuilding providers
-              ref.invalidate(userActivitiesProvider);
+              ref.invalidate(historicalWorkoutsProvider);
             },
           ),
         ],
       ),
       body: authState != AuthState.authenticated
           ? const _NotAuthenticatedView()
-          : firebaseUser.when(
-              data: (user) => user?.email == null
-                  ? const _NoEmailView()
-                  : _AuthenticatedAnalyticsView(userEmail: user!.email!),
-              loading: () => const _LoadingView(),
-              error: (error, _) => _ErrorView(error: error.toString()),
-            ),
+          : const _AuthenticatedAnalyticsView(),
     );
   }
 }
 
 class _AuthenticatedAnalyticsView extends ConsumerWidget {
-  final String userEmail;
-
-  const _AuthenticatedAnalyticsView({required this.userEmail});
+  const _AuthenticatedAnalyticsView();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activitiesAsync = ref.watch(userActivitiesProvider(userEmail));
+    final workoutsAsync = ref.watch(historicalWorkoutsProvider);
 
-    return activitiesAsync.when(
-      data: (activities) => _AnalyticsContent(
-        activities: activities,
-        userEmail: userEmail,
+    return workoutsAsync.when(
+      data: (workouts) => _AnalyticsContent(
+        workouts: workouts,
       ),
       loading: () => const _LoadingView(),
       error: (error, _) => _ErrorView(error: error.toString()),
@@ -76,60 +66,59 @@ class _AuthenticatedAnalyticsView extends ConsumerWidget {
 }
 
 class _AnalyticsContent extends StatelessWidget {
-  final List<ExerciseActivity> activities;
-  final String userEmail;
 
   const _AnalyticsContent({
-    required this.activities,
-    required this.userEmail,
+    required this.workouts,
   });
+  final List<Workout> workouts;
 
   @override
   Widget build(BuildContext context) {
-    if (activities.isEmpty) {
+    if (workouts.isEmpty) {
       return const _EmptyStateView();
     }
 
     // Calcola statistiche aggregate
-    final stats = _calculateOverallStats(activities);
+    final stats = _calculateOverallStats(workouts);
 
     return RefreshIndicator(
       onRefresh: () async {
-        // Refresh logic handled by provider invalidation
+        // Invalidation is handled by the refresh button in AppBar
       },
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 📱 Banner Ad
+            AdaptiveBannerAd(adUnitId: AdMobConfig.bannerAnalytics),
+            const SizedBox(height: 16),
+
             // Overview Cards
             AnalyticsOverviewCard(stats: stats),
             const SizedBox(height: 16),
 
             // Workout Frequency Chart
-            WorkoutFrequencyChart(activities: activities),
+            WorkoutFrequencyChart(workouts: workouts),
             const SizedBox(height: 16),
 
             // Recent Workouts
-            RecentWorkoutsCard(activities: activities.take(5).toList()),
+            RecentWorkoutsCard(workouts: workouts.take(5).toList()),
             const SizedBox(height: 16),
 
             // Top Exercises Stats
-            ExerciseStatsCard(
-              activities: activities,
-              userEmail: userEmail,
-            ),
+            ExerciseStatsCard(workouts: workouts),
             const SizedBox(height: 16),
 
             // Progress Section
-            _buildProgressSection(context, activities),
+            _buildProgressSection(context, workouts),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProgressSection(BuildContext context, List<ExerciseActivity> activities) {
+  Widget _buildProgressSection(BuildContext context, List<Workout> workouts) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -157,11 +146,11 @@ class _AnalyticsContent extends StatelessWidget {
             _buildProgressTile(
               context,
               '📅 This Month',
-              '${_getThisMonthWorkouts(activities)} workouts',
-              _getThisMonthWorkouts(activities) > _getLastMonthWorkouts(activities)
+              '${_getThisMonthWorkouts(workouts)} workouts',
+              _getThisMonthWorkouts(workouts) > _getLastMonthWorkouts(workouts)
                   ? Icons.trending_up
                   : Icons.trending_down,
-              _getThisMonthWorkouts(activities) > _getLastMonthWorkouts(activities)
+              _getThisMonthWorkouts(workouts) > _getLastMonthWorkouts(workouts)
                   ? Colors.green
                   : Colors.red,
             ),
@@ -169,7 +158,7 @@ class _AnalyticsContent extends StatelessWidget {
             _buildProgressTile(
               context,
               '💪 Total Volume',
-              '${_getTotalVolume(activities).toStringAsFixed(0)} kg',
+              '${_getTotalVolume(workouts).toStringAsFixed(0)} kg',
               Icons.fitness_center,
               Theme.of(context).colorScheme.secondary,
             ),
@@ -177,7 +166,7 @@ class _AnalyticsContent extends StatelessWidget {
             _buildProgressTile(
               context,
               '🎯 Consistency',
-              '${_getConsistencyPercentage(activities)}% this month',
+              '${_getConsistencyPercentage(workouts)}% this month',
               Icons.calendar_today,
               Theme.of(context).colorScheme.tertiary,
             ),
@@ -201,7 +190,7 @@ class _AnalyticsContent extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: color.withAlpha(25),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -229,18 +218,16 @@ class _AnalyticsContent extends StatelessWidget {
     );
   }
 
-  // Utility methods for calculations
-  OverallStats _calculateOverallStats(List<ExerciseActivity> activities) {
-    int totalWorkouts = activities.map((a) => a.schedaName).toSet().length;
-    int totalExercises = activities.length;
-    int totalSets = activities.fold(0, (sum, activity) => sum + activity.sets.length);
-    double totalVolume = activities.fold(0.0, (sum, activity) {
-      return sum + activity.sets.fold(0.0, (setSum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return setSum + (weight * reps);
+  // Utility methods for calculations using List<Workout>
+  OverallStats _calculateOverallStats(List<Workout> workouts) {
+    final int totalWorkouts = workouts.length;
+    final int totalExercises = workouts.fold(0, (sum, workout) => sum + workout.exercises.length);
+    final int totalSets = workouts.fold(0, (sum, workout) {
+      return sum + workout.exercises.fold(0, (exSum, exercise) {
+        return exSum + exercise.sets.where((s) => s.isCompleted).length;
       });
     });
+    final double totalVolume = _getTotalVolume(workouts);
 
     return OverallStats(
       totalWorkouts: totalWorkouts,
@@ -250,40 +237,44 @@ class _AnalyticsContent extends StatelessWidget {
     );
   }
 
-  int _getThisMonthWorkouts(List<ExerciseActivity> activities) {
+  int _getThisMonthWorkouts(List<Workout> workouts) {
     final now = DateTime.now();
-    return activities.where((activity) {
-      return activity.createdAt.year == now.year &&
-             activity.createdAt.month == now.month;
-    }).map((a) => a.schedaName).toSet().length;
+    return workouts.where((workout) {
+      final workoutDate = workout.endTime ?? workout.createdAt;
+      return workoutDate.year == now.year && workoutDate.month == now.month;
+    }).length;
   }
 
-  int _getLastMonthWorkouts(List<ExerciseActivity> activities) {
-    final lastMonth = DateTime.now().subtract(const Duration(days: 30));
-    return activities.where((activity) {
-      return activity.createdAt.year == lastMonth.year &&
-             activity.createdAt.month == lastMonth.month;
-    }).map((a) => a.schedaName).toSet().length;
+  int _getLastMonthWorkouts(List<Workout> workouts) {
+    final now = DateTime.now();
+    final lastMonth = DateTime(now.year, now.month - 1, now.day);
+    return workouts.where((workout) {
+      final workoutDate = workout.endTime ?? workout.createdAt;
+      return workoutDate.year == lastMonth.year && workoutDate.month == lastMonth.month;
+    }).length;
   }
 
-  double _getTotalVolume(List<ExerciseActivity> activities) {
-    return activities.fold(0.0, (sum, activity) {
-      return sum + activity.sets.fold(0.0, (setSum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return setSum + (weight * reps);
+  double _getTotalVolume(List<Workout> workouts) {
+    return workouts.fold(0.0, (sum, workout) {
+      return sum + workout.exercises.fold(0.0, (exSum, exercise) {
+        return exSum + exercise.sets.where((s) => s.isCompleted).fold(0.0, (setSum, set) {
+          final weight = set.weight ?? 0.0;
+          final reps = set.reps ?? 0;
+          return setSum + (weight * reps);
+        });
       });
     });
   }
 
-  int _getConsistencyPercentage(List<ExerciseActivity> activities) {
+  int _getConsistencyPercentage(List<Workout> workouts) {
     final now = DateTime.now();
     final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-    final workoutDays = activities.where((activity) {
-      return activity.createdAt.year == now.year &&
-             activity.createdAt.month == now.month;
-    }).map((a) => a.createdAt.day).toSet().length;
+    final workoutDays = workouts.where((workout) {
+      final workoutDate = workout.endTime ?? workout.createdAt;
+      return workoutDate.year == now.year && workoutDate.month == now.month;
+    }).map((w) => (w.endTime ?? w.createdAt).day).toSet().length;
     
+    if (daysInMonth == 0) return 0;
     return ((workoutDays / daysInMonth) * 100).round();
   }
 }
@@ -302,27 +293,6 @@ class _NotAuthenticatedView extends StatelessWidget {
           SizedBox(height: 16),
           Text(
             'Please log in to view your analytics',
-            style: TextStyle(fontSize: 18, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _NoEmailView extends StatelessWidget {
-  const _NoEmailView();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.email_outlined, size: 64, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            'Email not available for analytics',
             style: TextStyle(fontSize: 18, color: Colors.grey),
           ),
         ],
@@ -350,9 +320,9 @@ class _LoadingView extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  final String error;
 
   const _ErrorView({required this.error});
+  final String error;
 
   @override
   Widget build(BuildContext context) {
@@ -413,23 +383,16 @@ class _EmptyStateView extends StatelessWidget {
   }
 }
 
-// Provider for user activities
-final userActivitiesProvider = FutureProvider.family<List<ExerciseActivity>, String>((ref, userEmail) async {
-  final repository = ref.read(exerciseActivityRepositoryProvider);
-  return repository.getUserActivities(userEmail: userEmail, limit: 100);
-});
-
-// Data classes
 class OverallStats {
-  final int totalWorkouts;
-  final int totalExercises;
-  final int totalSets;
-  final double totalVolume;
 
-  OverallStats({
+  const OverallStats({
     required this.totalWorkouts,
     required this.totalExercises,
     required this.totalSets,
     required this.totalVolume,
   });
+  final int totalWorkouts;
+  final int totalExercises;
+  final int totalSets;
+  final double totalVolume;
 }

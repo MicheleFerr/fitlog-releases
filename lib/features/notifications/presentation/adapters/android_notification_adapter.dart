@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'dart:convert';
-import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as TZ;
-import 'package:timezone/data/latest.dart' as TZ;
-import '../../domain/entities/unified_notification.dart';
-import '../../domain/entities/unified_notification_state.dart';
-import 'notification_platform_adapter.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/notification_platform_adapter.dart';
+import 'package:flutter/foundation.dart';
 
 /// Android-specific implementation of the notification platform adapter
 /// Integrates with Android notification system, channels, and FCM
@@ -144,7 +143,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
       await _channel.invokeMethod('dispose');
       _isInitialized = false;
     } catch (error) {
-      print('Error disposing Android notification adapter: $error');
+      if (kDebugMode) {
+        debugPrint('Error disposing Android notification adapter: $error');
+      }
     }
   }
 
@@ -229,12 +230,12 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
         notification.body,
         TZ.TZDateTime.from(notification.scheduledTime, TZ.local),
         details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: json.encode({
           'notificationId': notification.id,
           'type': notification.type.name,
           'payload': notification.payload,
         }),
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       );
 
       return notification.id;
@@ -252,7 +253,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
         final id = await scheduleLocalNotification(notification);
         results.add(id);
       } catch (error) {
-        print('Failed to schedule notification ${notification.id}: $error');
+        if (kDebugMode) {
+          debugPrint('Failed to schedule notification ${notification.id}: $error');
+        }
         // Continue with other notifications
       }
     }
@@ -320,7 +323,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
     try {
       await _channel.invokeMethod('handlePushNotification', payload);
     } catch (error) {
-      print('Error handling push notification: $error');
+      if (kDebugMode) {
+        debugPrint('Error handling push notification: $error');
+      }
     }
   }
 
@@ -356,7 +361,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
       }
       return true;
     } catch (error) {
-      print('Error creating notification channels: $error');
+      if (kDebugMode) {
+        debugPrint('Error creating notification channels: $error');
+      }
       return false;
     }
   }
@@ -727,7 +734,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
         );
         break;
       default:
-        print('Unhandled Android method call: ${call.method}');
+        if (kDebugMode) {
+          debugPrint('Unhandled Android method call: ${call.method}');
+        }
     }
   }
 
@@ -812,7 +821,7 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
             channelDescription: 'Test channel',
           ),
         ),
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
       
       // Cancel immediately
@@ -846,7 +855,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
     } catch (error) {
-      print('Error tracking notification delivery: $error');
+      if (kDebugMode) {
+        debugPrint('Error tracking notification delivery: $error');
+      }
     }
   }
 
@@ -859,7 +870,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
     } catch (error) {
-      print('Error tracking notification interaction: $error');
+      if (kDebugMode) {
+        debugPrint('Error tracking notification interaction: $error');
+      }
     }
   }
 
@@ -878,7 +891,9 @@ class AndroidNotificationAdapter implements NotificationPlatformAdapter {
     try {
       await _channel.invokeMethod('handleAppStateChange', {'state': state});
     } catch (error) {
-      print('Error handling app state change: $error');
+      if (kDebugMode) {
+        debugPrint('Error handling app state change: $error');
+      }
     }
   }
 }

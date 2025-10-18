@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
 import 'package:mocktail/mocktail.dart';
 import '../../../../test_helpers/firebase_test_helper.dart';
 

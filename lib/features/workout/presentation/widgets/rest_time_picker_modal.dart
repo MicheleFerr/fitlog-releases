@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class RestTimePickerModal extends StatefulWidget {
-  final int? initialRestTime; // in seconds
-  final Function(int?) onRestTimeSelected;
 
   const RestTimePickerModal({
     super.key,
     this.initialRestTime,
     required this.onRestTimeSelected,
   });
+  final int? initialRestTime; // in seconds
+  final Function(int?) onRestTimeSelected;
 
   @override
   State<RestTimePickerModal> createState() => _RestTimePickerModalState();
@@ -335,15 +335,15 @@ class _RestTimePickerModalState extends State<RestTimePickerModal> {
     } else if (seconds == 0) {
       return '${minutes}min';
     } else {
-      return '${minutes}:${seconds.toString().padLeft(2, '0')}';
+      return '$minutes:${seconds.toString().padLeft(2, '0')}';
     }
   }
 }
 
 class RestTimePreset {
+
+  RestTimePreset(this.label, this.seconds, this.icon);
   final String label;
   final int? seconds;
   final IconData icon;
-
-  RestTimePreset(this.label, this.seconds, this.icon);
 }

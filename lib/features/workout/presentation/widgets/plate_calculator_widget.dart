@@ -3,11 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/barbell_selector_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class PlateCalculatorWidget extends ConsumerStatefulWidget {
-  final double targetWeight;
-  final Function(double) onWeightChanged;
-  final String unit;
   
   const PlateCalculatorWidget({
     super.key,
@@ -15,6 +13,9 @@ class PlateCalculatorWidget extends ConsumerStatefulWidget {
     required this.onWeightChanged,
     this.unit = 'kg',
   });
+  final double targetWeight;
+  final Function(double) onWeightChanged;
+  final String unit;
 
   @override
   ConsumerState<PlateCalculatorWidget> createState() => _PlateCalculatorWidgetState();
@@ -28,7 +29,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
   
   double? _barbellWeight = 20.0; // Now nullable to support "no barbell" option
   late double _targetWeight;
-  Map<double, int> _plateCounts = {};
+  final Map<double, int> _plateCounts = {};
   
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
     
     // Greedy algorithm to find minimum plates
     for (double plate in availablePlates) {
-      int count = (weightPerSide / plate).floor();
+      final int count = (weightPerSide / plate).floor();
       if (count > 0) {
         _plateCounts[plate] = count;
         weightPerSide -= count * plate;
@@ -79,7 +80,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
     
     // Handle remaining weight with smallest plate
     if (weightPerSide > 0.01) {
-      double smallestPlate = availablePlates.last;
+      final double smallestPlate = availablePlates.last;
       _plateCounts[smallestPlate] = (_plateCounts[smallestPlate] ?? 0) + 1;
     }
   }
@@ -118,14 +119,14 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                     ),
                     if (_barbellWeight != null && _barbellWeight! > 0)
                       Text(
-                        'Bilanciere ${_barbellWeight}kg incluso',
+                        AppLocalizations.of(context).barbellIncluded(_barbellWeight!),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                       )
                     else
                       Text(
-                        'Nessun bilanciere',
+                        AppLocalizations.of(context).noBarbell,
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -142,7 +143,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                 label: Text(
                   _barbellWeight != null 
                       ? '${_barbellWeight}kg' 
-                      : 'Seleziona',
+                      : AppLocalizations.of(context).selectBarbellButton,
                   style: const TextStyle(fontSize: 12),
                 ),
                 style: OutlinedButton.styleFrom(
@@ -211,7 +212,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Per lato:',
+                    AppLocalizations.of(context).perSide,
                     style: theme.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.secondary,
@@ -223,8 +224,8 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               if (_plateCounts.isEmpty)
                 Text(
                   _barbellWeight != null && _barbellWeight! > 0 
-                      ? 'Solo bilanciere' 
-                      : 'Nessun disco',
+                      ? AppLocalizations.of(context).onlyBarbell
+                      : AppLocalizations.of(context).noPlates,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -253,7 +254,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                       ],
                     ),
                   );
-                }).toList(),
+                }),
             ],
           ),
         ),
@@ -287,7 +288,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Configura dischi disponibili',
+                  AppLocalizations.of(context).configureAvailablePlates,
                   style: theme.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.secondary,
@@ -320,7 +321,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Seleziona i dischi disponibili nella tua palestra:',
+                  AppLocalizations.of(context).selectAvailablePlates,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -406,7 +407,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           HapticFeedback.lightImpact();
                         },
                         icon: const Icon(Icons.select_all, size: 16),
-                        label: const Text('Tutti'),
+                        label: Text(AppLocalizations.of(context).plateCalculatorAll),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -424,7 +425,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           HapticFeedback.lightImpact();
                         },
                         icon: const Icon(Icons.star, size: 16),
-                        label: const Text('Standard'),
+                        label: Text(AppLocalizations.of(context).plateCalculatorStandard),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -490,7 +491,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
       return const SizedBox.shrink();
     }
     
-    List<Widget> plates = [];
+    final List<Widget> plates = [];
     
     _plateCounts.forEach((weight, count) {
       for (int i = 0; i < count; i++) {
@@ -592,7 +593,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Seleziona Bilanciere',
+                      AppLocalizations.of(context).selectBarbell,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

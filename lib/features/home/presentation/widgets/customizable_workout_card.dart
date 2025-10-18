@@ -26,7 +26,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
   @override
   void initState() {
     super.initState();
-    print('🎯 CustomizableWorkoutCard inizializzato!');
+    // print('🎯 CustomizableWorkoutCard inizializzato!');
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -65,7 +65,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
   }
 
   void _handleLongPress() {
-    print('🔥 Long press rilevato!');
+    // print('🔥 Long press rilevato!');
     setState(() {
       _isLongPress = true;
       _hasSeenHint = true;

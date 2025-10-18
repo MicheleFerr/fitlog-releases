@@ -1,16 +1,15 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: analytics
- * 🔧 Type: entity
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout, Exercise, ExerciseSet
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: analytics
+/// 🔧 Type: entity
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout, Exercise, ExerciseSet
+library;
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -18,41 +17,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker
 
 /// Real-time workout metrics calculated during active workout
 class WorkoutMetrics {
-  final String workoutId;
-  final DateTime calculatedAt;
-  
-  // Volume Metrics
-  final double totalVolume;
-  final double workingSetsVolume;
-  final double warmupVolume;
-  final Map<ExerciseCategory, double> volumeByMuscleGroup;
-  
-  // Set Metrics
-  final int totalSets;
-  final int completedSets;
-  final int workingSets;
-  final int warmupSets;
-  
-  // Intensity Metrics
-  final double averageWeight;
-  final double averageRPE;
-  final double averageIntensity; // % of estimated 1RM
-  final double peakIntensity;
-  
-  // Performance Metrics
-  final Duration totalDuration;
-  final Duration workingTime;
-  final Duration restTime;
-  final double trainingDensity; // volume per minute
-  
-  // Progress Metrics
-  final double completionPercentage;
-  final int exercisesCompleted;
-  final int totalExercises;
-  
-  // Comparison Data
-  final WorkoutComparison? comparison;
-  final List<PersonalRecordAchieved> personalRecords;
 
   const WorkoutMetrics({
     required this.workoutId,
@@ -161,6 +125,41 @@ class WorkoutMetrics {
       totalExercises: workout.exercises.length,
     );
   }
+  final String workoutId;
+  final DateTime calculatedAt;
+  
+  // Volume Metrics
+  final double totalVolume;
+  final double workingSetsVolume;
+  final double warmupVolume;
+  final Map<ExerciseCategory, double> volumeByMuscleGroup;
+  
+  // Set Metrics
+  final int totalSets;
+  final int completedSets;
+  final int workingSets;
+  final int warmupSets;
+  
+  // Intensity Metrics
+  final double averageWeight;
+  final double averageRPE;
+  final double averageIntensity; // % of estimated 1RM
+  final double peakIntensity;
+  
+  // Performance Metrics
+  final Duration totalDuration;
+  final Duration workingTime;
+  final Duration restTime;
+  final double trainingDensity; // volume per minute
+  
+  // Progress Metrics
+  final double completionPercentage;
+  final int exercisesCompleted;
+  final int totalExercises;
+  
+  // Comparison Data
+  final WorkoutComparison? comparison;
+  final List<PersonalRecordAchieved> personalRecords;
 
   /// Get formatted volume string
   String get formattedVolume => '${totalVolume.toStringAsFixed(0)} kg';
@@ -289,8 +288,8 @@ class WorkoutMetrics {
   
   static double _calculateAverageWeight(List<ExerciseSet> sets) {
     if (sets.isEmpty) return 0;
-    
-    final totalWeight = sets.fold(0.0, (total, set) => total + set.weight);
+
+    final totalWeight = sets.fold(0.0, (total, set) => total + (set.weight ?? 0.0));
     return totalWeight / sets.length;
   }
   
@@ -304,9 +303,11 @@ class WorkoutMetrics {
   
   static double _calculatePeakIntensity(List<ExerciseSet> sets) {
     if (sets.isEmpty) return 0;
-    
+
     return sets.fold(0.0, (peak, set) {
-      final intensity = set.weight * set.reps;
+      final weight = set.weight ?? 0.0;
+      final reps = set.reps ?? 0;
+      final intensity = weight * reps;
       return intensity > peak ? intensity : peak;
     });
   }
@@ -389,7 +390,20 @@ class WorkoutMetrics {
 }
 
 /// Comparison with previous similar workouts
-class WorkoutComparison {
+class WorkoutComparison { // -100 to +100
+
+  const WorkoutComparison({
+    required this.comparisonId,
+    required this.comparisonDate,
+    required this.comparisonName,
+    required this.volumeChange,
+    required this.volumeChangePercentage,
+    required this.intensityChange,
+    required this.intensityChangePercentage,
+    required this.durationChange,
+    required this.densityChange,
+    required this.improvementScore,
+  });
   final String comparisonId;
   final DateTime comparisonDate;
   final String comparisonName;
@@ -407,20 +421,7 @@ class WorkoutComparison {
   final double densityChange;
   
   // Overall improvement score
-  final double improvementScore; // -100 to +100
-
-  const WorkoutComparison({
-    required this.comparisonId,
-    required this.comparisonDate,
-    required this.comparisonName,
-    required this.volumeChange,
-    required this.volumeChangePercentage,
-    required this.intensityChange,
-    required this.intensityChangePercentage,
-    required this.durationChange,
-    required this.densityChange,
-    required this.improvementScore,
-  });
+  final double improvementScore;
 
   /// Check if this represents an improvement
   bool get isImprovement => improvementScore > 5;
@@ -453,13 +454,6 @@ class WorkoutComparison {
 
 /// Personal record achieved during workout
 class PersonalRecordAchieved {
-  final String exerciseId;
-  final String exerciseName;
-  final PRType type;
-  final double newValue;
-  final double? previousValue;
-  final DateTime achievedAt;
-  final Map<String, dynamic> context;
 
   const PersonalRecordAchieved({
     required this.exerciseId,
@@ -470,6 +464,13 @@ class PersonalRecordAchieved {
     required this.achievedAt,
     this.context = const {},
   });
+  final String exerciseId;
+  final String exerciseName;
+  final PRType type;
+  final double newValue;
+  final double? previousValue;
+  final DateTime achievedAt;
+  final Map<String, dynamic> context;
 
   /// Get improvement percentage
   double get improvementPercentage {

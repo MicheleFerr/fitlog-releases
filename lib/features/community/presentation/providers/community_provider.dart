@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/data/repositories/community_repository.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:flutter/foundation.dart';
 
 // Repository provider è già definito in community_repository.dart
 
@@ -34,7 +35,7 @@ final userContributionStatsProvider = StreamProvider<UserContributionStats>((ref
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) {
     // Ritorna stats vuote ma valide per utente non autenticato
-    yield UserContributionStats(
+    yield const UserContributionStats(
       userId: 'guest',
       totalContributions: 0,
       approvedContributions: 0,
@@ -45,9 +46,9 @@ final userContributionStatsProvider = StreamProvider<UserContributionStats>((ref
       currentStreak: 0,
       longestStreak: 0,
       level: 'Rookie',
-      badges: const [],
+      badges: [],
       lastContributionDate: null,
-      contributionsByType: const {},
+      contributionsByType: {},
       approvalRate: 0.0,
       weeklyRank: 0,
       monthlyRank: 0,
@@ -62,21 +63,42 @@ final userContributionStatsProvider = StreamProvider<UserContributionStats>((ref
 
 // Provider per user contributions
 final userContributionsProvider = StreamProvider<List<CommunityContribution>>((ref) async* {
+  if (kDebugMode) {
+    debugPrint('🔍 [userContributionsProvider] Stream started');
+  }
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) {
+    if (kDebugMode) {
+      debugPrint('⚠️ [userContributionsProvider] No user authenticated');
+    }
     yield [];
     return;
   }
-  
+
+  if (kDebugMode) {
+    debugPrint('👤 [userContributionsProvider] Fetching contributions for user: ${userAsync.uid}');
+  }
   final repository = ref.watch(communityRepositoryProvider);
-  yield* repository.getContributions(userId: userAsync.uid);
+
+  // Stream dei contributi con logging
+  await for (final contributions in repository.getContributions(userId: userAsync.uid)) {
+    if (kDebugMode) {
+      debugPrint('📊 [userContributionsProvider] Received ${contributions.length} contributions from stream');
+    }
+    for (var contrib in contributions) {
+      if (kDebugMode) {
+        debugPrint('   📝 ${contrib.title} - ${contrib.status.name}');
+      }
+    }
+    yield contributions;
+  }
 });
 
 // State notifier per gestire submission di contributions
 class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
-  final Ref _ref;
   
   ContributionSubmissionNotifier(this._ref) : super(const AsyncValue.data(null));
+  final Ref _ref;
   
   Future<void> submitContribution({
     required String exerciseId,
@@ -89,11 +111,15 @@ class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
     Map<String, dynamic>? metadata,
   }) async {
     state = const AsyncValue.loading();
-    
+
     try {
       final userAsync = await _ref.read(currentUserProvider.future);
       if (userAsync == null) throw Exception('User not authenticated');
-      
+
+      if (kDebugMode) {
+        debugPrint('📤 [ContributionSubmission] Starting submission for user: ${userAsync.uid}');
+      }
+
       final contribution = CommunityContribution(
         id: '', // Will be set by repository
         exerciseId: exerciseId,
@@ -109,12 +135,34 @@ class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
         metadata: metadata,
         createdAt: DateTime.now(),
       );
-      
+
       final repository = _ref.read(communityRepositoryProvider);
       await repository.submitContribution(contribution);
-      
+
+      if (kDebugMode) {
+        debugPrint('✅ [ContributionSubmission] Contribution saved to Firestore');
+      }
+
+      // CRITICAL FIX: Invalidate providers to force refresh and show the new contribution
+      if (kDebugMode) {
+        debugPrint('🔄 [ContributionSubmission] Invalidating providers to refresh UI');
+      }
+      _ref.invalidate(userContributionsProvider);
+      _ref.invalidate(userContributionStatsProvider);
+      _ref.invalidate(trendingContributionsProvider);
+
+      // Small delay to ensure Firestore propagation
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      if (kDebugMode) {
+        debugPrint('✅ [ContributionSubmission] Providers invalidated, UI should refresh');
+      }
+
       state = const AsyncValue.data(null);
     } catch (error, stack) {
+      if (kDebugMode) {
+        debugPrint('❌ [ContributionSubmission] Error: $error');
+      }
       state = AsyncValue.error(error, stack);
     }
   }
@@ -128,7 +176,7 @@ class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
       await repository.voteOnContribution(contributionId, userAsync.uid, isUpvote);
     } catch (error) {
       // Handle error silently or show snackbar
-      print('Error voting: $error');
+      // print('Error voting: $error');
     }
   }
   
@@ -148,7 +196,7 @@ class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
       final repository = _ref.read(communityRepositoryProvider);
       await repository.commentOnContribution(contributionId, comment);
     } catch (error) {
-      print('Error commenting: $error');
+      // print('Error commenting: $error');
     }
   }
 }
@@ -202,12 +250,6 @@ final exerciseStatsProvider = FutureProvider.family<ExerciseStats, String>((ref,
 
 // Model per statistiche exercise
 class ExerciseStats {
-  final String exerciseId;
-  final int totalContributions;
-  final int approvedContributions;
-  final List<String> topTips;
-  final List<String> topWarnings;
-  final DateTime? lastUpdated;
   
   ExerciseStats({
     required this.exerciseId,
@@ -217,6 +259,12 @@ class ExerciseStats {
     required this.topWarnings,
     this.lastUpdated,
   });
+  final String exerciseId;
+  final int totalContributions;
+  final int approvedContributions;
+  final List<String> topTips;
+  final List<String> topWarnings;
+  final DateTime? lastUpdated;
   
   bool get hasContributions => totalContributions > 0;
   bool get needsReview => totalContributions > 5 && approvedContributions < 3;

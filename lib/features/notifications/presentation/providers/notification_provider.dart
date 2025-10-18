@@ -1,18 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../domain/entities/notification.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../progress/presentation/providers/progress_provider.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
+import 'package:flutter/foundation.dart';
 
+/// DEPRECATED: Use unified_notification_provider.dart instead
+/// This provider is kept for backward compatibility and will be removed in a future version.
+/// Please migrate to:
+/// - unifiedNotificationProvider for main functionality
+/// - Use the bridge in notification_provider_bridge.dart for gradual migration
+@Deprecated('Use unifiedNotificationProvider from unified_notification_provider.dart. '
+          'Use notification_provider_bridge.dart for gradual migration.')
 final notificationProvider = StateNotifierProvider<NotificationNotifier, List<AppNotification>>((ref) {
   return NotificationNotifier(ref);
 });
 
+/// DEPRECATED: Use unreadNotificationCountProvider from unified_notification_provider.dart
+@Deprecated('Use unreadNotificationCountProvider from unified_notification_provider.dart')
 final unreadCountProvider = Provider<int>((ref) {
   final notifications = ref.watch(notificationProvider);
   return notifications.where((n) => !n.isRead).length;
 });
 
+/// DEPRECATED: Use todayNotificationsProvider from unified_notification_provider.dart
+@Deprecated('Use todayNotificationsProvider from unified_notification_provider.dart')
 final recentNotificationsProvider = Provider<List<AppNotification>>((ref) {
   final notifications = ref.watch(notificationProvider);
   return notifications
@@ -21,14 +33,16 @@ final recentNotificationsProvider = Provider<List<AppNotification>>((ref) {
     ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 });
 
+/// DEPRECATED: Use UnifiedNotificationProvider from unified_notification_provider.dart
+@Deprecated('Use UnifiedNotificationProvider from unified_notification_provider.dart')
 class NotificationNotifier extends StateNotifier<List<AppNotification>> {
-  final Ref ref;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   NotificationNotifier(this.ref) : super([]) {
     _loadNotifications();
     _setupProgressListeners();
   }
+  final Ref ref;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _loadNotifications() async {
     try {
@@ -60,7 +74,9 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
         _createWelcomeNotification();
       }
     } catch (e) {
-      print('Errore nel caricamento notifiche: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel caricamento notifiche: $e');
+      }
     }
   }
   
@@ -127,7 +143,7 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
       title: 'Benvenuto in GymBro! 👋',
       message: 'Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.',
       emoji: '🎯',
-      action: NotificationAction(
+      action: const NotificationAction(
         label: 'Inizia ora',
         route: '/workout',
       ),
@@ -152,7 +168,9 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
       // Aggiorna stato locale
       state = [notification, ...state];
     } catch (e) {
-      print('Errore nel salvare notifica: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel salvare notifica: $e');
+      }
       // Aggiungi comunque localmente
       state = [notification, ...state];
     }
@@ -181,7 +199,9 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
         return notification;
       }).toList();
     } catch (e) {
-      print('Errore nel marcare come letta: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel marcare come letta: $e');
+      }
     }
   }
 
@@ -211,7 +231,9 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
         return notification.copyWith(isRead: true);
       }).toList();
     } catch (e) {
-      print('Errore nel marcare tutte come lette: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel marcare tutte come lette: $e');
+      }
     }
   }
 
@@ -233,7 +255,9 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
       // Aggiorna stato locale
       state = state.where((notification) => notification.id != notificationId).toList();
     } catch (e) {
-      print('Errore nella rimozione notifica: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nella rimozione notifica: $e');
+      }
     }
   }
 
@@ -267,7 +291,9 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
         return notification.createdAt.isAfter(oneWeekAgo);
       }).toList();
     } catch (e) {
-      print('Errore nella pulizia notifiche vecchie: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nella pulizia notifiche vecchie: $e');
+      }
     }
   }
 
@@ -278,7 +304,7 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
       title: 'AI Coach',
       message: tip,
       emoji: '🧠',
-      action: NotificationAction(
+      action: const NotificationAction(
         label: 'Vedi dettagli',
         route: '/ai-coach',
       ),
@@ -291,7 +317,7 @@ class NotificationNotifier extends StateNotifier<List<AppNotification>> {
       title: title,
       message: description,
       emoji: '🏆',
-      action: NotificationAction(
+      action: const NotificationAction(
         label: 'Vedi achievement',
         route: '/achievements',
       ),

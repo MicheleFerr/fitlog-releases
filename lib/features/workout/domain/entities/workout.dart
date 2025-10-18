@@ -1,5 +1,5 @@
 import 'package:uuid/uuid.dart';
-import 'exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 enum WorkoutStatus {
   planned,
@@ -8,16 +8,7 @@ enum WorkoutStatus {
   paused,
 }
 
-class Workout {
-  final String id;
-  final String name;
-  final List<Exercise> exercises;
-  final WorkoutStatus status;
-  final DateTime? startTime;
-  final DateTime? endTime;
-  final String? notes;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+class Workout { // ID del template di origine (se creato da template)
 
   Workout({
     String? id,
@@ -29,11 +20,46 @@ class Workout {
     this.notes,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) : 
+    this.templateId,
+  }) :
     id = id ?? const Uuid().v4(),
     exercises = exercises ?? [],
     createdAt = createdAt ?? DateTime.now(),
     updatedAt = updatedAt ?? DateTime.now();
+
+  factory Workout.fromJson(Map<String, dynamic> json) {
+    return Workout(
+      id: json['id'],
+      name: json['name'],
+      exercises: (json['exercises'] as List?)
+          ?.map((exerciseJson) => Exercise.fromJson(exerciseJson))
+          .toList() ?? [],
+      status: WorkoutStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => WorkoutStatus.planned,
+      ),
+      startTime: json['startTime'] != null
+          ? DateTime.parse(json['startTime'])
+          : null,
+      endTime: json['endTime'] != null
+          ? DateTime.parse(json['endTime'])
+          : null,
+      notes: json['notes'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+      templateId: json['templateId'],
+    );
+  }
+  final String id;
+  final String name;
+  final List<Exercise> exercises;
+  final WorkoutStatus status;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final String? notes;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? templateId;
 
   Duration? get duration {
     if (startTime == null) return null;
@@ -74,6 +100,7 @@ class Workout {
     DateTime? endTime,
     String? notes,
     DateTime? updatedAt,
+    String? templateId,
   }) {
     return Workout(
       id: id,
@@ -85,6 +112,7 @@ class Workout {
       notes: notes ?? this.notes,
       createdAt: createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
+      templateId: templateId ?? this.templateId,
     );
   }
 
@@ -152,30 +180,8 @@ class Workout {
       'notes': notes,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'templateId': templateId,
     };
-  }
-
-  factory Workout.fromJson(Map<String, dynamic> json) {
-    return Workout(
-      id: json['id'],
-      name: json['name'],
-      exercises: (json['exercises'] as List?)
-          ?.map((exerciseJson) => Exercise.fromJson(exerciseJson))
-          .toList() ?? [],
-      status: WorkoutStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => WorkoutStatus.planned,
-      ),
-      startTime: json['startTime'] != null 
-          ? DateTime.parse(json['startTime']) 
-          : null,
-      endTime: json['endTime'] != null 
-          ? DateTime.parse(json['endTime']) 
-          : null,
-      notes: json['notes'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
   }
 }
 

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../auth/presentation/providers/auth_provider.dart';
-import '../domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 
 /// Provider per gestire la personalizzazione della home screen
 final homeCustomizationProvider = StateNotifierProvider<HomeCustomizationNotifier, List<HomeWidgetConfig>>((ref) {
@@ -12,12 +12,12 @@ final homeCustomizationProvider = StateNotifierProvider<HomeCustomizationNotifie
 final isHomeEditingProvider = StateProvider<bool>((ref) => false);
 
 class HomeCustomizationNotifier extends StateNotifier<List<HomeWidgetConfig>> {
-  final Ref _ref;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   HomeCustomizationNotifier(this._ref) : super(DefaultHomeWidgets.defaultWidgets) {
     _loadUserConfiguration();
   }
+  final Ref _ref;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   /// Carica la configurazione personalizzata dell'utente
   Future<void> _loadUserConfiguration() async {
@@ -57,7 +57,7 @@ class HomeCustomizationNotifier extends StateNotifier<List<HomeWidgetConfig>> {
   
   /// Merge user config with defaults to include new widgets
   List<HomeWidgetConfig> _mergeWithDefaults(List<HomeWidgetConfig> userConfigs) {
-    final defaults = DefaultHomeWidgets.defaultWidgets;
+    const defaults = DefaultHomeWidgets.defaultWidgets;
     final merged = <HomeWidgetConfig>[];
     
     // Add all user configs

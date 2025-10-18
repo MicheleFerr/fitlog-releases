@@ -64,9 +64,9 @@ class WorkoutNotifier extends StateNotifier<Workout?> {
 }
 
 class TimerNotifier extends StateNotifier<RestTimer?> {
-  final Workout? workout;
   
   TimerNotifier(this.workout) : super(null);
+  final Workout? workout;
   
   void startRestTimer(String exerciseName, int currentSet, int totalSets) {
     state = RestTimer(
@@ -105,11 +105,6 @@ class TimerNotifier extends StateNotifier<RestTimer?> {
 }
 
 class WorkoutStats {
-  final int totalSets;
-  final int completedSets;
-  final double progress;
-  final bool isTimerActive;
-  final String? currentExercise;
   
   const WorkoutStats({
     this.totalSets = 0,
@@ -118,6 +113,11 @@ class WorkoutStats {
     this.isTimerActive = false,
     this.currentExercise,
   });
+  final int totalSets;
+  final int completedSets;
+  final double progress;
+  final bool isTimerActive;
+  final String? currentExercise;
 }
 
 // Extension per ExerciseSet

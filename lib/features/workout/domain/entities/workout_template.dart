@@ -1,9 +1,94 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-import 'exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// Template per workout riutilizzabili
-class WorkoutTemplate {
+class WorkoutTemplate { // 3, 6, o 10
+
+  WorkoutTemplate({
+    String? id,
+    required this.name,
+    required this.description,
+    this.imageUrl,
+    List<ExerciseTemplate>? exercises,
+    this.estimatedDuration = 45,
+    List<String>? tags,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    this.isCustom = true,
+    this.usageCount = 0,
+    this.isPublic = false,
+    this.userId,
+    this.authorName,
+    this.downloadCount = 0,
+    this.averageRating = 0.0,
+    this.reviewCount = 0,
+    this.difficulty,
+    this.defaultAutoAdjustmentType,
+    this.defaultApreProtocol,
+  })  : id = id ?? const Uuid().v4(),
+        exercises = exercises ?? [],
+        tags = tags ?? [],
+        createdAt = createdAt ?? DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now();
+
+  factory WorkoutTemplate.fromJson(Map<String, dynamic> json) {
+    // Parse exercises with enhanced error handling
+    final List<ExerciseTemplate> exercises = [];
+    if (json['exercises'] != null) {
+      if (json['exercises'] is List) {
+        final exercisesList = json['exercises'] as List;
+        
+        for (int i = 0; i < exercisesList.length; i++) {
+          try {
+            final exerciseJson = exercisesList[i];
+            if (exerciseJson is Map<String, dynamic>) {
+              final exerciseTemplate = ExerciseTemplate.fromJson(exerciseJson);
+              exercises.add(exerciseTemplate);
+            }
+          } catch (e) {
+          }
+        }
+      } else {
+      }
+    }
+    
+
+    // Parse auto-adjustment type
+    AutoAdjustmentType? defaultAutoAdjustmentType;
+    if (json['defaultAutoAdjustmentType'] != null) {
+      try {
+        defaultAutoAdjustmentType = AutoAdjustmentType.values.firstWhere(
+          (e) => e.name == json['defaultAutoAdjustmentType'],
+        );
+      } catch (e) {
+        defaultAutoAdjustmentType = null;
+      }
+    }
+
+    return WorkoutTemplate(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      imageUrl: json['imageUrl']?.toString(),
+      exercises: exercises,
+      estimatedDuration: json['estimatedDuration'] is int ? json['estimatedDuration'] : 45,
+      tags: json['tags'] is List ? List<String>.from(json['tags'].map((t) => t.toString())) : [],
+      createdAt: json['createdAt'] is String ? DateTime.parse(json['createdAt']) : DateTime.now(),
+      updatedAt: json['updatedAt'] is String ? DateTime.parse(json['updatedAt']) : DateTime.now(),
+      isCustom: json['isCustom'] is bool ? json['isCustom'] : true,
+      usageCount: json['usageCount'] is int ? json['usageCount'] : 0,
+      isPublic: json['isPublic'] is bool ? json['isPublic'] : false,
+      userId: json['userId']?.toString(),
+      authorName: json['authorName']?.toString(),
+      downloadCount: json['downloadCount'] is int ? json['downloadCount'] : 0,
+      averageRating: json['averageRating'] is num ? json['averageRating'].toDouble() : 0.0,
+      reviewCount: json['reviewCount'] is int ? json['reviewCount'] : 0,
+      difficulty: json['difficulty']?.toString(),
+      defaultAutoAdjustmentType: defaultAutoAdjustmentType,
+      defaultApreProtocol: json['defaultApreProtocol'] is int ? json['defaultApreProtocol'] : null,
+    );
+  }
   final String id;
   final String name;
   final String description;
@@ -25,30 +110,9 @@ class WorkoutTemplate {
   final int reviewCount; // Numero di recensioni
   final String? difficulty; // beginner, intermediate, advanced, expert
 
-  WorkoutTemplate({
-    String? id,
-    required this.name,
-    required this.description,
-    this.imageUrl,
-    List<ExerciseTemplate>? exercises,
-    this.estimatedDuration = 45,
-    List<String>? tags,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    this.isCustom = true,
-    this.usageCount = 0,
-    this.isPublic = false,
-    this.userId,
-    this.authorName,
-    this.downloadCount = 0,
-    this.averageRating = 0.0,
-    this.reviewCount = 0,
-    this.difficulty,
-  })  : id = id ?? const Uuid().v4(),
-        exercises = exercises ?? [],
-        tags = tags ?? [],
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  // Auto-regolazione predefinita
+  final AutoAdjustmentType? defaultAutoAdjustmentType; // APRE o RPE
+  final int? defaultApreProtocol;
 
   WorkoutTemplate copyWith({
     String? name,
@@ -67,6 +131,8 @@ class WorkoutTemplate {
     double? averageRating,
     int? reviewCount,
     String? difficulty,
+    AutoAdjustmentType? defaultAutoAdjustmentType,
+    int? defaultApreProtocol,
   }) {
     return WorkoutTemplate(
       id: id,
@@ -87,6 +153,8 @@ class WorkoutTemplate {
       averageRating: averageRating ?? this.averageRating,
       reviewCount: reviewCount ?? this.reviewCount,
       difficulty: difficulty ?? this.difficulty,
+      defaultAutoAdjustmentType: defaultAutoAdjustmentType ?? this.defaultAutoAdjustmentType,
+      defaultApreProtocol: defaultApreProtocol ?? this.defaultApreProtocol,
     );
   }
 
@@ -118,51 +186,9 @@ class WorkoutTemplate {
       'averageRating': averageRating,
       'reviewCount': reviewCount,
       'difficulty': difficulty,
+      'defaultAutoAdjustmentType': defaultAutoAdjustmentType?.name,
+      'defaultApreProtocol': defaultApreProtocol,
     };
-  }
-
-  factory WorkoutTemplate.fromJson(Map<String, dynamic> json) {
-    // Parse exercises with enhanced error handling
-    List<ExerciseTemplate> exercises = [];
-    if (json['exercises'] != null) {
-      if (json['exercises'] is List) {
-        final exercisesList = json['exercises'] as List;
-        
-        for (int i = 0; i < exercisesList.length; i++) {
-          try {
-            final exerciseJson = exercisesList[i];
-            if (exerciseJson is Map<String, dynamic>) {
-              final exerciseTemplate = ExerciseTemplate.fromJson(exerciseJson);
-              exercises.add(exerciseTemplate);
-            }
-          } catch (e, stackTrace) {
-          }
-        }
-      } else {
-      }
-    }
-    
-    
-    return WorkoutTemplate(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-      description: json['description']?.toString() ?? '',
-      imageUrl: json['imageUrl']?.toString(),
-      exercises: exercises,
-      estimatedDuration: json['estimatedDuration'] is int ? json['estimatedDuration'] : 45,
-      tags: json['tags'] is List ? List<String>.from(json['tags'].map((t) => t.toString())) : [],
-      createdAt: json['createdAt'] is String ? DateTime.parse(json['createdAt']) : DateTime.now(),
-      updatedAt: json['updatedAt'] is String ? DateTime.parse(json['updatedAt']) : DateTime.now(),
-      isCustom: json['isCustom'] is bool ? json['isCustom'] : true,
-      usageCount: json['usageCount'] is int ? json['usageCount'] : 0,
-      isPublic: json['isPublic'] is bool ? json['isPublic'] : false,
-      userId: json['userId']?.toString(),
-      authorName: json['authorName']?.toString(),
-      downloadCount: json['downloadCount'] is int ? json['downloadCount'] : 0,
-      averageRating: json['averageRating'] is num ? json['averageRating'].toDouble() : 0.0,
-      reviewCount: json['reviewCount'] is int ? json['reviewCount'] : 0,
-      difficulty: json['difficulty']?.toString(),
-    );
   }
 
   /// Crea un workout dal template
@@ -172,14 +198,7 @@ class WorkoutTemplate {
 }
 
 /// Template per esercizio all'interno di un workout template
-class ExerciseTemplate {
-  final String exerciseId; // ID dell'esercizio nel database
-  final String exerciseName;
-  final ExerciseCategory category;
-  final ExerciseType type;
-  final List<SetTemplate> sets;
-  final String? notes;
-  final int? restTime;
+class ExerciseTemplate { // For superset, dropset, etc.
 
   const ExerciseTemplate({
     required this.exerciseId,
@@ -189,19 +208,8 @@ class ExerciseTemplate {
     List<SetTemplate>? sets,
     this.notes,
     this.restTime,
+    this.subExercises,
   }) : sets = sets ?? const [];
-
-  Map<String, dynamic> toJson() {
-    return {
-      'exerciseId': exerciseId,
-      'exerciseName': exerciseName,
-      'category': category.name,
-      'type': type.name,
-      'sets': sets.map((s) => s.toJson()).toList(),
-      'notes': notes,
-      'restTime': restTime,
-    };
-  }
 
   factory ExerciseTemplate.fromJson(Map<String, dynamic> json) {
     
@@ -243,6 +251,21 @@ class ExerciseTemplate {
       }
     }
     
+    // Parse sub-exercises for superset/dropset
+    List<ExerciseTemplate>? subExercises;
+    if (json['exercises'] != null && json['exercises'] is List) {
+      try {
+        subExercises = (json['exercises'] as List)
+            .map((e) => ExerciseTemplate.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('Error parsing sub-exercises: $e');
+        }
+        subExercises = null;
+      }
+    }
+    
     final exerciseTemplate = ExerciseTemplate(
       exerciseId: json['exerciseId']?.toString() ?? '',
       exerciseName: json['exerciseName']?.toString() ?? '',
@@ -251,9 +274,32 @@ class ExerciseTemplate {
       sets: sets,
       notes: json['notes']?.toString(),
       restTime: json['restTime'] is int ? json['restTime'] : null,
+      subExercises: subExercises,
     );
     
     return exerciseTemplate;
+  }
+  final String exerciseId; // ID dell'esercizio nel database
+  final String exerciseName;
+  final ExerciseCategory category;
+  final ExerciseType type;
+  final List<SetTemplate> sets;
+  final String? notes;
+  final int? restTime;
+  final List<ExerciseTemplate>? subExercises;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'exerciseId': exerciseId,
+      'exerciseName': exerciseName,
+      'category': category.name,
+      'type': type.name,
+      'sets': sets.map((s) => s.toJson()).toList(),
+      'notes': notes,
+      'restTime': restTime,
+      if (subExercises != null && subExercises!.isNotEmpty) 
+        'exercises': subExercises!.map((e) => e.toJson()).toList(),
+    };
   }
 
   /// Crea una copia con modifiche
@@ -265,6 +311,7 @@ class ExerciseTemplate {
     List<SetTemplate>? sets,
     String? notes,
     int? restTime,
+    List<ExerciseTemplate>? subExercises,
   }) {
     return ExerciseTemplate(
       exerciseId: exerciseId ?? this.exerciseId,
@@ -274,11 +321,65 @@ class ExerciseTemplate {
       sets: sets ?? this.sets,
       notes: notes ?? this.notes,
       restTime: restTime ?? this.restTime,
+      subExercises: subExercises ?? this.subExercises,
     );
   }
 
   /// Converte il template in un esercizio per il workout
   Exercise toWorkoutExercise() {
+    // If it's a superset and has sub-exercises, create a SupersetExercise
+    if (type == ExerciseType.superset && subExercises != null && subExercises!.isNotEmpty) {
+      final exercises = subExercises!.map((subTemplate) => 
+        Exercise(
+          name: subTemplate.exerciseName,
+          type: ExerciseType.single, // Sub-exercises are singles
+          category: subTemplate.category,
+          sets: subTemplate.sets.map((s) => s.toExerciseSet()).toList(),
+          notes: subTemplate.notes,
+          restTime: subTemplate.restTime,
+        )
+      ).toList();
+      
+      // Create SupersetSets with shared data for all exercises
+      final supersetSets = <SupersetSet>[];
+      
+      for (int setIndex = 0; setIndex < sets.length; setIndex++) {
+        final setTemplate = sets[setIndex];
+        final exerciseData = <String, SupersetExerciseData>{};
+        
+        // Create data for each exercise in this superset set
+        for (final exercise in exercises) {
+          exerciseData[exercise.name] = SupersetExerciseData(
+            exerciseId: exercise.name, // Using exercise name as ID for now
+            exerciseName: exercise.name,
+            targetWeight: setTemplate.targetWeight,
+            targetReps: setTemplate.targetReps,
+            actualWeight: null,
+            actualReps: null,
+            rpe: null,
+            isCompleted: false,
+          );
+        }
+        
+        // ✅ FIX: Aggiungi timestamp per ID univoco
+        supersetSets.add(SupersetSet(
+          id: 'superset_set_${DateTime.now().millisecondsSinceEpoch}_$setIndex',
+          setNumber: setIndex + 1,
+          exerciseData: exerciseData,
+          isCompleted: false,
+        ));
+      }
+      
+      return SupersetExercise(
+        name: exerciseName,
+        exercises: exercises,
+        supersetSets: supersetSets,
+        notes: notes,
+        restTime: restTime,
+      );
+    }
+    
+    // For normal exercises or superset without sub-exercises
     final exercise = Exercise(
       name: exerciseName,
       type: type,
@@ -294,11 +395,6 @@ class ExerciseTemplate {
 
 /// Template per set all'interno di un esercizio template
 class SetTemplate {
-  final int setNumber;
-  final double? targetWeight;
-  final int? targetReps;
-  final int? targetRpe; // Rate of Perceived Exertion
-  final String? notes;
 
   const SetTemplate({
     required this.setNumber,
@@ -307,16 +403,6 @@ class SetTemplate {
     this.targetRpe,
     this.notes,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'setNumber': setNumber,
-      'targetWeight': targetWeight,
-      'targetReps': targetReps,
-      'targetRpe': targetRpe,
-      'notes': notes,
-    };
-  }
 
   factory SetTemplate.fromJson(Map<String, dynamic> json) {
     // Enhanced validation for SetTemplate deserialization
@@ -332,6 +418,21 @@ class SetTemplate {
       targetRpe: targetRpe,
       notes: json['notes']?.toString(),
     );
+  }
+  final int setNumber;
+  final double? targetWeight;
+  final int? targetReps;
+  final int? targetRpe; // Rate of Perceived Exertion
+  final String? notes;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'setNumber': setNumber,
+      'targetWeight': targetWeight,
+      'targetReps': targetReps,
+      'targetRpe': targetRpe,
+      'notes': notes,
+    };
   }
 
   /// Converte il template in un set per l'esercizio

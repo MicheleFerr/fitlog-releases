@@ -1,13 +1,12 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: core/utils
- * 🎯 Feature: logging
- * 🔧 Type: utility
- * 📱 Platform: Universal
- * 
- * Production-safe logging that automatically disables verbose logs in release builds
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: core/utils
+/// 🎯 Feature: logging
+/// 🔧 Type: utility
+/// 📱 Platform: Universal
+/// 
+/// Production-safe logging that automatically disables verbose logs in release builds
+library;
 
 import 'package:flutter/foundation.dart';
 

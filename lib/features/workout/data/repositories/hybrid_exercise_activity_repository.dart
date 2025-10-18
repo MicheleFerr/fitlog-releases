@@ -1,24 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: workout
- * 🔧 Type: repository
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Hive (local storage)
- * - Firebase (cloud sync for premium)
- * - Domain entities
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: workout
+/// 🔧 Type: repository
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Hive (local storage)
+/// - Firebase (cloud sync for premium)
+/// - Domain entities
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
@@ -28,14 +26,6 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 /// - Free users: Solo storage locale
 /// - Premium users: Storage locale + sync Firebase
 class HybridExerciseActivityRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final HiveWorkoutDataSource _localDataSource;
-  final FirebaseAuth _auth;
-  
-  // Cache user profile
-  UserProfile? _userProfile;
-  
-  static const String _collectionName = 'exerciseActivities';
 
   HybridExerciseActivityRepository({
     required HiveWorkoutDataSource localDataSource,
@@ -44,6 +34,14 @@ class HybridExerciseActivityRepository {
        _auth = auth ?? FirebaseAuth.instance {
     _loadUserProfile();
   }
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final HiveWorkoutDataSource _localDataSource;
+  final FirebaseAuth _auth;
+  
+  // Cache user profile
+  UserProfile? _userProfile;
+  
+  static const String _collectionName = 'exerciseActivities';
   
   /// Load user profile to check premium status
   Future<void> _loadUserProfile() async {
@@ -540,11 +538,6 @@ class HybridExerciseActivityRepository {
 
 /// Risultato operazione di sync
 class SyncResult {
-  final bool success;
-  final String message;
-  final int syncedCount;
-  final int failedCount;
-  final List<String>? errors;
   
   SyncResult({
     required this.success,
@@ -553,4 +546,9 @@ class SyncResult {
     required this.failedCount,
     this.errors,
   });
+  final bool success;
+  final String message;
+  final int syncedCount;
+  final int failedCount;
+  final List<String>? errors;
 }

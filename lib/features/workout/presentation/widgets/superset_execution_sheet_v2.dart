@@ -2,8 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
+/// ⚠️ DEPRECATED: Use SupersetSequentialExecutionSheet instead
+///
+/// This widget is deprecated because it violates the scientific superset methodology:
+/// - Uses PageView allowing free navigation (should be sequential A→B)
+/// - Reads from wrong data structure (exercise.sets instead of supersetSets)
+/// - Allows partial completion (violates "no rest between exercises" rule)
+///
+/// Use [SupersetSequentialExecutionSheet] for correct superset execution flow.
+@Deprecated('Use SupersetSequentialExecutionSheet instead')
 class SupersetExecutionSheetV2 extends ConsumerStatefulWidget {
+  
+  const SupersetExecutionSheetV2({
+    super.key,
+    required this.superset,
+    required this.setIndex,
+    required this.onComplete,
+  });
   final SupersetExercise superset;
   final int setIndex;
   final Function(
@@ -11,13 +28,6 @@ class SupersetExecutionSheetV2 extends ConsumerStatefulWidget {
     Map<String, int> rpes,
     Map<String, double> weights,
   ) onComplete;
-  
-  const SupersetExecutionSheetV2({
-    Key? key,
-    required this.superset,
-    required this.setIndex,
-    required this.onComplete,
-  }) : super(key: key);
 
   @override
   ConsumerState<SupersetExecutionSheetV2> createState() => _SupersetExecutionSheetV2State();
@@ -46,21 +56,29 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
     _weightControllers = {};
     _repsControllers = {};
     _rpeControllers = {};
-    
+
+    // ✅ FIX: Usa supersetSets invece di exercise.sets
+    // Get the current superset set
+    final currentSupersetSet = widget.setIndex < widget.superset.supersetSets.length
+        ? widget.superset.supersetSets[widget.setIndex]
+        : null;
+
     // Initialize values for each exercise
     for (final exercise in widget.superset.exercises) {
       _exerciseCompleted[exercise.id] = false;
-      
-      if (widget.setIndex < exercise.sets.length) {
-        final set = exercise.sets[widget.setIndex];
-        final weight = set.weight ?? 0.0;
-        final reps = set.reps ?? 10;
-        final rpe = 7; // Default RPE
-        
+
+      // ✅ FIX: Get data from SupersetSet.exerciseData
+      final exerciseData = currentSupersetSet?.exerciseData[exercise.id];
+
+      if (exerciseData != null) {
+        final weight = exerciseData.actualWeight ?? exerciseData.targetWeight ?? 0.0;
+        final reps = exerciseData.actualReps ?? exerciseData.targetReps ?? 10;
+        final rpe = exerciseData.rpe ?? 7; // Default RPE
+
         _actualReps[exercise.id] = reps;
         _weights[exercise.id] = weight;
         _rpes[exercise.id] = rpe;
-        
+
         // Initialize controllers
         _weightControllers[exercise.id] = FixedExtentScrollController(
           initialItem: (weight * 2).round().clamp(0, 400)
@@ -72,11 +90,11 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
           initialItem: (rpe - 1).clamp(0, 9)
         );
       } else {
-        // Fallback for exercises without sets
+        // Fallback for new sets without data
         _actualReps[exercise.id] = 10;
         _weights[exercise.id] = 0.0;
         _rpes[exercise.id] = 7;
-        
+
         _weightControllers[exercise.id] = FixedExtentScrollController(initialItem: 0);
         _repsControllers[exercise.id] = FixedExtentScrollController(initialItem: 9);
         _rpeControllers[exercise.id] = FixedExtentScrollController(initialItem: 6);
@@ -157,7 +175,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: SafeArea(
@@ -170,7 +188,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                color: context.colors.outline.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -193,8 +211,8 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                     icon: Icon(
                       Icons.arrow_back_ios,
                       color: _currentPage > 0 
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                          ? context.colors.primary
+                          : context.colors.outline.withOpacity(0.3),
                     ),
                   ),
                   
@@ -204,15 +222,15 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                       children: [
                         Text(
                           _currentExercise.name,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          style: context.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           '${_currentPage + 1} di ${widget.superset.exercises.length} • Set ${widget.setIndex + 1}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.outline,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.outline,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -233,8 +251,8 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                     icon: Icon(
                       Icons.arrow_forward_ios,
                       color: _currentPage < widget.superset.exercises.length - 1
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                          ? context.colors.primary
+                          : context.colors.outline.withOpacity(0.3),
                     ),
                   ),
                 ],
@@ -249,7 +267,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                 children: [
                   Text(
                     'Verify Weight & Reps',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: context.textTheme.titleMedium,
                   ),
                   Switch(
                     value: !(_exerciseCompleted[_currentExercise.id] ?? false),
@@ -291,14 +309,14 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.fitness_center, 
-                                        color: Theme.of(context).colorScheme.primary, 
+                                        color: context.colors.primary, 
                                         size: 20
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
                                         'Weight',
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
+                                        style: context.textTheme.titleMedium?.copyWith(
+                                          color: context.colors.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -311,30 +329,30 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       IconButton(
                                         onPressed: () => _quickAdjustWeight(-2.5),
                                         icon: Icon(Icons.remove, 
-                                          color: Theme.of(context).colorScheme.error),
+                                          color: context.colors.error),
                                         style: IconButton.styleFrom(
-                                          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                                          backgroundColor: context.colors.errorContainer,
                                         ),
                                       ),
                                       const SizedBox(width: 16),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Theme.of(context).colorScheme.outline),
+                                          border: Border.all(color: context.colors.outline),
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Column(
                                           children: [
                                             Text(
                                               (_weights[exerciseId] ?? 0.0).toStringAsFixed(1),
-                                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                              style: context.textTheme.headlineSmall?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             Text(
                                               'kg',
-                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: Theme.of(context).colorScheme.outline,
+                                              style: context.textTheme.bodySmall?.copyWith(
+                                                color: context.colors.outline,
                                               ),
                                             ),
                                           ],
@@ -344,9 +362,9 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       IconButton(
                                         onPressed: () => _quickAdjustWeight(2.5),
                                         icon: Icon(Icons.add, 
-                                          color: Theme.of(context).colorScheme.primary),
+                                          color: context.colors.primary),
                                         style: IconButton.styleFrom(
-                                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                                          backgroundColor: context.colors.primaryContainer,
                                         ),
                                       ),
                                     ],
@@ -365,14 +383,14 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.repeat, 
-                                        color: Theme.of(context).colorScheme.primary, 
+                                        color: context.colors.primary, 
                                         size: 20
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
                                         'Reps',
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
+                                        style: context.textTheme.titleMedium?.copyWith(
+                                          color: context.colors.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -385,31 +403,31 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       IconButton(
                                         onPressed: () => _quickAdjustReps(-1),
                                         icon: Icon(Icons.remove, 
-                                          color: Theme.of(context).colorScheme.error),
+                                          color: context.colors.error),
                                         style: IconButton.styleFrom(
-                                          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                                          backgroundColor: context.colors.errorContainer,
                                         ),
                                       ),
                                       const SizedBox(width: 16),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Theme.of(context).colorScheme.outline),
+                                          border: Border.all(color: context.colors.outline),
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         child: Column(
                                           children: [
                                             Text(
                                               (_actualReps[exerciseId] ?? 1).toString(),
-                                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                              style: context.textTheme.headlineSmall?.copyWith(
                                                 fontWeight: FontWeight.bold,
-                                                color: Theme.of(context).colorScheme.primary,
+                                                color: context.colors.primary,
                                               ),
                                             ),
                                             Text(
                                               '/10',
-                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: Theme.of(context).colorScheme.outline,
+                                              style: context.textTheme.bodySmall?.copyWith(
+                                                color: context.colors.outline,
                                               ),
                                             ),
                                           ],
@@ -419,9 +437,9 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       IconButton(
                                         onPressed: () => _quickAdjustReps(1),
                                         icon: Icon(Icons.add, 
-                                          color: Theme.of(context).colorScheme.primary),
+                                          color: context.colors.primary),
                                         style: IconButton.styleFrom(
-                                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                                          backgroundColor: context.colors.primaryContainer,
                                         ),
                                       ),
                                     ],
@@ -442,13 +460,13 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                               children: [
                                 Text(
                                   'RPE',
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  style: context.textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 Icon(Icons.info_outline, 
-                                  color: Theme.of(context).colorScheme.outline, 
+                                  color: context.colors.outline, 
                                   size: 20
                                 ),
                               ],
@@ -456,8 +474,8 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                             const SizedBox(height: 8),
                             Text(
                               'Quanto è stata difficile questa serie?',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.outline,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colors.outline,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -486,13 +504,13 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                     height: 80,
                                     decoration: BoxDecoration(
                                       color: isSelected 
-                                          ? Theme.of(context).colorScheme.primaryContainer
-                                          : Theme.of(context).colorScheme.surfaceContainerHighest,
+                                          ? context.colors.primaryContainer
+                                          : context.colors.surfaceContainerHighest,
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                         color: isSelected 
-                                            ? Theme.of(context).colorScheme.primary
-                                            : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                            ? context.colors.primary
+                                            : context.colors.outline.withOpacity(0.3),
                                         width: isSelected ? 2 : 1,
                                       ),
                                     ),
@@ -506,19 +524,19 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                         const SizedBox(height: 4),
                                         Text(
                                           rpeValue.toString(),
-                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          style: context.textTheme.titleMedium?.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: isSelected 
-                                                ? Theme.of(context).colorScheme.primary
+                                                ? context.colors.primary
                                                 : null,
                                           ),
                                         ),
                                         const SizedBox(height: 2),
                                         Text(
                                           label,
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          style: context.textTheme.bodySmall?.copyWith(
                                             fontSize: 10,
-                                            color: Theme.of(context).colorScheme.outline,
+                                            color: context.colors.outline,
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
@@ -590,8 +608,8 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: context.colors.primary,
+                        foregroundColor: context.colors.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

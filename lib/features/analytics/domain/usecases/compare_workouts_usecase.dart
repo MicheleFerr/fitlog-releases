@@ -1,17 +1,16 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: analytics
- * 🔧 Type: usecase
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout
- * - analytics/domain/entities: WorkoutMetrics, WorkoutComparison
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: analytics
+/// 🔧 Type: usecase
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout
+/// - analytics/domain/entities: WorkoutMetrics, WorkoutComparison
+library;
 
 import 'dart:math';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -344,28 +343,19 @@ class CompareWorkoutsUseCase {
 
 /// Workout similarity result
 class WorkoutSimilarity {
-  final Workout workout;
-  final double similarity;
-  final WorkoutComparison comparison;
 
   const WorkoutSimilarity({
     required this.workout,
     required this.similarity,
     required this.comparison,
   });
+  final Workout workout;
+  final double similarity;
+  final WorkoutComparison comparison;
 }
 
 /// Detailed comparison between two workouts
 class DetailedWorkoutComparison {
-  final Workout workout1;
-  final Workout workout2;
-  final WorkoutMetrics metrics1;
-  final WorkoutMetrics metrics2;
-  final MetricComparison volumeComparison;
-  final MetricComparison intensityComparison;
-  final MetricComparison durationComparison;
-  final Map<String, ExerciseComparison> exerciseComparison;
-  final double overallScore;
 
   const DetailedWorkoutComparison({
     required this.workout1,
@@ -378,14 +368,19 @@ class DetailedWorkoutComparison {
     required this.exerciseComparison,
     required this.overallScore,
   });
+  final Workout workout1;
+  final Workout workout2;
+  final WorkoutMetrics metrics1;
+  final WorkoutMetrics metrics2;
+  final MetricComparison volumeComparison;
+  final MetricComparison intensityComparison;
+  final MetricComparison durationComparison;
+  final Map<String, ExerciseComparison> exerciseComparison;
+  final double overallScore;
 }
 
 /// Comparison of a specific metric
 class MetricComparison {
-  final double current;
-  final double previous;
-  final double change;
-  final double changePercentage;
 
   const MetricComparison({
     required this.current,
@@ -393,6 +388,10 @@ class MetricComparison {
     required this.change,
     required this.changePercentage,
   });
+  final double current;
+  final double previous;
+  final double change;
+  final double changePercentage;
 
   bool get isImprovement => change > 0;
   bool get isRegression => change < 0;
@@ -401,13 +400,6 @@ class MetricComparison {
 
 /// Exercise-specific comparison
 class ExerciseComparison {
-  final String exerciseName;
-  final bool inWorkout1;
-  final bool inWorkout2;
-  final double volume1;
-  final double volume2;
-  final int sets1;
-  final int sets2;
 
   const ExerciseComparison({
     required this.exerciseName,
@@ -418,6 +410,13 @@ class ExerciseComparison {
     required this.sets1,
     required this.sets2,
   });
+  final String exerciseName;
+  final bool inWorkout1;
+  final bool inWorkout2;
+  final double volume1;
+  final double volume2;
+  final int sets1;
+  final int sets2;
 
   bool get isInBoth => inWorkout1 && inWorkout2;
   bool get isNewExercise => inWorkout1 && !inWorkout2;
@@ -429,10 +428,6 @@ class ExerciseComparison {
 
 /// Workout trend over time
 class WorkoutTrend {
-  final DateTime date;
-  final Workout workout;
-  final WorkoutComparison comparison;
-  final TrendDirection trendDirection;
 
   const WorkoutTrend({
     required this.date,
@@ -440,6 +435,10 @@ class WorkoutTrend {
     required this.comparison,
     required this.trendDirection,
   });
+  final DateTime date;
+  final Workout workout;
+  final WorkoutComparison comparison;
+  final TrendDirection trendDirection;
 }
 
 /// Trend direction enum

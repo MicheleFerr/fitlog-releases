@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../../domain/entities/exercise_activity.dart';
-import '../../domain/entities/exercise.dart';
-import '../../domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 /// Repository per gestire le attività degli esercizi in Firestore
 /// Salva nella collezione /exerciseActivities come nella vecchia app
@@ -54,7 +54,7 @@ class ExerciseActivityRepository {
       }
 
       return savedActivityIds;
-    } catch (e, stackTrace) {
+    } catch (e) {
       rethrow;
     }
   }
@@ -131,7 +131,7 @@ class ExerciseActivityRepository {
       
       return activities;
       
-    } catch (e, stackTrace) {
+    } catch (e) {
       return [];
     }
   }
@@ -162,7 +162,9 @@ class ExerciseActivityRepository {
           .map((doc) => ExerciseActivity.fromFirestore(doc))
           .toList();
     } catch (e) {
-      print('Errore nel recuperare attività per esercizio: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel recuperare attività per esercizio: $e');
+      }
       return [];
     }
   }
@@ -215,7 +217,9 @@ class ExerciseActivityRepository {
         lastWorkout: activities.first.createdAt,
       );
     } catch (e) {
-      print('Errore nel calcolare statistiche esercizio: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel calcolare statistiche esercizio: $e');
+      }
       return null;
     }
   }
@@ -229,7 +233,9 @@ class ExerciseActivityRepository {
           .delete();
       return true;
     } catch (e) {
-      print('Errore nell\'eliminare attività: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nell\'eliminare attività: $e');
+      }
       return false;
     }
   }
@@ -261,13 +267,6 @@ class ExerciseActivityRepository {
 
 /// Statistiche di un esercizio
 class ExerciseStats {
-  final String exerciseName;
-  final double maxWeight;
-  final int totalVolume;
-  final int totalSets;
-  final int totalReps;
-  final int totalWorkouts;
-  final DateTime lastWorkout;
 
   ExerciseStats({
     required this.exerciseName,
@@ -278,4 +277,11 @@ class ExerciseStats {
     required this.totalWorkouts,
     required this.lastWorkout,
   });
+  final String exerciseName;
+  final double maxWeight;
+  final int totalVolume;
+  final int totalSets;
+  final int totalReps;
+  final int totalWorkouts;
+  final DateTime lastWorkout;
 }

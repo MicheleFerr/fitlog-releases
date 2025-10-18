@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test
- * 🎯 Feature: helpers
- * 🔧 Type: test helpers
- * 🌍 Localization: ✅ AppLocalizations included
- * 🎨 Theme: ✅ ColorScheme included
- * 📱 Platform: Universal
- * 
- * Test helpers for buddy matching enhanced features
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test
+/// 🎯 Feature: helpers
+/// 🔧 Type: test helpers
+/// 🌍 Localization: ✅ AppLocalizations included
+/// 🎨 Theme: ✅ ColorScheme included
+/// 📱 Platform: Universal
+/// 
+/// Test helpers for buddy matching enhanced features
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

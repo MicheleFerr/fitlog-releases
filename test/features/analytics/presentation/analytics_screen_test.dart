@@ -63,11 +63,11 @@ void main() {
     });
 
     Widget createTestWidget() {
-      return MaterialApp(
+      return const MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: ProviderScope(
-          child: const AnalyticsScreen(),
+          child: AnalyticsScreen(),
         ),
       );
     }
@@ -205,7 +205,7 @@ void main() {
     });
 
     test('formats duration correctly', () {
-      final duration = const Duration(hours: 1, minutes: 30, seconds: 45);
+      const duration = Duration(hours: 1, minutes: 30, seconds: 45);
       final formatted = '${duration.inHours}h ${duration.inMinutes % 60}m';
       expect(formatted, '1h 30m');
     });
@@ -311,7 +311,7 @@ void main() {
     });
 
     test('formats large numbers for display', () {
-      double volume = 125000.0;
+      const double volume = 125000.0;
       String formatted;
       
       if (volume >= 1000000) {

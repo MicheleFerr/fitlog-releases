@@ -37,7 +37,6 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
   // Positioning state
   Offset _position = const Offset(20, 100);
   bool _isDragging = false;
-  bool _isExpanded = false;
   
   // Widget size constants
   static const Size _collapsedSize = Size(72, 48);
@@ -49,10 +48,8 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
     _setupAnimations();
     _loadSavedPosition();
     
-    // Start fade in animation
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _animationController.forward();
-    });
+    // CRITICAL FIX: Animation controller is now only used for dragging scale
+    // Fade and expand animations are handled separately in build method
   }
   
   void _setupAnimations() {
@@ -61,6 +58,8 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       vsync: this,
     );
     
+    // CRITICAL FIX: These animations are kept for potential future use
+    // but expand/collapse and show/hide are now handled directly in build
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -69,6 +68,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       curve: Curves.easeOutQuint,
     ));
     
+    // Scale animation is still used for dragging feedback
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
@@ -87,12 +87,14 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
   }
   
   void _loadSavedPosition() {
-    // Position could be managed by a separate provider in the future
-    // For now use default position
+    // Load position from UI state provider
+    final uiState = ref.read(timerUIStateProvider);
+    _position = uiState.position;
   }
   
   void _savePosition() {
-    // Position persistence could be added in the future
+    // Save position to UI state provider
+    ref.read(timerUIStateProvider.notifier).updatePosition(_position);
   }
 
   @override
@@ -113,11 +115,17 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
     final screenSize = MediaQuery.of(context).size;
     final screenPadding = MediaQuery.of(context).padding;
     
-    // Use position from local state
+    // Use position from UI state if available, otherwise local state
+    final position = uiState.position != Offset.zero ? uiState.position : _position;
+    
+    // Use expanded state from provider, not local state
+    final isExpanded = uiState.isExpanded;
+    
     final constrainedPosition = _getConstrainedPosition(
-      _position, 
+      position, 
       screenSize, 
       screenPadding,
+      isExpanded: isExpanded,
     );
 
     return Positioned(
@@ -125,34 +133,42 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       top: constrainedPosition.dy,
       child: Semantics(
         label: 'Timer',
-        hint: _isExpanded 
+        hint: isExpanded 
           ? 'Tap to collapse' 
           : 'Tap to expand',
         child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
+            // CRITICAL FIX: Use isExpanded from provider directly for size calculation
+            // Don't tie this to animation controller which is used only for fade-in
             final currentSize = Size.lerp(
               _collapsedSize, 
               _expandedSize, 
-              _isExpanded ? _expandAnimation.value : 0.0,
+              isExpanded ? 1.0 : 0.0, // Direct boolean, not animation value
             )!;
             
             return AnimatedOpacity(
-              opacity: _fadeAnimation.value,
+              // CRITICAL FIX: Keep opacity at 1.0 when visible, only use fade for show/hide
+              opacity: uiState.isVisible ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 150),
               child: Transform.scale(
                 scale: _isDragging ? _scaleAnimation.value : 1.0,
-                child: GestureDetector(
-                  onTap: _handleTap,
-                  onLongPress: _handleLongPress,
-                  onPanStart: _handlePanStart,
-                  onPanUpdate: _handlePanUpdate,
-                  onPanEnd: _handlePanEnd,
-                  child: Container(
-                    width: currentSize.width,
-                    height: currentSize.height,
-                    decoration: _buildDecoration(timerState, progress),
-                    child: _buildContent(timerState, remainingSeconds, progress),
+                child: AnimatedContainer(
+                  // CRITICAL FIX: Use AnimatedContainer for smooth size transitions
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOutQuint,
+                  width: currentSize.width,
+                  height: currentSize.height,
+                  child: GestureDetector(
+                    onTap: _handleTap,
+                    onLongPress: _handleLongPress,
+                    onPanStart: _handlePanStart,
+                    onPanUpdate: _handlePanUpdate,
+                    onPanEnd: _handlePanEnd,
+                    child: Container(
+                      decoration: _buildDecoration(timerState, progress),
+                      child: _buildContent(timerState, remainingSeconds, progress),
+                    ),
                   ),
                 ),
               ),
@@ -166,15 +182,14 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
   // MARK: - Gesture Handlers
   
   void _handleTap() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
+    // Toggle expanded state in provider
+    ref.read(timerUIStateProvider.notifier).toggleExpanded();
     
-    if (_isExpanded) {
-      _animationController.forward();
-    } else {
-      _animationController.reverse();
-    }
+    final isExpanded = ref.read(timerUIStateProvider).isExpanded;
+    
+    // CRITICAL FIX: Only animate expand/collapse, NOT fade
+    // The fade animation should remain at 1.0 to keep widget visible
+    // We'll handle expand animation separately in the build method
     
     HapticFeedback.selectionClick();
   }
@@ -242,7 +257,9 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
   }
   
   Widget _buildContent(UnifiedTimerState timerState, int remainingSeconds, double progress) {
-    if (_isExpanded) {
+    final isExpanded = ref.watch(timerUIStateProvider.select((state) => state.isExpanded));
+    
+    if (isExpanded) {
       return _buildExpandedContent(timerState, remainingSeconds, progress);
     } else {
       return _buildCollapsedContent(remainingSeconds);
@@ -420,8 +437,8 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
   
-  Offset _getConstrainedPosition(Offset position, Size screenSize, EdgeInsets padding) {
-    final currentSize = _isExpanded ? _expandedSize : _collapsedSize;
+  Offset _getConstrainedPosition(Offset position, Size screenSize, EdgeInsets padding, {bool? isExpanded}) {
+    final currentSize = (isExpanded ?? false) ? _expandedSize : _collapsedSize;
     const minVisibleWidth = 48.0; // Sempre 48px visibili
     
     final maxLeft = screenSize.width - minVisibleWidth;
@@ -482,15 +499,15 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
 
 /// Custom painter per progress ring ottimizzato
 class _ProgressRingPainter extends CustomPainter {
-  final double progress;
-  final Color color;
-  final double strokeWidth;
 
   const _ProgressRingPainter({
     required this.progress,
     required this.color,
     required this.strokeWidth,
   });
+  final double progress;
+  final Color color;
+  final double strokeWidth;
 
   @override
   void paint(Canvas canvas, Size size) {

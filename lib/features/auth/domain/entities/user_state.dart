@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: auth
- * 🔧 Type: entity
- * 🌍 Localization: N/A - Entity class
- * 🎨 Theme: N/A - Entity class
- * 📱 Platform: Universal
- * 
- * TYPE-SAFE USER STATE - Prevents null pointer and type errors
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: auth
+/// 🔧 Type: entity
+/// 🌍 Localization: N/A - Entity class
+/// 🎨 Theme: N/A - Entity class
+/// 📱 Platform: Universal
+/// 
+/// TYPE-SAFE USER STATE - Prevents null pointer and type errors
+library;
 
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile_consolidated.dart';
 
@@ -64,9 +63,9 @@ sealed class UserState {
 
 /// User is authenticated with a profile
 class UserAuthenticated extends UserState {
-  final UserProfile profile;
   
   const UserAuthenticated(this.profile);
+  final UserProfile profile;
   
   @override
   String toString() => 'UserAuthenticated(${profile.displayName})';
@@ -98,10 +97,10 @@ class UserLoading extends UserState {
 
 /// Error loading user state
 class UserError extends UserState {
-  final Object error;
-  final StackTrace stackTrace;
   
   const UserError(this.error, this.stackTrace);
+  final Object error;
+  final StackTrace stackTrace;
   
   @override
   String toString() => 'UserError($error)';

@@ -1,27 +1,25 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: community
- * 🔧 Type: adapter
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Adapter to bridge HybridCommunityRepository with existing interface
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: community
+/// 🔧 Type: adapter
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Adapter to bridge HybridCommunityRepository with existing interface
+library;
 
 import 'package:gymbro_flutter_new/features/community/data/repositories/community_repository.dart';
 import 'package:gymbro_flutter_new/features/community/data/repositories/hybrid_community_repository.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
-import 'package:rxdart/rxdart.dart';
 
 /// Adapter class to use HybridCommunityRepository with existing interface
 class HybridCommunityRepositoryAdapter implements CommunityRepository {
-  final HybridCommunityRepository _hybridRepository;
   
   HybridCommunityRepositoryAdapter() 
       : _hybridRepository = HybridCommunityRepository();
+  final HybridCommunityRepository _hybridRepository;
 
   @override
   Stream<List<CommunityContribution>> getContributions({
@@ -79,5 +77,17 @@ class HybridCommunityRepositoryAdapter implements CommunityRepository {
   @override
   Future<UserContributionStats> calculateUserStats(String userId) async {
     return await _hybridRepository.getUserStats(userId).first;
+  }
+
+  @override
+  Future<void> approveContribution(String contributionId, String adminId) async {
+    // TODO: Implement in HybridCommunityRepository if needed
+    throw UnimplementedError('Admin moderation not implemented in HybridRepository');
+  }
+
+  @override
+  Future<void> rejectContribution(String contributionId, String adminId, String reason) async {
+    // TODO: Implement in HybridCommunityRepository if needed
+    throw UnimplementedError('Admin moderation not implemented in HybridRepository');
   }
 }

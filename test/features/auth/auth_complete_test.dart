@@ -272,10 +272,6 @@ class MockAuthService {
 }
 
 class AuthResult {
-  final bool success;
-  final String? error;
-  final String? message;
-  final UserModel? user;
   
   AuthResult({
     required this.success,
@@ -283,6 +279,10 @@ class AuthResult {
     this.message,
     this.user,
   });
+  final bool success;
+  final String? error;
+  final String? message;
+  final UserModel? user;
 }
 
 void main() {

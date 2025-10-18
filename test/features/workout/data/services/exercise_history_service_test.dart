@@ -1,18 +1,16 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/data/services
- * 🎯 Feature: workout
- * 🔧 Type: test
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Test for ExerciseHistoryService
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/data/services
+/// 🎯 Feature: workout
+/// 🔧 Type: test
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Test for ExerciseHistoryService
+library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
@@ -31,7 +29,7 @@ void main() {
     });
     
     setUp(() async {
-      service = ExerciseHistoryService();
+      service = const ExerciseHistoryService();
       
       // Create a temporary box for testing - use the same name as the service
       box = await Hive.openBox<Map>('workouts');
@@ -106,7 +104,7 @@ void main() {
         'Incomplete Workout',
         'Squat',
         [
-          ExerciseSetModel(
+          const ExerciseSetModel(
             id: 'set1',
             setNumber: 1,
             weight: 100.0,
@@ -136,7 +134,7 @@ Future<void> _addTestWorkouts(Box<Map> box, String userId) async {
     'Test Workout 1',
     'Bench Press',
     [
-      ExerciseSetModel(
+      const ExerciseSetModel(
         id: 'set1',
         setNumber: 1,
         weight: 80.0,
@@ -145,7 +143,7 @@ Future<void> _addTestWorkouts(Box<Map> box, String userId) async {
         isCompleted: true,
         restTime: 60,
       ),
-      ExerciseSetModel(
+      const ExerciseSetModel(
         id: 'set2',
         setNumber: 2,
         weight: 80.0,
@@ -163,7 +161,7 @@ Future<void> _addTestWorkouts(Box<Map> box, String userId) async {
     'Test Workout 2',
     'Bench Press',
     [
-      ExerciseSetModel(
+      const ExerciseSetModel(
         id: 'set1',
         setNumber: 1,
         weight: 85.0,
@@ -172,7 +170,7 @@ Future<void> _addTestWorkouts(Box<Map> box, String userId) async {
         isCompleted: true,
         restTime: 60,
       ),
-      ExerciseSetModel(
+      const ExerciseSetModel(
         id: 'set2',
         setNumber: 2,
         weight: 85.0,

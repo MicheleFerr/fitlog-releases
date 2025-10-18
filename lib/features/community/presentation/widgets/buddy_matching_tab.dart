@@ -1,23 +1,21 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: community
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: Via providers
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: community
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: Via providers
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/community/domain/entities/buddy_preferences.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/buddy_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/buddy_matching_screen.dart';
@@ -28,7 +26,7 @@ class BuddyMatchingTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     final currentProfile = ref.watch(currentUserBuddyProfileProvider);
     final activeMatches = ref.watch(activeMatchesProvider);
@@ -38,7 +36,7 @@ class BuddyMatchingTab extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) {
         // Se l'errore è perché il profilo non esiste, mostra setup
-        print('Buddy profile error: $error');
+        // print('Buddy profile error: $error');
         return _buildSetupView(context, theme, l10n);
       },
       data: (profile) {
@@ -120,7 +118,7 @@ class BuddyMatchingTab extends ConsumerWidget {
           OutlinedButton.icon(
             onPressed: () => _navigateToMatching(context),
             icon: const Icon(Icons.explore),
-            label: Text('Esplora ora'),
+            label: const Text('Esplora ora'),
           ),
         ],
       ),
@@ -209,7 +207,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.favorite,
                         color: Colors.red,
                         size: 20,
@@ -249,7 +247,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.handshake,
                         color: Colors.green,
                         size: 20,
@@ -328,17 +326,17 @@ class BuddyMatchingTab extends ConsumerWidget {
             color: theme.colorScheme.primary,
           ),
         ),
-        title: Text('Nuovo Match!'),
+        title: const Text('Nuovo Match!'),
         subtitle: const Text('In attesa di conferma'),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: Icon(Icons.close, color: Colors.red),
+              icon: const Icon(Icons.close, color: Colors.red),
               onPressed: () => _handleMatchAction(context, match, false),
             ),
             IconButton(
-              icon: Icon(Icons.favorite, color: Colors.green),
+              icon: const Icon(Icons.favorite, color: Colors.green),
               onPressed: () => _handleMatchAction(context, match, true),
             ),
           ],
@@ -353,12 +351,12 @@ class BuddyMatchingTab extends ConsumerWidget {
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: Colors.green.withValues(alpha: 0.2),
-          child: Icon(
+          child: const Icon(
             Icons.handshake,
             color: Colors.green,
           ),
         ),
-        title: Text('Partnership Attiva'),
+        title: const Text('Partnership Attiva'),
         subtitle: const Text('Partnership attiva'),
         trailing: IconButton(
           icon: const Icon(Icons.chat),
@@ -386,7 +384,7 @@ class BuddyMatchingTab extends ConsumerWidget {
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: () => _navigateToOnboarding(context),
-            child: Text('Riprova'),
+            child: const Text('Riprova'),
           ),
         ],
       ),

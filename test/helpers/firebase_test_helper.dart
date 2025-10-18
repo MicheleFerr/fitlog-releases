@@ -1,23 +1,21 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/helpers
- * 🎯 Feature: firebase test helper
- * 🔧 Type: test helper
- * 🌍 Localization: ✅ Not applicable
- * 🎨 Theme: ✅ Not applicable
- * 📱 Platform: Universal
- * 
- * Firebase Mock Setup for Tests
- * Handles Firebase initialization and mocking
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/helpers
+/// 🎯 Feature: firebase test helper
+/// 🔧 Type: test helper
+/// 🌍 Localization: ✅ Not applicable
+/// 🎨 Theme: ✅ Not applicable
+/// 📱 Platform: Universal
+/// 
+/// Firebase Mock Setup for Tests
+/// Handles Firebase initialization and mocking
+library;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 // Mock classes
 class MockFirebaseApp extends Mock implements FirebaseApp {}

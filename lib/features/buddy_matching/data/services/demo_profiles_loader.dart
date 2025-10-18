@@ -1,24 +1,24 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data
- * 🎯 Feature: buddy_matching
- * 🔧 Type: service
- * 🌍 Localization: N/A - Service class
- * 🎨 Theme: N/A - Service class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Firebase: Firestore
- * - Demo data
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: service
+/// 🌍 Localization: N/A - Service class
+/// 🎨 Theme: N/A - Service class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Firebase: Firestore
+/// - Demo data
+library;
 
 import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../demo_profiles.dart';
-import '../../domain/entities/buddy_profile.dart';
-import '../../../../shared/domain/entities/italian_city.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/data/demo_profiles.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
+import 'package:flutter/foundation.dart';
 
 /// Service per caricare profili demo in Firestore per testing
 class DemoProfilesLoader {
@@ -36,12 +36,16 @@ class DemoProfilesLoader {
             .get();
             
         if (existing.docs.isNotEmpty) {
-          print('📱 Demo profiles già caricati. Usa force=true per ricaricare.');
+          if (kDebugMode) {
+            debugPrint('📱 Demo profiles già caricati. Usa force=true per ricaricare.');
+          }
           return;
         }
       }
 
-      print('📱 Caricamento ${DemoProfiles.allProfiles.length} profili demo...');
+      if (kDebugMode) {
+        debugPrint('📱 Caricamento ${DemoProfiles.allProfiles.length} profili demo...');
+      }
 
       final batch = _firestore.batch();
       
@@ -60,13 +64,17 @@ class DemoProfilesLoader {
       }
 
       await batch.commit();
-      print('✅ ${DemoProfiles.allProfiles.length} profili demo caricati con successo!');
+      if (kDebugMode) {
+        debugPrint('✅ ${DemoProfiles.allProfiles.length} profili demo caricati con successo!');
+      }
       
       // Carica anche le preferenze di matching
       await _loadDemoPreferences();
       
     } catch (e) {
-      print('❌ Errore nel caricamento profili demo: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore nel caricamento profili demo: $e');
+      }
       rethrow;
     }
   }
@@ -86,7 +94,9 @@ class DemoProfilesLoader {
       }
       
     } catch (e) {
-      print('❌ Errore nel caricamento profili per città $cityCode: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore nel caricamento profili per città $cityCode: $e');
+      }
       rethrow;
     }
   }
@@ -117,7 +127,9 @@ class DemoProfilesLoader {
       await loadDemoProfilesForCity(userCityCode, count: count);
       
     } catch (e) {
-      print('❌ Errore nel caricamento profili near user: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore nel caricamento profili near user: $e');
+      }
       rethrow;
     }
   }
@@ -125,7 +137,9 @@ class DemoProfilesLoader {
   /// Pulisce tutti i profili demo dal database
   Future<void> clearDemoProfiles() async {
     try {
-      print('🧹 Rimozione profili demo...');
+      if (kDebugMode) {
+        debugPrint('🧹 Rimozione profili demo...');
+      }
       
       final demoProfiles = await _firestore
           .collection('buddy_profiles')
@@ -138,10 +152,14 @@ class DemoProfilesLoader {
       }
       
       await batch.commit();
-      print('✅ ${demoProfiles.docs.length} profili demo rimossi');
+      if (kDebugMode) {
+        debugPrint('✅ ${demoProfiles.docs.length} profili demo rimossi');
+      }
       
     } catch (e) {
-      print('❌ Errore nella rimozione profili demo: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore nella rimozione profili demo: $e');
+      }
       rethrow;
     }
   }
@@ -160,7 +178,9 @@ class DemoProfilesLoader {
         throw Exception('Città non trovata: $targetCityCode');
       }
 
-      print('📍 Aggiornamento posizioni demo per ${targetCity.name}...');
+      if (kDebugMode) {
+        debugPrint('📍 Aggiornamento posizioni demo per ${targetCity.name}...');
+      }
 
       final demoProfiles = await _firestore
           .collection('buddy_profiles')
@@ -186,10 +206,14 @@ class DemoProfilesLoader {
       }
 
       await batch.commit();
-      print('✅ Posizioni aggiornate per ${demoProfiles.docs.length} profili');
+      if (kDebugMode) {
+        debugPrint('✅ Posizioni aggiornate per ${demoProfiles.docs.length} profili');
+      }
       
     } catch (e) {
-      print('❌ Errore nell\'aggiornamento posizioni: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore nell\'aggiornamento posizioni: $e');
+      }
       rethrow;
     }
   }
@@ -224,7 +248,9 @@ class DemoProfilesLoader {
         'profileIds': demoProfiles.docs.map((d) => d.id).toList(),
       };
     } catch (e) {
-      print('❌ Errore nel controllo status: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore nel controllo status: $e');
+      }
       rethrow;
     }
   }
@@ -237,7 +263,7 @@ class DemoProfilesLoader {
     for (final profile in profiles) {
       final docRef = _firestore.collection('buddy_profiles').doc(profile.uid);
       
-      var profileData = profile.toJson();
+      final profileData = profile.toJson();
       profileData['serverTimestamp'] = FieldValue.serverTimestamp();
       profileData['isDemoProfile'] = true;
       profileData['loadedAt'] = DateTime.now().toIso8601String();
@@ -258,12 +284,16 @@ class DemoProfilesLoader {
     }
 
     await batch.commit();
-    print('✅ ${profiles.length} profili specifici caricati');
+    if (kDebugMode) {
+      debugPrint('✅ ${profiles.length} profili specifici caricati');
+    }
   }
 
   Future<void> _loadDemoPreferences() async {
     // Carica anche alcune preferenze di esempio per l'algoritmo di matching
-    print('📋 Caricamento preferenze demo...');
+    if (kDebugMode) {
+      debugPrint('📋 Caricamento preferenze demo...');
+    }
     
     final batch = _firestore.batch();
     
@@ -297,7 +327,9 @@ class DemoProfilesLoader {
     }
     
     await batch.commit();
-    print('✅ Preferenze demo caricate');
+    if (kDebugMode) {
+      debugPrint('✅ Preferenze demo caricate');
+    }
   }
 
   String _getRandomZoneName() {

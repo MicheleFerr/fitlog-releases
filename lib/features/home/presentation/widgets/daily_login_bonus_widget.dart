@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../../providers/daily_login_provider.dart';
-import '../../domain/models/level_system.dart';
+import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 
 class DailyLoginBonusWidget extends ConsumerWidget {
   const DailyLoginBonusWidget({super.key});
@@ -10,7 +10,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final loginState = ref.watch(dailyLoginProvider);
     final bonusInfo = ref.read(dailyLoginProvider.notifier).getBonusInfo();
     
@@ -154,7 +154,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
               if (!loginState.bonusClaimedToday)
                 Column(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.touch_app,
                       color: Colors.amber,
                       size: 20,
@@ -257,7 +257,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                             colors: [Colors.green, Colors.green.shade700],
                           )
                         : isToday
-                          ? LinearGradient(
+                          ? const LinearGradient(
                               colors: [Colors.amber, Colors.orange],
                             )
                           : null,
@@ -326,7 +326,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.star,
                     color: Colors.green,
                     size: 16,

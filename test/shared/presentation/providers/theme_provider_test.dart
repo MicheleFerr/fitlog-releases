@@ -92,8 +92,6 @@ class AppTheme {
       onError: Color(0xFFFFFFFF),
       surface: Color(0xFFFEFBFF),
       onSurface: Color(0xFF1C1B1F),
-      background: Color(0xFFFEFBFF),
-      onBackground: Color(0xFF1C1B1F),
     ),
     appBarTheme: const AppBarTheme(
       centerTitle: true,
@@ -133,8 +131,6 @@ class AppTheme {
       onError: Color(0xFF690005),
       surface: Color(0xFF1C1B1F),
       onSurface: Color(0xFFE6E1E5),
-      background: Color(0xFF1C1B1F),
-      onBackground: Color(0xFFE6E1E5),
     ),
     appBarTheme: const AppBarTheme(
       centerTitle: true,
@@ -403,7 +399,7 @@ void main() {
         expect(colors.secondary, const Color(0xFF625B71));
         expect(colors.error, const Color(0xFFBA1A1A));
         expect(colors.surface, const Color(0xFFFEFBFF));
-        expect(colors.background, const Color(0xFFFEFBFF));
+        expect(colors.surface, const Color(0xFFFEFBFF));
       });
       
       test('✅ Dark color scheme', () {
@@ -415,7 +411,7 @@ void main() {
         expect(colors.secondary, const Color(0xFFCCC2DC));
         expect(colors.error, const Color(0xFFFFB4AB));
         expect(colors.surface, const Color(0xFF1C1B1F));
-        expect(colors.background, const Color(0xFF1C1B1F));
+        expect(colors.surface, const Color(0xFF1C1B1F));
       });
     });
   });

@@ -199,7 +199,7 @@ void main() {
     });
 
     test('should handle invalid state transitions gracefully', () {
-      var timer = UnifiedTimerState(totalDurationSeconds: 60);
+      final timer = UnifiedTimerState(totalDurationSeconds: 60);
 
       // Can't pause idle timer according to business logic
       expect(timer.canPause, false);

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/screens
- * 🎯 Feature: admin
- * 🔧 Type: screen (admin analytics dashboard)
- * 
- * Admin dashboard for collecting and viewing global analytics
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/screens
+/// 🎯 Feature: admin
+/// 🔧 Type: screen (admin analytics dashboard)
+/// 
+/// Admin dashboard for collecting and viewing global analytics
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import '../providers/admin_analytics_sync_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_analytics_sync_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class AdminAnalyticsScreen extends ConsumerStatefulWidget {
@@ -45,7 +44,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
   
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final syncState = ref.watch(adminAnalyticsSyncProvider);
     final isAdmin = ref.watch(isAdminProvider);
@@ -122,7 +121,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
     final theme = Theme.of(context);
     
     return Container(
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
@@ -165,7 +164,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                 const SizedBox(height: 4),
                 LinearProgressIndicator(
                   value: state.currentProgress!.percentage / 100,
-                  backgroundColor: theme.colorScheme.surfaceVariant,
+                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -576,7 +575,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                         const SizedBox(height: 4),
                         LinearProgressIndicator(
                           value: percentage / 100,
-                          backgroundColor: theme.colorScheme.surfaceVariant,
+                          backgroundColor: theme.colorScheme.surfaceContainerHighest,
                           valueColor: AlwaysStoppedAnimation(
                             theme.colorScheme.primary,
                           ),

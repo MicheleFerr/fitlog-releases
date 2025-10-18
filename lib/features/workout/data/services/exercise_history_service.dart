@@ -1,26 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/services
- * 🎯 Feature: workout
- * 🔧 Type: service
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Hive (local storage)
- * - Domain entities
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/services
+/// 🎯 Feature: workout
+/// 🔧 Type: service
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Hive (local storage)
+/// - Domain entities
+library;
 
 import 'package:hive_flutter/hive_flutter.dart';
-import '../models/workout_model.dart';
+import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
+import 'package:flutter/foundation.dart';
 
 class ExerciseHistoryData {
-  final double? weight;
-  final int? reps;
-  final DateTime date;
-  final String workoutName;
 
   const ExerciseHistoryData({
     this.weight,
@@ -28,20 +24,26 @@ class ExerciseHistoryData {
     required this.date,
     required this.workoutName,
   });
+  final double? weight;
+  final int? reps;
+  final DateTime date;
+  final String workoutName;
 }
 
 class ExerciseHistoryService {
+  
+  const ExerciseHistoryService({this.enableDebugLogging = true});
   static const String _workoutsBoxName = 'workouts';
   
   /// Enable debug logging (useful for troubleshooting)
   final bool enableDebugLogging;
   
-  const ExerciseHistoryService({this.enableDebugLogging = true});
-  
   /// Helper method for conditional debug logging
   void _debugLog(String message) {
     if (enableDebugLogging) {
-      print(message);
+      if (kDebugMode) {
+        debugPrint(message);
+      }
     }
   }
 
@@ -100,185 +102,118 @@ class ExerciseHistoryService {
     try {
       final box = await Hive.openBox<Map>(_workoutsBoxName);
       final historyData = <ExerciseHistoryData>[];
-      
-      // Enhanced debugging
-      if (enableDebugLogging) {
-        print('🔍 ===== EXERCISE HISTORY DEBUG START =====');
-        print('📦 ExerciseHistory: Total keys in box: ${box.keys.length}');
-        print('📦 ExerciseHistory: Looking for exercise: "$exerciseName" for user: "$userId"');
-      }
-      
-      // Show first few keys for debugging
-      final allKeys = box.keys.take(10).toList();
-      print('📦 ExerciseHistory: Sample keys: ${allKeys.join(", ")}');
-      
+
       // Get all workouts for this user
       final userKeys = box.keys.where((key) => key.toString().startsWith('${userId}_')).toList();
-      print('📦 ExerciseHistory: Found ${userKeys.length} keys for user $userId');
-      
+
       if (userKeys.isEmpty) {
-        print('❌ ExerciseHistory: No keys found for user $userId');
-        print('📦 ExerciseHistory: All keys in box: ${box.keys.toList()}');
-        print('🔍 ===== EXERCISE HISTORY DEBUG END =====');
         return [];
       }
-      
+
       final userWorkouts = <WorkoutModel>[];
-      
+
       for (final key in userKeys) {
         final data = box.get(key);
-        if (data == null) {
-          print('❌ ExerciseHistory: No data for key: $key');
-          continue;
-        }
-        
+        if (data == null) continue;
+
         try {
           final Map<String, dynamic> jsonData;
           if (data is Map<String, dynamic>) {
             jsonData = data;
-          } else if (data is Map) {
-            jsonData = Map<String, dynamic>.from(
-              data.map((k, v) => MapEntry(k.toString(), v))
-            );
           } else {
-            print('❌ ExerciseHistory: Invalid data type for key $key: ${data.runtimeType}');
-            continue;
+            jsonData = Map<String, dynamic>.from(
+            data.map((k, v) => MapEntry(k.toString(), v))
+          );
           }
-          
+        
+
           final workout = WorkoutModel.fromJson(jsonData);
           userWorkouts.add(workout);
-          print('✅ ExerciseHistory: Parsed workout: ${workout.name} (${workout.exercises.length} exercises)');
-          
-        } catch (e, stackTrace) {
-          print('❌ ExerciseHistory: Error parsing workout for key $key: $e');
-          print('❌ ExerciseHistory: Stack trace: $stackTrace');
+        } catch (e) {
+          if (enableDebugLogging) {
+            if (kDebugMode) {
+              debugPrint('❌ ExerciseHistory: Error parsing workout for key $key: $e');
+            }
+          }
           continue;
         }
       }
-      
-      print('📦 ExerciseHistory: Successfully parsed ${userWorkouts.length} workouts for user');
-      
+
       if (userWorkouts.isEmpty) {
-        print('❌ ExerciseHistory: No valid workouts found for user $userId');
-        print('🔍 ===== EXERCISE HISTORY DEBUG END =====');
         return [];
       }
-      
+
       // Sort workouts by date (newest first)
       userWorkouts.sort((a, b) => (b.startTime ?? b.createdAt).compareTo(a.startTime ?? a.createdAt));
-      
-      // Show all unique exercise names for debugging
-      final allExerciseNames = <String>{};
-      for (final workout in userWorkouts) {
-        for (final exercise in workout.exercises) {
-          allExerciseNames.add(exercise.name);
-        }
-      }
-      print('📋 ExerciseHistory: All unique exercise names found: ${allExerciseNames.toList()}');
-      
+
       // Extract exercise data from workouts
       for (final workout in userWorkouts) {
-        print('🔍 ExerciseHistory: Checking workout "${workout.name}" (status: ${workout.status})');
-        
-        // Include workouts with status 'completed' OR 'inProgress' that have completed exercises
-        // Skip only 'planned' workouts
-        if (workout.status == 'planned') {
-          print('⏭️ ExerciseHistory: Skipping planned workout');
-          continue;
-        }
-        
-        bool foundMatchingExercise = false;
-        
+        // Skip planned workouts
+        if (workout.status == 'planned') continue;
+
         for (final exercise in workout.exercises) {
           // More flexible exercise name matching
           final exerciseNameLower = exercise.name.toLowerCase().trim();
           final searchNameLower = exerciseName.toLowerCase().trim();
-          
-          print('🔍 ExerciseHistory: Comparing "$exerciseNameLower" with "$searchNameLower"');
-          
+
           // Try exact match, then partial match, then variations
           bool isMatch = false;
           if (exerciseNameLower == searchNameLower) {
             isMatch = true;
-            print('✅ ExerciseHistory: Exact match found');
           } else if (exerciseNameLower.contains(searchNameLower) || searchNameLower.contains(exerciseNameLower)) {
             isMatch = true;
-            print('✅ ExerciseHistory: Partial match found');
           } else {
             // Try with variations (Italian/English translations)
             final variations = _getExerciseVariations(searchNameLower);
             for (final variation in variations) {
               if (exerciseNameLower == variation || exerciseNameLower.contains(variation) || variation.contains(exerciseNameLower)) {
                 isMatch = true;
-                print('✅ ExerciseHistory: Variation match found: "$variation" matches "$exerciseNameLower"');
                 break;
               }
             }
           }
-          
+
           if (isMatch) {
-            foundMatchingExercise = true;
-            print('✅ ExerciseHistory: Found matching exercise: "${exercise.name}" with ${exercise.sets.length} sets');
             final workoutDate = workout.startTime ?? workout.createdAt;
-            
+
             // Get completed sets first
             var setsToProcess = exercise.sets.where((set) => set.isCompleted).toList();
-            print('📦 ExerciseHistory: Found ${setsToProcess.length} completed sets');
-            
+
             // If no completed sets, look for sets with weight > 0 and reps > 0
             if (setsToProcess.isEmpty) {
-              setsToProcess = exercise.sets.where((set) => set.weight > 0 && set.reps > 0).toList();
-              if (setsToProcess.isNotEmpty) {
-                print('⚠️ ExerciseHistory: No completed sets found, using ${setsToProcess.length} sets with weight > 0 and reps > 0');
-              }
+              setsToProcess = exercise.sets.where((set) => (set.weight ?? 0) > 0 && (set.reps ?? 0) > 0).toList();
             }
-            
+
             // If still no sets, include any sets with data
             if (setsToProcess.isEmpty) {
-              setsToProcess = exercise.sets.where((set) => set.weight > 0 || set.reps > 0).toList();
-              if (setsToProcess.isNotEmpty) {
-                print('⚠️ ExerciseHistory: Using ${setsToProcess.length} sets with any data');
-              }
+              setsToProcess = exercise.sets.where((set) => (set.weight ?? 0) > 0 || (set.reps ?? 0) > 0).toList();
             }
-            
-            print('📦 ExerciseHistory: Processing ${setsToProcess.length} sets for exercise "${exercise.name}"');
-            
+
             for (final set in setsToProcess) {
-              print('📝 ExerciseHistory: Adding set: ${set.weight}kg x ${set.reps} reps (completed: ${set.isCompleted})');
               historyData.add(ExerciseHistoryData(
-                weight: set.weight > 0 ? set.weight : null,
-                reps: set.reps > 0 ? set.reps : null,
+                weight: (set.weight ?? 0) > 0 ? set.weight : null,
+                reps: (set.reps ?? 0) > 0 ? set.reps : null,
                 date: workoutDate,
                 workoutName: workout.name,
               ));
             }
           }
         }
-        
-        if (!foundMatchingExercise) {
-          // Don't log every workout without match to avoid spam
-          // print('❌ ExerciseHistory: No matching exercise found in workout "${workout.name}"');
-          // Show exercise names in this workout for debugging only if we want verbose output
-          // final exerciseNames = workout.exercises.map((e) => '"${e.name}"').join(', ');
-          // print('📋 ExerciseHistory: Exercises in this workout: [$exerciseNames]');
-        }
-        
-        // REMOVED: Don't break early - search ALL workouts to find the exercise
-        // if (historyData.length >= limit) break;
       }
-      
-      print('📦 ExerciseHistory: Found ${historyData.length} total history items for "$exerciseName"');
-      print('📦 ExerciseHistory: Returning top ${historyData.length > limit ? limit : historyData.length} items');
-      print('🔍 ===== EXERCISE HISTORY DEBUG END =====');
-      
+
       // Sort by date (newest first) before limiting
       historyData.sort((a, b) => b.date.compareTo(a.date));
-      
+
       return historyData.take(limit).toList();
     } catch (e, stackTrace) {
-      print('❌ ExerciseHistory: Fatal error: $e');
-      print('❌ ExerciseHistory: Stack trace: $stackTrace');
-      // Return empty list on error
+      if (enableDebugLogging) {
+        if (kDebugMode) {
+          debugPrint('❌ ExerciseHistory: Fatal error: $e');
+        }
+        if (kDebugMode) {
+          debugPrint('❌ ExerciseHistory: Stack trace: $stackTrace');
+        }
+      }
       return [];
     }
   }
@@ -299,13 +234,12 @@ class ExerciseHistoryService {
           final Map<String, dynamic> jsonData;
           if (data is Map<String, dynamic>) {
             jsonData = data;
-          } else if (data is Map) {
-            jsonData = Map<String, dynamic>.from(
-              data.map((k, v) => MapEntry(k.toString(), v))
-            );
           } else {
-            continue;
+            jsonData = Map<String, dynamic>.from(
+            data.map((k, v) => MapEntry(k.toString(), v))
+          );
           }
+        
           
           final workout = WorkoutModel.fromJson(jsonData);
           for (final exercise in workout.exercises) {
@@ -319,7 +253,9 @@ class ExerciseHistoryService {
       
       return exerciseNames.toList()..sort();
     } catch (e) {
-      print('❌ ExerciseHistory: Error getting exercise names: $e');
+      if (kDebugMode) {
+        debugPrint('❌ ExerciseHistory: Error getting exercise names: $e');
+      }
       return [];
     }
   }

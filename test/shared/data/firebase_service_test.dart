@@ -14,13 +14,13 @@ class MockUser extends Mock implements User {}
 class MockUserCredential extends Mock implements UserCredential {}
 
 class FirebaseServiceTest {
-  final FirebaseAuth auth;
-  final FirebaseFirestore firestore;
 
   FirebaseServiceTest({
     required this.auth,
     required this.firestore,
   });
+  final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
 
   // Auth methods
   User? get currentUser => auth.currentUser;

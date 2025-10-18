@@ -7,10 +7,6 @@ import 'dart:math' as math;
 /// Grafico avanzato per tracciare la progressione del 1RM (One Rep Max)
 /// con predictive trend lines e analisi del plateau
 class OneRMProgressionChart extends StatefulWidget {
-  final Map<String, List<OneRMData>> exerciseData; // Exercise name -> data points
-  final Function(String exercise, OneRMData data)? onDataPointTap;
-  final bool showPrediction;
-  final int predictionDays;
   
   const OneRMProgressionChart({
     super.key,
@@ -19,6 +15,10 @@ class OneRMProgressionChart extends StatefulWidget {
     this.showPrediction = true,
     this.predictionDays = 30,
   });
+  final Map<String, List<OneRMData>> exerciseData; // Exercise name -> data points
+  final Function(String exercise, OneRMData data)? onDataPointTap;
+  final bool showPrediction;
+  final int predictionDays;
 
   @override
   State<OneRMProgressionChart> createState() => _OneRMProgressionChartState();
@@ -298,7 +298,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
                 ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -831,7 +831,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
   
   PlateauAnalysis _detectPlateau(List<OneRMData> data) {
     if (data.length < 3) {
-      return PlateauAnalysis(
+      return const PlateauAnalysis(
         isInPlateau: false,
         message: 'Dati insufficienti per analisi',
       );
@@ -986,11 +986,6 @@ enum ChartTimeRange {
 }
 
 class OneRMData {
-  final DateTime date;
-  final double weight;
-  final int? actualReps;
-  final double? rpe; // Rate of Perceived Exertion (1-10)
-  final String? notes;
   
   const OneRMData({
     required this.date,
@@ -999,26 +994,31 @@ class OneRMData {
     this.rpe,
     this.notes,
   });
+  final DateTime date;
+  final double weight;
+  final int? actualReps;
+  final double? rpe; // Rate of Perceived Exertion (1-10)
+  final String? notes;
 }
 
 class PlateauAnalysis {
-  final bool isInPlateau;
-  final String message;
-  final String? suggestion;
   
   const PlateauAnalysis({
     required this.isInPlateau,
     required this.message,
     this.suggestion,
   });
+  final bool isInPlateau;
+  final String message;
+  final String? suggestion;
 }
 
 class TrendPrediction {
-  final double predictedValue;
-  final double confidence;
   
   const TrendPrediction({
     required this.predictedValue,
     required this.confidence,
   });
+  final double predictedValue;
+  final double confidence;
 }

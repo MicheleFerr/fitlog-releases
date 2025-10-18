@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: services
- * 🎯 Feature: premium
- * 🔧 Type: service
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Timer for periodic sync
- * - Connectivity monitoring
- * - Battery optimization
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: services
+/// 🎯 Feature: premium
+/// 🔧 Type: service
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Timer for periodic sync
+/// - Connectivity monitoring
+/// - Battery optimization
+library;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -23,6 +22,14 @@ import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/
 
 /// Manages all premium sync operations with optimized timing
 class PremiumSyncManager {
+  
+  PremiumSyncManager({
+    required WorkoutSyncService workoutSyncService,
+    required HybridTemplateRepository templateRepository,
+  }) : _workoutSyncService = workoutSyncService,
+       _templateRepository = templateRepository {
+    _initialize();
+  }
   final WorkoutSyncService _workoutSyncService;
   final HybridTemplateRepository _templateRepository;
   
@@ -47,14 +54,6 @@ class PremiumSyncManager {
   
   // Sync statistics
   final _syncStats = SyncStatistics();
-  
-  PremiumSyncManager({
-    required WorkoutSyncService workoutSyncService,
-    required HybridTemplateRepository templateRepository,
-  }) : _workoutSyncService = workoutSyncService,
-       _templateRepository = templateRepository {
-    _initialize();
-  }
   
   /// Initialize sync manager
   void _initialize() {
@@ -125,7 +124,7 @@ class PremiumSyncManager {
     // Check if sync is needed based on last sync time
     if (_lastSyncTime != null) {
       final timeSinceLastSync = DateTime.now().difference(_lastSyncTime!);
-      if (timeSinceLastSync < Duration(minutes: 1)) {
+      if (timeSinceLastSync < const Duration(minutes: 1)) {
         return false; // Too soon
       }
     }
@@ -184,7 +183,7 @@ class PremiumSyncManager {
   /// Sync after workout completion (immediate)
   Future<void> syncAfterWorkout() async {
     // Wait a moment for data to be saved
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     
     // Force sync even if recently synced
     await syncNow(reason: SyncReason.workoutCompleted, force: true);
@@ -264,7 +263,7 @@ class PremiumSyncManager {
   
   /// Get optimal sync configuration
   static SyncConfiguration getOptimalConfiguration() {
-    return SyncConfiguration(
+    return const SyncConfiguration(
       activeSyncInterval: _activeSyncInterval,
       backgroundSyncInterval: _backgroundSyncInterval,
       minBatteryLevel: _minBatteryLevel,
@@ -284,12 +283,6 @@ class PremiumSyncManager {
 
 /// Sync status information
 class SyncStatus {
-  final DateTime? lastSyncTime;
-  final bool isSyncing;
-  final bool isEnabled;
-  final bool hasConnection;
-  final int batteryLevel;
-  final Map<String, dynamic> statistics;
   
   SyncStatus({
     this.lastSyncTime,
@@ -299,6 +292,12 @@ class SyncStatus {
     required this.batteryLevel,
     required this.statistics,
   });
+  final DateTime? lastSyncTime;
+  final bool isSyncing;
+  final bool isEnabled;
+  final bool hasConnection;
+  final int batteryLevel;
+  final Map<String, dynamic> statistics;
   
   String get statusMessage {
     if (isSyncing) return 'Syncing...';
@@ -330,12 +329,6 @@ enum SyncReason {
 
 /// Sync configuration
 class SyncConfiguration {
-  final Duration activeSyncInterval;
-  final Duration backgroundSyncInterval;
-  final int minBatteryLevel;
-  final bool wifiOnlyForLargeSync;
-  final int maxRetries;
-  final Duration retryDelay;
   
   const SyncConfiguration({
     required this.activeSyncInterval,
@@ -345,6 +338,12 @@ class SyncConfiguration {
     required this.maxRetries,
     required this.retryDelay,
   });
+  final Duration activeSyncInterval;
+  final Duration backgroundSyncInterval;
+  final int minBatteryLevel;
+  final bool wifiOnlyForLargeSync;
+  final int maxRetries;
+  final Duration retryDelay;
 }
 
 /// Sync statistics tracking

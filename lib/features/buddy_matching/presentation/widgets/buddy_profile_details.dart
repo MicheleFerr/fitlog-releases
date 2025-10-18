@@ -1,38 +1,37 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/buddy_profile.dart';
-import 'fitness_level_badge.dart';
-import 'workout_goals_chips.dart';
-import 'instagram_link_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/fitness_level_badge.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/workout_goals_chips.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/instagram_link_button.dart';
 
 class BuddyProfileDetails extends StatelessWidget {
-  final BuddyProfile profile;
 
   const BuddyProfileDetails({
     super.key,
     required this.profile,
   });
+  final BuddyProfile profile;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.9,
@@ -166,7 +165,7 @@ class BuddyProfileDetails extends StatelessWidget {
             ),
             if (profile.isVerified) ...[
               const SizedBox(width: 8),
-              Icon(
+              const Icon(
                 Icons.verified,
                 color: Colors.blue,
                 size: 24,
@@ -201,7 +200,7 @@ class BuddyProfileDetails extends StatelessWidget {
   }
 
   Widget _buildProfilePlaceholder(ThemeData theme) {
-    return Icon(
+    return const Icon(
       Icons.person,
       size: 60,
       color: Colors.white,

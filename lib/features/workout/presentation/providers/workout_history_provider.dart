@@ -1,22 +1,20 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: workout
- * 🔧 Type: provider
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout
- * - workout/data/datasources: HiveWorkoutDataSource
- * - auth/presentation/providers: AuthProvider
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: workout
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout
+/// - workout/data/datasources: HiveWorkoutDataSource
+/// - auth/presentation/providers: AuthProvider
+library;
 
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
@@ -28,15 +26,6 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 
 /// State class for workout history management
 class WorkoutHistoryState {
-  final List<Workout> workouts;
-  final bool isLoading;
-  final bool isLoadingMore;
-  final String? error;
-  final bool hasMoreData;
-  final String searchQuery;
-  final String activeFilter;
-  final DateTimeRange? dateFilter;
-  final Map<String, dynamic> statistics;
 
   const WorkoutHistoryState({
     this.workouts = const [],
@@ -49,6 +38,15 @@ class WorkoutHistoryState {
     this.dateFilter,
     this.statistics = const {},
   });
+  final List<Workout> workouts;
+  final bool isLoading;
+  final bool isLoadingMore;
+  final String? error;
+  final bool hasMoreData;
+  final String searchQuery;
+  final String activeFilter;
+  final DateTimeRange? dateFilter;
+  final Map<String, dynamic> statistics;
 
   WorkoutHistoryState copyWith({
     List<Workout>? workouts,
@@ -80,6 +78,13 @@ class WorkoutHistoryState {
 
 /// Notifier for managing workout history state
 class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
+
+  WorkoutHistoryNotifier({
+    required HiveWorkoutDataSource dataSource,
+    String? userId,
+  })  : _dataSource = dataSource,
+        _userId = userId,
+        super(const AsyncValue.loading());
   final HiveWorkoutDataSource _dataSource;
   final String? _userId;
   
@@ -91,13 +96,6 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
   final int _pageSize = 20;
   bool _hasMoreData = true;
   List<Workout> _allWorkouts = [];
-
-  WorkoutHistoryNotifier({
-    required HiveWorkoutDataSource dataSource,
-    String? userId,
-  })  : _dataSource = dataSource,
-        _userId = userId,
-        super(const AsyncValue.loading());
 
   bool get hasMoreData => _hasMoreData;
 
@@ -114,7 +112,7 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
     
     try {
       // Load all workouts from local storage
-      final allWorkouts = await _dataSource.getWorkouts(_userId!);
+      final allWorkouts = await _dataSource.getWorkouts(_userId);
       _allWorkouts = allWorkouts.map((model) => _mapWorkoutModelToEntity(model)).toList();
       
       // Sort by date (newest first)
@@ -191,7 +189,7 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
 
     try {
       final workoutModel = _mapWorkoutEntityToModel(updatedWorkout);
-      await _dataSource.updateWorkout(workoutModel, _userId!);
+      await _dataSource.updateWorkout(workoutModel, _userId);
       
       // Update local cache
       final index = _allWorkouts.indexWhere((w) => w.id == updatedWorkout.id);
@@ -228,7 +226,7 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
       );
       
       final workoutModel = _mapWorkoutEntityToModel(duplicatedWorkout);
-      await _dataSource.saveWorkout(workoutModel, _userId!);
+      await _dataSource.saveWorkout(workoutModel, _userId);
       
       // Add to local cache
       _allWorkouts.insert(0, duplicatedWorkout); // Add at beginning (newest first)
@@ -250,7 +248,7 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
     if (_userId == null) return;
 
     try {
-      await _dataSource.deleteWorkout(workout.id, _userId!);
+      await _dataSource.deleteWorkout(workout.id, _userId);
       
       // Remove from local cache
       _allWorkouts.removeWhere((w) => w.id == workout.id);

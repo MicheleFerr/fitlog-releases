@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:intl/intl.dart';
 
 /// 🎯 TIER-1 IMPROVEMENT COMPONENTS
 /// Componenti riutilizzabili per rendere Analytics tier-1
@@ -12,12 +10,6 @@ import 'package:intl/intl.dart';
 // ============================================================================
 
 class HelpButton extends StatelessWidget {
-  final String topic;
-  final String? customTitle;
-  final String? customContent;
-  final List<Widget>? additionalActions;
-  final IconData icon;
-  final double size;
 
   const HelpButton({
     super.key,
@@ -28,11 +20,17 @@ class HelpButton extends StatelessWidget {
     this.icon = Icons.help_outline,
     this.size = 18,
   });
+  final String topic;
+  final String? customTitle;
+  final String? customContent;
+  final List<Widget>? additionalActions;
+  final IconData icon;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return IconButton(
       icon: Icon(icon, size: size),
@@ -52,7 +50,7 @@ class HelpButton extends StatelessWidget {
 
   void _showHelpDialog(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     showDialog(
       context: context,
@@ -118,7 +116,7 @@ class HelpButton extends StatelessWidget {
 
   Widget _buildExampleCard(BuildContext context, String topic) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       padding: const EdgeInsets.all(12),
@@ -166,16 +164,6 @@ class HelpButton extends StatelessWidget {
 // ============================================================================
 
 class InteractiveMetricCard extends StatefulWidget {
-  final String title;
-  final String value;
-  final String? unit;
-  final IconData icon;
-  final Color? iconColor;
-  final double? previousValue;
-  final String? helpTopic;
-  final VoidCallback? onTap;
-  final Widget? expandedContent;
-  final String? tooltip;
 
   const InteractiveMetricCard({
     super.key,
@@ -190,6 +178,16 @@ class InteractiveMetricCard extends StatefulWidget {
     this.expandedContent,
     this.tooltip,
   });
+  final String title;
+  final String value;
+  final String? unit;
+  final IconData icon;
+  final Color? iconColor;
+  final double? previousValue;
+  final String? helpTopic;
+  final VoidCallback? onTap;
+  final Widget? expandedContent;
+  final String? tooltip;
 
   @override
   State<InteractiveMetricCard> createState() => _InteractiveMetricCardState();
@@ -228,7 +226,7 @@ class _InteractiveMetricCardState extends State<InteractiveMetricCard>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -409,10 +407,6 @@ class _InteractiveMetricCardState extends State<InteractiveMetricCard>
 // ============================================================================
 
 class TrendIndicator extends StatelessWidget {
-  final double current;
-  final double previous;
-  final bool showPercentage;
-  final bool showAbsolute;
 
   const TrendIndicator({
     super.key,
@@ -421,11 +415,15 @@ class TrendIndicator extends StatelessWidget {
     this.showPercentage = true,
     this.showAbsolute = false,
   });
+  final double current;
+  final double previous;
+  final bool showPercentage;
+  final bool showAbsolute;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     final difference = current - previous;
     final percentage = previous > 0 ? (difference / previous * 100) : 0.0;
@@ -480,11 +478,6 @@ class TrendIndicator extends StatelessWidget {
 // ============================================================================
 
 class InsightCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String message;
-  final Widget? action;
-  final InsightType type;
 
   const InsightCard({
     super.key,
@@ -494,6 +487,11 @@ class InsightCard extends StatelessWidget {
     this.action,
     this.type = InsightType.info,
   });
+  final IconData icon;
+  final String title;
+  final String message;
+  final Widget? action;
+  final InsightType type;
 
   @override
   Widget build(BuildContext context) {
@@ -600,11 +598,6 @@ class InsightCard extends StatelessWidget {
 enum InsightType { success, warning, error, info }
 
 class InsightColors {
-  final Color background;
-  final Color border;
-  final Color icon;
-  final Color iconBackground;
-  final Color text;
 
   InsightColors({
     required this.background,
@@ -613,6 +606,11 @@ class InsightColors {
     required this.iconBackground,
     required this.text,
   });
+  final Color background;
+  final Color border;
+  final Color icon;
+  final Color iconBackground;
+  final Color text;
 }
 
 // ============================================================================
@@ -620,12 +618,6 @@ class InsightColors {
 // ============================================================================
 
 class MotivationalEmptyState extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final String? motivationalQuote;
-  final VoidCallback? onAction;
-  final String? actionLabel;
 
   const MotivationalEmptyState({
     super.key,
@@ -636,11 +628,17 @@ class MotivationalEmptyState extends StatelessWidget {
     this.onAction,
     this.actionLabel,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final String? motivationalQuote;
+  final VoidCallback? onAction;
+  final String? actionLabel;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Center(
       child: Padding(
@@ -791,10 +789,6 @@ class MotivationalEmptyState extends StatelessWidget {
 // ============================================================================
 
 class StreakWidget extends StatelessWidget {
-  final int currentStreak;
-  final int longestStreak;
-  final int nextMilestone;
-  final String? motivationalMessage;
 
   const StreakWidget({
     super.key,
@@ -803,11 +797,15 @@ class StreakWidget extends StatelessWidget {
     required this.nextMilestone,
     this.motivationalMessage,
   });
+  final int currentStreak;
+  final int longestStreak;
+  final int nextMilestone;
+  final String? motivationalMessage;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     final daysToMilestone = nextMilestone - currentStreak;
     final progressToMilestone = currentStreak / nextMilestone;

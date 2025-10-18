@@ -2,9 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
 
+/// ⚠️ DEPRECATED: Use SupersetSequentialExecutionSheet instead
+///
+/// This widget is deprecated because it violates the scientific superset methodology:
+/// - Uses PageView allowing free navigation (should be sequential A→B)
+/// - Allows partial completion (violates "no rest between exercises" rule)
+/// - No timer integration between rounds
+///
+/// Use [SupersetSequentialExecutionSheet] for correct superset execution flow.
+@Deprecated('Use SupersetSequentialExecutionSheet instead')
 class SupersetExecutionSheet extends ConsumerStatefulWidget {
+  
+  const SupersetExecutionSheet({
+    super.key,
+    required this.superset,
+    required this.setIndex,
+    required this.onComplete,
+  });
   final SupersetExercise superset;
   final int setIndex;
   final Function(
@@ -12,13 +27,6 @@ class SupersetExecutionSheet extends ConsumerStatefulWidget {
     Map<String, int> rpes,
     Map<String, double> weights,
   ) onComplete;
-  
-  const SupersetExecutionSheet({
-    Key? key,
-    required this.superset,
-    required this.setIndex,
-    required this.onComplete,
-  }) : super(key: key);
 
   @override
   ConsumerState<SupersetExecutionSheet> createState() => _SupersetExecutionSheetState();
@@ -34,7 +42,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
   late Map<String, FixedExtentScrollController> _repsControllers;
   late Map<String, FixedExtentScrollController> _rpeControllers;
   
-  int _currentPage = 0;
+  final int _currentPage = 0;
   
   @override
   void initState() {
@@ -56,7 +64,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
         final set = exercise.sets[widget.setIndex];
         final weight = set.weight ?? 0.0;
         final reps = set.reps ?? 10;
-        final rpe = 7; // Default RPE
+        const rpe = 7; // Default RPE
         
         _actualReps[exercise.id] = reps;
         _weights[exercise.id] = weight;
@@ -328,7 +336,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                               // RPE selector
                               Expanded(
                                 child: DropdownButtonFormField<int>(
-                                  value: _rpes[exercise.id] ?? 7,
+                                  initialValue: _rpes[exercise.id] ?? 7,
                                   decoration: InputDecoration(
                                     labelText: 'RPE',
                                     isDense: true,

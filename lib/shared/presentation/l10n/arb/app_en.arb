@@ -1,0 +1,14 @@
+{
+  "appTitle": "Gymbro",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "timeUnderTensionExplanation": "Time Under Tension (TUT) is the total amount of time a muscle is under strain during a set. It's a key factor for muscle growth and strength.",
+  "tutBasicExplanation": "TUT is the duration your muscles work during an exercise set. Longer TUT can lead to more muscle growth.",
+  "tutFormatTitle": "TUT Format: X-Y-Z-W",
+  "tutFormatExplanation": "The TUT format X-Y-Z-W represents the duration in seconds for each phase of an exercise: X (eccentric/lowering), Y (pause at bottom), Z (concentric/lifting), W (pause at top).",
+  "warmupTipLight": "Light warmup: Focus on dynamic stretches and light cardio to get your blood flowing.",
+  "warmupTipModerate": "Moderate warmup: Include some light sets of your main exercise to prepare your muscles.",
+  "warmupTipHeavy": "Heavy warmup: Gradually increase weight with several sets, ensuring proper form and muscle activation.",
+  "warmupTipMax": "Max effort warmup: Perform a few very light sets, then jump straight into your working sets with minimal rest."
+}

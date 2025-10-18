@@ -24,6 +24,7 @@ _$ExerciseTemplateImpl _$$ExerciseTemplateImplFromJson(
           .toList(),
       imageUrl: json['imageUrl'] as String?,
       videoUrl: json['videoUrl'] as String?,
+      difficulty: json['difficulty'] as String?,
       metadata: json['metadata'] as Map<String, dynamic>?,
       isActive: json['isActive'] as bool? ?? true,
       createdAt: json['createdAt'] == null
@@ -47,6 +48,7 @@ Map<String, dynamic> _$$ExerciseTemplateImplToJson(
       'instructions': instance.instructions,
       'imageUrl': instance.imageUrl,
       'videoUrl': instance.videoUrl,
+      'difficulty': instance.difficulty,
       'metadata': instance.metadata,
       'isActive': instance.isActive,
       'createdAt': instance.createdAt?.toIso8601String(),

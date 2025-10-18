@@ -201,7 +201,7 @@ final class PermissionManager {
     // MARK: - Alert Presentation
     
     private func showBackgroundRefreshAlert(title: String, message: String) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                   let rootViewController = windowScene.windows.first?.rootViewController else {
                 Logger.shared.log(.error, "No root view controller for alert", category: .permission)
@@ -214,8 +214,8 @@ final class PermissionManager {
                 preferredStyle: .alert
             )
             
-            alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in
-                self.openAppSettings()
+            alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { [weak self] _ in
+                self?.openAppSettings()
             })
             
             alert.addAction(UIAlertAction(title: "Later", style: .cancel) { _ in
@@ -239,8 +239,8 @@ final class PermissionManager {
                 preferredStyle: .alert
             )
             
-            alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in
-                self.openAppSettings()
+            alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { [weak self] _ in
+                self?.openAppSettings()
             })
             
             alert.addAction(UIAlertAction(title: "Not Now", style: .cancel))

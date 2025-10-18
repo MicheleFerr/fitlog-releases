@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_overview_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_progress_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_insights_tab.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_routine_tab.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_premium_tab.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/animated_search_icon.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_history_search_modal.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart' show userActivitiesProvider, isPremiumProvider;
-import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/sync_progress_overlay.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/skeleton_loader.dart';
 
 class TabbedAnalyticsScreen extends ConsumerStatefulWidget {
   const TabbedAnalyticsScreen({super.key});
@@ -28,7 +31,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         setState(() {
@@ -38,11 +41,9 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
       }
     });
     
-    // SYNC FIX: Refresh analytics data when screen is loaded
-    // This ensures we show the latest data if user just completed a workout
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(analyticsRefreshProvider)();
-    });
+    // Cache-first strategy: Don't invalidate on every screen load
+    // Data will be fetched from Hive cache first, then Firebase if cache is empty
+    // Real-time updates are handled by Firestore listeners
   }
   
   @override
@@ -54,8 +55,8 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
-    final firebaseUser = ref.watch(firebaseUserProvider);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -77,13 +78,13 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Analytics',
+              l10n.analytics,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              'Track your fitness journey',
+              l10n.trackYourFitnessJourney,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -94,16 +95,9 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           if (authState == AuthState.authenticated)
             AnimatedSearchIcon(
               onPressed: () async {
-                final activitiesAsync = ref.read(userActivitiesProvider(
-                  ref.read(firebaseUserProvider).valueOrNull?.email ?? '',
-                ));
-                
-                if (activitiesAsync.hasValue) {
-                  await ExerciseHistorySearchModal.show(
-                    context,
-                    activitiesAsync.value!,
-                  );
-                }
+                // TODO: Re-implement search with the new data model
+                // final workouts = ref.read(historicalWorkoutsProvider).valueOrNull ?? [];
+                // await ExerciseHistorySearchModal.show(context, workouts);
               },
               showInitialAnimation: true,
             ),
@@ -111,12 +105,12 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             icon: const Icon(Icons.refresh),
             onPressed: () {
               HapticFeedback.lightImpact();
-              ref.invalidate(userActivitiesProvider);
+              ref.invalidate(historicalWorkoutsProvider);
             },
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
+          preferredSize: const Size.fromHeight(56),
           child: Container(
             color: theme.colorScheme.surface,
             child: TabBar(
@@ -126,43 +120,26 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
               indicatorColor: theme.colorScheme.primary,
               labelColor: theme.colorScheme.primary,
               unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
-              labelStyle: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-              unselectedLabelStyle: theme.textTheme.titleSmall,
               tabs: const [
                 Tab(
-                  height: 46,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.dashboard_outlined, size: 20),
-                      SizedBox(height: 4),
-                      Text('Overview'),
-                    ],
-                  ),
+                  height: 52,
+                  icon: Icon(Icons.dashboard_outlined, size: 24),
                 ),
                 Tab(
-                  height: 46,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.trending_up_outlined, size: 20),
-                      SizedBox(height: 4),
-                      Text('Progress'),
-                    ],
-                  ),
+                  height: 52,
+                  icon: Icon(Icons.trending_up_outlined, size: 24),
                 ),
                 Tab(
-                  height: 46,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.insights_outlined, size: 20),
-                      SizedBox(height: 4),
-                      Text('Insights'),
-                    ],
-                  ),
+                  height: 52,
+                  icon: Icon(Icons.insights_outlined, size: 24),
+                ),
+                Tab(
+                  height: 52,
+                  icon: Icon(Icons.calendar_month_outlined, size: 24),
+                ),
+                Tab(
+                  height: 52,
+                  icon: Icon(Icons.auto_awesome_outlined, size: 24),
                 ),
               ],
             ),
@@ -171,43 +148,46 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
       ),
       body: authState != AuthState.authenticated
           ? _buildNotAuthenticatedView()
-          : firebaseUser.when(
-              data: (user) => user?.email == null
-                  ? _buildNoEmailView()
-                  : _buildTabContent(user!.email!),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => _buildErrorView(error.toString()),
-            ),
+          : _buildTabContent(),
     );
   }
   
-  Widget _buildTabContent(String userEmail) {
-    final activitiesAsync = ref.watch(userActivitiesProvider(userEmail));
-    final isPremium = ref.watch(isPremiumProvider).value ?? false;
-    
-    return activitiesAsync.when(
-      data: (activities) {
-        if (activities.isEmpty) {
+  Widget _buildTabContent() {
+    final workoutsAsync = ref.watch(historicalWorkoutsProvider);
+    final isPremium = ref.watch(isPremiumUserProvider);
+    final syncStatus = ref.watch(workoutSyncStatusProvider);
+
+    // Show sync overlay if syncing
+    if (syncStatus.isActive) {
+      return const SyncProgressOverlay();
+    }
+
+    return workoutsAsync.when(
+      data: (workouts) {
+        if (workouts.isEmpty) {
           return _buildEmptyState();
         }
-        
+
         return TabBarView(
           controller: _tabController,
           children: [
-            AnalyticsOverviewTab(activities: activities),
-            AnalyticsProgressTab(activities: activities, isPremium: isPremium),
-            AnalyticsInsightsTab(activities: activities, isPremium: isPremium),
+            AnalyticsOverviewTab(workouts: workouts),
+            AnalyticsProgressTab(workouts: workouts, isPremium: isPremium),
+            AnalyticsInsightsTab(workouts: workouts, isPremium: isPremium),
+            const AnalyticsRoutineTab(),
+            AnalyticsPremiumTab(workouts: workouts, isPremium: isPremium),
           ],
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => _buildLoadingSkeleton(),
       error: (error, _) => _buildErrorView(error.toString()),
     );
   }
   
   Widget _buildNotAuthenticatedView() {
     final theme = Theme.of(context);
-    
+    final l10n = AppLocalizations.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -221,13 +201,13 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             ),
             const SizedBox(height: 24),
             Text(
-              'Sign in to view analytics',
+              l10n.signInToViewAnalytics,
               style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             Text(
-              'Track your workouts and monitor your progress',
+              l10n.trackYourWorkoutsAndMonitorProgress,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -236,7 +216,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             const SizedBox(height: 32),
             FilledButton(
               onPressed: () => context.push('/login'),
-              child: const Text('Sign In'),
+              child: Text(l10n.signIn),
             ),
           ],
         ),
@@ -246,7 +226,8 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
   
   Widget _buildNoEmailView() {
     final theme = Theme.of(context);
-    
+    final l10n = AppLocalizations.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -260,12 +241,12 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             ),
             const SizedBox(height: 24),
             Text(
-              'Account Error',
+              l10n.accountError,
               style: theme.textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
             Text(
-              'Unable to load user data. Please sign out and sign in again.',
+              l10n.unableToLoadUserData,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -279,7 +260,8 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
   
   Widget _buildErrorView(String error) {
     final theme = Theme.of(context);
-    
+    final l10n = AppLocalizations.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -293,7 +275,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             ),
             const SizedBox(height: 24),
             Text(
-              'Error loading analytics',
+              l10n.errorLoadingAnalytics,
               style: theme.textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
@@ -306,9 +288,9 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             ),
             const SizedBox(height: 32),
             OutlinedButton.icon(
-              onPressed: () => ref.invalidate(userActivitiesProvider),
+              onPressed: () => ref.invalidate(historicalWorkoutsProvider),
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(l10n.retry),
             ),
           ],
         ),
@@ -316,42 +298,41 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
     );
   }
   
+  Widget _buildLoadingSkeleton() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: const [
+        // Hero card skeleton
+        HeroCardSkeleton(),
+        SizedBox(height: 16),
+
+        // Stats grid skeleton
+        MetricGridSkeleton(itemCount: 4),
+        SizedBox(height: 20),
+
+        // Recent workouts skeleton
+        WorkoutListSkeleton(itemCount: 3),
+        SizedBox(height: 20),
+
+        // Chart skeleton
+        ChartSkeleton(height: 200, showLegend: true),
+      ],
+    );
+  }
+
   Widget _buildEmptyState() {
-    final theme = Theme.of(context);
-    
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.fitness_center,
-              size: 80,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'No workouts yet',
-              style: theme.textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Start your first workout to see analytics',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            FilledButton.icon(
-              onPressed: () => context.push('/workout'),
-              icon: const Icon(Icons.add),
-              label: const Text('Start Workout'),
-            ),
-          ],
-        ),
-      ),
+    final l10n = AppLocalizations.of(context);
+
+    return EnhancedEmptyState(
+      type: EmptyStateType.motivational,
+      icon: Icons.fitness_center,
+      title: l10n.noWorkoutsYet,
+      description: l10n.startYourFirstWorkoutDesc,
+      motivationalQuote: l10n.fitnessQuoteEmptyState,
+      proTip: l10n.proTipFirstWorkout,
+      primaryActionLabel: l10n.startWorkout,
+      primaryActionIcon: Icons.add,
+      onPrimaryAction: () => context.push('/workout'),
     );
   }
 }

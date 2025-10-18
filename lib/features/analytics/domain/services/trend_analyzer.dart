@@ -19,15 +19,17 @@ enum AnalysisPeriod {
   year,
 }
 
+/// Trend direction for compatibility
+enum TrendDirection {
+  strongUp,
+  up,
+  stable,
+  down,
+  strongDown,
+}
+
 /// Trend analysis result
 class TrendAnalysis {
-  final TrendType type;
-  final double slope;          // Rate of change
-  final double correlation;    // Strength of trend (0-1)
-  final double currentValue;
-  final double predictedValue; // Next period prediction
-  final String recommendation;
-  final Map<String, dynamic> metadata;
 
   TrendAnalysis({
     required this.type,
@@ -36,8 +38,17 @@ class TrendAnalysis {
     required this.currentValue,
     required this.predictedValue,
     required this.recommendation,
+    this.averageVolume = 0.0,
     this.metadata = const {},
   });
+  final TrendType type;
+  final double slope;          // Rate of change
+  final double correlation;    // Strength of trend (0-1)
+  final double currentValue;
+  final double predictedValue; // Next period prediction
+  final String recommendation;
+  final double averageVolume;  // Average volume over the period
+  final Map<String, dynamic> metadata;
 
   /// Get percentage change
   double get percentageChange {
@@ -47,6 +58,20 @@ class TrendAnalysis {
 
   /// Check if trend is statistically significant
   bool get isSignificant => correlation.abs() > 0.7;
+
+  /// Map TrendType to TrendDirection for compatibility
+  TrendDirection get trend {
+    switch (type) {
+      case TrendType.improving:
+        return TrendDirection.up;
+      case TrendType.declining:
+        return TrendDirection.down;
+      case TrendType.plateau:
+        return TrendDirection.stable;
+      case TrendType.inconsistent:
+        return TrendDirection.stable;
+    }
+  }
 }
 
 /// Service for analyzing workout trends
@@ -496,7 +521,7 @@ class TrendAnalyzer {
     if (daysSincePlateau < 14) {
       return 'Early plateau detected. Increase intensity or volume slightly';
     } else if (daysSincePlateau < 30) {
-      return 'Plateau for ${daysSincePlateau} days. Consider deload then new program';
+      return 'Plateau for $daysSincePlateau days. Consider deload then new program';
     } else {
       return 'Extended plateau. Time for program change or technique review';
     }
@@ -520,10 +545,6 @@ class TrendAnalyzer {
 
 /// Linear regression result
 class LinearRegression {
-  final double slope;
-  final double intercept;
-  final double correlation;
-  final int lastX;
 
   LinearRegression({
     required this.slope,
@@ -531,6 +552,10 @@ class LinearRegression {
     required this.correlation,
     this.lastX = 0,
   });
+  final double slope;
+  final double intercept;
+  final double correlation;
+  final int lastX;
 
   double predictNext() {
     return slope * (lastX + 1) + intercept;
@@ -543,10 +568,6 @@ class LinearRegression {
 
 /// Plateau detection result
 class PlateauDetection {
-  final bool isPlateaued;
-  final int duration; // Days
-  final int sessionsInPlateau;
-  final String recommendation;
 
   PlateauDetection({
     required this.isPlateaued,
@@ -554,15 +575,14 @@ class PlateauDetection {
     this.sessionsInPlateau = 0,
     required this.recommendation,
   });
+  final bool isPlateaued;
+  final int duration; // Days
+  final int sessionsInPlateau;
+  final String recommendation;
 }
 
 /// Performance prediction for next workout
 class PerformancePrediction {
-  final double predicted1RM;
-  final double suggestedWeight;
-  final int suggestedReps;
-  final double confidenceLevel;
-  final String recommendation;
 
   PerformancePrediction({
     required this.predicted1RM,
@@ -571,4 +591,9 @@ class PerformancePrediction {
     required this.confidenceLevel,
     required this.recommendation,
   });
+  final double predicted1RM;
+  final double suggestedWeight;
+  final int suggestedReps;
+  final double confidenceLevel;
+  final String recommendation;
 }

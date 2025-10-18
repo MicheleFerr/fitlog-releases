@@ -1,32 +1,26 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: workout
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerStatefulWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: workout
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerStatefulWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import '../providers/set_duration_tracker_provider.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class ExerciseStartButton extends ConsumerStatefulWidget {
-  final String exerciseId;
-  final String exerciseName;
-  final VoidCallback? onStarted;
-  final bool isFirstSet;
   
   const ExerciseStartButton({
     super.key,
@@ -35,6 +29,10 @@ class ExerciseStartButton extends ConsumerStatefulWidget {
     required this.onStarted,
     this.isFirstSet = true,
   });
+  final String exerciseId;
+  final String exerciseName;
+  final VoidCallback? onStarted;
+  final bool isFirstSet;
 
   @override
   ConsumerState<ExerciseStartButton> createState() => _ExerciseStartButtonState();
@@ -123,7 +121,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     // If exercise has started, show a subtle indicator instead
     if (_hasStarted) {
@@ -142,7 +140,8 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
   Widget _buildStartButton(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       child: InkWell(
@@ -178,14 +177,14 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Start tracking duration',
+                  l10n.startTrackingDuration,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
               Text(
-                'Tap to start',
+                l10n.tapToStart,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: colorScheme.onSurfaceVariant.withOpacity(0.6),
                 ),
@@ -200,7 +199,8 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
   Widget _buildCountdownOverlay(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -242,7 +242,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              _countdownValue > 0 ? 'Get ready...' : 'GO! Start your set',
+              _countdownValue > 0 ? l10n.getReady : l10n.goStartYourSet,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: _countdownValue == 0 ? FontWeight.bold : FontWeight.normal,
@@ -257,7 +257,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
                 minimumSize: const Size(0, 0),
               ),
               child: Text(
-                'Cancel',
+                l10n.cancel,
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: colorScheme.error,
                 ),

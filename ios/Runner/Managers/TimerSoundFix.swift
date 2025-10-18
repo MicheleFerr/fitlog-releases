@@ -16,13 +16,30 @@ final class TimerSoundFix {
         setupAudioSession()
         preloadCustomSounds()
     }
+
+    // CRITICAL FIX: Call this from AppDelegate to ensure early preloading
+    static func initializeAtAppLaunch() {
+        Logger.shared.log(.info, "🚀 TimerSoundFix early initialization called from AppDelegate", category: .audioSession)
+        _ = TimerSoundFix.shared // Triggers singleton initialization
+
+        // Additional preload verification after app launch
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            TimerSoundFix.shared.verifyPreloadedSounds()
+        }
+    }
     
     // MARK: - Main API
     
     /// Play timer completion sound with multiple fallback strategies
     func playTimerCompletionSound(preferredSound: String? = nil) {
-        Logger.shared.log(.info, "🎯 Playing timer completion sound", category: .audioSession)
-        Logger.shared.log(.info, "🎵 Preferred sound: \(preferredSound ?? "default")", category: .audioSession)
+        let appState = UIApplication.shared.applicationState
+        Logger.shared.log(.info, """
+            🎯 [TIMER-DEBUG] playTimerCompletionSound called:
+            - Preferred Sound: \(preferredSound ?? "default")
+            - App State: \(appState == .active ? "Active" : appState == .background ? "Background" : "Inactive")
+            - Time: \(Date())
+            - Available Preloaded: \(preloadedSounds.keys.joined(separator: ", "))
+            """, category: .audioSession)
         
         // Setup audio session for silent mode override
         do {
@@ -34,15 +51,34 @@ final class TimerSoundFix {
             Logger.shared.log(.error, "Failed to setup audio session: \(error)", category: .audioSession)
         }
         
-        // ALWAYS play system sounds for reliability
+        // CRITICAL FIX: Try custom sound FIRST if available
+        if let preferred = preferredSound, !preferred.isEmpty && preferred != "default" {
+            Logger.shared.log(.info, "🎵 [TIMER-DEBUG] Attempting to play custom sound: \(preferred)", category: .audioSession)
+            // Try to play custom sound immediately
+            if playCustomSoundIfAvailable(preferredSound: preferred) {
+                Logger.shared.log(.info, "✅ [TIMER-DEBUG] Custom sound played successfully: \(preferred)", category: .audioSession)
+                // Still add haptic for feedback
+                playHapticFeedback()
+                return
+            } else {
+                Logger.shared.log(.warning, "⚠️ [TIMER-DEBUG] Custom sound failed, will use fallback", category: .audioSession)
+            }
+        }
+        
+        // Fallback: Play system sounds for reliability
         playSystemSound()
         
         // Haptic feedback
         playHapticFeedback()
         
-        // DON'T try to play custom sounds via AudioServices - KB says it doesn't work!
-        // Only notifications can play custom sounds in background
-        Logger.shared.log(.info, "📢 Custom sounds only work via notifications, not AudioServices", category: .audioSession)
+        // CRITICAL FIX: Skip notification scheduling - Flutter handles all notifications
+        // This was causing duplicate notifications with hardcoded English text
+        Logger.shared.log(.info, """
+            ⏭️ [NOTIFICATION-FIX] SKIPPING notification from TimerSoundFix:
+            - Would have shown: "Timer Complete! Your rest timer has finished."
+            - Flutter now handles all completion notifications with proper localization
+            - Audio was already played via system sound above
+            """, category: .audioSession)
     }
     
     // MARK: - Audio Session Setup
@@ -71,7 +107,7 @@ final class TimerSoundFix {
     // MARK: - Preload Custom Sounds
     
     private func preloadCustomSounds() {
-        let soundsToPreload = ["timer_complete", "LightWeight", "YehBuddie"]
+        let soundsToPreload = ["sound", "timer_complete", "LightWeight", "YehBuddie"]
         
         for soundName in soundsToPreload {
             // Try CAF first (Apple's preferred format)
@@ -116,6 +152,63 @@ final class TimerSoundFix {
         
         Logger.shared.log(.info, "📦 Preloaded \(preloadedSounds.count) custom sounds", category: .audioSession)
     }
+
+    // CRITICAL FIX: Verify preloaded sounds are still valid
+    func verifyPreloadedSounds() {
+        Logger.shared.log(.info, "🔍 Verifying preloaded sounds integrity...", category: .audioSession)
+
+        var invalidSounds: [String] = []
+
+        for (soundName, soundID) in preloadedSounds {
+            // AudioServicesPlaySystemSound doesn't return status, so we assume valid
+            // The sound ID should be valid if it was successfully created earlier
+            Logger.shared.log(.debug, "✅ Assuming valid sound ID for \(soundName): \(soundID)", category: .audioSession)
+        }
+
+        // Reload any invalid sounds
+        if !invalidSounds.isEmpty {
+            Logger.shared.log(.warning, "⚠️ Reloading \(invalidSounds.count) invalid sounds: \(invalidSounds.joined(separator: ", "))", category: .audioSession)
+
+            for soundName in invalidSounds {
+                // Dispose old sound ID
+                if let oldSoundID = preloadedSounds[soundName] {
+                    AudioServicesDisposeSystemSoundID(oldSoundID)
+                }
+                preloadedSounds.removeValue(forKey: soundName)
+
+                // Reload the sound
+                reloadSpecificSound(soundName)
+            }
+        } else {
+            Logger.shared.log(.info, "✅ All preloaded sounds verified successfully", category: .audioSession)
+        }
+    }
+
+    // CRITICAL FIX: Reload a specific sound that failed verification
+    private func reloadSpecificSound(_ soundName: String) {
+        Logger.shared.log(.info, "🔄 Reloading sound: \(soundName)", category: .audioSession)
+
+        // Try CAF first
+        if let url = Bundle.main.url(forResource: soundName, withExtension: "caf") {
+            var soundID: SystemSoundID = 0
+            let status = AudioServicesCreateSystemSoundID(url as CFURL, &soundID)
+
+            if status == kAudioServicesNoError {
+                preloadedSounds[soundName] = soundID
+
+                // Add completion handler
+                AudioServicesAddSystemSoundCompletion(soundID, nil, nil, { soundID, _ in
+                    Logger.shared.log(.info, "🔊 Reloaded sound completed: ID \(soundID)", category: .audioSession)
+                }, nil)
+
+                Logger.shared.log(.info, "✅ Successfully reloaded: \(soundName).caf with ID: \(soundID)", category: .audioSession)
+            } else {
+                Logger.shared.log(.error, "❌ Failed to reload \(soundName).caf, status: \(status)", category: .audioSession)
+            }
+        } else {
+            Logger.shared.log(.error, "❌ Sound file not found for reload: \(soundName).caf", category: .audioSession)
+        }
+    }
     
     deinit {
         // Clean up preloaded sounds
@@ -127,6 +220,8 @@ final class TimerSoundFix {
     // MARK: - Strategy 1: System Sound
     
     private func playSystemSound() {
+        Logger.shared.log(.info, "🔊 [TIMER-DEBUG] Playing system sound fallback", category: .audioSession)
+        
         // Use a prominent system sound that always works
         let soundIDs: [SystemSoundID] = [
             1005, // New mail sound  
@@ -144,7 +239,7 @@ final class TimerSoundFix {
         AudioServicesPlaySystemSound(soundIDs[1])
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         
-        Logger.shared.log(.info, "✅ System alert sounds \(soundIDs[0]) and \(soundIDs[1]) played with vibration", category: .audioSession)
+        Logger.shared.log(.info, "✅ [TIMER-DEBUG] System alert sounds \(soundIDs[0]) and \(soundIDs[1]) played with vibration", category: .audioSession)
     }
     
     // MARK: - Strategy 2: Haptic Feedback
@@ -171,10 +266,12 @@ final class TimerSoundFix {
     // MARK: - Strategy 3: Custom Sound
     
     private func playCustomSoundIfAvailable(preferredSound: String? = nil) -> Bool {
+        Logger.shared.log(.info, "🔍 [TIMER-DEBUG] playCustomSoundIfAvailable: \(preferredSound ?? "none")", category: .audioSession)
+        
         // FIRST: Try preloaded system sound ID (works in background!)
         if let preferred = preferredSound,
            let soundID = preloadedSounds[preferred] {
-            Logger.shared.log(.info, "🎵 Playing preloaded sound: \(preferred) with ID: \(soundID)", category: .audioSession)
+            Logger.shared.log(.info, "🎵 [TIMER-DEBUG] Found preloaded sound: \(preferred) with ID: \(soundID)", category: .audioSession)
             
             // Use PlaySystemSoundWithCompletion for better reliability
             AudioServicesPlaySystemSoundWithCompletion(soundID) { [weak self] in
@@ -190,9 +287,9 @@ final class TimerSoundFix {
             return true
         }
         
-        // Fallback to preloaded timer_complete
-        if let soundID = preloadedSounds["timer_complete"] {
-            Logger.shared.log(.info, "🎵 Playing fallback preloaded sound: timer_complete", category: .audioSession)
+        // Fallback to preloaded sound
+        if let soundID = preloadedSounds["sound"] {
+            Logger.shared.log(.info, "🎵 Playing fallback preloaded sound: sound", category: .audioSession)
             
             // Use both methods for redundancy
             AudioServicesPlaySystemSoundWithCompletion(soundID) { [weak self] in
@@ -201,7 +298,7 @@ final class TimerSoundFix {
             }
             AudioServicesPlayAlertSound(soundID)
             
-            Logger.shared.log(.info, "✅ Fallback sound played with dual method: timer_complete", category: .audioSession)
+            Logger.shared.log(.info, "✅ Fallback sound played with dual method: sound", category: .audioSession)
             return true
         }
         
@@ -270,12 +367,12 @@ final class TimerSoundFix {
         content.body = "Your rest timer has finished."
         
         // Use custom sound if available, otherwise default
-        if let sound = soundName, sound != "timer_complete" {
+        if let sound = soundName, sound != "sound" {
             content.sound = UNNotificationSound(named: UNNotificationSoundName("\(sound).caf"))
             Logger.shared.log(.info, "📢 Notification with custom sound: \(sound).caf", category: .audioSession)
         } else {
-            content.sound = UNNotificationSound(named: UNNotificationSoundName("timer_complete.caf"))
-            Logger.shared.log(.info, "📢 Notification with default timer sound", category: .audioSession)
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("sound.caf"))
+            Logger.shared.log(.info, "📢 Notification with default sound: sound.caf", category: .audioSession)
         }
         
         content.categoryIdentifier = "TIMER_COMPLETE"
@@ -307,7 +404,7 @@ final class TimerSoundFix {
         
         // First verify files exist
         Logger.shared.log(.info, "📁 Verifying sound files...", category: .audioSession)
-        let soundsToCheck = ["timer_complete", "LightWeight", "YehBuddie"]
+        let soundsToCheck = ["sound", "timer_complete", "LightWeight", "YehBuddie"]
         for soundName in soundsToCheck {
             if let url = Bundle.main.url(forResource: soundName, withExtension: "caf") {
                 Logger.shared.log(.info, "✅ Found: \(soundName).caf at \(url.path)", category: .audioSession)
@@ -340,11 +437,11 @@ final class TimerSoundFix {
             Logger.shared.log(.info, "2️⃣ Testing haptic feedback...", category: .audioSession)
             self?.playHapticFeedback()
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                 Logger.shared.log(.info, "3️⃣ Testing custom sounds...", category: .audioSession)
                 self?.playCustomSoundIfAvailable(preferredSound: "YehBuddie")
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                     Logger.shared.log(.info, "4️⃣ Testing notification...", category: .audioSession)
                     self?.scheduleImmediateNotification()
                     

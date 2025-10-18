@@ -1,26 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
-import '../../domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
 
 class WorkoutGoalsChips extends StatelessWidget {
-  final List<WorkoutGoal> goals;
-  final bool compact;
-  final int? maxDisplay;
 
   const WorkoutGoalsChips({
     super.key,
@@ -28,6 +24,9 @@ class WorkoutGoalsChips extends StatelessWidget {
     this.compact = false,
     this.maxDisplay,
   });
+  final List<WorkoutGoal> goals;
+  final bool compact;
+  final int? maxDisplay;
 
   @override
   Widget build(BuildContext context) {

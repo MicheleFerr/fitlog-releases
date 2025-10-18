@@ -120,12 +120,14 @@ struct PauseResumeIntent: LiveActivityIntent {
 struct SkipTimerIntent: LiveActivityIntent {
     static var title: LocalizedStringResource { "Skip Timer" }
     static var description: IntentDescription { "Skip the current rest timer" }
-    
+
     func perform() async throws -> some IntentResult {
         // Find the current activity and skip timer
         if let activity = Activity<GymBroTimerAttributes>.activities.first {
             let currentState = activity.content.state
-            
+
+            // CRITICAL FIX: Update state to show timer is skipped
+            // Audio cancellation will be handled by the main app when it receives this event
             let updatedState = GymBroTimerAttributes.ContentState(
                 remainingSeconds: 0,
                 totalSeconds: currentState.totalSeconds,
@@ -134,15 +136,16 @@ struct SkipTimerIntent: LiveActivityIntent {
                 totalSets: currentState.totalSets,
                 lastUpdated: Date()
             )
-            
+
             await activity.update(
                 ActivityContent<GymBroTimerAttributes.ContentState>(
                     state: updatedState,
                     staleDate: nil as Date?
                 )
             )
-            
-            // 🔥 NUEVO: Salva evento per Flutter tramite UserDefaults condivisi
+
+            // 🔥 CRITICAL: Signal skip to main app via UserDefaults
+            // The main app will cancel background audio when it detects this event
             let userDefaults = UserDefaults(suiteName: "group.com.michele.gymbro.flutter")
             let eventData: [String: Any] = [
                 "remainingSeconds": 0,
@@ -152,7 +155,8 @@ struct SkipTimerIntent: LiveActivityIntent {
                 "totalSets": currentState.totalSets,
                 "lastUpdated": Date().timeIntervalSince1970 * 1000,
                 "activityId": activity.id,
-                "eventType": "skip"
+                "eventType": "skip",
+                "audioSkipped": true  // Flag to indicate audio should not play
             ]
             userDefaults?.set(eventData, forKey: "timer_event")
             userDefaults?.synchronize()

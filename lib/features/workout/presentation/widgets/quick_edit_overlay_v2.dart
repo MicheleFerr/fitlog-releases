@@ -1,39 +1,26 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/widgets
- * 🎯 Feature: workout
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * QuickEditOverlayV2 - Optimized version with better UX and performance
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/widgets
+/// 🎯 Feature: workout
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// QuickEditOverlayV2 - Optimized version with better UX and performance
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math' as math;
 
-import '../../domain/entities/exercise.dart';
-import '../providers/exercise_history_provider.dart';
-import '../../../../shared/presentation/providers/app_config_provider.dart';
-import 'plate_calculator_widget.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
-  final ExerciseSet? exerciseSet; // Nullable per superset
-  final Function(ExerciseSet)? onSave; // Nullable per superset
-  final VoidCallback onCancel;
-  final Offset position;
-  final ExerciseSet? previousSet;
-  final String? exerciseName;
-  
-  // Superset support
-  final List<String>? exerciseNames;
-  final Map<String, ExerciseSet>? exerciseSets;
-  final Function(Map<String, ExerciseSet>)? onSupersetSave;
-  final bool isSuperset;
 
   const QuickEditOverlayV2({
     super.key,
@@ -52,6 +39,18 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
          (isSuperset && exerciseNames != null && exerciseSets != null && onSupersetSave != null),
          'For superset mode, exerciseNames, exerciseSets and onSupersetSave are required'
        );
+  final ExerciseSet? exerciseSet; // Nullable per superset
+  final Function(ExerciseSet)? onSave; // Nullable per superset
+  final VoidCallback onCancel;
+  final Offset position;
+  final ExerciseSet? previousSet;
+  final String? exerciseName;
+  
+  // Superset support
+  final List<String>? exerciseNames;
+  final Map<String, ExerciseSet>? exerciseSets;
+  final Function(Map<String, ExerciseSet>)? onSupersetSave;
+  final bool isSuperset;
 
   @override
   ConsumerState<QuickEditOverlayV2> createState() => _QuickEditOverlayV2State();
@@ -91,12 +90,21 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   bool _isManualWeightEntry = false;
   bool _isManualRepsEntry = false;
   bool _usePercentage = false;
-  double _percentageValue = 5.0; // Changed from int to double for slider
+  double _percentageValue = 5.0;
+
+  // Positioning state - calculate once
+  late final _SmartPositioning _positioning;
+
+  // Keyboard state tracking
+  bool _isRequestingFocus = false;
 
   @override
   void initState() {
     super.initState();
-    
+
+    // Calculate position once
+    _positioning = _calculateInitialPosition();
+
     if (widget.isSuperset) {
       // Initialize superset values
       for (String exerciseName in widget.exerciseNames!) {
@@ -172,6 +180,28 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     }
   }
 
+  _SmartPositioning _calculateInitialPosition() {
+    // Get initial screen measurements
+    final mediaQuery = MediaQuery.of(context);
+    final screenSize = mediaQuery.size;
+    final statusBarHeight = mediaQuery.padding.top;
+    final bottomPadding = mediaQuery.padding.bottom;
+
+    const overlayWidth = 340.0;
+    const overlayHeight = 600.0;
+    const padding = 16.0;
+
+    return _calculateSmartPosition(
+      tapPosition: widget.position,
+      screenSize: screenSize,
+      overlaySize: const Size(overlayWidth, overlayHeight),
+      keyboardHeight: 0, // Don't consider keyboard on initial positioning
+      statusBarHeight: statusBarHeight,
+      bottomPadding: bottomPadding,
+      padding: padding,
+    );
+  }
+
   @override
   void dispose() {
     _weightFocusNode.removeListener(_onWeightFocusChanged);
@@ -192,30 +222,67 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     final measurementUnit = ref.watch(
       appConfigProvider.select((config) => config.measurementUnit)
     );
-    
+
     final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    
-    // Calculate optimal position
-    double left = widget.position.dx - 170;
-    double top = widget.position.dy - 140;
-    
-    if (keyboardHeight > 0) {
-      final availableHeight = screenSize.height - keyboardHeight - 50;
-      if (top + 400 > availableHeight) {
-        top = availableHeight - 400;
-      }
+    final screenSize = MediaQuery.of(context).size; // Get screen size here
+    const overlayWidth = 340.0;
+
+    // Use pre-calculated position
+    final double left = _positioning.left;
+    final double top = _positioning.top;
+    final bool showAsBottomSheet = _positioning.showAsBottomSheet;
+
+    if (showAsBottomSheet) {
+      // Show as bottom sheet when no space available
+      return AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(0, _slideAnimation.value * 10),
+            child: Opacity(
+              opacity: _fadeAnimation.value,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(16),
+                  constraints: BoxConstraints(
+                    maxHeight: screenSize.height * 0.75,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: theme.colorScheme.outline.withValues(alpha: 0.1),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                        blurRadius: 24,
+                        offset: const Offset(0, -8),
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildHeader(theme),
+                        const SizedBox(height: 12),
+                        _buildContent(theme, measurementUnit),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
     }
     
-    // Smaller overlay width for better performance
-    const overlayWidth = 340.0;
-    left = left.clamp(16.0, screenSize.width - overlayWidth - 16.0);
-    top = top.clamp(50.0, screenSize.height - keyboardHeight - 400.0);
-
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 100), // Faster positioning
-      curve: Curves.easeOutCubic,
+    return Positioned(
       left: left,
       top: top,
       child: AnimatedBuilder(
@@ -231,32 +298,37 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         },
         child: Material(
           color: Colors.transparent,
-          child: Container(
-            width: overlayWidth,
-            constraints: const BoxConstraints(maxHeight: 600),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
+          child: Stack(
+            children: [
+              Container(
+                width: overlayWidth,
+                constraints: const BoxConstraints(maxHeight: 600),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withValues(alpha: 0.15),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildHeader(theme),
-                const SizedBox(height: 12),
-                _buildContent(theme, measurementUnit),
-              ],
-            ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildHeader(theme),
+                    const SizedBox(height: 12),
+                    _buildContent(theme, measurementUnit),
+                  ],
+                ),
+              ),
+              // Removed: Gesture hint overlay - no longer needed
+            ],
           ),
         ),
       ),
@@ -283,8 +355,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               Expanded(
                 child: Text(
                   widget.isSuperset 
-                    ? 'Quick Edit Superset'
-                    : (widget.exerciseName ?? 'Quick Edit Set ${widget.exerciseSet?.setNumber}'),
+                    ? 'Quick Edit Superset'  // TODO: Add localization key
+                    : (widget.exerciseName ?? 'Quick Edit Set ${widget.exerciseSet?.setNumber ?? ""}'),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -296,7 +368,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 TextButton.icon(
                   onPressed: _copyFromPreviousSet,
                   icon: const Icon(Icons.content_copy_rounded, size: 16),
-                  label: const Text('Copy', style: TextStyle(fontSize: 12)),
+                  label: Text(AppLocalizations.of(context).copy, style: const TextStyle(fontSize: 12)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: const Size(0, 0),
@@ -369,7 +441,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             Icon(Icons.fitness_center, size: 14, color: theme.colorScheme.primary),
             const SizedBox(width: 4),
             Text(
-              'Weight ($measurementUnit)',
+              AppLocalizations.of(context).weightKg.replaceAll('kg', measurementUnit),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,
@@ -381,12 +453,25 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 _isManualWeightEntry ? Icons.dialpad : Icons.keyboard,
                 size: 16,
               ),
-              onPressed: () => setState(() {
-                _isManualWeightEntry = !_isManualWeightEntry;
-                if (_isManualWeightEntry) {
-                  _weightFocusNode.requestFocus();
+              onPressed: () {
+                setState(() {
+                  _isManualWeightEntry = !_isManualWeightEntry;
+                });
+                if (!_isManualWeightEntry) {
+                  // Unfocus when going back to wheel mode
+                  _weightFocusNode.unfocus();
+                } else if (!_isRequestingFocus) {
+                  // Prevent multiple focus requests
+                  _isRequestingFocus = true;
+                  // Use a longer delay to ensure the widget is fully built
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    if (mounted && _isManualWeightEntry) {
+                      _weightFocusNode.requestFocus();
+                      _isRequestingFocus = false;
+                    }
+                  });
                 }
-              }),
+              },
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               tooltip: _isManualWeightEntry ? 'Use wheel' : 'Type manually',
@@ -405,39 +490,57 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           ),
           child: _isManualWeightEntry
               ? Center(
-                  child: SizedBox(
-                    width: 100,
-                    child: TextField(
-                      controller: _weightTextController,
-                      focusNode: _weightFocusNode,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        suffix: Text(
-                          measurementUnit,
-                          style: theme.textTheme.bodySmall,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        child: TextField(
+                          controller: _weightTextController,
+                          focusNode: _weightFocusNode,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                            fontSize: _selectedWeight >= 100 ? 20 : 24, // Dynamic font size
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            suffix: Text(
+                              measurementUnit,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                          textInputAction: TextInputAction.done,
+                          onChanged: (value) {
+                            // Update weight as user types
+                            final weight = double.tryParse(value.replaceAll(',', '.'));
+                            if (weight != null) {
+                              setState(() {
+                                _selectedWeight = weight;
+                              });
+                            }
+                          },
+                          onSubmitted: (value) {
+                            _confirmManualWeight();
+                          },
                         ),
                       ),
-                      onSubmitted: (value) {
-                        final weight = double.tryParse(value);
-                        if (weight != null) {
-                          setState(() {
-                            _selectedWeight = weight;
-                            _isManualWeightEntry = false;
-                          });
-                          _weightController.animateToItem(
-                            (weight * 2).round(),
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                          );
-                        }
-                      },
-                    ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        onPressed: _confirmManualWeight,
+                        icon: Icon(
+                          Icons.check_circle,
+                          color: theme.colorScheme.primary,
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        constraints: const BoxConstraints(),
+                        tooltip: 'Done',
+                      ),
+                    ],
                   ),
                 )
               : ListWheelScrollView.useDelegate(
@@ -493,7 +596,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             Icon(Icons.repeat, size: 14, color: theme.colorScheme.secondary),
             const SizedBox(width: 4),
             Text(
-              'Reps',
+              AppLocalizations.of(context).reps,
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.secondary,
                 fontWeight: FontWeight.w600,
@@ -505,12 +608,25 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 _isManualRepsEntry ? Icons.dialpad : Icons.keyboard,
                 size: 16,
               ),
-              onPressed: () => setState(() {
-                _isManualRepsEntry = !_isManualRepsEntry;
-                if (_isManualRepsEntry) {
-                  _repsFocusNode.requestFocus();
+              onPressed: () {
+                setState(() {
+                  _isManualRepsEntry = !_isManualRepsEntry;
+                });
+                if (!_isManualRepsEntry) {
+                  // Unfocus when going back to wheel mode
+                  _repsFocusNode.unfocus();
+                } else if (!_isRequestingFocus) {
+                  // Prevent multiple focus requests
+                  _isRequestingFocus = true;
+                  // Use a longer delay to ensure the widget is fully built
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    if (mounted && _isManualRepsEntry) {
+                      _repsFocusNode.requestFocus();
+                      _isRequestingFocus = false;
+                    }
+                  });
                 }
-              }),
+              },
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               tooltip: _isManualRepsEntry ? 'Use wheel' : 'Type manually',
@@ -529,35 +645,51 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           ),
           child: _isManualRepsEntry
               ? Center(
-                  child: SizedBox(
-                    width: 80,
-                    child: TextField(
-                      controller: _repsTextController,
-                      focusNode: _repsFocusNode,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.secondary,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child: TextField(
+                          controller: _repsTextController,
+                          focusNode: _repsFocusNode,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.secondary,
+                            fontSize: 24,
+                          ),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          textInputAction: TextInputAction.done,
+                          onChanged: (value) {
+                            // Update reps as user types
+                            final reps = int.tryParse(value);
+                            if (reps != null && reps > 0) {
+                              setState(() {
+                                _selectedReps = reps;
+                              });
+                            }
+                          },
+                          onSubmitted: (value) {
+                            _confirmManualReps();
+                          },
+                        ),
                       ),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
+                      const SizedBox(width: 4),
+                      IconButton(
+                        onPressed: _confirmManualReps,
+                        icon: Icon(
+                          Icons.check_circle,
+                          color: theme.colorScheme.secondary,
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        constraints: const BoxConstraints(),
+                        tooltip: 'Done',
                       ),
-                      onSubmitted: (value) {
-                        final reps = int.tryParse(value);
-                        if (reps != null && reps > 0) {
-                          setState(() {
-                            _selectedReps = reps;
-                            _isManualRepsEntry = false;
-                          });
-                          _repsController.animateToItem(
-                            reps - 1,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                          );
-                        }
-                      },
-                    ),
+                    ],
                   ),
                 )
               : ListWheelScrollView.useDelegate(
@@ -623,64 +755,85 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Recent Weights',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.history,
+                      size: 14,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      AppLocalizations.of(context).recentWeights,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
-                SizedBox(
-                  height: 36,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: math.min(weights.length, 5),
-                    itemBuilder: (context, index) {
-                      final data = weights[index];
-                      final weight = data.weight ?? 0;
-                      final isSelected = (_selectedWeight - weight).abs() < 0.1;
-                      
-                      return Padding(
-                        padding: EdgeInsets.only(right: index < 4 ? 8 : 0),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => _setWeight(weight),
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                color: isSelected 
-                                  ? theme.colorScheme.primaryContainer
-                                  : theme.colorScheme.surfaceContainerHighest,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: isSelected
-                                    ? theme.colorScheme.primary
-                                    : theme.colorScheme.outline.withValues(alpha: 0.2),
-                                ),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)}kg',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                  color: isSelected 
-                                    ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurface,
-                                ),
-                              ),
-                            ),
-                          ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: weights.take(8).map((data) {
+                    final weight = data.weight ?? 0;
+                    final isSelected = (_selectedWeight - weight).abs() < 0.1;
+                    final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3));
+                    final isFromLast3Days = data.date.isAfter(threeDaysAgo);
+                    
+                    return ActionChip(
+                      onPressed: () {
+                        HapticFeedback.lightImpact();
+                        _setWeight(weight);
+                      },
+                      label: Text(
+                        '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)}kg',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                          color: isSelected 
+                            ? theme.colorScheme.onPrimary
+                            : isFromLast3Days 
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                      backgroundColor: isSelected 
+                        ? theme.colorScheme.primary
+                        : isFromLast3Days 
+                          ? theme.colorScheme.primaryContainer.withValues(alpha: 0.8)
+                          : theme.colorScheme.surfaceContainerHighest,
+                      side: BorderSide(
+                        color: isSelected
+                          ? theme.colorScheme.primary
+                          : isFromLast3Days
+                            ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                            : theme.colorScheme.outline.withValues(alpha: 0.3),
+                        width: isSelected ? 2 : 1,
+                      ),
+                      elevation: isSelected ? 2 : 0,
+                      shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    );
+                  }).toList(),
                 ),
               ],
             );
           },
-          loading: () => const SizedBox(height: 36),
+          loading: () => Container(
+            height: 60,
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
           error: (_, __) => const SizedBox.shrink(),
         );
       },
@@ -842,7 +995,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               ),
               const SizedBox(width: 6),
               Text(
-                'Dischi',
+                'Plates',  // Using simple English until localization key is added
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: hasWeight 
                     ? theme.colorScheme.onSecondary 
@@ -923,7 +1076,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: OutlinedButton.icon(
             onPressed: _cancel,
             icon: const Icon(Icons.close_rounded, size: 18),
-            label: const Text('Cancel'),
+            label: Text(AppLocalizations.of(context).cancel),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
               side: BorderSide(
@@ -939,7 +1092,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: FilledButton.icon(
             onPressed: _save,
             icon: const Icon(Icons.check_rounded, size: 18),
-            label: const Text('Save Set'),
+            label: Text(AppLocalizations.of(context).save),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
               backgroundColor: theme.colorScheme.primary,
@@ -955,15 +1108,49 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       _selectedWeight = weight;
       _weightTextController.text = weight.toString();
     });
-    
+
     final newIndex = (weight * 2).round();
     _weightController.animateToItem(
       newIndex,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
-    
+
     HapticFeedback.lightImpact();
+  }
+
+  void _confirmManualWeight() {
+    final weight = double.tryParse(_weightTextController.text.replaceAll(',', '.'));
+    if (weight != null && weight > 0) {
+      setState(() {
+        _selectedWeight = weight;
+        _isManualWeightEntry = false;
+      });
+      _weightController.animateToItem(
+        (weight * 2).round(),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+      _weightFocusNode.unfocus();
+      HapticFeedback.lightImpact();
+    }
+  }
+
+  void _confirmManualReps() {
+    final reps = int.tryParse(_repsTextController.text);
+    if (reps != null && reps > 0) {
+      setState(() {
+        _selectedReps = reps;
+        _isManualRepsEntry = false;
+      });
+      _repsController.animateToItem(
+        reps - 1,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+      _repsFocusNode.unfocus();
+      HapticFeedback.lightImpact();
+    }
   }
 
   void _adjustWeight(double delta) {
@@ -1066,7 +1253,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ? FilledButton.icon(
                 onPressed: _applyWeightToAll,
                 icon: const Icon(Icons.fitness_center, size: 16),
-                label: const Text('Weight to All'),
+                label: const Text('Weight to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   backgroundColor: theme.colorScheme.primary,
@@ -1076,7 +1263,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             : OutlinedButton.icon(
                 onPressed: _applyWeightToAll,
                 icon: const Icon(Icons.fitness_center, size: 16),
-                label: const Text('Weight to All'),
+                label: const Text('Weight to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(
@@ -1093,7 +1280,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ? FilledButton.icon(
                 onPressed: _applyRepsToAll,
                 icon: const Icon(Icons.repeat, size: 16),
-                label: const Text('Reps to All'),
+                label: const Text('Reps to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   backgroundColor: theme.colorScheme.secondary,
@@ -1103,7 +1290,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             : OutlinedButton.icon(
                 onPressed: _applyRepsToAll,
                 icon: const Icon(Icons.repeat, size: 16),
-                label: const Text('Reps to All'),
+                label: const Text('Reps to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(
@@ -1311,6 +1498,82 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     
     HapticFeedback.lightImpact();
   }
+  
+  // Smart positioning calculation
+  _SmartPositioning _calculateSmartPosition({
+    required Offset tapPosition,
+    required Size screenSize,
+    required Size overlaySize,
+    required double keyboardHeight,
+    required double statusBarHeight,
+    required double bottomPadding,
+    required double padding,
+  }) {
+    final availableHeight = screenSize.height - keyboardHeight - statusBarHeight - bottomPadding;
+    final availableWidth = screenSize.width;
+    
+    // Calculate preferred position (centered on tap)
+    final double preferredLeft = tapPosition.dx - (overlaySize.width / 2);
+    double preferredTop = tapPosition.dy - (overlaySize.height / 2);
+    
+    // Check available space above and below tap point
+    final spaceAbove = tapPosition.dy - statusBarHeight - padding;
+    final spaceBelow = availableHeight - tapPosition.dy + statusBarHeight - padding;
+    
+    // Minimum space required for overlay
+    const minSpaceRequired = 400.0;
+    
+    // If neither above nor below has enough space, show as bottom sheet
+    if (spaceAbove < minSpaceRequired && spaceBelow < minSpaceRequired) {
+      return const _SmartPositioning(
+        left: 0,
+        top: 0,
+        showAsBottomSheet: true,
+      );
+    }
+    
+    // Determine optimal vertical position
+    if (spaceBelow >= minSpaceRequired) {
+      // Show below tap point
+      preferredTop = tapPosition.dy + 20;
+    } else if (spaceAbove >= minSpaceRequired) {
+      // Show above tap point
+      preferredTop = tapPosition.dy - overlaySize.height - 20;
+    }
+    
+    // Constrain horizontal position
+    final constrainedLeft = preferredLeft.clamp(
+      padding,
+      availableWidth - overlaySize.width - padding,
+    );
+    
+    // Constrain vertical position
+    final constrainedTop = preferredTop.clamp(
+      statusBarHeight + padding,
+      availableHeight - overlaySize.height + statusBarHeight - padding,
+    );
+    
+    return _SmartPositioning(
+      left: constrainedLeft,
+      top: constrainedTop,
+      showAsBottomSheet: false,
+    );
+  }
+  
+  // Removed: All gesture handlers and hint methods to fix overlay issues
+}
+
+// Helper class for smart positioning
+class _SmartPositioning {
+  
+  const _SmartPositioning({
+    required this.left,
+    required this.top,
+    required this.showAsBottomSheet,
+  });
+  final double left;
+  final double top;
+  final bool showAsBottomSheet;
 }
 
 // Extension for easy usage
@@ -1324,40 +1587,34 @@ extension QuickEditOverlayV2Extension on BuildContext {
   }) {
     return showDialog(
       context: this,
-      barrierColor: Colors.transparent, // TEMPORARILY DISABLE GRAY OVERLAY FOR DEBUGGING
-      builder: (context) => AnimatedPadding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        duration: const Duration(milliseconds: 100),
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.transparent,
-              ),
+      barrierColor: Colors.black54,
+      builder: (context) => Stack(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.transparent,
             ),
-            QuickEditOverlayV2(
-              exerciseSet: exerciseSet,
-              onSave: (updatedSet) {
-                // First close the dialog
-                Navigator.of(context).pop();
-                // Then call the save callback
-                onSave(updatedSet);
-              },
-              onCancel: () {
-                // Just close the dialog, no need to call anything else
-                Navigator.of(context).pop();
-              },
-              position: position,
-              previousSet: previousSet,
-              exerciseName: exerciseName,
-            ),
-          ],
-        ),
+          ),
+          QuickEditOverlayV2(
+            exerciseSet: exerciseSet,
+            onSave: (updatedSet) {
+              // First close the dialog
+              Navigator.of(context).pop();
+              // Then call the save callback
+              onSave(updatedSet);
+            },
+            onCancel: () {
+              // Just close the dialog, no need to call anything else
+              Navigator.of(context).pop();
+            },
+            position: position,
+            previousSet: previousSet,
+            exerciseName: exerciseName,
+          ),
+        ],
       ),
     );
   }
@@ -1371,39 +1628,33 @@ extension QuickEditOverlayV2Extension on BuildContext {
     return showDialog(
       context: this,
       barrierColor: Colors.transparent,
-      builder: (context) => AnimatedPadding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        duration: const Duration(milliseconds: 100),
-        child: Stack(
-          children: [
-            GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.transparent,
-              ),
+      builder: (context) => Stack(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.transparent,
             ),
-            QuickEditOverlayV2(
-              isSuperset: true,
-              exerciseNames: exerciseNames,
-              exerciseSets: exerciseSets,
-              onSupersetSave: (updatedSets) {
-                // First close the dialog
-                Navigator.of(context).pop();
-                // Then call the save callback
-                onSave(updatedSets);
-              },
-              onCancel: () {
-                // Just close the dialog
-                Navigator.of(context).pop();
-              },
-              position: position,
-            ),
-          ],
-        ),
+          ),
+          QuickEditOverlayV2(
+            isSuperset: true,
+            exerciseNames: exerciseNames,
+            exerciseSets: exerciseSets,
+            onSupersetSave: (updatedSets) {
+              // First close the dialog
+              Navigator.of(context).pop();
+              // Then call the save callback
+              onSave(updatedSets);
+            },
+            onCancel: () {
+              // Just close the dialog
+              Navigator.of(context).pop();
+            },
+            position: position,
+          ),
+        ],
       ),
     );
   }

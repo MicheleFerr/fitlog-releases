@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
-import '../../domain/entities/exercise.dart';
-import '../../domain/entities/workout.dart';
-import 'workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 /// 🚀 TIER-1 OPTIMIZATION PROVIDERS
 /// High-performance state management with selective updates
@@ -23,12 +22,6 @@ final exerciseStatsProvider = Provider.family<ExerciseStats, String>((ref, exerc
 });
 
 class ExerciseStats {
-  final int completedSets;
-  final int totalSets;
-  final double totalVolume;
-  final double averageRpe;
-  final Duration totalRestTime;
-  final bool isComplete;
   
   ExerciseStats({
     required this.completedSets,
@@ -81,6 +74,12 @@ class ExerciseStats {
       isComplete: completedSets == totalSets && totalSets > 0,
     );
   }
+  final int completedSets;
+  final int totalSets;
+  final double totalVolume;
+  final double averageRpe;
+  final Duration totalRestTime;
+  final bool isComplete;
 }
 
 // ============================================================================
@@ -96,13 +95,13 @@ final setProvider = StateNotifierProvider.family<SetNotifier, ExerciseSet?, (Str
 );
 
 class SetNotifier extends StateNotifier<ExerciseSet?> {
-  final Ref ref;
-  final String exerciseId;
-  final String setId;
   
   SetNotifier(this.ref, this.exerciseId, this.setId) : super(null) {
     _loadSet();
   }
+  final Ref ref;
+  final String exerciseId;
+  final String setId;
   
   void _loadSet() {
     final workout = ref.read(currentWorkoutProvider);
@@ -155,12 +154,12 @@ final workoutCacheProvider = Provider<WorkoutCache>((ref) {
 });
 
 class WorkoutCache {
+  
+  WorkoutCache(this.ref);
   final Ref ref;
   final Map<String, dynamic> _cache = {};
   final Map<String, DateTime> _timestamps = {};
   static const _cacheTimeout = Duration(seconds: 30);
-  
-  WorkoutCache(this.ref);
   
   T? get<T>(String key) {
     final timestamp = _timestamps[key];
@@ -196,10 +195,6 @@ final undoRedoProvider = StateNotifierProvider<UndoRedoNotifier, UndoRedoState>(
 });
 
 class UndoRedoState {
-  final List<WorkoutCommand> undoStack;
-  final List<WorkoutCommand> redoStack;
-  final bool canUndo;
-  final bool canRedo;
   
   UndoRedoState({
     required this.undoStack,
@@ -211,25 +206,29 @@ class UndoRedoState {
     undoStack: [],
     redoStack: [],
   );
+  final List<WorkoutCommand> undoStack;
+  final List<WorkoutCommand> redoStack;
+  final bool canUndo;
+  final bool canRedo;
 }
 
 abstract class WorkoutCommand {
-  final DateTime timestamp;
-  final String description;
   
   WorkoutCommand({
     required this.description,
   }) : timestamp = DateTime.now();
+  final DateTime timestamp;
+  final String description;
   
   void execute(Ref ref);
   void undo(Ref ref);
 }
 
 class AddExerciseCommand extends WorkoutCommand {
-  final Exercise exercise;
   
   AddExerciseCommand(this.exercise) 
     : super(description: 'Add ${exercise.name}');
+  final Exercise exercise;
   
   @override
   void execute(Ref ref) {
@@ -243,15 +242,15 @@ class AddExerciseCommand extends WorkoutCommand {
 }
 
 class UpdateSetCommand extends WorkoutCommand {
-  final String exerciseId;
-  final ExerciseSet oldSet;
-  final ExerciseSet newSet;
   
   UpdateSetCommand({
     required this.exerciseId,
     required this.oldSet,
     required this.newSet,
   }) : super(description: 'Update set');
+  final String exerciseId;
+  final ExerciseSet oldSet;
+  final ExerciseSet newSet;
   
   @override
   void execute(Ref ref) {
@@ -265,10 +264,10 @@ class UpdateSetCommand extends WorkoutCommand {
 }
 
 class UndoRedoNotifier extends StateNotifier<UndoRedoState> {
-  final Ref ref;
-  static const _maxStackSize = 20;
   
   UndoRedoNotifier(this.ref) : super(UndoRedoState.initial());
+  final Ref ref;
+  static const _maxStackSize = 20;
   
   void execute(WorkoutCommand command) {
     command.execute(ref);
@@ -324,9 +323,9 @@ final batchOperationsProvider = Provider<BatchOperations>((ref) {
 });
 
 class BatchOperations {
-  final Ref ref;
   
   BatchOperations(this.ref);
+  final Ref ref;
   
   /// Complete all sets for an exercise
   void completeAllSets(String exerciseId) {
@@ -414,10 +413,6 @@ final offlineSyncProvider = StateNotifierProvider<OfflineSyncNotifier, OfflineSy
 });
 
 class OfflineSyncState {
-  final bool isOnline;
-  final List<PendingAction> pendingActions;
-  final DateTime? lastSyncTime;
-  final bool isSyncing;
   
   OfflineSyncState({
     required this.isOnline,
@@ -431,19 +426,23 @@ class OfflineSyncState {
     pendingActions: [],
     isSyncing: false,
   );
+  final bool isOnline;
+  final List<PendingAction> pendingActions;
+  final DateTime? lastSyncTime;
+  final bool isSyncing;
 }
 
 class PendingAction {
-  final String id;
-  final ActionType type;
-  final Map<String, dynamic> data;
-  final DateTime timestamp;
   
   PendingAction({
     required this.id,
     required this.type,
     required this.data,
   }) : timestamp = DateTime.now();
+  final String id;
+  final ActionType type;
+  final Map<String, dynamic> data;
+  final DateTime timestamp;
 }
 
 enum ActionType {
@@ -457,9 +456,9 @@ enum ActionType {
 }
 
 class OfflineSyncNotifier extends StateNotifier<OfflineSyncState> {
-  final Ref ref;
   
   OfflineSyncNotifier(this.ref) : super(OfflineSyncState.initial());
+  final Ref ref;
   
   void addPendingAction(ActionType type, Map<String, dynamic> data) {
     state = state.copyWith(

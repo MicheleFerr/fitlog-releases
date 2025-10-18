@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../progress/presentation/providers/progress_provider.dart';
-import '../../domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 
 class WeeklyGoalsWidget extends ConsumerWidget {
-  final WidgetSize size;
   
   const WeeklyGoalsWidget({
     super.key,
     required this.size,
   });
+  final WidgetSize size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

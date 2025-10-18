@@ -1,0 +1,88 @@
+{
+  "routineSelectionTitle": "Select Workout Templates",
+  "@routineSelectionTitle": {
+    "description": "Template selection step title"
+  },
+  "routineSelectionSubtitle": "Choose templates to rotate automatically across workout days",
+  "@routineSelectionSubtitle": {
+    "description": "Template selection step subtitle"
+  },
+  "routineAvailableTemplates": "Available Templates",
+  "@routineAvailableTemplates": {
+    "description": "Available templates label"
+  },
+  "routineSelected": "{count} selected",
+  "@routineSelected": {
+    "description": "Selected count badge",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineNextStepInfo": "In the next step, you'll arrange the order in which these templates rotate",
+  "@routineNextStepInfo": {
+    "description": "Info about next step"
+  },
+  "routineNoTemplatesYet": "No Workout Templates Yet",
+  "@routineNoTemplatesYet": {
+    "description": "No templates empty state title"
+  },
+  "routineNeedTemplatesMessage": "You need workout templates to create a routine.\nChoose one of the options below to continue.",
+  "@routineNeedTemplatesMessage": {
+    "description": "No templates empty state message"
+  },
+  "routinePopularTemplates": "Popular Templates",
+  "@routinePopularTemplates": {
+    "description": "Popular templates option title"
+  },
+  "routinePopularTemplatesDesc": "Start with proven workout plans",
+  "@routinePopularTemplatesDesc": {
+    "description": "Popular templates option description"
+  },
+  "routineImportPopularTemplates": "Import Popular Templates",
+  "@routineImportPopularTemplates": {
+    "description": "Import popular templates button"
+  },
+  "routineCustomTemplate": "Custom Template",
+  "@routineCustomTemplate": {
+    "description": "Custom template option title"
+  },
+  "routineCustomTemplateDesc": "Design your own workout plan",
+  "@routineCustomTemplateDesc": {
+    "description": "Custom template option description"
+  },
+  "routineCreateFirstTemplate": "Create First Template",
+  "@routineCreateFirstTemplate": {
+    "description": "Create first template button"
+  },
+  "routineNavigatingToCreator": "Navigating to template creator... 🏗️",
+  "@routineNavigatingToCreator": {
+    "description": "Navigating to template creator message"
+  },
+  "routineSelectTemplatesDialog": "Select the templates you want to import",
+  "@routineSelectTemplatesDialog": {
+    "description": "Select templates dialog message"
+  },
+  "routineSelectTemplatesButton": "Select templates",
+  "@routineSelectTemplatesButton": {
+    "description": "Select templates button (disabled state)"
+  },
+  "routineImportCount": "Import ({count})",
+  "@routineImportCount": {
+    "description": "Import button with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineOr": "OR",
+  "@routineOr": {
+    "description": "OR divider text"
+  },
+  "routineErrorLoadingTemplates": "Error loading templates",
+  "@routineErrorLoadingTemplates": {
+    "description": "Error loading templates"
+  }
+}

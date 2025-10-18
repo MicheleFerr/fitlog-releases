@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../providers/home_customization_provider.dart';
-import '../domain/models/home_widget_config.dart';
-import 'widgets/home_widget_factory.dart';
-import 'widgets/widget_customization_menu.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/home/providers/home_customization_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/home_widget_factory.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/widget_customization_menu.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
+import 'package:gymbro_flutter_new/core/config/admob_config.dart';
+import 'package:gymbro_flutter_new/shared/data/services/rewarded_ad_service.dart';
 
 class CustomizableHomeScreen extends ConsumerStatefulWidget {
   const CustomizableHomeScreen({super.key});
@@ -15,11 +17,14 @@ class CustomizableHomeScreen extends ConsumerStatefulWidget {
   ConsumerState<CustomizableHomeScreen> createState() => _CustomizableHomeScreenState();
 }
 
-class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen> 
+class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
-  
+  final _rewardedAdService = RewardedAdService();
+  bool _isPremiumUnlocked = false;
+  Duration? _premiumRemainingTime;
+
   @override
   void initState() {
     super.initState();
@@ -34,12 +39,80 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
       parent: _shakeController,
       curve: Curves.easeInOut,
     ));
+
+    // Pre-load rewarded ad
+    _rewardedAdService.preloadRewardedAd();
+
+    // Check premium status
+    _checkPremiumStatus();
+  }
+
+  Future<void> _checkPremiumStatus() async {
+    final isUnlocked = await _rewardedAdService.isPremiumUnlocked();
+    final remainingTime = await _rewardedAdService.getPremiumRemainingTime();
+
+    if (mounted) {
+      setState(() {
+        _isPremiumUnlocked = isUnlocked;
+        _premiumRemainingTime = remainingTime;
+      });
+    }
   }
   
   @override
   void dispose() {
     _shakeController.dispose();
+    _rewardedAdService.dispose();
     super.dispose();
+  }
+
+  Future<void> _watchAdForPremium() async {
+    final adShown = await _rewardedAdService.showRewardedAd(
+      onUserEarnedReward: (amount, type) async {
+        // User earned reward - unlock premium for 24h
+        await _rewardedAdService.unlockPremiumTemporarily();
+
+        // Update UI
+        await _checkPremiumStatus();
+
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).premiumUnlockedFor24Hours,
+              ),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      },
+      onAdClosed: () {
+        // Pre-load next ad
+        _rewardedAdService.preloadRewardedAd();
+      },
+    );
+
+    if (!adShown && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).adNotReady),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  String _formatRemainingTime(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+
+    if (hours > 0) {
+      return '$hours${AppLocalizations.of(context).hours} $minutes${AppLocalizations.of(context).minutes}';
+    } else {
+      return '$minutes${AppLocalizations.of(context).minutes}';
+    }
   }
   
   void _startEditMode() {
@@ -127,13 +200,13 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                     ref.read(homeCustomizationProvider.notifier).resetToDefaults();
                     HapticFeedback.mediumImpact();
                   },
-                  child: Text(AppLocalizations.of(context)!.reset),
+                  child: Text(AppLocalizations.of(context).reset),
                 ),
                 TextButton(
                   onPressed: _endEditMode,
                   child: Text(
-                    AppLocalizations.of(context)!.fatto,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    AppLocalizations.of(context).fatto,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -190,7 +263,25 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
               ),
             ),
           ],
-          
+
+          // 🎁 Premium Unlock Card
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: _buildPremiumUnlockCard(),
+            ),
+          ),
+
+          // 📱 Banner Ad
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: AdaptiveBannerAd(
+                adUnitId: AdMobConfig.bannerAnalytics,
+              ),
+            ),
+          ),
+
           // Bottom padding
           const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
         ],
@@ -550,7 +641,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
   }
   
   Widget _buildConstrainedWidget(HomeWidgetConfig widget) {
-    Widget child = HomeWidgetFactory.buildWidget(
+    final Widget child = HomeWidgetFactory.buildWidget(
       context: context,
       ref: ref,
       config: widget,
@@ -571,5 +662,132 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
       case WidgetSize.large:
         return child; // No constraint
     }
+  }
+
+  Widget _buildPremiumUnlockCard() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: _isPremiumUnlocked
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.amber.shade700,
+                    Colors.amber.shade900,
+                  ],
+                )
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.secondary,
+                  ],
+                ),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: _isPremiumUnlocked
+            ? _buildPremiumActiveContent()
+            : _buildWatchAdContent(),
+      ),
+    );
+  }
+
+  Widget _buildPremiumActiveContent() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Icon(
+              Icons.workspace_premium,
+              color: Colors.white,
+              size: 32,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '👑 ${AppLocalizations.of(context).premium}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (_premiumRemainingTime != null)
+                    Text(
+                      AppLocalizations.of(context).premiumActiveRemaining(
+                        _formatRemainingTime(_premiumRemainingTime!),
+                      ),
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 14,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWatchAdContent() {
+    return InkWell(
+      onTap: _watchAdForPremium,
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.card_giftcard,
+                color: Colors.white,
+                size: 32,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).unlockPremium,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      AppLocalizations.of(context).watchAdForPremium,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.play_circle_filled,
+                color: Colors.white,
+                size: 40,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,24 +1,23 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: shared/domain
- * 🎯 Feature: error_handling
- * 🔧 Type: failure
- * 🌍 Localization: ✅ Error codes for AppLocalizations
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - None (pure domain)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: shared/domain
+/// 🎯 Feature: error_handling
+/// 🔧 Type: failure
+/// 🌍 Localization: ✅ Error codes for AppLocalizations
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - None (pure domain)
+library;
 
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
-  final String message;
-  final String? code;
   
   const Failure(this.message, {this.code});
+  final String message;
+  final String? code;
   
   @override
   List<Object?> get props => [message, code];

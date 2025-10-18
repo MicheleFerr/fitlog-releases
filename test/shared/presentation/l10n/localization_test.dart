@@ -18,7 +18,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -58,7 +58,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -88,7 +88,7 @@ void main() {
     testWidgets('changes language dynamically', (tester) async {
       const Locale englishLocale = Locale('en');
       const Locale italianLocale = Locale('it');
-      ValueNotifier<Locale> currentLocale = ValueNotifier(englishLocale);
+      final ValueNotifier<Locale> currentLocale = ValueNotifier(englishLocale);
 
       await tester.pumpWidget(
         ValueListenableBuilder<Locale>(
@@ -105,7 +105,7 @@ void main() {
               supportedLocales: AppLocalizations.supportedLocales,
               home: Builder(
                 builder: (context) {
-                  final l10n = AppLocalizations.of(context)!;
+                  final l10n = AppLocalizations.of(context);
                   return Scaffold(
                     body: Column(
                       children: [
@@ -152,7 +152,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -190,7 +190,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -224,7 +224,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -264,7 +264,7 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
           home: const Scaffold(
             body: Text('Test'),
           ),
@@ -278,7 +278,7 @@ void main() {
     });
 
     test('supported locales include English and Italian', () {
-      final supportedLocales = AppLocalizations.supportedLocales;
+      const supportedLocales = AppLocalizations.supportedLocales;
       
       expect(supportedLocales, contains(const Locale('en')));
       expect(supportedLocales, contains(const Locale('it')));
@@ -307,7 +307,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -353,7 +353,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -395,7 +395,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               return Scaffold(
                 body: Column(
                   children: [
@@ -436,7 +436,7 @@ void main() {
           home: Builder(
             builder: (context) {
               // Extension method for easier access
-              final l10n = AppLocalizations.of(context)!;
+              final l10n = AppLocalizations.of(context);
               
               return Scaffold(
                 body: Text(l10n.appTitle),

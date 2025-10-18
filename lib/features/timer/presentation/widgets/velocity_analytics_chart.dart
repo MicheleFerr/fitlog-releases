@@ -3,16 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 
-import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// TIER-1 Velocity Analytics Chart Widget
 /// Advanced velocity-based training visualization with load-velocity profiling
 class VelocityAnalyticsChart extends ConsumerStatefulWidget {
-  final String exerciseId;
-  final Duration timeWindow;
-  final VelocityChartType chartType;
   
   const VelocityAnalyticsChart({
     super.key,
@@ -20,6 +16,9 @@ class VelocityAnalyticsChart extends ConsumerStatefulWidget {
     this.timeWindow = const Duration(days: 30),
     this.chartType = VelocityChartType.loadVelocity,
   });
+  final String exerciseId;
+  final Duration timeWindow;
+  final VelocityChartType chartType;
 
   @override
   ConsumerState<VelocityAnalyticsChart> createState() => _VelocityAnalyticsChartState();
@@ -86,7 +85,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Card(
       elevation: 4,
@@ -145,7 +144,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
         Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceVariant,
+            color: theme.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -241,7 +240,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
         height: 300,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
           borderRadius: BorderRadius.circular(12),
         ),
         child: _buildChart(context, theme, l10n),

@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draft.dart';
+import 'package:flutter/foundation.dart';
 
 /// Repository for managing workout drafts in local storage
 class WorkoutDraftRepository {
@@ -35,9 +36,13 @@ class WorkoutDraftRepository {
       final draft = WorkoutDraft.fromWorkout(workout);
       await _draftBox?.put(_currentDraftKey, draft);
       
-      print('✅ Workout draft saved at ${draft.lastSaved}');
+      if (kDebugMode) {
+        debugPrint('✅ Workout draft saved at ${draft.lastSaved}');
+      }
     } catch (e) {
-      print('❌ Failed to save workout draft: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to save workout draft: $e');
+      }
     }
   }
 
@@ -47,7 +52,9 @@ class WorkoutDraftRepository {
       await init();
       return _draftBox?.get(_currentDraftKey);
     } catch (e) {
-      print('❌ Failed to get workout draft: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get workout draft: $e');
+      }
       return null;
     }
   }
@@ -87,7 +94,9 @@ class WorkoutDraftRepository {
       
       return draft.toWorkout();
     } catch (e) {
-      print('❌ Failed to recover workout draft: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to recover workout draft: $e');
+      }
       return null;
     }
   }
@@ -97,9 +106,13 @@ class WorkoutDraftRepository {
     try {
       await init();
       await _draftBox?.delete(_currentDraftKey);
-      print('✅ Workout draft cleared');
+      if (kDebugMode) {
+        debugPrint('✅ Workout draft cleared');
+      }
     } catch (e) {
-      print('❌ Failed to clear workout draft: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to clear workout draft: $e');
+      }
     }
   }
 
@@ -113,7 +126,9 @@ class WorkoutDraftRepository {
       }
       return [];
     } catch (e) {
-      print('❌ Failed to get recovered drafts: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get recovered drafts: $e');
+      }
       return [];
     }
   }
@@ -136,7 +151,9 @@ class WorkoutDraftRepository {
         await _recoveredBox?.put(_recoveredDraftsKey, toKeep);
       }
     } catch (e) {
-      print('❌ Failed to clear old drafts: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to clear old drafts: $e');
+      }
     }
   }
 }

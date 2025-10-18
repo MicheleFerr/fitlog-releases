@@ -2,7 +2,7 @@ name: gymbro_flutter_new
 description: FitLog Pro - Advanced Fitness Tracking App
 
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+49
 
 environment:
   sdk: ^3.8.1
@@ -17,8 +17,9 @@ dependencies:
   firebase_core: ^3.3.0
   cloud_firestore: ^5.2.1
   firebase_auth: ^5.1.4
+  firebase_messaging: ^15.0.4  # Push notifications
   google_sign_in: ^6.3.0   # Supporta GoogleUtilities 8.0+
-  sign_in_with_apple: ^5.0.0  # Versione stabile testata
+  sign_in_with_apple: ^7.0.0  # Upgraded for Flutter Android embedding compatibility
   
   # State Management
   flutter_riverpod: ^2.4.9
@@ -34,7 +35,8 @@ dependencies:
   # Background & Timer
   flutter_background_service: ^5.0.5
   audioplayers: ^5.2.1
-  flutter_local_notifications: ^16.3.0
+  flutter_local_notifications: ^19.4.2
+  timezone: ^0.10.1  # For scheduled notifications
   
   # HealthKit & Fitness (temporarily disabled for initial setup)
   # health: ^10.0.0
@@ -43,12 +45,30 @@ dependencies:
   # Navigation & UI
   go_router: ^12.1.3
   flutter_animate: ^4.3.0
+  cached_network_image: ^3.3.1
+  url_launcher: ^6.3.1
   
   # Utils
   intl: ^0.20.2
+  package_info_plus: ^9.0.0
+  connectivity_plus: ^6.0.5
+
+  # PDF Generation & Sharing
+  pdf: ^3.11.0
+  printing: ^5.13.0
   equatable: ^2.0.5
-  
-  
+  share_plus: ^10.1.0
+  csv: ^6.0.0
+
+  # Firebase Functions
+  cloud_functions: ^5.1.4
+
+  # UI Components
+  visibility_detector: ^0.4.0+2
+
+  # AdMob Integration
+  google_mobile_ads: ^5.1.0
+
   # Icons
   cupertino_icons: ^1.0.8
 
@@ -56,9 +76,29 @@ dependencies:
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
   rxdart: ^0.28.0
+  fl_chart: ^1.1.0
+  wakelock_plus: ^1.4.0
+  crypto: ^3.0.6
+  table_calendar: ^3.1.2
 
+  # Data Visualization & Animations (Analytics Feature)
+  lottie: ^3.1.0
+  animate_do: ^3.3.4
+  percent_indicator: ^4.2.3
+
+  path_provider: any
+  sensors_plus: any
+  hive: any
+  file_picker: any
+  collection: any
+  image_picker: any
+  in_app_purchase: any
+  battery_plus: any
+  shimmer: any
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -81,11 +121,15 @@ dev_dependencies:
   # Testing - Mocking
   mocktail: ^1.0.4
   fake_cloud_firestore: ^3.0.4
+  firebase_auth_mocks: ^0.14.2  # Fix per test auth flow - compatibile con firebase_core ^3.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+  test_api: any
+  firebase_core_platform_interface: any
+  hive: any
 flutter:
 
   # The following line ensures that the Material Icons font is

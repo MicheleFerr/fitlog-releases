@@ -2,24 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import '../shared/presentation/l10n/generated/app_localizations.dart';
-import '../features/auth/presentation/login_screen.dart';
-import '../features/auth/presentation/register_screen.dart';
-import '../features/auth/presentation/providers/auth_provider.dart';
-import '../features/home/presentation/home_screen.dart';
-import '../features/home/presentation/home_screen_tier1.dart';
-import '../features/workout/presentation/workout_screen.dart';
-import '../features/exercise_database/presentation/exercise_search_screen.dart';
-import '../features/analytics/presentation/analytics_screen.dart';
-import '../features/settings/presentation/settings_screen.dart';
-import '../features/workout/presentation/screens/workout_templates_screen.dart';
-import '../features/community/presentation/screens/community_hub_screen.dart';
-import '../tools/import_exercises_screen.dart';
-import '../shared/presentation/theme/app_theme.dart';
-import '../shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/login_screen.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/register_screen.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/home_screen_optimized.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analytics_screen.dart';
+// import 'package:gymbro_flutter_new/features/analytics/presentation/screens/analytics_dashboard_screen.dart'; // TEMP DISABLED
+import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_center_screen.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/screens/workout_history_screen.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
+import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 
-class GymBroApp extends ConsumerWidget {
-  const GymBroApp({super.key});
+class FitLogApp extends ConsumerWidget {
+  const FitLogApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,9 +33,13 @@ class GymBroApp extends ConsumerWidget {
     final config = ref.watch(appConfigProvider);
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
-    
+
+    // 🔥 CRITICAL: Load fitness questionnaire at app startup
+    // This ensures weight suggestions work immediately without needing to visit settings first
+    ref.watch(fitnessProfileAutoLoadProvider);
+
     return MaterialApp.router(
-      title: 'GymBro TrackLog',
+      title: 'FitLog Pro',
       theme: _buildThemeWithFontSize(AppTheme.lightTheme, config.fontSize),
       darkTheme: _buildThemeWithFontSize(AppTheme.darkTheme, config.fontSize),
       themeMode: themeMode,
@@ -161,23 +171,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/',
         name: 'home',
-        builder: (context, state) => const HomeScreenTier1(),
-      ),
-      GoRoute(
-        path: '/home-legacy',
-        name: 'home-legacy',
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const HomeScreenOptimized(),
       ),
       GoRoute(
         path: '/workout',
         name: 'workout',
         builder: (context, state) => const WorkoutScreen(),
       ),
-      GoRoute(
-        path: '/timer',
-        name: 'timer',
-        builder: (context, state) => const WorkoutScreen(), // Will create separate timer screen later
-      ),
+      // ✅ REMOVED: Dead route '/timer' (0 usage, redirected to /workout)
       GoRoute(
         path: '/exercises',
         name: 'exercises',
@@ -186,7 +187,26 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/analytics',
         name: 'analytics',
-        builder: (context, state) => const AnalyticsScreen(),
+        builder: (context, state) => const TabbedAnalyticsScreen(),
+      ),
+      // TEMP DISABLED: Analytics dashboard
+      // GoRoute(
+      //   path: '/analytics-dashboard',
+      //   name: 'analytics-dashboard',
+      //   builder: (context, state) => const AnalyticsDashboardScreen(),
+      // ),
+      GoRoute(
+        path: '/exercise-progress',
+        name: 'exercise-progress',
+        builder: (context, state) => const ExerciseProgressScreen(),
+      ),
+      GoRoute(
+        path: '/exercise-progress/detail',
+        name: 'exercise-detail',
+        builder: (context, state) {
+          final exerciseName = state.extra as String;
+          return ExerciseDetailScreen(exerciseName: exerciseName);
+        },
       ),
       GoRoute(
         path: '/settings',
@@ -199,14 +219,31 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ImportExercisesScreen(),
       ),
       GoRoute(
-        path: '/workout-templates',
-        name: 'workout-templates',
-        builder: (context, state) => const WorkoutTemplatesScreen(),
+        path: '/routine',
+        name: 'routine',
+        builder: (context, state) => const RoutineCenterScreen(),
       ),
       GoRoute(
         path: '/community',
         name: 'community',
         builder: (context, state) => const CommunityHubScreen(),
+      ),
+      GoRoute(
+        path: '/workout-history',
+        name: 'workout-history',
+        builder: (context, state) => const WorkoutHistoryScreen(),
+      ),
+      // ✅ REMOVED: Dead route '/migration' (0 usage, legacy migration tool)
+      GoRoute(
+        path: '/admin',
+        name: 'admin',
+        builder: (context, state) => const AdminDashboardScreen(),
+      ),
+      // ✅ REMOVED: Dead route '/fitness-profile-debug' (0 usage, debug-only screen)
+      GoRoute(
+        path: '/onboarding',
+        name: 'onboarding',
+        builder: (context, state) => const GlobalOnboardingScreen(),
       ),
     ],
   );

@@ -1,13 +1,13 @@
-import '../entities/unified_notification.dart';
-import '../entities/unified_notification_state.dart';
-import '../repositories/notification_repository.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
 
 /// Use case for scheduling notifications with business logic validation
 /// Handles smart scheduling, duplicate prevention, and preference checks
 class ScheduleNotificationUseCase {
-  final NotificationRepository _repository;
 
   ScheduleNotificationUseCase(this._repository);
+  final NotificationRepository _repository;
 
   Future<ScheduleNotificationResult> execute(ScheduleNotificationParams params) async {
     try {
@@ -191,23 +191,6 @@ class ScheduleNotificationUseCase {
 }
 
 class ScheduleNotificationParams {
-  final NotificationType type;
-  final String title;
-  final String body;
-  final DateTime? scheduledTime;
-  final NotificationPriority priority;
-  final NotificationDeliveryMethod deliveryMethod;
-  final Map<String, dynamic>? payload;
-  final String? imageUrl;
-  final String? soundName;
-  final List<NotificationAction>? actions;
-  final String? userId;
-  final String? workoutId;
-  final String? exerciseId;
-  final List<String>? tags;
-  final NotificationPersonalization? personalization;
-  final IOSNotificationConfig? iosConfig;
-  final AndroidNotificationConfig? androidConfig;
 
   ScheduleNotificationParams({
     required this.type,
@@ -228,14 +211,26 @@ class ScheduleNotificationParams {
     this.iosConfig,
     this.androidConfig,
   });
+  final NotificationType type;
+  final String title;
+  final String body;
+  final DateTime? scheduledTime;
+  final NotificationPriority priority;
+  final NotificationDeliveryMethod deliveryMethod;
+  final Map<String, dynamic>? payload;
+  final String? imageUrl;
+  final String? soundName;
+  final List<NotificationAction>? actions;
+  final String? userId;
+  final String? workoutId;
+  final String? exerciseId;
+  final List<String>? tags;
+  final NotificationPersonalization? personalization;
+  final IOSNotificationConfig? iosConfig;
+  final AndroidNotificationConfig? androidConfig;
 }
 
 class ScheduleNotificationResult {
-  final bool isSuccess;
-  final String? notificationId;
-  final UnifiedNotification? notification;
-  final String? error;
-  final ScheduleNotificationStatus status;
 
   ScheduleNotificationResult._({
     required this.isSuccess,
@@ -277,6 +272,11 @@ class ScheduleNotificationResult {
       status: ScheduleNotificationStatus.duplicate,
     );
   }
+  final bool isSuccess;
+  final String? notificationId;
+  final UnifiedNotification? notification;
+  final String? error;
+  final ScheduleNotificationStatus status;
 }
 
 enum ScheduleNotificationStatus {
@@ -287,11 +287,11 @@ enum ScheduleNotificationStatus {
 }
 
 class ValidationResult {
-  final bool isValid;
-  final String? error;
 
   ValidationResult._(this.isValid, this.error);
 
   factory ValidationResult.valid() => ValidationResult._(true, null);
   factory ValidationResult.invalid(String error) => ValidationResult._(false, error);
+  final bool isValid;
+  final String? error;
 }

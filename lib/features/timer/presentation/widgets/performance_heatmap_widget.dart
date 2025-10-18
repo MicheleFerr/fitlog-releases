@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
 
-import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// TIER-1 Performance Heatmap Widget
 /// Visualizes performance data as an interactive heatmap with drill-down capabilities
 class PerformanceHeatmapWidget extends ConsumerStatefulWidget {
-  final String exerciseId;
-  final DateTime startDate;
-  final DateTime endDate;
-  final HeatmapMetric metric;
-  final bool showWeekView;
   
   const PerformanceHeatmapWidget({
     super.key,
@@ -23,6 +17,11 @@ class PerformanceHeatmapWidget extends ConsumerStatefulWidget {
     this.metric = HeatmapMetric.executionTime,
     this.showWeekView = true,
   });
+  final String exerciseId;
+  final DateTime startDate;
+  final DateTime endDate;
+  final HeatmapMetric metric;
+  final bool showWeekView;
 
   @override
   ConsumerState<PerformanceHeatmapWidget> createState() => _PerformanceHeatmapWidgetState();
@@ -87,7 +86,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Card(
       elevation: 4,
@@ -150,7 +149,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceVariant,
+            color: theme.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(20),
           ),
           child: DropdownButtonHideUnderline(
@@ -190,7 +189,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -231,7 +230,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
               fontWeight: FontWeight.w500,
             ),
           ),
-        )).toList(),
+        )),
       ],
     );
   }
@@ -309,7 +308,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         child: hasData
           ? Center(
               child: Text(
-                _getCellDisplayValue(cellData!),
+                _getCellDisplayValue(cellData),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: _getCellTextColor(cellData, theme),
                   fontWeight: FontWeight.bold,
@@ -560,7 +559,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
 
   List<List<HeatmapCell>> _groupByWeeks(List<HeatmapCell> data) {
     final weeks = <List<HeatmapCell>>[];
-    var currentWeek = <HeatmapCell>[];
+    final currentWeek = <HeatmapCell>[];
     
     var currentDate = widget.startDate;
     final startOfWeek = currentDate.subtract(Duration(days: currentDate.weekday - 1));
@@ -602,7 +601,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
 
   Color _getCellColor(HeatmapCell? cellData, ThemeData theme) {
     if (cellData == null || cellData.value == 0) {
-      return theme.colorScheme.surfaceVariant;
+      return theme.colorScheme.surfaceContainerHighest;
     }
     
     // Normalize value to 0-1 range based on metric
@@ -613,7 +612,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
   Color _getIntensityColor(double intensity, ThemeData theme) {
     final baseColor = theme.colorScheme.primary;
     return Color.lerp(
-      theme.colorScheme.surfaceVariant,
+      theme.colorScheme.surfaceContainerHighest,
       baseColor,
       intensity,
     )!;
@@ -678,11 +677,7 @@ enum HeatmapMetric {
 }
 
 /// Individual cell in the heatmap
-class HeatmapCell {
-  final DateTime date;
-  final double value;
-  final int setCount;
-  final double qualityScore; // 0-1 range
+class HeatmapCell { // 0-1 range
   
   const HeatmapCell({
     required this.date,
@@ -690,4 +685,8 @@ class HeatmapCell {
     required this.setCount,
     required this.qualityScore,
   });
+  final DateTime date;
+  final double value;
+  final int setCount;
+  final double qualityScore;
 }

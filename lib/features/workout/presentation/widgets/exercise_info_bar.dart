@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_selector.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
 
 /// Info bar minimalista e professionale per mostrare categoria, tipo e TUT
 class ExerciseInfoBar extends StatefulWidget {
-  final Exercise exercise;
-  final Map<String, dynamic>? exerciseData;
-  final VoidCallback? onTutTap;
   
   const ExerciseInfoBar({
     super.key,
     required this.exercise,
     this.exerciseData,
     this.onTutTap,
+    this.onTutChanged,
   });
+  final Exercise exercise;
+  final Map<String, dynamic>? exerciseData;
+  final VoidCallback? onTutTap;
+  final Function(String)? onTutChanged;
   
   @override
   State<ExerciseInfoBar> createState() => _ExerciseInfoBarState();
@@ -26,6 +30,7 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
   late Animation<double> _rotateAnimation;
   bool _isPressed = false;
   bool _isDataLoaded = false;
+  bool _showTutSelector = false;
   
   @override
   void initState() {
@@ -72,49 +77,72 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
     final theme = Theme.of(context);
     final tut = widget.exerciseData?['tempoEsecuzione'];
     final hasValidTut = tut != null && tut != '' && tut != 'N/A';
-    
-    return GestureDetector(
-      onTapDown: hasValidTut ? (_) {
-        setState(() => _isPressed = true);
-        _animationController.forward();
-        HapticFeedback.lightImpact();
-      } : null,
-      onTapUp: hasValidTut ? (_) {
-        setState(() => _isPressed = false);
-        _animationController.reverse();
-        widget.onTutTap?.call();
-      } : null,
-      onTapCancel: hasValidTut ? () {
-        setState(() => _isPressed = false);
-        _animationController.reverse();
-      } : null,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: _isPressed 
-                  ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
-                  : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-                border: _isPressed 
-                  ? Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                      width: 1,
-                    )
-                  : null,
-              ),
-              child: _isDataLoaded 
-                ? _buildContent(theme, tut, hasValidTut)
-                : _buildShimmer(theme),
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTapDown: hasValidTut ? (_) {
+            setState(() => _isPressed = true);
+            _animationController.forward();
+            HapticFeedback.lightImpact();
+          } : null,
+          onTapUp: hasValidTut ? (_) {
+            setState(() => _isPressed = false);
+            _animationController.reverse();
+            if (widget.onTutChanged != null) {
+              setState(() => _showTutSelector = !_showTutSelector);
+            } else {
+              _showTutInfoDialog(context, tut!);
+            }
+          } : null,
+          onTapCancel: hasValidTut ? () {
+            setState(() => _isPressed = false);
+            _animationController.reverse();
+          } : null,
+          child: AnimatedBuilder(
+            animation: _scaleAnimation,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _scaleAnimation.value,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _isPressed || _showTutSelector
+                      ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
+                      : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(8),
+                    border: _isPressed || _showTutSelector
+                      ? Border.all(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                          width: 1,
+                        )
+                      : null,
+                  ),
+                  child: _isDataLoaded
+                    ? _buildContent(theme, tut, hasValidTut)
+                    : _buildShimmer(theme),
+                ),
+              );
+            },
+          ),
+        ),
+
+        // TUT Selector Overlay
+        if (_showTutSelector && hasValidTut && widget.onTutChanged != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: TutSelector(
+              initialValue: tut,
+              isCompact: true,
+              onChanged: (newTut) {
+                widget.onTutChanged!(newTut);
+                setState(() => _showTutSelector = false);
+              },
             ),
-          );
-        },
-      ),
+          ),
+      ],
     );
   }
   
@@ -188,9 +216,13 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                         return Transform.rotate(
                           angle: _rotateAnimation.value * 3.14159,
                           child: Icon(
-                            _isPressed ? Icons.close : Icons.info_outline,
+                            _showTutSelector
+                              ? Icons.close
+                              : (widget.onTutChanged != null
+                                  ? Icons.expand_more
+                                  : Icons.info_outline),
                             size: 14,
-                            color: _isPressed 
+                            color: _isPressed || _showTutSelector
                               ? theme.colorScheme.primary
                               : theme.colorScheme.primary.withValues(alpha: 0.5),
                           ),
@@ -386,5 +418,9 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
       case ExerciseType.restPause:
         return theme.colorScheme.error;
     }
+  }
+
+  void _showTutInfoDialog(BuildContext context, String tutValue) {
+    showTutInfoBottomSheet(context, tutValue);
   }
 }

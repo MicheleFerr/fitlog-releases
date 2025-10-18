@@ -1,34 +1,33 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../domain/entities/buddy_action.dart';
-import '../../../domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_action.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
 
 class ReportUserDialog extends ConsumerStatefulWidget {
-  final BuddyProfile targetProfile;
-  final Function(ReportReason reason, String? description) onReport;
 
   const ReportUserDialog({
     super.key,
     required this.targetProfile,
     required this.onReport,
   });
+  final BuddyProfile targetProfile;
+  final Function(ReportReason reason, String? description) onReport;
 
   @override
   ConsumerState<ReportUserDialog> createState() => _ReportUserDialogState();
@@ -98,7 +97,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
@@ -127,7 +126,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceVariant.withOpacity(0.3),
+                color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -194,7 +193,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
                 contentPadding: EdgeInsets.zero,
                 dense: true,
               );
-            }).toList(),
+            }),
 
             const SizedBox(height: 16),
 
@@ -223,7 +222,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
                   borderSide: BorderSide(color: colorScheme.primary, width: 2),
                 ),
                 filled: true,
-                fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+                fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
               ),
               style: TextStyle(color: colorScheme.onSurface),
             ),
@@ -322,18 +321,18 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
 
 /// Block user confirmation dialog
 class BlockUserDialog extends ConsumerWidget {
-  final BuddyProfile targetProfile;
-  final Function(String? reason) onBlock;
 
   const BlockUserDialog({
     super.key,
     required this.targetProfile,
     required this.onBlock,
   });
+  final BuddyProfile targetProfile;
+  final Function(String? reason) onBlock;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
@@ -359,7 +358,7 @@ class BlockUserDialog extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceVariant.withOpacity(0.3),
+              color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

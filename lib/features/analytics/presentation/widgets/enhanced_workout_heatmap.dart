@@ -3,14 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Enhanced Heatmap calendar with zoom controls and detailed exercise view
 class EnhancedWorkoutHeatmap extends ConsumerStatefulWidget {
-  final Map<DateTime, WorkoutDayData> workoutData;
-  final Function(DateTime, WorkoutDayData?)? onDayTap;
-  final DateTime? startDate;
-  final int weeksToShow;
   
   const EnhancedWorkoutHeatmap({
     super.key,
@@ -19,6 +15,10 @@ class EnhancedWorkoutHeatmap extends ConsumerStatefulWidget {
     this.startDate,
     this.weeksToShow = 52,
   });
+  final Map<DateTime, WorkoutDayData> workoutData;
+  final Function(DateTime, WorkoutDayData?)? onDayTap;
+  final DateTime? startDate;
+  final int weeksToShow;
 
   @override
   ConsumerState<EnhancedWorkoutHeatmap> createState() => _EnhancedWorkoutHeatmapState();
@@ -117,7 +117,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
     final theme = Theme.of(context);
     final endDate = widget.startDate ?? DateTime.now();
     final startDate = endDate.subtract(Duration(days: widget.weeksToShow * 7));
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,7 +519,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
                 borderRadius: BorderRadius.circular(8),
               ),
               child: workoutData != null
-                  ? Center(
+                  ? const Center(
                       child: Icon(
                         Icons.fitness_center,
                         color: Colors.white,
@@ -544,12 +544,12 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
                   ),
                   if (workoutData != null) ...[
                     Text(
-                      l10n.workoutWithExercises(workoutData.exercises.length),
+                      l10n.exerciseCount(workoutData.exercises.length),
                       style: theme.textTheme.bodyMedium,
                     ),
                     if (workoutData.totalMinutes > 0)
                       Text(
-                        l10n.totalDuration(workoutData.totalMinutes),
+                        l10n.durationMinutes(workoutData.totalMinutes),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
@@ -680,39 +680,32 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
 
 /// Data model for a workout day
 class WorkoutDayData {
-  final List<ExerciseData> exercises;
-  final int totalMinutes;
-  final String? notes;
   
   WorkoutDayData({
     required this.exercises,
     this.totalMinutes = 0,
     this.notes,
   });
+  final List<ExerciseData> exercises;
+  final int totalMinutes;
+  final String? notes;
 }
 
 /// Data model for an exercise
 class ExerciseData {
-  final String name;
-  final List<SetData> sets;
-  final String? notes;
   
   ExerciseData({
     required this.name,
     required this.sets,
     this.notes,
   });
+  final String name;
+  final List<SetData> sets;
+  final String? notes;
 }
 
 /// Data model for a set
 class SetData {
-  final int? reps;
-  final double? weight;
-  final int? duration; // in seconds for timed exercises
-  final int? effort; // 1-10 scale
-  final bool isWarmup;
-  final bool isDropSet;
-  final bool isRestPause;
   
   SetData({
     this.reps,
@@ -723,6 +716,13 @@ class SetData {
     this.isDropSet = false,
     this.isRestPause = false,
   });
+  final int? reps;
+  final double? weight;
+  final int? duration; // in seconds for timed exercises
+  final int? effort; // 1-10 scale
+  final bool isWarmup;
+  final bool isDropSet;
+  final bool isRestPause;
 }
 
 /// Intensity levels for the heatmap
@@ -736,27 +736,27 @@ enum WorkoutIntensityLevel {
 
 /// Month label for the calendar
 class MonthLabel {
-  final int month;
-  final int year;
-  final int weekIndex;
   
   const MonthLabel({
     required this.month,
     required this.year,
     required this.weekIndex,
   });
+  final int month;
+  final int year;
+  final int weekIndex;
 }
 
 /// Bottom sheet for workout details
 class WorkoutDetailsSheet extends StatefulWidget {
-  final DateTime date;
-  final WorkoutDayData workoutData;
   
   const WorkoutDetailsSheet({
     super.key,
     required this.date,
     required this.workoutData,
   });
+  final DateTime date;
+  final WorkoutDayData workoutData;
   
   @override
   State<WorkoutDetailsSheet> createState() => _WorkoutDetailsSheetState();
@@ -768,7 +768,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       constraints: BoxConstraints(
@@ -920,7 +920,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                   SizedBox(
                                     width: 40,
                                     child: Text(
-                                      l10n.setLabel,
+                                      l10n.sets,
                                       style: theme.textTheme.labelSmall?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -1014,8 +1014,8 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                             if (set.effort != null)
                                               _buildEffortIndicator(set.effort!, theme),
                                             if (set.isDropSet)
-                                              Padding(
-                                                padding: const EdgeInsets.only(left: 4),
+                                              const Padding(
+                                                padding: EdgeInsets.only(left: 4),
                                                 child: Icon(
                                                   Icons.arrow_downward,
                                                   size: 14,
@@ -1023,8 +1023,8 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                                 ),
                                               ),
                                             if (set.isRestPause)
-                                              Padding(
-                                                padding: const EdgeInsets.only(left: 4),
+                                              const Padding(
+                                                padding: EdgeInsets.only(left: 4),
                                                 child: Icon(
                                                   Icons.pause,
                                                   size: 14,

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain/usecases
- * 🎯 Feature: workout
- * 🔧 Type: usecase
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities
- * - Repository interface
- * - Shared failures
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain/usecases
+/// 🎯 Feature: workout
+/// 🔧 Type: usecase
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities
+/// - Repository interface
+/// - Shared failures
+library;
 
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
@@ -22,9 +21,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 
 /// Use case for saving workouts with business logic validation
 class SaveWorkoutUseCase {
-  final WorkoutRepository _repository;
   
   const SaveWorkoutUseCase(this._repository);
+  final WorkoutRepository _repository;
   
   /// Save workout with validation
   Future<Either<Failure, String>> call(SaveWorkoutParams params) async {
@@ -173,11 +172,11 @@ class SaveWorkoutUseCase {
 
 /// Parameters for SaveWorkoutUseCase
 class SaveWorkoutParams {
-  final Workout workout;
-  final bool requireCompletedSets;
   
   const SaveWorkoutParams({
     required this.workout,
     this.requireCompletedSets = false,
   });
+  final Workout workout;
+  final bool requireCompletedSets;
 }

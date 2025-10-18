@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
-import '../../../community/presentation/providers/community_provider.dart';
-import '../../../progress/presentation/providers/optimized_progress_provider.dart';
-import '../../providers/achievement_xp_provider.dart';
-import '../../utils/xp_calculator.dart';
-import '../../domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/optimized_progress_provider.dart';
+import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
+import 'package:gymbro_flutter_new/features/home/utils/xp_calculator.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 
 /// OPTIMIZED VERSION - Fixed animation loops and excessive rebuilds
 class OptimizedUnifiedStatsCard extends ConsumerStatefulWidget {
-  final VoidCallback? onTapXP;
-  final VoidCallback? onTapAchievements;
-  final WidgetSize size;
   
   const OptimizedUnifiedStatsCard({
     super.key,
@@ -20,6 +17,9 @@ class OptimizedUnifiedStatsCard extends ConsumerStatefulWidget {
     this.onTapAchievements,
     this.size = WidgetSize.large,
   });
+  final VoidCallback? onTapXP;
+  final VoidCallback? onTapAchievements;
+  final WidgetSize size;
 
   @override
   ConsumerState<OptimizedUnifiedStatsCard> createState() => _OptimizedUnifiedStatsCardState();
@@ -651,7 +651,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   }
   
   Widget _buildDefaultXPDisplay(BuildContext context, ThemeData theme) {
-    return Container(
+    return SizedBox(
       height: 200,
       child: Center(
         child: Column(
@@ -660,7 +660,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             Container(
               width: 60,
               height: 60,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.green,
               ),
@@ -692,7 +692,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   Widget _buildLoadingSkeleton(BuildContext context) {
     final theme = Theme.of(context);
     
-    return Container(
+    return SizedBox(
       height: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -722,7 +722,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   Widget _buildErrorState(BuildContext context) {
     final theme = Theme.of(context);
     
-    return Container(
+    return SizedBox(
       height: 200,
       child: Center(
         child: Column(

@@ -1,38 +1,37 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/buddy_match.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_match.dart';
 
 class MatchesPreviewBar extends StatelessWidget {
-  final List<BuddyMatch> matches;
-  final VoidCallback? onTap;
 
   const MatchesPreviewBar({
     super.key,
     required this.matches,
     this.onTap,
   });
+  final List<BuddyMatch> matches;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     if (matches.isEmpty) return const SizedBox.shrink();
 
@@ -140,7 +139,7 @@ class MatchesPreviewBar extends StatelessWidget {
                       Row(
                         children: [
                           if (confirmedMatches > 0) ...[
-                            Icon(
+                            const Icon(
                               Icons.favorite,
                               size: 14,
                               color: Colors.red,
@@ -161,7 +160,7 @@ class MatchesPreviewBar extends StatelessWidget {
                               ),
                             ),
                           if (activePartnerships > 0) ...[
-                            Icon(
+                            const Icon(
                               Icons.handshake,
                               size: 14,
                               color: Colors.green,

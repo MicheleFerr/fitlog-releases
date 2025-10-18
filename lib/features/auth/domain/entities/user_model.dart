@@ -1,15 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  final String uid;
-  final String email;
-  final String displayName;
-  final String? photoURL;
-  final DateTime? createdAt;
-  final DateTime? lastLoginAt;
-  final bool isGuest;
-  final UserPreferences preferences;
-  final UserStats stats;
 
   const UserModel({
     required this.uid,
@@ -69,6 +60,15 @@ class UserModel {
       ),
     );
   }
+  final String uid;
+  final String email;
+  final String displayName;
+  final String? photoURL;
+  final DateTime? createdAt;
+  final DateTime? lastLoginAt;
+  final bool isGuest;
+  final UserPreferences preferences;
+  final UserStats stats;
 
   Map<String, dynamic> toFirestore({bool useServerTimestamp = true}) {
     return {
@@ -169,9 +169,6 @@ class UserModel {
 }
 
 class UserPreferences {
-  final String units; // 'kg' or 'lbs'
-  final bool restTimerSound;
-  final bool notifications;
 
   const UserPreferences({
     this.units = 'kg',
@@ -186,6 +183,9 @@ class UserPreferences {
       notifications: map['notifications'] as bool? ?? true,
     );
   }
+  final String units; // 'kg' or 'lbs'
+  final bool restTimerSound;
+  final bool notifications;
 
   Map<String, dynamic> toMap() {
     return {
@@ -228,9 +228,6 @@ class UserPreferences {
 }
 
 class UserStats {
-  final int totalWorkouts;
-  final int totalExercises;
-  final double totalVolume;
 
   const UserStats({
     this.totalWorkouts = 0,
@@ -245,6 +242,9 @@ class UserStats {
       totalVolume: (map['totalVolume'] as num?)?.toDouble() ?? 0.0,
     );
   }
+  final int totalWorkouts;
+  final int totalExercises;
+  final double totalVolume;
 
   Map<String, dynamic> toMap() {
     return {

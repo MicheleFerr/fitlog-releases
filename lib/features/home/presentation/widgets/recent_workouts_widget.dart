@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../domain/models/home_widget_config.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class RecentWorkoutsWidget extends ConsumerWidget {
-  final WidgetSize size;
   
   const RecentWorkoutsWidget({
     super.key,
     required this.size,
   });
+  final WidgetSize size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,9 +29,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
   Widget _buildCompactView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authService = ref.watch(authServiceProvider);
-    final userEmail = authService.currentUser?.email;
-    
-    if (userEmail == null) {
+    final currentUser = authService.currentUser;
+
+    if (currentUser == null) {
       return _buildEmptyState(context, 'Accedi per vedere i workout');
     }
     
@@ -59,9 +59,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
         ),
         child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
-              .collection('exerciseActivities')
-              .where('email', isEqualTo: userEmail.toLowerCase())
-              .orderBy('createdAt', descending: true)
+              .collection('workouts')
+              .where('userId', isEqualTo: currentUser.uid)
+              .orderBy('completedAt', descending: true)
               .limit(1)
               .snapshots(),
           builder: (context, snapshot) {
@@ -71,8 +71,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
             
             final workout = snapshot.data!.docs.first;
             final data = workout.data() as Map<String, dynamic>;
-            final timestamp = data['createdAt'] as Timestamp?;
-            final date = timestamp?.toDate() ?? DateTime.now();
+            final completedTimestamp = data['completedAt'] as Timestamp?;
+            final createdTimestamp = data['createdAt'] as Timestamp?;
+            final date = completedTimestamp?.toDate() ?? createdTimestamp?.toDate() ?? DateTime.now();
             
             return InkWell(
               onTap: () => context.push('/history'),
@@ -107,7 +108,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                     ),
                     const Spacer(),
                     Text(
-                      data['exerciseName'] ?? 'Workout',
+                      data['name'] ?? 'Workout',
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -130,7 +131,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        if (data['sets'] != null) ...[
+                        if (data['exercises'] != null) ...[
                           Icon(
                             Icons.fitness_center,
                             size: 14,
@@ -138,7 +139,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${(data['sets'] as List).length} serie',
+                            '${(data['exercises'] as List).length} esercizi',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
@@ -159,9 +160,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
   Widget _buildStandardView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authService = ref.watch(authServiceProvider);
-    final userEmail = authService.currentUser?.email;
-    
-    if (userEmail == null) {
+    final currentUser = authService.currentUser;
+
+    if (currentUser == null) {
       return _buildEmptyState(context, 'Accedi per vedere i workout');
     }
     
@@ -243,9 +244,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('exerciseActivities')
-                    .where('email', isEqualTo: userEmail.toLowerCase())
-                    .orderBy('createdAt', descending: true)
+                    .collection('workouts')
+                    .where('userId', isEqualTo: currentUser.uid)
+                    .orderBy('completedAt', descending: true)
                     .limit(3)
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -276,9 +277,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
   Widget _buildExpandedView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authService = ref.watch(authServiceProvider);
-    final userEmail = authService.currentUser?.email;
-    
-    if (userEmail == null) {
+    final currentUser = authService.currentUser;
+
+    if (currentUser == null) {
       return _buildEmptyState(context, 'Accedi per vedere i workout');
     }
     
@@ -356,16 +357,16 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                   FilledButton.icon(
                     onPressed: () => context.push('/history'),
                     icon: const Icon(Icons.open_in_new, size: 18),
-                    label: Text(AppLocalizations.of(context)!.viewAll),
+                    label: Text(AppLocalizations.of(context).seeAll),
                   ),
                 ],
               ),
             ),
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('exerciseActivities')
-                  .where('email', isEqualTo: userEmail.toLowerCase())
-                  .orderBy('createdAt', descending: true)
+                  .collection('workouts')
+                  .where('userId', isEqualTo: currentUser.uid)
+                  .orderBy('completedAt', descending: true)
                   .limit(5)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -380,10 +381,11 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                 final Map<String, List<Map<String, dynamic>>> groupedWorkouts = {};
                 for (final doc in snapshot.data!.docs) {
                   final data = doc.data() as Map<String, dynamic>;
-                  final timestamp = data['createdAt'] as Timestamp?;
-                  final date = timestamp?.toDate() ?? DateTime.now();
+                  final completedTimestamp = data['completedAt'] as Timestamp?;
+                  final createdTimestamp = data['createdAt'] as Timestamp?;
+                  final date = completedTimestamp?.toDate() ?? createdTimestamp?.toDate() ?? DateTime.now();
                   final dateKey = _formatDate(date);
-                  
+
                   if (!groupedWorkouts.containsKey(dateKey)) {
                     groupedWorkouts[dateKey] = [];
                   }
@@ -433,16 +435,22 @@ class RecentWorkoutsWidget extends ConsumerWidget {
 
   Widget _buildWorkoutItem(BuildContext context, Map<String, dynamic> data, {required bool compact}) {
     final theme = Theme.of(context);
-    final timestamp = data['createdAt'] as Timestamp?;
-    final date = timestamp?.toDate() ?? DateTime.now();
-    final sets = data['sets'] as List? ?? [];
-    
-    // Calculate total volume
+    final completedTimestamp = data['completedAt'] as Timestamp?;
+    final createdTimestamp = data['createdAt'] as Timestamp?;
+    final date = completedTimestamp?.toDate() ?? createdTimestamp?.toDate() ?? DateTime.now();
+    final exercises = data['exercises'] as List? ?? [];
+
+    // Calculate total volume and sets from exercises
     double totalVolume = 0;
-    for (final set in sets) {
-      final weight = (set['weight'] ?? 0).toDouble();
-      final reps = (set['reps'] ?? 0).toInt();
-      totalVolume += weight * reps;
+    int totalSets = 0;
+    for (final exercise in exercises) {
+      final sets = exercise['sets'] as List? ?? [];
+      totalSets += sets.length;
+      for (final set in sets) {
+        final weight = (set['weight'] ?? 0).toDouble();
+        final reps = (set['reps'] ?? 0).toInt();
+        totalVolume += weight * reps;
+      }
     }
     
     return Container(
@@ -482,7 +490,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  data['exerciseName'] ?? 'Workout',
+                  data['name'] ?? 'Workout',
                   style: (compact ? theme.textTheme.bodyLarge : theme.textTheme.titleMedium)?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -495,7 +503,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                     children: [
                       _buildWorkoutStat(
                         icon: Icons.repeat,
-                        value: '${sets.length}',
+                        value: '$totalSets',
                         label: 'serie',
                         theme: theme,
                       ),

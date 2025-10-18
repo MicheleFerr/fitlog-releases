@@ -1,19 +1,18 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: workout
- * 🔧 Type: provider
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod
- * - Repository implementations
- * - Firebase
- * - Hive
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: workout
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod
+/// - Repository implementations
+/// - Firebase
+/// - Hive
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,10 +77,6 @@ final syncStatusProvider = StateNotifierProvider<SyncStatusNotifier, SyncStatusS
 
 /// State for sync status
 class SyncStatusState {
-  final bool isSyncing;
-  final DateTime? lastSyncTime;
-  final SyncResult? lastSyncResult;
-  final bool isPremiumUser;
   
   const SyncStatusState({
     this.isSyncing = false,
@@ -89,6 +84,10 @@ class SyncStatusState {
     this.lastSyncResult,
     this.isPremiumUser = false,
   });
+  final bool isSyncing;
+  final DateTime? lastSyncTime;
+  final SyncResult? lastSyncResult;
+  final bool isPremiumUser;
   
   SyncStatusState copyWith({
     bool? isSyncing,
@@ -107,9 +106,9 @@ class SyncStatusState {
 
 /// Notifier for sync status
 class SyncStatusNotifier extends StateNotifier<SyncStatusState> {
-  final WorkoutSyncService _syncService;
   
   SyncStatusNotifier(this._syncService) : super(const SyncStatusState());
+  final WorkoutSyncService _syncService;
   
   /// Trigger manual sync
   Future<void> syncNow() async {

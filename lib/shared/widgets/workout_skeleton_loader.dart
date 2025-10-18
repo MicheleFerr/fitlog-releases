@@ -4,12 +4,12 @@ import 'package:shimmer/shimmer.dart';
 /// Skeleton loader widget for workout history items
 /// Shows animated placeholder while loading real data
 class WorkoutSkeletonLoader extends StatelessWidget {
-  final int itemCount;
   
   const WorkoutSkeletonLoader({
-    Key? key,
+    super.key,
     this.itemCount = 3,
-  }) : super(key: key);
+  });
+  final int itemCount;
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +91,12 @@ class WorkoutSkeletonLoader extends StatelessWidget {
 
 /// Loading indicator for pagination
 class LoadMoreIndicator extends StatelessWidget {
-  final String message;
   
   const LoadMoreIndicator({
-    Key? key,
+    super.key,
     this.message = 'Loading more workouts...',
-  }) : super(key: key);
+  });
+  final String message;
 
   @override
   Widget build(BuildContext context) {

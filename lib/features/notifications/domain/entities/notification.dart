@@ -1,15 +1,6 @@
 import 'package:uuid/uuid.dart';
 
 class AppNotification {
-  final String id;
-  final NotificationType type;
-  final String title;
-  final String message;
-  final String emoji;
-  final DateTime createdAt;
-  final bool isRead;
-  final Map<String, dynamic>? data;
-  final NotificationAction? action;
 
   const AppNotification({
     required this.id,
@@ -43,6 +34,31 @@ class AppNotification {
     );
   }
 
+  factory AppNotification.fromJson(Map<String, dynamic> json) {
+    return AppNotification(
+      id: json['id'] as String,
+      type: NotificationType.values.byName(json['type'] as String),
+      title: json['title'] as String,
+      message: json['message'] as String,
+      emoji: json['emoji'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      isRead: json['is_read'] as bool? ?? false,
+      data: json['data'] as Map<String, dynamic>?,
+      action: json['action'] != null 
+          ? NotificationAction.fromJson(json['action'] as Map<String, dynamic>)
+          : null,
+    );
+  }
+  final String id;
+  final NotificationType type;
+  final String title;
+  final String message;
+  final String emoji;
+  final DateTime createdAt;
+  final bool isRead;
+  final Map<String, dynamic>? data;
+  final NotificationAction? action;
+
   AppNotification copyWith({
     String? id,
     NotificationType? type,
@@ -64,22 +80,6 @@ class AppNotification {
       isRead: isRead ?? this.isRead,
       data: data ?? this.data,
       action: action ?? this.action,
-    );
-  }
-
-  factory AppNotification.fromJson(Map<String, dynamic> json) {
-    return AppNotification(
-      id: json['id'] as String,
-      type: NotificationType.values.byName(json['type'] as String),
-      title: json['title'] as String,
-      message: json['message'] as String,
-      emoji: json['emoji'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      isRead: json['is_read'] as bool? ?? false,
-      data: json['data'] as Map<String, dynamic>?,
-      action: json['action'] != null 
-          ? NotificationAction.fromJson(json['action'] as Map<String, dynamic>)
-          : null,
     );
   }
 
@@ -130,9 +130,6 @@ enum NotificationType {
 }
 
 class NotificationAction {
-  final String label;
-  final String route;
-  final Map<String, dynamic>? parameters;
 
   const NotificationAction({
     required this.label,
@@ -147,6 +144,9 @@ class NotificationAction {
       parameters: json['parameters'] as Map<String, dynamic>?,
     );
   }
+  final String label;
+  final String route;
+  final Map<String, dynamic>? parameters;
 
   Map<String, dynamic> toJson() {
     return {

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/auth_service.dart';
-import '../../domain/entities/user_model.dart';
+import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
 
 // Auth Service Provider
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
@@ -76,9 +76,9 @@ final authControllerProvider = StateNotifierProvider<AuthController, AsyncValue<
 );
 
 class AuthController extends StateNotifier<AsyncValue<void>> {
-  final AuthService _authService;
 
   AuthController(this._authService) : super(const AsyncValue.data(null));
+  final AuthService _authService;
 
   // Register with Email and Password
   Future<void> registerWithEmailAndPassword({

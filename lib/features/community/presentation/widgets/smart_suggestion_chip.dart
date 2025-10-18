@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'dart:math' as math;
 
 class SmartSuggestionChip extends StatefulWidget {
-  final String suggestion;
-  final IconData icon;
-  final VoidCallback onTap;
-  final VoidCallback? onDismiss;
-  final Duration displayDuration;
-  final bool showBreathingAnimation;
-  final bool isMinimal;
   
   const SmartSuggestionChip({
     super.key,
@@ -22,6 +14,13 @@ class SmartSuggestionChip extends StatefulWidget {
     this.showBreathingAnimation = false,
     this.isMinimal = true,
   });
+  final String suggestion;
+  final IconData icon;
+  final VoidCallback onTap;
+  final VoidCallback? onDismiss;
+  final Duration displayDuration;
+  final bool showBreathingAnimation;
+  final bool isMinimal;
 
   @override
   State<SmartSuggestionChip> createState() => _SmartSuggestionChipState();
@@ -222,9 +221,9 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
 }
 
 class _PulsingIcon extends StatefulWidget {
-  final IconData icon;
   
   const _PulsingIcon({required this.icon});
+  final IconData icon;
 
   @override
   State<_PulsingIcon> createState() => _PulsingIconState();

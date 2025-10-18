@@ -6,12 +6,6 @@ import 'dart:math' as math;
 /// Radar chart interattivo per visualizzare la forza relativa
 /// dei diversi gruppi muscolari
 class MuscleStrengthRadarChart extends StatefulWidget {
-  final Map<MuscleGroup, double> currentStrength;
-  final Map<MuscleGroup, double>? targetStrength;
-  final Map<MuscleGroup, double>? previousStrength;
-  final Function(MuscleGroup)? onMuscleGroupTap;
-  final bool showValues;
-  final bool animated;
   
   const MuscleStrengthRadarChart({
     super.key,
@@ -22,6 +16,12 @@ class MuscleStrengthRadarChart extends StatefulWidget {
     this.showValues = true,
     this.animated = true,
   });
+  final Map<MuscleGroup, double> currentStrength;
+  final Map<MuscleGroup, double>? targetStrength;
+  final Map<MuscleGroup, double>? previousStrength;
+  final Function(MuscleGroup)? onMuscleGroupTap;
+  final bool showValues;
+  final bool animated;
 
   @override
   State<MuscleStrengthRadarChart> createState() => _MuscleStrengthRadarChartState();
@@ -395,30 +395,6 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
           ],
           
           const SizedBox(height: 12),
-          
-          // Recommended exercises
-          Text(
-            'Esercizi consigliati:',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: _getRecommendedExercises(_selectedMuscle!).map((exercise) {
-              return Chip(
-                label: Text(
-                  exercise,
-                  style: theme.textTheme.bodySmall,
-                ),
-                backgroundColor: theme.colorScheme.primaryContainer,
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              );
-            }).toList(),
-          ),
         ],
       ),
     );
@@ -540,22 +516,6 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
     }
   }
   
-  List<String> _getRecommendedExercises(MuscleGroup muscle) {
-    switch (muscle) {
-      case MuscleGroup.chest:
-        return ['Panca piana', 'Dips', 'Croci'];
-      case MuscleGroup.back:
-        return ['Trazioni', 'Rematore', 'Pulley'];
-      case MuscleGroup.shoulders:
-        return ['Military press', 'Alzate laterali', 'Face pulls'];
-      case MuscleGroup.arms:
-        return ['Curl bilanciere', 'French press', 'Hammer curl'];
-      case MuscleGroup.legs:
-        return ['Squat', 'Stacchi', 'Leg press'];
-      case MuscleGroup.core:
-        return ['Plank', 'Crunch', 'Russian twist'];
-    }
-  }
 }
 
 enum MuscleGroup {

@@ -1,12 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
 
 /// Page Object for Timer functionality
 class TimerPage {
-  final PatrolIntegrationTester $;
   
   TimerPage(this.$);
+  final PatrolIntegrationTester $;
   
   // Main timer overlay finders
   Finder get timerOverlay => find.byKey(const Key('timer_overlay'));
@@ -108,8 +110,11 @@ class TimerPage {
   }
   
   /// Drag timer to new position
+  /// TODO: Patrol 3.x - drag() method removed, need to find alternative
   Future<void> dragTimerTo(Offset position) async {
-    await $.drag(timerOverlay, position);
+    // await $.drag(timerOverlay, position);
+    // await $.pumpAndSettle();
+    // Placeholder - drag functionality disabled
     await $.pumpAndSettle();
   }
   
@@ -168,8 +173,9 @@ class TimerPage {
   
   /// Check if Live Activity is showing timer (iOS)
   Future<bool> isTimerInLiveActivity() async {
-    if (!await $.native.isIOS()) return false;
-    
+    // TODO: Patrol 3.x - isIOS() removed, using Platform.isIOS
+    if (!Platform.isIOS) return false;
+
     // Check for Live Activity
     // This requires native iOS implementation
     return true; // Placeholder

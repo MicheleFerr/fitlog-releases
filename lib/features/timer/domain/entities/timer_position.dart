@@ -26,15 +26,29 @@ enum TimerDisplayMode {
 
 /// Configurazione per il timer
 class TimerDisplaySettings {
-  final TimerPosition position;
-  final TimerDisplayMode displayMode;
-  final bool isVisible;
 
   const TimerDisplaySettings({
     this.position = TimerPosition.top,
     this.displayMode = TimerDisplayMode.normal,
     this.isVisible = true,
   });
+
+  factory TimerDisplaySettings.fromJson(Map<String, dynamic> json) {
+    return TimerDisplaySettings(
+      position: TimerPosition.values.firstWhere(
+        (e) => e.name == json['position'],
+        orElse: () => TimerPosition.top,
+      ),
+      displayMode: TimerDisplayMode.values.firstWhere(
+        (e) => e.name == json['displayMode'],
+        orElse: () => TimerDisplayMode.normal,
+      ),
+      isVisible: json['isVisible'] ?? true,
+    );
+  }
+  final TimerPosition position;
+  final TimerDisplayMode displayMode;
+  final bool isVisible;
 
   TimerDisplaySettings copyWith({
     TimerPosition? position,
@@ -54,20 +68,6 @@ class TimerDisplaySettings {
       'displayMode': displayMode.name,
       'isVisible': isVisible,
     };
-  }
-
-  factory TimerDisplaySettings.fromJson(Map<String, dynamic> json) {
-    return TimerDisplaySettings(
-      position: TimerPosition.values.firstWhere(
-        (e) => e.name == json['position'],
-        orElse: () => TimerPosition.top,
-      ),
-      displayMode: TimerDisplayMode.values.firstWhere(
-        (e) => e.name == json['displayMode'],
-        orElse: () => TimerDisplayMode.normal,
-      ),
-      isVisible: json['isVisible'] ?? true,
-    );
   }
 }
 

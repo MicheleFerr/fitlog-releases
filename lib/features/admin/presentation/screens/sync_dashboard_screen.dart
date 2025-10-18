@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/screens
- * 🎯 Feature: admin
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Admin dashboard for monitoring sync status
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/screens
+/// 🎯 Feature: admin
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Admin dashboard for monitoring sync status
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,7 +36,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -45,7 +44,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
     final user = ref.watch(currentUserProvider).value;
     
     // Check if user is admin
-    final isAdmin = user?.email?.contains('admin') ?? false;
+    final isAdmin = user?.email.contains('admin') ?? false;
     
     if (!isAdmin) {
       return Scaffold(
@@ -268,14 +267,14 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         const SizedBox(height: 16),
         Card(
           elevation: 0,
-          color: colorScheme.surfaceVariant.withOpacity(0.3),
+          color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               height: 200,
               child: LineChart(
                 LineChartData(
-                  gridData: FlGridData(show: false),
+                  gridData: const FlGridData(show: false),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
@@ -301,8 +300,8 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                         },
                       ),
                     ),
-                    rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   ),
                   borderData: FlBorderData(show: false),
                   lineBarsData: [
@@ -313,7 +312,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                       isCurved: true,
                       color: colorScheme.primary,
                       barWidth: 3,
-                      dotData: FlDotData(show: false),
+                      dotData: const FlDotData(show: false),
                       belowBarData: BarAreaData(
                         show: true,
                         color: colorScheme.primary.withOpacity(0.1),
@@ -342,7 +341,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         const SizedBox(height: 16),
         ...data.featureStats.entries.map((entry) {
           return _buildFeatureRow(context, entry.key, entry.value);
-        }).toList(),
+        }),
       ],
     );
   }
@@ -378,7 +377,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
               ),
             LinearProgressIndicator(
               value: stats.syncPercentage / 100,
-              backgroundColor: colorScheme.surfaceVariant,
+              backgroundColor: colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation(
                 stats.isHealthy ? colorScheme.primary : colorScheme.error,
               ),
@@ -470,7 +469,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                   'Pro': data.proUsers.toDouble(),
                 },
                 colors: [
-                  colorScheme.surfaceVariant,
+                  colorScheme.surfaceContainerHighest,
                   colorScheme.primary,
                   colorScheme.secondary,
                 ],
@@ -487,7 +486,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                 },
                 colors: [
                   colorScheme.primary,
-                  colorScheme.surfaceVariant,
+                  colorScheme.surfaceContainerHighest,
                 ],
               ),
             ),
@@ -558,7 +557,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                   ),
                 ],
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -634,7 +633,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                       ],
                     ),
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),

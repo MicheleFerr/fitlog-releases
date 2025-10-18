@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 
 // App Configuration State Provider
 final appConfigProvider = StateNotifierProvider<AppConfigNotifier, AppConfig>((ref) {
@@ -12,6 +12,11 @@ final appConfigProvider = StateNotifierProvider<AppConfigNotifier, AppConfig>((r
 });
 
 class AppConfigNotifier extends StateNotifier<AppConfig> {
+
+  AppConfigNotifier() : super(const AppConfig()) {
+    _initCompleter = Completer<void>();
+    _initializeConfig();
+  }
   static const String _boxName = 'app_config';
   Box<AppConfig>? _configBox;
 
@@ -21,11 +26,6 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
   Completer<void>? _initCompleter;
   int _initRetryCount = 0;
   static const int _maxInitRetries = 3;
-
-  AppConfigNotifier() : super(const AppConfig()) {
-    _initCompleter = Completer<void>();
-    _initializeConfig();
-  }
 
   Future<void> _initializeConfig() async {
     try {

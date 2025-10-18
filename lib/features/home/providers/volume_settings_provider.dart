@@ -15,13 +15,13 @@ enum VolumePeriod {
 }
 
 class VolumeSettings {
-  final WeightUnit unit;
-  final VolumePeriod period;
   
   VolumeSettings({
     this.unit = WeightUnit.kg,
     this.period = VolumePeriod.week,
   });
+  final WeightUnit unit;
+  final VolumePeriod period;
   
   VolumeSettings copyWith({
     WeightUnit? unit,
@@ -68,20 +68,20 @@ class VolumeSettings {
 }
 
 class DateRange {
-  final DateTime start;
-  final DateTime end;
   
   DateRange({required this.start, required this.end});
+  final DateTime start;
+  final DateTime end;
 }
 
 class VolumeSettingsNotifier extends StateNotifier<VolumeSettings> {
-  final SharedPreferences _prefs;
-  static const String _unitKey = 'volume_weight_unit';
-  static const String _periodKey = 'volume_period';
   
   VolumeSettingsNotifier(this._prefs) : super(VolumeSettings()) {
     _loadSettings();
   }
+  final SharedPreferences _prefs;
+  static const String _unitKey = 'volume_weight_unit';
+  static const String _periodKey = 'volume_period';
   
   void _loadSettings() {
     final unitIndex = _prefs.getInt(_unitKey) ?? 0;

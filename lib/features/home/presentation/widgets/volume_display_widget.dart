@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../../providers/volume_settings_provider.dart';
-import 'volume_details_modal.dart';
-import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 
 class VolumeDisplayWidget extends ConsumerWidget {
-  final double volumeInKg;
-  final bool showSettings;
-  final bool expandedView;
   
   const VolumeDisplayWidget({
     super.key,
@@ -16,11 +12,14 @@ class VolumeDisplayWidget extends ConsumerWidget {
     this.showSettings = true,
     this.expandedView = false,
   });
+  final double volumeInKg;
+  final bool showSettings;
+  final bool expandedView;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(volumeSettingsProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     
     // Converti il peso nell'unità selezionata
@@ -62,7 +61,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
     VolumeSettings settings,
   ) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return InkWell(
       onTap: () => _showVolumeDetails(context, ref),
@@ -170,7 +169,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
     VolumeSettings settings,
   ) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return InkWell(
       onTap: () => _showVolumeDetails(context, ref),
@@ -240,15 +239,15 @@ class VolumeDisplayWidget extends ConsumerWidget {
   
   Widget _buildTrendIndicator(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     // TODO: Calcolare il trend reale confrontando con il periodo precedente
-    final isPositiveTrend = true;
-    final trendPercentage = 12.5;
+    const isPositiveTrend = true;
+    const trendPercentage = 12.5;
     
     return Row(
       children: [
-        Icon(
+        const Icon(
           isPositiveTrend ? Icons.trending_up : Icons.trending_down,
           color: isPositiveTrend ? Colors.green : Colors.red,
           size: 16,
@@ -276,7 +275,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => _VolumeSettingsSheet(),
+      builder: (context) => const _VolumeSettingsSheet(),
     );
   }
   
@@ -340,7 +339,7 @@ class _VolumeSettingsSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final settings = ref.watch(volumeSettingsProvider);
     
@@ -466,15 +465,15 @@ class _VolumeSettingsSheet extends ConsumerWidget {
 }
 
 class _UnitButton extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
   
   const _UnitButton({
     required this.label,
     required this.isSelected,
     required this.onTap,
   });
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
   
   @override
   Widget build(BuildContext context) {

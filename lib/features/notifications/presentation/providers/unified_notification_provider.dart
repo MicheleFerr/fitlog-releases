@@ -1,21 +1,32 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/unified_notification.dart';
-import '../../domain/entities/unified_notification_state.dart';
-import '../../domain/repositories/notification_repository.dart';
-import '../../domain/use_cases/schedule_notification_use_case.dart';
-import '../adapters/notification_platform_adapter.dart';
-import '../adapters/platform_adapter_factory.dart';
-import '../../data/repositories/simple_notification_repository.dart';
-import '../../data/services/fcm_service.dart';
-import '../../domain/services/notification_analytics_service.dart';
-import '../../../../core/utils/debug_logger.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/use_cases/schedule_notification_use_case.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/notification_platform_adapter.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/platform_adapter_factory.dart';
+import 'package:gymbro_flutter_new/features/notifications/data/repositories/simple_notification_repository.dart';
+import 'package:gymbro_flutter_new/features/notifications/data/services/fcm_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_analytics_service.dart';
+import 'package:gymbro_flutter_new/core/utils/debug_logger.dart';
 import 'package:flutter/foundation.dart';
 
 /// Unified notification provider that serves as the single source of truth
 /// for all notification functionality in the app
 /// Similar to UnifiedTimerProvider pattern
 class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState> {
+
+  UnifiedNotificationProvider(
+    this._repository,
+    this._scheduleUseCase,
+    this._platformAdapter, [
+    this._fcmService,
+    this._analyticsService,
+  ]) : super(UnifiedNotificationState.initial()) {
+    _initCompleter = Completer<void>();
+    _initialize();
+  }
   final NotificationRepository _repository;
   final ScheduleNotificationUseCase _scheduleUseCase;
   final NotificationPlatformAdapter _platformAdapter;
@@ -39,17 +50,6 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
   Timer? _metricsUpdateTimer;
   Timer? _cleanupTimer;
   Timer? _syncTimer;
-
-  UnifiedNotificationProvider(
-    this._repository,
-    this._scheduleUseCase,
-    this._platformAdapter, [
-    this._fcmService,
-    this._analyticsService,
-  ]) : super(UnifiedNotificationState.initial()) {
-    _initCompleter = Completer<void>();
-    _initialize();
-  }
 
   Future<void> _initialize() async {
     try {

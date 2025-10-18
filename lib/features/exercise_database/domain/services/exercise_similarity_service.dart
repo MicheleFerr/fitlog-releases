@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_database.dart';
 
 /// Service for calculating similarity between exercises
@@ -241,15 +240,15 @@ class ExerciseSimilarityService {
 
 /// Recommendation with similarity score and matched factors
 class ExerciseRecommendation {
-  final ExerciseDatabase exercise;
-  final double similarityScore;
-  final List<MatchFactor> matchedFactors;
 
   ExerciseRecommendation({
     required this.exercise,
     required this.similarityScore,
     required this.matchedFactors,
   });
+  final ExerciseDatabase exercise;
+  final double similarityScore;
+  final List<MatchFactor> matchedFactors;
 
   /// Get similarity percentage (0-100)
   int get similarityPercentage => (similarityScore * 100).round();
@@ -268,15 +267,15 @@ class ExerciseRecommendation {
 
 /// Factor that matched between exercises
 class MatchFactor {
-  final MatchFactorType type;
-  final String description;
-  final double importance;
 
   MatchFactor({
     required this.type,
     required this.description,
     required this.importance,
   });
+  final MatchFactorType type;
+  final String description;
+  final double importance;
 }
 
 /// Types of matching factors

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: buddy_matching
- * 🔧 Type: entity
- * 🌍 Localization: N/A - Entity class
- * 🎨 Theme: N/A - Entity class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: entity
+/// 🌍 Localization: N/A - Entity class
+/// 🎨 Theme: N/A - Entity class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -302,7 +301,7 @@ extension BuddyMessageX on BuddyMessage {
       case MessageType.workoutInvite:
         final status = getWorkoutInviteStatus();
         final statusText = status == 'pending' ? '' : ' ($status)';
-        return '${content}$statusText';
+        return '$content$statusText';
       case MessageType.workoutPlan:
         return content;
       case MessageType.exerciseShare:

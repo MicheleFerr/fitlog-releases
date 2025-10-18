@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/widgets
- * 🎯 Feature: workout
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout, Exercise
- * - workout/presentation/providers: WorkoutHistoryProvider
- * - shared/presentation/l10n: AppLocalizations
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/widgets
+/// 🎯 Feature: workout
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout, Exercise
+/// - workout/presentation/providers: WorkoutHistoryProvider
+/// - shared/presentation/l10n: AppLocalizations
+library;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -25,12 +24,12 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:intl/intl.dart';
 
 class WorkoutHistoryEditor extends ConsumerStatefulWidget {
-  final Workout workout;
 
   const WorkoutHistoryEditor({
     super.key,
     required this.workout,
   });
+  final Workout workout;
 
   @override
   ConsumerState<WorkoutHistoryEditor> createState() => _WorkoutHistoryEditorState();
@@ -138,7 +137,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -183,7 +182,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
                   onPressed: _onClosePressed,
                   icon: const Icon(Icons.close),
                   style: IconButton.styleFrom(
-                    backgroundColor: theme.colorScheme.surfaceVariant,
+                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -427,7 +426,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
       decoration: BoxDecoration(
         color: set.isCompleted
             ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
-            : theme.colorScheme.surfaceVariant.withValues(alpha: 0.3),
+            : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: set.isWarmup
             ? Border.all(
@@ -546,7 +545,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
     int? setIndex,
   }) {
     // Create unique key for this input field
-    final key = '${exerciseIndex}_${setIndex}_${hint}';
+    final key = '${exerciseIndex}_${setIndex}_$hint';
     
     // Get or create focus node for this input
     final focusNode = _focusNodes.putIfAbsent(key, () {
@@ -665,7 +664,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.workoutSaved),
+            content: Text(AppLocalizations.of(context).workoutSaved),
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
         );
@@ -678,7 +677,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorSavingWorkout),
+            content: Text(AppLocalizations.of(context).errorSavingWorkout),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -691,26 +690,26 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.unsavedChanges),
-          content: Text(AppLocalizations.of(context)!.unsavedChangesMessage),
+          title: Text(AppLocalizations.of(context).unsavedChanges),
+          content: Text(AppLocalizations.of(context).unsavedChangesMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(AppLocalizations.of(context).cancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
                 Navigator.of(context).pop(); // Close editor
               },
-              child: Text(AppLocalizations.of(context)!.discard),
+              child: Text(AppLocalizations.of(context).discard),
             ),
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
                 _saveWorkout(); // This will close editor after saving
               },
-              child: Text(AppLocalizations.of(context)!.save),
+              child: Text(AppLocalizations.of(context).save),
             ),
           ],
         ),

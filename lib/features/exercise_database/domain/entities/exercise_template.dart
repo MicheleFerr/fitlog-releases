@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 part 'exercise_template.freezed.dart';
 part 'exercise_template.g.dart';
@@ -17,6 +17,7 @@ class ExerciseTemplate with _$ExerciseTemplate {
     List<String>? instructions,
     String? imageUrl,
     String? videoUrl,
+    String? difficulty,
     Map<String, dynamic>? metadata,
     @Default(true) bool isActive,
     DateTime? createdAt,

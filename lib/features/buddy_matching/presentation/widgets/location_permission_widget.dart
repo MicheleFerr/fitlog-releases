@@ -1,33 +1,32 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Location service
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Location service
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../data/services/location_service.dart';
-import '../providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/data/services/location_service.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
 
 class LocationPermissionWidget extends ConsumerStatefulWidget {
-  final Widget child;
-  final bool showLocationButton;
 
   const LocationPermissionWidget({
     super.key,
     required this.child,
     this.showLocationButton = true,
   });
+  final Widget child;
+  final bool showLocationButton;
 
   @override
   ConsumerState<LocationPermissionWidget> createState() => _LocationPermissionWidgetState();
@@ -70,7 +69,7 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Stack(
       children: [
@@ -269,11 +268,11 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
       
       if (status == LocationPermissionStatus.granted) {
         _updateLocation();
-        _showSuccessMessage(AppLocalizations.of(context)!.locationPermissionGranted);
+        _showSuccessMessage(AppLocalizations.of(context).locationPermissionGranted);
       } else if (status == LocationPermissionStatus.permanentlyDenied) {
         _showPermissionDialog();
       } else {
-        _showErrorMessage(AppLocalizations.of(context)!.locationPermissionDenied);
+        _showErrorMessage(AppLocalizations.of(context).locationPermissionDenied);
       }
     }
   }
@@ -296,12 +295,12 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
         // Refresh matches dopo l'aggiornamento della location
         ref.read(matchingProvider.notifier).refreshMatches();
         
-        _showSuccessMessage('✅ ${AppLocalizations.of(context)!.locationUpdated}: ${location.cityName}');
+        _showSuccessMessage('✅ ${AppLocalizations.of(context).locationUpdated}: ${location.cityName}');
       } else {
-        _showErrorMessage(AppLocalizations.of(context)!.unableToGetLocation);
+        _showErrorMessage(AppLocalizations.of(context).unableToGetLocation);
       }
     } catch (e) {
-      _showErrorMessage('${AppLocalizations.of(context)!.locationUpdateError}: $e');
+      _showErrorMessage('${AppLocalizations.of(context).locationUpdateError}: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -318,7 +317,7 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
   }
 
   void _showPermissionDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     showDialog(
       context: context,

@@ -1,7 +1,6 @@
-import '../entities/smart_training_metrics.dart';
-import '../entities/progressive_overload_analysis.dart';
-import '../../workout/domain/entities/workout.dart';
-import '../../workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/progressive_overload_analysis.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// Core engine for progressive overload calculations and analysis
 class ProgressiveOverloadEngine {
@@ -15,7 +14,7 @@ class ProgressiveOverloadEngine {
     
     // RPE adjustment factor (more accurate for higher RPE values)
     if (rpe != null && rpe >= 6 && rpe <= 10) {
-      double rpeAdjustment = _getRPEAdjustmentFactor(reps, rpe);
+      final double rpeAdjustment = _getRPEAdjustmentFactor(reps, rpe);
       baseOneRM = weight / rpeAdjustment;
     }
     
@@ -38,7 +37,7 @@ class ProgressiveOverloadEngine {
     };
     
     // Find closest rep range
-    int closestReps = rpeChart.keys.reduce((a, b) => 
+    final int closestReps = rpeChart.keys.reduce((a, b) => 
       (reps - a).abs() < (reps - b).abs() ? a : b);
     
     return rpeChart[closestReps]?[rpe] ?? 0.75;

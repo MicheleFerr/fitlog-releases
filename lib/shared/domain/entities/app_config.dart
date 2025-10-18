@@ -4,7 +4,84 @@ import 'package:hive_flutter/hive_flutter.dart';
 part 'app_config.g.dart';
 
 @HiveType(typeId: 0)
-class AppConfig {
+class AppConfig { // Auto-adjust rest time based on RPE feedback
+
+  const AppConfig({
+    this.languageCode = 'en',
+    this.countryCode = 'US',
+    this.themeMode = ThemeMode.system,
+    this.measurementUnit = 'kg',
+    this.soundEnabled = true,
+    this.vibrationsEnabled = true,
+    this.timerSound = 'timer_complete',
+    this.defaultRestTime = 90,
+    this.autoStartTimer = true,
+    this.strengthRestTime = 180, // 3 minutes
+    this.hypertrophyRestTime = 90, // 1.5 minutes
+    this.enduranceRestTime = 60, // 1 minute
+    this.showIntensityTechniques = true,
+    this.primaryColor = 'blue',
+    this.enableLiveActivities = true,
+    this.syncWithHealthKit = false,
+    this.fontSize = 1.0,
+    this.preferredTemplateId,
+    this.rpeTracking,
+    this.autoRestTimer,
+    this.setDurationTracking,
+    this.plateCalculator,
+    this.warmupSuggestions,
+    this.availablePlates,
+    this.isProMode,
+    this.autoCollapseCompleted,
+    this.showTutInfo,
+    this.showExerciseNotes,
+    this.showCommunitySuggestions,
+    this.showExerciseInsights,
+    this.showCustomTimers,
+    this.showAdvancedMenu,
+    this.showCollapseCountdown,
+    this.simplifiedAnimations,
+    this.hasSeenWorkoutOnboarding = false,
+    this.onboardingVersion = 1,
+    this.betaModeEnabled,
+    this.enableApre,
+    this.defaultApreProtocol,
+    this.autoAdjustRestTime = true, // Default to true for APRE users
+    this.showQuickInfoIcon,
+    this.showWarmupIcon,
+    this.showPreventionIcon,
+    this.autoAdjustWeightFromRpe,
+    this.autoAdjustRestFromRpe,
+  });
+
+  factory AppConfig.fromJson(Map<String, dynamic> json) {
+    return AppConfig(
+      languageCode: json['languageCode'] ?? 'en',
+      countryCode: json['countryCode'] ?? 'US',
+      themeMode: ThemeMode.values.firstWhere(
+        (mode) => mode.name == json['themeMode'],
+        orElse: () => ThemeMode.system,
+      ),
+      measurementUnit: json['measurementUnit'] ?? 'kg',
+      soundEnabled: json['soundEnabled'] ?? true,
+      vibrationsEnabled: json['vibrationsEnabled'] ?? true,
+      timerSound: json['timerSound'] ?? 'timer_complete',
+      defaultRestTime: json['defaultRestTime'] ?? 90,
+      autoStartTimer: json['autoStartTimer'] ?? true,
+      strengthRestTime: json['strengthRestTime'] ?? 180,
+      hypertrophyRestTime: json['hypertrophyRestTime'] ?? 90,
+      enduranceRestTime: json['enduranceRestTime'] ?? 60,
+      showIntensityTechniques: json['showIntensityTechniques'] ?? true,
+      primaryColor: json['primaryColor'] ?? 'blue',
+      enableLiveActivities: json['enableLiveActivities'] ?? true,
+      syncWithHealthKit: json['syncWithHealthKit'] ?? false,
+      fontSize: json['fontSize']?.toDouble() ?? 1.0,
+      preferredTemplateId: json['preferredTemplateId'],
+      hasSeenWorkoutOnboarding: json['hasSeenWorkoutOnboarding'] ?? false,
+      onboardingVersion: json['onboardingVersion'] ?? 1,
+      betaModeEnabled: json['betaModeEnabled'] ?? false,
+    );
+  }
   @HiveField(0)
   final String languageCode;
   
@@ -77,32 +154,68 @@ class AppConfig {
   @HiveField(23)
   final List<double>? availablePlates; // Available plates in gym
 
-  const AppConfig({
-    this.languageCode = 'en',
-    this.countryCode = 'US',
-    this.themeMode = ThemeMode.system,
-    this.measurementUnit = 'kg',
-    this.soundEnabled = true,
-    this.vibrationsEnabled = true,
-    this.timerSound = 'timer_complete',
-    this.defaultRestTime = 90,
-    this.autoStartTimer = true,
-    this.strengthRestTime = 180, // 3 minutes
-    this.hypertrophyRestTime = 90, // 1.5 minutes
-    this.enduranceRestTime = 60, // 1 minute
-    this.showIntensityTechniques = true,
-    this.primaryColor = 'blue',
-    this.enableLiveActivities = true,
-    this.syncWithHealthKit = false,
-    this.fontSize = 1.0,
-    this.preferredTemplateId,
-    this.rpeTracking,
-    this.autoRestTimer,
-    this.setDurationTracking,
-    this.plateCalculator,
-    this.warmupSuggestions,
-    this.availablePlates,
-  });
+  @HiveField(24)
+  final bool? isProMode; // Pro mode for advanced users
+
+  @HiveField(25)
+  final bool? autoCollapseCompleted; // Auto-collapse completed exercises
+
+  @HiveField(26)
+  final bool? showTutInfo; // Show TUT (Time Under Tension) information
+
+  @HiveField(27)
+  final bool? showExerciseNotes; // Show exercise notes section
+
+  @HiveField(28)
+  final bool? showCommunitySuggestions; // Show community suggestions
+
+  @HiveField(29)
+  final bool? showExerciseInsights; // Show exercise statistics/insights
+
+  @HiveField(30)
+  final bool? showCustomTimers; // Show custom timer settings
+
+  @HiveField(31)
+  final bool? showAdvancedMenu; // Show advanced menu options
+
+  @HiveField(32)
+  final bool? showCollapseCountdown; // Show auto-collapse countdown visual
+
+  @HiveField(33)
+  final bool? simplifiedAnimations;
+
+  @HiveField(34)
+  final bool hasSeenWorkoutOnboarding;
+
+  @HiveField(35)
+  final int onboardingVersion;
+
+  @HiveField(36)
+  final bool? betaModeEnabled;
+
+  @HiveField(37)
+  final bool? enableApre; // Enable APRE auto-regulation
+
+  @HiveField(38)
+  final int? defaultApreProtocol; // Default APRE protocol: 3, 6, or 10
+
+  @HiveField(39)
+  final bool? autoAdjustRestTime; // Auto-adjust rest time based on APRE performance
+
+  @HiveField(40)
+  final bool? showQuickInfoIcon; // Show quick info icon in exercise card
+
+  @HiveField(41)
+  final bool? showWarmupIcon; // Show warmup icon in exercise card
+
+  @HiveField(42)
+  final bool? showPreventionIcon; // Show prevention icon in exercise card
+
+  @HiveField(43)
+  final bool? autoAdjustWeightFromRpe; // Auto-adjust weight based on RPE feedback
+
+  @HiveField(44)
+  final bool? autoAdjustRestFromRpe;
 
   Locale get locale => Locale(languageCode, countryCode);
 
@@ -131,6 +244,27 @@ class AppConfig {
     bool? plateCalculator,
     bool? warmupSuggestions,
     List<double>? availablePlates,
+    bool? isProMode,
+    bool? autoCollapseCompleted,
+    bool? showTutInfo,
+    bool? showExerciseNotes,
+    bool? showCommunitySuggestions,
+    bool? showExerciseInsights,
+    bool? showCustomTimers,
+    bool? showAdvancedMenu,
+    bool? showCollapseCountdown,
+    bool? simplifiedAnimations,
+    bool? hasSeenWorkoutOnboarding,
+    int? onboardingVersion,
+    bool? betaModeEnabled,
+    bool? enableApre,
+    int? defaultApreProtocol,
+    bool? autoAdjustRestTime,
+    bool? showQuickInfoIcon,
+    bool? showWarmupIcon,
+    bool? showPreventionIcon,
+    bool? autoAdjustWeightFromRpe,
+    bool? autoAdjustRestFromRpe,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -157,6 +291,27 @@ class AppConfig {
       plateCalculator: plateCalculator ?? this.plateCalculator,
       warmupSuggestions: warmupSuggestions ?? this.warmupSuggestions,
       availablePlates: availablePlates ?? this.availablePlates,
+      isProMode: isProMode ?? this.isProMode,
+      autoCollapseCompleted: autoCollapseCompleted ?? this.autoCollapseCompleted,
+      showTutInfo: showTutInfo ?? this.showTutInfo,
+      showExerciseNotes: showExerciseNotes ?? this.showExerciseNotes,
+      showCommunitySuggestions: showCommunitySuggestions ?? this.showCommunitySuggestions,
+      showExerciseInsights: showExerciseInsights ?? this.showExerciseInsights,
+      showCustomTimers: showCustomTimers ?? this.showCustomTimers,
+      showAdvancedMenu: showAdvancedMenu ?? this.showAdvancedMenu,
+      showCollapseCountdown: showCollapseCountdown ?? this.showCollapseCountdown,
+      simplifiedAnimations: simplifiedAnimations ?? this.simplifiedAnimations,
+      hasSeenWorkoutOnboarding: hasSeenWorkoutOnboarding ?? this.hasSeenWorkoutOnboarding,
+      onboardingVersion: onboardingVersion ?? this.onboardingVersion,
+      betaModeEnabled: betaModeEnabled ?? this.betaModeEnabled,
+      enableApre: enableApre ?? this.enableApre,
+      defaultApreProtocol: defaultApreProtocol ?? this.defaultApreProtocol,
+      autoAdjustRestTime: autoAdjustRestTime ?? this.autoAdjustRestTime,
+      showQuickInfoIcon: showQuickInfoIcon ?? this.showQuickInfoIcon,
+      showWarmupIcon: showWarmupIcon ?? this.showWarmupIcon,
+      showPreventionIcon: showPreventionIcon ?? this.showPreventionIcon,
+      autoAdjustWeightFromRpe: autoAdjustWeightFromRpe ?? this.autoAdjustWeightFromRpe,
+      autoAdjustRestFromRpe: autoAdjustRestFromRpe ?? this.autoAdjustRestFromRpe,
     );
   }
 
@@ -180,33 +335,10 @@ class AppConfig {
       'syncWithHealthKit': syncWithHealthKit,
       'fontSize': fontSize,
       'preferredTemplateId': preferredTemplateId,
+      'hasSeenWorkoutOnboarding': hasSeenWorkoutOnboarding,
+      'onboardingVersion': onboardingVersion,
+      'betaModeEnabled': betaModeEnabled,
     };
-  }
-
-  factory AppConfig.fromJson(Map<String, dynamic> json) {
-    return AppConfig(
-      languageCode: json['languageCode'] ?? 'en',
-      countryCode: json['countryCode'] ?? 'US',
-      themeMode: ThemeMode.values.firstWhere(
-        (mode) => mode.name == json['themeMode'],
-        orElse: () => ThemeMode.system,
-      ),
-      measurementUnit: json['measurementUnit'] ?? 'kg',
-      soundEnabled: json['soundEnabled'] ?? true,
-      vibrationsEnabled: json['vibrationsEnabled'] ?? true,
-      timerSound: json['timerSound'] ?? 'timer_complete',
-      defaultRestTime: json['defaultRestTime'] ?? 90,
-      autoStartTimer: json['autoStartTimer'] ?? true,
-      strengthRestTime: json['strengthRestTime'] ?? 180,
-      hypertrophyRestTime: json['hypertrophyRestTime'] ?? 90,
-      enduranceRestTime: json['enduranceRestTime'] ?? 60,
-      showIntensityTechniques: json['showIntensityTechniques'] ?? true,
-      primaryColor: json['primaryColor'] ?? 'blue',
-      enableLiveActivities: json['enableLiveActivities'] ?? true,
-      syncWithHealthKit: json['syncWithHealthKit'] ?? false,
-      fontSize: json['fontSize']?.toDouble() ?? 1.0,
-      preferredTemplateId: json['preferredTemplateId'],
-    );
   }
 
   @override
@@ -232,7 +364,9 @@ class AppConfig {
         other.enableLiveActivities == enableLiveActivities &&
         other.syncWithHealthKit == syncWithHealthKit &&
         other.fontSize == fontSize &&
-        other.preferredTemplateId == preferredTemplateId;
+        other.preferredTemplateId == preferredTemplateId &&
+        other.hasSeenWorkoutOnboarding == hasSeenWorkoutOnboarding &&
+        other.onboardingVersion == onboardingVersion;
   }
 
   @override
@@ -253,6 +387,8 @@ class AppConfig {
       syncWithHealthKit,
       fontSize,
       preferredTemplateId,
+      hasSeenWorkoutOnboarding,
+      onboardingVersion,
     );
   }
 }

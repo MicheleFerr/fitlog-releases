@@ -1,20 +1,19 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data
- * 🎯 Feature: buddy_matching
- * 🔧 Type: demo_data
- * 🌍 Localization: N/A - Demo data
- * 🎨 Theme: N/A - Demo data  
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: demo_data
+/// 🌍 Localization: N/A - Demo data
+/// 🎨 Theme: N/A - Demo data  
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities
+library;
 
-import '../domain/entities/buddy_profile.dart';
-import '../domain/entities/buddy_preferences.dart';
-import '../../../shared/domain/entities/italian_city.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
 
 /// Demo profiles for development and testing
 class DemoProfiles {

@@ -6,11 +6,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 /// Tooltip overlay showing exercises in a superset with detailed info
 class SupersetExercisesTooltip extends ConsumerStatefulWidget {
-  final SupersetExercise supersetExercise;
-  final VoidCallback? onClose;
-  final Function(Exercise)? onExerciseInfo;
-  final Function(Exercise)? onWarmupPrevention;
-  final Function(Exercise)? onTechniqueTips;
   
   const SupersetExercisesTooltip({
     super.key,
@@ -20,6 +15,11 @@ class SupersetExercisesTooltip extends ConsumerStatefulWidget {
     this.onWarmupPrevention,
     this.onTechniqueTips,
   });
+  final SupersetExercise supersetExercise;
+  final VoidCallback? onClose;
+  final Function(Exercise)? onExerciseInfo;
+  final Function(Exercise)? onWarmupPrevention;
+  final Function(Exercise)? onTechniqueTips;
 
   static Future<void> show({
     required BuildContext context,

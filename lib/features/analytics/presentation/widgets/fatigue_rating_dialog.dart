@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../domain/models/workout_fatigue.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/models/workout_fatigue.dart';
 
 class FatigueRatingDialog extends StatefulWidget {
-  final Function(int fatigueLevel, String? notes) onRatingSubmitted;
-  final double totalVolume;
-  final List<String> exercisesPerformed;
 
   const FatigueRatingDialog({
     super.key,
@@ -13,6 +10,9 @@ class FatigueRatingDialog extends StatefulWidget {
     required this.totalVolume,
     required this.exercisesPerformed,
   });
+  final Function(int fatigueLevel, String? notes) onRatingSubmitted;
+  final double totalVolume;
+  final List<String> exercisesPerformed;
 
   @override
   State<FatigueRatingDialog> createState() => _FatigueRatingDialogState();
@@ -21,7 +21,7 @@ class FatigueRatingDialog extends StatefulWidget {
 class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
   int _selectedFatigue = 3;
   final _notesController = TextEditingController();
-  bool _isHovering = false;
+  final bool _isHovering = false;
 
   @override
   void dispose() {

@@ -1,25 +1,10 @@
 import 'package:uuid/uuid.dart';
-import '../../workout/domain/entities/exercise.dart';
-import '../../workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/volume_range.dart';
 
 /// Smart workout template with adaptive parameters
 class SmartWorkoutTemplate {
-  final String id;
-  final String name;
-  final String description;
-  final WorkoutCategory category;
-  final DifficultyLevel difficulty;
-  final TrainingStyle style;
-  final int estimatedDuration; // minutes
-  final List<TemplateExercise> exercises;
-  final Map<String, int> muscleGroupVolume; // sets per muscle group
-  final List<String> tags;
-  final String? imageUrl;
-  final bool isPremium;
-  final int popularityScore;
-  final double averageRating;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   SmartWorkoutTemplate({
     String? id,
@@ -42,6 +27,45 @@ class SmartWorkoutTemplate {
     id = id ?? const Uuid().v4(),
     createdAt = createdAt ?? DateTime.now(),
     updatedAt = updatedAt ?? DateTime.now();
+
+  factory SmartWorkoutTemplate.fromJson(Map<String, dynamic> json) {
+    return SmartWorkoutTemplate(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      category: WorkoutCategory.values.firstWhere((c) => c.name == json['category']),
+      difficulty: DifficultyLevel.values.firstWhere((d) => d.name == json['difficulty']),
+      style: TrainingStyle.values.firstWhere((s) => s.name == json['style']),
+      estimatedDuration: json['estimatedDuration'],
+      exercises: (json['exercises'] as List)
+          .map((e) => TemplateExercise.fromJson(e))
+          .toList(),
+      muscleGroupVolume: Map<String, int>.from(json['muscleGroupVolume']),
+      tags: List<String>.from(json['tags']),
+      imageUrl: json['imageUrl'],
+      isPremium: json['isPremium'] ?? false,
+      popularityScore: json['popularityScore'] ?? 0,
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
+  final String id;
+  final String name;
+  final String description;
+  final WorkoutCategory category;
+  final DifficultyLevel difficulty;
+  final TrainingStyle style;
+  final int estimatedDuration; // minutes
+  final List<TemplateExercise> exercises;
+  final Map<String, int> muscleGroupVolume; // sets per muscle group
+  final List<String> tags;
+  final String? imageUrl;
+  final bool isPremium;
+  final int popularityScore;
+  final double averageRating;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Generate actual workout from template with user adaptations
   Workout generateWorkout({
@@ -84,43 +108,10 @@ class SmartWorkoutTemplate {
       'updatedAt': updatedAt.toIso8601String(),
     };
   }
-
-  factory SmartWorkoutTemplate.fromJson(Map<String, dynamic> json) {
-    return SmartWorkoutTemplate(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      category: WorkoutCategory.values.firstWhere((c) => c.name == json['category']),
-      difficulty: DifficultyLevel.values.firstWhere((d) => d.name == json['difficulty']),
-      style: TrainingStyle.values.firstWhere((s) => s.name == json['style']),
-      estimatedDuration: json['estimatedDuration'],
-      exercises: (json['exercises'] as List)
-          .map((e) => TemplateExercise.fromJson(e))
-          .toList(),
-      muscleGroupVolume: Map<String, int>.from(json['muscleGroupVolume']),
-      tags: List<String>.from(json['tags']),
-      imageUrl: json['imageUrl'],
-      isPremium: json['isPremium'] ?? false,
-      popularityScore: json['popularityScore'] ?? 0,
-      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
-  }
 }
 
 /// Template exercise with adaptive parameters
-class TemplateExercise {
-  final String name;
-  final ExerciseCategory category;
-  final ExerciseType type;
-  final SetTemplate setTemplate;
-  final int? restTimeSeconds;
-  final List<String> alternatives; // Alternative exercises
-  final Map<String, dynamic> adaptiveParameters;
-  final String? notes;
-  final bool isOptional;
-  final int priority; // 1-10, higher = more important
+class TemplateExercise { // 1-10, higher = more important
 
   TemplateExercise({
     required this.name,
@@ -134,6 +125,31 @@ class TemplateExercise {
     this.isOptional = false,
     this.priority = 5,
   });
+
+  factory TemplateExercise.fromJson(Map<String, dynamic> json) {
+    return TemplateExercise(
+      name: json['name'],
+      category: ExerciseCategory.values.firstWhere((c) => c.name == json['category']),
+      type: ExerciseType.values.firstWhere((t) => t.name == json['type']),
+      setTemplate: SetTemplate.fromJson(json['setTemplate']),
+      restTimeSeconds: json['restTimeSeconds'],
+      alternatives: List<String>.from(json['alternatives']),
+      adaptiveParameters: Map<String, dynamic>.from(json['adaptiveParameters']),
+      notes: json['notes'],
+      isOptional: json['isOptional'] ?? false,
+      priority: json['priority'] ?? 5,
+    );
+  }
+  final String name;
+  final ExerciseCategory category;
+  final ExerciseType type;
+  final SetTemplate setTemplate;
+  final int? restTimeSeconds;
+  final List<String> alternatives; // Alternative exercises
+  final Map<String, dynamic> adaptiveParameters;
+  final String? notes;
+  final bool isOptional;
+  final int priority;
 
   /// Generate actual exercise from template
   Exercise generateExercise({
@@ -171,29 +187,10 @@ class TemplateExercise {
       'priority': priority,
     };
   }
-
-  factory TemplateExercise.fromJson(Map<String, dynamic> json) {
-    return TemplateExercise(
-      name: json['name'],
-      category: ExerciseCategory.values.firstWhere((c) => c.name == json['category']),
-      type: ExerciseType.values.firstWhere((t) => t.name == json['type']),
-      setTemplate: SetTemplate.fromJson(json['setTemplate']),
-      restTimeSeconds: json['restTimeSeconds'],
-      alternatives: List<String>.from(json['alternatives']),
-      adaptiveParameters: Map<String, dynamic>.from(json['adaptiveParameters']),
-      notes: json['notes'],
-      isOptional: json['isOptional'] ?? false,
-      priority: json['priority'] ?? 5,
-    );
-  }
 }
 
 /// Template for generating sets
 class SetTemplate {
-  final SetProgressionType progressionType;
-  final Map<TrainingExperience, SetParameters> experienceParameters;
-  final IntensityRange intensityRange;
-  final VolumeRange volumeRange;
 
   SetTemplate({
     required this.progressionType,
@@ -201,6 +198,25 @@ class SetTemplate {
     required this.intensityRange,
     required this.volumeRange,
   });
+
+  factory SetTemplate.fromJson(Map<String, dynamic> json) {
+    return SetTemplate(
+      progressionType: SetProgressionType.values.firstWhere(
+        (p) => p.name == json['progressionType']
+      ),
+      experienceParameters: (json['experienceParameters'] as Map<String, dynamic>)
+          .map((k, v) => MapEntry(
+            TrainingExperience.values.firstWhere((e) => e.name == k),
+            SetParameters.fromJson(v)
+          )),
+      intensityRange: IntensityRange.fromJson(json['intensityRange']),
+      volumeRange: VolumeRange.fromJson(json['volumeRange']),
+    );
+  }
+  final SetProgressionType progressionType;
+  final Map<TrainingExperience, SetParameters> experienceParameters;
+  final IntensityRange intensityRange;
+  final VolumeRange volumeRange;
 
   /// Generate actual sets based on parameters
   List<ExerciseSet> generateSets({
@@ -317,30 +333,10 @@ class SetTemplate {
       'volumeRange': volumeRange.toJson(),
     };
   }
-
-  factory SetTemplate.fromJson(Map<String, dynamic> json) {
-    return SetTemplate(
-      progressionType: SetProgressionType.values.firstWhere(
-        (p) => p.name == json['progressionType']
-      ),
-      experienceParameters: (json['experienceParameters'] as Map<String, dynamic>)
-          .map((k, v) => MapEntry(
-            TrainingExperience.values.firstWhere((e) => e.name == k),
-            SetParameters.fromJson(v)
-          )),
-      intensityRange: IntensityRange.fromJson(json['intensityRange']),
-      volumeRange: VolumeRange.fromJson(json['volumeRange']),
-    );
-  }
 }
 
 /// Parameters for generating sets at different experience levels
 class SetParameters {
-  final int warmupSets;
-  final int workingSets;
-  final RepsRange repsRange;
-  final double defaultWeight;
-  final int restSeconds;
 
   SetParameters({
     required this.warmupSets,
@@ -349,16 +345,6 @@ class SetParameters {
     required this.defaultWeight,
     required this.restSeconds,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'warmupSets': warmupSets,
-      'workingSets': workingSets,
-      'repsRange': repsRange.toJson(),
-      'defaultWeight': defaultWeight,
-      'restSeconds': restSeconds,
-    };
-  }
 
   factory SetParameters.fromJson(Map<String, dynamic> json) {
     return SetParameters(
@@ -369,17 +355,27 @@ class SetParameters {
       restSeconds: json['restSeconds'],
     );
   }
+  final int warmupSets;
+  final int workingSets;
+  final RepsRange repsRange;
+  final double defaultWeight;
+  final int restSeconds;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'warmupSets': warmupSets,
+      'workingSets': workingSets,
+      'repsRange': repsRange.toJson(),
+      'defaultWeight': defaultWeight,
+      'restSeconds': restSeconds,
+    };
+  }
 }
 
 /// Range classes
 class RepsRange {
-  final int min;
-  final int optimal;
-  final int max;
 
   const RepsRange({required this.min, required this.optimal, required this.max});
-
-  Map<String, dynamic> toJson() => {'min': min, 'optimal': optimal, 'max': max};
 
   factory RepsRange.fromJson(Map<String, dynamic> json) {
     return RepsRange(
@@ -388,16 +384,16 @@ class RepsRange {
       max: json['max'],
     );
   }
+  final int min;
+  final int optimal;
+  final int max;
+
+  Map<String, dynamic> toJson() => {'min': min, 'optimal': optimal, 'max': max};
 }
 
 class IntensityRange {
-  final double min;
-  final double optimal;
-  final double max;
 
   const IntensityRange({required this.min, required this.optimal, required this.max});
-
-  Map<String, dynamic> toJson() => {'min': min, 'optimal': optimal, 'max': max};
 
   factory IntensityRange.fromJson(Map<String, dynamic> json) {
     return IntensityRange(
@@ -406,6 +402,11 @@ class IntensityRange {
       max: (json['max'] as num).toDouble(),
     );
   }
+  final double min;
+  final double optimal;
+  final double max;
+
+  Map<String, dynamic> toJson() => {'min': min, 'optimal': optimal, 'max': max};
 }
 
 /// Enums

@@ -1,28 +1,23 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class BuddyActionButtons extends StatefulWidget {
-  final VoidCallback? onDislike;
-  final VoidCallback? onLike;
-  final VoidCallback? onSuperLike;
-  final bool isEnabled;
 
   const BuddyActionButtons({
     super.key,
@@ -31,6 +26,10 @@ class BuddyActionButtons extends StatefulWidget {
     this.onSuperLike,
     this.isEnabled = true,
   });
+  final VoidCallback? onDislike;
+  final VoidCallback? onLike;
+  final VoidCallback? onSuperLike;
+  final bool isEnabled;
 
   @override
   State<BuddyActionButtons> createState() => _BuddyActionButtonsState();
@@ -68,7 +67,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32),

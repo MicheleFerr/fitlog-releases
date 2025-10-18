@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 // Exercise sets management for the modal
 class ExerciseSetNotifier extends StateNotifier<List<ExerciseSet>> {
@@ -56,4 +56,26 @@ class ExerciseSetNotifier extends StateNotifier<List<ExerciseSet>> {
 // Provider for exercise sets in the modal
 final exerciseSetsProvider = StateNotifierProvider<ExerciseSetNotifier, List<ExerciseSet>>((ref) {
   return ExerciseSetNotifier();
+});
+
+// Superset exercises management
+class SupersetExercisesNotifier extends StateNotifier<List<Exercise>> {
+  SupersetExercisesNotifier() : super([]);
+
+  void addExercise(Exercise exercise) {
+    state = [...state, exercise];
+  }
+
+  void removeExercise(Exercise exercise) {
+    state = state.where((e) => e.id != exercise.id).toList();
+  }
+
+  void clear() {
+    state = [];
+  }
+}
+
+// Provider for superset exercises
+final supersetExercisesProvider = StateNotifierProvider<SupersetExercisesNotifier, List<Exercise>>((ref) {
+  return SupersetExercisesNotifier();
 });

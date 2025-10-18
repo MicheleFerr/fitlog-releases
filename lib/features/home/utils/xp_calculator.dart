@@ -90,11 +90,6 @@ class XPCalculator {
 }
 
 class LevelProgress {
-  final int level;
-  final int currentXP;
-  final int requiredXP;
-  final int totalXP;
-  final double progress;
   
   const LevelProgress({
     required this.level,
@@ -103,4 +98,9 @@ class LevelProgress {
     required this.totalXP,
     required this.progress,
   });
+  final int level;
+  final int currentXP;
+  final int requiredXP;
+  final int totalXP;
+  final double progress;
 }

@@ -1,16 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: core/config
- * 🎯 Feature: logging
- * 🔧 Type: configuration
- * 📱 Platform: Universal
- * 
- * Firebase logging configuration for production optimization
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: core/config
+/// 🎯 Feature: logging
+/// 🔧 Type: configuration
+/// 📱 Platform: Universal
+/// 
+/// Firebase logging configuration for production optimization
+library;
 
 import 'package:flutter/foundation.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseLoggingConfig {
   /// Configure Firebase logging for production builds

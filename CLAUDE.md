@@ -2,10 +2,119 @@
 
 > **IMPORTANTE**: Questo file contiene le regole OBBLIGATORIE per qualsiasi assistente AI che lavora su questo progetto Flutter. Leggi SEMPRE questo file prima di fare modifiche al codice.
 
-## 📱 Progetto: GymBro TrackLog
-**Framework**: Flutter  
-**Architettura**: Clean Architecture + Riverpod  
+## 📱 Progetto: FitLog Pro
+**Framework**: Flutter
+**Architettura**: Clean Architecture + Riverpod
 **Stato**: Produzione attiva con utenti iOS/Android
+
+## 🚀 EXERCISE DATABASE IMPLEMENTATION PROJECT
+
+> **STATUS**: In Development (Ready to Start)
+> **CURRENT PHASE**: 1 - Foundational (Weeks 1-4)
+> **PROGRESS**: 0% - Ready for implementation
+
+### 📋 Project Overview
+
+Building a comprehensive exercise database system with:
+- ✅ 1,567 corrected Italian exercises (Sept 2025)
+- ✅ Automatic validation and testing
+- ✅ User feedback collection
+- ✅ Version control system
+- ✅ Smart sync (delta-only downloads)
+- ✅ Backup & disaster recovery
+
+### 📚 Documentation (Start Here!)
+
+**BEFORE STARTING ANY TASK, READ THESE:**
+
+1. **Quick Reference** (Start here, 15 min read):
+   ```
+   docs/QUICK_REFERENCE.md
+   ```
+   - Where to find everything
+   - Quick navigation
+   - Copy-paste commands
+
+2. **Architecture Overview** (Understand the system, 30 min):
+   ```
+   docs/EXERCISE_DATABASE_SYNC_ARCHITECTURE.md
+   ```
+   - How the system works
+   - Design decisions
+   - Technical deep-dive
+
+3. **Implementation Playbook** (Follow this to code, 2-3 hours):
+   ```
+   docs/EXERCISE_IMPLEMENTATION_PLAYBOOK.md
+   ```
+   - Step-by-step implementation
+   - Complete code examples
+   - Task checklists
+   - Success metrics
+
+4. **Implementation Status** (Update weekly!):
+   ```
+   docs/IMPLEMENTATION_STATUS.json
+   ```
+   - Track current progress
+   - See what's next
+   - Update after each session
+
+### 🎯 How to Resume After Break
+
+```bash
+# 1. Check where you left off:
+cat docs/IMPLEMENTATION_STATUS.json | jq '.overall_progress_percent, .current_phase'
+
+# 2. Open quick reference:
+open docs/QUICK_REFERENCE.md
+
+# 3. Jump to your phase in PLAYBOOK:
+open docs/EXERCISE_IMPLEMENTATION_PLAYBOOK.md
+# Then Ctrl+F for "FASE 2" or "FASE 3" etc.
+
+# 4. Continue from where you stopped
+```
+
+### ⏭️ Next Steps
+
+**This Week:**
+- [ ] Read QUICK_REFERENCE.md (15 min)
+- [ ] Read ARCHITECTURE doc Executive Summary (20 min)
+- [ ] Start Task 1.1: Validation & Testing
+- [ ] Update IMPLEMENTATION_STATUS.json
+
+**Timeline:** ~20 weeks total (4 phases)
+- Phase 1: 4 weeks (Foundational)
+- Phase 2: 6 weeks (Infrastructure)
+- Phase 3: 6 weeks (Visibility & Scale)
+- Phase 4: 6+ weeks (Expansion)
+
+---
+
+## 🛡️ ENFORCEMENT ATTIVO
+
+**⚠️ CRITICAL**: Tutte le modifiche al codice DEVONO rispettare:
+
+1. **`CODE_QUALITY_RULES.md`** - Regole obbligatorie con enforcement automatico
+2. **Questo file (CLAUDE.md)** - Guidelines specifiche del progetto
+3. **Pre-commit hooks** - Check automatici prima di ogni commit
+
+```bash
+# BEFORE OGNI MODIFICA
+./scripts/quality_dashboard.sh  # Vedi stato corrente
+flutter analyze                 # DEVE essere 0 errors
+
+# DURING sviluppo
+- NO hardcoded strings → usa context.l10n.*
+- NO hardcoded colors → usa context.colors.*
+- NO raw components → usa LoadingIndicator, SnackBarService, ModalService
+
+# BEFORE commit
+git add .
+# Pre-commit hook runs automatically
+git commit -m "..."
+```
 
 ---
 
@@ -19,18 +128,21 @@ AppBar(title: Text('Settings'))
 SnackBar(content: Text('Success!'))
 ```
 
-### ✅ FARE SEMPRE:
+### ✅ FARE SEMPRE (con BuildContext Extensions):
 ```dart
-// ✅ CORRETTO - Usa AppLocalizations
+// ✅ CORRETTO - Usa context.l10n (più conciso)
+Text(context.l10n.welcomeToGymBro)
+AppBar(title: Text(context.l10n.settings))
+SnackBar(content: Text(context.l10n.successMessage))
+
+// ⚠️ DEPRECATO (ancora valido ma verboso)
 Text(AppLocalizations.of(context)!.welcomeToGymBro)
-AppBar(title: Text(AppLocalizations.of(context)!.settings))
-SnackBar(content: Text(AppLocalizations.of(context)!.successMessage))
 ```
 
 ### 🔧 Setup Richiesto in OGNI Schermata:
 ```dart
-// IMPORT OBBLIGATORIO
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
+// IMPORT OBBLIGATORIO - BuildContext Extensions
+import '../../../../shared/presentation/extensions/build_context_extensions.dart';
 
 // O il percorso corretto in base alla posizione del file
 ```
@@ -74,12 +186,15 @@ Container(color: Colors.blue)
 Text(style: TextStyle(color: Colors.black))
 ```
 
-### ✅ USA SEMPRE il ColorScheme del Tema:
+### ✅ USA SEMPRE il ColorScheme del Tema (con BuildContext Extensions):
 ```dart
-// ✅ CORRETTO
+// ✅ CORRETTO - Usa context.colors (più conciso)
+Container(color: context.colors.primary)
+Text(style: TextStyle(color: context.colors.onSurface))
+Icon(color: context.colors.secondary)
+
+// ⚠️ DEPRECATO (ancora valido ma verboso)
 Container(color: Theme.of(context).colorScheme.primary)
-Text(style: TextStyle(color: Theme.of(context).colorScheme.onSurface))
-Icon(color: Theme.of(context).colorScheme.secondary)
 ```
 
 ### 🎯 Colori Disponibili nel ColorScheme:
@@ -184,10 +299,97 @@ make pre-commit
 
 ## 📚 RISORSE
 
+### Documentazione Generale
 - **Guida Localizzazione**: `docs/LOCALIZATION_GUIDE.md`
 - **Snippet VSCode**: `.vscode/dart.code-snippets`
 - **Script Automatici**: `scripts/`
 - **Configurazione Tema**: `lib/shared/presentation/theme/app_theme.dart`
+
+### 🏋️‍♂️ Documentazione Feature Workout (OBBLIGATORIA)
+- **📋 Rules of Engagement (ROE)**: `docs/WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md`
+  - **LEGGERE PRIMA di ogni modifica al sistema workout**
+  - Template architettura obbligatori (Clean Architecture + Riverpod)
+  - Pattern hybrid storage (Hive local-first + Firebase cloud-sync)
+  - Atomic operations e race condition prevention
+  - Test requirements (unit/widget/integration templates)
+  - Performance metrics da rispettare (80-90% miglioramenti)
+  - Sicurezza: input sanitization e Firestore rules
+  - iOS integration: Live Activities, background tasks
+  - Pre-commit checklist (40+ verifiche obbligatorie)
+
+- **📖 Overview Non-Tecnico**: `docs/WORKOUT_SYSTEM_OVERVIEW.md`
+  - Comprensione del sistema per stakeholders
+  - Workflow completo: pianificazione → esecuzione → completamento
+  - Strategia data persistence (local + cloud sync)
+  - Timer system e iOS features
+  - FAQ per domande comuni
+
+### 📋 Documentazione Exercise Card (OBBLIGATORIA)
+- **📋 Rules of Engagement (ROE)**: `docs/EXERCISE_CARD_DEVELOPMENT_GUIDE.md`
+  - **LEGGERE PRIMA di modificare le card degli esercizi**
+  - Template componenti (ExerciseListItem, QuickEdit, Stats, Selector)
+  - Widget performance patterns (debounce, pagination, virtualization)
+  - BuildContext extensions (colori, temi, localizzazione)
+  - Hybrid storage strategy (Hive + Firebase)
+  - Search e filter optimization
+  - Test templates completi (unit, widget, integration)
+  - Input sanitization e sicurezza
+  - Pre-commit checklist (30+ verifiche)
+
+- **📖 Overview Non-Tecnico**: `docs/EXERCISE_CARD_SYSTEM_OVERVIEW.md`
+  - Comprensione UI exercise card per non-dev
+  - Ciclo di vita della card (creazione → visualizzazione → modifica → esecuzione)
+  - Struttura dati (20 campi per esercizio)
+  - Metodi di ricerca e filtro
+  - Design e tema (colori per categoria)
+  - Performance e caching strategy
+  - FAQ per domande comuni
+
+### 🔧 Documentazione Exercise Insertion System (OBBLIGATORIA)
+- **📋 Rules of Engagement (ROE)**: `docs/EXERCISE_INSERTION_DEVELOPMENT_GUIDE.md`
+  - **LEGGERE PRIMA di modificare il flusso di inserimento**
+  - Modal architecture template (Single tab + Advanced sub-tabs)
+  - Advanced exercise types: Superset, Drop Set, Rest-Pause (con implementazione template)
+  - State management per inserimento (Riverpod providers)
+  - APRE calculation, caching e invalidation
+  - Customization settings storage (Hive + Firebase)
+  - Performance optimization (debounce, caching, pagination)
+  - Test templates completi (unit, widget, integration)
+  - Pre-commit checklist (20+ verifiche)
+
+- **⚙️ Customization & Toggles Guide**: `docs/EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md`
+  - **LEGGERE PER CAPIRE TUTTI I TOGGLE**
+  - Global settings (unit system, rest times, database source)
+  - APRE settings (enable/disable, protocols, base weight, cache invalidation)
+  - Per-exercise customization (sets, weight increments, reps presets)
+  - Advanced type settings (superset, drop set, rest-pause)
+  - UI/UX customization (modal layout, filters, display modes)
+  - Storage locations e sync strategy
+  - Troubleshooting guide
+
+- **📖 Overview Non-Tecnico**: `docs/EXERCISE_INSERTION_SYSTEM_OVERVIEW.md`
+  - Comprensione del flusso di inserimento per non-dev
+  - Fase per fase: Accesso → Tipo → Ricerca → Personalizzazione → Salvataggio
+  - Spiegazione esercizi avanzati (Superset, Drop Set, Rest-Pause)
+  - Toggle e personalizzazioni spiegate semplicemente
+  - APRE auto-regulation spiegato
+  - FAQ domande comuni
+  - Storage e sincronizzazione dati
+
+### Ottimizzazioni Architetturali
+- **📊 Report Completo**: `ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`
+  - Dettagli implementazione BuildContext Extensions
+  - Metriche di impatto (27,000+ righe ottimizzate)
+  - Esempi prima/dopo per ogni ottimizzazione
+  - Guida migrazione file esistenti
+  - Script automatici disponibili
+
+### Componenti e Servizi Unificati
+- **BuildContext Extensions**: `lib/shared/presentation/extensions/build_context_extensions.dart`
+- **Loading Component**: `lib/shared/presentation/widgets/loading_indicator.dart`
+- **Snackbar Service**: `lib/shared/presentation/services/snackbar_service.dart`
+- **Modal Service**: `lib/shared/presentation/services/modal_service.dart`
+- **Script Migrazione**: `scripts/migrate_to_context_extensions.sh`
 
 ---
 
@@ -219,9 +421,10 @@ docs: update localization guide with new patterns
 
 Prima di ogni modifica, verifica:
 
-- [ ] 🌍 Nessun testo hardcoded (usa `AppLocalizations`)
-- [ ] 🎨 Nessun colore hardcoded (usa `Theme.of(context).colorScheme`)
-- [ ] 📱 Import di `app_localizations.dart` aggiunto se necessario
+- [ ] 🌍 Nessun testo hardcoded (usa `context.l10n`)
+- [ ] 🎨 Nessun colore hardcoded (usa `context.colors`)
+- [ ] 📱 Import di `build_context_extensions.dart` aggiunto
+- [ ] 🖨️ **Nessun print() - usa debugPrint() + kDebugMode**
 - [ ] 🔤 Traduzioni aggiunte in EN e IT
 - [ ] ⚙️ `flutter gen-l10n` eseguito se aggiunte traduzioni
 - [ ] 🔍 `flutter analyze` passa senza errori
@@ -325,10 +528,46 @@ testWidgets('should show Italian text', (tester) async {
       home: MyWidget(),
     ),
   );
-  
+
   expect(find.text('Testo Italiano'), findsOneWidget);
 });
 ```
+
+### 🖨️ Debug Printing (OBBLIGATORIO)
+
+**❌ MAI usare print() in production:**
+```dart
+// ❌ SBAGLIATO - print() rallenta production e riempie i log
+print('User ID: $userId');
+print('Debug: Loading workouts...');
+```
+
+**✅ SEMPRE usare debugPrint() con kDebugMode:**
+```dart
+// ✅ CORRETTO - Solo in debug mode
+import 'package:flutter/foundation.dart';
+
+if (kDebugMode) {
+  debugPrint('User ID: $userId');
+}
+
+// ✅ ALTERNATIVA - Per log critici (errori)
+if (kDebugMode) {
+  debugPrint('❌ Error loading workout: $error');
+}
+```
+
+**📋 Regole debugPrint:**
+1. **SEMPRE** importare `package:flutter/foundation.dart`
+2. **SEMPRE** wrappare `debugPrint()` in `if (kDebugMode)`
+3. **MAI** usare `print()` (rallenta performance production)
+4. **Script disponibile**: `scripts/fix_print_statements.py` per fix automatici
+
+**💡 Perché debugPrint invece di print:**
+- `debugPrint()` non rallenta production (viene rimosso in release)
+- `kDebugMode` check previene output in production
+- Migliore per performance (no I/O bloccante in release)
+- Log più puliti e professionali
 
 ### 🐛 Debug Mode:
 - **SEMPRE** testare in Release mode prima del deploy
@@ -361,6 +600,7 @@ context.go('/workout');
 ### 📊 Entità Principali:
 - **Workout**: Allenamento con timer e live activities
 - **Exercise**: Esercizio con sets, reps, peso
+- **ExerciseCard**: UI card per visualizzare esercizi
 - **WorkoutTemplate**: Template riutilizzabili
 - **Analytics**: Progressi e statistiche
 
@@ -377,6 +617,99 @@ context.go('/workout');
 - **Superset**: Esercizi consecutivi senza riposo
 - **Drop set**: Riduzione peso a cedimento
 - **Rest-pause**: Brevi pause durante serie
+
+### 🚨 IMPORTANTE: Modifiche al Sistema Workout
+
+**PRIMA di implementare/modificare feature workout, DEVI:**
+
+1. **Leggere OBBLIGATORIAMENTE**:
+   - `docs/WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md` - ROE complete per workout features
+   - `docs/WORKOUT_SYSTEM_OVERVIEW.md` - Comprensione sistema (opzionale)
+
+2. **Seguire le ROE (Rules of Engagement)**:
+   - Template architettura obbligatori
+   - Pattern hybrid storage (local-first + cloud-sync)
+   - Atomic operations per completion flow
+   - Test requirements (unit/widget/integration)
+   - Performance metrics da rispettare
+
+**Esempi Trigger per Leggere la Guida:**
+- Aggiungere un nuovo tipo di esercizio (es: superset, dropset)
+- Modificare il flusso di completamento workout
+- Cambiare il sistema di persistenza
+- Aggiungere analytics o tracking
+- Modificare il timer system o Live Activities
+- Integrare con routine/programmi
+
+**Se l'utente dice**:
+- "Voglio aggiungere..." → Leggi WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md
+- "Posso modificare il workout..." → Leggi WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md
+- "Come implemento..." → Leggi WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md
+
+### 📋 IMPORTANTE: Modifiche alle Exercise Card
+
+**PRIMA di implementare/modificare feature delle exercise card, DEVI:**
+
+1. **Leggere OBBLIGATORIAMENTE**:
+   - `docs/EXERCISE_CARD_DEVELOPMENT_GUIDE.md` - ROE complete per exercise card
+   - `docs/EXERCISE_CARD_SYSTEM_OVERVIEW.md` - Comprensione sistema (opzionale)
+
+2. **Seguire le ROE (Rules of Engagement)**:
+   - Template architettura obbligatori (ExerciseListItem, QuickEdit, Stats, Selector)
+   - Pattern hybrid storage (Hive local-first + Firebase cloud-sync)
+   - Widget performance requirements (debounce, pagination, virtualization)
+   - BuildContext extensions per colori, temi e localizzazione
+   - Test requirements (unit/widget/integration test templates)
+   - Performance metrics da rispettare (60 FPS, < 50MB memory)
+   - Sicurezza: input sanitization per nomi esercizi
+   - iOS integration: fallback per Android
+
+**Esempi Trigger per Leggere la Guida:**
+- Modificare card degli esercizi (colori, layout, campi)
+- Aggiungere campi all'esercizio (difficulty, technique, etc)
+- Cambiare il sistema di ricerca/filtro esercizi
+- Ottimizzare performance della lista esercizi
+- Integrare con sistema di categorie
+- Aggiungere selettore di esercizi
+- Modificare cache strategy per esercizi
+
+**Se l'utente dice**:
+- "Modifica le card degli esercizi..." → Leggi EXERCISE_CARD_DEVELOPMENT_GUIDE.md
+- "Voglio aggiungere campi all'esercizio..." → Leggi EXERCISE_CARD_DEVELOPMENT_GUIDE.md
+- "Come miglioro la ricerca esercizi..." → Leggi EXERCISE_CARD_DEVELOPMENT_GUIDE.md
+
+### 🔧 IMPORTANTE: Modifiche al Sistema di Inserimento Esercizi
+
+**PRIMA di implementare/modificare il flusso di inserimento esercizi o i toggle, DEVI:**
+
+1. **Leggere OBBLIGATORIAMENTE**:
+   - `docs/EXERCISE_INSERTION_DEVELOPMENT_GUIDE.md` - ROE complete
+   - `docs/EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md` - Tutti i toggle e settings
+   - `docs/EXERCISE_INSERTION_SYSTEM_OVERVIEW.md` - Comprensione sistema (opzionale)
+
+2. **Seguire le ROE (Rules of Engagement)**:
+   - Template modal architecture (Single tab, Advanced tab con sub-tabs)
+   - Advanced exercise types: Superset, Drop Set, Rest-Pause
+   - State management patterns (Riverpod providers)
+   - APRE calculation e caching
+   - Customization settings storage
+   - Test templates obbligatori
+   - Performance requirements
+
+**Esempi Trigger per Leggere la Guida:**
+- Modificare il flusso di aggiunta esercizi
+- Aggiungere nuovi toggle o impostazioni
+- Cambiar il sistema di APRE (Auto-Programmed Resistance)
+- Implementare advanced exercise types
+- Personalizzare UI della modal
+- Modificare storage delle preferenze
+- Aggiungere nuove customization options
+
+**Se l'utente dice**:
+- "Modifica il flusso di inserimento esercizi..." → Leggi EXERCISE_INSERTION_DEVELOPMENT_GUIDE.md
+- "Aggiungi un toggle per..." → Leggi EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md
+- "Come funziona APRE..." → Leggi EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md
+- "Voglio aggiungere una opzione di personalizzazione..." → Leggi EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md
 
 ---
 
@@ -401,12 +734,380 @@ context.go('/workout');
 
 ---
 
+## 🔨 REGOLA #12: BUILD & COMPILATION
+
+### 🚫 NON Fare Build Automatici:
+- **MAI** eseguire `flutter build ios` o `flutter build android` automaticamente
+- **MAI** fare rebuild dopo modifiche al codice senza esplicita richiesta
+- **SOLO** fare build se:
+  - L'utente lo richiede esplicitamente
+  - È necessario per risolvere un errore di compilazione specifico
+  - Fa parte della risoluzione di un problema critico
+
+### ✅ Quando È Permesso:
+```bash
+# SOLO se richiesto dall'utente o per fix critici
+flutter build ios --release  # Solo se esplicitamente richiesto
+flutter run                  # Solo per debug se richiesto
+```
+
+### 💡 Motivazione:
+- Risparmio token nella conversazione
+- L'utente preferisce fare build da Xcode/Android Studio
+- Build più veloce con IDE native
+- Migliore controllo del processo di build
+
+---
+
+## 🎯 REGOLA #13: BUILDCONTEXT EXTENSIONS (OBBLIGATORIO)
+
+### 📝 Overview
+Per ridurre verbosità e migliorare leggibilità, **SEMPRE** usare le BuildContext extensions invece degli accessor verbosi.
+
+### ✅ Extensions Disponibili
+
+```dart
+// SEMPRE importare le extensions
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+
+// 🎨 Theme & Colors
+context.colors           // invece di Theme.of(context).colorScheme
+context.textTheme        // invece di Theme.of(context).textTheme
+context.theme            // invece di Theme.of(context)
+
+// 🌍 Localizzazione
+context.l10n             // invece di AppLocalizations.of(context)!
+
+// 📱 Media Query
+context.mediaQuery       // invece di MediaQuery.of(context)
+context.screenWidth      // invece di MediaQuery.of(context).size.width
+context.screenHeight     // invece di MediaQuery.of(context).size.height
+
+// 🔦 Utility
+context.isDarkMode       // verifica se tema scuro attivo
+context.isLightMode      // verifica se tema chiaro attivo
+context.topPadding       // safe area top (notch, ecc.)
+context.bottomPadding    // safe area bottom (home indicator)
+context.isKeyboardVisible // verifica se tastiera è visibile
+```
+
+### 📊 Prima vs Dopo
+
+**❌ DEPRECATO (Verboso):**
+```dart
+Container(
+  height: MediaQuery.of(context).size.height * 0.9,
+  color: Theme.of(context).colorScheme.surface,
+  child: Column(
+    children: [
+      Text(
+        AppLocalizations.of(context)!.title,
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+      if (Theme.of(context).brightness == Brightness.dark)
+        Icon(Icons.dark_mode),
+    ],
+  ),
+)
+```
+
+**✅ CORRETTO (Conciso con Extensions):**
+```dart
+Container(
+  height: context.screenHeight * 0.9,
+  color: context.colors.surface,
+  child: Column(
+    children: [
+      Text(
+        context.l10n.title,
+        style: context.textTheme.headlineSmall?.copyWith(
+          color: context.colors.primary,
+        ),
+      ),
+      if (context.isDarkMode)
+        Icon(Icons.dark_mode),
+    ],
+  ),
+)
+```
+
+### 📈 Benefici Misurabili
+
+- **Leggibilità**: 40-60% meno caratteri per accesso tema/localizzazioni
+- **Manutenibilità**: Cambio centralizzato se cambia API Flutter
+- **Performance**: Stesso identico costo (zero overhead)
+- **Developer Experience**: IntelliSense più veloce e chiaro
+
+### 🚨 Regole di Utilizzo
+
+1. **SEMPRE** importare le extensions in OGNI file che usa Theme, Localizations o MediaQuery
+2. **SEMPRE** preferire `context.colors` invece di `Theme.of(context).colorScheme`
+3. **SEMPRE** preferire `context.l10n` invece di `AppLocalizations.of(context)!`
+4. **SEMPRE** preferire `context.screenWidth/Height` invece di `MediaQuery.of(context).size`
+5. **MAI** usare la forma verbosa in nuovo codice (solo per compatibilità legacy)
+
+### 📂 Dove Trovarle
+
+- **File**: `lib/shared/presentation/extensions/build_context_extensions.dart`
+- **Esempio Migrato**: `lib/features/workout/presentation/widgets/add_exercise_modal.dart`
+- **Script Migrazione**: `scripts/migrate_to_context_extensions.sh`
+
+### 🔄 Migrazione Graduale
+
+- **Nuovo codice**: DEVE usare extensions
+- **Codice esistente**: Migrare opportunisticamente quando si tocca il file
+- **Compatibilità**: Entrambe le forme funzionano, ma preferire extensions
+
+### 📖 Documentazione Dettagliata
+
+Per informazioni complete su implementazione, metriche di impatto e guida alla migrazione, consulta:
+**`ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`** - Sezione "FASE 1: BuildContext Extensions"
+
+---
+
+## 🧩 REGOLA #14: COMPONENTI E SERVIZI UNIFICATI (OBBLIGATORIO)
+
+### 📝 Overview
+Per ridurre duplicazione e garantire UX consistente, **SEMPRE** usare i componenti e servizi unificati invece di implementazioni sparse.
+
+### 🔄 Loading States
+
+**❌ NON Usare Direttamente:**
+```dart
+// ❌ SBAGLIATO - CircularProgressIndicator diretto
+Center(child: CircularProgressIndicator())
+
+// ❌ SBAGLIATO - LinearProgressIndicator custom
+LinearProgressIndicator(
+  color: Theme.of(context).colorScheme.primary,
+  backgroundColor: Colors.grey,
+)
+```
+
+**✅ USA LoadingIndicator:**
+```dart
+// ✅ CORRETTO - Loading semplice
+LoadingIndicator()
+
+// ✅ CORRETTO - Loading con messaggio
+LoadingIndicator(message: context.l10n.loadingWorkouts)
+
+// ✅ CORRETTO - Loading overlay fullscreen
+LoadingIndicator.overlay(message: context.l10n.savingChanges)
+
+// ✅ CORRETTO - Progress bar
+LoadingIndicator.linear(progress: 0.75)
+
+// ✅ CORRETTO - Wrapper condizionale
+LoadingWrapper(
+  isLoading: isLoading,
+  child: MyContent(),
+)
+
+// ✅ CORRETTO - Con mixin per async operations
+class MyWidget extends ConsumerWidget with LoadingMixin {
+  Future<void> saveWorkout() async {
+    await withLoading(context, () async {
+      // Operazione async
+    }, message: context.l10n.saving);
+  }
+}
+```
+
+**Importare:**
+```dart
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+```
+
+---
+
+### 📢 Snackbar Messages
+
+**❌ NON Usare Direttamente:**
+```dart
+// ❌ SBAGLIATO - ScaffoldMessenger diretto
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text('Success!'),
+    backgroundColor: Colors.green,
+  ),
+);
+```
+
+**✅ USA SnackBarService:**
+```dart
+// ✅ CORRETTO - Success message
+SnackBarService.showSuccess(context, context.l10n.workoutSaved);
+
+// ✅ CORRETTO - Error message
+SnackBarService.showError(context, context.l10n.errorSavingWorkout);
+
+// ✅ CORRETTO - Warning message
+SnackBarService.showWarning(context, context.l10n.unsavedChanges);
+
+// ✅ CORRETTO - Info message
+SnackBarService.showInfo(context, context.l10n.tipOfTheDay);
+
+// ✅ CORRETTO - Custom con azione
+SnackBarService.showCustom(
+  context,
+  message: 'Exercise deleted',
+  actionLabel: 'UNDO',
+  onAction: () => undoDelete(),
+);
+
+// ✅ CORRETTO - Con mixin
+class MyWidget extends ConsumerWidget with SnackBarMixin {
+  void save() {
+    // ...
+    showSuccess(context, context.l10n.saved);
+  }
+}
+```
+
+**Importare:**
+```dart
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+```
+
+---
+
+### 🪟 Modals & Bottom Sheets
+
+**❌ NON Usare Direttamente:**
+```dart
+// ❌ SBAGLIATO - showModalBottomSheet custom
+showModalBottomSheet(
+  context: context,
+  backgroundColor: Theme.of(context).colorScheme.surface,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  ),
+  builder: (_) => MyContent(),
+);
+```
+
+**✅ USA ModalService:**
+```dart
+// ✅ CORRETTO - Bottom sheet standard
+final result = await ModalService.showBottomSheet(
+  context,
+  child: MyContentWidget(),
+);
+
+// ✅ CORRETTO - Bottom sheet fullscreen
+await ModalService.showFullScreenSheet(
+  context,
+  child: EditWorkoutScreen(),
+);
+
+// ✅ CORRETTO - Dialog di conferma
+final confirmed = await ModalService.showConfirmDialog(
+  context,
+  title: context.l10n.deleteWorkout,
+  message: context.l10n.deleteWorkoutConfirmation,
+  isDangerous: true,  // Red button per azioni pericolose
+);
+
+if (confirmed) {
+  // Delete workout
+}
+
+// ✅ CORRETTO - Dialog informativo
+await ModalService.showInfoDialog(
+  context,
+  title: context.l10n.tip,
+  message: context.l10n.restTimerExplanation,
+  icon: Icons.info,
+);
+
+// ✅ CORRETTO - Dialog con lista
+final selected = await ModalService.showListDialog<Exercise>(
+  context,
+  title: context.l10n.selectExercise,
+  items: exercises,
+  itemLabel: (ex) => ex.name,
+);
+
+// ✅ CORRETTO - Con mixin
+class MyWidget extends ConsumerWidget with ModalMixin {
+  Future<void> delete() async {
+    final confirmed = await showConfirm(
+      context,
+      title: context.l10n.delete,
+      message: context.l10n.confirmDelete,
+      isDangerous: true,
+    );
+    // ...
+  }
+}
+```
+
+**Importare:**
+```dart
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+```
+
+---
+
+### 📈 Benefici dei Componenti Unificati
+
+| Componente | Prima | Dopo | Beneficio |
+|-----------|-------|------|-----------|
+| Loading | 178 implementazioni diverse | 1 componente | UX consistente |
+| Snackbar | 258 implementazioni diverse | 1 servizio | Branding unificato |
+| Modal | 259 implementazioni diverse | 1 servizio | Manutenzione semplificata |
+
+### 🚨 Regole di Utilizzo
+
+1. **SEMPRE** usare `LoadingIndicator` invece di `CircularProgressIndicator` diretto
+2. **SEMPRE** usare `SnackBarService` invece di `ScaffoldMessenger.showSnackBar`
+3. **SEMPRE** usare `ModalService` invece di `showModalBottomSheet`/`showDialog`
+4. **MAI** creare implementazioni custom senza motivazione tecnica forte
+5. **SEMPRE** usare i preset semantici (success/error/warning/info)
+
+### 📂 Dove Trovarli
+
+- **LoadingIndicator**: `lib/shared/presentation/widgets/loading_indicator.dart`
+- **SnackBarService**: `lib/shared/presentation/services/snackbar_service.dart`
+- **ModalService**: `lib/shared/presentation/services/modal_service.dart`
+
+### 📖 Documentazione Dettagliata
+
+Per esempi completi, API reference e best practices, consulta:
+**`ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`** - Sezioni "FASE 2-4: Componenti Unificati"
+
+Il report include:
+- 🎯 Esempi d'uso completi per ogni componente
+- 📊 Metriche di impatto (178-259 implementazioni → 3 componenti)
+- 🔄 Pattern di migrazione da codice legacy
+- ✅ Checklist per adozione nei nuovi PR
+
+---
+
 ## 🆘 IN CASO DI DUBBI
 
-1. **Consulta questo file CLAUDE.md**
-2. **Leggi `docs/LOCALIZATION_GUIDE.md`**
-3. **Esegui `./scripts/find_hardcoded_strings.sh`**
-4. **Controlla file esistenti come esempi**
+### 📖 Documentazione da Consultare (in ordine)
+
+1. **Questo file CLAUDE.md** - Regole obbligatorie e quick reference
+2. **`ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`** - Guida completa alle ottimizzazioni:
+   - BuildContext Extensions (esempi, migrazione, metriche)
+   - Loading Component (API completa, use cases)
+   - Snackbar Service (preset semantici, custom options)
+   - Modal Service (bottom sheets, dialogs, confirm flows)
+3. **`docs/LOCALIZATION_GUIDE.md`** - Guida localizzazione dettagliata
+4. **File esistenti come esempi**:
+   - `lib/features/workout/presentation/widgets/add_exercise_modal.dart` (migrato)
+   - `lib/features/workout/presentation/widgets/exercise_list_item.dart` (migrato)
+   - Altri top 10 file migrati (vedi report)
+
+### 🔧 Script e Tool Utili
+
+- `./scripts/find_hardcoded_strings.sh` - Trova testi hardcoded
+- `./scripts/migrate_to_context_extensions.sh <file>` - Migra file a extensions
+- `flutter analyze` - Verifica qualità codice
 
 ---
 

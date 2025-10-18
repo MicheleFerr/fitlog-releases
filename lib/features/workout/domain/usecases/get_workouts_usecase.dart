@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain/usecases
- * 🎯 Feature: workout
- * 🔧 Type: usecase
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities
- * - Repository interface
- * - Shared failures
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain/usecases
+/// 🎯 Feature: workout
+/// 🔧 Type: usecase
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities
+/// - Repository interface
+/// - Shared failures
+library;
 
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
@@ -21,9 +20,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 
 /// Use case for retrieving workouts with filtering and business logic
 class GetWorkoutsUseCase {
-  final WorkoutRepository _repository;
   
   const GetWorkoutsUseCase(this._repository);
+  final WorkoutRepository _repository;
   
   /// Get workouts with filtering and sorting
   Future<Either<Failure, List<Workout>>> call(GetWorkoutsParams params) async {
@@ -132,14 +131,6 @@ class GetWorkoutsUseCase {
 
 /// Parameters for GetWorkoutsUseCase
 class GetWorkoutsParams {
-  final int? limit;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final WorkoutStatus? statusFilter;
-  final Duration? minDuration;
-  final int? minExercises;
-  final WorkoutSortBy sortBy;
-  final bool sortDescending;
   
   const GetWorkoutsParams({
     this.limit,
@@ -151,6 +142,14 @@ class GetWorkoutsParams {
     this.sortBy = WorkoutSortBy.date,
     this.sortDescending = true,
   });
+  final int? limit;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final WorkoutStatus? statusFilter;
+  final Duration? minDuration;
+  final int? minExercises;
+  final WorkoutSortBy sortBy;
+  final bool sortDescending;
 }
 
 /// Enum for workout sorting options

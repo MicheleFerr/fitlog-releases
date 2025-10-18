@@ -1,23 +1,20 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: app_config
- * 🔧 Type: repository
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - BaseHybridRepository (local + premium sync)
- * - Hive (local storage)
- * - Firebase (premium cloud sync)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: app_config
+/// 🔧 Type: repository
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - BaseHybridRepository (local + premium sync)
+/// - Hive (local storage)
+/// - Firebase (premium cloud sync)
+library;
 
 import 'package:gymbro_flutter_new/core/data/repositories/base_hybrid_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 /// Hybrid repository for app configuration
@@ -25,14 +22,12 @@ import 'package:flutter/foundation.dart';
 /// - PREMIUM users: Local + Cloud sync (settings sync across devices)
 class HybridAppConfigRepository extends BaseHybridRepository<UserAppConfig> {
   HybridAppConfigRepository({
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
+    super.firestore,
+    super.auth,
   }) : super(
     featureName: 'app_config',
     collectionName: 'user_app_configs',
-    requiresPremiumForCloud: true, // Only premium users get cross-device sync
-    firestore: firestore,
-    auth: auth,
+    requiresPremiumForCloud: true,
   );
 
   @override
@@ -143,10 +138,6 @@ class HybridAppConfigRepository extends BaseHybridRepository<UserAppConfig> {
 
 /// User app configuration wrapper
 class UserAppConfig {
-  final String userId;
-  final AppConfig config;
-  final DateTime lastUpdated;
-  final Map<String, dynamic>? deviceInfo;
 
   UserAppConfig({
     required this.userId,
@@ -154,13 +145,6 @@ class UserAppConfig {
     required this.lastUpdated,
     this.deviceInfo,
   });
-
-  Map<String, dynamic> toJson() => {
-    'userId': userId,
-    'config': config.toJson(),
-    'lastUpdated': lastUpdated.toIso8601String(),
-    'deviceInfo': deviceInfo,
-  };
 
   factory UserAppConfig.fromJson(Map<String, dynamic> json) {
     return UserAppConfig(
@@ -172,6 +156,17 @@ class UserAppConfig {
       deviceInfo: json['deviceInfo'],
     );
   }
+  final String userId;
+  final AppConfig config;
+  final DateTime lastUpdated;
+  final Map<String, dynamic>? deviceInfo;
+
+  Map<String, dynamic> toJson() => {
+    'userId': userId,
+    'config': config.toJson(),
+    'lastUpdated': lastUpdated.toIso8601String(),
+    'deviceInfo': deviceInfo,
+  };
 
   UserAppConfig copyWith({
     AppConfig? config,

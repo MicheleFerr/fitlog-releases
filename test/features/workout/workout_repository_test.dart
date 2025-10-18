@@ -116,9 +116,9 @@ class WorkoutRepository {
     _workouts.remove(workoutId);
     
     // Remove from all user lists
-    _userWorkouts.values.forEach((list) {
+    for (var list in _userWorkouts.values) {
       list.remove(workoutId);
-    });
+    }
     
     return true;
   }
@@ -182,9 +182,9 @@ class WorkoutRepository {
     _templates.remove(templateId);
     
     // Remove from all user lists
-    _userTemplates.values.forEach((list) {
+    for (var list in _userTemplates.values) {
       list.remove(templateId);
-    });
+    }
     
     return true;
   }
@@ -306,15 +306,6 @@ class WorkoutRepository {
 }
 
 class WorkoutStatistics {
-  final int totalWorkouts;
-  final int totalExercises;
-  final int totalSets;
-  final int totalReps;
-  final double totalVolume;
-  final int totalDuration; // in minutes
-  final int averageDuration; // in minutes
-  final String? favoriteExercise;
-  final DateTime? lastWorkout;
   
   WorkoutStatistics({
     required this.totalWorkouts,
@@ -327,6 +318,15 @@ class WorkoutStatistics {
     this.favoriteExercise,
     this.lastWorkout,
   });
+  final int totalWorkouts;
+  final int totalExercises;
+  final int totalSets;
+  final int totalReps;
+  final double totalVolume;
+  final int totalDuration; // in minutes
+  final int averageDuration; // in minutes
+  final String? favoriteExercise;
+  final DateTime? lastWorkout;
 }
 
 void main() {

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_set_overlay.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/enhanced_quick_edit_overlay.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/simple_enhanced_quick_edit.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/hybrid_quick_edit_overlay.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 
 class QuickEditShowcase extends ConsumerStatefulWidget {
   const QuickEditShowcase({super.key});
@@ -60,55 +56,13 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
       _lastEditedVersion = version;
     });
 
-    switch (version) {
-      case 'basic':
-        context.showQuickEditOverlay(
-          exerciseSet: _demoSet,
-          onSave: (updatedSet) => _handleSave(updatedSet, version),
-          position: position,
-          previousSet: _previousSet,
-        );
-        break;
-        
-      case 'enhanced':
-        context.showEnhancedQuickEditOverlay(
-          exerciseSet: _demoSet,
-          onSave: (updatedSet) => _handleSave(updatedSet, version),
-          position: position,
-          previousSet: _previousSet,
-          recentWeights: _recentWeights,
-          oneRepMax: _oneRepMax,
-        );
-        break;
-        
-      case 'simple':
-        context.showSimpleEnhancedQuickEdit(
-          exerciseSet: _demoSet,
-          onSave: (updatedSet) => _handleSave(updatedSet, version),
-          position: position,
-          previousSet: _previousSet,
-        );
-        break;
-        
-      case 'hybrid':
-        context.showHybridQuickEditOverlay(
-          exerciseSet: _demoSet,
-          onSave: (updatedSet) => _handleSave(updatedSet, version),
-          position: position,
-          previousSet: _previousSet,
-          recentWeights: _recentWeights,
-        );
-        break;
-        
-      case 'v2':
-        context.showQuickEditOverlayV2(
-          exerciseSet: _demoSet,
-          onSave: (updatedSet) => _handleSave(updatedSet, version),
-          position: position,
-          previousSet: _previousSet,
-        );
-        break;
-    }
+    // Only V2 is available now
+    context.showQuickEditOverlayV2(
+      exerciseSet: _demoSet,
+      onSave: (updatedSet) => _handleSave(updatedSet, version),
+      position: position,
+      previousSet: _previousSet,
+    );
   }
 
   void _handleSave(ExerciseSet updatedSet, String version) {
@@ -128,8 +82,15 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
 
   @override
   Widget build(BuildContext context) {
+    final isAdmin = ref.watch(showDebugSectionsProvider);
+
+    // Don't show if not admin
+    if (!isAdmin) {
+      return const SizedBox.shrink();
+    }
+
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -246,47 +207,58 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
           
           const SizedBox(height: 16),
           
-          // Version buttons grid
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _buildVersionButton(
-                'basic',
-                'Basic Wheel',
-                Icons.radio_button_checked,
-                'Original wheel picker',
-                theme.colorScheme.primary,
+          // Info about current QuickEdit version
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.purple.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.purple.withValues(alpha: 0.3),
               ),
-              _buildVersionButton(
-                'enhanced',
-                'Enhanced Tabs',
-                Icons.tab,
-                'With plates & %',
-                theme.colorScheme.secondary,
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.layers, color: Colors.purple, size: 24),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'QuickEdit V2 - Production',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.purple,
+                        ),
+                      ),
+                      Text(
+                        'Superset support • Advanced features • Default editor',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Test button
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: () => _showQuickEditVersion('v2'),
+              icon: const Icon(Icons.play_arrow),
+              label: const Text('Test QuickEdit V2'),
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.purple,
+                padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              _buildVersionButton(
-                'simple',
-                'Simple Input',
-                Icons.keyboard,
-                'Text input only',
-                theme.colorScheme.tertiary,
-              ),
-              _buildVersionButton(
-                'hybrid',
-                'Hybrid',
-                Icons.merge_type,
-                'Wheel + Input',
-                Colors.orange,
-              ),
-              _buildVersionButton(
-                'v2',
-                'V2 Superset ⭐',
-                Icons.layers,
-                'DEFAULT - In use',
-                Colors.purple,
-              ),
-            ],
+            ),
           ),
           
           // Last saved info

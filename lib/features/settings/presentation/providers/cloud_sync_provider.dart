@@ -1,13 +1,12 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: settings
- * 🔧 Type: provider (cloud sync management)
- * 
- * Handles syncing user data from cloud to local device
- * Essential for premium users with multiple devices
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: settings
+/// 🔧 Type: provider (cloud sync management)
+/// 
+/// Handles syncing user data from cloud to local device
+/// Essential for premium users with multiple devices
+library;
 
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,15 +14,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
-import '../../../auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 
 /// Cloud sync state
 class CloudSyncState {
-  final bool isSyncing;
-  final String? lastSyncTime;
-  final SyncProgress? progress;
-  final List<String> errors;
-  final SyncSummary? lastSyncSummary;
   
   const CloudSyncState({
     this.isSyncing = false,
@@ -32,6 +26,11 @@ class CloudSyncState {
     this.errors = const [],
     this.lastSyncSummary,
   });
+  final bool isSyncing;
+  final String? lastSyncTime;
+  final SyncProgress? progress;
+  final List<String> errors;
+  final SyncSummary? lastSyncSummary;
   
   CloudSyncState copyWith({
     bool? isSyncing,
@@ -52,27 +51,20 @@ class CloudSyncState {
 
 /// Sync progress tracking
 class SyncProgress {
-  final String currentItem;
-  final int totalItems;
-  final int syncedItems;
-  final double percentage;
   
   SyncProgress({
     required this.currentItem,
     required this.totalItems,
     required this.syncedItems,
   }) : percentage = totalItems > 0 ? (syncedItems / totalItems) * 100 : 0;
+  final String currentItem;
+  final int totalItems;
+  final int syncedItems;
+  final double percentage;
 }
 
 /// Sync summary
 class SyncSummary {
-  final int workoutsSynced;
-  final int templatesSynced;
-  final int exercisesSynced;
-  final int settingsSynced;
-  final int personalRecordsSynced;
-  final DateTime syncedAt;
-  final bool success;
   
   SyncSummary({
     required this.workoutsSynced,
@@ -83,6 +75,13 @@ class SyncSummary {
     required this.syncedAt,
     required this.success,
   });
+  final int workoutsSynced;
+  final int templatesSynced;
+  final int exercisesSynced;
+  final int settingsSynced;
+  final int personalRecordsSynced;
+  final DateTime syncedAt;
+  final bool success;
   
   int get totalItemsSynced => 
       workoutsSynced + templatesSynced + exercisesSynced + settingsSynced + personalRecordsSynced;
@@ -90,13 +89,13 @@ class SyncSummary {
 
 /// Cloud sync provider
 class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
-  final Ref _ref;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   
   CloudSyncNotifier(this._ref) : super(const CloudSyncState()) {
     _loadLastSyncTime();
   }
+  final Ref _ref;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   
   /// Load last sync time from local storage
   Future<void> _loadLastSyncTime() async {

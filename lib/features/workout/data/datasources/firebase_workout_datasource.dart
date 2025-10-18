@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/datasources
- * 🎯 Feature: workout
- * 🔧 Type: datasource
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Cloud Firestore
- * - Data models
- * - Domain entities (for method signatures)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/datasources
+/// 🎯 Feature: workout
+/// 🔧 Type: datasource
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Cloud Firestore
+/// - Data models
+/// - Domain entities (for method signatures)
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -21,9 +20,9 @@ import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.da
 
 /// Firebase data source for workout operations
 class FirebaseWorkoutDataSource {
-  final FirebaseFirestore _firestore;
   
   const FirebaseWorkoutDataSource(this._firestore);
+  final FirebaseFirestore _firestore;
 
   /// Save workout to Firestore
   Future<String> saveWorkout(WorkoutModel workout, String userId) async {

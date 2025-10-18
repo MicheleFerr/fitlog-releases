@@ -9,7 +9,6 @@
 /// dart scripts/mcp_helper.dart widget-tree
 
 import 'dart:io';
-import 'dart:convert';
 
 void main(List<String> args) async {
   if (args.isEmpty) {
@@ -59,7 +58,7 @@ Future<void> getAppErrors() async {
   
   // Attendi alcuni secondi per raccogliere errori
   print('⏳ Raccolta errori in corso (5 secondi)...');
-  await Future.delayed(Duration(seconds: 5));
+  await Future.delayed(const Duration(seconds: 5));
   
   final logs = await Process.run('flutter', ['logs']);
   if (logs.stdout.toString().contains('Error') || 

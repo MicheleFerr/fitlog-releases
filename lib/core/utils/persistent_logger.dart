@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart';
 
 /// Logger persistente che salva su file per debug in release mode
 class PersistentLogger {
-  static final PersistentLogger _instance = PersistentLogger._internal();
   factory PersistentLogger() => _instance;
   PersistentLogger._internal();
+  static final PersistentLogger _instance = PersistentLogger._internal();
 
   File? _logFile;
   static const int _maxLogSize = 1024 * 1024; // 1MB max
@@ -29,7 +30,9 @@ class PersistentLogger {
       
       await log('=== PersistentLogger initialized ===');
     } catch (e) {
-      print('PersistentLogger init failed: $e');
+      if (kDebugMode) {
+        debugPrint('PersistentLogger init failed: $e');
+      }
     }
   }
 
@@ -46,7 +49,9 @@ class PersistentLogger {
         mode: FileMode.append,
       );
     } catch (e) {
-      print('PersistentLogger write failed: $e');
+      if (kDebugMode) {
+        debugPrint('PersistentLogger write failed: $e');
+      }
     }
   }
 

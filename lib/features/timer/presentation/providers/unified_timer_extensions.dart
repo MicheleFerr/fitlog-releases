@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_ui_state_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Extensions per UnifiedTimerProvider con funzionalità tier-1
 /// 
@@ -18,6 +19,9 @@ extension Tier1TimerExtensions on StateNotifier<UnifiedTimerState?> {
     int? currentSet,
     int? totalSets,
   }) async {
+    // Get timer sound preference from app config
+    final config = ref.read(appConfigProvider);
+    
     // Start timer logic - cast to access methods
     final controller = this as dynamic;
     await controller.startTimer(
@@ -27,6 +31,7 @@ extension Tier1TimerExtensions on StateNotifier<UnifiedTimerState?> {
       exerciseId: exerciseId,
       currentSet: currentSet,
       totalSets: totalSets,
+      customSound: config.timerSound, // Pass user's sound preference
     );
     
     // Show UI automatically
@@ -45,7 +50,7 @@ extension Tier1TimerExtensions on StateNotifier<UnifiedTimerState?> {
     await startRestTimerWithUI(
       seconds: seconds,
       ref: ref,
-      exerciseName: "Quick Rest",
+      exerciseName: 'Quick Rest',
     );
   }
 }
@@ -57,9 +62,9 @@ final tier1TimerActionsProvider = Provider<Tier1TimerActions>((ref) {
 
 /// Helper class per azioni comuni tier-1
 class Tier1TimerActions {
-  final Ref ref;
   
   Tier1TimerActions(this.ref);
+  final Ref ref;
   
   /// Start rest timer con UI
   Future<void> startExerciseRest({
@@ -134,11 +139,11 @@ final timerIsActiveProvider = Provider<bool>((ref) {
 /// Provider per tempo rimanente formattato
 final timerRemainingFormattedProvider = Provider<String>((ref) {
   final state = ref.watch(unifiedTimerProvider);
-  if (state == null) return "00:00";
+  if (state == null) return '00:00';
   
   final minutes = (state.remainingSeconds ~/ 60).toString().padLeft(2, '0');
   final seconds = (state.remainingSeconds % 60).toString().padLeft(2, '0');
-  return "$minutes:$seconds";
+  return '$minutes:$seconds';
 });
 
 /// Provider per progresso timer (0.0 to 1.0)

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: analytics
- * 🔧 Type: provider
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: StateNotifierProvider, StreamProvider
- * - workout/presentation/providers: workoutProvider
- * - analytics/domain: UseCases, Repository, Entities
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: analytics
+/// 🔧 Type: provider
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: StateNotifierProvider, StreamProvider
+/// - workout/presentation/providers: workoutProvider
+/// - analytics/domain: UseCases, Repository, Entities
+library;
 
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,20 +26,43 @@ import 'package:gymbro_flutter_new/features/analytics/domain/usecases/calculate_
 import 'package:gymbro_flutter_new/features/analytics/domain/usecases/detect_personal_records_usecase.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/usecases/compare_workouts_usecase.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 
 // =============================================================================
 // PROVIDERS SETUP
 // =============================================================================
 
+/// Hive workout data source provider
+final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
+  return HiveWorkoutDataSource();
+});
+
 /// Hive cache box for workout metrics
-final workoutMetricsCacheProvider = Provider<Box<Map<String, dynamic>>>((ref) {
-  return Hive.box<Map<String, dynamic>>('workoutMetrics');
+final workoutMetricsCacheProvider = Provider<Box<Map>>((ref) {
+  // Open box if not already open
+  if (!Hive.isBoxOpen('workoutMetrics')) {
+    throw StateError('workoutMetrics box not opened. Call Hive.openBox<Map>(\'workoutMetrics\') first.');
+  }
+  return Hive.box<Map>('workoutMetrics');
 });
 
 /// Workout Analytics Repository Provider
 final workoutAnalyticsRepositoryProvider = Provider<WorkoutAnalyticsRepository>((ref) {
-  final cache = ref.watch(workoutMetricsCacheProvider);
-  return WorkoutAnalyticsRepositoryImpl(metricsCache: cache);
+  final hiveDataSource = ref.watch(hiveWorkoutDataSourceProvider);
+
+  // Get the metrics cache box
+  final Box<Map> cache;
+  if (Hive.isBoxOpen('workoutMetrics')) {
+    cache = Hive.box<Map>('workoutMetrics');
+  } else {
+    throw StateError('workoutMetrics box must be opened before using analytics');
+  }
+
+  // Pass cache directly without cast - repository now accepts untyped Box
+  return WorkoutAnalyticsRepositoryImpl(
+    metricsCache: cache,
+    hiveWorkoutDataSource: hiveDataSource,
+  );
 });
 
 /// Calculate Workout Metrics Use Case Provider
@@ -70,13 +92,6 @@ final workoutAnalyticsProvider = StateNotifierProvider<WorkoutAnalyticsNotifier,
 
 /// Workout analytics state
 class WorkoutAnalyticsState {
-  final WorkoutMetrics? currentMetrics;
-  final List<PersonalRecordAchieved> currentPRs;
-  final WorkoutComparison? comparison;
-  final List<PRPrediction> prPredictions;
-  final bool isCalculating;
-  final String? error;
-  final DateTime lastUpdated;
 
   const WorkoutAnalyticsState({
     this.currentMetrics,
@@ -87,6 +102,13 @@ class WorkoutAnalyticsState {
     this.error,
     required this.lastUpdated,
   });
+  final WorkoutMetrics? currentMetrics;
+  final List<PersonalRecordAchieved> currentPRs;
+  final WorkoutComparison? comparison;
+  final List<PRPrediction> prPredictions;
+  final bool isCalculating;
+  final String? error;
+  final DateTime lastUpdated;
 
   WorkoutAnalyticsState copyWith({
     WorkoutMetrics? currentMetrics,
@@ -138,13 +160,13 @@ class WorkoutAnalyticsState {
 
 /// Workout analytics state notifier
 class WorkoutAnalyticsNotifier extends StateNotifier<WorkoutAnalyticsState> {
-  final Ref _ref;
-  Timer? _updateTimer;
-  WorkoutMetrics? _lastMetrics;
 
   WorkoutAnalyticsNotifier(this._ref) : super(WorkoutAnalyticsState(lastUpdated: DateTime.now())) {
     _initializeAnalytics();
   }
+  final Ref _ref;
+  Timer? _updateTimer;
+  WorkoutMetrics? _lastMetrics;
 
   void _initializeAnalytics() {
     // Listen to workout changes and update analytics

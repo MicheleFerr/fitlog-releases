@@ -1,4 +1,6 @@
-import '../entities/smart_workout_template.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/volume_range.dart';
 
 /// Service for managing and generating smart workout templates
 class SmartWorkoutTemplatesService {

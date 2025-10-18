@@ -1,23 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../auth/presentation/providers/auth_provider.dart';
-import '../../progress/presentation/providers/progress_provider.dart';
-import '../../workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 
 // Model per Achievement
 class Achievement {
-  final String id;
-  final String title;
-  final String description;
-  final String emoji;
-  final int xpReward;
-  final Color color;
-  final bool isUnlocked;
-  final DateTime? unlockedAt;
-  final bool isNew;
-  final AchievementType type;
-  final Map<String, dynamic>? metadata;
 
   Achievement({
     required this.id,
@@ -32,6 +20,41 @@ class Achievement {
     required this.type,
     this.metadata,
   });
+
+  factory Achievement.fromJson(Map<String, dynamic> json) {
+    return Achievement(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      emoji: json['emoji'],
+      xpReward: json['xpReward'],
+      color: _getColorFromType(AchievementType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => AchievementType.general,
+      )),
+      isUnlocked: json['isUnlocked'] ?? false,
+      unlockedAt: json['unlockedAt'] != null 
+        ? DateTime.parse(json['unlockedAt'])
+        : null,
+      isNew: false,
+      type: AchievementType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => AchievementType.general,
+      ),
+      metadata: json['metadata'],
+    );
+  }
+  final String id;
+  final String title;
+  final String description;
+  final String emoji;
+  final int xpReward;
+  final Color color;
+  final bool isUnlocked;
+  final DateTime? unlockedAt;
+  final bool isNew;
+  final AchievementType type;
+  final Map<String, dynamic>? metadata;
 
   Achievement copyWith({
     bool? isUnlocked,
@@ -64,30 +87,6 @@ class Achievement {
     'type': type.name,
     'metadata': metadata,
   };
-
-  factory Achievement.fromJson(Map<String, dynamic> json) {
-    return Achievement(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      emoji: json['emoji'],
-      xpReward: json['xpReward'],
-      color: _getColorFromType(AchievementType.values.firstWhere(
-        (e) => e.name == json['type'],
-        orElse: () => AchievementType.general,
-      )),
-      isUnlocked: json['isUnlocked'] ?? false,
-      unlockedAt: json['unlockedAt'] != null 
-        ? DateTime.parse(json['unlockedAt'])
-        : null,
-      isNew: false,
-      type: AchievementType.values.firstWhere(
-        (e) => e.name == json['type'],
-        orElse: () => AchievementType.general,
-      ),
-      metadata: json['metadata'],
-    );
-  }
 }
 
 enum AchievementType {
@@ -118,10 +117,6 @@ Color _getColorFromType(AchievementType type) {
 
 // Achievement Data model
 class AchievementData {
-  final int totalXP;
-  final List<Achievement> allAchievements;
-  final List<Achievement> recentAchievements;
-  final Map<AchievementType, int> xpByType;
 
   AchievementData({
     required this.totalXP,
@@ -129,6 +124,10 @@ class AchievementData {
     required this.recentAchievements,
     required this.xpByType,
   });
+  final int totalXP;
+  final List<Achievement> allAchievements;
+  final List<Achievement> recentAchievements;
+  final Map<AchievementType, int> xpByType;
 }
 
 // Provider per gestire achievement XP
@@ -137,6 +136,20 @@ final achievementXPProvider = StateNotifierProvider<AchievementXPNotifier, Async
 });
 
 class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
+  
+  AchievementXPNotifier(this._ref) : super(const AsyncValue.loading()) {
+    // Inizializza immediatamente con dati vuoti, poi carica
+    state = AsyncValue.data(AchievementData(
+      totalXP: 0,
+      allAchievements: _allAchievements,
+      recentAchievements: [],
+      xpByType: {},
+    ));
+    
+    // Poi carica i dati reali
+    _loadAchievements();
+    _setupListeners();
+  }
   final Ref _ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
@@ -323,20 +336,6 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
     ),
   ];
   
-  AchievementXPNotifier(this._ref) : super(const AsyncValue.loading()) {
-    // Inizializza immediatamente con dati vuoti, poi carica
-    state = AsyncValue.data(AchievementData(
-      totalXP: 0,
-      allAchievements: _allAchievements,
-      recentAchievements: [],
-      xpByType: {},
-    ));
-    
-    // Poi carica i dati reali
-    _loadAchievements();
-    _setupListeners();
-  }
-  
   Future<void> _loadAchievements() async {
     try {
       final userAsync = await _ref.read(currentUserProvider.future);
@@ -498,7 +497,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       
       // TODO: Mostrare notifica di achievement sbloccato
     } catch (e) {
-      print('Error unlocking achievement: $e');
+      // print('Error unlocking achievement: $e');
     }
   }
   

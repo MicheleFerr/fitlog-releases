@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:io';
-import 'providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -46,12 +48,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         error: (error, _) {
           // Show error message
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(error.toString()),
-                backgroundColor: Colors.red,
-              ),
-            );
+            SnackBarService.showError(context, error.toString());
           }
         },
       );
@@ -59,13 +56,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Account'),
+        title: Text(context.l10n.createAccount),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () => context.goNamed('login'),
-            tooltip: 'Torna al Login',
+            tooltip: context.l10n.backToLogin,
           ),
         ],
       ),
@@ -95,18 +92,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                 // Welcome Text
                 Text(
-                  'Join GymBro TrackLog',
+                  context.l10n.joinGymBro,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: context.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Start tracking your fitness journey',
+                  context.l10n.startTrackingJourney,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    color: context.colors.onSurface.withOpacity(0.7),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -118,17 +115,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     child: Column(
                       children: [
                         Text(
-                          'Registrati Velocemente',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          context.l10n.registerQuickly,
+                          style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Il sistema creerà automaticamente il tuo account\nse è la prima volta che accedi',
+                          context.l10n.autoAccountCreation,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurface.withOpacity(0.6),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -145,12 +142,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
                                 : const Icon(Icons.g_mobiledata, size: 24),
-                            label: const Text('Continua con Google'),
+                            label: Text(context.l10n.continueWithGoogle),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 12),
-                        
+
                         // Apple Sign Up (iOS only)
                         if (Platform.isIOS) ...[
                           SizedBox(
@@ -161,14 +158,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 backgroundColor: Colors.black,
                                 foregroundColor: Colors.white,
                               ),
-                              icon: authController.isLoading 
+                              icon: authController.isLoading
                                   ? const SizedBox(
                                       height: 20,
                                       width: 20,
                                       child: CircularProgressIndicator(strokeWidth: 2),
                                     )
                                   : const Icon(Icons.apple),
-                              label: const Text('Continua con Apple'),
+                              label: Text(context.l10n.continueWithApple),
                             ),
                           ),
                         ],
@@ -186,9 +183,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
-                        'OR',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        context.l10n.orDivider,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ),
@@ -201,18 +198,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 // Name Field
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Full Name',
-                    hintText: 'Enter your full name',
-                    prefixIcon: Icon(Icons.person),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.fullName,
+                    hintText: context.l10n.fullNameHint,
+                    prefixIcon: const Icon(Icons.person),
                   ),
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your name';
+                      return context.l10n.nameRequired;
                     }
                     if (value.trim().length < 2) {
-                      return 'Name must be at least 2 characters';
+                      return context.l10n.nameMinLength;
                     }
                     return null;
                   },
@@ -222,19 +219,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 // Email Field
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
-                    prefixIcon: Icon(Icons.email),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.emailLabel,
+                    hintText: context.l10n.emailHint,
+                    prefixIcon: const Icon(Icons.email),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email';
+                      return context.l10n.emailRequired;
                     }
                     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'Please enter a valid email';
+                      return context.l10n.emailInvalid;
                     }
                     return null;
                   },
@@ -245,8 +242,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
+                    labelText: context.l10n.passwordLabel,
+                    hintText: context.l10n.passwordHint,
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
@@ -257,10 +254,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
+                      return context.l10n.passwordRequired;
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return context.l10n.passwordMinLength;
                     }
                     return null;
                   },
@@ -271,8 +268,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    hintText: 'Confirm your password',
+                    labelText: context.l10n.confirmPassword,
+                    hintText: context.l10n.confirmPasswordHint,
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
@@ -283,10 +280,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   textInputAction: TextInputAction.done,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
+                      return context.l10n.confirmPasswordRequired;
                     }
                     if (value != _passwordController.text) {
-                      return 'Passwords do not match';
+                      return context.l10n.passwordsDoNotMatch;
                     }
                     return null;
                   },
@@ -302,7 +299,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Create Account'),
+                      : Text(context.l10n.createAccount),
                 ),
                 const SizedBox(height: 16),
 
@@ -313,9 +310,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'OR',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        context.l10n.orDivider,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ),
@@ -328,10 +325,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 OutlinedButton.icon(
                   onPressed: authController.isLoading ? null : _handleGoogleSignUp,
                   icon: const Icon(Icons.g_mobiledata, size: 24),
-                  label: const Text('Sign up with Google'),
+                  label: Text(context.l10n.signUpWithGoogle),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Apple Sign Up Button (iOS only)
                 if (Platform.isIOS)
                   OutlinedButton.icon(
@@ -340,7 +337,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       side: const BorderSide(color: Colors.black),
                     ),
                     icon: const Icon(Icons.apple, color: Colors.black),
-                    label: const Text('Sign up with Apple', style: TextStyle(color: Colors.black)),
+                    label: Text(context.l10n.signUpWithApple, style: const TextStyle(color: Colors.black)),
                   ),
                 const SizedBox(height: 32),
 
@@ -349,12 +346,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Already have an account? ',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      context.l10n.alreadyHaveAccountPrompt,
+                      style: context.textTheme.bodyMedium,
                     ),
                     TextButton(
                       onPressed: () => context.pop(),
-                      child: const Text('Sign In'),
+                      child: Text(context.l10n.signIn),
                     ),
                   ],
                 ),

@@ -83,7 +83,7 @@ Map<String, dynamic> _$$BuddyProfileImplToJson(_$BuddyProfileImpl instance) =>
       'uid': instance.uid,
       'displayName': instance.displayName,
       'photoURL': instance.photoURL,
-      'preferences': instance.preferences,
+      'preferences': instance.preferences.toJson(),
       'badges': instance.badges.map((e) => _$BadgeTypeEnumMap[e]!).toList(),
       'partnershipsCount': instance.partnershipsCount,
       'successfulPartnerships': instance.successfulPartnerships,

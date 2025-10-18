@@ -1,28 +1,25 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
 
 class VerificationBadges extends ConsumerWidget {
-  final BuddyProfile profile;
-  final double size;
-  final bool showText;
 
   const VerificationBadges({
     super.key,
@@ -30,6 +27,9 @@ class VerificationBadges extends ConsumerWidget {
     this.size = 24,
     this.showText = false,
   });
+  final BuddyProfile profile;
+  final double size;
+  final bool showText;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +42,7 @@ class VerificationBadges extends ConsumerWidget {
         context,
         icon: Icons.verified,
         color: const Color(0xFF1DA1F2), // Twitter blue
-        text: AppLocalizations.of(context)!.verified,
+        text: AppLocalizations.of(context).verified,
         tooltip: 'Profilo verificato dal team GymBro',
       ));
     }
@@ -53,7 +53,7 @@ class VerificationBadges extends ConsumerWidget {
         context,
         icon: Icons.camera_alt,
         color: const Color(0xFFE4405F), // Instagram pink
-        text: AppLocalizations.of(context)!.instagramVerified,
+        text: AppLocalizations.of(context).instagramVerified,
         tooltip: 'Account Instagram collegato e verificato',
       ));
     }
@@ -64,7 +64,7 @@ class VerificationBadges extends ConsumerWidget {
         context,
         icon: Icons.photo_camera,
         color: const Color(0xFF4CAF50), // Green
-        text: AppLocalizations.of(context)!.photoVerified,
+        text: AppLocalizations.of(context).photoVerified,
         tooltip: 'Foto del profilo verificata',
       ));
     }
@@ -75,7 +75,7 @@ class VerificationBadges extends ConsumerWidget {
         context,
         icon: Icons.rocket_launch,
         color: const Color(0xFFFF9800), // Orange
-        text: AppLocalizations.of(context)!.boosted,
+        text: AppLocalizations.of(context).boosted,
         tooltip: 'Profilo in evidenza',
       ));
     }
@@ -177,9 +177,6 @@ class VerificationBadges extends ConsumerWidget {
 
 /// Trust score indicator with color-coded levels
 class TrustScoreIndicator extends ConsumerWidget {
-  final double trustScore;
-  final bool showText;
-  final double size;
 
   const TrustScoreIndicator({
     super.key,
@@ -187,10 +184,13 @@ class TrustScoreIndicator extends ConsumerWidget {
     this.showText = true,
     this.size = 32,
   });
+  final double trustScore;
+  final bool showText;
+  final double size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     
     Color getScoreColor() {
@@ -248,18 +248,18 @@ class TrustScoreIndicator extends ConsumerWidget {
 
 /// Connection type badges showing what user is looking for
 class ConnectionTypeBadges extends ConsumerWidget {
-  final BuddyProfile profile;
-  final bool compact;
 
   const ConnectionTypeBadges({
     super.key,
     required this.profile,
     this.compact = false,
   });
+  final BuddyProfile profile;
+  final bool compact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final badges = <Widget>[];
 

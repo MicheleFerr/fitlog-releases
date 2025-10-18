@@ -5,10 +5,6 @@ import 'package:go_router/go_router.dart';
 
 /// A widget that overlays a blur effect on premium features for free users
 class PremiumFeatureOverlay extends StatelessWidget {
-  final bool isPremium;
-  final String featureName;
-  final Widget child;
-  final double height;
   
   const PremiumFeatureOverlay({
     super.key,
@@ -17,6 +13,10 @@ class PremiumFeatureOverlay extends StatelessWidget {
     required this.child,
     this.height = 300,
   });
+  final bool isPremium;
+  final String featureName;
+  final Widget child;
+  final double height;
 
   @override
   Widget build(BuildContext context) {

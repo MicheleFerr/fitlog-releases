@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class BarbellType {
-  final String name;
-  final String category;
-  final double weight;
-  final IconData icon;
-  final Color color;
-  final String description;
 
   const BarbellType({
     required this.name,
@@ -17,17 +11,23 @@ class BarbellType {
     required this.color,
     required this.description,
   });
+  final String name;
+  final String category;
+  final double weight;
+  final IconData icon;
+  final Color color;
+  final String description;
 }
 
 class BarbellSelectorWidget extends StatefulWidget {
-  final double? selectedBarbellWeight;
-  final Function(double?) onBarbellSelected;
   
   const BarbellSelectorWidget({
     super.key,
     this.selectedBarbellWeight,
     required this.onBarbellSelected,
   });
+  final double? selectedBarbellWeight;
+  final Function(double?) onBarbellSelected;
 
   @override
   State<BarbellSelectorWidget> createState() => _BarbellSelectorWidgetState();

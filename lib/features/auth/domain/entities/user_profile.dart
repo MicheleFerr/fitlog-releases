@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: auth
- * 🔧 Type: entity
- * 🌍 Localization: N/A - Entity class
- * 🎨 Theme: N/A - Entity class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: auth
+/// 🔧 Type: entity
+/// 🌍 Localization: N/A - Entity class
+/// 🎨 Theme: N/A - Entity class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,10 +24,6 @@ enum AccountTier {
 
 /// Template quota information
 class TemplateQuota {
-  final int maxPrivateTemplates;
-  final int maxPublicTemplates;
-  final int usedPrivateTemplates;
-  final int usedPublicTemplates;
   
   const TemplateQuota({
     required this.maxPrivateTemplates,
@@ -36,18 +31,6 @@ class TemplateQuota {
     this.usedPrivateTemplates = 0,
     this.usedPublicTemplates = 0,
   });
-  
-  /// Check if user can save a new private template
-  bool get canSavePrivate => usedPrivateTemplates < maxPrivateTemplates;
-  
-  /// Check if user can save a new public template
-  bool get canSavePublic => usedPublicTemplates < maxPublicTemplates;
-  
-  /// Get remaining private templates
-  int get remainingPrivate => maxPrivateTemplates - usedPrivateTemplates;
-  
-  /// Get remaining public templates  
-  int get remainingPublic => maxPublicTemplates - usedPublicTemplates;
   
   /// Get quota based on tier
   factory TemplateQuota.forTier(AccountTier tier, {
@@ -79,13 +62,6 @@ class TemplateQuota {
     }
   }
   
-  Map<String, dynamic> toJson() => {
-    'maxPrivateTemplates': maxPrivateTemplates,
-    'maxPublicTemplates': maxPublicTemplates,
-    'usedPrivateTemplates': usedPrivateTemplates,
-    'usedPublicTemplates': usedPublicTemplates,
-  };
-  
   factory TemplateQuota.fromJson(Map<String, dynamic> json) {
     return TemplateQuota(
       maxPrivateTemplates: json['maxPrivateTemplates'] ?? 10,
@@ -94,21 +70,33 @@ class TemplateQuota {
       usedPublicTemplates: json['usedPublicTemplates'] ?? 0,
     );
   }
+  final int maxPrivateTemplates;
+  final int maxPublicTemplates;
+  final int usedPrivateTemplates;
+  final int usedPublicTemplates;
+  
+  /// Check if user can save a new private template
+  bool get canSavePrivate => usedPrivateTemplates < maxPrivateTemplates;
+  
+  /// Check if user can save a new public template
+  bool get canSavePublic => usedPublicTemplates < maxPublicTemplates;
+  
+  /// Get remaining private templates
+  int get remainingPrivate => maxPrivateTemplates - usedPrivateTemplates;
+  
+  /// Get remaining public templates  
+  int get remainingPublic => maxPublicTemplates - usedPublicTemplates;
+  
+  Map<String, dynamic> toJson() => {
+    'maxPrivateTemplates': maxPrivateTemplates,
+    'maxPublicTemplates': maxPublicTemplates,
+    'usedPrivateTemplates': usedPrivateTemplates,
+    'usedPublicTemplates': usedPublicTemplates,
+  };
 }
 
 /// User profile entity with tier and quota information
 class UserProfile {
-  final String uid;
-  final String email;
-  final String displayName;
-  final String? photoURL;
-  final AccountTier accountTier;
-  final TemplateQuota templateQuota;
-  final DateTime createdAt;
-  final DateTime lastLoginAt;
-  final Map<String, dynamic> preferences;
-  final Map<String, dynamic> stats;
-  final bool isGuest;
   
   const UserProfile({
     required this.uid,
@@ -122,8 +110,48 @@ class UserProfile {
     this.preferences = const {},
     this.stats = const {},
     this.isGuest = false,
+    this.isAdmin = false,
   });
   
+  /// Create from JSON data (for caching)
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    // Parse account tier
+    final tierString = json['accountTier'] as String? ?? 'free';
+    final tier = AccountTier.values.firstWhere(
+      (t) => t.name == tierString,
+      orElse: () => AccountTier.free,
+    );
+    
+    // Parse template quota
+    TemplateQuota quota;
+    if (json['templateQuota'] != null) {
+      quota = TemplateQuota.fromJson(json['templateQuota']);
+    } else {
+      // Calculate used templates for backward compatibility
+      final usedPrivate = json['stats']?['privateTemplateCount'] ?? 0;
+      final usedPublic = json['stats']?['publicTemplateCount'] ?? 0;
+      quota = TemplateQuota.forTier(tier, 
+        usedPrivate: usedPrivate,
+        usedPublic: usedPublic,
+      );
+    }
+    
+    return UserProfile(
+      uid: json['uid'] ?? '',
+      email: json['email'] ?? '',
+      displayName: json['displayName'] ?? 'GymBro User',
+      photoURL: json['photoURL'],
+      accountTier: tier,
+      templateQuota: quota,
+      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      lastLoginAt: DateTime.parse(json['lastLoginAt'] ?? DateTime.now().toIso8601String()),
+      preferences: Map<String, dynamic>.from(json['preferences'] ?? {}),
+      stats: Map<String, dynamic>.from(json['stats'] ?? {}),
+      isGuest: json['isGuest'] ?? false,
+      isAdmin: json['isAdmin'] ?? false,
+    );
+  }
+
   /// Create from Firestore document
   factory UserProfile.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -161,9 +189,40 @@ class UserProfile {
       preferences: data['preferences'] ?? {},
       stats: data['stats'] ?? {},
       isGuest: data['isGuest'] ?? false,
+      isAdmin: data['isAdmin'] ?? false,
     );
   }
+  final String uid;
+  final String email;
+  final String displayName;
+  final String? photoURL;
+  final AccountTier accountTier;
+  final TemplateQuota templateQuota;
+  final DateTime createdAt;
+  final DateTime lastLoginAt;
+  final Map<String, dynamic> preferences;
+  final Map<String, dynamic> stats;
+  final bool isGuest;
+  final bool isAdmin;
   
+  /// Convert to JSON (for caching)
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'email': email,
+      'displayName': displayName,
+      'photoURL': photoURL,
+      'accountTier': accountTier.name,
+      'templateQuota': templateQuota.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'lastLoginAt': lastLoginAt.toIso8601String(),
+      'preferences': preferences,
+      'stats': stats,
+      'isGuest': isGuest,
+      'isAdmin': isAdmin,
+    };
+  }
+
   /// Convert to Firestore document
   Map<String, dynamic> toFirestore() {
     return {
@@ -178,6 +237,7 @@ class UserProfile {
       'preferences': preferences,
       'stats': stats,
       'isGuest': isGuest,
+      'isAdmin': isAdmin,
     };
   }
   
@@ -231,14 +291,17 @@ class UserProfile {
     final updatedQuota = TemplateQuota(
       maxPrivateTemplates: templateQuota.maxPrivateTemplates,
       maxPublicTemplates: templateQuota.maxPublicTemplates,
-      usedPrivateTemplates: isPublic 
-          ? templateQuota.usedPrivateTemplates 
+      usedPrivateTemplates: isPublic
+          ? templateQuota.usedPrivateTemplates
           : (templateQuota.usedPrivateTemplates - 1).clamp(0, 999),
-      usedPublicTemplates: isPublic 
+      usedPublicTemplates: isPublic
           ? (templateQuota.usedPublicTemplates - 1).clamp(0, 999)
           : templateQuota.usedPublicTemplates,
     );
-    
+
     return copyWith(templateQuota: updatedQuota);
   }
+
+  /// Check if user has premium account
+  bool get isPremium => accountTier == AccountTier.premium || accountTier == AccountTier.pro;
 }

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain/usecases
- * 🎯 Feature: workout
- * 🔧 Type: usecase
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities
- * - Repository interface
- * - Shared failures
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain/usecases
+/// 🎯 Feature: workout
+/// 🔧 Type: usecase
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities
+/// - Repository interface
+/// - Shared failures
+library;
 
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
@@ -21,9 +20,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 
 /// Use case for updating exercise sets with business logic
 class UpdateExerciseSetUseCase {
-  final WorkoutRepository _repository;
   
   const UpdateExerciseSetUseCase(this._repository);
+  final WorkoutRepository _repository;
   
   /// Update exercise set with validation and business rules
   Future<Either<Failure, void>> call(UpdateExerciseSetParams params) async {
@@ -144,7 +143,7 @@ class UpdateExerciseSetUseCase {
     final volumeImprovement = currentSet.volume - previousSet.volume;
     
     // Add metadata about progression
-    Map<String, dynamic> progression = {
+    final Map<String, dynamic> progression = {
       'weightChange': weightImprovement,
       'repsChange': repsImprovement,
       'volumeChange': volumeImprovement,
@@ -213,11 +212,7 @@ class UpdateExerciseSetUseCase {
 }
 
 /// Parameters for UpdateExerciseSetUseCase
-class UpdateExerciseSetParams {
-  final String workoutId;
-  final String exerciseId;
-  final ExerciseSet exerciseSet;
-  final ExerciseSet? previousSet; // For progression logic
+class UpdateExerciseSetParams { // For progression logic
   
   const UpdateExerciseSetParams({
     required this.workoutId,
@@ -225,4 +220,8 @@ class UpdateExerciseSetParams {
     required this.exerciseSet,
     this.previousSet,
   });
+  final String workoutId;
+  final String exerciseId;
+  final ExerciseSet exerciseSet;
+  final ExerciseSet? previousSet;
 }

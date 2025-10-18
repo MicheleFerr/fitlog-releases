@@ -43,13 +43,6 @@ final myTemplatesProvider = StateProvider<List<MyTemplate>>((ref) {
 
 /// Entità per i template personalizzati
 class MyTemplate {
-  final String id;
-  final String name;
-  final String description;
-  final String emoji;
-  final int exerciseCount;
-  final DateTime? createdAt;
-  final DateTime? lastUsed;
 
   const MyTemplate({
     required this.id,
@@ -60,6 +53,13 @@ class MyTemplate {
     this.createdAt,
     this.lastUsed,
   });
+  final String id;
+  final String name;
+  final String description;
+  final String emoji;
+  final int exerciseCount;
+  final DateTime? createdAt;
+  final DateTime? lastUsed;
 
   MyTemplate copyWith({
     String? id,

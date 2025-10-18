@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import '../../domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 
 class VotingCard extends StatefulWidget {
-  final CommunityContribution contribution;
-  final VoidCallback onUpvote;
-  final VoidCallback onDownvote;
-  final VoidCallback? onComment;
-  final bool showActions;
-  
+
   const VotingCard({
     super.key,
     required this.contribution,
     required this.onUpvote,
     required this.onDownvote,
     this.onComment,
+    this.onTap,
+    this.currentUserId,
     this.showActions = true,
   });
+  final CommunityContribution contribution;
+  final VoidCallback onUpvote;
+  final VoidCallback onDownvote;
+  final VoidCallback? onComment;
+  final VoidCallback? onTap; // Tap per aprire detail modal
+  final String? currentUserId; // Per tracking stato voto
+  final bool showActions;
 
   @override
   State<VotingCard> createState() => _VotingCardState();
@@ -118,41 +122,50 @@ class _VotingCardState extends State<VotingCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final typeColor = _getTypeColor(context);
-    
+
+    // Check user vote status
+    final hasUpvoted = widget.currentUserId != null &&
+        widget.contribution.upvotedBy.contains(widget.currentUserId);
+    final hasDownvoted = widget.currentUserId != null &&
+        widget.contribution.downvotedBy.contains(widget.currentUserId);
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: ScaleTransition(
         scale: _scaleAnimation,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.surface,
-                theme.colorScheme.surface.withOpacity(0.95),
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.colorScheme.surface,
+                  theme.colorScheme.surface.withOpacity(0.95),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: typeColor.withOpacity(0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
               ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: typeColor.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
+              border: Border.all(
+                color: theme.colorScheme.outline.withOpacity(0.1),
+                width: 1,
               ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-            border: Border.all(
-              color: theme.colorScheme.outline.withOpacity(0.1),
-              width: 1,
             ),
-          ),
-          child: ClipRRect(
+            child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +239,7 @@ class _VotingCardState extends State<VotingCard>
                                       vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
+                                      gradient: const LinearGradient(
                                         colors: [
                                           Colors.amber,
                                           Colors.orange,
@@ -369,19 +382,21 @@ class _VotingCardState extends State<VotingCard>
                           activeIcon: Icons.thumb_up,
                           count: widget.contribution.upvotes,
                           color: Colors.green,
+                          isActive: hasUpvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
                             widget.onUpvote();
                           },
                         ),
                         const SizedBox(width: 16),
-                        
+
                         // Downvote button
                         _VoteButton(
                           icon: Icons.thumb_down_outlined,
                           activeIcon: Icons.thumb_down,
                           count: widget.contribution.downvotes,
                           color: Colors.red,
+                          isActive: hasDownvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
                             widget.onDownvote();
@@ -420,6 +435,7 @@ class _VotingCardState extends State<VotingCard>
           ),
         ),
       ),
+      ),
     );
   }
   
@@ -442,20 +458,22 @@ class _VotingCardState extends State<VotingCard>
 }
 
 class _VoteButton extends StatefulWidget {
-  final IconData icon;
-  final IconData activeIcon;
-  final int count;
-  final Color color;
-  final VoidCallback onTap;
-  
+
   const _VoteButton({
     required this.icon,
     required this.activeIcon,
     required this.count,
     required this.color,
+    required this.isActive,
     required this.onTap,
   });
-  
+  final IconData icon;
+  final IconData activeIcon;
+  final int count;
+  final Color color;
+  final bool isActive; // Stato voto dal parent
+  final VoidCallback onTap;
+
   @override
   State<_VoteButton> createState() => _VoteButtonState();
 }
@@ -463,7 +481,6 @@ class _VoteButton extends StatefulWidget {
 class _VoteButtonState extends State<_VoteButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  bool _isActive = false;
   
   @override
   void initState() {
@@ -472,40 +489,47 @@ class _VoteButtonState extends State<_VoteButton>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+    // Set initial state based on isActive
+    if (widget.isActive) {
+      _controller.value = 1.0;
+    }
   }
-  
+
+  @override
+  void didUpdateWidget(_VoteButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Animate quando isActive cambia
+    if (widget.isActive != oldWidget.isActive) {
+      if (widget.isActive) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return InkWell(
-      onTap: () {
-        setState(() {
-          _isActive = !_isActive;
-          if (_isActive) {
-            _controller.forward();
-          } else {
-            _controller.reverse();
-          }
-        });
-        widget.onTap();
-      },
+      onTap: widget.onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: _isActive
+          color: widget.isActive
               ? widget.color.withOpacity(0.1)
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _isActive
+            color: widget.isActive
                 ? widget.color.withOpacity(0.3)
                 : theme.colorScheme.outline.withOpacity(0.1),
           ),
@@ -519,9 +543,9 @@ class _VoteButtonState extends State<_VoteButton>
                 return Transform.scale(
                   scale: 1 + (_controller.value * 0.2),
                   child: Icon(
-                    _isActive ? widget.activeIcon : widget.icon,
+                    widget.isActive ? widget.activeIcon : widget.icon,
                     size: 18,
-                    color: _isActive
+                    color: widget.isActive
                         ? widget.color
                         : theme.colorScheme.onSurfaceVariant,
                   ),
@@ -533,7 +557,7 @@ class _VoteButtonState extends State<_VoteButton>
               widget.count.toString(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: _isActive
+                color: widget.isActive
                     ? widget.color
                     : theme.colorScheme.onSurfaceVariant,
               ),
@@ -546,13 +570,13 @@ class _VoteButtonState extends State<_VoteButton>
 }
 
 class _DiffDisplay extends StatelessWidget {
-  final String original;
-  final String suggested;
   
   const _DiffDisplay({
     required this.original,
     required this.suggested,
   });
+  final String original;
+  final String suggested;
   
   @override
   Widget build(BuildContext context) {
@@ -632,9 +656,9 @@ class _DiffDisplay extends StatelessWidget {
 }
 
 class _TrustScoreIndicator extends StatelessWidget {
-  final int score;
   
   const _TrustScoreIndicator({required this.score});
+  final int score;
   
   @override
   Widget build(BuildContext context) {

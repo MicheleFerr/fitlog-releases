@@ -1,27 +1,23 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class SuperLikeButton extends ConsumerWidget {
-  final int superLikesRemaining;
-  final VoidCallback? onSuperLike;
-  final bool isEnabled;
 
   const SuperLikeButton({
     super.key,
@@ -29,10 +25,13 @@ class SuperLikeButton extends ConsumerWidget {
     this.onSuperLike,
     this.isEnabled = true,
   });
+  final int superLikesRemaining;
+  final VoidCallback? onSuperLike;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     
     final hasRemaining = superLikesRemaining > 0;
@@ -52,7 +51,7 @@ class SuperLikeButton extends ConsumerWidget {
                     end: Alignment.bottomRight,
                   )
                 : null,
-            color: !canSuperLike ? colorScheme.surfaceVariant : null,
+            color: !canSuperLike ? colorScheme.surfaceContainerHighest : null,
             boxShadow: canSuperLike
                 ? [
                     BoxShadow(
@@ -112,14 +111,14 @@ class SuperLikeButton extends ConsumerWidget {
 }
 
 class SuperLikeAnimation extends StatefulWidget {
-  final Widget child;
-  final bool animate;
 
   const SuperLikeAnimation({
     super.key,
     required this.child,
     this.animate = false,
   });
+  final Widget child;
+  final bool animate;
 
   @override
   State<SuperLikeAnimation> createState() => _SuperLikeAnimationState();
@@ -205,14 +204,14 @@ class _SuperLikeAnimationState extends State<SuperLikeAnimation>
 
 /// Floating Super Like overlay for dramatic effect
 class SuperLikeOverlay extends StatefulWidget {
-  final bool isVisible;
-  final VoidCallback? onComplete;
 
   const SuperLikeOverlay({
     super.key,
     required this.isVisible,
     this.onComplete,
   });
+  final bool isVisible;
+  final VoidCallback? onComplete;
 
   @override
   State<SuperLikeOverlay> createState() => _SuperLikeOverlayState();
@@ -315,7 +314,7 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          AppLocalizations.of(context)!.superLike,
+                          AppLocalizations.of(context).superLike,
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

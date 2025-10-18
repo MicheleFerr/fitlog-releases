@@ -89,8 +89,9 @@ class FatigueAnalyzerService {
     
     // Adjust based on fatigue
     double multiplier = 1.0;
-    if (fatigueIndex > 80) multiplier = 2.0;
-    else if (fatigueIndex > 60) multiplier = 1.5;
+    if (fatigueIndex > 80) {
+      multiplier = 2.0;
+    } else if (fatigueIndex > 60) multiplier = 1.5;
     else if (fatigueIndex > 40) multiplier = 1.2;
     else if (fatigueIndex < 20) multiplier = 0.8;
     
@@ -105,9 +106,9 @@ class FatigueAnalyzerService {
     int plannedSets,
   ) {
     if (fatigueIndex > 90) {
-      return FatigueRecommendation(
+      return const FatigueRecommendation(
         action: FatigueAction.stopSet,
-        message: "Extreme fatigue detected - end set immediately",
+        message: 'Extreme fatigue detected - end set immediately',
         restRecommendation: Duration(minutes: 5),
         weightAdjustment: -15.0, // Reduce weight by 15%
         priority: FatiguePriority.critical,
@@ -115,9 +116,9 @@ class FatigueAnalyzerService {
     }
     
     if (fatigueIndex > 75) {
-      return FatigueRecommendation(
+      return const FatigueRecommendation(
         action: FatigueAction.considerEnding,
-        message: "High fatigue - consider ending set",
+        message: 'High fatigue - consider ending set',
         restRecommendation: Duration(minutes: 3),
         weightAdjustment: -10.0,
         priority: FatiguePriority.high,
@@ -125,18 +126,18 @@ class FatigueAnalyzerService {
     }
     
     if (fatigueIndex > 50) {
-      return FatigueRecommendation(
+      return const FatigueRecommendation(
         action: FatigueAction.monitor,
-        message: "Moderate fatigue - monitor closely",
+        message: 'Moderate fatigue - monitor closely',
         restRecommendation: Duration(minutes: 2),
         weightAdjustment: -5.0,
         priority: FatiguePriority.medium,
       );
     }
     
-    return FatigueRecommendation(
-      action: FatigueAction.continue,
-      message: "Low fatigue - continue set",
+    return const FatigueRecommendation(
+      action: FatigueAction.proceed,
+      message: 'Low fatigue - continue set',
       restRecommendation: Duration(seconds: 90),
       weightAdjustment: 0.0,
       priority: FatiguePriority.low,
@@ -294,11 +295,6 @@ class FatigueAnalyzerService {
 
 /// Fatigue-based recommendation data
 class FatigueRecommendation {
-  final FatigueAction action;
-  final String message;
-  final Duration restRecommendation;
-  final double weightAdjustment; // Percentage change
-  final FatiguePriority priority;
   
   const FatigueRecommendation({
     required this.action,
@@ -307,11 +303,16 @@ class FatigueRecommendation {
     required this.weightAdjustment,
     required this.priority,
   });
+  final FatigueAction action;
+  final String message;
+  final Duration restRecommendation;
+  final double weightAdjustment; // Percentage change
+  final FatiguePriority priority;
 }
 
 /// Fatigue action recommendations
 enum FatigueAction {
-  continue,
+  proceed,
   monitor,
   considerEnding,
   stopSet,

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: analytics
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Material: Card, LinearProgressIndicator, IconButton
- * - analytics/presentation/providers: workoutAnalyticsProvider
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: analytics
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Material: Card, LinearProgressIndicator, IconButton
+/// - analytics/presentation/providers: workoutAnalyticsProvider
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,18 +22,18 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/worko
 
 /// Real-time analytics bar showing key workout metrics during workout
 class WorkoutAnalyticsBar extends ConsumerWidget {
-  final bool isCompact;
-  final VoidCallback? onTap;
 
   const WorkoutAnalyticsBar({
     super.key,
     this.isCompact = false,
     this.onTap,
   });
+  final bool isCompact;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -195,7 +194,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
                       l10n.improving,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: colorScheme.secondary,
-                        fontWeight: FontWeight.medium,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -237,7 +236,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
             const SizedBox(height: 4),
             LinearProgressIndicator(
               value: completion,
-              backgroundColor: colorScheme.surfaceVariant,
+              backgroundColor: colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation(_getCompletionColor(completion, colorScheme)),
             ),
           ],
@@ -419,7 +418,7 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -483,7 +482,7 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
                         l10n.newPersonalRecords(analytics.totalPRs),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.secondary,
-                          fontWeight: FontWeight.medium,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -528,12 +527,12 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
 
 /// Floating analytics widget for minimal distraction
 class FloatingAnalyticsWidget extends ConsumerWidget {
-  final VoidCallback? onTap;
 
   const FloatingAnalyticsWidget({
     super.key,
     this.onTap,
   });
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

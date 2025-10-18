@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:intl/intl.dart';
-import '../../domain/models/progressive_overload_data.dart';
-import '../../../../features/workout/domain/entities/exercise_activity.dart';
-import 'contextual_training_advisor.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/contextual_training_advisor.dart';
 
 class WeeklyDashboardWidget extends StatefulWidget {
-  final List<ExerciseActivity> activities;
-  final bool isPremium;
-  final Function(ProgressiveOverloadData)? onDataSync;
 
   const WeeklyDashboardWidget({
     super.key,
@@ -17,6 +12,9 @@ class WeeklyDashboardWidget extends StatefulWidget {
     this.isPremium = false,
     this.onDataSync,
   });
+  final List<ExerciseActivity> activities;
+  final bool isPremium;
+  final Function(ProgressiveOverloadData)? onDataSync;
 
   @override
   State<WeeklyDashboardWidget> createState() => _WeeklyDashboardWidgetState();

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../../providers/home_customization_provider.dart';
-import '../../domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/home/providers/home_customization_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 
 class WidgetCustomizationMenu extends ConsumerWidget {
   const WidgetCustomizationMenu({super.key});
@@ -110,7 +110,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                           _showResetConfirmation(context, ref);
                         },
                         icon: const Icon(Icons.restore),
-                        label: Text(AppLocalizations.of(context)!.resetLayout),
+                        label: Text(AppLocalizations.of(context).resetLayout),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -118,7 +118,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                       child: FilledButton.icon(
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.check),
-                        label: Text(AppLocalizations.of(context)!.fatto),
+                        label: Text(AppLocalizations.of(context).fatto),
                       ),
                     ),
                   ],
@@ -275,14 +275,14 @@ class WidgetCustomizationMenu extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.resetLayout),
-        content: Text(
+        title: Text(AppLocalizations.of(context).resetLayout),
+        content: const Text(
           'Vuoi ripristinare il layout predefinito? Tutte le tue personalizzazioni verranno perse.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -297,7 +297,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                 ),
               );
             },
-            child: Text(AppLocalizations.of(context)!.reset),
+            child: Text(AppLocalizations.of(context).reset),
           ),
         ],
       ),

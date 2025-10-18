@@ -1,34 +1,33 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: workout
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: iOS/Android/Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: workout
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: iOS/Android/Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import '../providers/workout_provider.dart';
-import '../providers/zen_mode_provider.dart';
-import '../widgets/zen_mode_settings_dialog.dart';
-import '../widgets/workout_customization_modal.dart';
-import 'template_save_helper.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/zen_mode_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/zen_mode_settings_dialog.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_actions/template_save_helper.dart';
 
 class WorkoutSettingsMenu extends ConsumerWidget {
-  final Workout? currentWorkout;
-  final VoidCallback? onCompleteWorkout;
 
   const WorkoutSettingsMenu({
     super.key,
     required this.currentWorkout,
     this.onCompleteWorkout,
   });
+  final Workout? currentWorkout;
+  final VoidCallback? onCompleteWorkout;
 
   static void show(
     BuildContext context, {
@@ -91,8 +90,8 @@ class WorkoutSettingsMenu extends ConsumerWidget {
     return [
       ListTile(
         leading: const Icon(Icons.save_alt),
-        title: Text(AppLocalizations.of(context)!.saveAsTemplate),
-        subtitle: Text(AppLocalizations.of(context)!.saveToFirebaseForReuse),
+        title: Text(AppLocalizations.of(context).saveAsTemplate),
+        subtitle: Text(AppLocalizations.of(context).saveToFirebaseForReuse),
         onTap: () {
           Navigator.pop(context);
           TemplateSaveHelper.showSaveAsTemplateDialog(context, ref);
@@ -100,7 +99,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
       ),
       ListTile(
         leading: const Icon(Icons.pause),
-        title: Text(AppLocalizations.of(context)!.pauseWorkout),
+        title: Text(AppLocalizations.of(context).pauseWorkout),
         onTap: () {
           ref.read(currentWorkoutProvider.notifier).pauseWorkout();
           Navigator.pop(context);
@@ -111,7 +110,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
           Icons.stop,
           color: Theme.of(context).colorScheme.error,
         ),
-        title: Text(AppLocalizations.of(context)!.endWorkout),
+        title: Text(AppLocalizations.of(context).endWorkout),
         onTap: () {
           Navigator.pop(context);
           if (onCompleteWorkout != null) {
@@ -138,11 +137,11 @@ class WorkoutSettingsMenu extends ConsumerWidget {
                     ? Theme.of(context).colorScheme.primary 
                     : null,
                 ),
-                title: Text(AppLocalizations.of(context)!.zenMode),
+                title: Text(AppLocalizations.of(context).zenMode),
                 subtitle: Text(
                   zenState.isEnabled 
-                    ? AppLocalizations.of(context)!.zenModeActiveDescription
-                    : AppLocalizations.of(context)!.zenModeInactiveDescription,
+                    ? AppLocalizations.of(context).zenModeActiveDescription
+                    : AppLocalizations.of(context).zenModeInactiveDescription,
                 ),
                 trailing: Switch.adaptive(
                   value: zenState.isEnabled,
@@ -165,11 +164,11 @@ class WorkoutSettingsMenu extends ConsumerWidget {
                       ? Theme.of(context).colorScheme.primary
                       : null,
                   ),
-                  title: Text(AppLocalizations.of(context)!.keepScreenOn),
+                  title: Text(AppLocalizations.of(context).keepScreenOn),
                   subtitle: Text(
                     zenState.isKeepScreenOnActive
-                      ? AppLocalizations.of(context)!.screenWontTurnOff
-                      : AppLocalizations.of(context)!.batterySaverActive,
+                      ? AppLocalizations.of(context).screenWontTurnOff
+                      : AppLocalizations.of(context).batterySaverActive,
                   ),
                   trailing: Switch.adaptive(
                     value: zenState.isKeepScreenOnActive,
@@ -188,16 +187,16 @@ class WorkoutSettingsMenu extends ConsumerWidget {
     return [
       ListTile(
         leading: const Icon(Icons.tune),
-        title: Text(AppLocalizations.of(context)!.customizeWorkout),
-        subtitle: Text(AppLocalizations.of(context)!.rpeTimerAndMore),
+        title: Text(AppLocalizations.of(context).customizeWorkout),
+        subtitle: Text(AppLocalizations.of(context).rpeTimerAndMore),
         onTap: () {
           Navigator.pop(context);
-          WorkoutCustomizationModal.show(context);
+          WorkoutCustomizationModalV2.show(context);
         },
       ),
       ListTile(
         leading: const Icon(Icons.logout),
-        title: Text(AppLocalizations.of(context)!.signOut),
+        title: Text(AppLocalizations.of(context).signOut),
         onTap: () {
           Navigator.pop(context);
           context.go('/login');

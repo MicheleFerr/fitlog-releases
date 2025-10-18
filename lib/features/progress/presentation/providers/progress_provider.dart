@@ -1,10 +1,90 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
-import '../../../workout/data/repositories/exercise_activity_repository.dart';
-import '../../domain/entities/progress_data.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
+import 'package:gymbro_flutter_new/features/progress/domain/entities/progress_data.dart';
+
+/// CRITICAL FIX: Helper to query both 'email' and 'userEmail' fields in parallel
+/// This reduces latency from 2x sequential queries to 1x parallel execution
+Future<QuerySnapshot> _queryUserActivitiesOptimized({
+  required FirebaseFirestore firestore,
+  required String userEmail,
+  required String orderByField,
+  DateTime? startDate,
+  DateTime? endDate,
+  int? limit,
+  bool descending = true,
+}) async {
+  final normalizedEmail = userEmail.toLowerCase().trim();
+
+  // Execute both queries in parallel
+  final futures = [
+    _buildQuery(
+      firestore: firestore,
+      email: normalizedEmail,
+      emailField: 'email',
+      orderByField: orderByField,
+      startDate: startDate,
+      endDate: endDate,
+      limit: limit,
+      descending: descending,
+    ).get(),
+    _buildQuery(
+      firestore: firestore,
+      email: normalizedEmail,
+      emailField: 'userEmail',
+      orderByField: orderByField,
+      startDate: startDate,
+      endDate: endDate,
+      limit: limit,
+      descending: descending,
+    ).get(),
+  ];
+
+  final results = await Future.wait(futures);
+
+  // Return the result with documents (prefer 'email' if both have data)
+  if (results[0].docs.isNotEmpty) {
+    return results[0];
+  } else {
+    return results[1];
+  }
+}
+
+/// Build Firestore query with common parameters
+Query _buildQuery({
+  required FirebaseFirestore firestore,
+  required String email,
+  required String emailField,
+  required String orderByField,
+  DateTime? startDate,
+  DateTime? endDate,
+  int? limit,
+  bool descending = true,
+}) {
+  Query query = firestore
+      .collection('exerciseActivities')
+      .where(emailField, isEqualTo: email);
+
+  // Add date filters if provided
+  if (startDate != null) {
+    query = query.where(orderByField, isGreaterThan: Timestamp.fromDate(startDate));
+  }
+
+  if (endDate != null) {
+    query = query.where(orderByField, isLessThan: Timestamp.fromDate(endDate));
+  }
+
+  // Add ordering
+  query = query.orderBy(orderByField, descending: descending);
+
+  // Add limit if provided
+  if (limit != null) {
+    query = query.limit(limit);
+  }
+
+  return query;
+}
 
 /// Provider per i dati di progresso reali basati sui workout salvati in Firestore
 final progressDataProvider = FutureProvider<ProgressData?>((ref) async {
@@ -31,34 +111,26 @@ final quickStatsProvider = FutureProvider<QuickStats?>((ref) async {
 final recentActivityProvider = FutureProvider<DateTime?>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
-  
+
   if (currentUser?.email == null) {
     return null;
   }
 
+  // CRITICAL FIX: Use optimized parallel query
   final firestore = FirebaseFirestore.instance;
-  // Prova prima con 'email' (formato attuale nel DB)
-  var query = await firestore
-      .collection('exerciseActivities')
-      .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
-      .orderBy('createdAt', descending: true)
-      .limit(1)
-      .get();
-  
-  // Se non trova nulla, prova con 'userEmail' (formato vecchio)
-  if (query.docs.isEmpty) {
-    query = await firestore
-        .collection('exerciseActivities')
-        .where('userEmail', isEqualTo: currentUser!.email!.toLowerCase().trim())
-        .orderBy('createdAt', descending: true)
-        .limit(1)
-        .get();
-  }
+  final query = await _queryUserActivitiesOptimized(
+    firestore: firestore,
+    userEmail: currentUser!.email!,
+    orderByField: 'createdAt',
+    limit: 1,
+    descending: true,
+  );
 
   if (query.docs.isEmpty) return null;
-  
+
   final doc = query.docs.first;
-  final timestamp = doc.data()['createdAt'] as Timestamp?;
+  final data = doc.data() as Map<String, dynamic>?;
+  final timestamp = data?['createdAt'] as Timestamp?;
   return timestamp?.toDate();
 });
 
@@ -66,42 +138,42 @@ final recentActivityProvider = FutureProvider<DateTime?>((ref) async {
 final completedWorkoutsCountProvider = FutureProvider<int>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
-  
+
   if (currentUser?.email == null) {
     return 0;
   }
-  
+
   try {
     final firestore = FirebaseFirestore.instance;
-    
-    // Prima prova con 'email'
-    var query = await firestore
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
-        .get();
-    
-    // Se non trova nulla, prova con 'userEmail'
-    if (query.docs.isEmpty) {
-      query = await firestore
-          .collection('exerciseActivities')
-          .where('userEmail', isEqualTo: currentUser!.email!.toLowerCase().trim())
-          .get();
-    }
-    
+
+    // OTTIMIZZAZIONE: Limita a 365 giorni (1 anno) di workout
+    // Per conteggi più vecchi, usare un contatore salvato nel profilo utente
+    final oneYearAgo = DateTime.now().subtract(const Duration(days: 365));
+
+    // CRITICAL FIX: Use optimized parallel query
+    final query = await _queryUserActivitiesOptimized(
+      firestore: firestore,
+      userEmail: currentUser!.email!,
+      orderByField: 'createdAt',
+      startDate: oneYearAgo,
+      limit: 500, // OTTIMIZZAZIONE: Max 500 documenti (più che sufficiente per 1 anno)
+      descending: true,
+    );
+
     // Conta i workout unici per giorno
     final Set<String> uniqueDays = {};
     for (final doc in query.docs) {
-      final timestamp = doc.data()['createdAt'] as Timestamp?;
+      final data = doc.data() as Map<String, dynamic>?;
+      final timestamp = data?['createdAt'] as Timestamp?;
       if (timestamp != null) {
         final date = timestamp.toDate();
         final dayKey = '${date.year}-${date.month}-${date.day}';
         uniqueDays.add(dayKey);
       }
     }
-    
+
     return uniqueDays.length;
   } catch (e) {
-    print('Error getting workout count: $e');
     return 0;
   }
 });
@@ -110,40 +182,33 @@ final completedWorkoutsCountProvider = FutureProvider<int>((ref) async {
 final currentStreakProvider = FutureProvider<int>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
-  
+
   if (currentUser?.email == null) {
     return 0;
   }
 
   final firestore = FirebaseFirestore.instance;
-  
+
   // Prendi gli ultimi 30 giorni di attività per calcolare lo streak
   final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-  
-  // Prova prima con 'email' (formato attuale nel DB)
-  var query = await firestore
-      .collection('exerciseActivities')
-      .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
-      .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
-      .orderBy('createdAt', descending: true)
-      .get();
-  
-  // Se non trova nulla, prova con 'userEmail' (formato vecchio)
-  if (query.docs.isEmpty) {
-    query = await firestore
-        .collection('exerciseActivities')
-        .where('userEmail', isEqualTo: currentUser!.email!.toLowerCase().trim())
-        .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
-        .orderBy('createdAt', descending: true)
-        .get();
-  }
+
+  // CRITICAL FIX: Use optimized parallel query
+  final query = await _queryUserActivitiesOptimized(
+    firestore: firestore,
+    userEmail: currentUser!.email!,
+    orderByField: 'createdAt',
+    startDate: thirtyDaysAgo,
+    limit: 100, // OTTIMIZZAZIONE: Max 100 workout per calcolare streak (più che sufficiente per 30 giorni)
+    descending: true,
+  );
 
   if (query.docs.isEmpty) return 0;
 
   // Raggruppa per giorni
   final Map<String, bool> workoutDays = {};
   for (final doc in query.docs) {
-    final timestamp = doc.data()['createdAt'] as Timestamp?;
+    final data = doc.data() as Map<String, dynamic>?;
+    final timestamp = data?['createdAt'] as Timestamp?;
     if (timestamp != null) {
       final date = timestamp.toDate();
       final dayKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
@@ -160,7 +225,6 @@ final currentStreakProvider = FutureProvider<int>((ref) async {
     final checkDate = today.subtract(Duration(days: i));
     final dayKey = '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
     
-    debugPrint('DEBUG Streak: Controllo giorno $dayKey - Presente: ${workoutDays.containsKey(dayKey)}');
     
     if (workoutDays.containsKey(dayKey)) {
       streak++;
@@ -180,51 +244,36 @@ final currentStreakProvider = FutureProvider<int>((ref) async {
 final weeklyFrequencyProvider = FutureProvider<double>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
-  
+
   if (currentUser?.email == null) {
-    print('DEBUG Frequenza: Nessun utente autenticato');
     return 0.0;
   }
 
   final firestore = FirebaseFirestore.instance;
   final now = DateTime.now();
   final thirtyDaysAgo = now.subtract(const Duration(days: 30));
-  
-  print('DEBUG Frequenza: Data attuale: ${now.toString()}');
-  print('DEBUG Frequenza: Cercando workout dal ${thirtyDaysAgo.toString()} per ${currentUser?.email}');
-  
-  // Prova prima con 'email' (formato attuale nel DB)
-  var query = await firestore
-      .collection('exerciseActivities')
-      .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
-      .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
-      .get();
-  
-  // Se non trova nulla, prova con 'userEmail' (formato vecchio)
-  if (query.docs.isEmpty) {
-    print('DEBUG Frequenza: Nessun documento con campo "email", provo con "userEmail"');
-    query = await firestore
-        .collection('exerciseActivities')
-        .where('userEmail', isEqualTo: currentUser!.email!.toLowerCase().trim())
-        .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
-        .get();
-  }
 
-  print('DEBUG Frequenza: Trovati ${query.docs.length} documenti');
-  
+  // CRITICAL FIX: Use optimized parallel query
+  final query = await _queryUserActivitiesOptimized(
+    firestore: firestore,
+    userEmail: currentUser!.email!,
+    orderByField: 'createdAt',
+    startDate: thirtyDaysAgo,
+    limit: 100, // OTTIMIZZAZIONE: Max 100 workout per calcolare frequenza
+    descending: true,
+  );
+
   if (query.docs.isEmpty) return 0.0;
 
   // Conta i giorni unici con workout per ogni settimana
   final Map<int, Set<String>> workoutDaysByWeek = {};
-  
+
   for (final doc in query.docs) {
-    final data = doc.data();
+    final data = doc.data() as Map<String, dynamic>?;
+    if (data == null) continue;
+
     final timestamp = data['createdAt'] as Timestamp?;
-    // Prova sia 'schedaName' che 'workoutName' per compatibilità
-    final workoutName = data['schedaName'] as String? ?? 
-                        data['workoutName'] as String? ?? 
-                        'Workout';
-    
+
     if (timestamp != null) {
       final date = timestamp.toDate();
       
@@ -235,15 +284,12 @@ final weeklyFrequencyProvider = FutureProvider<double>((ref) async {
       // Calcola la differenza in giorni basandosi solo sulla data
       final daysDifference = nowDate.difference(workoutDate).inDays;
       
-      print('DEBUG: Workout "$workoutName" del ${date.toString()}');
-      print('DEBUG: Data workout (solo giorno): $workoutDate, Oggi: $nowDate, Differenza giorni: $daysDifference');
       
       // Per la frequenza, conta solo i giorni unici con workout negli ultimi 30 giorni
       if (daysDifference >= 0 && daysDifference < 30) {
         // Determina in quale settimana ricade per il calcolo della media
-        int weekNumber = daysDifference ~/ 7;
+        final int weekNumber = daysDifference ~/ 7;
         
-        print('DEBUG: Assegnato alla settimana $weekNumber (giorni fa: $daysDifference)');
         
         if (weekNumber < 5) { // Massimo 4.x settimane in 30 giorni
           workoutDaysByWeek.putIfAbsent(weekNumber, () => <String>{});
@@ -257,18 +303,15 @@ final weeklyFrequencyProvider = FutureProvider<double>((ref) async {
 
   // Debug: mostra workout per settimana
   workoutDaysByWeek.forEach((week, days) {
-    print('DEBUG Frequenza: Settimana $week - ${days.length} giorni con workout');
   });
 
   // Conta il totale di giorni con workout negli ultimi 30 giorni
   final totalWorkoutDays = workoutDaysByWeek.values.fold(0, (sum, days) => sum + days.length);
   
   // Calcola la media settimanale basata su 30 giorni (circa 4.3 settimane)
-  final weeksIn30Days = 30.0 / 7.0; // circa 4.3 settimane
+  const weeksIn30Days = 30.0 / 7.0; // circa 4.3 settimane
   final average = totalWorkoutDays / weeksIn30Days;
   
-  print('DEBUG Frequenza: Totale giorni con workout in 30 giorni: $totalWorkoutDays');
-  print('DEBUG Frequenza: Media settimanale: ${average.toStringAsFixed(1)} giorni/settimana');
   
   return average;
 });

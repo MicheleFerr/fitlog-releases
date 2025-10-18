@@ -1,25 +1,42 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../models/exercise_model.dart';
-import '../../domain/entities/exercise.dart';
+import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_model.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 class JsonExerciseRepository {
+
+  JsonExerciseRepository({required this.locale});
+  final Locale locale;
   List<Exercise>? _cachedExercises;
+  String? _cachedLocaleCode;
 
   Future<List<Exercise>> getAllExercises() async {
+    // Clear cache if locale changed
+    if (_cachedLocaleCode != locale.languageCode) {
+      _cachedExercises = null;
+      _cachedLocaleCode = locale.languageCode;
+    }
+
     if (_cachedExercises != null) {
       return _cachedExercises!;
     }
 
     try {
-      final String jsonString = await rootBundle.loadString('assets/data/exercises.json');
+      // Load the correct JSON file based on locale
+      final String fileName = locale.languageCode == 'it'
+          ? 'assets/data/exercises_it.json'
+          : 'assets/data/exercises.json';
+
+      final String jsonString = await rootBundle.loadString(fileName);
       final List<dynamic> jsonList = json.decode(jsonString);
-      
+
       _cachedExercises = jsonList
           .map((json) => ExerciseModel.fromJson(json).toEntity())
           .toList();
-      
+
       return _cachedExercises!;
     } catch (e) {
       throw Exception('Failed to load exercises: $e');
@@ -101,11 +118,10 @@ class JsonExerciseRepository {
 }
 
 // Providers per il nuovo sistema
+// DEPRECATED: Use hybridExerciseRepositoryProvider from hybrid_exercise_provider.dart instead
+@Deprecated('Use hybridExerciseRepositoryProvider from hybrid_exercise_provider.dart')
 final jsonExerciseRepositoryProvider = FutureProvider<List<Exercise>>((ref) async {
-  final repository = JsonExerciseRepository();
+  final locale = ref.watch(localeProvider);
+  final repository = JsonExerciseRepository(locale: locale);
   return repository.getAllExercises();
-});
-
-final jsonExerciseRepositoryInstanceProvider = Provider<JsonExerciseRepository>((ref) {
-  return JsonExerciseRepository();
 });

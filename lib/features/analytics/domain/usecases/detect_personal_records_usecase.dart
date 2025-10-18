@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: analytics
- * 🔧 Type: usecase
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout, Exercise, ExerciseSet
- * - analytics/domain/entities: PersonalRecordAchieved
- * - analytics/domain/services: PRTracker
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: analytics
+/// 🔧 Type: usecase
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout, Exercise, ExerciseSet
+/// - analytics/domain/entities: PersonalRecordAchieved
+/// - analytics/domain/services: PRTracker
+library;
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -22,9 +21,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_cal
 
 /// Use case for detecting personal records in real-time during workout
 class DetectPersonalRecordsUseCase {
-  final PRTracker _prTracker;
 
   DetectPersonalRecordsUseCase(this._prTracker);
+  final PRTracker _prTracker;
 
   /// Detect potential PRs from current workout state
   Future<List<PersonalRecordAchieved>> execute(
@@ -78,13 +77,15 @@ class DetectPersonalRecordsUseCase {
     
     // Analyze current sets to predict potential PRs
     for (final set in exercise.sets.where((s) => !s.isCompleted)) {
-      if (set.weight > 0 && set.reps > 0) {
+      final weight = set.weight ?? 0;
+      final reps = set.reps ?? 0;
+      if (weight > 0 && reps > 0) {
         // Predict if this set could be a PR
         final weightPR = existingPRs[PRType.weight];
-        if (weightPR == null || set.weight > weightPR.value) {
+        if (weightPR == null || weight > weightPR.value) {
           predictions.add(PRPrediction(
             type: PRType.weight,
-            predictedValue: set.weight,
+            predictedValue: weight,
             currentRecord: weightPR?.value,
             confidence: _calculatePRConfidence(set, weightPR?.value),
             setIndex: exercise.sets.indexOf(set),
@@ -92,14 +93,14 @@ class DetectPersonalRecordsUseCase {
         }
 
         // Predict 1RM PR
-        final estimated1RM = OneRMCalculator.calculateAverage(set.weight, set.reps);
+        final estimated1RM = OneRMCalculator.calculateAverage(weight, reps);
         final oneRMPR = existingPRs[PRType.oneRM];
         if (oneRMPR == null || estimated1RM > oneRMPR.value) {
           predictions.add(PRPrediction(
             type: PRType.oneRM,
             predictedValue: estimated1RM,
             currentRecord: oneRMPR?.value,
-            confidence: _calculate1RMConfidence(set.weight, set.reps),
+            confidence: _calculate1RMConfidence(weight, reps),
             setIndex: exercise.sets.indexOf(set),
           ));
         }
@@ -143,21 +144,22 @@ class DetectPersonalRecordsUseCase {
     ExerciseSet set,
     Map<PRType, PersonalRecord> existingPRs,
   ) {
-    if (set.isWarmup || set.weight <= 0) return null;
+    final weight = set.weight ?? 0;
+    if (set.isWarmup || weight <= 0) return null;
 
     final currentRecord = existingPRs[PRType.weight];
-    if (currentRecord != null && set.weight <= currentRecord.value) return null;
+    if (currentRecord != null && weight <= currentRecord.value) return null;
 
     return PersonalRecordAchieved(
       exerciseId: exercise.id,
       exerciseName: exercise.name,
       type: PRType.weight,
-      newValue: set.weight,
+      newValue: weight,
       previousValue: currentRecord?.value,
       achievedAt: DateTime.now(),
       context: {
-        'reps': set.reps,
-        'actualReps': set.actualReps,
+        'reps': set.reps ?? 0,
+        'actualReps': set.actualReps ?? 0,
         'rpe': set.rpe,
         'setNumber': set.setNumber,
       },
@@ -169,20 +171,21 @@ class DetectPersonalRecordsUseCase {
     ExerciseSet set,
     Map<PRType, PersonalRecord> existingPRs,
   ) {
-    if (set.isWarmup || set.weight <= 0) return null;
+    final weight = set.weight ?? 0;
+    if (set.isWarmup || weight <= 0) return null;
 
-    final actualReps = set.actualReps ?? set.reps;
+    final actualReps = set.actualReps ?? set.reps ?? 0;
     if (actualReps <= 0) return null;
 
     final currentRecord = existingPRs[PRType.reps];
-    
+
     // For reps PR, need to consider both reps and weight
     if (currentRecord != null) {
       final currentWeight = currentRecord.metadata['weight'] as double? ?? 0;
-      
+
       // Only PR if more reps at same or higher weight
-      if (set.weight < currentWeight || 
-          (set.weight == currentWeight && actualReps <= currentRecord.value)) {
+      if (weight < currentWeight ||
+          (weight == currentWeight && actualReps <= currentRecord.value)) {
         return null;
       }
     }
@@ -195,7 +198,7 @@ class DetectPersonalRecordsUseCase {
       previousValue: currentRecord?.value,
       achievedAt: DateTime.now(),
       context: {
-        'weight': set.weight,
+        'weight': weight,
         'rpe': set.rpe,
         'setNumber': set.setNumber,
       },
@@ -207,14 +210,15 @@ class DetectPersonalRecordsUseCase {
     ExerciseSet set,
     Map<PRType, PersonalRecord> existingPRs,
   ) {
-    if (set.isWarmup || set.weight <= 0) return null;
+    final weight = set.weight ?? 0;
+    if (set.isWarmup || weight <= 0) return null;
 
-    final actualReps = set.actualReps ?? set.reps;
+    final actualReps = set.actualReps ?? set.reps ?? 0;
     if (actualReps <= 0) return null;
 
-    final estimated1RM = OneRMCalculator.calculateAverage(set.weight, actualReps);
+    final estimated1RM = OneRMCalculator.calculateAverage(weight, actualReps);
     final currentRecord = existingPRs[PRType.oneRM];
-    
+
     if (currentRecord != null && estimated1RM <= currentRecord.value) return null;
 
     return PersonalRecordAchieved(
@@ -225,7 +229,7 @@ class DetectPersonalRecordsUseCase {
       previousValue: currentRecord?.value,
       achievedAt: DateTime.now(),
       context: {
-        'weight': set.weight,
+        'weight': weight,
         'reps': actualReps,
         'rpe': set.rpe,
         'setNumber': set.setNumber,
@@ -241,7 +245,7 @@ class DetectPersonalRecordsUseCase {
     final completedSets = exercise.sets.where((s) => s.isCompleted && !s.isWarmup).toList();
     if (completedSets.isEmpty) return null;
 
-    final totalVolume = completedSets.fold(0.0, (sum, set) => sum + set.volume);
+    final totalVolume = completedSets.fold(0.0, (sum, set) => sum + (set.volume ?? 0));
     final currentRecord = existingPRs[PRType.volume];
     
     if (currentRecord != null && totalVolume <= currentRecord.value) return null;
@@ -255,8 +259,8 @@ class DetectPersonalRecordsUseCase {
       achievedAt: DateTime.now(),
       context: {
         'sets': completedSets.length,
-        'averageWeight': completedSets.fold(0.0, (sum, s) => sum + s.weight) / completedSets.length,
-        'totalReps': completedSets.fold(0, (sum, s) => sum + (s.actualReps ?? s.reps)),
+        'averageWeight': completedSets.fold(0.0, (sum, s) => sum + (s.weight ?? 0)) / completedSets.length,
+        'totalReps': completedSets.fold(0, (sum, s) => sum + (s.actualReps ?? s.reps ?? 0)),
       },
     );
   }
@@ -279,15 +283,16 @@ class DetectPersonalRecordsUseCase {
       previousValue: currentRecord?.value,
       achievedAt: DateTime.now(),
       context: {
-        'totalVolume': exercise.sets.where((s) => s.isCompleted).fold(0.0, (sum, s) => sum + s.volume),
+        'totalVolume': exercise.sets.where((s) => s.isCompleted).fold(0.0, (sum, s) => sum + (s.volume ?? 0)),
       },
     );
   }
 
   double _calculatePRConfidence(ExerciseSet set, double? currentRecord) {
     if (currentRecord == null) return 0.9; // High confidence for first PR
-    
-    final improvement = (set.weight - currentRecord) / currentRecord;
+
+    final weight = set.weight ?? 0;
+    final improvement = (weight - currentRecord) / currentRecord;
     
     // Lower confidence for very large improvements (might be input error)
     if (improvement > 0.2) return 0.3;
@@ -310,11 +315,6 @@ class DetectPersonalRecordsUseCase {
 
 /// Prediction for potential personal record
 class PRPrediction {
-  final PRType type;
-  final double predictedValue;
-  final double? currentRecord;
-  final double confidence; // 0.0 to 1.0
-  final int setIndex;
 
   const PRPrediction({
     required this.type,
@@ -323,6 +323,11 @@ class PRPrediction {
     required this.confidence,
     required this.setIndex,
   });
+  final PRType type;
+  final double predictedValue;
+  final double? currentRecord;
+  final double confidence; // 0.0 to 1.0
+  final int setIndex;
 
   /// Get improvement percentage if this PR is achieved
   double get improvementPercentage {

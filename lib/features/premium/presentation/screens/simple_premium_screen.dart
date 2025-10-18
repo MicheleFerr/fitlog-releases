@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 
 /// Simple premium screen that works without crashes
 class SimplePremiumScreen extends ConsumerWidget {
@@ -10,7 +10,7 @@ class SimplePremiumScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isPremium = ref.watch(isPremiumProvider).value ?? false;
+    final isPremium = ref.watch(isPremiumUserProvider);
     
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,

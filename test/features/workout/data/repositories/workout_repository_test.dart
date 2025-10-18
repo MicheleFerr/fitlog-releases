@@ -12,13 +12,13 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 class MockUser extends Mock implements User {}
 
 class WorkoutRepository {
-  final FirebaseFirestore firestore;
-  final FirebaseAuth auth;
 
   WorkoutRepository({
     required this.firestore,
     required this.auth,
   });
+  final FirebaseFirestore firestore;
+  final FirebaseAuth auth;
 
   String? get userId => auth.currentUser?.uid;
 
@@ -154,7 +154,7 @@ class WorkoutRepository {
 
     // Calculate total volume
     double totalVolume = 0;
-    Map<String, int> exerciseFrequency = {};
+    final Map<String, int> exerciseFrequency = {};
     int totalDuration = 0;
     int completedWorkouts = 0;
 

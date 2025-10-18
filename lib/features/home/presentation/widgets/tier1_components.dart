@@ -3,11 +3,6 @@ import 'dart:math' as math;
 
 /// Premium animated progress ring per Tier 1 apps
 class AnimatedProgressRing extends StatefulWidget {
-  final double progress;
-  final double size;
-  final Color color;
-  final String centerText;
-  final String subtitle;
 
   const AnimatedProgressRing({
     super.key,
@@ -17,6 +12,11 @@ class AnimatedProgressRing extends StatefulWidget {
     required this.centerText,
     required this.subtitle,
   });
+  final double progress;
+  final double size;
+  final Color color;
+  final String centerText;
+  final String subtitle;
 
   @override
   State<AnimatedProgressRing> createState() => _AnimatedProgressRingState();
@@ -116,11 +116,6 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
 
 /// Glassmorphism card per effetti premium
 class GlassmorphismCard extends StatelessWidget {
-  final Widget child;
-  final double borderRadius;
-  final double blur;
-  final double opacity;
-  final Color color;
 
   const GlassmorphismCard({
     super.key,
@@ -130,6 +125,11 @@ class GlassmorphismCard extends StatelessWidget {
     this.opacity = 0.1,
     this.color = Colors.white,
   });
+  final Widget child;
+  final double borderRadius;
+  final double blur;
+  final double opacity;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -162,10 +162,6 @@ class GlassmorphismCard extends StatelessWidget {
 
 /// Pulsating CTA button per massimo engagement
 class PulsatingCTAButton extends StatefulWidget {
-  final Widget child;
-  final VoidCallback onPressed;
-  final Color color;
-  final Duration pulseDuration;
 
   const PulsatingCTAButton({
     super.key,
@@ -174,6 +170,10 @@ class PulsatingCTAButton extends StatefulWidget {
     required this.color,
     this.pulseDuration = const Duration(seconds: 2),
   });
+  final Widget child;
+  final VoidCallback onPressed;
+  final Color color;
+  final Duration pulseDuration;
 
   @override
   State<PulsatingCTAButton> createState() => _PulsatingCTAButtonState();
@@ -246,10 +246,6 @@ class _PulsatingCTAButtonState extends State<PulsatingCTAButton>
 
 /// Shimmer loading per stati di caricamento premium
 class ShimmerLoading extends StatefulWidget {
-  final Widget child;
-  final Color baseColor;
-  final Color highlightColor;
-  final Duration period;
 
   const ShimmerLoading({
     super.key,
@@ -258,6 +254,10 @@ class ShimmerLoading extends StatefulWidget {
     this.highlightColor = const Color(0xFFF5F5F5),
     this.period = const Duration(milliseconds: 1500),
   });
+  final Widget child;
+  final Color baseColor;
+  final Color highlightColor;
+  final Duration period;
 
   @override
   State<ShimmerLoading> createState() => _ShimmerLoadingState();
@@ -318,12 +318,6 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
 
 /// Statistiche animate per dashboard
 class AnimatedStatCard extends StatefulWidget {
-  final String title;
-  final String value;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
-  final bool isPositive;
 
   const AnimatedStatCard({
     super.key,
@@ -334,6 +328,12 @@ class AnimatedStatCard extends StatefulWidget {
     required this.color,
     this.isPositive = true,
   });
+  final String title;
+  final String value;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final bool isPositive;
 
   @override
   State<AnimatedStatCard> createState() => _AnimatedStatCardState();
@@ -458,11 +458,6 @@ class _AnimatedStatCardState extends State<AnimatedStatCard>
 
 /// Hero workout card con animazioni premium
 class HeroWorkoutCard extends StatefulWidget {
-  final String title;
-  final String subtitle;
-  final String duration;
-  final VoidCallback onTap;
-  final List<Color> gradientColors;
 
   const HeroWorkoutCard({
     super.key,
@@ -472,6 +467,11 @@ class HeroWorkoutCard extends StatefulWidget {
     required this.onTap,
     required this.gradientColors,
   });
+  final String title;
+  final String subtitle;
+  final String duration;
+  final VoidCallback onTap;
+  final List<Color> gradientColors;
 
   @override
   State<HeroWorkoutCard> createState() => _HeroWorkoutCardState();
@@ -587,7 +587,7 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
                     Row(
                       children: [
                         const Text(
-                          "INIZIA ORA",
+                          'INIZIA ORA',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,

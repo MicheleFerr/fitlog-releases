@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../domain/entities/workout_template.dart';
-import '../../domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 class WorkoutTemplateRepository {
   static const String _templatesKey = 'workout_templates';
@@ -44,7 +45,7 @@ class WorkoutTemplateRepository {
       
       return customTemplates;
     } catch (e) {
-      print('Errore nel caricamento template personalizzati: $e');
+      // print('Errore nel caricamento template personalizzati: $e');
       return [];
     }
   }
@@ -71,65 +72,84 @@ class WorkoutTemplateRepository {
           .where((template) => !template.isCustom)
           .toList();
     } catch (e) {
-      print('Errore nel caricamento template predefiniti: $e');
+      // print('Errore nel caricamento template predefiniti: $e');
       return [];
     }
   }
 
   /// Salva un template personalizzato
   Future<void> saveTemplate(WorkoutTemplate template) async {
-    print('💾 LOCAL: Salvando template "${template.name}" con ${template.exercises.length} esercizi');
-    
+    debugPrint('💾 LOCAL: Salvando template "${template.name}" con ${template.exercises.length} esercizi');
+
     try {
-      final templates = await getAllTemplates();
-      
+      // Work with custom templates only
+      final customTemplates = await getCustomTemplates();
+
       // Rimuovi il template esistente se è un aggiornamento
-      templates.removeWhere((t) => t.id == template.id);
-      
-      // Aggiungi il template aggiornato
-      templates.add(template);
-      
-      print('💾 LOCAL: Template aggiunto, totale templates: ${templates.length}');
-      print('💾 LOCAL: Template appena aggiunto ha ${template.exercises.length} esercizi');
-      
-      await _saveAllTemplates(templates);
+      customTemplates.removeWhere((t) => t.id == template.id);
+
+      // Aggiungi il template aggiornato (ensure it's marked as custom)
+      final customTemplate = template.copyWith(isCustom: true);
+      customTemplates.add(customTemplate);
+
+      debugPrint('💾 LOCAL: Template aggiunto, totale custom templates: ${customTemplates.length}');
+      debugPrint('💾 LOCAL: Template appena aggiunto ha ${customTemplate.exercises.length} esercizi');
+
+      // Save only custom templates
+      await _saveCustomTemplates(customTemplates);
     } catch (e) {
-      print('Errore nel salvataggio template: $e');
-      throw Exception('Impossibile salvare il template');
+      debugPrint('❌ LOCAL: Errore nel salvataggio template: $e');
+      throw Exception('Impossibile salvare il template: $e');
     }
   }
 
   /// Elimina un template personalizzato
   Future<void> deleteTemplate(String templateId) async {
     try {
-      final templates = await getAllTemplates();
-      final templateToDelete = templates.firstWhere((t) => t.id == templateId);
-      
-      // Non permettere l'eliminazione di template predefiniti
+      // IMPORTANT: Only work with custom templates, not ALL templates
+      final customTemplates = await getCustomTemplates();
+      final templateToDelete = customTemplates.firstWhere(
+        (t) => t.id == templateId,
+        orElse: () => throw Exception('Template non trovato'),
+      );
+
+      // Non permettere l'eliminazione di template predefiniti (double check)
       if (!templateToDelete.isCustom) {
         throw Exception('Non puoi eliminare template predefiniti');
       }
-      
-      templates.removeWhere((t) => t.id == templateId);
-      await _saveAllTemplates(templates);
+
+      // Remove from custom templates only
+      customTemplates.removeWhere((t) => t.id == templateId);
+
+      // Save only the custom templates (not predefined ones)
+      await _saveCustomTemplates(customTemplates);
+
+      debugPrint('✅ LOCAL REPO: Template $templateId deleted successfully');
     } catch (e) {
-      print('Errore nell\'eliminazione template: $e');
-      throw Exception('Impossibile eliminare il template');
+      debugPrint('❌ LOCAL REPO: Error deleting template $templateId: $e');
+      throw Exception('Impossibile eliminare il template: $e');
     }
   }
 
   /// Incrementa il contatore di utilizzo di un template
   Future<void> incrementUsage(String templateId) async {
     try {
-      final templates = await getAllTemplates();
-      final templateIndex = templates.indexWhere((t) => t.id == templateId);
-      
-      if (templateIndex != -1) {
-        templates[templateIndex] = templates[templateIndex].incrementUsage();
-        await _saveAllTemplates(templates);
+      // Check if it's a custom template first
+      final customTemplates = await getCustomTemplates();
+      final customIndex = customTemplates.indexWhere((t) => t.id == templateId);
+
+      if (customIndex != -1) {
+        // It's a custom template, update and save
+        customTemplates[customIndex] = customTemplates[customIndex].incrementUsage();
+        await _saveCustomTemplates(customTemplates);
+        debugPrint('✅ LOCAL REPO: Incremented usage for custom template $templateId');
+      } else {
+        // It might be a predefined template - we don't persist usage for those
+        // Or we could track usage separately for predefined templates
+        debugPrint('ℹ️ LOCAL REPO: Template $templateId is not a custom template, usage not tracked');
       }
     } catch (e) {
-      print('Errore nell\'aggiornamento utilizzo template: $e');
+      debugPrint('⚠️ LOCAL REPO: Error updating template usage: $e');
     }
   }
 
@@ -353,15 +373,32 @@ class WorkoutTemplateRepository {
       );
       await prefs.setString(_templatesKey, templatesJson);
     } catch (e) {
-      print('Errore nel salvataggio template: $e');
+      // print('Errore nel salvataggio template: $e');
       throw Exception('Impossibile salvare i template');
+    }
+  }
+
+  /// Salva solo i template personalizzati nel storage
+  Future<void> _saveCustomTemplates(List<WorkoutTemplate> customTemplates) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      // Filter to ensure only custom templates are saved
+      final customOnly = customTemplates.where((t) => t.isCustom).toList();
+      final templatesJson = json.encode(
+        customOnly.map((template) => template.toJson()).toList(),
+      );
+      await prefs.setString(_templatesKey, templatesJson);
+      debugPrint('✅ LOCAL REPO: Saved ${customOnly.length} custom templates');
+    } catch (e) {
+      debugPrint('❌ LOCAL REPO: Error saving custom templates: $e');
+      throw Exception('Impossibile salvare i template personalizzati');
     }
   }
 
   /// Stima la durata del workout basata sugli esercizi
   int _estimateDuration(List<Exercise> exercises) {
-    int totalSets = exercises.fold(0, (sum, exercise) => sum + exercise.sets.length);
-    int restTime = exercises.fold(0, (sum, exercise) => sum + (exercise.restTime ?? 90));
+    final int totalSets = exercises.fold(0, (sum, exercise) => sum + exercise.sets.length);
+    final int restTime = exercises.fold(0, (sum, exercise) => sum + (exercise.restTime ?? 90));
     
     // Stima: 2 minuti per set + tempo di riposo
     return (totalSets * 2) + (restTime ~/ 60);

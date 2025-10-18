@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/community/data/services/demo_profiles_loader.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
   const BuddyMatchingScreen({super.key});
@@ -166,7 +165,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
               ),
               
               // Action buttons
-              Positioned(
+              const Positioned(
                 bottom: 40,
                 left: 0,
                 right: 0,
@@ -530,8 +529,8 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
       ref.refresh(potentialMatchesProvider);
       
       scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: const Text('✅ 10 profili demo caricati!'),
+        const SnackBar(
+          content: Text('✅ 10 profili demo caricati!'),
           backgroundColor: Colors.green,
         ),
       );

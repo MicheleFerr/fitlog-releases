@@ -7,9 +7,9 @@ import 'dart:async';
 /// Performance optimizer for GymBro app
 /// Provides tools to monitor and optimize widget rebuilds and provider usage
 class PerformanceOptimizer {
-  static final PerformanceOptimizer _instance = PerformanceOptimizer._internal();
   factory PerformanceOptimizer() => _instance;
   PerformanceOptimizer._internal();
+  static final PerformanceOptimizer _instance = PerformanceOptimizer._internal();
 
   final Map<String, int> _providerRebuildCounts = {};
   final Map<String, DateTime> _lastRebuildTimes = {};
@@ -58,14 +58,14 @@ mixin PerformanceTrackingMixin {
 
 /// Optimized Consumer widget that prevents unnecessary rebuilds
 class OptimizedConsumer extends ConsumerWidget {
-  final Widget Function(BuildContext, WidgetRef) builder;
-  final Widget? child;
   
   const OptimizedConsumer({
     super.key,
     required this.builder,
     this.child,
   });
+  final Widget Function(BuildContext, WidgetRef) builder;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

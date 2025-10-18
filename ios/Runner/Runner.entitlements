@@ -2,13 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>com.apple.security.application-groups</key>
-	<array>
-		<string>group.com.michele.gymbro.flutter</string>
-	</array>
+	<key>aps-environment</key>
+	<string>production</string>
 	<key>com.apple.developer.applesignin</key>
 	<array>
 		<string>Default</string>
+	</array>
+	<!-- Critical alerts temporarily disabled - needs provisioning profile update
+	<key>com.apple.developer.messages.critical-messaging</key>
+	<true/>
+	<key>com.apple.developer.usernotifications.critical-alerts</key>
+	<true/>
+	-->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.michele.gymbro.flutter</string>
 	</array>
 </dict>
 </plist>

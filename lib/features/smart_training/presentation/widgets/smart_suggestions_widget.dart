@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/smart_suggestion.dart';
-import '../providers/smart_training_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_suggestion.dart';
+import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
 
 /// Widget that displays smart training suggestions
 class SmartSuggestionsWidget extends ConsumerWidget {
@@ -11,7 +11,7 @@ class SmartSuggestionsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestions = ref.watch(smartSuggestionsProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     if (suggestions.isEmpty) {
       return const SizedBox.shrink();
@@ -63,16 +63,16 @@ class SmartSuggestionsWidget extends ConsumerWidget {
 
 /// Individual suggestion tile
 class SmartSuggestionTile extends ConsumerWidget {
-  final SmartSuggestion suggestion;
   
   const SmartSuggestionTile({
     super.key,
     required this.suggestion,
   });
+  final SmartSuggestion suggestion;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       padding: const EdgeInsets.all(16),
@@ -126,7 +126,7 @@ class SmartSuggestionTile extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

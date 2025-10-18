@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../workout/domain/entities/exercise_activity.dart';
-import 'widgets/enhanced_chart_widgets.dart';
-import 'widgets/enhanced_stat_cards.dart';
-import 'widgets/enhanced_progress_indicators.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_chart_widgets.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_stat_cards.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_progress_indicators.dart';
 
 /// Enhanced Statistics Dashboard with Material 3 design and responsive layout
 class EnhancedStatisticsDashboard extends ConsumerWidget {
-  final List<ExerciseActivity> activities;
-  final String userEmail;
 
   const EnhancedStatisticsDashboard({
     super.key,
     required this.activities,
     required this.userEmail,
   });
+  final List<ExerciseActivity> activities;
+  final String userEmail;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final isTablet = _isTablet(context);
     final stats = _calculateEnhancedStats(activities);
@@ -325,7 +325,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
                       activity: activity,
                       showDetailedMetrics: isTablet,
                     ))
-                .toList(),
+                ,
           ],
         ),
       ),
@@ -504,7 +504,7 @@ class _StatisticsFilterDialogState extends State<StatisticsFilterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     
     return AlertDialog(
       title: Text(localizations.filterStatistics),
@@ -619,15 +619,6 @@ class _StatisticsFilterDialogState extends State<StatisticsFilterDialog> {
 
 // Data Classes
 class EnhancedWorkoutStats {
-  final int totalWorkouts;
-  final int weeklyWorkouts;
-  final double totalVolume;
-  final int averageWorkoutDuration;
-  final int personalRecords;
-  final int consistencyPercentage;
-  final StatTrend workoutTrend;
-  final StatTrend volumeTrend;
-  final StatTrend durationTrend;
 
   EnhancedWorkoutStats({
     required this.totalWorkouts,
@@ -640,6 +631,15 @@ class EnhancedWorkoutStats {
     required this.volumeTrend,
     required this.durationTrend,
   });
+  final int totalWorkouts;
+  final int weeklyWorkouts;
+  final double totalVolume;
+  final int averageWorkoutDuration;
+  final int personalRecords;
+  final int consistencyPercentage;
+  final StatTrend workoutTrend;
+  final StatTrend volumeTrend;
+  final StatTrend durationTrend;
 }
 
 enum StatTrend { positive, negative, neutral }

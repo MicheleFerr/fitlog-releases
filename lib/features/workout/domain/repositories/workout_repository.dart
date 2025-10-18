@@ -1,23 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain/repositories
- * 🎯 Feature: workout
- * 🔧 Type: repository_interface
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities only
- * - Shared failures
- * - Either type
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain/repositories
+/// 🎯 Feature: workout
+/// 🔧 Type: repository_interface
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities only
+/// - Shared failures
+/// - Either type
+library;
 
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
-import '../entities/workout.dart';
-import '../entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// Abstract repository interface for workout data operations
 /// This defines the contract that data layer must implement
@@ -85,13 +84,6 @@ abstract class WorkoutRepository {
 
 /// Value objects for repository operations
 class WorkoutStats {
-  final int totalWorkouts;
-  final int totalExercises;
-  final int totalSets;
-  final Duration totalDuration;
-  final double averageWorkoutDuration;
-  final Map<ExerciseCategory, int> exercisesByCategory;
-  final DateTime? lastWorkoutDate;
   
   const WorkoutStats({
     required this.totalWorkouts,
@@ -102,13 +94,16 @@ class WorkoutStats {
     required this.exercisesByCategory,
     this.lastWorkoutDate,
   });
+  final int totalWorkouts;
+  final int totalExercises;
+  final int totalSets;
+  final Duration totalDuration;
+  final double averageWorkoutDuration;
+  final Map<ExerciseCategory, int> exercisesByCategory;
+  final DateTime? lastWorkoutDate;
 }
 
 class WorkoutHistory {
-  final List<Workout> workouts;
-  final int totalCount;
-  final bool hasMore;
-  final int currentPage;
   
   const WorkoutHistory({
     required this.workouts,
@@ -116,4 +111,8 @@ class WorkoutHistory {
     required this.hasMore,
     required this.currentPage,
   });
+  final List<Workout> workouts;
+  final int totalCount;
+  final bool hasMore;
+  final int currentPage;
 }

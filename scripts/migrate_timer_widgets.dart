@@ -32,9 +32,7 @@ Future<void> migrateWidget(String filePath) async {
     if (importIndex != -1) {
       final nextLineIndex = content.indexOf('\n', importIndex);
       if (nextLineIndex != -1) {
-        content = content.substring(0, nextLineIndex + 1) +
-            "import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_system_adapter.dart';\n" +
-            content.substring(nextLineIndex + 1);
+        content = "${content.substring(0, nextLineIndex + 1)}import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_system_adapter.dart';\n${content.substring(nextLineIndex + 1)}";
       }
     }
   }

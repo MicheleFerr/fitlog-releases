@@ -1,5 +1,5 @@
-import '../../domain/entities/unified_notification.dart';
-import '../../domain/entities/unified_notification_state.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
 
 /// Abstract platform adapter for notification functionality
 /// Provides a consistent interface for iOS and Android implementations
@@ -172,16 +172,6 @@ abstract class NotificationPlatformAdapter {
 
 /// Performance metrics for notification system
 class NotificationPerformanceMetrics {
-  final Duration averageDeliveryLatency;
-  final Duration averageSchedulingLatency;
-  final int totalNotificationsScheduled;
-  final int totalNotificationsDelivered;
-  final int totalNotificationsFailed;
-  final double memoryUsageMB;
-  final double cpuUsagePercent;
-  final DateTime lastMetricsUpdate;
-  final Map<NotificationType, int> deliveryCountByType;
-  final Map<String, Duration> latencyByPlatform;
 
   const NotificationPerformanceMetrics({
     required this.averageDeliveryLatency,
@@ -195,6 +185,31 @@ class NotificationPerformanceMetrics {
     required this.deliveryCountByType,
     required this.latencyByPlatform,
   });
+
+  factory NotificationPerformanceMetrics.empty() {
+    return NotificationPerformanceMetrics(
+      averageDeliveryLatency: Duration.zero,
+      averageSchedulingLatency: Duration.zero,
+      totalNotificationsScheduled: 0,
+      totalNotificationsDelivered: 0,
+      totalNotificationsFailed: 0,
+      memoryUsageMB: 0.0,
+      cpuUsagePercent: 0.0,
+      lastMetricsUpdate: DateTime.now(),
+      deliveryCountByType: {},
+      latencyByPlatform: {},
+    );
+  }
+  final Duration averageDeliveryLatency;
+  final Duration averageSchedulingLatency;
+  final int totalNotificationsScheduled;
+  final int totalNotificationsDelivered;
+  final int totalNotificationsFailed;
+  final double memoryUsageMB;
+  final double cpuUsagePercent;
+  final DateTime lastMetricsUpdate;
+  final Map<NotificationType, int> deliveryCountByType;
+  final Map<String, Duration> latencyByPlatform;
 
   // Performance indicators
   double get deliveryRate => totalNotificationsScheduled > 0 
@@ -225,20 +240,5 @@ class NotificationPerformanceMetrics {
         'isHealthy': isHealthy,
       },
     };
-  }
-
-  factory NotificationPerformanceMetrics.empty() {
-    return NotificationPerformanceMetrics(
-      averageDeliveryLatency: Duration.zero,
-      averageSchedulingLatency: Duration.zero,
-      totalNotificationsScheduled: 0,
-      totalNotificationsDelivered: 0,
-      totalNotificationsFailed: 0,
-      memoryUsageMB: 0.0,
-      cpuUsagePercent: 0.0,
-      lastMetricsUpdate: DateTime.now(),
-      deliveryCountByType: {},
-      latencyByPlatform: {},
-    );
   }
 }

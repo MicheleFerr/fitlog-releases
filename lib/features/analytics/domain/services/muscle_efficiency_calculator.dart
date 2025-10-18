@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/user_fitness_profile.dart';
@@ -188,10 +187,8 @@ class MuscleEfficiencyCalculator {
     
     for (final activity in activities) {
       for (final set in activity.sets) {
-        if (set.effort != null) {
-          efforts.add(set.effort!);
-        }
-      }
+        efforts.add(set.effort);
+            }
     }
 
     if (efforts.isEmpty) return 50.0;
@@ -200,9 +197,9 @@ class MuscleEfficiencyCalculator {
     final avgEffort = efforts.reduce((a, b) => a + b) / efforts.length;
     
     // Count high intensity (8-10), medium (5-7), low (1-4)
-    int high = efforts.where((e) => e >= 8).length;
-    int medium = efforts.where((e) => e >= 5 && e < 8).length;
-    int low = efforts.where((e) => e < 5).length;
+    final int high = efforts.where((e) => e >= 8).length;
+    final int medium = efforts.where((e) => e >= 5 && e < 8).length;
+    final int low = efforts.where((e) => e < 5).length;
     
     final total = efforts.length;
     final highPercent = high / total;
@@ -457,11 +454,6 @@ class MuscleEfficiencyCalculator {
 
 /// Muscle Efficiency Score model
 class MuscleEfficiencyScore {
-  final int score;
-  final Map<String, double> components;
-  final EfficiencyTrend trend;
-  final List<String> insights;
-  final DateTime lastCalculated;
 
   MuscleEfficiencyScore({
     required this.score,
@@ -480,6 +472,11 @@ class MuscleEfficiencyScore {
       lastCalculated: DateTime.now(),
     );
   }
+  final int score;
+  final Map<String, double> components;
+  final EfficiencyTrend trend;
+  final List<String> insights;
+  final DateTime lastCalculated;
 
   Color get color {
     if (score >= 80) return const Color(0xFF4CAF50); // Green

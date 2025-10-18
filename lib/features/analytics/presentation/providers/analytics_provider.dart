@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
@@ -9,18 +10,158 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
+
+import 'package:flutter/foundation.dart';
+
+// =============================================================================
+// SYNC STATE MANAGEMENT
+// =============================================================================
+
+/// Sync state enum
+enum SyncState {
+  idle,       // No sync in progress
+  checking,   // Checking if sync needed
+  syncing,    // Syncing workouts
+  completed,  // Sync completed successfully
+  error,      // Sync failed
+}
+
+/// Workout sync status
+class WorkoutSyncStatus {
+
+  const WorkoutSyncStatus({
+    required this.state,
+    this.currentCount = 0,
+    this.totalCount = 0,
+    this.errorMessage,
+  });
+
+  factory WorkoutSyncStatus.idle() {
+    return const WorkoutSyncStatus(state: SyncState.idle);
+  }
+
+  factory WorkoutSyncStatus.checking() {
+    return const WorkoutSyncStatus(state: SyncState.checking);
+  }
+
+  factory WorkoutSyncStatus.syncing(int current, int total) {
+    return WorkoutSyncStatus(
+      state: SyncState.syncing,
+      currentCount: current,
+      totalCount: total,
+    );
+  }
+
+  factory WorkoutSyncStatus.completed() {
+    return const WorkoutSyncStatus(state: SyncState.completed);
+  }
+
+  factory WorkoutSyncStatus.error(String message) {
+    return WorkoutSyncStatus(
+      state: SyncState.error,
+      errorMessage: message,
+    );
+  }
+  final SyncState state;
+  final int currentCount;
+  final int totalCount;
+  final String? errorMessage;
+
+  double get progress => totalCount > 0 ? currentCount / totalCount : 0.0;
+
+  bool get isActive => state == SyncState.checking || state == SyncState.syncing;
+
+  WorkoutSyncStatus copyWith({
+    SyncState? state,
+    int? currentCount,
+    int? totalCount,
+    String? errorMessage,
+  }) {
+    return WorkoutSyncStatus(
+      state: state ?? this.state,
+      currentCount: currentCount ?? this.currentCount,
+      totalCount: totalCount ?? this.totalCount,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}
+
+/// Provider for workout sync status
+final workoutSyncStatusProvider = StateNotifierProvider<WorkoutSyncNotifier, WorkoutSyncStatus>((ref) {
+  return WorkoutSyncNotifier();
+});
+
+/// Notifier for managing sync status
+class WorkoutSyncNotifier extends StateNotifier<WorkoutSyncStatus> {
+  WorkoutSyncNotifier() : super(WorkoutSyncStatus.idle());
+
+  void setChecking() {
+    state = WorkoutSyncStatus.checking();
+  }
+
+  void setSyncing(int current, int total) {
+    state = WorkoutSyncStatus.syncing(current, total);
+  }
+
+  void setCompleted() {
+    state = WorkoutSyncStatus.completed();
+    // Reset to idle after a delay
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        state = WorkoutSyncStatus.idle();
+      }
+    });
+  }
+
+  void setError(String message) {
+    state = WorkoutSyncStatus.error(message);
+  }
+
+  void reset() {
+    state = WorkoutSyncStatus.idle();
+  }
+}
+
+/// Provider for historical workouts with sync status tracking
+final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((ref) async {
+  final user = ref.watch(firebaseUserProvider).value;
+
+  if (user == null) {
+    return [];
+  }
+
+  final analyticsRepo = ref.watch(workoutAnalyticsRepositoryProvider);
+  final syncNotifier = ref.read(workoutSyncStatusProvider.notifier);
+
+  try {
+    // Set checking state
+    syncNotifier.setChecking();
+
+    // Set up progress callback for sync
+    if (analyticsRepo is WorkoutAnalyticsRepositoryImpl) {
+      analyticsRepo.setSyncProgressCallback((current, total) {
+        syncNotifier.setSyncing(current, total);
+      });
+    }
+
+    // Fetch completed workouts for analytics (this will trigger sync if needed)
+    final workouts = await analyticsRepo.getHistoricalWorkouts(user.uid, limit: 100);
+
+    // Mark as completed
+    syncNotifier.setCompleted();
+
+    return workouts;
+  } catch (e) {
+    syncNotifier.setError(e.toString());
+    rethrow;
+  }
+});
+
 
 /// State for analytics data
 class AnalyticsState {
-  final List<ExerciseActivity> activities;
-  final List<PersonalRecord> personalRecords;
-  final List<PersonalRecord> recentPRs;
-  final List<TrainingInsight> insights;
-  final VolumeProgression volumeProgression;
-  final Map<String, TrendAnalysis> exerciseTrends;
-  final MuscleGroupBalance muscleBalance;
-  final bool isLoading;
-  final String? error;
 
   AnalyticsState({
     this.activities = const [],
@@ -36,7 +177,7 @@ class AnalyticsState {
 
   factory AnalyticsState.initial() {
     return AnalyticsState(
-      volumeProgression: VolumeProgression(
+      volumeProgression: const VolumeProgression(
         weeklyChange: 0,
         monthlyChange: 0,
         currentWeekVolume: 0,
@@ -49,6 +190,15 @@ class AnalyticsState {
       ),
     );
   }
+  final List<ExerciseActivity> activities;
+  final List<PersonalRecord> personalRecords;
+  final List<PersonalRecord> recentPRs;
+  final List<TrainingInsight> insights;
+  final VolumeProgression volumeProgression;
+  final Map<String, TrendAnalysis> exerciseTrends;
+  final MuscleGroupBalance muscleBalance;
+  final bool isLoading;
+  final String? error;
 
   AnalyticsState copyWith({
     List<ExerciseActivity>? activities,
@@ -77,9 +227,6 @@ class AnalyticsState {
 
 /// Analytics state notifier
 class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
-  final HybridExerciseActivityRepository _activityRepository;
-  final PRTracker _prTracker;
-  final String? _userId;
 
   AnalyticsNotifier({
     required HybridExerciseActivityRepository activityRepository,
@@ -93,6 +240,9 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
       loadAnalytics();
     }
   }
+  final HybridExerciseActivityRepository _activityRepository;
+  final PRTracker _prTracker;
+  final String? _userId;
 
   /// Load all analytics data
   Future<void> loadAnalytics({bool forceRefresh = false}) async {
@@ -104,16 +254,18 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
       // Load activities with increased limit to ensure we capture recent workouts
       // Use forceRefresh to bypass any caching in the repository
       final activities = await _activityRepository.getUserActivities(
-        userEmail: _userId!,
+        userEmail: _userId,
         limit: 100, // SYNC FIX: Increased from 50 to capture recent workouts
       );
 
       // DEBUG: Log activity count for troubleshooting
-      print('📊 Analytics: Loaded ${activities.length} activities for user $_userId');
+      if (kDebugMode) {
+        debugPrint('📊 Analytics: Loaded ${activities.length} activities for user $_userId');
+      }
       
       // Load personal records
-      final personalRecords = await _prTracker.getUserPRs(_userId!);
-      final recentPRs = await _prTracker.getRecentPRs(_userId!);
+      final personalRecords = await _prTracker.getUserPRs(_userId);
+      final recentPRs = await _prTracker.getRecentPRs(_userId);
 
       // Calculate analytics
       final volumeProgression = VolumeCalculator.calculateProgression(activities);
@@ -123,7 +275,7 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
       final insights = InsightsEngine.generateInsights(
         activities: activities,
         recentPRs: recentPRs,
-        userId: _userId!,
+        userId: _userId,
       );
 
       // Calculate trends for top exercises
@@ -140,9 +292,13 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
         isLoading: false,
       );
       
-      print('✅ Analytics: Updated state with ${activities.length} activities');
+      if (kDebugMode) {
+        debugPrint('✅ Analytics: Updated state with ${activities.length} activities');
+      }
     } catch (e) {
-      print('❌ Analytics: Error loading data: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Analytics: Error loading data: $e');
+      }
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),
@@ -158,7 +314,9 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
   /// Refresh analytics after workout completion
   /// This ensures the analytics screen shows the latest data
   Future<void> refreshAfterWorkoutCompletion() async {
-    print('🔄 Analytics: Refreshing after workout completion...');
+    if (kDebugMode) {
+      debugPrint('🔄 Analytics: Refreshing after workout completion...');
+    }
     await loadAnalytics(forceRefresh: true);
   }
 
@@ -170,7 +328,7 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
       if (newPRs.isNotEmpty) {
         // Reload PRs to update state
         final personalRecords = await _prTracker.getUserPRs(_userId!);
-        final recentPRs = await _prTracker.getRecentPRs(_userId!);
+        final recentPRs = await _prTracker.getRecentPRs(_userId);
         
         state = state.copyWith(
           personalRecords: personalRecords,
@@ -180,7 +338,9 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
       
       return newPRs;
     } catch (e) {
-      print('Error checking for PRs: $e');
+      if (kDebugMode) {
+        debugPrint('Error checking for PRs: $e');
+      }
       return [];
     }
   }
@@ -400,7 +560,7 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
 /// Main analytics provider
 final analyticsProvider = StateNotifierProvider<AnalyticsNotifier, AnalyticsState>((ref) {
   final user = ref.watch(firebaseUserProvider).valueOrNull;
-  final activityRepository = ref.read(exerciseActivityRepositoryProvider);
+  final activityRepository = ref.read(hybridExerciseActivityRepositoryProvider);
   final prTracker = PRTracker();
   
   return AnalyticsNotifier(
@@ -421,7 +581,9 @@ final volumeChartDataProvider = Provider.autoDispose<Map<DateTime, double>>((ref
 /// This can be called from anywhere in the app to refresh analytics
 final analyticsRefreshProvider = Provider<void Function()>((ref) {
   return () {
-    print('🔄 Global analytics refresh triggered');
+    if (kDebugMode) {
+      debugPrint('🔄 Global analytics refresh triggered');
+    }
     ref.read(analyticsProvider.notifier).refreshAfterWorkoutCompletion();
     
     // Also invalidate exercise history providers to ensure fresh data

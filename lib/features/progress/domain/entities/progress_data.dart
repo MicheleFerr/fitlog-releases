@@ -1,15 +1,7 @@
-import 'package:flutter/foundation.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 /// Entità che rappresenta i dati di progresso dell'utente
 class ProgressData {
-  final double totalVolume; // Volume totale sollevato in kg
-  final double volumeIncrease; // Incremento percentuale volume ultimo mese
-  final Map<String, double> personalRecords; // PR per esercizio
-  final int totalWorkouts; // Totale workout completati
-  final int currentStreak; // Giorni consecutivi attuali
-  final double weeklyFrequency; // Frequenza settimanale media
-  final QuickStats quickStats;
 
   const ProgressData({
     required this.totalVolume,
@@ -38,11 +30,15 @@ class ProgressData {
     // Ordina per data
     activities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-    // Calcola volume totale
+    // Calcola volume totale (solo per set completati)
     double totalVolume = 0;
     for (final activity in activities) {
       for (final set in activity.sets) {
-        totalVolume += (double.tryParse(set.weight.toString()) ?? 0) * (int.tryParse(set.reps.toString()) ?? 0);
+        if (set.done) {
+          final weight = _parseWeight(set.weight);
+          final reps = _parseReps(set.reps);
+          totalVolume += weight * reps;
+        }
       }
     }
 
@@ -57,14 +53,22 @@ class ProgressData {
     double recentVolume = 0;
     for (final activity in recentActivities) {
       for (final set in activity.sets) {
-        recentVolume += (double.tryParse(set.weight.toString()) ?? 0) * (int.tryParse(set.reps.toString()) ?? 0);
+        if (set.done) {
+          final weight = _parseWeight(set.weight);
+          final reps = _parseReps(set.reps);
+          recentVolume += weight * reps;
+        }
       }
     }
 
     double previousVolume = 0;
     for (final activity in previousActivities) {
       for (final set in activity.sets) {
-        previousVolume += (double.tryParse(set.weight.toString()) ?? 0) * (int.tryParse(set.reps.toString()) ?? 0);
+        if (set.done) {
+          final weight = _parseWeight(set.weight);
+          final reps = _parseReps(set.reps);
+          previousVolume += weight * reps;
+        }
       }
     }
 
@@ -74,7 +78,7 @@ class ProgressData {
     }
 
     // Calcola PR per esercizio (solo ultimi 30 giorni)
-    Map<String, double> personalRecords = {};
+    final Map<String, double> personalRecords = {};
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
     final recentActivitiesForPR = activities.where((a) => a.createdAt.isAfter(thirtyDaysAgo)).toList();
     
@@ -85,11 +89,7 @@ class ProgressData {
       for (final set in activity.sets) {
         // Assicurati che il set sia completato
         if (set.done) {
-          final weight = double.tryParse(set.weight.toString()) ?? 0;
-          // Debug: stampa i pesi trovati
-          if (weight > 0 && exerciseName.toLowerCase().contains('panca')) {
-            debugPrint('DEBUG: Panca - Peso trovato: $weight kg');
-          }
+          final weight = _parseWeight(set.weight);
           if (weight > maxWeight) {
             maxWeight = weight;
           }
@@ -99,7 +99,6 @@ class ProgressData {
       if (maxWeight > 0) {
         if (!personalRecords.containsKey(exerciseName) || maxWeight > personalRecords[exerciseName]!) {
           personalRecords[exerciseName] = maxWeight;
-          debugPrint('DEBUG: PR per $exerciseName: $maxWeight kg');
         }
       }
     }
@@ -115,14 +114,6 @@ class ProgressData {
       }
     });
     
-    // Debug: stampa il PR finale
-    if (maxPRValue > 0) {
-      debugPrint('DEBUG: PR FINALE - $prExerciseName: $maxPRValue kg');
-      debugPrint('DEBUG: Tutti i PR trovati:');
-      personalRecords.forEach((exercise, weight) {
-        debugPrint('  - $exercise: $weight kg');
-      });
-    }
 
     // Conta workout unici (per giornata)
     final uniqueWorkoutDays = <String>{};
@@ -149,15 +140,35 @@ class ProgressData {
       quickStats: quickStats,
     );
   }
+  final double totalVolume; // Volume totale sollevato in kg
+  final double volumeIncrease; // Incremento percentuale volume ultimo mese
+  final Map<String, double> personalRecords; // PR per esercizio
+  final int totalWorkouts; // Totale workout completati
+  final int currentStreak; // Giorni consecutivi attuali
+  final double weeklyFrequency; // Frequenza settimanale media
+  final QuickStats quickStats;
+
+  /// Helper per parsare il peso in modo sicuro
+  static double _parseWeight(dynamic weight) {
+    if (weight == null) return 0.0;
+    if (weight is double) return weight;
+    if (weight is int) return weight.toDouble();
+    if (weight is String) return double.tryParse(weight) ?? 0.0;
+    return 0.0;
+  }
+
+  /// Helper per parsare le ripetizioni in modo sicuro
+  static double _parseReps(dynamic reps) {
+    if (reps == null) return 0.0;
+    if (reps is double) return reps;
+    if (reps is int) return reps.toDouble();
+    if (reps is String) return double.tryParse(reps) ?? 0.0;
+    return 0.0;
+  }
 }
 
 /// Statistiche rapide per la home screen
 class QuickStats {
-  final double totalVolume;
-  final double volumeIncrease; // Percentuale
-  final double maxPR;
-  final String prExercise;
-  final int totalWorkouts;
 
   const QuickStats({
     required this.totalVolume,
@@ -176,6 +187,11 @@ class QuickStats {
       totalWorkouts: 0,
     );
   }
+  final double totalVolume;
+  final double volumeIncrease; // Percentuale
+  final double maxPR;
+  final String prExercise;
+  final int totalWorkouts;
 
   String get formattedVolume {
     if (totalVolume >= 1000) {

@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 void main() {
@@ -36,7 +35,7 @@ void main() {
         });
 
         final snapshot = await docRef.get();
-        final user = UserModel.fromFirestore(snapshot as DocumentSnapshot<Map<String, dynamic>>);
+        final user = UserModel.fromFirestore(snapshot);
         
         expect(user.preferences, isNotNull);
         expect(user.preferences.units, 'kg'); // Default value

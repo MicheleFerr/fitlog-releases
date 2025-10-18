@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:math' as math;
-import '../../domain/models/progressive_overload_data.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
 
 /// Widget che fornisce consigli contestuali invece di un numero astratto
 class ContextualTrainingAdvisor extends StatelessWidget {
-  final double currentWeekVolume;
-  final double previousWeekVolume;
-  final double avgIntensity; // RPE medio 6-10
-  final List<FatigueEntry> fatigueHistory;
-  final int workoutCount;
-  final DateTime lastWorkoutDate;
-  final bool isPremium;
 
   const ContextualTrainingAdvisor({
     super.key,
@@ -23,6 +15,13 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     required this.lastWorkoutDate,
     this.isPremium = false,
   });
+  final double currentWeekVolume;
+  final double previousWeekVolume;
+  final double avgIntensity; // RPE medio 6-10
+  final List<FatigueEntry> fatigueHistory;
+  final int workoutCount;
+  final DateTime lastWorkoutDate;
+  final bool isPremium;
 
   @override
   Widget build(BuildContext context) {
@@ -247,56 +246,56 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     if (volumeChange < -30) {
       if (avgFatigue > 3.5) {
         return ContextualAdvice(
-          mainMessage: "Il tuo corpo sta chiedendo riposo. Il volume è calato del ${volumeChange.abs().toStringAsFixed(0)}% e la fatica è alta.",
-          subMessage: "Considera 2-3 giorni di recupero completo o un allenamento molto leggero.",
+          mainMessage: 'Il tuo corpo sta chiedendo riposo. Il volume è calato del ${volumeChange.abs().toStringAsFixed(0)}% e la fatica è alta.',
+          subMessage: 'Considera 2-3 giorni di recupero completo o un allenamento molto leggero.',
           subIcon: Icons.spa,
         );
       } else {
         return ContextualAdvice(
-          mainMessage: "Settimana di scarico rilevata. Volume ridotto del ${volumeChange.abs().toStringAsFixed(0)}%.",
-          subMessage: "Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.",
+          mainMessage: 'Settimana di scarico rilevata. Volume ridotto del ${volumeChange.abs().toStringAsFixed(0)}%.',
+          subMessage: 'Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.',
           subIcon: Icons.check_circle,
         );
       }
     } else if (volumeChange > 15) {
       if (avgFatigue < 3) {
         return ContextualAdvice(
-          mainMessage: "Ottima progressione! Volume aumentato del ${volumeChange.toStringAsFixed(0)}% con fatica gestibile.",
-          subMessage: "Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.",
+          mainMessage: 'Ottima progressione! Volume aumentato del ${volumeChange.toStringAsFixed(0)}% con fatica gestibile.',
+          subMessage: 'Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.',
           subIcon: Icons.rocket_launch,
         );
       } else {
         return ContextualAdvice(
-          mainMessage: "Volume aumentato del ${volumeChange.toStringAsFixed(0)}%, ma la fatica è elevata.",
-          subMessage: "Considera di mantenere il volume attuale per consolidare i progressi.",
+          mainMessage: 'Volume aumentato del ${volumeChange.toStringAsFixed(0)}%, ma la fatica è elevata.',
+          subMessage: 'Considera di mantenere il volume attuale per consolidare i progressi.',
           subIcon: Icons.warning_amber,
         );
       }
     } else if (daysSinceLastWorkout > 4) {
       return ContextualAdvice(
         mainMessage: "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
-        subMessage: "Riparti con calma, magari con un volume ridotto del 20-30%.",
+        subMessage: 'Riparti con calma, magari con un volume ridotto del 20-30%.',
         subIcon: Icons.directions_walk,
       );
     } else if (normalizedIntensity > 8) {
       return ContextualAdvice(
-        mainMessage: "Intensità molto alta questa settimana (RPE medio: ${normalizedIntensity.toStringAsFixed(1)}).",
-        subMessage: "Assicurati di bilanciare con giorni di recupero adeguati.",
+        mainMessage: 'Intensità molto alta questa settimana (RPE medio: ${normalizedIntensity.toStringAsFixed(1)}).',
+        subMessage: 'Assicurati di bilanciare con giorni di recupero adeguati.',
         subIcon: Icons.flash_on,
       );
     } else if (workoutCount >= 5) {
       return ContextualAdvice(
-        mainMessage: "Frequenza di allenamento elevata con $workoutCount sessioni questa settimana.",
+        mainMessage: 'Frequenza di allenamento elevata con $workoutCount sessioni questa settimana.',
         subMessage: avgFatigue > 3 
-            ? "Valuta se ridurre la frequenza per migliorare il recupero."
-            : "Ottimo ritmo! Continua a monitorare i segnali del corpo.",
+            ? 'Valuta se ridurre la frequenza per migliorare il recupero.'
+            : 'Ottimo ritmo! Continua a monitorare i segnali del corpo.',
         subIcon: Icons.calendar_today,
       );
     } else {
       // Messaggio standard basato su performance generale
       return ContextualAdvice(
         mainMessage: "Settimana equilibrata con volume ${volumeChange > 0 ? 'in crescita' : 'stabile'}.",
-        subMessage: "Continua così, ascoltando sempre i segnali del tuo corpo.",
+        subMessage: 'Continua così, ascoltando sempre i segnali del tuo corpo.',
         subIcon: Icons.thumb_up,
       );
     }
@@ -351,12 +350,6 @@ class ContextualTrainingAdvisor extends StatelessWidget {
 }
 
 class _DetailedExplanationSheet extends StatelessWidget {
-  final double volumeChange;
-  final double avgIntensity;
-  final double avgFatigue;
-  final int workoutCount;
-  final int daysSinceLastWorkout;
-  final bool isPremium;
 
   const _DetailedExplanationSheet({
     required this.volumeChange,
@@ -366,6 +359,12 @@ class _DetailedExplanationSheet extends StatelessWidget {
     required this.daysSinceLastWorkout,
     required this.isPremium,
   });
+  final double volumeChange;
+  final double avgIntensity;
+  final double avgFatigue;
+  final int workoutCount;
+  final int daysSinceLastWorkout;
+  final bool isPremium;
 
   @override
   Widget build(BuildContext context) {
@@ -559,69 +558,69 @@ class _DetailedExplanationSheet extends StatelessWidget {
 
   String _getVolumeExplanation() {
     if (volumeChange > 15) {
-      return "Grande aumento di volume! Assicurati di recuperare adeguatamente. "
-             "Se ti senti bene, puoi mantenere questo ritmo per 2-3 settimane prima di una settimana di scarico.";
+      return 'Grande aumento di volume! Assicurati di recuperare adeguatamente. '
+             'Se ti senti bene, puoi mantenere questo ritmo per 2-3 settimane prima di una settimana di scarico.';
     } else if (volumeChange > 5) {
       return "Progressione moderata e sostenibile. Questo è l'incremento ideale per costruire forza "
-             "e massa muscolare senza accumulare troppa fatica.";
+             'e massa muscolare senza accumulare troppa fatica.';
     } else if (volumeChange > -5) {
-      return "Volume stabile rispetto alla settimana precedente. Perfetto per consolidare i progressi "
-             "o per una fase di mantenimento.";
+      return 'Volume stabile rispetto alla settimana precedente. Perfetto per consolidare i progressi '
+             'o per una fase di mantenimento.';
     } else if (volumeChange > -20) {
-      return "Leggera riduzione del volume. Può essere utile per favorire il recupero "
-             "mantenendo comunque lo stimolo allenante.";
+      return 'Leggera riduzione del volume. Può essere utile per favorire il recupero '
+             'mantenendo comunque lo stimolo allenante.';
     } else {
-      return "Significativa riduzione del volume. Se pianificata (deload week), ottimo per il recupero. "
-             "Altrimenti, valuta se ci sono fattori esterni che influenzano il tuo allenamento.";
+      return 'Significativa riduzione del volume. Se pianificata (deload week), ottimo per il recupero. '
+             'Altrimenti, valuta se ci sono fattori esterni che influenzano il tuo allenamento.';
     }
   }
 
   String _getIntensityExplanation() {
     final rpe = 6 + (avgIntensity - 1) * 4 / 9;
     if (rpe >= 9) {
-      return "Intensità molto alta! Stai lavorando vicino al massimale. "
-             "Assicurati di non mantenere questa intensità per troppe settimane consecutive.";
+      return 'Intensità molto alta! Stai lavorando vicino al massimale. '
+             'Assicurati di non mantenere questa intensità per troppe settimane consecutive.';
     } else if (rpe >= 7.5) {
-      return "Intensità ottimale per costruire forza e massa. "
-             "Stai lasciando 2-3 ripetizioni in riserva, perfetto per progressi sostenibili.";
+      return 'Intensità ottimale per costruire forza e massa. '
+             'Stai lasciando 2-3 ripetizioni in riserva, perfetto per progressi sostenibili.';
     } else if (rpe >= 6.5) {
-      return "Intensità moderata, ideale per volume alto o fase di apprendimento tecnico. "
+      return 'Intensità moderata, ideale per volume alto o fase di apprendimento tecnico. '
              "Puoi aumentare gradualmente l'intensità se ti senti recuperato.";
     } else {
-      return "Intensità bassa, utile per recupero attivo o perfezionamento tecnico. "
-             "Se non è una settimana di scarico, considera di aumentare i carichi.";
+      return 'Intensità bassa, utile per recupero attivo o perfezionamento tecnico. '
+             'Se non è una settimana di scarico, considera di aumentare i carichi.';
     }
   }
 
   String _getRecoveryExplanation() {
     if (avgFatigue < 2) {
       return "Recupero eccellente! Il tuo corpo risponde molto bene all'allenamento. "
-             "Potresti anche aumentare volume o frequenza se desideri.";
+             'Potresti anche aumentare volume o frequenza se desideri.';
     } else if (avgFatigue < 3) {
-      return "Buon recupero con fatica gestibile. Questo è il range ideale per progressi "
-             "costanti senza rischio di sovrallenamento.";
+      return 'Buon recupero con fatica gestibile. Questo è il range ideale per progressi '
+             'costanti senza rischio di sovrallenamento.';
     } else if (avgFatigue < 4) {
-      return "Fatica accumulata moderata. Monitora attentamente i prossimi allenamenti "
-             "e considera di ridurre volume o intensità se peggiora.";
+      return 'Fatica accumulata moderata. Monitora attentamente i prossimi allenamenti '
+             'e considera di ridurre volume o intensità se peggiora.';
     } else {
-      return "Fatica elevata! Il tuo corpo ha bisogno di più recupero. "
-             "Considera 2-3 giorni di riposo completo o una settimana di scarico.";
+      return 'Fatica elevata! Il tuo corpo ha bisogno di più recupero. '
+             'Considera 2-3 giorni di riposo completo o una settimana di scarico.';
     }
   }
 
   String _getFrequencyExplanation() {
     if (workoutCount >= 6) {
       return "Frequenza molto alta! Assicurati di variare l'intensità tra le sessioni "
-             "e di includere giorni più leggeri per favorire il recupero.";
+             'e di includere giorni più leggeri per favorire il recupero.';
     } else if (workoutCount >= 4) {
-      return "Frequenza ottimale per la maggior parte degli atleti intermedi/avanzati. "
-             "Permette buon volume settimanale con recupero adeguato.";
+      return 'Frequenza ottimale per la maggior parte degli atleti intermedi/avanzati. '
+             'Permette buon volume settimanale con recupero adeguato.';
     } else if (workoutCount >= 3) {
-      return "Frequenza standard, ideale per principianti/intermedi o per chi ha tempo limitato. "
-             "Focus sulla qualità degli allenamenti piuttosto che sulla quantità.";
+      return 'Frequenza standard, ideale per principianti/intermedi o per chi ha tempo limitato. '
+             'Focus sulla qualità degli allenamenti piuttosto che sulla quantità.';
     } else {
-      return "Frequenza bassa. Se è il tuo standard, assicurati che ogni sessione "
-             "sia sufficientemente stimolante. Altrimenti, cerca di aumentare gradualmente.";
+      return 'Frequenza bassa. Se è il tuo standard, assicurati che ogni sessione '
+             'sia sufficientemente stimolante. Altrimenti, cerca di aumentare gradualmente.';
     }
   }
 
@@ -650,13 +649,13 @@ enum AdviceCategory {
 }
 
 class ContextualAdvice {
-  final String mainMessage;
-  final String? subMessage;
-  final IconData? subIcon;
 
   ContextualAdvice({
     required this.mainMessage,
     this.subMessage,
     this.subIcon,
   });
+  final String mainMessage;
+  final String? subMessage;
+  final IconData? subIcon;
 }

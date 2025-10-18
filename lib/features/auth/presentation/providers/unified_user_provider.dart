@@ -1,16 +1,15 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: auth
- * 🔧 Type: provider
- * 🌍 Localization: N/A - Provider class
- * 🎨 Theme: N/A - Provider class
- * 📱 Platform: Universal
- * 
- * UNIFIED USER PROVIDER - Compatibility layer for safe migration
- * This provider unifies all duplicate user providers without breaking existing code
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: auth
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A - Provider class
+/// 🎨 Theme: N/A - Provider class
+/// 📱 Platform: Universal
+/// 
+/// UNIFIED USER PROVIDER - Compatibility layer for safe migration
+/// This provider unifies all duplicate user providers without breaking existing code
+library;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -78,7 +77,7 @@ final unifiedUserProfileProvider = StreamProvider<UserProfile?>((ref) async* {
         }
       } catch (error) {
         // Log error but provide fallback
-        print('Error loading user profile: $error');
+        // print('Error loading user profile: $error');
         
         // Fallback to basic profile
         yield UserProfile(
@@ -104,6 +103,9 @@ final unifiedUserProfileProvider = StreamProvider<UserProfile?>((ref) async* {
 /// ============================================================================
 
 /// Get current user ID (compatible with existing usage)
+/// Alias for backwards compatibility
+final unifiedUserProvider = unifiedUserProfileProvider;
+
 final unifiedUserIdProvider = Provider<String?>((ref) {
   final user = ref.watch(unifiedFirebaseUserProvider).value;
   return user?.uid;

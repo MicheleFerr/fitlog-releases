@@ -1,0 +1,583 @@
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+///
+/// 📁 Layer: features/routine/presentation/screens
+/// 🎯 Feature: flexible_routine
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ YES (context.l10n)
+/// 🎨 Theme: ✅ YES (context.colors)
+/// 📱 Platform: Universal
+///
+/// ROUTINE CENTER SCREEN - Main hub for managing flexible routines
+///
+/// Features:
+/// - Display active routine with prominent badge
+/// - List all inactive/paused routines
+/// - Create new routine button
+/// - Activate/Archive/Delete actions
+/// - Real-time sync with Firebase
+/// - Empty state for new users
+library;
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/routine_card.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/onboarding/routine_onboarding_screen.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
+
+/// Main screen for managing all flexible routines
+class RoutineCenterScreen extends ConsumerStatefulWidget {
+  const RoutineCenterScreen({super.key});
+
+  @override
+  ConsumerState<RoutineCenterScreen> createState() =>
+      _RoutineCenterScreenState();
+}
+
+class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Check onboarding status after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkOnboarding();
+    });
+  }
+
+  Future<void> _checkOnboarding() async {
+    final hasSeenOnboarding = ref.read(routineOnboardingProvider);
+
+    if (!hasSeenOnboarding && mounted) {
+      // Show onboarding as fullscreen dialog
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => RoutineOnboardingScreen(
+            onComplete: () {
+              // Mark as completed
+              ref.read(routineOnboardingProvider.notifier).completeOnboarding();
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final routinesAsync = ref.watch(userFlexibleRoutinesProvider);
+    final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Routine Center',
+          style: context.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.onSurface,
+          ),
+        ),
+        backgroundColor: context.colors.surface,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            // First try Navigator pop (for internal navigation like detail screens)
+            final didPop = await Navigator.of(context).maybePop();
+
+            if (!didPop && context.mounted) {
+              // Check if GoRouter can pop, otherwise go home
+              if (GoRouter.of(context).canPop()) {
+                context.pop();
+              } else {
+                context.go('/');
+              }
+            }
+          },
+          tooltip: 'Back',
+        ),
+        actions: [
+          // Create new routine button
+          IconButton(
+            onPressed: () => _navigateToCreateRoutine(context),
+            icon: const Icon(Icons.add_circle),
+            color: context.colors.primary,
+            iconSize: 28,
+            tooltip: 'Create New Routine',
+          ),
+          // More options menu
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'tutorial') {
+                _showTutorialAgain();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'tutorial',
+                child: Row(
+                  children: [
+                    Icon(Icons.school, size: 20),
+                    SizedBox(width: 12),
+                    Text('Show Tutorial'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: routinesAsync.when(
+        data: (routines) =>
+            _buildContent(context, ref, routines, activeRoutineAsync.value),
+        loading: () => const Center(child: LoadingIndicator()),
+        error: (error, stack) => _buildError(context, error),
+      ),
+    );
+  }
+
+  Widget _buildContent(
+    BuildContext context,
+    WidgetRef ref,
+    List<FlexibleRoutine> allRoutines,
+    FlexibleRoutine? activeRoutine,
+  ) {
+    // Separate active and inactive routines
+    final inactiveRoutines = allRoutines
+        .where((r) => !r.isActive && !r.isArchived && !r.isCompleted)
+        .toList();
+
+    final archivedRoutines =
+        allRoutines.where((r) => r.isArchived).toList();
+
+    // If no routines at all
+    if (allRoutines.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Refresh routines
+        ref.invalidate(userFlexibleRoutinesProvider);
+      },
+      child: CustomScrollView(
+        slivers: [
+          // Active routine section
+          if (activeRoutine != null) ...[
+            SliverToBoxAdapter(
+              child: _buildSectionHeader(
+                context,
+                title: 'Active Routine',
+                icon: Icons.play_circle,
+                color: context.colors.primary,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: RoutineCard(
+                routine: activeRoutine,
+                showActiveBadge: true,
+                onTap: () => _navigateToRoutineDetail(context, activeRoutine),
+                onArchive: () =>
+                    _archiveRoutine(context, ref, activeRoutine.id),
+                onDelete: () => _deleteRoutine(context, ref, activeRoutine.id),
+              ),
+            ),
+          ],
+
+          // Inactive routines section
+          if (inactiveRoutines.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: _buildSectionHeader(
+                context,
+                title: 'Other Routines',
+                icon: Icons.folder_outlined,
+                color: context.colors.secondary,
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final routine = inactiveRoutines[index];
+                  return RoutineCard(
+                    routine: routine,
+                    showActiveBadge: false,
+                    onTap: () => _navigateToRoutineDetail(context, routine),
+                    onActivate: () => _activateRoutine(context, ref, routine),
+                    onArchive: () => _archiveRoutine(context, ref, routine.id),
+                    onDelete: () => _deleteRoutine(context, ref, routine.id),
+                  );
+                },
+                childCount: inactiveRoutines.length,
+              ),
+            ),
+          ],
+
+          // Archived routines section
+          if (archivedRoutines.isNotEmpty) ...[
+            SliverToBoxAdapter(
+              child: _buildSectionHeader(
+                context,
+                title: 'Archived',
+                icon: Icons.archive,
+                color: context.colors.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final routine = archivedRoutines[index];
+                  return RoutineCard(
+                    routine: routine,
+                    showActiveBadge: false,
+                    onTap: () => _navigateToRoutineDetail(context, routine),
+                    onActivate: () => _activateRoutine(context, ref, routine),
+                    onArchive: () =>
+                        _unarchiveRoutine(context, ref, routine.id),
+                    onDelete: () => _deleteRoutine(context, ref, routine.id),
+                  );
+                },
+                childCount: archivedRoutines.length,
+              ),
+            ),
+          ],
+
+          // Bottom spacing
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 24),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: color,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.calendar_today_outlined,
+              size: 80,
+              color: context.colors.onSurface.withValues(alpha: 0.3),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'No Routines Yet',
+              style: context.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onSurface,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Create your first flexible routine to start tracking your fitness journey with multi-period planning and smart skip recovery.',
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () => _navigateToCreateRoutine(context),
+              icon: Icon(Icons.add, color: context.colors.onPrimary),
+              label: Text(
+                'Create Your First Routine',
+                style: TextStyle(
+                  color: context.colors.onPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                backgroundColor: context.colors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Choose from popular patterns or create your own custom schedule',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.5),
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildError(BuildContext context, Object error) {
+    final isPermissionError =
+        error.toString().toLowerCase().contains('permission');
+    final errorMessage = isPermissionError
+        ? 'Please check your Firebase permissions and authentication status'
+        : error.toString();
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: context.colors.error,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Error loading routines',
+              style: context.textTheme.titleMedium?.copyWith(
+                color: context.colors.error,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              errorMessage,
+              style: context.textTheme.bodySmall,
+              textAlign: TextAlign.center,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () async {
+                // First try Navigator pop (for internal navigation)
+                final didPop = await Navigator.of(context).maybePop();
+
+                if (!didPop && context.mounted) {
+                  // Check if GoRouter can pop, otherwise go home
+                  if (GoRouter.of(context).canPop()) {
+                    context.pop();
+                  } else {
+                    context.go('/');
+                  }
+                }
+              },
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Go Back'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                backgroundColor: context.colors.primary,
+                foregroundColor: context.colors.onPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showTutorialAgain() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => RoutineOnboardingScreen(
+          onComplete: () {
+            Navigator.of(context).pop();
+            SnackBarService.showSuccess(context, 'Tutorial completed! 📚');
+          },
+        ),
+      ),
+    );
+  }
+
+  // === NAVIGATION ===
+
+  void _navigateToCreateRoutine(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const RoutineEditorScreen(),
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
+  void _navigateToRoutineDetail(
+    BuildContext context,
+    FlexibleRoutine routine,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => RoutineDetailScreen(routineId: routine.id),
+      ),
+    );
+  }
+
+  // === ACTIONS ===
+
+  Future<void> _activateRoutine(
+    BuildContext context,
+    WidgetRef ref,
+    FlexibleRoutine routine,
+  ) async {
+    final confirmed = await ModalService.showConfirmDialog(
+      context,
+      title: 'Activate Routine',
+      message:
+          'Activating "${routine.name}" will deactivate your current active routine. Continue?',
+      isDangerous: false,
+    );
+
+    if (confirmed) {
+      final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+      final success = await notifier.activateRoutine(routine.id);
+
+      if (context.mounted) {
+        if (success) {
+          SnackBarService.showSuccess(
+            context,
+            '"${routine.name}" is now active 🎯',
+          );
+        } else {
+          final error = ref.read(flexibleRoutineNotifierProvider).error;
+          SnackBarService.showError(
+            context,
+            error ?? 'Failed to activate routine',
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _archiveRoutine(
+    BuildContext context,
+    WidgetRef ref,
+    String routineId,
+  ) async {
+    final confirmed = await ModalService.showConfirmDialog(
+      context,
+      title: 'Archive Routine',
+      message:
+          'Archived routines can be unarchived later. Your progress will be preserved.',
+      isDangerous: false,
+    );
+
+    if (confirmed) {
+      final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+      final success = await notifier.archiveRoutine(routineId);
+
+      if (context.mounted) {
+        if (success) {
+          SnackBarService.showSuccess(
+            context,
+            'Routine archived 📦',
+          );
+        } else {
+          final error = ref.read(flexibleRoutineNotifierProvider).error;
+          SnackBarService.showError(
+            context,
+            error ?? 'Failed to archive routine',
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _unarchiveRoutine(
+    BuildContext context,
+    WidgetRef ref,
+    String routineId,
+  ) async {
+    final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+    final success = await notifier.unarchiveRoutine(routineId);
+
+    if (context.mounted) {
+      if (success) {
+        SnackBarService.showSuccess(
+          context,
+          'Routine unarchived ✅',
+        );
+      } else {
+        final error = ref.read(flexibleRoutineNotifierProvider).error;
+        SnackBarService.showError(
+          context,
+          error ?? 'Failed to unarchive routine',
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteRoutine(
+    BuildContext context,
+    WidgetRef ref,
+    String routineId,
+  ) async {
+    final confirmed = await ModalService.showConfirmDialog(
+      context,
+      title: 'Delete Routine',
+      message:
+          'This action cannot be undone. All progress and history will be permanently deleted.',
+      isDangerous: true,
+    );
+
+    if (confirmed) {
+      final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+      final success = await notifier.deleteRoutine(routineId);
+
+      if (context.mounted) {
+        if (success) {
+          SnackBarService.showSuccess(
+            context,
+            'Routine deleted',
+          );
+        } else {
+          final error = ref.read(flexibleRoutineNotifierProvider).error;
+          SnackBarService.showError(
+            context,
+            error ?? 'Failed to delete routine',
+          );
+        }
+      }
+    }
+  }
+}

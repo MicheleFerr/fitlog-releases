@@ -1,20 +1,18 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: workout
- * 🔧 Type: repository_implementation
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Firebase Firestore
- * - Domain entities
- * - Repository interface
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: workout
+/// 🔧 Type: repository_implementation
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Firebase Firestore
+/// - Domain entities
+/// - Repository interface
+library;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
@@ -26,13 +24,13 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_wo
 
 /// Firebase implementation of WorkoutRepository
 class WorkoutRepositoryImpl implements WorkoutRepository {
-  final FirebaseWorkoutDataSource _dataSource;
-  final FirebaseAuth _auth;
   
   const WorkoutRepositoryImpl({
     required FirebaseWorkoutDataSource dataSource,
     required FirebaseAuth auth,
   }) : _dataSource = dataSource, _auth = auth;
+  final FirebaseWorkoutDataSource _dataSource;
+  final FirebaseAuth _auth;
 
   @override
   Future<Either<Failure, String>> saveWorkout(Workout workout) async {

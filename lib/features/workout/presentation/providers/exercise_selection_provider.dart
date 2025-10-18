@@ -1,21 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// 🚀 TIER-1 PERFORMANCE: Immutable exercise data model
 class ExerciseData {
-  final String id;
-  final String nome;
-  final String focus;
-  final String? imageUrl;
-  final String? muscoliSecondari;
-  final String difficolta;
-  final String tipoEsercizio;
-  final String attrezzatura;
-  final String patternMovimento;
-  final String rangeRipetizioni;
-  final String? noteTecniche;
   
   const ExerciseData({
     required this.id,
@@ -46,14 +36,29 @@ class ExerciseData {
       noteTecniche: json['noteTecniche'] as String?,
     );
   }
+  final String id;
+  final String nome;
+  final String focus;
+  final String? imageUrl;
+  final String? muscoliSecondari;
+  final String difficolta;
+  final String tipoEsercizio;
+  final String attrezzatura;
+  final String patternMovimento;
+  final String rangeRipetizioni;
+  final String? noteTecniche;
+
+  // English getters for compatibility
+  String get name => nome;
+  String get category => tipoEsercizio;
+  List<String> get muscleGroups => [
+    focus,
+    if (muscoliSecondari != null && muscoliSecondari!.isNotEmpty) muscoliSecondari!,
+  ];
 }
 
 /// 🚀 TIER-1: Cached and indexed exercise database
 class ExerciseDatabase {
-  final List<ExerciseData> exercises;
-  final Map<String, List<int>> _searchIndex;
-  final Map<String, List<int>> _categoryIndex;
-  final Map<String, List<int>> _equipmentIndex;
   
   ExerciseDatabase._({
     required this.exercises,
@@ -63,10 +68,19 @@ class ExerciseDatabase {
   }) : _searchIndex = searchIndex,
        _categoryIndex = categoryIndex,
        _equipmentIndex = equipmentIndex;
+  final List<ExerciseData> exercises;
+  final Map<String, List<int>> _searchIndex;
+  final Map<String, List<int>> _categoryIndex;
+  final Map<String, List<int>> _equipmentIndex;
   
   /// Build optimized indexes for O(1) lookups
-  static Future<ExerciseDatabase> load() async {
-    final jsonString = await rootBundle.loadString('assets/data/exercises.json');
+  static Future<ExerciseDatabase> load({String languageCode = 'en'}) async {
+    // Use localized JSON file
+    final jsonFile = languageCode == 'it'
+        ? 'assets/data/exercises_it.json'
+        : 'assets/data/exercises.json';
+
+    final jsonString = await rootBundle.loadString(jsonFile);
     final List<dynamic> jsonList = json.decode(jsonString);
     
     final exercises = jsonList
@@ -163,17 +177,12 @@ class ExerciseDatabase {
 
 /// 🚀 TIER-1: Singleton provider for exercise database (loaded once)
 final exerciseDatabaseProvider = FutureProvider<ExerciseDatabase>((ref) async {
-  return ExerciseDatabase.load();
+  final config = ref.watch(appConfigProvider);
+  return ExerciseDatabase.load(languageCode: config.languageCode);
 });
 
 /// 🚀 TIER-1: Selection state with minimal rebuilds
 class ExerciseSelectionState {
-  final String searchQuery;
-  final Set<String> selectedIds;
-  final String? focusedCategory;
-  final String? focusedEquipment;
-  final bool isMultiSelect;
-  final ExerciseType? targetType;
   
   const ExerciseSelectionState({
     this.searchQuery = '',
@@ -183,6 +192,12 @@ class ExerciseSelectionState {
     this.isMultiSelect = false,
     this.targetType,
   });
+  final String searchQuery;
+  final Set<String> selectedIds;
+  final String? focusedCategory;
+  final String? focusedEquipment;
+  final bool isMultiSelect;
+  final ExerciseType? targetType;
   
   ExerciseSelectionState copyWith({
     String? searchQuery,

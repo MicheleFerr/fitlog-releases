@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../workout/domain/entities/exercise.dart';
-import '../../domain/entities/exercise_template.dart';
-import '../providers/exercise_search_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_search_provider.dart';
 
 class ExerciseSelectorModal extends ConsumerStatefulWidget {
-  final Function(ExerciseTemplate) onExerciseSelected;
 
   const ExerciseSelectorModal({
     super.key,
     required this.onExerciseSelected,
   });
+  final Function(ExerciseTemplate) onExerciseSelected;
 
   @override
   ConsumerState<ExerciseSelectorModal> createState() => _ExerciseSelectorModalState();

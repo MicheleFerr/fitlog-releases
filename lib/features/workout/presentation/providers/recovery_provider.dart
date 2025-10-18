@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: workout
- * 🔧 Type: provider
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Provider to recover workouts from Firestore to local storage
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: workout
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Provider to recover workouts from Firestore to local storage
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,11 +21,6 @@ import 'package:flutter/foundation.dart';
 
 /// State for recovery operation
 class RecoveryState {
-  final bool isRecovering;
-  final int workoutsFound;
-  final int workoutsRecovered;
-  final String? currentOperation;
-  final String? error;
   
   RecoveryState({
     this.isRecovering = false,
@@ -35,6 +29,11 @@ class RecoveryState {
     this.currentOperation,
     this.error,
   });
+  final bool isRecovering;
+  final int workoutsFound;
+  final int workoutsRecovered;
+  final String? currentOperation;
+  final String? error;
 }
 
 /// Provider to recover workouts from Firestore
@@ -46,11 +45,11 @@ final workoutRecoveryProvider = StateNotifierProvider<WorkoutRecoveryNotifier, R
 });
 
 class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
+  
+  WorkoutRecoveryNotifier(this.userId) : super(RecoveryState());
   final String? userId;
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  
-  WorkoutRecoveryNotifier(this.userId) : super(RecoveryState());
   
   /// Clear all local workouts before recovery
   Future<void> clearLocalWorkouts() async {
@@ -109,7 +108,7 @@ class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
       
       // First try exerciseActivities (correct collection name)
       // Order by createdAt to avoid index requirement
-      List<QueryDocumentSnapshot> allActivities = [];
+      final List<QueryDocumentSnapshot> allActivities = [];
       
       // Try with exact email match first
       debugPrint('🔍 Querying with email field = $userEmail');
@@ -147,7 +146,7 @@ class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
         
         debugPrint('📊 Collection has ${sampleQuery.docs.length} sample documents');
         if (sampleQuery.docs.isNotEmpty) {
-          final sampleDoc = sampleQuery.docs.first.data() as Map<String, dynamic>;
+          final sampleDoc = sampleQuery.docs.first.data();
           debugPrint('📄 Sample document fields: ${sampleDoc.keys.join(', ')}');
           if (sampleDoc.containsKey('email')) {
             debugPrint('📧 Sample email value: ${sampleDoc['email']}');

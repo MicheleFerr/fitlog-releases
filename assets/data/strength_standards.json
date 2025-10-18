@@ -1,0 +1,625 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-15",
+  "attribution": "Data manually transcribed from ExRx.net and SymmetricStrength.com. For educational and reference purposes only. See ATTRIBUTION.md for full credits.",
+  "standards": [
+    {
+      "id": "barbell_bench_press",
+      "name": "Barbell Bench Press",
+      "keywords": ["bench press", "bench", "barbell bench", "flat bench", "panca", "distensione su panca", "distensioni panca", "pressa pettorali", "panca piana"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["PETT", "Pectorals", "TRIC", "Triceps", "DELT", "Deltoids"],
+      "dataSource": "exrx_net",
+      "bodyweightTable": {
+        "60": {
+          "untrained": 45.0,
+          "novice": 57.5,
+          "intermediate": 70.0,
+          "advanced": 95.0,
+          "elite": 117.5
+        },
+        "75": {
+          "untrained": 55.0,
+          "novice": 70.0,
+          "intermediate": 85.0,
+          "advanced": 115.0,
+          "elite": 145.0
+        },
+        "82": {
+          "untrained": 60.0,
+          "novice": 75.0,
+          "intermediate": 90.0,
+          "advanced": 125.0,
+          "elite": 157.5
+        },
+        "90": {
+          "untrained": 62.5,
+          "novice": 80.0,
+          "intermediate": 97.5,
+          "advanced": 132.5,
+          "elite": 162.5
+        },
+        "100": {
+          "untrained": 62.5,
+          "novice": 82.5,
+          "intermediate": 102.5,
+          "advanced": 137.5,
+          "elite": 172.5
+        }
+      },
+      "bodyweightMultipliers": {
+        "untrained": 0.75,
+        "novice": 0.93,
+        "intermediate": 1.13,
+        "advanced": 1.47,
+        "elite": 1.83
+      },
+      "symmetricStrengthMultipliers": {
+        "untrained": 0.55,
+        "novice": 0.85,
+        "intermediate": 1.10,
+        "proficient": 1.40,
+        "advanced": 1.60,
+        "exceptional": 1.85,
+        "elite": 2.10,
+        "worldClass": 2.35
+      }
+    },
+    {
+      "id": "barbell_back_squat",
+      "name": "Barbell Back Squat",
+      "keywords": ["squat", "back squat", "barbell squat", "full squat", "accosciata", "squat bilanciere", "squat completo"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["QUAD", "Quadriceps", "GLUT", "Gluteus", "HAMS", "Hamstrings"],
+      "dataSource": "exrx_net",
+      "bodyweightTable": {
+        "60": {
+          "untrained": 40.0,
+          "novice": 77.5,
+          "intermediate": 92.5,
+          "advanced": 127.5,
+          "elite": 167.5
+        },
+        "75": {
+          "untrained": 50.0,
+          "novice": 92.5,
+          "intermediate": 112.5,
+          "advanced": 155.0,
+          "elite": 202.5
+        },
+        "82": {
+          "untrained": 55.0,
+          "novice": 100.0,
+          "intermediate": 122.5,
+          "advanced": 167.5,
+          "elite": 217.5
+        },
+        "90": {
+          "untrained": 57.5,
+          "novice": 105.0,
+          "intermediate": 130.0,
+          "advanced": 177.5,
+          "elite": 230.0
+        },
+        "100": {
+          "untrained": 60.0,
+          "novice": 110.0,
+          "intermediate": 135.0,
+          "advanced": 185.0,
+          "elite": 240.0
+        }
+      },
+      "bodyweightMultipliers": {
+        "untrained": 0.67,
+        "novice": 1.23,
+        "intermediate": 1.50,
+        "advanced": 2.07,
+        "elite": 2.70
+      },
+      "symmetricStrengthMultipliers": {
+        "untrained": 0.75,
+        "novice": 1.20,
+        "intermediate": 1.60,
+        "proficient": 2.00,
+        "advanced": 2.30,
+        "exceptional": 2.60,
+        "elite": 3.00,
+        "worldClass": 3.30
+      }
+    },
+    {
+      "id": "barbell_deadlift",
+      "name": "Barbell Deadlift",
+      "keywords": ["deadlift", "stacco", "conventional deadlift", "stacco da terra", "stacco tradizionale"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["BACK", "Back", "GLUT", "Gluteus", "HAMS", "Hamstrings", "TRAP", "Trapezius"],
+      "dataSource": "exrx_net",
+      "bodyweightTable": {
+        "60": {
+          "untrained": 50.0,
+          "novice": 95.0,
+          "intermediate": 110.0,
+          "advanced": 155.0,
+          "elite": 200.0
+        },
+        "75": {
+          "untrained": 62.5,
+          "novice": 115.0,
+          "intermediate": 135.0,
+          "advanced": 185.0,
+          "elite": 235.0
+        },
+        "82": {
+          "untrained": 67.5,
+          "novice": 125.0,
+          "intermediate": 142.5,
+          "advanced": 200.0,
+          "elite": 250.0
+        },
+        "90": {
+          "untrained": 70.0,
+          "novice": 132.5,
+          "intermediate": 152.5,
+          "advanced": 207.5,
+          "elite": 257.5
+        },
+        "100": {
+          "untrained": 75.0,
+          "novice": 137.5,
+          "intermediate": 160.0,
+          "advanced": 217.5,
+          "elite": 265.0
+        }
+      },
+      "bodyweightMultipliers": {
+        "untrained": 0.83,
+        "novice": 1.53,
+        "intermediate": 1.80,
+        "advanced": 2.47,
+        "elite": 3.17
+      },
+      "symmetricStrengthMultipliers": {
+        "untrained": 0.90,
+        "novice": 1.30,
+        "intermediate": 1.70,
+        "proficient": 2.10,
+        "advanced": 2.60,
+        "exceptional": 3.00,
+        "elite": 3.30,
+        "worldClass": 3.65
+      }
+    },
+    {
+      "id": "barbell_overhead_press",
+      "name": "Barbell Overhead Press",
+      "keywords": ["overhead press", "military press", "shoulder press", "standing press", "lento avanti", "spinte sopra la testa", "press spalle"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["DELT", "Deltoids", "TRIC", "Triceps"],
+      "dataSource": "exrx_net",
+      "bodyweightTable": {
+        "60": {
+          "untrained": 27.5,
+          "novice": 37.5,
+          "intermediate": 47.5,
+          "advanced": 57.5,
+          "elite": 70.0
+        },
+        "75": {
+          "untrained": 32.5,
+          "novice": 45.0,
+          "intermediate": 57.5,
+          "advanced": 70.0,
+          "elite": 85.0
+        },
+        "82": {
+          "untrained": 35.0,
+          "novice": 50.0,
+          "intermediate": 62.5,
+          "advanced": 75.0,
+          "elite": 100.0
+        },
+        "90": {
+          "untrained": 37.5,
+          "novice": 52.5,
+          "intermediate": 65.0,
+          "advanced": 77.5,
+          "elite": 105.0
+        },
+        "100": {
+          "untrained": 40.0,
+          "novice": 55.0,
+          "intermediate": 70.0,
+          "advanced": 82.5,
+          "elite": 115.0
+        }
+      },
+      "bodyweightMultipliers": {
+        "untrained": 0.46,
+        "novice": 0.60,
+        "intermediate": 0.76,
+        "advanced": 0.90,
+        "elite": 1.13
+      },
+      "symmetricStrengthMultipliers": {
+        "untrained": 0.40,
+        "novice": 0.60,
+        "intermediate": 0.80,
+        "proficient": 1.00,
+        "advanced": 1.15,
+        "exceptional": 1.30,
+        "elite": 1.45,
+        "worldClass": 1.60
+      }
+    },
+    {
+      "id": "barbell_power_clean",
+      "name": "Barbell Power Clean",
+      "keywords": ["power clean", "clean", "hang clean", "power clean bilanciere"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["TRAP", "Trapezius", "QUAD", "Quadriceps", "GLUT", "Gluteus", "DELT", "Deltoids"],
+      "dataSource": "exrx_net_reference",
+      "estimatedMultipliers": {
+        "untrained": 0.55,
+        "novice": 0.75,
+        "intermediate": 0.95,
+        "advanced": 1.20,
+        "elite": 1.45
+      },
+      "note": "Estimated from ExRx.net power clean standards. Requires technical proficiency."
+    },
+    {
+      "id": "barbell_power_snatch",
+      "name": "Barbell Power Snatch",
+      "keywords": ["power snatch", "snatch", "hang snatch", "snatch bilanciere"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["TRAP", "Trapezius", "QUAD", "Quadriceps", "GLUT", "Gluteus", "DELT", "Deltoids"],
+      "dataSource": "exrx_net_reference",
+      "estimatedMultipliers": {
+        "untrained": 0.40,
+        "novice": 0.55,
+        "intermediate": 0.70,
+        "advanced": 0.90,
+        "elite": 1.10
+      },
+      "note": "Estimated from ExRx.net power snatch standards. Requires technical proficiency."
+    },
+    {
+      "id": "barbell_bent_over_row",
+      "name": "Barbell Bent-Over Row",
+      "keywords": ["bent over row", "barbell row", "pendlay row"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["LAT", "Latissimus Dorsi", "TRAP", "Trapezius", "RHOM", "Rhomboids"],
+      "dataSource": "estimated_from_benchmarks",
+      "estimatedMultipliers": {
+        "untrained": 0.50,
+        "novice": 0.70,
+        "intermediate": 0.90,
+        "advanced": 1.20,
+        "elite": 1.50
+      },
+      "note": "Estimated based on common progression relative to other pulling exercises."
+    },
+    {
+      "id": "pull_up_bodyweight",
+      "name": "Pull-up (Bodyweight)",
+      "keywords": ["pull up", "pullup", "chin up", "trazioni", "trazioni alla sbarra", "chin-up", "pronated pull up"],
+      "equipment": "Corpo Libero",
+      "muscleGroups": ["LAT", "Latissimus Dorsi", "BICE", "Biceps", "TRAP", "Trapezius"],
+      "dataSource": "reps_based_standard",
+      "repsStandards": {
+        "untrained": 0,
+        "novice": 3,
+        "intermediate": 8,
+        "advanced": 15,
+        "elite": 25
+      },
+      "note": "Bodyweight exercise. Standards based on consecutive reps."
+    },
+    {
+      "id": "dip_bodyweight",
+      "name": "Dip (Bodyweight)",
+      "keywords": ["dip", "parallel bar dip", "chest dip", "parallele", "dips", "tricep dip"],
+      "equipment": "Corpo Libero",
+      "muscleGroups": ["PETT", "Pectorals", "TRIC", "Triceps", "DELT", "Deltoids"],
+      "dataSource": "reps_based_standard",
+      "repsStandards": {
+        "untrained": 0,
+        "novice": 5,
+        "intermediate": 12,
+        "advanced": 20,
+        "elite": 35
+      },
+      "note": "Bodyweight exercise. Standards based on consecutive reps."
+    },
+    {
+      "id": "barbell_front_squat",
+      "name": "Barbell Front Squat",
+      "keywords": ["front squat", "front barbell squat"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["QUAD", "Quadriceps", "GLUT", "Gluteus", "CORE", "Core"],
+      "dataSource": "estimated_from_back_squat",
+      "estimatedMultipliers": {
+        "untrained": 0.55,
+        "novice": 0.95,
+        "intermediate": 1.20,
+        "advanced": 1.65,
+        "elite": 2.15
+      },
+      "note": "Typically 80-85% of back squat weight. Requires mobility and core strength."
+    },
+    {
+      "id": "barbell_incline_bench_press",
+      "name": "Barbell Incline Bench Press",
+      "keywords": ["incline bench", "incline press", "incline barbell"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["PETT", "Pectorals", "DELT", "Deltoids", "TRIC", "Triceps"],
+      "dataSource": "estimated_from_flat_bench",
+      "estimatedMultipliers": {
+        "untrained": 0.60,
+        "novice": 0.75,
+        "intermediate": 0.90,
+        "advanced": 1.18,
+        "elite": 1.47
+      },
+      "note": "Typically 80% of flat bench press weight."
+    },
+    {
+      "id": "barbell_romanian_deadlift",
+      "name": "Barbell Romanian Deadlift (RDL)",
+      "keywords": ["romanian deadlift", "rdl", "stiff leg deadlift"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["HAMS", "Hamstrings", "GLUT", "Gluteus", "BACK", "Back"],
+      "dataSource": "estimated_from_deadlift",
+      "estimatedMultipliers": {
+        "untrained": 0.65,
+        "novice": 1.20,
+        "intermediate": 1.40,
+        "advanced": 1.93,
+        "elite": 2.48
+      },
+      "note": "Typically 75-80% of conventional deadlift weight."
+    },
+    {
+      "id": "barbell_curl",
+      "name": "Barbell Curl",
+      "keywords": ["barbell curl", "bicep curl", "standing curl"],
+      "equipment": "Bilanciere",
+      "muscleGroups": ["BICE", "Biceps"],
+      "dataSource": "estimated_isolation",
+      "estimatedMultipliers": {
+        "untrained": 0.25,
+        "novice": 0.35,
+        "intermediate": 0.45,
+        "advanced": 0.60,
+        "elite": 0.75
+      },
+      "note": "Isolation exercise. Conservative estimates."
+    },
+    {
+      "id": "dumbbell_bench_press",
+      "name": "Dumbbell Bench Press",
+      "keywords": ["dumbbell bench", "db bench", "dumbbell press"],
+      "equipment": "Manubri",
+      "muscleGroups": ["PETT", "Pectorals", "TRIC", "Triceps", "DELT", "Deltoids"],
+      "dataSource": "estimated_from_barbell",
+      "estimatedMultipliers": {
+        "untrained": 0.30,
+        "novice": 0.40,
+        "intermediate": 0.48,
+        "advanced": 0.63,
+        "elite": 0.78
+      },
+      "note": "Per dumbbell weight. Total weight ~60% of barbell bench press (30% each dumbbell)."
+    },
+    {
+      "id": "dumbbell_shoulder_press",
+      "name": "Dumbbell Shoulder Press",
+      "keywords": ["dumbbell press", "db shoulder press", "seated db press"],
+      "equipment": "Manubri",
+      "muscleGroups": ["DELT", "Deltoids", "TRIC", "Triceps"],
+      "dataSource": "estimated_from_barbell_ohp",
+      "estimatedMultipliers": {
+        "untrained": 0.18,
+        "novice": 0.24,
+        "intermediate": 0.30,
+        "advanced": 0.36,
+        "elite": 0.45
+      },
+      "note": "Per dumbbell weight. Total weight ~60% of barbell OHP."
+    },
+    {
+      "id": "leg_press",
+      "name": "Leg Press (Machine)",
+      "keywords": ["leg press", "machine leg press", "pressa gambe"],
+      "equipment": "Macchina",
+      "muscleGroups": ["QUAD", "Quadriceps", "GLUT", "Gluteus"],
+      "dataSource": "estimated_machine",
+      "estimatedMultipliers": {
+        "untrained": 1.20,
+        "novice": 2.00,
+        "intermediate": 2.50,
+        "advanced": 3.30,
+        "elite": 4.20
+      },
+      "note": "Typically 2-3x bodyweight for trained individuals. Machine-dependent."
+    },
+    {
+      "id": "lat_pulldown",
+      "name": "Lat Pulldown (Machine)",
+      "keywords": ["lat pulldown", "pulldown", "lat machine", "dorsal machine", "lat pull down"],
+      "equipment": "Macchina",
+      "muscleGroups": ["LAT", "Latissimus Dorsi", "BICE", "Biceps", "RHOM", "Rhomboids"],
+      "dataSource": "estimated_machine",
+      "estimatedMultipliers": {
+        "untrained": 0.40,
+        "novice": 0.60,
+        "intermediate": 0.80,
+        "advanced": 1.10,
+        "elite": 1.30
+      },
+      "note": "Typically 0.8-1.1x bodyweight for trained individuals. Similar to pull-up strength."
+    },
+    {
+      "id": "cable_row",
+      "name": "Cable Row (Seated)",
+      "keywords": ["cable row", "seated cable row", "low row", "rematore cavi", "pulley row"],
+      "equipment": "Cavi",
+      "muscleGroups": ["LAT", "Latissimus Dorsi", "TRAP", "Trapezius", "RHOM", "Rhomboids"],
+      "dataSource": "estimated_cables",
+      "estimatedMultipliers": {
+        "untrained": 0.35,
+        "novice": 0.50,
+        "intermediate": 0.70,
+        "advanced": 0.90,
+        "elite": 1.10
+      },
+      "note": "Typically 70-80% of barbell row weight. Cable resistance varies by machine."
+    },
+    {
+      "id": "tricep_extension",
+      "name": "Tricep Extension (Cable/Barbell)",
+      "keywords": ["tricep extension", "overhead tricep", "skull crusher", "french press", "estensioni tricipiti"],
+      "equipment": "Vario",
+      "muscleGroups": ["TRIC", "Triceps"],
+      "dataSource": "estimated_isolation",
+      "estimatedMultipliers": {
+        "untrained": 0.15,
+        "novice": 0.25,
+        "intermediate": 0.35,
+        "advanced": 0.50,
+        "elite": 0.65
+      },
+      "note": "Isolation exercise. Weight varies significantly by variation (cable, barbell, dumbbell)."
+    },
+    {
+      "id": "leg_extension",
+      "name": "Leg Extension (Machine)",
+      "keywords": ["leg extension", "quad extension", "estensioni gambe", "leg ext"],
+      "equipment": "Macchina",
+      "muscleGroups": ["QUAD", "Quadriceps"],
+      "dataSource": "estimated_machine",
+      "estimatedMultipliers": {
+        "untrained": 0.25,
+        "novice": 0.40,
+        "intermediate": 0.55,
+        "advanced": 0.75,
+        "elite": 0.95
+      },
+      "note": "Isolation exercise for quadriceps. Machine-dependent resistance."
+    },
+    {
+      "id": "leg_curl",
+      "name": "Leg Curl (Machine)",
+      "keywords": ["leg curl", "hamstring curl", "lying leg curl", "curl femorali", "seated leg curl"],
+      "equipment": "Macchina",
+      "muscleGroups": ["HAMS", "Hamstrings"],
+      "dataSource": "estimated_machine",
+      "estimatedMultipliers": {
+        "untrained": 0.20,
+        "novice": 0.35,
+        "intermediate": 0.50,
+        "advanced": 0.70,
+        "elite": 0.90
+      },
+      "note": "Isolation exercise for hamstrings. Machine-dependent resistance."
+    },
+    {
+      "id": "chest_fly",
+      "name": "Chest Fly (Dumbbell/Cable)",
+      "keywords": ["chest fly", "pec fly", "dumbbell fly", "aperture pettorali", "cable fly"],
+      "equipment": "Vario",
+      "muscleGroups": ["PETT", "Pectorals"],
+      "dataSource": "estimated_isolation",
+      "estimatedMultipliers": {
+        "untrained": 0.08,
+        "novice": 0.12,
+        "intermediate": 0.16,
+        "advanced": 0.22,
+        "elite": 0.28
+      },
+      "perDumbbellNote": "Per dumbbell weight. Total weight ~16-28% of bodyweight for chest fly.",
+      "note": "Isolation exercise. Requires strict form. Weight per dumbbell."
+    },
+    {
+      "id": "face_pull",
+      "name": "Face Pull (Cable)",
+      "keywords": ["face pull", "rear delt cable", "tirate al viso", "face pulls"],
+      "equipment": "Cavi",
+      "muscleGroups": ["DELT", "Rear Deltoids", "TRAP", "Trapezius", "RHOM", "Rhomboids"],
+      "dataSource": "estimated_cables",
+      "estimatedMultipliers": {
+        "untrained": 0.12,
+        "novice": 0.18,
+        "intermediate": 0.25,
+        "advanced": 0.35,
+        "elite": 0.45
+      },
+      "note": "Isolation/corrective exercise. Focus on form and rear delt activation."
+    },
+    {
+      "id": "lateral_raise",
+      "name": "Lateral Raise (Dumbbell)",
+      "keywords": ["lateral raise", "side raise", "alzate laterali", "dumbbell lateral raise"],
+      "equipment": "Manubri",
+      "muscleGroups": ["DELT", "Lateral Deltoids"],
+      "dataSource": "estimated_isolation",
+      "estimatedMultipliers": {
+        "untrained": 0.06,
+        "novice": 0.10,
+        "intermediate": 0.14,
+        "advanced": 0.20,
+        "elite": 0.26
+      },
+      "perDumbbellNote": "Per dumbbell weight. Strict form required.",
+      "note": "Isolation exercise for lateral deltoids. Weight per dumbbell."
+    },
+    {
+      "id": "calf_raise",
+      "name": "Calf Raise (Machine/Barbell)",
+      "keywords": ["calf raise", "standing calf raise", "seated calf raise", "polpacci", "heel raise"],
+      "equipment": "Vario",
+      "muscleGroups": ["POLP", "Calves"],
+      "dataSource": "estimated_isolation",
+      "estimatedMultipliers": {
+        "untrained": 0.50,
+        "novice": 0.80,
+        "intermediate": 1.20,
+        "advanced": 1.80,
+        "elite": 2.40
+      },
+      "note": "Can handle significant load. Standing vs seated variations differ significantly."
+    }
+  ],
+  "levelDefinitions": {
+    "untrained": {
+      "description": "Has not trained on the exercise, but can perform it correctly",
+      "experienceDuration": "0 months"
+    },
+    "novice": {
+      "description": "Regular strength training for several months",
+      "experienceDuration": "2-6 months"
+    },
+    "intermediate": {
+      "description": "Regular training for about 1-2 years",
+      "experienceDuration": "1-2 years"
+    },
+    "advanced": {
+      "description": "Structured training for several years",
+      "experienceDuration": "3-5 years"
+    },
+    "elite": {
+      "description": "Competitive athlete in strength sports",
+      "experienceDuration": "5+ years"
+    }
+  },
+  "calculationNotes": {
+    "workingWeight": "Suggested working weight = 70% of 1RM for hypertrophy (8-12 reps)",
+    "strengthWeight": "Suggested working weight = 85% of 1RM for strength (3-5 reps)",
+    "bodyweightInterpolation": "For bodyweights not in table, use linear interpolation between nearest values",
+    "equipmentAdjustments": {
+      "dumbbells": "Typically 60% of barbell equivalent (30% per dumbbell)",
+      "machines": "Varies significantly, use conservative estimates",
+      "cables": "Typically 70-80% of free weight equivalent"
+    }
+  }
+}

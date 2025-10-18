@@ -1,0 +1,6 @@
+{
+  "screenAlwaysOnEnabled": "Schermo sempre acceso attivato",
+  "screenAlwaysOnDisabled": "Schermo sempre acceso disattivato",
+  "screenAlwaysOnTooltip": "Mantieni lo schermo acceso durante l'allenamento",
+  "screenAlwaysOnDescription": "Impedisce allo schermo di spegnersi automaticamente mentre ti alleni"
+}

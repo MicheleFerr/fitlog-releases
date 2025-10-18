@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../shared/presentation/providers/app_config_provider.dart';
-import '../../../shared/domain/entities/app_config.dart';
-import '../../../shared/domain/entities/timer_sound.dart';
-import '../../auth/presentation/providers/auth_provider.dart';
-import '../../timer/presentation/providers/timer_ui_state_provider.dart';
-import 'widgets/timer_sound_selector.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/timer_sound.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_ui_state_provider.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/widgets/timer_sound_selector.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/widgets/timer_sound_test_dialog.dart';
+import 'package:gymbro_flutter_new/features/migration/presentation/providers/migration_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/template_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart' show isAdminCachedProvider;
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -16,12 +25,15 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(appConfigProvider);
     final currentUser = ref.watch(firebaseUserProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = context.l10n;
+
+    // Auto-load fitness profile when user is authenticated
+    ref.watch(fitnessProfileAutoLoadProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.settingsTitle),
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        backgroundColor: context.colors.surfaceContainerHighest,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -38,8 +50,16 @@ class SettingsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Fitness Benchmark Hero Card
+            _buildFitnessBenchmarkCard(context, ref),
+            const SizedBox(height: 24),
+
             // User Info Section
             _buildUserInfoSection(context, ref, currentUser),
+            const SizedBox(height: 24),
+
+            // Fitness Profile Section
+            _buildFitnessProfileSection(context, ref),
             const SizedBox(height: 24),
 
             // Appearance Settings
@@ -76,6 +96,91 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  Widget _buildFitnessBenchmarkCard(BuildContext context, WidgetRef ref) {
+    final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
+    final l10n = context.l10n;
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            context.colors.primaryContainer,
+            context.colors.secondaryContainer,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () async {
+            final result = await showModalBottomSheet<bool>(
+              context: context,
+              isScrollControlled: true,
+              useSafeArea: true,
+              builder: (_) => const FitnessQuestionnaireScreen(),
+            );
+            if (result == true && context.mounted) {
+              ref.invalidate(userFitnessQuestionnaireProvider);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: context.colors.surface,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.analytics_outlined,
+                    size: 32,
+                    color: context.colors.primary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        questionnaire != null
+                            ? l10n.fitnessBenchmarkUpdate
+                            : l10n.fitnessBenchmarkCalculate,
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.colors.onPrimaryContainer,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        questionnaire != null
+                            ? '${l10n.fitnessBenchmarkLevel}: ${questionnaire.experienceLevel.name}'
+                            : l10n.fitnessBenchmarkDescription,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.colors.onSecondaryContainer,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: context.colors.onPrimaryContainer,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildUserInfoSection(BuildContext context, WidgetRef ref, AsyncValue<dynamic> currentUser) {
     return Card(
       child: Padding(
@@ -87,12 +192,12 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.person,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  AppLocalizations.of(context)!.account,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  context.l10n.account,
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -121,14 +226,14 @@ class SettingsScreen extends ConsumerWidget {
                                 children: [
                                   Text(
                                     user.displayName ?? 'GymBro User',
-                                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    style: context.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
                                     user.email ?? 'No email',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                                    style: context.textTheme.bodySmall?.copyWith(
+                                      color: context.colors.onSurface.withValues(alpha: 0.7),
                                     ),
                                   ),
                                 ],
@@ -136,12 +241,140 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 12),
+                        // Admin Dashboard Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () => context.pushNamed('admin'),
+                            icon: const Icon(Icons.admin_panel_settings),
+                            label: Text(context.l10n.adminDashboard),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: context.colors.primary,
+                            ),
+                          ),
+                        ),
                       ],
                     )
                   : const Text('Not logged in'),
               loading: () => const Text('Loading...'),
               error: (_, __) => const Text('Error loading user'),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFitnessProfileSection(BuildContext context, WidgetRef ref) {
+    final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
+    final l10n = context.l10n;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.fitness_center,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.fitnessQuestionnaireTitle,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (questionnaire != null) ...[
+              // Display current profile summary
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${l10n.fitnessQuestionnaireExperienceLevelLabel}: ${questionnaire.experienceLevel.name}',
+                          style: context.textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${l10n.fitnessQuestionnaireBodyweightLabel}: ${questionnaire.bodyweightKg.toStringAsFixed(1)} kg',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurface.withValues(alpha: 0.7),
+                          ),
+                        ),
+                        if (questionnaire.completedAt != null)
+                          Text(
+                            'Last updated: ${questionnaire.completedAt!.day}/${questionnaire.completedAt!.month}/${questionnaire.completedAt!.year}',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: context.colors.onSurface.withValues(alpha: 0.5),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () async {
+                    final result = await showModalBottomSheet<bool>(
+                      context: context,
+                      isScrollControlled: true,
+                      useSafeArea: true,
+                      builder: (_) => const FitnessQuestionnaireScreen(),
+                    );
+                    if (result == true && context.mounted) {
+                      // Profile updated successfully
+                      ref.invalidate(userFitnessQuestionnaireProvider);
+                    }
+                  },
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Update Profile'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: context.colors.primary,
+                  ),
+                ),
+              ),
+            ] else ...[
+              // No profile yet - show setup button
+              Text(
+                l10n.weightSuggestionCompleteQuestionnaire,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: () async {
+                    final result = await showModalBottomSheet<bool>(
+                      context: context,
+                      isScrollControlled: true,
+                      useSafeArea: true,
+                      builder: (_) => const FitnessQuestionnaireScreen(),
+                    );
+                    if (result == true && context.mounted) {
+                      // Profile created successfully
+                      ref.invalidate(userFitnessQuestionnaireProvider);
+                    }
+                  },
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.fitnessQuestionnaireWelcomeStart),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -159,12 +392,12 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.palette,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  AppLocalizations.of(context)!.appearance,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  context.l10n.appearance,
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -175,8 +408,8 @@ class SettingsScreen extends ConsumerWidget {
             // Theme Mode Selection
             _buildSettingTile(
               context,
-              title: AppLocalizations.of(context)!.theme,
-              subtitle: _getThemeModeText(AppLocalizations.of(context)!, config.themeMode),
+              title: context.l10n.theme,
+              subtitle: _getThemeModeText(context.l10n, config.themeMode),
               leading: Icon(_getThemeModeIcon(config.themeMode)),
               onTap: () => _showThemeDialog(context, ref, config.themeMode),
             ),
@@ -216,12 +449,12 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.fitness_center,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'Workout',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -280,12 +513,12 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.language,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'Units & Language',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -329,12 +562,12 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.phone_iphone,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'iOS Features',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -382,12 +615,12 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.volume_up,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'Audio & Feedback',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -424,10 +657,15 @@ class SettingsScreen extends ConsumerWidget {
             // Timer Sound
             _buildSettingTile(
               context,
-              title: AppLocalizations.of(context)!.timerSound,
+              title: context.l10n.timerSound,
               subtitle: TimerSound.fromFileName(config.timerSound).getLocalizedName(),
               leading: const Icon(Icons.notifications_active),
               onTap: () => _showTimerSoundDialog(context, ref, config.timerSound),
+              trailing: IconButton(
+                icon: const Icon(Icons.play_circle_outline),
+                tooltip: 'Test Sounds',
+                onPressed: () => showTimerSoundTestDialog(context),
+              ),
             ),
           ],
         ),
@@ -446,12 +684,12 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.settings_applications,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'Advanced',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -492,6 +730,148 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
+            // Fitness Profile Debug (Admin Only)
+            Consumer(
+              builder: (context, ref, child) {
+                final isAdmin = ref.watch(isAdminCachedProvider);
+                if (!isAdmin) return const SizedBox.shrink();
+
+                return Column(
+                  children: [
+                    _buildSettingTile(
+                      context,
+                      title: 'Fitness Profile Debug',
+                      subtitle: 'View fitness profile and weight suggestions status',
+                      leading: const Icon(Icons.bug_report),
+                      onTap: () => context.pushNamed('fitness-profile-debug'),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
+            ),
+
+            // Reset Onboarding Tutorials (Admin Only)
+            Consumer(
+              builder: (context, ref, child) {
+                final isAdmin = ref.watch(isAdminCachedProvider);
+                if (!isAdmin) return const SizedBox.shrink();
+
+                return Column(
+                  children: [
+                    _buildSettingTile(
+                      context,
+                      title: context.l10n.resetOnboarding,
+                      subtitle: context.l10n.resetOnboardingDesc,
+                      leading: const Icon(Icons.school_outlined),
+                      onTap: () => _resetOnboarding(context, ref),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
+            ),
+
+            // Data Migration
+            Consumer(
+              builder: (context, ref, child) {
+                final migrationState = ref.watch(migrationProvider);
+                return _buildSettingTile(
+                  context,
+                  title: context.l10n.dataMigration,
+                  subtitle: migrationState.hasDataToMigrate
+                    ? 'Hai dati da migrare dalla versione precedente'
+                    : 'Migrazione completata o non necessaria',
+                  leading: Icon(
+                    Icons.sync_alt,
+                    color: migrationState.hasDataToMigrate
+                      ? context.colors.primary
+                      : context.colors.outline,
+                  ),
+                  trailing: migrationState.hasDataToMigrate
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: context.colors.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'Disponibile',
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.onPrimaryContainer,
+                          ),
+                        ),
+                      )
+                    : null,
+                  onTap: () => context.push('/migration'),
+                );
+              },
+            ),
+
+            const Divider(),
+
+            // Beta Mode Toggle
+            Consumer(
+              builder: (context, ref, child) {
+                final betaModeEnabled = ref.watch(betaModeEnabledProvider);
+                return SwitchListTile(
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.science,
+                        color: betaModeEnabled
+                          ? context.colors.tertiary
+                          : context.colors.outline,
+                      ),
+                      const SizedBox(width: 16),
+                      Text(context.l10n.settingsBetaMode),
+                      if (betaModeEnabled) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: context.colors.tertiaryContainer,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            'BETA',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.onTertiaryContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  subtitle: Text(
+                    betaModeEnabled
+                      ? 'Tutte le funzionalità premium sbloccate per testing'
+                      : 'Abilita accesso temporaneo a tutte le funzionalità premium',
+                  ),
+                  value: betaModeEnabled,
+                  activeThumbColor: context.colors.tertiary,
+                  onChanged: (value) {
+                    ref.read(appConfigProvider.notifier).setBetaMode(value);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          value
+                            ? '🧪 Beta Mode attivato - Tutte le funzionalità premium sbloccate!'
+                            : 'Beta Mode disattivato',
+                        ),
+                        backgroundColor: value
+                          ? context.colors.tertiaryContainer
+                          : null,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+
+            const Divider(),
+
             // Reset to Defaults
             _buildSettingTile(
               context,
@@ -515,14 +895,14 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.logout,
                   color: Colors.red,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   'Account Actions',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -592,12 +972,12 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   Text(
                     'Font Size',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: context.textTheme.bodyLarge,
                   ),
                   Text(
                     _getFontSizeText(config.fontSize),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -680,7 +1060,7 @@ class SettingsScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             RadioListTile<String>(
-              title: const Text('English'),
+              title: Text(context.l10n.languageEnglish),
               subtitle: const Text('English (US)'),
               value: 'en',
               groupValue: currentLang,
@@ -810,14 +1190,14 @@ class SettingsScreen extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.cancel),
             ),
             FilledButton(
               onPressed: () {
                 ref.read(appConfigProvider.notifier).setDefaultRestTime(selectedTime);
                 Navigator.pop(context);
               },
-              child: const Text('Save'),
+              child: Text(context.l10n.save),
             ),
           ],
         ),
@@ -834,21 +1214,51 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () async {
               // Reset timer position to default
               ref.read(timerUIStateProvider.notifier).updatePosition(const Offset(20, 100));
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Timer position reset to default'),
-                  backgroundColor: Colors.green,
-                ),
-              );
+              SnackBarService.showSuccess(context, 'Timer position reset to default');
             },
             child: const Text('Reset Position'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _resetOnboarding(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.resetOnboarding),
+        content: Text(l10n.resetOnboardingConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              // Reset both template and exercise onboarding
+              await ref.read(templateOnboardingProvider.notifier).resetOnboarding();
+              await ref.read(exerciseOnboardingProvider.notifier).resetOnboarding();
+
+              if (context.mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.onboardingResetSuccess),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            },
+            child: Text(l10n.reset),
           ),
         ],
       ),
@@ -864,18 +1274,16 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
               ref.read(appConfigProvider.notifier).resetToDefaults();
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Settings reset to defaults')),
-              );
+              SnackBarService.showSuccess(context, 'Settings reset to defaults');
             },
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Reset'),
+            child: Text(context.l10n.reset),
           ),
         ],
       ),
@@ -886,12 +1294,12 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Sign Out'),
+        title: Text(context.l10n.signOutButton),
         content: const Text('Are you sure you want to sign out?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -900,7 +1308,7 @@ class SettingsScreen extends ConsumerWidget {
               context.go('/login');
             },
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Sign Out'),
+            child: Text(context.l10n.signOutButton),
           ),
         ],
       ),
@@ -910,23 +1318,19 @@ class SettingsScreen extends ConsumerWidget {
   void _exportSettings(BuildContext context, WidgetRef ref) {
     final config = ref.read(appConfigProvider.notifier).exportConfig();
     // In a real app, you'd save this to a file or share it
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Export functionality coming soon')),
-    );
+    SnackBarService.showInfo(context, 'Export functionality coming soon');
   }
 
   void _importSettings(BuildContext context, WidgetRef ref) {
     // In a real app, you'd pick a file and import it
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Import functionality coming soon')),
-    );
+    SnackBarService.showInfo(context, 'Import functionality coming soon');
   }
 
   void _showTimerSoundDialog(BuildContext context, WidgetRef ref, String currentSound) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.timerSound),
+        title: Text(context.l10n.timerSound),
         content: SizedBox(
           width: double.maxFinite,
           child: TimerSoundSelector(

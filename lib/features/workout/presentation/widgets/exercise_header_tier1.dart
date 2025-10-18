@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Tier-1 Exercise Header Widget with category icons, badges, and TUT timer
 class ExerciseHeaderTier1 extends StatelessWidget {
-  final Exercise exercise;
-  final VoidCallback? onTap;
   
   const ExerciseHeaderTier1({
     super.key,
     required this.exercise,
     this.onTap,
   });
+  final Exercise exercise;
+  final VoidCallback? onTap;
   
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return InkWell(
       onTap: onTap,

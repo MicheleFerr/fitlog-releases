@@ -10,9 +10,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 /// TIER-1 Set Tracking Widget with real-time visualization
 /// Shows live metrics, form feedback, and velocity graphs during set execution
 class Tier1SetTrackingWidget extends ConsumerWidget {
-  final String exerciseId;
-  final int setNumber;
-  final bool showAdvancedMetrics;
   
   const Tier1SetTrackingWidget({
     super.key,
@@ -20,6 +17,9 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     required this.setNumber,
     this.showAdvancedMetrics = true,
   });
+  final String exerciseId;
+  final int setNumber;
+  final bool showAdvancedMetrics;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +31,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     final velocityDrop = ref.watch(setVelocityDropProvider);
     
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     if (!isTrackingSet || currentMetrics == null) {
       return _buildReadyState(context, theme, l10n);
@@ -244,7 +244,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
       height: 150,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -327,7 +327,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
               CircularProgressIndicator(
                 value: value / 100,
                 strokeWidth: 8,
-                backgroundColor: theme.colorScheme.surfaceVariant,
+                backgroundColor: theme.colorScheme.surfaceContainerHighest,
                 valueColor: AlwaysStoppedAnimation<Color>(color),
               ),
               Center(

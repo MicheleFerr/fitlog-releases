@@ -8,9 +8,9 @@ import 'package:gymbro_flutter_new/features/timer/domain/repositories/set_timing
 /// TIER-1 Set Analytics Engine with ML-based predictions
 /// Provides advanced performance insights and predictions
 class SetAnalyticsEngine {
-  final SetTimingRepository _repository;
   
   SetAnalyticsEngine(this._repository);
+  final SetTimingRepository _repository;
 
   /// Generate comprehensive performance report
   Future<PerformanceReport> generatePerformanceReport(
@@ -586,16 +586,6 @@ class SetAnalyticsEngine {
 // (Performance Report, VBT Analysis, Fatigue Model, etc.)
 
 class PerformanceReport {
-  final String exerciseId;
-  final DateRange dateRange;
-  final int totalSets;
-  final VolumeAnalysis volumeAnalysis;
-  final IntensityAnalysis intensityAnalysis;
-  final ConsistencyAnalysis consistencyAnalysis;
-  final FatigueAnalysisResult fatigueAnalysis;
-  final MLPredictions predictions;
-  final PerformanceTrends trends;
-  final DateTime generatedAt;
   
   const PerformanceReport({
     required this.exerciseId,
@@ -624,68 +614,74 @@ class PerformanceReport {
       generatedAt: DateTime.now(),
     );
   }
+  final String exerciseId;
+  final DateRange dateRange;
+  final int totalSets;
+  final VolumeAnalysis volumeAnalysis;
+  final IntensityAnalysis intensityAnalysis;
+  final ConsistencyAnalysis consistencyAnalysis;
+  final FatigueAnalysisResult fatigueAnalysis;
+  final MLPredictions predictions;
+  final PerformanceTrends trends;
+  final DateTime generatedAt;
 }
 
 class DateRange {
-  final DateTime start;
-  final DateTime end;
   
   DateRange(this.start, this.end);
+  final DateTime start;
+  final DateTime end;
 }
 
 class VolumeAnalysis {
-  final double totalVolume;
-  final double averageVolumePerSet;
-  final double volumeTrend;
   
   const VolumeAnalysis({
     required this.totalVolume,
     required this.averageVolumePerSet,
     required this.volumeTrend,
   });
+  final double totalVolume;
+  final double averageVolumePerSet;
+  final double volumeTrend;
 }
 
 class IntensityAnalysis {
-  final double averageWeight;
-  final double maxWeight;
-  final double intensityTrend;
   
   const IntensityAnalysis({
     required this.averageWeight,
     required this.maxWeight,
     required this.intensityTrend,
   });
+  final double averageWeight;
+  final double maxWeight;
+  final double intensityTrend;
 }
 
 class ConsistencyAnalysis {
-  final double timeConsistency;
-  final double formConsistency;
-  final double overallConsistency;
   
   const ConsistencyAnalysis({
     required this.timeConsistency,
     required this.formConsistency,
     required this.overallConsistency,
   });
+  final double timeConsistency;
+  final double formConsistency;
+  final double overallConsistency;
 }
 
 class FatigueAnalysisResult {
-  final double averageFatigue;
-  final double maxFatigue;
-  final double fatigueTrend;
   
   const FatigueAnalysisResult({
     required this.averageFatigue,
     required this.maxFatigue,
     required this.fatigueTrend,
   });
+  final double averageFatigue;
+  final double maxFatigue;
+  final double fatigueTrend;
 }
 
 class MLPredictions {
-  final int nextSetExecutionTime;
-  final double nextSetFatigueIndex;
-  final double recommendedWeight;
-  final double confidenceScore;
   
   const MLPredictions({
     required this.nextSetExecutionTime,
@@ -693,26 +689,25 @@ class MLPredictions {
     required this.recommendedWeight,
     required this.confidenceScore,
   });
+  final int nextSetExecutionTime;
+  final double nextSetFatigueIndex;
+  final double recommendedWeight;
+  final double confidenceScore;
 }
 
 class PerformanceTrends {
-  final double executionTimeTrend;
-  final double formScoreTrend;
-  final double fatigueIndexTrend;
   
   const PerformanceTrends({
     required this.executionTimeTrend,
     required this.formScoreTrend,
     required this.fatigueIndexTrend,
   });
+  final double executionTimeTrend;
+  final double formScoreTrend;
+  final double fatigueIndexTrend;
 }
 
 class SetPrediction {
-  final int predictedExecutionTimeMs;
-  final double predictedFatigueIndex;
-  final double successProbability;
-  final double confidence;
-  final int basedOnSets;
   
   const SetPrediction({
     required this.predictedExecutionTimeMs,
@@ -731,14 +726,14 @@ class SetPrediction {
       basedOnSets: 0,
     );
   }
+  final int predictedExecutionTimeMs;
+  final double predictedFatigueIndex;
+  final double successProbability;
+  final double confidence;
+  final int basedOnSets;
 }
 
 class VBTAnalysis {
-  final Map<String, double> zoneDistribution;
-  final List<LoadVelocityPoint> loadVelocityProfile;
-  final OptimalLoads optimalLoads;
-  final double averageVelocityLoss;
-  final VelocityThresholds recommendedVelocityThresholds;
   
   const VBTAnalysis({
     required this.zoneDistribution,
@@ -757,44 +752,45 @@ class VBTAnalysis {
       recommendedVelocityThresholds: VelocityThresholds(minVelocity: 0, optimalVelocity: 0, maxVelocity: 0),
     );
   }
+  final Map<String, double> zoneDistribution;
+  final List<LoadVelocityPoint> loadVelocityProfile;
+  final OptimalLoads optimalLoads;
+  final double averageVelocityLoss;
+  final VelocityThresholds recommendedVelocityThresholds;
 }
 
 class LoadVelocityPoint {
-  final double load;
-  final double velocity;
   
   const LoadVelocityPoint({required this.load, required this.velocity});
+  final double load;
+  final double velocity;
 }
 
 class OptimalLoads {
-  final double maxStrength;
-  final double maxPower;
-  final double maxSpeed;
   
   const OptimalLoads({
     required this.maxStrength,
     required this.maxPower,
     required this.maxSpeed,
   });
+  final double maxStrength;
+  final double maxPower;
+  final double maxSpeed;
 }
 
 class VelocityThresholds {
-  final double minVelocity;
-  final double optimalVelocity;
-  final double maxVelocity;
   
   const VelocityThresholds({
     required this.minVelocity,
     required this.optimalVelocity,
     required this.maxVelocity,
   });
+  final double minVelocity;
+  final double optimalVelocity;
+  final double maxVelocity;
 }
 
 class FatigueModel {
-  final List<IntraSessionFatigue> intraSessionFatigue;
-  final InterSessionFatigue interSessionFatigue;
-  final FatigueCoefficients fatigueCoefficients;
-  final Map<String, Duration> optimalRestRecommendations;
   
   const FatigueModel({
     required this.intraSessionFatigue,
@@ -811,47 +807,47 @@ class FatigueModel {
       optimalRestRecommendations: {},
     );
   }
+  final List<IntraSessionFatigue> intraSessionFatigue;
+  final InterSessionFatigue interSessionFatigue;
+  final FatigueCoefficients fatigueCoefficients;
+  final Map<String, Duration> optimalRestRecommendations;
 }
 
 class IntraSessionFatigue {
-  final double initialFatigue;
-  final double finalFatigue;
-  final double fatigueAccumulation;
   
   const IntraSessionFatigue({
     required this.initialFatigue,
     required this.finalFatigue,
     required this.fatigueAccumulation,
   });
+  final double initialFatigue;
+  final double finalFatigue;
+  final double fatigueAccumulation;
 }
 
 class InterSessionFatigue {
-  final Duration averageRecoveryTime;
-  final double recoveryEfficiency;
   
   const InterSessionFatigue({
     required this.averageRecoveryTime,
     required this.recoveryEfficiency,
   });
+  final Duration averageRecoveryTime;
+  final double recoveryEfficiency;
 }
 
 class FatigueCoefficients {
-  final double fatigueRate;
-  final double recoveryRate;
-  final double carryOverFactor;
   
   const FatigueCoefficients({
     required this.fatigueRate,
     required this.recoveryRate,
     required this.carryOverFactor,
   });
+  final double fatigueRate;
+  final double recoveryRate;
+  final double carryOverFactor;
 }
 
 class RestPrediction {
-  final int predictedRestTimeSeconds;
-  final double confidence;
-  final double targetRecovery;
-  final double expectedFatigueAfterRest;
   
   const RestPrediction({
     required this.predictedRestTimeSeconds,
@@ -868,35 +864,35 @@ class RestPrediction {
       expectedFatigueAfterRest: 20.0,
     );
   }
+  final int predictedRestTimeSeconds;
+  final double confidence;
+  final double targetRecovery;
+  final double expectedFatigueAfterRest;
 }
 
 class RecoveryPattern {
-  final double initialFatigue;
-  final Duration restTime;
-  final double finalFatigue;
   
   const RecoveryPattern({
     required this.initialFatigue,
     required this.restTime,
     required this.finalFatigue,
   });
+  final double initialFatigue;
+  final Duration restTime;
+  final double finalFatigue;
 }
 
 class RecoveryModel {
-  final double exponentialDecayRate;
-  final double plateauThreshold;
   
   const RecoveryModel({
     required this.exponentialDecayRate,
     required this.plateauThreshold,
   });
+  final double exponentialDecayRate;
+  final double plateauThreshold;
 }
 
 class CoachingInsights {
-  final List<CoachingInsight> insights;
-  final double overallScore;
-  final List<String> keyRecommendations;
-  final DateTime generatedAt;
   
   const CoachingInsights({
     required this.insights,
@@ -913,14 +909,13 @@ class CoachingInsights {
       generatedAt: DateTime.now(),
     );
   }
+  final List<CoachingInsight> insights;
+  final double overallScore;
+  final List<String> keyRecommendations;
+  final DateTime generatedAt;
 }
 
 class CoachingInsight {
-  final String title;
-  final String description;
-  final String recommendation;
-  final InsightPriority priority;
-  final InsightCategory category;
   
   const CoachingInsight({
     required this.title,
@@ -929,6 +924,11 @@ class CoachingInsight {
     required this.priority,
     required this.category,
   });
+  final String title;
+  final String description;
+  final String recommendation;
+  final InsightPriority priority;
+  final InsightCategory category;
 }
 
 enum InsightPriority { low, medium, high, critical }

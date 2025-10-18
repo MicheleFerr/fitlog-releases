@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class LevelInfoModal extends ConsumerWidget {
-  final int currentLevel;
-  final int currentXp;
-  final int xpForNextLevel;
   
   const LevelInfoModal({
     super.key,
@@ -13,10 +10,13 @@ class LevelInfoModal extends ConsumerWidget {
     required this.currentXp,
     required this.xpForNextLevel,
   });
+  final int currentLevel;
+  final int currentXp;
+  final int xpForNextLevel;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     
     return Container(

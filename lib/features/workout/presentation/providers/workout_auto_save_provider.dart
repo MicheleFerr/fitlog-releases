@@ -17,10 +17,6 @@ final workoutAutoSaveProvider = StateNotifierProvider<WorkoutAutoSaveNotifier, W
 
 /// State for auto-save functionality
 class WorkoutAutoSaveState {
-  final bool isAutoSaveEnabled;
-  final DateTime? lastSaveTime;
-  final bool isSaving;
-  final String? lastError;
 
   WorkoutAutoSaveState({
     this.isAutoSaveEnabled = true,
@@ -28,6 +24,10 @@ class WorkoutAutoSaveState {
     this.isSaving = false,
     this.lastError,
   });
+  final bool isAutoSaveEnabled;
+  final DateTime? lastSaveTime;
+  final bool isSaving;
+  final String? lastError;
 
   WorkoutAutoSaveState copyWith({
     bool? isAutoSaveEnabled,
@@ -45,7 +45,11 @@ class WorkoutAutoSaveState {
 }
 
 /// Notifier for managing workout auto-save
-class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with WidgetsBindingObserver {
+class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with WidgetsBindingObserver {      // Increased from 2 to 5 seconds
+
+  WorkoutAutoSaveNotifier(this._repository) : super(WorkoutAutoSaveState()) {
+    _init();
+  }
   final WorkoutDraftRepository _repository;
   Timer? _autoSaveTimer;
   Timer? _debounceTimer;
@@ -53,11 +57,7 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   
   // CPU OPTIMIZATION: Increased intervals to reduce background activity
   static const Duration _autoSaveInterval = Duration(minutes: 10);  // Reduced from 5 to 10 minutes
-  static const Duration _debounceDelay = Duration(seconds: 5);      // Increased from 2 to 5 seconds
-
-  WorkoutAutoSaveNotifier(this._repository) : super(WorkoutAutoSaveState()) {
-    _init();
-  }
+  static const Duration _debounceDelay = Duration(seconds: 5);
 
   void _init() {
     // Add lifecycle observer to save on app pause

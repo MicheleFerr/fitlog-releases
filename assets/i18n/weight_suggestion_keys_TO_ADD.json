@@ -1,0 +1,394 @@
+{
+  "_comment": "===== WEIGHT SUGGESTION FEATURE - LOCALIZATION KEYS =====",
+  "_comment2": "Add these to app_en.arb and app_it.arb (Italian translations below)",
+  "_comment3": "After adding, run: flutter gen-l10n",
+
+  "ENGLISH_KEYS": {
+    "fitnessQuestionnaireTitle": "Fitness Profile Setup",
+    "@fitnessQuestionnaireTitle": {
+      "description": "Title for fitness questionnaire"
+    },
+
+    "fitnessQuestionnaireWelcomeTitle": "Get Personalized Weight Suggestions",
+    "@fitnessQuestionnaireWelcomeTitle": {
+      "description": "Welcome screen title"
+    },
+
+    "fitnessQuestionnaireWelcomeDescription": "Answer a few quick questions to receive scientifically-backed starting weight suggestions for your exercises.",
+    "@fitnessQuestionnaireWelcomeDescription": {
+      "description": "Welcome screen description"
+    },
+
+    "fitnessQuestionnaireWelcomeSkip": "Skip for now",
+    "@fitnessQuestionnaireWelcomeSkip": {
+      "description": "Skip questionnaire button"
+    },
+
+    "fitnessQuestionnaireWelcomeStart": "Let's Start",
+    "@fitnessQuestionnaireWelcomeStart": {
+      "description": "Start questionnaire button"
+    },
+
+    "fitnessQuestionnaireDemographicsTitle": "About You",
+    "@fitnessQuestionnaireDemographicsTitle": {
+      "description": "Demographics step title"
+    },
+
+    "fitnessQuestionnaireBodyweightLabel": "Current Bodyweight",
+    "@fitnessQuestionnaireBodyweightLabel": {
+      "description": "Bodyweight input label"
+    },
+
+    "fitnessQuestionnaireBodyweightUnit": "kg",
+    "@fitnessQuestionnaireBodyweightUnit": {
+      "description": "Bodyweight unit"
+    },
+
+    "fitnessQuestionnaireAgeLabel": "Age",
+    "@fitnessQuestionnaireAgeLabel": {
+      "description": "Age input label"
+    },
+
+    "fitnessQuestionnaireSexLabel": "Biological Sex",
+    "@fitnessQuestionnaireSexLabel": {
+      "description": "Biological sex label"
+    },
+
+    "fitnessQuestionnaireSexMale": "Male",
+    "@fitnessQuestionnaireSexMale": {
+      "description": "Male option"
+    },
+
+    "fitnessQuestionnaireSexFemale": "Female",
+    "@fitnessQuestionnaireSexFemale": {
+      "description": "Female option"
+    },
+
+    "fitnessQuestionnaireExperienceTitle": "Training Experience",
+    "@fitnessQuestionnaireExperienceTitle": {
+      "description": "Experience step title"
+    },
+
+    "fitnessQuestionnaireExperienceLevelLabel": "Experience Level",
+    "@fitnessQuestionnaireExperienceLevelLabel": {
+      "description": "Experience level label"
+    },
+
+    "fitnessQuestionnaireExperienceLevelUntrained": "Beginner",
+    "@fitnessQuestionnaireExperienceLevelUntrained": {
+      "description": "Untrained level"
+    },
+
+    "fitnessQuestionnaireExperienceLevelNovice": "Novice",
+    "@fitnessQuestionnaireExperienceLevelNovice": {
+      "description": "Novice level (2-6 months)"
+    },
+
+    "fitnessQuestionnaireExperienceLevelIntermediate": "Intermediate",
+    "@fitnessQuestionnaireExperienceLevelIntermediate": {
+      "description": "Intermediate level (1-2 years)"
+    },
+
+    "fitnessQuestionnaireExperienceLevelAdvanced": "Advanced",
+    "@fitnessQuestionnaireExperienceLevelAdvanced": {
+      "description": "Advanced level (3-5 years)"
+    },
+
+    "fitnessQuestionnaireExperienceLevelElite": "Elite",
+    "@fitnessQuestionnaireExperienceLevelElite": {
+      "description": "Elite level (5+ years)"
+    },
+
+    "fitnessQuestionnaireMonthsTrainingLabel": "Months of consistent training (optional)",
+    "@fitnessQuestionnaireMonthsTrainingLabel": {
+      "description": "Months of training label"
+    },
+
+    "fitnessQuestionnaireMaxLiftsTitle": "Max Lifts (Optional)",
+    "@fitnessQuestionnaireMaxLiftsTitle": {
+      "description": "Max lifts step title"
+    },
+
+    "fitnessQuestionnaireMaxLiftsDescription": "Entering your max lifts improves suggestion accuracy. You can skip this if you don't know them.",
+    "@fitnessQuestionnaireMaxLiftsDescription": {
+      "description": "Max lifts description"
+    },
+
+    "fitnessQuestionnaireBenchPressLabel": "Bench Press 1RM",
+    "@fitnessQuestionnaireBenchPressLabel": {
+      "description": "Bench press max label"
+    },
+
+    "fitnessQuestionnaireSquatLabel": "Squat 1RM",
+    "@fitnessQuestionnaireSquatLabel": {
+      "description": "Squat max label"
+    },
+
+    "fitnessQuestionnaireDeadliftLabel": "Deadlift 1RM",
+    "@fitnessQuestionnaireDeadliftLabel": {
+      "description": "Deadlift max label"
+    },
+
+    "fitnessQuestionnaireOhpLabel": "Overhead Press 1RM",
+    "@fitnessQuestionnaireOhpLabel": {
+      "description": "OHP max label"
+    },
+
+    "fitnessQuestionnaireCalculateFrom": "Calculate from reps",
+    "@fitnessQuestionnaireCalculateFrom": {
+      "description": "Link to 1RM calculator"
+    },
+
+    "fitnessQuestionnaireGoalsTitle": "Goals & Preferences",
+    "@fitnessQuestionnaireGoalsTitle": {
+      "description": "Goals step title"
+    },
+
+    "fitnessQuestionnaireTrainingGoalLabel": "Primary Training Goal",
+    "@fitnessQuestionnaireTrainingGoalLabel": {
+      "description": "Training goal label"
+    },
+
+    "fitnessQuestionnaireTrainingGoalStrength": "Strength (1-5 reps)",
+    "@fitnessQuestionnaireTrainingGoalStrength": {
+      "description": "Strength goal"
+    },
+
+    "fitnessQuestionnaireTrainingGoalHypertrophy": "Hypertrophy (8-12 reps)",
+    "@fitnessQuestionnaireTrainingGoalHypertrophy": {
+      "description": "Hypertrophy goal"
+    },
+
+    "fitnessQuestionnaireTrainingGoalEndurance": "Endurance (15+ reps)",
+    "@fitnessQuestionnaireTrainingGoalEndurance": {
+      "description": "Endurance goal"
+    },
+
+    "fitnessQuestionnaireInjuryHistoryLabel": "I have a history of training-related injuries",
+    "@fitnessQuestionnaireInjuryHistoryLabel": {
+      "description": "Injury history checkbox"
+    },
+
+    "fitnessQuestionnaireSuggestionStyleLabel": "Suggestion Style",
+    "@fitnessQuestionnaireSuggestionStyleLabel": {
+      "description": "Suggestion style label"
+    },
+
+    "fitnessQuestionnaireSuggestionStyleConservative": "Conservative (safer)",
+    "@fitnessQuestionnaireSuggestionStyleConservative": {
+      "description": "Conservative style"
+    },
+
+    "fitnessQuestionnaireSuggestionStyleBalanced": "Balanced (recommended)",
+    "@fitnessQuestionnaireSuggestionStyleBalanced": {
+      "description": "Balanced style"
+    },
+
+    "fitnessQuestionnaireSuggestionStyleAggressive": "Aggressive (experienced)",
+    "@fitnessQuestionnaireSuggestionStyleAggressive": {
+      "description": "Aggressive style"
+    },
+
+    "fitnessQuestionnaireReviewTitle": "Review & Complete",
+    "@fitnessQuestionnaireReviewTitle": {
+      "description": "Review step title"
+    },
+
+    "fitnessQuestionnaireReviewDescription": "Review your information and complete the setup to start getting weight suggestions.",
+    "@fitnessQuestionnaireReviewDescription": {
+      "description": "Review step description"
+    },
+
+    "fitnessQuestionnaireComplete": "Complete Setup",
+    "@fitnessQuestionnaireComplete": {
+      "description": "Complete button"
+    },
+
+    "fitnessQuestionnaireBackButton": "Back",
+    "@fitnessQuestionnaireBackButton": {
+      "description": "Back button"
+    },
+
+    "fitnessQuestionnaireNextButton": "Next",
+    "@fitnessQuestionnaireNextButton": {
+      "description": "Next button"
+    },
+
+    "weightSuggestionSuggestedWeight": "Suggested",
+    "@weightSuggestionSuggestedWeight": {
+      "description": "Suggested weight label"
+    },
+
+    "weightSuggestionUse": "Use Suggestion",
+    "@weightSuggestionUse": {
+      "description": "Use suggestion button"
+    },
+
+    "weightSuggestionConfidenceExcellent": "Excellent match",
+    "@weightSuggestionConfidenceExcellent": {
+      "description": "Excellent confidence"
+    },
+
+    "weightSuggestionConfidenceGood": "Good match",
+    "@weightSuggestionConfidenceGood": {
+      "description": "Good confidence"
+    },
+
+    "weightSuggestionConfidenceFair": "Fair match",
+    "@weightSuggestionConfidenceFair": {
+      "description": "Fair confidence"
+    },
+
+    "weightSuggestionConfidenceLow": "Low confidence",
+    "@weightSuggestionConfidenceLow": {
+      "description": "Low confidence"
+    },
+
+    "weightSuggestionWarningLow": "This suggestion has low confidence. Start conservatively.",
+    "@weightSuggestionWarningLow": {
+      "description": "Low confidence warning"
+    },
+
+    "weightSuggestionNoData": "No suggestion available for this exercise",
+    "@weightSuggestionNoData": {
+      "description": "No suggestion message"
+    },
+
+    "weightSuggestionCompleteQuestionnaire": "Complete fitness profile to get weight suggestions",
+    "@weightSuggestionCompleteQuestionnaire": {
+      "description": "Prompt to complete questionnaire"
+    },
+
+    "weightSuggestionBasedOn": "Based on strength standards",
+    "@weightSuggestionBasedOn": {
+      "description": "Suggestion basis label"
+    },
+
+    "weightSuggestionViewDetails": "View Details",
+    "@weightSuggestionViewDetails": {
+      "description": "View suggestion details button"
+    },
+
+    "weightSuggestionDetailsTitle": "Weight Suggestion Details",
+    "@weightSuggestionDetailsTitle": {
+      "description": "Details dialog title"
+    },
+
+    "weightSuggestionDetailsBaseOneRM": "Estimated 1RM",
+    "@weightSuggestionDetailsBaseOneRM": {
+      "description": "Base 1RM label"
+    },
+
+    "weightSuggestionDetailsIntensityFactor": "Training goal intensity",
+    "@weightSuggestionDetailsIntensityFactor": {
+      "description": "Intensity factor label"
+    },
+
+    "weightSuggestionDetailsAppliedMultipliers": "Applied adjustments",
+    "@weightSuggestionDetailsAppliedMultipliers": {
+      "description": "Multipliers list label"
+    },
+
+    "weightSuggestionDetailsNotes": "Important notes",
+    "@weightSuggestionDetailsNotes": {
+      "description": "Notes label"
+    },
+
+    "oneRMCalculatorTitle": "1RM Calculator",
+    "@oneRMCalculatorTitle": {
+      "description": "1RM calculator title"
+    },
+
+    "oneRMCalculatorWeight": "Weight lifted",
+    "@oneRMCalculatorWeight": {
+      "description": "Weight input label"
+    },
+
+    "oneRMCalculatorReps": "Reps completed",
+    "@oneRMCalculatorReps": {
+      "description": "Reps input label"
+    },
+
+    "oneRMCalculatorEstimated": "Estimated 1RM",
+    "@oneRMCalculatorEstimated": {
+      "description": "Estimated 1RM result label"
+    },
+
+    "oneRMCalculatorFormula": "Using Brzycki formula",
+    "@oneRMCalculatorFormula": {
+      "description": "Formula note"
+    },
+
+    "oneRMCalculatorUse": "Use This Value",
+    "@oneRMCalculatorUse": {
+      "description": "Use calculated value button"
+    }
+  },
+
+  "ITALIAN_KEYS": {
+    "fitnessQuestionnaireTitle": "Configurazione Profilo Fitness",
+    "fitnessQuestionnaireWelcomeTitle": "Ottieni Suggerimenti di Peso Personalizzati",
+    "fitnessQuestionnaireWelcomeDescription": "Rispondi ad alcune domande rapide per ricevere suggerimenti di peso iniziale basati su dati scientifici.",
+    "fitnessQuestionnaireWelcomeSkip": "Salta per ora",
+    "fitnessQuestionnaireWelcomeStart": "Inizia",
+    "fitnessQuestionnaireDemographicsTitle": "Su di Te",
+    "fitnessQuestionnaireBodyweightLabel": "Peso Corporeo Attuale",
+    "fitnessQuestionnaireBodyweightUnit": "kg",
+    "fitnessQuestionnaireAgeLabel": "Età",
+    "fitnessQuestionnaireSexLabel": "Sesso Biologico",
+    "fitnessQuestionnaireSexMale": "Uomo",
+    "fitnessQuestionnaireSexFemale": "Donna",
+    "fitnessQuestionnaireExperienceTitle": "Esperienza di Allenamento",
+    "fitnessQuestionnaireExperienceLevelLabel": "Livello di Esperienza",
+    "fitnessQuestionnaireExperienceLevelUntrained": "Principiante",
+    "fitnessQuestionnaireExperienceLevelNovice": "Base",
+    "fitnessQuestionnaireExperienceLevelIntermediate": "Intermedio",
+    "fitnessQuestionnaireExperienceLevelAdvanced": "Avanzato",
+    "fitnessQuestionnaireExperienceLevelElite": "Elite",
+    "fitnessQuestionnaireMonthsTrainingLabel": "Mesi di allenamento costante (opzionale)",
+    "fitnessQuestionnaireMaxLiftsTitle": "Massimali (Opzionale)",
+    "fitnessQuestionnaireMaxLiftsDescription": "Inserire i tuoi massimali migliora l'accuratezza dei suggerimenti. Puoi saltare se non li conosci.",
+    "fitnessQuestionnaireBenchPressLabel": "Panca Piana 1RM",
+    "fitnessQuestionnaireSquatLabel": "Squat 1RM",
+    "fitnessQuestionnaireDeadliftLabel": "Stacco 1RM",
+    "fitnessQuestionnaireOhpLabel": "Lento Avanti 1RM",
+    "fitnessQuestionnaireCalculateFrom": "Calcola da ripetizioni",
+    "fitnessQuestionnaireGoalsTitle": "Obiettivi e Preferenze",
+    "fitnessQuestionnaireTrainingGoalLabel": "Obiettivo Principale",
+    "fitnessQuestionnaireTrainingGoalStrength": "Forza (1-5 rip)",
+    "fitnessQuestionnaireTrainingGoalHypertrophy": "Ipertrofia (8-12 rip)",
+    "fitnessQuestionnaireTrainingGoalEndurance": "Resistenza (15+ rip)",
+    "fitnessQuestionnaireInjuryHistoryLabel": "Ho avuto infortuni legati all'allenamento",
+    "fitnessQuestionnaireSuggestionStyleLabel": "Stile Suggerimenti",
+    "fitnessQuestionnaireSuggestionStyleConservative": "Conservativo (più sicuro)",
+    "fitnessQuestionnaireSuggestionStyleBalanced": "Bilanciato (consigliato)",
+    "fitnessQuestionnaireSuggestionStyleAggressive": "Aggressivo (esperti)",
+    "fitnessQuestionnaireReviewTitle": "Riepilogo e Completa",
+    "fitnessQuestionnaireReviewDescription": "Rivedi le tue informazioni e completa la configurazione per ricevere suggerimenti di peso.",
+    "fitnessQuestionnaireComplete": "Completa Configurazione",
+    "fitnessQuestionnaireBackButton": "Indietro",
+    "fitnessQuestionnaireNextButton": "Avanti",
+    "weightSuggestionSuggestedWeight": "Suggerito",
+    "weightSuggestionUse": "Usa Suggerimento",
+    "weightSuggestionConfidenceExcellent": "Match eccellente",
+    "weightSuggestionConfidenceGood": "Match buono",
+    "weightSuggestionConfidenceFair": "Match discreto",
+    "weightSuggestionConfidenceLow": "Bassa affidabilità",
+    "weightSuggestionWarningLow": "Questo suggerimento ha bassa affidabilità. Inizia conservativo.",
+    "weightSuggestionNoData": "Nessun suggerimento disponibile per questo esercizio",
+    "weightSuggestionCompleteQuestionnaire": "Completa il profilo fitness per ricevere suggerimenti di peso",
+    "weightSuggestionBasedOn": "Basato su strength standards",
+    "weightSuggestionViewDetails": "Vedi Dettagli",
+    "weightSuggestionDetailsTitle": "Dettagli Suggerimento Peso",
+    "weightSuggestionDetailsBaseOneRM": "1RM stimato",
+    "weightSuggestionDetailsIntensityFactor": "Intensità obiettivo",
+    "weightSuggestionDetailsAppliedMultipliers": "Aggiustamenti applicati",
+    "weightSuggestionDetailsNotes": "Note importanti",
+    "oneRMCalculatorTitle": "Calcolatore 1RM",
+    "oneRMCalculatorWeight": "Peso sollevato",
+    "oneRMCalculatorReps": "Ripetizioni completate",
+    "oneRMCalculatorEstimated": "1RM stimato",
+    "oneRMCalculatorFormula": "Formula Brzycki",
+    "oneRMCalculatorUse": "Usa Questo Valore"
+  }
+}

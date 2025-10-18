@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/exercise.dart';
-import '../../domain/entities/workout.dart';
-import '../providers/workout_provider.dart';
-import '../providers/add_exercise_provider.dart';
-import '../../../exercise_database/presentation/exercise_search_screen.dart';
-import '../../../exercise_database/domain/entities/exercise_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_converter.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/add_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_builder_widget.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/dropset_weight_picker_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:flutter/foundation.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
-  final Function(Exercise)? onExerciseAdded;
   
   const AddExerciseModal({
     super.key,
     this.onExerciseAdded,
   });
+  final Function(Exercise)? onExerciseAdded;
 
   @override
   ConsumerState<AddExerciseModal> createState() => _AddExerciseModalState();
@@ -21,31 +27,84 @@ class AddExerciseModal extends ConsumerStatefulWidget {
 
 class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with TickerProviderStateMixin {
   late TabController _tabController;
+  late TabController _advancedTabController;
   final _nameController = TextEditingController();
   final _notesController = TextEditingController();
   final _searchController = TextEditingController();
 
+  // APRE configuration state
+  bool _useAPRE = false;
+  int _apreProtocol = 6; // Default to APRE 6
+  final _apreBaseWeightController = TextEditingController();
+
+  // DropSet state
+  final List<DropSetStageData> _dropsetStages = [
+    DropSetStageData(weightController: TextEditingController(text: '100'), repsController: TextEditingController(text: '8')),
+    DropSetStageData(weightController: TextEditingController(text: '80'), repsController: TextEditingController(text: '10')),
+    DropSetStageData(weightController: TextEditingController(text: '60'), repsController: TextEditingController(text: '12')),
+  ];
+
+  // Rest-Pause state
+  final _restPauseWeightController = TextEditingController();
+  final _restPauseTargetRepsController = TextEditingController();
+  final _restPauseRestSecondsController = TextEditingController(text: '15');
+  final _restPauseMaxSetsController = TextEditingController(text: '3');
+
+  // Selected exercise from database (for DropSet/Rest-Pause)
+  ExerciseDB.Exercise? _selectedDropSetExercise;
+  ExerciseDB.Exercise? _selectedRestPauseExercise;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this); // Simplified to 2 tabs
+    _advancedTabController = TabController(length: 3, vsync: this); // 3 advanced tabs
+
+    // Add listeners to update UI when tab changes
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {}); // Rebuild to show/hide Add button
+      }
+    });
+
+    _advancedTabController.addListener(() {
+      if (_advancedTabController.indexIsChanging) {
+        setState(() {}); // Rebuild to show/hide Add button for advanced tabs
+      }
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _advancedTabController.dispose();
     _nameController.dispose();
     _notesController.dispose();
     _searchController.dispose();
+    _apreBaseWeightController.dispose();
+
+    // Dispose DropSet controllers
+    for (var stage in _dropsetStages) {
+      stage.weightController.dispose();
+      stage.repsController.dispose();
+    }
+
+    // Dispose Rest-Pause controllers
+    _restPauseWeightController.dispose();
+    _restPauseTargetRepsController.dispose();
+    _restPauseRestSecondsController.dispose();
+    _restPauseMaxSetsController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      height: context.screenHeight * 0.9,
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -71,16 +130,18 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Add Exercise',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  context.l10n.addExerciseTitle,
+                  style: context.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Spacer(),
-                FilledButton(
-                  onPressed: _canAddExercise() ? _addExercise : null,
-                  child: const Text('Add'),
-                ),
+                // Show Add button for Single tab and Advanced tabs (except Superset)
+                if (_shouldShowAddButton())
+                  FilledButton(
+                    onPressed: _canAddAdvancedExercise() ? _addAdvancedExercise : null,
+                    child: Text(context.l10n.addButton),
+                  ),
               ],
             ),
           ),
@@ -89,25 +150,23 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
             ),
             child: TabBar(
               controller: _tabController,
               indicator: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
+                color: context.colors.primary,
                 borderRadius: BorderRadius.circular(8),
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: Colors.transparent,
-              labelColor: Theme.of(context).colorScheme.onPrimary,
-              unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+              labelColor: context.colors.onPrimary,
+              unselectedLabelColor: context.colors.onSurfaceVariant,
               labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-              tabs: const [
-                Tab(text: 'Single'),
-                Tab(text: 'Superset'),
-                Tab(text: 'DropSet'),
-                Tab(text: 'Rest-Pause'),
+              tabs: [
+                Tab(text: context.l10n.tabSingle),
+                Tab(text: context.l10n.tabAdvanced),
               ],
             ),
           ),
@@ -118,9 +177,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               controller: _tabController,
               children: [
                 _buildSingleExerciseTab(),
-                _buildSupersetTab(),
-                _buildDropSetTab(),
-                _buildRestPauseTab(),
+                _buildAdvancedTab(), // New tab for advanced options
               ],
             ),
           ),
@@ -135,117 +192,80 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Exercise search and selection
+          // Exercise search and selection with custom exercise form
           _buildExerciseSearchSection(),
-          const SizedBox(height: 20),
-          
-          // Exercise name
-          TextField(
-            controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Exercise Name',
-              hintText: 'e.g., Panca Piana',
-              prefixIcon: Icon(Icons.fitness_center),
-            ),
-          ),
-          const SizedBox(height: 16),
-          
-          // Category selection
-          _buildCategorySelector(),
-          const SizedBox(height: 20),
-          
-          // Sets configuration
-          _buildSetsSection(ref),
-          const SizedBox(height: 16),
-          
-          // Notes
-          TextField(
-            controller: _notesController,
-            maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'Notes (optional)',
-              hintText: 'Add any notes about form, weight progression, etc.',
-              prefixIcon: Icon(Icons.note),
-            ),
-          ),
         ],
       ),
     );
   }
 
+  Widget _buildAdvancedTab() {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        // Sub-tabs for advanced exercises
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: TabBar(
+            controller: _advancedTabController,
+            indicator: BoxDecoration(
+              color: context.colors.secondary,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            indicatorSize: TabBarIndicatorSize.tab,
+            dividerColor: Colors.transparent,
+            labelColor: context.colors.onSecondary,
+            unselectedLabelColor: context.colors.onSurfaceVariant,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+            tabs: [
+              Tab(text: context.l10n.tabSuperset),
+              Tab(text: context.l10n.tabDropSet),
+              Tab(text: context.l10n.tabRestPause),
+            ],
+          ),
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _advancedTabController,
+            children: [
+              _buildSupersetTab(),
+              _buildDropSetTab(),
+              _buildRestPauseTab(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSupersetTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Info card
-          Card(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Superset combines 2+ exercises performed back-to-back with minimal rest.',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          
-          // Superset name
-          TextField(
-            controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Superset Name',
-              hintText: 'e.g., Chest & Triceps Superset',
-              prefixIcon: Icon(Icons.repeat),
-            ),
-          ),
-          const SizedBox(height: 16),
-          
-          // Exercise 1
-          _buildSupersetExerciseCard('Exercise 1', 0),
-          const SizedBox(height: 12),
-          
-          // Exercise 2
-          _buildSupersetExerciseCard('Exercise 2', 1),
-          const SizedBox(height: 16),
-          
-          // Add more exercises button
-          OutlinedButton.icon(
-            onPressed: () {
-              // TODO: Add more exercises to superset
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('Add Exercise'),
-          ),
-          const SizedBox(height: 16),
-          
-          // Notes
-          TextField(
-            controller: _notesController,
-            maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'Notes (optional)',
-              hintText: 'Rest time between exercises, form cues, etc.',
-              prefixIcon: Icon(Icons.note),
-            ),
-          ),
-        ],
-      ),
+    return SupersetBuilderWidget(
+      onSupersetCreated: _createSupersetFromConfiguration,
+    );
+  }
+
+  void _createSupersetFromConfiguration(SupersetConfiguration config) {
+    // Convert SupersetConfiguration to SupersetExercise
+    final supersetExercise = SupersetConverter.configurationToSupersetExercise(config);
+    
+    // Add the superset to the workout
+    if (widget.onExerciseAdded != null) {
+      widget.onExerciseAdded!(supersetExercise);
+    } else {
+      ref.read(currentWorkoutProvider.notifier).addExercise(supersetExercise);
+    }
+    
+    // Close the modal
+    Navigator.of(context).pop();
+    
+    // Show success message
+    SnackBarService.showSuccess(
+      context,
+      '✅ ${context.l10n.exerciseAddedToWorkout(supersetExercise.name)}',
     );
   }
 
@@ -257,21 +277,21 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         children: [
           // Info card
           Card(
-            color: Theme.of(context).colorScheme.tertiaryContainer,
+            color: context.colors.tertiaryContainer,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Icon(
                     Icons.info,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    color: context.colors.onTertiaryContainer,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Drop Set: Perform exercise to failure, then immediately reduce weight and continue.',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onTertiaryContainer,
+                      context.l10n.dropSetInfoCard,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onTertiaryContainer,
                       ),
                     ),
                   ),
@@ -280,45 +300,89 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             ),
           ),
           const SizedBox(height: 20),
-          
+
+          // Exercise search and selection for DropSet
+          _buildExerciseSearchSection(onExerciseSelected: _onDropSetExerciseSelected),
+          const SizedBox(height: 20),
+
+          // Show selected exercise
+          if (_selectedDropSetExercise != null)
+            Card(
+              color: context.colors.primaryContainer.withOpacity(0.3),
+              child: ListTile(
+                leading: Icon(Icons.check_circle, color: context.colors.primary),
+                title: Text(_selectedDropSetExercise!.nome),
+                subtitle: Text('Focus: ${_selectedDropSetExercise!.focus.join(", ")}'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      _selectedDropSetExercise = null;
+                      _nameController.clear();
+                    });
+                  },
+                ),
+              ),
+            ),
+          if (_selectedDropSetExercise != null) const SizedBox(height: 20),
+
           // Exercise name
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Exercise Name',
-              hintText: 'e.g., Bicep Curl Drop Set',
-              prefixIcon: Icon(Icons.trending_down),
+            decoration: InputDecoration(
+              labelText: context.l10n.exerciseNameLabel,
+              hintText: context.l10n.exerciseNameHintBicepCurl,
+              prefixIcon: const Icon(Icons.trending_down),
             ),
           ),
-          const SizedBox(height: 16),
-          
-          // Category selection
-          _buildCategorySelector(),
           const SizedBox(height: 20),
-          
-          // Drop Set Stages
-          Text(
-            'Drop Set Stages',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          
-          _buildDropSetStage('Stage 1 (Heavy)', 0),
-          const SizedBox(height: 8),
-          _buildDropSetStage('Stage 2 (Medium)', 1),  
-          const SizedBox(height: 8),
-          _buildDropSetStage('Stage 3 (Light)', 2),
-          const SizedBox(height: 16),
-          
-          // Add stage button
-          OutlinedButton.icon(
-            onPressed: () {
-              // TODO: Add more drop set stages
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('Add Stage'),
+
+          // Drop Set Stages - Only show when exercise is selected
+          AnimatedSize(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOutCubic,
+            alignment: Alignment.topCenter,
+            child: _selectedDropSetExercise != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.dropSetStagesTitle,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      _buildDropSetStage(context.l10n.stageHeavy, 0),
+                      const SizedBox(height: 8),
+                      _buildDropSetStage(context.l10n.stageMedium, 1),
+                      const SizedBox(height: 8),
+                      _buildDropSetStage(context.l10n.stageLight, 2),
+                      const SizedBox(height: 16),
+
+                      // Add stage button
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            final lastStage = _dropsetStages.last;
+                            final lastWeight = double.tryParse(lastStage.weightController.text) ?? 60;
+                            final lastReps = int.tryParse(lastStage.repsController.text) ?? 12;
+
+                            _dropsetStages.add(
+                              DropSetStageData(
+                                weightController: TextEditingController(text: (lastWeight * 0.8).toStringAsFixed(0)),
+                                repsController: TextEditingController(text: '${lastReps + 2}'),
+                              ),
+                            );
+                          });
+                        },
+                        icon: const Icon(Icons.add),
+                        label: Text(context.l10n.addStageButton),
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ),
           const SizedBox(height: 16),
           
@@ -326,10 +390,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           TextField(
             controller: _notesController,
             maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'Notes (optional)',
-              hintText: 'Weight drops, rest between stages, etc.',
-              prefixIcon: Icon(Icons.note),
+            decoration: InputDecoration(
+              labelText: context.l10n.notesOptional,
+              hintText: context.l10n.notesHintWeightDrops,
+              prefixIcon: const Icon(Icons.note),
             ),
           ),
         ],
@@ -345,21 +409,21 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         children: [
           // Info card
           Card(
-            color: Theme.of(context).colorScheme.errorContainer,
+            color: context.colors.errorContainer,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Icon(
                     Icons.info,
-                    color: Theme.of(context).colorScheme.onErrorContainer,
+                    color: context.colors.onErrorContainer,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onErrorContainer,
+                      context.l10n.restPauseInfoCard,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onErrorContainer,
                       ),
                     ),
                   ),
@@ -368,14 +432,39 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             ),
           ),
           const SizedBox(height: 20),
-          
+
+          // Exercise search and selection for Rest-Pause
+          _buildExerciseSearchSection(onExerciseSelected: _onRestPauseExerciseSelected),
+          const SizedBox(height: 20),
+
+          // Show selected exercise
+          if (_selectedRestPauseExercise != null)
+            Card(
+              color: context.colors.primaryContainer.withOpacity(0.3),
+              child: ListTile(
+                leading: Icon(Icons.check_circle, color: context.colors.primary),
+                title: Text(_selectedRestPauseExercise!.nome),
+                subtitle: Text('Focus: ${_selectedRestPauseExercise!.focus.join(", ")}'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      _selectedRestPauseExercise = null;
+                      _nameController.clear();
+                    });
+                  },
+                ),
+              ),
+            ),
+          if (_selectedRestPauseExercise != null) const SizedBox(height: 20),
+
           // Exercise name
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Exercise Name',
-              hintText: 'e.g., Bench Press Rest-Pause',
-              prefixIcon: Icon(Icons.pause_circle),
+            decoration: InputDecoration(
+              labelText: context.l10n.exerciseNameLabel,
+              hintText: context.l10n.exerciseNameHintBenchPress,
+              prefixIcon: const Icon(Icons.pause_circle),
             ),
           ),
           const SizedBox(height: 16),
@@ -389,19 +478,21 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             children: [
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Weight (kg)',
-                    prefixIcon: Icon(Icons.fitness_center),
+                  controller: _restPauseWeightController,
+                  decoration: InputDecoration(
+                    labelText: context.l10n.weightKgLabel,
+                    prefixIcon: const Icon(Icons.fitness_center),
                   ),
-                  keyboardType: TextInputType.number,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Target Reps',
-                    prefixIcon: Icon(Icons.repeat),
+                  controller: _restPauseTargetRepsController,
+                  decoration: InputDecoration(
+                    labelText: context.l10n.targetRepsLabel,
+                    prefixIcon: const Icon(Icons.repeat),
                   ),
                   keyboardType: TextInputType.number,
                 ),
@@ -409,31 +500,33 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Rest periods
           Text(
-            'Rest-Pause Configuration',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            context.l10n.restPauseConfiguration,
+            style: context.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
-          
+
           TextField(
-            decoration: const InputDecoration(
-              labelText: 'Rest Period (seconds)',
-              hintText: '10-15 seconds typical',
-              prefixIcon: Icon(Icons.timer),
+            controller: _restPauseRestSecondsController,
+            decoration: InputDecoration(
+              labelText: context.l10n.restPeriodSecondsLabel,
+              hintText: context.l10n.restPeriodSecondsHint,
+              prefixIcon: const Icon(Icons.timer),
             ),
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 16),
-          
+
           TextField(
-            decoration: const InputDecoration(
-              labelText: 'Max Rest-Pause Sets',
-              hintText: '3-4 typical',
-              prefixIcon: Icon(Icons.repeat),
+            controller: _restPauseMaxSetsController,
+            decoration: InputDecoration(
+              labelText: context.l10n.maxRestPauseSetsLabel,
+              hintText: context.l10n.maxRestPauseSetsHint,
+              prefixIcon: const Icon(Icons.repeat),
             ),
             keyboardType: TextInputType.number,
           ),
@@ -443,10 +536,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           TextField(
             controller: _notesController,
             maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'Notes (optional)',
-              hintText: 'Form cues, progression strategy, etc.',
-              prefixIcon: Icon(Icons.note),
+            decoration: InputDecoration(
+              labelText: context.l10n.notesOptional,
+              hintText: context.l10n.notesHintFormCues,
+              prefixIcon: const Icon(Icons.note),
             ),
           ),
         ],
@@ -454,86 +547,301 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     );
   }
 
-  Widget _buildExerciseSearchSection() {
+  Widget _buildExerciseSearchSection({Function(ExerciseDB.Exercise)? onExerciseSelected}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Browse exercises from database button
+        // Browse exercises from database button - Prominent
         Card(
+          elevation: 2,
           child: ListTile(
-            leading: const Icon(Icons.library_books),
-            title: const Text('Browse Exercise Database'),
-            subtitle: const Text('Choose from our exercise library'),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {
-              print('🔍 ADD_EXERCISE_MODAL: Opening ExerciseSearchScreen with callback: ${widget.onExerciseAdded != null}');
-              Navigator.of(context).pop(); // Close current modal
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ExerciseSearchScreen(
-                    onExerciseAdded: widget.onExerciseAdded, // 🔥 FIX: Pass callback
+            leading: Icon(
+              Icons.library_books,
+              color: context.colors.primary,
+            ),
+            title: Text(
+              context.l10n.browseExerciseDatabase,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(context.l10n.chooseFromLibrary),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: context.colors.primary,
+            ),
+            onTap: () async {
+              if (kDebugMode) {
+                debugPrint('🔍 ADD_EXERCISE_MODAL: Opening ExerciseSearchScreen with callback: ${widget.onExerciseAdded != null}');
+              }
+
+              // If we have a custom callback, open search in selection mode
+              if (onExerciseSelected != null) {
+                final selectedExercise = await Navigator.of(context).push<ExerciseDB.Exercise>(
+                  MaterialPageRoute(
+                    builder: (context) => const ExerciseSearchScreen(
+                      selectionMode: true,
+                    ),
                   ),
-                ),
-              );
+                );
+
+                if (selectedExercise != null) {
+                  onExerciseSelected(selectedExercise);
+                }
+              } else {
+                // Original behavior for single exercise tab
+                final result = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ExerciseSearchScreen(
+                      onExerciseAdded: widget.onExerciseAdded,
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ),
         const SizedBox(height: 16),
-        
-        // Divider
-        Row(
-          children: [
-            const Expanded(child: Divider()),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'OR',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+
+        // Expandable section for custom exercise - Hidden by default
+        Theme(
+          data: context.theme.copyWith(
+            dividerColor: Colors.transparent,
+          ),
+          child: ExpansionTile(
+            tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+            leading: Icon(
+              Icons.add_circle_outline,
+              color: context.colors.onSurfaceVariant.withOpacity(0.7),
+            ),
+            title: Text(
+              'Non trovi l\'esercizio? Creane uno personalizzato',
+              style: TextStyle(
+                fontSize: 14,
+                color: context.colors.onSurfaceVariant.withOpacity(0.8),
               ),
             ),
-            const Expanded(child: Divider()),
-          ],
-        ),
-        const SizedBox(height: 16),
-        
-        // Manual entry section
-        Text(
-          'Create Custom Exercise',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w500,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.customExerciseDetails,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Exercise name
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: context.l10n.exerciseNameLabel,
+                        hintText: context.l10n.exerciseNameHint,
+                        prefixIcon: const Icon(Icons.fitness_center),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Category selection
+                    _buildCategorySelector(),
+                    const SizedBox(height: 20),
+
+                    // Sets configuration
+                    _buildSetsSection(ref),
+                    const SizedBox(height: 16),
+
+                    // APRE Configuration Section
+                    _buildAPRESection(),
+                    const SizedBox(height: 16),
+
+                    // Notes
+                    TextField(
+                      controller: _notesController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: context.l10n.notesOptional,
+                        hintText: context.l10n.notesHint,
+                        prefixIcon: const Icon(Icons.note),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
-  void _onExerciseTemplateSelected(ExerciseTemplate template) {
-    // Convert template to exercise and add to workout
-    final exercise = template.toExercise().copyWith(
-      sets: [
-        ExerciseSet(setNumber: 1, weight: 0, reps: 10),
-        ExerciseSet(setNumber: 2, weight: 0, reps: 10),
-        ExerciseSet(setNumber: 3, weight: 0, reps: 10),
-      ],
-    );
+  Widget _buildAPRESection() {
+    final l10n = context.l10n;
 
-    // Se c'è un callback, lo usa invece di aggiungere al workout corrente  
-    if (widget.onExerciseAdded != null) {
-      widget.onExerciseAdded!(exercise);
-      Navigator.pop(context);
-      return;
-    }
-    
-    ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Added ${exercise.name} to workout'),
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
+    return Card(
+      color: _useAPRE
+        ? context.colors.primaryContainer.withOpacity(0.1)
+        : context.colors.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // APRE Toggle
+            Row(
+              children: [
+                Icon(
+                  Icons.trending_up,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.apreAutoregulation,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        l10n.apreAutoregulationDescription,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: _useAPRE,
+                  onChanged: (value) {
+                    setState(() {
+                      _useAPRE = value;
+                      if (!value) {
+                        _apreBaseWeightController.clear();
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+
+            // APRE Configuration (shown when enabled)
+            if (_useAPRE) ...[
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+
+              // Protocol Selection
+              Text(
+                l10n.apreProtocolSelect,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SegmentedButton<int>(
+                segments: const [
+                  ButtonSegment<int>(
+                    value: 3,
+                    label: Text('APRE 3'),
+                    icon: Icon(Icons.looks_3),
+                  ),
+                  ButtonSegment<int>(
+                    value: 6,
+                    label: Text('APRE 6'),
+                    icon: Icon(Icons.looks_6),
+                  ),
+                  ButtonSegment<int>(
+                    value: 10,
+                    label: Text('APRE 10'),
+                    icon: Icon(Icons.looks),
+                  ),
+                ],
+                selected: {_apreProtocol},
+                onSelectionChanged: (Set<int> newSelection) {
+                  setState(() {
+                    _apreProtocol = newSelection.first;
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
+
+              // Protocol Description
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.colors.tertiaryContainer.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 16,
+                      color: context.colors.onTertiaryContainer,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _getProtocolDescription(),
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onTertiaryContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Base Weight Input
+              TextField(
+                controller: _apreBaseWeightController,
+                decoration: InputDecoration(
+                  labelText: l10n.apreBaseWeight,
+                  hintText: l10n.apreBaseWeightHint,
+                  prefixIcon: const Icon(Icons.fitness_center),
+                  suffixText: 'kg',
+                  helperText: _getBaseWeightHelper(),
+                ),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              ),
+            ],
+          ],
+        ),
       ),
     );
+  }
+
+  String _getProtocolDescription() {
+    final l10n = context.l10n;
+    switch (_apreProtocol) {
+      case 3:
+        return l10n.apreProtocol3Description;
+      case 6:
+        return l10n.apreProtocol6Description;
+      case 10:
+        return l10n.apreProtocol10Description;
+      default:
+        return '';
+    }
+  }
+
+  String _getBaseWeightHelper() {
+    final l10n = context.l10n;
+    switch (_apreProtocol) {
+      case 3:
+        return l10n.apreProtocol3Helper;
+      case 6:
+        return l10n.apreProtocol6Helper;
+      case 10:
+        return l10n.apreProtocol10Helper;
+      default:
+        return '';
+    }
   }
 
   Widget _buildCategorySelector() {
@@ -543,8 +851,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Exercise Category',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          context.l10n.exerciseCategoryLabel,
+          style: context.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -578,8 +886,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         Row(
           children: [
             Text(
-              'Sets',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              context.l10n.setsLabel,
+              style: context.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -589,7 +897,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 ref.read(exerciseSetsProvider.notifier).addSet();
               },
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Set'),
+              label: Text(context.l10n.addSetLabel),
             ),
           ],
         ),
@@ -617,15 +925,15 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
+            color: context.colors.primaryContainer,
             shape: BoxShape.circle,
           ),
           child: Center(
             child: Text(
               '${set.setNumber}',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              style: context.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                color: context.colors.onPrimaryContainer,
               ),
             ),
           ),
@@ -634,11 +942,11 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         Expanded(
           child: TextFormField(
             initialValue: set.weight?.toString() ?? '0',
-            decoration: const InputDecoration(
-              hintText: 'Weight (kg)',
+            decoration: InputDecoration(
+              hintText: context.l10n.weightHintKg,
               isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              border: OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              border: const OutlineInputBorder(),
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (value) {
@@ -654,11 +962,11 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         Expanded(
           child: TextFormField(
             initialValue: set.reps?.toString() ?? '10',
-            decoration: const InputDecoration(
-              hintText: 'Reps',
+            decoration: InputDecoration(
+              hintText: context.l10n.repsHintLabel,
               isDense: true,
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              border: OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              border: const OutlineInputBorder(),
             ),
             keyboardType: TextInputType.number,
             onChanged: (value) {
@@ -675,7 +983,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               ref.read(exerciseSetsProvider.notifier).removeSet(set.id);
             },
             icon: const Icon(Icons.remove_circle_outline, size: 20),
-            tooltip: 'Remove Set',
+            tooltip: context.l10n.removeSetTooltip,
           ),
       ],
     );
@@ -690,14 +998,14 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              style: context.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 12),
             TextField(
-              decoration: const InputDecoration(
-                labelText: 'Exercise Name',
+              decoration: InputDecoration(
+                labelText: context.l10n.exerciseNameLabel,
                 hintText: 'e.g., Push-ups',
                 isDense: true,
               ),
@@ -707,8 +1015,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               children: [
                 Expanded(
                   child: TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Weight (kg)',
+                    decoration: InputDecoration(
+                      labelText: context.l10n.weightKgLabel,
                       isDense: true,
                     ),
                     keyboardType: TextInputType.number,
@@ -719,8 +1027,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Reps',
+                    decoration: InputDecoration(
+                      labelText: context.l10n.repsHintLabel,
                       isDense: true,
                     ),
                     keyboardType: TextInputType.number,
@@ -735,6 +1043,12 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   }
 
   Widget _buildDropSetStage(String title, int index) {
+    if (index >= _dropsetStages.length) {
+      return const SizedBox.shrink();
+    }
+
+    final stageData = _dropsetStages[index];
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -744,28 +1058,42 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.tertiaryContainer,
+                color: context.colors.tertiaryContainer,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Text(
                   '${index + 1}',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  style: context.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    color: context.colors.onTertiaryContainer,
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'Weight (kg)',
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: InkWell(
+                onTap: () => _openWeightPicker(index),
+                borderRadius: BorderRadius.circular(4),
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: context.l10n.weightKgLabel,
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: const OutlineInputBorder(),
+                  ),
+                  child: Text(
+                    stageData.weightController.text.isEmpty
+                        ? '---'
+                        : '${stageData.weightController.text} kg',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: stageData.weightController.text.isEmpty
+                          ? context.colors.onSurfaceVariant.withOpacity(0.5)
+                          : context.colors.onSurface,
+                    ),
+                  ),
                 ),
-                keyboardType: TextInputType.number,
               ),
             ),
             const SizedBox(width: 8),
@@ -773,8 +1101,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             const SizedBox(width: 8),
             Expanded(
               child: TextField(
+                controller: stageData.repsController,
                 decoration: InputDecoration(
-                  labelText: 'Reps',
+                  labelText: context.l10n.repsHintLabel,
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 ),
@@ -784,7 +1113,11 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             if (index > 2)
               IconButton(
                 onPressed: () {
-                  // TODO: Remove stage
+                  setState(() {
+                    stageData.weightController.dispose();
+                    stageData.repsController.dispose();
+                    _dropsetStages.removeAt(index);
+                  });
                 },
                 icon: const Icon(Icons.remove_circle_outline, size: 20),
               ),
@@ -794,24 +1127,51 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     );
   }
 
+  Future<void> _openWeightPicker(int stageIndex) async {
+    // Get previous stage weight if not first stage
+    double? previousWeight;
+    if (stageIndex > 0 && _dropsetStages[stageIndex - 1].weightController.text.isNotEmpty) {
+      previousWeight = double.tryParse(_dropsetStages[stageIndex - 1].weightController.text);
+    }
+
+    // Get current weight if exists
+    final currentWeightText = _dropsetStages[stageIndex].weightController.text;
+    final initialWeight = currentWeightText.isNotEmpty ? double.tryParse(currentWeightText) : null;
+
+    final selectedWeight = await DropSetWeightPickerModal.show(
+      context: context,
+      stageIndex: stageIndex,
+      previousStageWeight: previousWeight,
+      initialWeight: initialWeight,
+      selectedExercise: _selectedDropSetExercise,
+      exerciseName: _nameController.text.isEmpty ? null : _nameController.text,
+    );
+
+    if (selectedWeight != null && mounted) {
+      setState(() {
+        _dropsetStages[stageIndex].weightController.text = selectedWeight.toStringAsFixed(1);
+      });
+    }
+  }
+
   String _getCategoryDisplayName(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return 'Chest';
+        return context.l10n.categoryChest;
       case ExerciseCategory.back:
-        return 'Back';
+        return context.l10n.categoryBack;
       case ExerciseCategory.shoulders:
-        return 'Shoulders';
+        return context.l10n.categoryShoulders;
       case ExerciseCategory.arms:
-        return 'Arms';
+        return context.l10n.categoryArms;
       case ExerciseCategory.legs:
-        return 'Legs';
+        return context.l10n.categoryLegs;
       case ExerciseCategory.abs:
-        return 'Abs';
+        return context.l10n.categoryAbs;
       case ExerciseCategory.cardio:
-        return 'Cardio';
+        return context.l10n.categoryCardio;
       case ExerciseCategory.other:
-        return 'Other';
+        return context.l10n.categoryOther;
     }
   }
 
@@ -822,16 +1182,29 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   void _addExercise() {
     if (!_canAddExercise()) return;
 
+    // Only handle single exercises (tab index 0)
+    if (_tabController.index != 0) {
+      // Advanced tab - handled by respective widgets
+      return;
+    }
+
     final selectedCategory = ref.read(selectedExerciseCategoryProvider);
-    final exerciseType = ExerciseType.values[_tabController.index];
     final sets = ref.read(exerciseSetsProvider);
-    
+
+    // Parse APRE base weight
+    final apreBaseWeight = _useAPRE
+        ? double.tryParse(_apreBaseWeightController.text.trim())
+        : null;
+
     final exercise = Exercise(
       name: _nameController.text.trim(),
-      type: exerciseType,
+      type: ExerciseType.single, // Always single for the first tab
       category: selectedCategory,
       notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       sets: sets,
+      useAPRE: _useAPRE,
+      apreProtocol: _useAPRE ? _apreProtocol : null,
+      apreBaseWeight: apreBaseWeight,
     );
 
     // Se c'è un callback, lo usa invece di aggiungere al workout corrente
@@ -840,17 +1213,290 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     } else {
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
     }
-    
+
     // Reset the sets for next exercise
     ref.read(exerciseSetsProvider.notifier).reset();
-    
+
     Navigator.pop(context);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Added ${exercise.name} to workout'),
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-      ),
+
+    SnackBarService.showSuccess(
+      context,
+      '✅ ${context.l10n.exerciseAddedToWorkout(exercise.name)}',
     );
   }
+
+  bool _shouldShowAddButton() {
+    // Show for Single tab
+    if (_tabController.index == 0) {
+      return true;
+    }
+
+    // Show for Advanced tab, but not for Superset (it has its own button)
+    if (_tabController.index == 1) {
+      return _advancedTabController.index != 0; // 0 = Superset tab
+    }
+
+    return false;
+  }
+
+  bool _canAddAdvancedExercise() {
+    if (_tabController.index == 0) {
+      // Single tab
+      return _canAddExercise();
+    }
+
+    // Advanced tabs
+    if (_tabController.index == 1) {
+      switch (_advancedTabController.index) {
+        case 0: // Superset - handled by SupersetBuilderWidget
+          return false;
+        case 1: // DropSet
+          return _nameController.text.trim().isNotEmpty;
+        case 2: // Rest-Pause
+          return _nameController.text.trim().isNotEmpty &&
+                 _restPauseWeightController.text.trim().isNotEmpty &&
+                 _restPauseTargetRepsController.text.trim().isNotEmpty;
+        default:
+          return false;
+      }
+    }
+
+    return false;
+  }
+
+  void _addAdvancedExercise() {
+    if (_tabController.index == 0) {
+      // Single tab
+      _addExercise();
+      return;
+    }
+
+    // Advanced tabs
+    if (_tabController.index == 1) {
+      switch (_advancedTabController.index) {
+        case 0: // Superset - handled by SupersetBuilderWidget
+          break;
+        case 1: // DropSet
+          _createDropSet();
+          break;
+        case 2: // Rest-Pause
+          _createRestPause();
+          break;
+      }
+    }
+  }
+
+  void _onDropSetExerciseSelected(ExerciseDB.Exercise exercise) {
+    setState(() {
+      _selectedDropSetExercise = exercise;
+      _nameController.text = '${exercise.nome} - Drop Set';
+
+      // Map exercise focus to category
+      final category = _mapExerciseFocusToCategory(exercise.focus.isNotEmpty ? exercise.focus.first : '');
+      ref.read(selectedExerciseCategoryProvider.notifier).state = category;
+    });
+  }
+
+  void _onRestPauseExerciseSelected(ExerciseDB.Exercise exercise) {
+    setState(() {
+      _selectedRestPauseExercise = exercise;
+      _nameController.text = '${exercise.nome} - Rest-Pause';
+
+      // Map exercise focus to category
+      final category = _mapExerciseFocusToCategory(exercise.focus.isNotEmpty ? exercise.focus.first : '');
+      ref.read(selectedExerciseCategoryProvider.notifier).state = category;
+    });
+  }
+
+  ExerciseCategory _mapExerciseFocusToCategory(String focus) {
+    final focusLower = focus.toLowerCase();
+
+    // Chest
+    if (focusLower.contains('chest') || focusLower.contains('petto') || focusLower.contains('pett')) {
+      return ExerciseCategory.chest;
+    }
+
+    // Back
+    if (focusLower.contains('back') || focusLower.contains('dorso') ||
+        focusLower.contains('schiena') || focusLower.contains('lats') ||
+        focusLower.contains('dors')) {
+      return ExerciseCategory.back;
+    }
+
+    // Shoulders
+    if (focusLower.contains('shoulder') || focusLower.contains('spalle') ||
+        focusLower.contains('delt') || focusLower.contains('spal')) {
+      return ExerciseCategory.shoulders;
+    }
+
+    // Arms
+    if (focusLower.contains('arm') || focusLower.contains('bracci') ||
+        focusLower.contains('bicep') || focusLower.contains('tricep') ||
+        focusLower.contains('avambracci')) {
+      return ExerciseCategory.arms;
+    }
+
+    // Legs
+    if (focusLower.contains('leg') || focusLower.contains('gambe') ||
+        focusLower.contains('quad') || focusLower.contains('hamstring') ||
+        focusLower.contains('glut') || focusLower.contains('polp') ||
+        focusLower.contains('addut') || focusLower.contains('abdut')) {
+      return ExerciseCategory.legs;
+    }
+
+    // Abs/Core
+    if (focusLower.contains('abs') || focusLower.contains('core') ||
+        focusLower.contains('addominali') || focusLower.contains('addome')) {
+      return ExerciseCategory.abs;
+    }
+
+    // Cardio
+    if (focusLower.contains('cardio')) {
+      return ExerciseCategory.cardio;
+    }
+
+    return ExerciseCategory.other;
+  }
+
+  /// Validate weight input (0.1kg - 999.9kg)
+  double? _validateWeight(String value) {
+    final weight = double.tryParse(value.trim());
+    if (weight == null || weight <= 0 || weight > 999.9) {
+      return null;
+    }
+    return weight;
+  }
+
+  /// Validate reps input (1-999)
+  int? _validateReps(String value) {
+    final reps = int.tryParse(value.trim());
+    if (reps == null || reps < 1 || reps > 999) {
+      return null;
+    }
+    return reps;
+  }
+
+  /// Validate rest seconds (1-600 seconds = 10 minutes max)
+  int? _validateRestSeconds(String value) {
+    final seconds = int.tryParse(value.trim());
+    if (seconds == null || seconds < 1 || seconds > 600) {
+      return null;
+    }
+    return seconds;
+  }
+
+  /// Validate max sets (1-20)
+  int? _validateMaxSets(String value) {
+    final maxSets = int.tryParse(value.trim());
+    if (maxSets == null || maxSets < 1 || maxSets > 20) {
+      return null;
+    }
+    return maxSets;
+  }
+
+  void _createDropSet() {
+    final selectedCategory = ref.read(selectedExerciseCategoryProvider);
+
+    // Validate and parse stages from controllers
+    final stages = <DropSetStage>[];
+    for (var stageData in _dropsetStages) {
+      final weight = _validateWeight(stageData.weightController.text);
+      final reps = _validateReps(stageData.repsController.text);
+
+      if (weight == null || reps == null) {
+        // Show error for invalid input
+        SnackBarService.showError(
+          context,
+          'Invalid input, please check the values',
+        );
+        return;
+      }
+
+      stages.add(DropSetStage(weight: weight, reps: reps));
+    }
+
+    final exercise = DropSetExercise(
+      name: _nameController.text.trim(),
+      category: selectedCategory,
+      stages: stages,
+      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+    );
+
+    // Add to workout or use callback
+    if (widget.onExerciseAdded != null) {
+      widget.onExerciseAdded!(exercise);
+    } else {
+      ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
+    }
+
+    Navigator.pop(context);
+
+    SnackBarService.showSuccess(
+      context,
+      '✅ ${context.l10n.exerciseAddedDropSet(exercise.name)}',
+    );
+  }
+
+  void _createRestPause() {
+    final selectedCategory = ref.read(selectedExerciseCategoryProvider);
+
+    // Validate all inputs
+    final weight = _validateWeight(_restPauseWeightController.text);
+    final targetReps = _validateReps(_restPauseTargetRepsController.text);
+    final restSeconds = _validateRestSeconds(_restPauseRestSecondsController.text);
+    final maxSets = _validateMaxSets(_restPauseMaxSetsController.text);
+
+    // Check if any validation failed
+    if (weight == null || targetReps == null || restSeconds == null || maxSets == null) {
+      // Show error for invalid input
+      SnackBarService.showError(
+        context,
+        'Invalid input, please check the values',
+      );
+      return;
+    }
+
+    // Create default rest-pause sets (user will complete them during workout)
+    final restPauseSets = List.generate(
+      maxSets,
+      (index) => RestPauseSet(
+        reps: 0, // Will be filled during workout
+        restSeconds: restSeconds,
+      ),
+    );
+
+    final exercise = RestPauseExercise(
+      name: _nameController.text.trim(),
+      category: selectedCategory,
+      weight: weight,
+      targetReps: targetReps,
+      restPauseSets: restPauseSets,
+      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+    );
+
+    // Add to workout or use callback
+    if (widget.onExerciseAdded != null) {
+      widget.onExerciseAdded!(exercise);
+    } else {
+      ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
+    }
+
+    Navigator.pop(context);
+
+    SnackBarService.showSuccess(
+      context,
+      '✅ ${context.l10n.exerciseAddedRestPause(exercise.name)}',
+    );
+  }
+}
+
+// Helper class to manage DropSet stage controllers
+class DropSetStageData {
+
+  DropSetStageData({
+    required this.weightController,
+    required this.repsController,
+  });
+  final TextEditingController weightController;
+  final TextEditingController repsController;
 }

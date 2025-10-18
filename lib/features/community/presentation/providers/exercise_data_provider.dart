@@ -2,11 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Provider che fornisce i dati degli esercizi con merge delle contribuzioni community
 final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, exerciseName) async {
-  // 1. Carica i dati base dal JSON
-  final String jsonString = await rootBundle.loadString('assets/data/exercises.json');
+  // 1. Carica i dati base dal JSON localizzato
+  final config = ref.watch(appConfigProvider);
+  final isItalian = config.languageCode == 'it';
+  final jsonFile = isItalian
+      ? 'assets/data/exercises_it.json'
+      : 'assets/data/exercises.json';
+
+  final String jsonString = await rootBundle.loadString(jsonFile);
   final List<dynamic> exercises = json.decode(jsonString);
   
   // Trova l'esercizio per nome
@@ -48,7 +55,7 @@ final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>
         final newValue = data['suggestedValue'] ?? data['description'];
         
         // APPLICA L'OVERRIDE
-        print('🔄 Applying correction: $fieldToCorrect = $newValue');
+        // print('🔄 Applying correction: $fieldToCorrect = $newValue');
         mergedData[_mapFieldName(fieldToCorrect)] = newValue;
       }
     }
@@ -96,7 +103,7 @@ final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>
     }
     
   } catch (e) {
-    print('Error fetching community corrections: $e');
+    // print('Error fetching community corrections: $e');
     // In caso di errore, ritorna solo i dati base
   }
   
@@ -186,7 +193,7 @@ final hasCommunityCorrectionProvider = FutureProvider.family<bool, String>((ref,
       doc.data()['status'] == 'approved'
     );
   } catch (e) {
-    print('Error checking community corrections: $e');
+    // print('Error checking community corrections: $e');
     return false;
   }
 });

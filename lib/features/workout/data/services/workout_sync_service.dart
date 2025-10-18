@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/services
- * 🎯 Feature: workout
- * 🔧 Type: service
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Hive (local storage)
- * - Firebase (cloud sync for premium)
- * - Connectivity monitoring
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/services
+/// 🎯 Feature: workout
+/// 🔧 Type: service
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Hive (local storage)
+/// - Firebase (cloud sync for premium)
+/// - Connectivity monitoring
+library;
 
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,9 +20,18 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:flutter/foundation.dart';
 
 /// Service to handle background synchronization for premium users
 class WorkoutSyncService {
+  
+  WorkoutSyncService({
+    required HiveWorkoutDataSource localDataSource,
+    required FirebaseWorkoutDataSource remoteDataSource,
+    required FirebaseAuth auth,
+  }) : _localDataSource = localDataSource,
+       _remoteDataSource = remoteDataSource,
+       _auth = auth;
   final HiveWorkoutDataSource _localDataSource;
   final FirebaseWorkoutDataSource _remoteDataSource;
   final FirebaseAuth _auth;
@@ -34,14 +42,6 @@ class WorkoutSyncService {
   
   // Sync status tracking
   final Map<String, SyncStatus> _syncStatuses = {};
-  
-  WorkoutSyncService({
-    required HiveWorkoutDataSource localDataSource,
-    required FirebaseWorkoutDataSource remoteDataSource,
-    required FirebaseAuth auth,
-  }) : _localDataSource = localDataSource,
-       _remoteDataSource = remoteDataSource,
-       _auth = auth;
   
   /// Initialize sync service
   Future<void> initialize() async {
@@ -73,7 +73,9 @@ class WorkoutSyncService {
         _userProfile = UserProfile.fromFirestore(doc);
       }
     } catch (e) {
-      print('Failed to load user profile for sync: $e');
+      if (kDebugMode) {
+        debugPrint('Failed to load user profile for sync: $e');
+      }
     }
   }
   
@@ -242,10 +244,8 @@ class WorkoutSyncService {
   /// Check if local workout should be updated with cloud version
   bool _shouldUpdateLocal(WorkoutModel local, WorkoutModel cloud) {
     // Simple conflict resolution: cloud wins if newer
-    if (cloud.updatedAt != null && local.updatedAt != null) {
-      return cloud.updatedAt!.isAfter(local.updatedAt!);
-    }
-    
+    return cloud.updatedAt.isAfter(local.updatedAt);
+      
     // If no update timestamps, compare creation dates
     return cloud.createdAt.isAfter(local.createdAt);
   }
@@ -332,16 +332,14 @@ class WorkoutSyncService {
   WorkoutModel _mergeWorkouts(WorkoutModel local, WorkoutModel cloud) {
     // Complex merge logic
     // For now, take cloud metadata but local exercises if local is newer
-    if (local.updatedAt != null && cloud.updatedAt != null) {
-      if (local.updatedAt!.isAfter(cloud.updatedAt!)) {
-        // Local is newer - keep local exercises
-        return local.copyWith(
-          // Keep cloud metadata that might have been updated elsewhere
-          status: cloud.status,
-        );
-      }
+    if (local.updatedAt.isAfter(cloud.updatedAt)) {
+      // Local is newer - keep local exercises
+      return local.copyWith(
+        // Keep cloud metadata that might have been updated elsewhere
+        status: cloud.status,
+      );
     }
-    
+      
     // Cloud is newer
     return cloud;
   }
@@ -392,16 +390,25 @@ class WorkoutSyncService {
 
 /// Sync result information
 class SyncResult {
-  bool success = false;
-  String message = '';
-  int syncedItems = 0;
-  int failedItems = 0;
-  int pulledItems = 0;
-  int updatedItems = 0;
-  List<String> errors = [];
+
+  SyncResult({
+    this.success = false,
+    this.message = '',
+    this.syncedItems = 0,
+    this.failedItems = 0,
+    this.pulledItems = 0,
+    this.updatedItems = 0,
+    List<String>? errors,
+    this.lastSyncTime,
+  }) : errors = errors ?? [];
+  bool success;
+  String message;
+  int syncedItems;
+  int failedItems;
+  int pulledItems;
+  int updatedItems;
+  List<String> errors;
   DateTime? lastSyncTime;
-  
-  SyncResult();
   
   Map<String, dynamic> toJson() => {
     'success': success,
@@ -433,11 +440,11 @@ enum ConflictResolutionStrategy {
 
 /// Conflict resolution result
 class ConflictResolution {
-  final bool success;
-  final String message;
   
   ConflictResolution({
     required this.success,
     required this.message,
   });
+  final bool success;
+  final String message;
 }

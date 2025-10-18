@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:async';
-import 'dart:io' show Platform;
 
 // Mock Live Activity Manager for iOS
 class LiveActivityManager {
@@ -370,6 +369,26 @@ class LiveActivityManager {
 
 // Models
 class LiveActivityState {
+  
+  LiveActivityState({
+    required this.id,
+    required this.type,
+    required this.startTime,
+    this.endTime,
+    required this.isActive,
+    required this.isPaused,
+    this.exerciseName,
+    this.durationSeconds,
+    this.remainingSeconds,
+    this.currentSet,
+    this.totalSets,
+    this.nextExerciseName,
+    this.workoutName,
+    this.totalExercises,
+    this.completedExercises,
+    this.currentExercise,
+    this.elapsedTime,
+  });
   final String id;
   final LiveActivityType type;
   final DateTime startTime;
@@ -391,26 +410,6 @@ class LiveActivityState {
   final int? completedExercises;
   final String? currentExercise;
   final Duration? elapsedTime;
-  
-  LiveActivityState({
-    required this.id,
-    required this.type,
-    required this.startTime,
-    this.endTime,
-    required this.isActive,
-    required this.isPaused,
-    this.exerciseName,
-    this.durationSeconds,
-    this.remainingSeconds,
-    this.currentSet,
-    this.totalSets,
-    this.nextExerciseName,
-    this.workoutName,
-    this.totalExercises,
-    this.completedExercises,
-    this.currentExercise,
-    this.elapsedTime,
-  });
   
   LiveActivityState copyWith({
     bool? isActive,
@@ -444,10 +443,6 @@ class LiveActivityState {
 }
 
 class LiveActivityResult {
-  final bool success;
-  final String? error;
-  final String? message;
-  final String? activityId;
   
   LiveActivityResult({
     required this.success,
@@ -455,13 +450,13 @@ class LiveActivityResult {
     this.message,
     this.activityId,
   });
+  final bool success;
+  final String? error;
+  final String? message;
+  final String? activityId;
 }
 
 class LiveActivityEvent {
-  final LiveActivityEventType type;
-  final DateTime timestamp;
-  final String? activityId;
-  final Map<String, dynamic>? metadata;
   
   LiveActivityEvent({
     required this.type,
@@ -469,6 +464,10 @@ class LiveActivityEvent {
     this.activityId,
     this.metadata,
   });
+  final LiveActivityEventType type;
+  final DateTime timestamp;
+  final String? activityId;
+  final Map<String, dynamic>? metadata;
 }
 
 enum LiveActivityType {

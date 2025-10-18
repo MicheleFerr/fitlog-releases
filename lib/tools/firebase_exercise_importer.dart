@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../features/exercise_database/domain/entities/exercise_template.dart';
-import '../features/exercise_database/data/models/exercise_model.dart';
+import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
+import 'package:flutter/foundation.dart';
 
 class FirebaseExerciseImporter {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -10,19 +11,25 @@ class FirebaseExerciseImporter {
 
   Future<void> importExercisesFromJson() async {
     try {
-      print('🔥 IMPORTER: Starting exercise import from JSON...');
+      if (kDebugMode) {
+        debugPrint('🔥 IMPORTER: Starting exercise import from JSON...');
+      }
       
       // 1. Load JSON file
       final String jsonString = await rootBundle.loadString('assets/data/exercises.json');
       final List<dynamic> jsonList = json.decode(jsonString);
       
-      print('📋 IMPORTER: Found ${jsonList.length} exercises in JSON');
+      if (kDebugMode) {
+        debugPrint('📋 IMPORTER: Found ${jsonList.length} exercises in JSON');
+      }
       
       // 2. Check if exercises already exist
       final existingDocs = await _firestore.collection(_collection).get();
       
       if (existingDocs.docs.isNotEmpty) {
-        print('⚠️  IMPORTER: Found ${existingDocs.docs.length} existing exercises. Clearing collection...');
+        if (kDebugMode) {
+          debugPrint('⚠️  IMPORTER: Found ${existingDocs.docs.length} existing exercises. Clearing collection...');
+        }
         
         // Delete existing exercises
         final batch = _firestore.batch();
@@ -30,7 +37,9 @@ class FirebaseExerciseImporter {
           batch.delete(doc.reference);
         }
         await batch.commit();
-        print('🗑️  IMPORTER: Cleared existing exercises');
+        if (kDebugMode) {
+          debugPrint('🗑️  IMPORTER: Cleared existing exercises');
+        }
       }
       
       // 3. Import exercises in smaller batches to avoid size limits
@@ -53,19 +62,27 @@ class FirebaseExerciseImporter {
             batch.set(docRef, firebaseData);
           }
           
-          print('📤 IMPORTER: Committing batch ${(i ~/ batchSize) + 1}...');
+          if (kDebugMode) {
+            debugPrint('📤 IMPORTER: Committing batch ${(i ~/ batchSize) + 1}...');
+          }
           await batch.commit();
           imported += (end - i);
-          print('✅ IMPORTER: Imported batch ${(i ~/ batchSize) + 1} - Total: $imported/${jsonList.length}');
+          if (kDebugMode) {
+            debugPrint('✅ IMPORTER: Imported batch ${(i ~/ batchSize) + 1} - Total: $imported/${jsonList.length}');
+          }
           
           // Small delay between batches to avoid rate limiting
           await Future.delayed(const Duration(milliseconds: 100));
           
         } catch (e) {
-          print('❌ BATCH ERROR ${(i ~/ batchSize) + 1}: $e');
+          if (kDebugMode) {
+            debugPrint('❌ BATCH ERROR ${(i ~/ batchSize) + 1}: $e');
+          }
           
           // Try individual imports for this batch
-          print('🔄 IMPORTER: Trying individual imports for batch ${(i ~/ batchSize) + 1}...');
+          if (kDebugMode) {
+            debugPrint('🔄 IMPORTER: Trying individual imports for batch ${(i ~/ batchSize) + 1}...');
+          }
           final end = (i + batchSize < jsonList.length) ? i + batchSize : jsonList.length;
           
           for (int j = i; j < end; j++) {
@@ -78,7 +95,9 @@ class FirebaseExerciseImporter {
               imported++;
               
               if (j % 10 == 0) {
-                print('📤 Individual import: $imported/${jsonList.length}');
+                if (kDebugMode) {
+                  debugPrint('📤 Individual import: $imported/${jsonList.length}');
+                }
               }
               
               // Small delay between individual writes
@@ -86,19 +105,25 @@ class FirebaseExerciseImporter {
               
             } catch (individualError) {
               final exerciseJson = jsonList[j] as Map<String, dynamic>;
-              print('❌ Failed to import exercise ${exerciseJson['id']}: $individualError');
+              if (kDebugMode) {
+                debugPrint('❌ Failed to import exercise ${exerciseJson['id']}: $individualError');
+              }
             }
           }
         }
       }
       
-      print('✅ IMPORTER: Successfully imported $imported exercises to Firebase!');
+      if (kDebugMode) {
+        debugPrint('✅ IMPORTER: Successfully imported $imported exercises to Firebase!');
+      }
       
       // 4. Verify import
       await _verifyImport(jsonList.length);
       
     } catch (e) {
-      print('❌ IMPORTER ERROR: $e');
+      if (kDebugMode) {
+        debugPrint('❌ IMPORTER ERROR: $e');
+      }
       rethrow;
     }
   }
@@ -134,14 +159,30 @@ class FirebaseExerciseImporter {
   }
   
   String _mapFocusToCategory(String focus) {
-    final focusLower = focus.toLowerCase();
-    if (focusLower.contains('pett') || focusLower.contains('chest')) return 'chest';
-    if (focusLower.contains('dors') || focusLower.contains('back')) return 'back'; 
-    if (focusLower.contains('quad') || focusLower.contains('glut') || focusLower.contains('femor')) return 'legs';
-    if (focusLower.contains('delt') || focusLower.contains('spall') || focusLower.contains('shoulder')) return 'shoulders';
-    if (focusLower.contains('brac') || focusLower.contains('tric') || focusLower.contains('arm')) return 'arms';
-    if (focusLower.contains('core') || focusLower.contains('add')) return 'core';
-    return 'other';
+    // Split focus string by comma to create a list
+    final focusList = focus.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+
+    final category = ExerciseConverter.mapFocusToCategory(focusList);
+
+    // Convert enum to lowercase string for Firebase
+    switch (category) {
+      case WorkoutExercise.ExerciseCategory.chest:
+        return 'chest';
+      case WorkoutExercise.ExerciseCategory.back:
+        return 'back';
+      case WorkoutExercise.ExerciseCategory.shoulders:
+        return 'shoulders';
+      case WorkoutExercise.ExerciseCategory.arms:
+        return 'arms';
+      case WorkoutExercise.ExerciseCategory.legs:
+        return 'legs';
+      case WorkoutExercise.ExerciseCategory.abs:
+        return 'core';
+      case WorkoutExercise.ExerciseCategory.cardio:
+        return 'cardio';
+      case WorkoutExercise.ExerciseCategory.other:
+        return 'other';
+    }
   }
   
   List<String> _parseMuscleGroups(String muscleString) {
@@ -194,25 +235,41 @@ class FirebaseExerciseImporter {
       final snapshot = await _firestore.collection(_collection).get();
       final actualCount = snapshot.docs.length;
       
-      print('🔍 IMPORTER: Verification - Expected: $expectedCount, Found: $actualCount');
+      if (kDebugMode) {
+        debugPrint('🔍 IMPORTER: Verification - Expected: $expectedCount, Found: $actualCount');
+      }
       
       if (actualCount == expectedCount) {
-        print('✅ IMPORT VERIFICATION: Success! All exercises imported correctly');
+        if (kDebugMode) {
+          debugPrint('✅ IMPORT VERIFICATION: Success! All exercises imported correctly');
+        }
         
         // Sample a few exercises to verify structure
         final sampleExercises = snapshot.docs.take(3);
         for (final doc in sampleExercises) {
           final data = doc.data();
-          print('📋 Sample Exercise: ${data['name']} (${doc.id})');
-          print('   - Category: ${data['category']}');
-          print('   - Muscle Groups: ${data['muscleGroups']}');
-          print('   - Equipment: ${data['equipment']}');
+          if (kDebugMode) {
+            debugPrint('📋 Sample Exercise: ${data['name']} (${doc.id})');
+          }
+          if (kDebugMode) {
+            debugPrint('   - Category: ${data['category']}');
+          }
+          if (kDebugMode) {
+            debugPrint('   - Muscle Groups: ${data['muscleGroups']}');
+          }
+          if (kDebugMode) {
+            debugPrint('   - Equipment: ${data['equipment']}');
+          }
         }
       } else {
-        print('⚠️  IMPORT VERIFICATION: Warning - Count mismatch!');
+        if (kDebugMode) {
+          debugPrint('⚠️  IMPORT VERIFICATION: Warning - Count mismatch!');
+        }
       }
     } catch (e) {
-      print('❌ VERIFICATION ERROR: $e');
+      if (kDebugMode) {
+        debugPrint('❌ VERIFICATION ERROR: $e');
+      }
     }
   }
   
@@ -226,22 +283,34 @@ class FirebaseExerciseImporter {
         final testExercise = jsonList.first as Map<String, dynamic>;
         final firebaseData = _convertJsonToFirebaseFormat(testExercise);
         
-        print('🧪 TEST: Converting exercise "${testExercise['nome']}"');
-        print('📋 Firebase format:');
+        if (kDebugMode) {
+          debugPrint('🧪 TEST: Converting exercise "${testExercise['nome']}"');
+        }
+        if (kDebugMode) {
+          debugPrint('📋 Firebase format:');
+        }
         firebaseData.forEach((key, value) {
-          print('   $key: $value');
+          if (kDebugMode) {
+            debugPrint('   $key: $value');
+          }
         });
         
         // Test write to Firebase
         await _firestore.collection('test_exercises').doc('test').set(firebaseData);
-        print('✅ TEST: Successfully wrote test exercise to Firebase');
+        if (kDebugMode) {
+          debugPrint('✅ TEST: Successfully wrote test exercise to Firebase');
+        }
         
         // Clean up test
         await _firestore.collection('test_exercises').doc('test').delete();
-        print('🗑️  TEST: Cleaned up test exercise');
+        if (kDebugMode) {
+          debugPrint('🗑️  TEST: Cleaned up test exercise');
+        }
       }
     } catch (e) {
-      print('❌ TEST ERROR: $e');
+      if (kDebugMode) {
+        debugPrint('❌ TEST ERROR: $e');
+      }
     }
   }
 }

@@ -1,0 +1,282 @@
+{
+  "routineCenter": "Centro Routine",
+  "@routineCenter": {
+    "description": "Routine Center title on home screen"
+  },
+  "routineCenterDescription": "Routine multi-periodo con tracciamento intelligente",
+  "@routineCenterDescription": {
+    "description": "Routine Center description on home screen"
+  },
+  "routineBasicInfoTitle": "Informazioni di Base",
+  "@routineBasicInfoTitle": {
+    "description": "Basic info step title"
+  },
+  "routineBasicInfoSubtitle": "Imposta le fondamenta della tua routine",
+  "@routineBasicInfoSubtitle": {
+    "description": "Basic info step subtitle"
+  },
+  "routineNameLabel": "Nome Routine *",
+  "@routineNameLabel": {
+    "description": "Routine name field label"
+  },
+  "routineNameHint": "es., Estate Definizione 2025",
+  "@routineNameHint": {
+    "description": "Routine name field hint"
+  },
+  "routineNameRequired": "Inserisci un nome",
+  "@routineNameRequired": {
+    "description": "Routine name required validation"
+  },
+  "routineNameMinLength": "Il nome deve essere di almeno 3 caratteri",
+  "@routineNameMinLength": {
+    "description": "Routine name minimum length validation"
+  },
+  "routineDescriptionLabel": "Descrizione (Opzionale)",
+  "@routineDescriptionLabel": {
+    "description": "Routine description field label"
+  },
+  "routineDescriptionHint": "Aggiungi note su questa routine...",
+  "@routineDescriptionHint": {
+    "description": "Routine description field hint"
+  },
+  "routineTypeLabel": "Tipo di Routine",
+  "@routineTypeLabel": {
+    "description": "Routine type section label"
+  },
+  "routineTypeWeekly": "Settimanale",
+  "@routineTypeWeekly": {
+    "description": "Weekly routine type"
+  },
+  "routineTypeWeeklyDuration": "7 giorni",
+  "@routineTypeWeeklyDuration": {
+    "description": "Weekly routine duration"
+  },
+  "routineTypeMonthly": "Mensile",
+  "@routineTypeMonthly": {
+    "description": "Monthly routine type"
+  },
+  "routineTypeMonthlyDuration": "30 giorni",
+  "@routineTypeMonthlyDuration": {
+    "description": "Monthly routine duration"
+  },
+  "routineTypeBimonthly": "Bimestrale",
+  "@routineTypeBimonthly": {
+    "description": "Bimonthly routine type"
+  },
+  "routineTypeBimonthlyDuration": "60 giorni",
+  "@routineTypeBimonthlyDuration": {
+    "description": "Bimonthly routine duration"
+  },
+  "routineTypeSemester": "Semestrale",
+  "@routineTypeSemester": {
+    "description": "Semester routine type"
+  },
+  "routineTypeSemesterDuration": "6 mesi",
+  "@routineTypeSemesterDuration": {
+    "description": "Semester routine duration"
+  },
+  "routineTypeCustom": "Personalizzata",
+  "@routineTypeCustom": {
+    "description": "Custom routine type"
+  },
+  "routineTypeCustomDuration": "Durata personalizzata",
+  "@routineTypeCustomDuration": {
+    "description": "Custom routine duration"
+  },
+  "routineDurationLabel": "Durata",
+  "@routineDurationLabel": {
+    "description": "Duration section label"
+  },
+  "routineStartDateLabel": "Data Inizio",
+  "@routineStartDateLabel": {
+    "description": "Start date field label"
+  },
+  "routineEndDateLabel": "Data Fine",
+  "@routineEndDateLabel": {
+    "description": "End date field label"
+  },
+  "routineDurationWeeks": "{weeks, plural, =1{1 settimana} other{{weeks} settimane}}",
+  "@routineDurationWeeks": {
+    "description": "Duration in weeks",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "routineDurationDays": "{days, plural, =1{1 giorno} other{{days} giorni}}",
+  "@routineDurationDays": {
+    "description": "Duration in days",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "routineDurationInfo": "Durata: {duration}",
+  "@routineDurationInfo": {
+    "description": "Duration info label",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "routinePatternOneWorkoutOneRest": "1 Allenamento + 1 Riposo",
+  "@routinePatternOneWorkoutOneRest": {
+    "description": "Pattern name: 1 workout 1 rest"
+  },
+  "routinePatternOneWorkoutOneRestDesc": "1 giorno di allenamento seguito da 1 giorno di riposo",
+  "@routinePatternOneWorkoutOneRestDesc": {
+    "description": "Pattern description: 1 workout 1 rest"
+  },
+  "routinePatternTwoWorkoutsOneRest": "2 Allenamenti + 1 Riposo",
+  "@routinePatternTwoWorkoutsOneRest": {
+    "description": "Pattern name: 2 workouts 1 rest"
+  },
+  "routinePatternTwoWorkoutsOneRestDesc": "2 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternTwoWorkoutsOneRestDesc": {
+    "description": "Pattern description: 2 workouts 1 rest"
+  },
+  "routinePatternThreeWorkoutsOneRest": "3 Allenamenti + 1 Riposo",
+  "@routinePatternThreeWorkoutsOneRest": {
+    "description": "Pattern name: 3 workouts 1 rest"
+  },
+  "routinePatternThreeWorkoutsOneRestDesc": "3 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternThreeWorkoutsOneRestDesc": {
+    "description": "Pattern description: 3 workouts 1 rest"
+  },
+  "routinePatternThreeWorkoutsTwoRest": "3 Allenamenti + 2 Riposi",
+  "@routinePatternThreeWorkoutsTwoRest": {
+    "description": "Pattern name: 3 workouts 2 rest"
+  },
+  "routinePatternThreeWorkoutsTwoRestDesc": "3 giorni di allenamento con 2 giorni di riposo a settimana",
+  "@routinePatternThreeWorkoutsTwoRestDesc": {
+    "description": "Pattern description: 3 workouts 2 rest"
+  },
+  "routinePatternFourWorkoutsOneRest": "4 Allenamenti + 1 Riposo",
+  "@routinePatternFourWorkoutsOneRest": {
+    "description": "Pattern name: 4 workouts 1 rest"
+  },
+  "routinePatternFourWorkoutsOneRestDesc": "4 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternFourWorkoutsOneRestDesc": {
+    "description": "Pattern description: 4 workouts 1 rest"
+  },
+  "routinePatternFourWorkoutsThreeRest": "4 Allenamenti + 3 Riposi",
+  "@routinePatternFourWorkoutsThreeRest": {
+    "description": "Pattern name: 4 workouts 3 rest"
+  },
+  "routinePatternFourWorkoutsThreeRestDesc": "4 giorni di allenamento con 3 giorni di riposo a settimana",
+  "@routinePatternFourWorkoutsThreeRestDesc": {
+    "description": "Pattern description: 4 workouts 3 rest"
+  },
+  "routinePatternFiveWorkoutsTwoRest": "5 Allenamenti + 2 Riposi",
+  "@routinePatternFiveWorkoutsTwoRest": {
+    "description": "Pattern name: 5 workouts 2 rest"
+  },
+  "routinePatternFiveWorkoutsTwoRestDesc": "5 giorni di allenamento seguiti da 2 giorni di riposo",
+  "@routinePatternFiveWorkoutsTwoRestDesc": {
+    "description": "Pattern description: 5 workouts 2 rest"
+  },
+  "routinePatternSixWorkoutsOneRest": "6 Allenamenti + 1 Riposo",
+  "@routinePatternSixWorkoutsOneRest": {
+    "description": "Pattern name: 6 workouts 1 rest"
+  },
+  "routinePatternSixWorkoutsOneRestDesc": "6 giorni di allenamento seguiti da 1 giorno di riposo",
+  "@routinePatternSixWorkoutsOneRestDesc": {
+    "description": "Pattern description: 6 workouts 1 rest"
+  },
+  "routineCalendarPreview": "Anteprima Calendario",
+  "@routineCalendarPreview": {
+    "description": "Calendar preview title"
+  },
+  "routineCalendarPreviewSubtitle": "Come appare il tuo pattern sul calendario",
+  "@routineCalendarPreviewSubtitle": {
+    "description": "Calendar preview subtitle"
+  },
+  "routineAndMoreDays": "... e altri {count} {count, plural, =1{giorno} other{giorni}}",
+  "@routineAndMoreDays": {
+    "description": "More days indicator",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineTotalWorkouts": "Totale: {count} {count, plural, =1{allenamento} other{allenamenti}}",
+  "@routineTotalWorkouts": {
+    "description": "Total workouts in period",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineTotalRestDays": "Totale: {count} {count, plural, =1{giorno di riposo} other{giorni di riposo}}",
+  "@routineTotalRestDays": {
+    "description": "Total rest days in period",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineWorkoutDayLabel": "Giorni Allenamento",
+  "@routineWorkoutDayLabel": {
+    "description": "Workout days label"
+  },
+  "routineRestDayLabel": "Giorni Riposo",
+  "@routineRestDayLabel": {
+    "description": "Rest days label"
+  },
+  "routineTotalDaysLabel": "Giorni Totali",
+  "@routineTotalDaysLabel": {
+    "description": "Total days label"
+  },
+  "routineWeekdayMonday": "Lunedì",
+  "@routineWeekdayMonday": {
+    "description": "Monday"
+  },
+  "routineWeekdayTuesday": "Martedì",
+  "@routineWeekdayTuesday": {
+    "description": "Tuesday"
+  },
+  "routineWeekdayWednesday": "Mercoledì",
+  "@routineWeekdayWednesday": {
+    "description": "Wednesday"
+  },
+  "routineWeekdayThursday": "Giovedì",
+  "@routineWeekdayThursday": {
+    "description": "Thursday"
+  },
+  "routineWeekdayFriday": "Venerdì",
+  "@routineWeekdayFriday": {
+    "description": "Friday"
+  },
+  "routineWeekdaySaturday": "Sabato",
+  "@routineWeekdaySaturday": {
+    "description": "Saturday"
+  },
+  "routineWeekdaySunday": "Domenica",
+  "@routineWeekdaySunday": {
+    "description": "Sunday"
+  },
+  "routineWorkoutCount": "{count} allenamento{count, plural, =1{} other{i}}",
+  "@routineWorkoutCount": {
+    "description": "Workout count text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineRestCount": "{count} riposo",
+  "@routineRestCount": {
+    "description": "Rest count text",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

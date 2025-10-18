@@ -1,35 +1,28 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data
- * 🎯 Feature: buddy_matching
- * 🔧 Type: service
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: N/A - Service class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Permission handler
- * - Location services
- * - Firebase Firestore
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: service
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: N/A - Service class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Permission handler
+/// - Location services
+/// - Firebase Firestore
+library;
 
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../shared/domain/entities/italian_city.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
 
 /// Risultato dell'operazione di location
 class LocationResult {
-  final double latitude;
-  final double longitude;
-  final String? locationName;
-  final String? cityCode;
-  final String? cityName;
-  final String? zoneName;
-  final bool isAccurate;
 
   const LocationResult({
     required this.latitude,
@@ -40,6 +33,13 @@ class LocationResult {
     this.zoneName,
     this.isAccurate = false,
   });
+  final double latitude;
+  final double longitude;
+  final String? locationName;
+  final String? cityCode;
+  final String? cityName;
+  final String? zoneName;
+  final bool isAccurate;
 }
 
 /// Enum per lo stato dei permessi location
@@ -52,9 +52,9 @@ enum LocationPermissionStatus {
 
 /// Service per gestire location GPS e permessi
 class LocationService {
-  static final LocationService _instance = LocationService._internal();
   factory LocationService() => _instance;
   LocationService._internal();
+  static final LocationService _instance = LocationService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Timer? _locationUpdateTimer;
@@ -350,10 +350,8 @@ class LocationService {
 
 /// Extension per conversioni matematiche
 extension on double {
-  double sin() => dart:math.sin(this);
-  double cos() => dart:math.cos(this);
-  double asin() => dart:math.asin(this);
-  double sqrt() => dart:math.sqrt(this);
+  double sin() => math.sin(this);
+  double cos() => math.cos(this);
+  double asin() => math.asin(this);
+  double sqrt() => math.sqrt(this);
 }
-
-import 'dart:math' as dart_math;

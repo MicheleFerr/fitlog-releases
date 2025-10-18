@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../../shared/domain/entities/timer_sound.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/timer_sound.dart';
 
 class TimerSoundSelector extends ConsumerWidget {
-  final TimerSound selectedSound;
-  final Function(TimerSound) onSoundSelected;
-  
-  // Player statico per evitare conflitti
-  static AudioPlayer? _previewPlayer;
   
   const TimerSoundSelector({
     super.key,
     required this.selectedSound,
     required this.onSoundSelected,
   });
+  final TimerSound selectedSound;
+  final Function(TimerSound) onSoundSelected;
+  
+  // Player statico per evitare conflitti
+  static AudioPlayer? _previewPlayer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +52,7 @@ class TimerSoundSelector extends ConsumerWidget {
       secondary: IconButton(
         onPressed: () => _playPreview(context, sound),
         icon: const Icon(Icons.play_arrow, size: 20),
-        tooltip: AppLocalizations.of(context)!.playPreview,
+        tooltip: AppLocalizations.of(context).playPreview,
       ),
     );
   }
@@ -62,7 +63,7 @@ class TimerSoundSelector extends ConsumerWidget {
       await rootBundle.load('assets/$path');
       return true;
     } catch (e) {
-      print('❌ Asset non trovato: assets/$path');
+      // print('❌ Asset non trovato: assets/$path');
       return false;
     }
   }
@@ -74,7 +75,7 @@ class TimerSoundSelector extends ConsumerWidget {
       await _previewPlayer?.dispose();
       
       final audioPath = 'sounds/${sound.fileName}.wav';
-      print('🎵 Tentativo riproduzione: $audioPath');
+      // print('🎵 Tentativo riproduzione: $audioPath');
       
       // Verifica se il file esiste
       final exists = await _checkAssetExists(audioPath);
@@ -87,12 +88,10 @@ class TimerSoundSelector extends ConsumerWidget {
       
       // Show feedback
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('🔊 ${sound.displayName}'),
-            duration: const Duration(seconds: 1),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
+        SnackBarService.showSuccess(
+          context,
+          '🔊 ${sound.displayName}',
+          duration: const Duration(seconds: 1),
         );
       }
       
@@ -103,16 +102,14 @@ class TimerSoundSelector extends ConsumerWidget {
       
     } catch (e) {
       // Debug: mostra errore dettagliato
-      print('❌ Errore audio: $e');
+      // print('❌ Errore audio: $e');
       
       // Handle error con dettagli specifici
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('❌ ${sound.displayName}\n${e.toString()}'),
-            duration: const Duration(seconds: 4),
-            backgroundColor: Colors.red,
-          ),
+        SnackBarService.showError(
+          context,
+          '❌ ${sound.displayName}\n${e.toString()}',
+          duration: const Duration(seconds: 4),
         );
       }
     }

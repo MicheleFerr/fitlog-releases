@@ -8,10 +8,6 @@ import 'dart:math' as math;
 /// Grafico 3D interattivo per visualizzare il volume di allenamento
 /// con effetti di profondità e animazioni touch-responsive
 class VolumeProgressChart3D extends ConsumerStatefulWidget {
-  final List<VolumeData> data;
-  final VolumeChartType chartType;
-  final Function(VolumeData)? onBarTap;
-  final bool showTrend;
   
   const VolumeProgressChart3D({
     super.key,
@@ -20,6 +16,10 @@ class VolumeProgressChart3D extends ConsumerStatefulWidget {
     this.onBarTap,
     this.showTrend = true,
   });
+  final List<VolumeData> data;
+  final VolumeChartType chartType;
+  final Function(VolumeData)? onBarTap;
+  final bool showTrend;
 
   @override
   ConsumerState<VolumeProgressChart3D> createState() => _VolumeProgressChart3DState();
@@ -32,7 +32,7 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
   late Animation<double> _entranceAnimation;
   
   int? _touchedIndex;
-  bool _is3DMode = false; // Disabled by default
+  final bool _is3DMode = false; // Disabled by default
   VolumeChartType _currentChartType = VolumeChartType.weekly;
   
   @override
@@ -270,7 +270,6 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
               fitInsideHorizontally: true,
               fitInsideVertically: true,
               tooltipPadding: const EdgeInsets.all(8),
-              tooltipRoundedRadius: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 if (groupIndex >= data.length) return null;
                 
@@ -318,10 +317,6 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
         currentY,
         currentY + volume,
         colors[colorIndex % colors.length].withValues(alpha: 0.7),
-        BorderSide(
-          color: colors[colorIndex % colors.length],
-          width: 0.5,
-        ),
       ));
       currentY += volume;
       colorIndex++;
@@ -572,12 +567,6 @@ enum VolumeChartType {
 }
 
 class VolumeData {
-  final DateTime date;
-  final double volume;
-  final String? muscleGroup;
-  final String? exerciseName;
-  final int sets;
-  final int reps;
   
   const VolumeData({
     required this.date,
@@ -587,13 +576,15 @@ class VolumeData {
     required this.sets,
     required this.reps,
   });
+  final DateTime date;
+  final double volume;
+  final String? muscleGroup;
+  final String? exerciseName;
+  final int sets;
+  final int reps;
 }
 
 class ProcessedVolumeData {
-  final DateTime date;
-  double totalVolume;
-  int workoutCount;
-  Map<String, double> muscleGroupVolumes;
   
   ProcessedVolumeData({
     required this.date,
@@ -601,4 +592,8 @@ class ProcessedVolumeData {
     required this.workoutCount,
     required this.muscleGroupVolumes,
   });
+  final DateTime date;
+  double totalVolume;
+  int workoutCount;
+  Map<String, double> muscleGroupVolumes;
 }

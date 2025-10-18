@@ -7,14 +7,14 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
-  final Exercise currentExercise;
-  final Function(Exercise) onReplace;
   
   const ExerciseReplacementModal({
     super.key,
     required this.currentExercise,
     required this.onReplace,
   });
+  final Exercise currentExercise;
+  final Function(Exercise) onReplace;
   
   static Future<void> show(
     BuildContext context,
@@ -44,7 +44,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final exercisesAsync = ref.watch(exerciseJsonProvider);
     
     // Get exercises from provider
@@ -209,7 +209,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                       borderRadius: BorderRadius.circular(12),
                     ),
                     filled: true,
-                    fillColor: theme.colorScheme.surfaceVariant.withValues(alpha: 0.3),
+                    fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   ),
                 ),
                 
@@ -238,7 +238,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                         ),
                         selected: _showOnlyCompatible,
                         onSelected: (value) => setState(() => _showOnlyCompatible = value),
-                        backgroundColor: theme.colorScheme.surfaceVariant,
+                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
                         selectedColor: theme.colorScheme.primary,
                       ),
                       const SizedBox(width: 8),
@@ -326,7 +326,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   
   Widget _buildExerciseTile(BuildContext context, ExerciseSuggestion suggestion) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     // Calculate color based on compatibility
     Color compatibilityColor;
@@ -349,7 +349,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
-        color: theme.colorScheme.surfaceVariant.withValues(alpha: 0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           onTap: () => _confirmReplacement(context, suggestion.exercise),
@@ -436,7 +436,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   
   void _confirmReplacement(BuildContext context, Exercise newExercise) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     HapticFeedback.lightImpact();
     
@@ -448,29 +448,12 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichText(
-              text: TextSpan(
-                style: theme.textTheme.bodyMedium,
-                children: [
-                  TextSpan(text: l10n.replaceExerciseConfirmation),
-                  TextSpan(text: '\n\n'),
-                  TextSpan(
-                    text: '${widget.currentExercise.name}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.error,
-                    ),
-                  ),
-                  TextSpan(text: ' → '),
-                  TextSpan(
-                    text: newExercise.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ],
+            Text(
+              l10n.replaceExerciseConfirmation(
+                widget.currentExercise.name,
+                newExercise.name,
               ),
+              style: theme.textTheme.bodyMedium,
             ),
             const SizedBox(height: 12),
             Container(
@@ -600,7 +583,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   }
   
   String _getCompatibilityReason(double score, Exercise exercise) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     if (exercise.name == widget.currentExercise.name) {
       return l10n.currentExercise;

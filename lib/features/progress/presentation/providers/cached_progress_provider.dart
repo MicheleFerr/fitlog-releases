@@ -3,6 +3,7 @@
 /// CACHED PROGRESS PROVIDER
 /// Provider con cache locale per statistiche workout
 /// Risolve il problema del conteggio errato (esercizi vs workout)
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,16 +62,7 @@ class _CacheLogger {
 }
 
 /// Cached dashboard stats entity
-class CachedDashboardStats {
-  final int totalWorkouts;        // Workout reali (non esercizi)
-  final int totalExercises;       // Esercizi totali
-  final int currentStreak;        // Streak giorni consecutivi
-  final double weeklyFrequency;   // Frequenza settimanale
-  final double totalVolume;       // Volume totale
-  final double maxPR;            // PR massimo
-  final String prExercise;       // Esercizio del PR
-  final Map<String, bool> workoutDates; // Date workout per streak
-  final DateTime lastCalculated; // Per validità cache
+class CachedDashboardStats { // Per validità cache
 
   const CachedDashboardStats({
     required this.totalWorkouts,
@@ -83,6 +75,45 @@ class CachedDashboardStats {
     required this.workoutDates,
     required this.lastCalculated,
   });
+
+  /// Create from JSON
+  factory CachedDashboardStats.fromJson(Map<String, dynamic> json) {
+    return CachedDashboardStats(
+      totalWorkouts: json['totalWorkouts'] ?? 0,
+      totalExercises: json['totalExercises'] ?? 0,
+      currentStreak: json['currentStreak'] ?? 0,
+      weeklyFrequency: (json['weeklyFrequency'] ?? 0.0).toDouble(),
+      totalVolume: (json['totalVolume'] ?? 0.0).toDouble(),
+      maxPR: (json['maxPR'] ?? 0.0).toDouble(),
+      prExercise: json['prExercise'] ?? 'N/A',
+      workoutDates: Map<String, bool>.from(json['workoutDates'] ?? {}),
+      lastCalculated: DateTime.parse(json['lastCalculated'] ?? DateTime.now().toIso8601String()),
+    );
+  }
+
+  /// Create empty stats
+  factory CachedDashboardStats.empty() {
+    return CachedDashboardStats(
+      totalWorkouts: 0,
+      totalExercises: 0,
+      currentStreak: 0,
+      weeklyFrequency: 0.0,
+      totalVolume: 0.0,
+      maxPR: 0.0,
+      prExercise: 'N/A',
+      workoutDates: {},
+      lastCalculated: DateTime.now(),
+    );
+  }
+  final int totalWorkouts;        // Workout reali (non esercizi)
+  final int totalExercises;       // Esercizi totali
+  final int currentStreak;        // Streak giorni consecutivi
+  final double weeklyFrequency;   // Frequenza settimanale
+  final double totalVolume;       // Volume totale
+  final double maxPR;            // PR massimo
+  final String prExercise;       // Esercizio del PR
+  final Map<String, bool> workoutDates; // Date workout per streak
+  final DateTime lastCalculated;
 
   /// Check if cache is still valid (adaptive based on user activity)
   bool get isValid {
@@ -122,36 +153,6 @@ class CachedDashboardStats {
       'workoutDates': workoutDates,
       'lastCalculated': lastCalculated.toIso8601String(),
     };
-  }
-
-  /// Create from JSON
-  factory CachedDashboardStats.fromJson(Map<String, dynamic> json) {
-    return CachedDashboardStats(
-      totalWorkouts: json['totalWorkouts'] ?? 0,
-      totalExercises: json['totalExercises'] ?? 0,
-      currentStreak: json['currentStreak'] ?? 0,
-      weeklyFrequency: (json['weeklyFrequency'] ?? 0.0).toDouble(),
-      totalVolume: (json['totalVolume'] ?? 0.0).toDouble(),
-      maxPR: (json['maxPR'] ?? 0.0).toDouble(),
-      prExercise: json['prExercise'] ?? 'N/A',
-      workoutDates: Map<String, bool>.from(json['workoutDates'] ?? {}),
-      lastCalculated: DateTime.parse(json['lastCalculated'] ?? DateTime.now().toIso8601String()),
-    );
-  }
-
-  /// Create empty stats
-  factory CachedDashboardStats.empty() {
-    return CachedDashboardStats(
-      totalWorkouts: 0,
-      totalExercises: 0,
-      currentStreak: 0,
-      weeklyFrequency: 0.0,
-      totalVolume: 0.0,
-      maxPR: 0.0,
-      prExercise: 'N/A',
-      workoutDates: {},
-      lastCalculated: DateTime.now(),
-    );
   }
 
   /// Add new workout to stats
@@ -233,13 +234,6 @@ class CachedDashboardStats {
 
 /// Dashboard stats entity (from existing code)
 class DashboardStats {
-  final int currentStreak;
-  final int totalWorkouts;
-  final double weeklyFrequency;
-  final double totalVolume;
-  final double volumeIncrease;
-  final double maxPR;
-  final String prExercise;
 
   const DashboardStats({
     required this.currentStreak,
@@ -262,10 +256,22 @@ class DashboardStats {
       prExercise: 'N/A',
     );
   }
+  final int currentStreak;
+  final int totalWorkouts;
+  final double weeklyFrequency;
+  final double totalVolume;
+  final double volumeIncrease;
+  final double maxPR;
+  final String prExercise;
 }
 
 /// Cache repository for progress stats
 class ProgressCacheRepository {
+
+  ProgressCacheRepository(this._prefs) {
+    _initCompleter = Completer<void>();
+    _initialize();
+  }
   static const String _cacheKey = 'cached_dashboard_stats';
   final SharedPreferences _prefs;
 
@@ -284,11 +290,6 @@ class ProgressCacheRepository {
   int _initRetryCount = 0;
   static const int _maxInitRetries = 3;
 
-  ProgressCacheRepository(this._prefs) {
-    _initCompleter = Completer<void>();
-    _initialize();
-  }
-
   /// Initialize the repository
   Future<void> _initialize() async {
     try {
@@ -296,7 +297,7 @@ class ProgressCacheRepository {
 
       // Test SharedPreferences accessibility
       final testKey = 'init_test_key_${DateTime.now().millisecondsSinceEpoch}';
-      final testValue = 'test_value';
+      const testValue = 'test_value';
       await _prefs.setString(testKey, testValue);
       final readBack = _prefs.getString(testKey);
       await _prefs.remove(testKey);
@@ -578,7 +579,7 @@ final progressCacheRepositoryProvider = Provider<ProgressCacheRepository>((ref) 
 
   // Test SharedPreferences accessibility
   try {
-    final testKey = 'debug_test_key';
+    const testKey = 'debug_test_key';
     final testValue = 'debug_test_value_${DateTime.now().millisecondsSinceEpoch}';
     prefs.setString(testKey, testValue);
     final readBack = prefs.getString(testKey);

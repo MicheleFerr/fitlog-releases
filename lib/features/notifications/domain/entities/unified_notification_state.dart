@@ -1,25 +1,8 @@
-import 'unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 
 /// Unified state for the entire notification system
 /// Similar to UnifiedTimerState but for notifications management
 class UnifiedNotificationState {
-  final List<UnifiedNotification> notifications;
-  final Map<String, NotificationDeliveryReceipt> deliveryStatus;
-  final NotificationPreferences preferences;
-  final NotificationMetrics metrics;
-  final NotificationSystemStatus systemStatus;
-  final DateTime lastSyncTime;
-  final String? error;
-  
-  // Filters and organization
-  final List<NotificationFilter> activeFilters;
-  final NotificationSortOrder sortOrder;
-  final int unreadCount;
-  
-  // Batching and queue management
-  final List<UnifiedNotification> pendingQueue;
-  final List<UnifiedNotification> retryQueue;
-  final Map<String, DateTime> scheduledTasks;
 
   const UnifiedNotificationState({
     required this.notifications,
@@ -53,6 +36,23 @@ class UnifiedNotificationState {
       scheduledTasks: const {},
     );
   }
+  final List<UnifiedNotification> notifications;
+  final Map<String, NotificationDeliveryReceipt> deliveryStatus;
+  final NotificationPreferences preferences;
+  final NotificationMetrics metrics;
+  final NotificationSystemStatus systemStatus;
+  final DateTime lastSyncTime;
+  final String? error;
+  
+  // Filters and organization
+  final List<NotificationFilter> activeFilters;
+  final NotificationSortOrder sortOrder;
+  final int unreadCount;
+  
+  // Batching and queue management
+  final List<UnifiedNotification> pendingQueue;
+  final List<UnifiedNotification> retryQueue;
+  final Map<String, DateTime> scheduledTasks;
 
   // Computed properties
   bool get isInitialized => systemStatus != NotificationSystemStatus.initializing;
@@ -237,11 +237,6 @@ enum NotificationSortOrder {
 }
 
 class NotificationDeliveryReceipt {
-  final String notificationId;
-  final NotificationDeliveryStatus status;
-  final DateTime timestamp;
-  final String? errorMessage;
-  final Map<String, dynamic>? platformData;
 
   NotificationDeliveryReceipt({
     required this.notificationId,
@@ -250,16 +245,6 @@ class NotificationDeliveryReceipt {
     this.errorMessage,
     this.platformData,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'notificationId': notificationId,
-      'status': status.name,
-      'timestamp': timestamp.toIso8601String(),
-      'errorMessage': errorMessage,
-      'platformData': platformData,
-    };
-  }
 
   factory NotificationDeliveryReceipt.fromJson(Map<String, dynamic> json) {
     return NotificationDeliveryReceipt(
@@ -270,16 +255,24 @@ class NotificationDeliveryReceipt {
       platformData: json['platformData'] as Map<String, dynamic>?,
     );
   }
+  final String notificationId;
+  final NotificationDeliveryStatus status;
+  final DateTime timestamp;
+  final String? errorMessage;
+  final Map<String, dynamic>? platformData;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'notificationId': notificationId,
+      'status': status.name,
+      'timestamp': timestamp.toIso8601String(),
+      'errorMessage': errorMessage,
+      'platformData': platformData,
+    };
+  }
 }
 
 class NotificationPreferences {
-  final bool enabled;
-  final Map<NotificationType, bool> typePreferences;
-  final List<TimeRange> quietHours;
-  final NotificationSound soundPreferences;
-  final bool vibrationEnabled;
-  final NotificationFrequency frequency;
-  final String? language;
 
   const NotificationPreferences({
     required this.enabled,
@@ -298,25 +291,13 @@ class NotificationPreferences {
         for (var type in NotificationType.values) type: true
       },
       quietHours: [
-        TimeRange(start: const TimeOfDay(hour: 22, minute: 0), 
-                 end: const TimeOfDay(hour: 8, minute: 0)),
+        const TimeRange(start: TimeOfDay(hour: 22, minute: 0), 
+                 end: TimeOfDay(hour: 8, minute: 0)),
       ],
       soundPreferences: NotificationSound.defaults(),
       vibrationEnabled: true,
       frequency: NotificationFrequency.normal,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'enabled': enabled,
-      'typePreferences': typePreferences.map((k, v) => MapEntry(k.name, v)),
-      'quietHours': quietHours.map((t) => t.toJson()).toList(),
-      'soundPreferences': soundPreferences.toJson(),
-      'vibrationEnabled': vibrationEnabled,
-      'frequency': frequency.name,
-      'language': language,
-    };
   }
 
   factory NotificationPreferences.fromJson(Map<String, dynamic> json) {
@@ -333,20 +314,28 @@ class NotificationPreferences {
       language: json['language'] as String?,
     );
   }
+  final bool enabled;
+  final Map<NotificationType, bool> typePreferences;
+  final List<TimeRange> quietHours;
+  final NotificationSound soundPreferences;
+  final bool vibrationEnabled;
+  final NotificationFrequency frequency;
+  final String? language;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'enabled': enabled,
+      'typePreferences': typePreferences.map((k, v) => MapEntry(k.name, v)),
+      'quietHours': quietHours.map((t) => t.toJson()).toList(),
+      'soundPreferences': soundPreferences.toJson(),
+      'vibrationEnabled': vibrationEnabled,
+      'frequency': frequency.name,
+      'language': language,
+    };
+  }
 }
 
 class NotificationMetrics {
-  final int totalScheduled;
-  final int totalDelivered;
-  final int totalFailed;
-  final int totalRead;
-  final int duplicatesPrevented;
-  final Map<NotificationType, int> deliveryByType;
-  final List<NotificationError> recentErrors;
-  final DateTime? lastCleanupTime;
-  final Duration averageSchedulingLatency;
-  final Duration averageDeliveryLatency;
-  final double batteryImpact;
 
   const NotificationMetrics({
     required this.totalScheduled,
@@ -376,6 +365,17 @@ class NotificationMetrics {
       batteryImpact: 0.0,
     );
   }
+  final int totalScheduled;
+  final int totalDelivered;
+  final int totalFailed;
+  final int totalRead;
+  final int duplicatesPrevented;
+  final Map<NotificationType, int> deliveryByType;
+  final List<NotificationError> recentErrors;
+  final DateTime? lastCleanupTime;
+  final Duration averageSchedulingLatency;
+  final Duration averageDeliveryLatency;
+  final double batteryImpact;
 
   // Performance indicators
   double get deliveryRate => totalScheduled > 0 ? totalDelivered / totalScheduled : 0.0;
@@ -402,17 +402,8 @@ class NotificationMetrics {
 
 // Supporting classes
 class TimeRange {
-  final TimeOfDay start;
-  final TimeOfDay end;
 
   const TimeRange({required this.start, required this.end});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'start': {'hour': start.hour, 'minute': start.minute},
-      'end': {'hour': end.hour, 'minute': end.minute},
-    };
-  }
 
   factory TimeRange.fromJson(Map<String, dynamic> json) {
     return TimeRange(
@@ -426,19 +417,25 @@ class TimeRange {
       ),
     );
   }
+  final TimeOfDay start;
+  final TimeOfDay end;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'start': {'hour': start.hour, 'minute': start.minute},
+      'end': {'hour': end.hour, 'minute': end.minute},
+    };
+  }
 }
 
 class TimeOfDay {
-  final int hour;
-  final int minute;
 
   const TimeOfDay({required this.hour, required this.minute});
+  final int hour;
+  final int minute;
 }
 
 class NotificationSound {
-  final String name;
-  final double volume;
-  final bool enabled;
 
   const NotificationSound({
     required this.name,
@@ -454,14 +451,6 @@ class NotificationSound {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'volume': volume,
-      'enabled': enabled,
-    };
-  }
-
   factory NotificationSound.fromJson(Map<String, dynamic> json) {
     return NotificationSound(
       name: json['name'] as String,
@@ -469,13 +458,20 @@ class NotificationSound {
       enabled: json['enabled'] as bool,
     );
   }
+  final String name;
+  final double volume;
+  final bool enabled;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'volume': volume,
+      'enabled': enabled,
+    };
+  }
 }
 
 class NotificationError {
-  final String message;
-  final DateTime timestamp;
-  final String? notificationId;
-  final Map<String, dynamic>? context;
 
   NotificationError({
     required this.message,
@@ -483,15 +479,6 @@ class NotificationError {
     this.notificationId,
     this.context,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'message': message,
-      'timestamp': timestamp.toIso8601String(),
-      'notificationId': notificationId,
-      'context': context,
-    };
-  }
 
   factory NotificationError.fromJson(Map<String, dynamic> json) {
     return NotificationError(
@@ -501,13 +488,26 @@ class NotificationError {
       context: json['context'] as Map<String, dynamic>?,
     );
   }
+  final String message;
+  final DateTime timestamp;
+  final String? notificationId;
+  final Map<String, dynamic>? context;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      'timestamp': timestamp.toIso8601String(),
+      'notificationId': notificationId,
+      'context': context,
+    };
+  }
 }
 
 class NotificationFilter {
-  final String name;
-  final bool Function(UnifiedNotification) predicate;
 
   NotificationFilter({required this.name, required this.predicate});
+  final String name;
+  final bool Function(UnifiedNotification) predicate;
 }
 
 enum NotificationFrequency {

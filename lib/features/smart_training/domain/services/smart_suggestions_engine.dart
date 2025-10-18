@@ -1,12 +1,9 @@
 import 'dart:math' as math;
-import '../entities/smart_suggestion.dart';
-import '../entities/smart_training_metrics.dart';
-import '../entities/progressive_overload_analysis.dart';
-import '../services/progressive_overload_engine.dart';
-import '../services/deload_detection_service.dart';
-import '../services/plateau_breaker_service.dart';
-import '../../workout/domain/entities/workout.dart';
-import '../../workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_suggestion.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/progressive_overload_engine.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/deload_detection_service.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/plateau_breaker_service.dart';
 
 /// Real-time smart suggestions engine
 class SmartSuggestionsEngine {
@@ -241,7 +238,7 @@ class SmartSuggestionsEngine {
     
     // Rest time optimization
     if (rpe != null && actualReps != null) {
-      int recommendedRest = _calculateOptimalRestTime(rpe, actualReps, targetReps, setNumber);
+      final int recommendedRest = _calculateOptimalRestTime(rpe, actualReps, targetReps, setNumber);
       
       if ((recommendedRest - restTime).abs() > 30) {
         final adjustment = recommendedRest > restTime ? 'increase' : 'decrease';
@@ -251,7 +248,7 @@ class SmartSuggestionsEngine {
           type: SuggestionType.restTimeOptimization,
           priority: SuggestionPriority.medium,
           title: 'Rest Time Optimization',
-          description: 'Based on your RPE and performance, ${adjustment} rest by ${difference}s for optimal recovery.',
+          description: 'Based on your RPE and performance, $adjustment rest by ${difference}s for optimal recovery.',
           reasoning: 'Optimized rest times improve performance and training efficiency',
           category: SuggestionCategory.performance,
           parameters: {
@@ -550,7 +547,7 @@ class SmartSuggestionsEngine {
     SuggestionContext context,
   ) {
     // Filter out dismissed or applied suggestions
-    var filtered = suggestions.where((s) => s.isValid).toList();
+    final filtered = suggestions.where((s) => s.isValid).toList();
     
     // Sort by priority and confidence
     filtered.sort((a, b) {
@@ -608,13 +605,15 @@ class SmartSuggestionsEngine {
     int baseRest = 120; // 2 minutes default
     
     // Adjust for RPE
-    if (rpe >= 9) baseRest += 60;
-    else if (rpe >= 8) baseRest += 30;
+    if (rpe >= 9) {
+      baseRest += 60;
+    } else if (rpe >= 8) baseRest += 30;
     else if (rpe <= 6) baseRest -= 30;
     
     // Adjust for rep performance
-    if (actualReps < targetReps) baseRest += 30;
-    else if (actualReps > targetReps) baseRest -= 15;
+    if (actualReps < targetReps) {
+      baseRest += 30;
+    } else if (actualReps > targetReps) baseRest -= 15;
     
     // Adjust for set number (later sets need more rest)
     baseRest += (setNumber - 1) * 15;

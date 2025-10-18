@@ -3,15 +3,6 @@ import 'package:flutter/services.dart';
 
 /// Widget interattivo che mostra una metrica con tooltip esplicativo
 class InteractiveMetricWidget extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
-  final String beginnerExplanation;
-  final String intermediateExplanation;
-  final String advancedExplanation;
-  final String? formula;
-  final Widget? customContent;
 
   const InteractiveMetricWidget({
     super.key,
@@ -25,6 +16,15 @@ class InteractiveMetricWidget extends StatelessWidget {
     this.formula,
     this.customContent,
   });
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color color;
+  final String beginnerExplanation;
+  final String intermediateExplanation;
+  final String advancedExplanation;
+  final String? formula;
+  final Widget? customContent;
 
   @override
   Widget build(BuildContext context) {
@@ -117,14 +117,6 @@ class InteractiveMetricWidget extends StatelessWidget {
 }
 
 class _ExplanationSheet extends StatefulWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
-  final String beginnerExplanation;
-  final String intermediateExplanation;
-  final String advancedExplanation;
-  final String? formula;
 
   const _ExplanationSheet({
     required this.title,
@@ -136,6 +128,14 @@ class _ExplanationSheet extends StatefulWidget {
     required this.advancedExplanation,
     this.formula,
   });
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color color;
+  final String beginnerExplanation;
+  final String intermediateExplanation;
+  final String advancedExplanation;
+  final String? formula;
 
   @override
   State<_ExplanationSheet> createState() => _ExplanationSheetState();

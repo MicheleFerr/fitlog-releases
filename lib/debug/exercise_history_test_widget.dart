@@ -1,28 +1,28 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: debug
- * 🎯 Feature: workout
- * 🔧 Type: debug_widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: debug
+/// 🎯 Feature: workout
+/// 🔧 Type: debug_widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../shared/presentation/l10n/generated/app_localizations.dart';
-import '../features/workout/presentation/providers/exercise_history_provider.dart';
-import '../features/auth/presentation/providers/user_provider_v2.dart';
-import '../features/workout/data/services/exercise_history_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
+import 'package:flutter/foundation.dart';
 
 class ExerciseHistoryTestWidget extends ConsumerStatefulWidget {
-  final String exerciseName;
   
   const ExerciseHistoryTestWidget({
     super.key,
     required this.exerciseName,
   });
+  final String exerciseName;
 
   @override
   ConsumerState<ExerciseHistoryTestWidget> createState() => _ExerciseHistoryTestWidgetState();
@@ -50,7 +50,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
       final userId = ref.read(currentUserIdProvider);
       if (userId == null) return;
 
-      final service = ExerciseHistoryService();
+      const service = ExerciseHistoryService();
       final exerciseNames = await service.getAllExerciseNames(userId);
       final workoutCount = await service.getWorkoutCount(userId);
 
@@ -61,7 +61,9 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
         });
       }
     } catch (e) {
-      print('Error loading debug data: $e');
+      if (kDebugMode) {
+        debugPrint('Error loading debug data: $e');
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -74,7 +76,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     final historyAsync = ref.watch(exerciseHistoryProvider(widget.exerciseName));
     final userId = ref.watch(currentUserIdProvider);

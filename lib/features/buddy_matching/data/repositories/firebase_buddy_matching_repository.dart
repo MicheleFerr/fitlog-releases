@@ -1,36 +1,34 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data
- * 🎯 Feature: buddy_matching
- * 🔧 Type: repository implementation
- * 🌍 Localization: N/A - Repository implementation
- * 🎨 Theme: N/A - Repository implementation
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None (injected via constructor)
- * - Firebase: Firestore, Auth
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: repository implementation
+/// 🌍 Localization: N/A - Repository implementation
+/// 🎨 Theme: N/A - Repository implementation
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None (injected via constructor)
+/// - Firebase: Firestore, Auth
+/// - Hive: None
+library;
 
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../domain/entities/buddy_profile.dart';
-import '../../domain/entities/buddy_match.dart';
-import '../../domain/entities/buddy_preferences.dart';
-import '../../domain/repositories/buddy_matching_repository.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_match.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/repositories/buddy_matching_repository.dart';
 
 class FirebaseBuddyMatchingRepository implements BuddyMatchingRepository {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _auth;
 
   FirebaseBuddyMatchingRepository({
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
         _auth = auth ?? FirebaseAuth.instance;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
   // Collections
   CollectionReference get _profilesCollection => _firestore.collection('buddy_profiles');

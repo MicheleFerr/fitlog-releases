@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Tier1FAB extends StatefulWidget {
-  final VoidCallback onPressed;
-  final IconData icon;
-  final String label;
   
   const Tier1FAB({
     super.key,
@@ -12,6 +9,9 @@ class Tier1FAB extends StatefulWidget {
     required this.icon,
     required this.label,
   });
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String label;
 
   @override
   State<Tier1FAB> createState() => _Tier1FABState();
@@ -152,12 +152,12 @@ class _Tier1FABState extends State<Tier1FAB> with SingleTickerProviderStateMixin
 }
 
 class Tier1SearchFAB extends StatelessWidget {
-  final VoidCallback onPressed;
   
   const Tier1SearchFAB({
     super.key,
     required this.onPressed,
   });
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain/services
- * 🎯 Feature: workout
- * 🔧 Type: service
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities
- * - File system access
- * - JSON/CSV parsing
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain/services
+/// 🎯 Feature: workout
+/// 🔧 Type: service
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities
+/// - File system access
+/// - JSON/CSV parsing
+library;
 
 import 'dart:convert';
 import 'dart:io';
@@ -26,11 +25,6 @@ import 'package:uuid/uuid.dart';
 
 /// Opzioni per l'import
 class ImportOptions {
-  final bool overwriteExisting;
-  final bool mergeWithExisting;
-  final bool validateData;
-  final bool skipInvalidRows;
-  final String? defaultWorkoutName;
   
   ImportOptions({
     this.overwriteExisting = false,
@@ -39,6 +33,11 @@ class ImportOptions {
     this.skipInvalidRows = true,
     this.defaultWorkoutName,
   });
+  final bool overwriteExisting;
+  final bool mergeWithExisting;
+  final bool validateData;
+  final bool skipInvalidRows;
+  final String? defaultWorkoutName;
 }
 
 /// Service per importare workout da vari formati
@@ -132,7 +131,7 @@ class WorkoutImportService {
           if (options.skipInvalidRows) {
             errors.add('Failed to import workout $i: $e');
           } else {
-            throw e;
+            rethrow;
           }
         }
       }
@@ -213,7 +212,7 @@ class WorkoutImportService {
           if (options.skipInvalidRows) {
             errors.add('Failed to parse row $i: $e');
           } else {
-            throw e;
+            rethrow;
           }
         }
       }
@@ -526,10 +525,6 @@ class WorkoutImportService {
 
 /// Risultato dell'import
 class ImportResult {
-  final bool success;
-  final String message;
-  final List<Workout>? workouts;
-  final List<String>? errors;
   
   ImportResult({
     required this.success,
@@ -537,6 +532,10 @@ class ImportResult {
     this.workouts,
     this.errors,
   });
+  final bool success;
+  final String message;
+  final List<Workout>? workouts;
+  final List<String>? errors;
   
   int get importedCount => workouts?.length ?? 0;
   int get errorCount => errors?.length ?? 0;

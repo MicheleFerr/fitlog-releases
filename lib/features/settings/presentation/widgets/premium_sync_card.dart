@@ -1,20 +1,18 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/widgets
- * 🎯 Feature: settings
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: Consumer for state
- * - Material Design 3
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/widgets
+/// 🎯 Feature: settings
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: Consumer for state
+/// - Material Design 3
+library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
@@ -27,13 +25,6 @@ import 'package:intl/intl.dart';
 
 /// State for sync operation
 class SyncState {
-  final bool isSyncing;
-  final double? progress;
-  final String? currentOperation;
-  final int syncedCount;
-  final int totalCount;
-  final SyncResult? lastResult;
-  final DateTime? lastSyncTime;
   
   SyncState({
     this.isSyncing = false,
@@ -44,6 +35,13 @@ class SyncState {
     this.lastResult,
     this.lastSyncTime,
   });
+  final bool isSyncing;
+  final double? progress;
+  final String? currentOperation;
+  final int syncedCount;
+  final int totalCount;
+  final SyncResult? lastResult;
+  final DateTime? lastSyncTime;
   
   SyncState copyWith({
     bool? isSyncing,
@@ -72,11 +70,11 @@ final syncStateProvider = StateNotifierProvider<SyncStateNotifier, SyncState>((r
 });
 
 class SyncStateNotifier extends StateNotifier<SyncState> {
-  final Ref ref;
   
   SyncStateNotifier(this.ref) : super(SyncState()) {
     _loadLastSyncTime();
   }
+  final Ref ref;
   
   Future<void> _loadLastSyncTime() async {
     // Load from SharedPreferences if needed
@@ -140,7 +138,7 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
         state = state.copyWith(
           syncedCount: processed,
           progress: processed / unsyncedWorkouts.length,
-          currentOperation: 'Syncing workout ${processed}/${unsyncedWorkouts.length}',
+          currentOperation: 'Syncing workout $processed/${unsyncedWorkouts.length}',
         );
         
         // Small delay for UI updates
@@ -230,7 +228,7 @@ class PremiumSyncCard extends ConsumerWidget {
     final userProfile = ref.watch(unifiedUserProfileProvider);
     final firebaseUser = ref.watch(unifiedFirebaseUserProvider);
     final syncState = ref.watch(syncStateProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     
     // Check if user is admin (special access)
@@ -253,7 +251,7 @@ class PremiumSyncCard extends ConsumerWidget {
       // Free user - show upgrade prompt
       return Card(
         elevation: 0,
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
         child: InkWell(
           onTap: () {
             // Navigate to premium upgrade
@@ -366,7 +364,7 @@ class PremiumSyncCard extends ConsumerWidget {
               const SizedBox(height: 8),
               LinearProgressIndicator(
                 value: syncState.progress,
-                backgroundColor: theme.colorScheme.surfaceVariant,
+                backgroundColor: theme.colorScheme.surfaceContainerHighest,
               ),
               const SizedBox(height: 4),
               Text(
@@ -437,7 +435,7 @@ class PremiumSyncCard extends ConsumerWidget {
                           final confirmed = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: Text(AppLocalizations.of(context)!.syncWorkouts),
+                              title: Text(AppLocalizations.of(context).syncWorkouts),
                               content: const Text(
                                 'This will upload all your local workouts to the cloud. '
                                 'This may take a few minutes depending on how many workouts you have.'
@@ -461,7 +459,7 @@ class PremiumSyncCard extends ConsumerWidget {
                           }
                         },
                   icon: const Icon(Icons.cloud_upload),
-                  label: Text(AppLocalizations.of(context)!.syncAllWorkouts),
+                  label: Text(AppLocalizations.of(context).syncAllWorkouts),
                 ),
               ),
             ],
@@ -549,7 +547,7 @@ class PremiumSyncCard extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.upgradeToPremium),
+        title: Text(AppLocalizations.of(context).upgradeToPremium),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -602,13 +600,13 @@ class PremiumSyncCard extends ConsumerWidget {
 }
 
 class _FeatureItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
   
   const _FeatureItem({
     required this.icon,
     required this.text,
   });
+  final IconData icon;
+  final String text;
   
   @override
   Widget build(BuildContext context) {

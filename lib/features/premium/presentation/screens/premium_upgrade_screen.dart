@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/screens
- * 🎯 Feature: premium
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal with iOS/Android payment
- * 
- * Premium upgrade screen with smart refresh
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/screens
+/// 🎯 Feature: premium
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal with iOS/Android payment
+/// 
+/// Premium upgrade screen with smart refresh
+library;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -17,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -58,7 +58,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final size = MediaQuery.of(context).size;
@@ -213,7 +213,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
               color: colorScheme.primary,
             ),
           ),
-        )).toList(),
+        )),
       ],
     );
   }
@@ -410,7 +410,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 margin: const EdgeInsets.only(right: 16),
                 child: Card(
                   elevation: 0,
-                  color: colorScheme.surfaceVariant.withOpacity(0.5),
+                  color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -485,7 +485,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
               child: Text(faq.$2),
             ),
           ],
-        )).toList(),
+        )),
       ],
     );
   }
@@ -647,12 +647,12 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         // Show success
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Row(
                 children: [
-                  const Icon(Icons.check_circle, color: Colors.white),
-                  const SizedBox(width: 8),
-                  const Text('Welcome to Premium! 🎉'),
+                  Icon(Icons.check_circle, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text('Welcome to Premium! 🎉'),
                 ],
               ),
               backgroundColor: Colors.green,

@@ -18,35 +18,48 @@ rules_version = '2';
           request.auth.uid == resource.data.userId;
         allow write: if request.auth != null &&
           request.auth.uid == resource.data.userId;
-        allow create: if request.auth != null &&
-          request.auth.uid == request.resource.data.userId;
+
+        // 🔒 SECURITY: Validazione lunghezza campi template
+        allow create: if request.auth != null
+          && request.auth.uid == request.resource.data.userId
+          && validateStringField(request.resource.data, 'name', 1, 100, false);
       }
 
-      // ============= USERS =============
-      match /users/{userId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-      }
+      // ============= USERS - RIMOSSO DUPLICATO (vedi linea 391) =============
+      // Regola spostata più in basso per evitare conflitti
 
-      // ============= WORKOUTS =============
+      // ============= WORKOUTS (regola unificata più in basso) =============
       match /workouts/{workoutId} {
-        allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+        allow list: if request.auth != null;
+        allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+
+        // 🔒 SECURITY: Validazione lunghezza campi per prevenire DoS attacks
+        allow create: if request.auth != null
+          && request.auth.uid == request.resource.data.userId
+          && validateWorkoutData(request.resource.data);
+
+        allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
       }
 
       // ============= COMMUNITY REPORTS SYSTEM ================
       match /exercise_reports/{reportId} {
         allow read: if request.auth != null;
+
+        // 🔒 SECURITY: Validazione lunghezza campi per prevenire DoS
         allow create: if request.auth != null
           && request.auth.uid == request.resource.data.userId
           && request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'imageUrl', 'reportType', 'userId', 'timestamp',
   'status'])
           && request.resource.data.status == 'pending'
-          && request.resource.data.reportType in ['wrong_image', 'missing_image', 'wrong_name'];
+          && request.resource.data.reportType in ['wrong_image', 'missing_image', 'wrong_name']
+          && validateStringField(request.resource.data, 'exerciseName', 1, 100, false)
+          && validateStringField(request.resource.data, 'imageUrl', 0, 500, true);
+
         allow update: if request.auth != null
           && request.auth.uid != null
           && (
             request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes'])
-            || (request.auth.token.email in ['admin@admin.com', 'ferrara-michele@hotmail.it']
-                && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']))
+            || (isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']))
           );
 
         match /suggestions/{suggestionId} {
@@ -146,19 +159,82 @@ rules_version = '2';
       allow read: if request.auth != null &&
         (resource.data.coachId == request.auth.uid ||
          resource.data.athleteId == request.auth.uid);
-      
+
       // Solo il coach può creare assegnazioni
       allow create: if request.auth != null &&
         request.auth.uid == request.resource.data.coachId;
-      
+
       // Solo il coach può aggiornare
       allow update: if request.auth != null &&
         request.auth.uid == resource.data.coachId;
-      
+
       // Coach o atleta possono eliminare
       allow delete: if request.auth != null &&
         (resource.data.coachId == request.auth.uid ||
          resource.data.athleteId == request.auth.uid);
+    }
+
+    // ============= WEEKLY ROUTINES =============
+    match /weeklyRoutines/{routineId} {
+      // Permettere query/list per tutti gli utenti autenticati
+      // (la query deve essere filtrata per userId lato client)
+      allow list: if request.auth != null;
+
+      // L'utente può leggere solo le proprie routine (singolo documento)
+      allow get: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      // L'utente può creare routine per se stesso
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.keys().hasAll(['id', 'userId', 'name', 'schedule', 'isActive', 'createdAt']);
+
+      // L'utente può aggiornare solo le proprie routine
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId &&
+        request.auth.uid == request.resource.data.userId;
+
+      // L'utente può eliminare solo le proprie routine
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
+
+    // ============= FLEXIBLE ROUTINES (MULTI-PERIOD) =============
+    match /flexibleRoutines/{routineId} {
+      // Permettere query/list per tutti gli utenti autenticati
+      // (la query deve essere filtrata per userId lato client)
+      allow list: if request.auth != null;
+
+      // L'utente può leggere solo le proprie routine (singolo documento)
+      allow get: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      // L'utente può creare routine per se stesso
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.keys().hasAll([
+          'id',
+          'userId',
+          'name',
+          'type',
+          'startDate',
+          'endDate',
+          'pattern',
+          'schedule',
+          'skipTracker',
+          'recoverySettings',
+          'isActive',
+          'createdAt'
+        ]);
+
+      // L'utente può aggiornare solo le proprie routine
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId &&
+        request.auth.uid == request.resource.data.userId;
+
+      // L'utente può eliminare solo le proprie routine
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
     }
 
     // ============= SESSION WORKOUTS - FIXED =============
@@ -328,6 +404,7 @@ rules_version = '2';
 
     // ============= USER MASSIMALI =============
     match /userMassimali/{userId} {
+      allow list: if request.auth != null;
       allow read: if request.auth != null && (
         // Proprietario
         request.auth.uid == userId ||
@@ -389,7 +466,8 @@ rules_version = '2';
 
     // ============= USERS =============
     match /users/{userId} {
-      allow read: if request.auth != null;
+      // Solo il proprietario può leggere i propri dati
+      allow read: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null
         && request.auth.uid == userId
@@ -450,8 +528,7 @@ rules_version = '2';
     match /settings/{userId} {
       allow read: if request.auth != null && (
         request.auth.uid == userId ||
-        // Permetti lettura per cercare coach tramite coachCode
-        true ||
+        // Permetti accesso coach solo se esiste delegazione
         (request.auth.token.email != null &&
          resource.data.email != null &&
          exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)))
@@ -533,7 +610,11 @@ rules_version = '2';
             request.auth.token.email == request.resource.data.email)
         && request.resource.data.type in ['walk','run','hiit']
         && request.resource.data.duration is number
-        && request.resource.data.mode in ['outdoor','indoor'];
+        && request.resource.data.duration > 0           // Min: 1 secondo
+        && request.resource.data.duration < 86400       // Max: 24 ore
+        && request.resource.data.mode in ['outdoor','indoor']
+        && request.resource.data.keys().size() < 20    // Limita numero campi
+        && request.resource.data.size() < 1000000;      // Max 1MB documento
 
       allow update, delete: if false;
     }
@@ -607,10 +688,139 @@ rules_version = '2';
     match /exercises/{exerciseId} {
       // Permetti lettura a tutti gli utenti autenticati
       allow read: if request.auth != null;
-      
+
       // Solo admin può creare, modificare o eliminare
       allow create, update, delete: if request.auth != null &&
         request.auth.token.admin == true;
+    }
+
+    // ============= EXERCISE METADATA (ADMIN SYSTEM) =============
+    match /exercise_metadata/{metadataId} {
+      // Tutti gli utenti autenticati possono leggere metadati
+      allow read: if request.auth != null;
+
+      // Solo admin può creare, modificare o eliminare metadati
+      allow create, update, delete: if request.auth != null && isAdmin();
+    }
+
+    // ============= EXERCISES METADATA (VERSION INFO) =============
+    match /exercises_metadata/{metadataDoc} {
+      // Tutti gli utenti autenticati possono leggere i metadati degli esercizi
+      allow read: if request.auth != null;
+
+      // Solo admin può scrivere metadati
+      allow write: if request.auth != null && isAdmin();
+    }
+
+    // ============= COMMUNITY CONTRIBUTIONS =============
+    match /community_contributions/{contributionId} {
+      // Get (singolo documento): Chiunque autenticato può leggere approved, solo owner/admin pending/rejected
+      allow get: if request.auth != null && (
+        resource.data.status == 'approved' ||
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // List (query): Permetti query filtrate per userId o status approved
+      allow list: if request.auth != null;
+
+      // Create: Utenti autenticati possono creare contributi (sempre pending)
+      // 🔒 SECURITY: Validazione lunghezza per prevenire DoS
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.status == 'pending' &&
+        request.resource.data.keys().hasAll(['userId', 'userName', 'exerciseId', 'exerciseName', 'type', 'status', 'title', 'description', 'createdAt']) &&
+        validateStringField(request.resource.data, 'title', 1, 150, false) &&
+        validateStringField(request.resource.data, 'description', 1, 1000, false) &&
+        validateStringField(request.resource.data, 'exerciseName', 1, 100, false);
+
+      // Update: Owner (solo pending), voting (tutti), admin (moderation)
+      allow update: if request.auth != null && (
+        // Owner può modificare solo se pending
+        (resource.data.userId == request.auth.uid &&
+         resource.data.status == 'pending' &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'originalValue', 'suggestedValue', 'updatedAt'])) ||
+        // Voting: Chiunque può votare (solo campi voto)
+        (isVoteUpdate()) ||
+        // Admin: può approvare/rifiutare
+        (isAdmin() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'reviewedBy', 'reviewedAt', 'reviewNote', 'updatedAt']))
+      );
+
+      // Delete: Solo admin
+      allow delete: if request.auth != null && isAdmin();
+    }
+
+    // Helper per controllare se è un update di voti
+    function isVoteUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['upvotes', 'downvotes', 'upvotedBy', 'downvotedBy', 'updatedAt', 'status']);
+    }
+
+    // Helper per controllare se è admin
+    // IMPORTANTE: Usa Firebase custom claims invece di email hardcodate
+    // Per impostare admin: usa Firebase Admin SDK o Firebase Console
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+
+    // 🔒 SECURITY: Helper per validare lunghezza campi workout
+    // Previene DoS attacks con payload enormi
+    function validateWorkoutData(data) {
+      return validateStringField(data, 'name', 1, 100, false)  // name è obbligatorio
+        && validateStringField(data, 'notes', 0, 5000, true);  // notes è opzionale
+    }
+
+    // 🔒 SECURITY: Helper generico per validazione stringhe
+    function validateStringField(data, field, minLen, maxLen, optional) {
+      return !data.keys().hasAny([field])  // Campo non presente
+        || (optional == true && (!data.keys().hasAny([field]) || data[field] == null))  // Campo opzionale
+        || (data[field] is string
+            && data[field].size() >= minLen
+            && data[field].size() <= maxLen);
+    }
+
+    // ============= COMMUNITY CONTRIBUTION STATS =============
+    match /user_contribution_stats/{userId} {
+      // Read: Chiunque può leggere stats (per leaderboard)
+      allow read: if request.auth != null;
+
+      // Write: Solo il sistema (via repository) può scrivere
+      // In pratica permettiamo write a tutti perché viene gestito dal repository
+      allow create, update: if request.auth != null;
+
+      // Delete: Solo admin
+      allow delete: if request.auth != null && isAdmin();
+    }
+
+    // ============= CONTRIBUTION VOTES (se decidiamo di fare collezione separata) =============
+    match /contribution_votes/{voteId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
+
+    // ============= EXERCISE CORRECTIONS (COMMUNITY SYSTEM) =============
+    match /exercise_corrections/{correctionId} {
+      // Tutti gli utenti autenticati possono leggere correzioni
+      allow read: if request.auth != null;
+
+      // Utenti autenticati possono creare correzioni
+      allow create: if request.auth != null &&
+        request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'userId', 'userName', 'status', 'createdAt']) &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.status == 'pending';
+
+      // Solo admin può modificare correzioni (approvare/rifiutare)
+      allow update: if request.auth != null && isAdmin() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'reviewedAt', 'reviewedBy', 'adminNotes']);
+
+      // Solo admin può eliminare correzioni
+      allow delete: if request.auth != null && isAdmin();
     }
 
     match /attivitaEsercizi/{activityId} {
@@ -717,19 +927,7 @@ rules_version = '2';
          request.auth.token.email == resource.data.email);
     }
 
-    // ============= WORKOUTS - MODIFICATO PER SUPPORTARE EMAIL =============
-    match /workouts/{workoutId} {
-      allow read: if request.auth != null && (
-        request.auth.uid == resource.data.userId ||
-        request.auth.token.email == resource.data.email  // AGGIUNTO per supportare dati vecchi
-      );
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.userId;
-      allow update: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-      allow delete: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-    }
+    // (Blocco rimosso perché duplicato e obsoleto)
 
     match /workoutHistory/{historyId} {
       allow read: if request.auth != null &&
@@ -816,19 +1014,117 @@ rules_version = '2';
         resource.data.userId == request.auth.uid ||
         (resource.data.rating != null && resource.data.rating > 0)
       );
-      
+
       // Gli utenti possono creare download per se stessi
       allow create: if request.auth != null &&
         request.resource.data.userId == request.auth.uid &&
         request.resource.data.keys().hasAll(['programId', 'programTitle', 'authorName', 'userId', 'userName', 'downloadedAt', 'appliedToScheda']);
-      
+
       // Gli utenti possono aggiornare i propri download (per recensioni)
       allow update: if request.auth != null &&
         resource.data.userId == request.auth.uid &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'review', 'reviewedAt', 'appliedToScheda', 'schedaId']);
-      
+
       // Nessuno può eliminare i download (per mantenere le statistiche)
       allow delete: if false;
+    }
+
+    // ============= MISSING EXERCISE REQUESTS =============
+    match /missing_exercise_requests/{requestId} {
+      // Utenti autenticati possono leggere:
+      // 1. Le proprie richieste (sempre)
+      // 2. Tutte le richieste (se admin)
+      allow read: if request.auth != null && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Utenti autenticati possono creare richieste per se stessi
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.keys().hasAll(['exerciseName', 'exerciseId', 'userId', 'requestedAt', 'status']) &&
+        request.resource.data.status == 'pending';
+
+      // Solo admin può aggiornare le richieste (per approvarle/rifiutarle)
+      allow update: if request.auth != null && isAdmin() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'adminNotes', 'reviewedAt', 'reviewedBy']);
+
+      // Solo admin può eliminare le richieste
+      allow delete: if request.auth != null && isAdmin();
+    }
+
+    // ============= AI COACH INSIGHT FEEDBACK =============
+    match /insight_feedback/{feedbackId} {
+      // Permettere list/query per tutti gli utenti autenticati
+      // (la query deve essere filtrata per userId lato client)
+      allow list: if request.auth != null;
+
+      // L'utente può leggere solo il proprio feedback (singolo documento)
+      allow get: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      // L'utente può creare feedback solo per se stesso
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.keys().hasAll(['id', 'userId', 'insightType', 'insightHash', 'isHelpful', 'timestamp']);
+
+      // L'utente può aggiornare solo il proprio feedback
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId &&
+        request.auth.uid == request.resource.data.userId;
+
+      // L'utente può eliminare solo il proprio feedback
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
+
+    // ============= USER FEEDBACK SYSTEM =============
+    match /userFeedback/{feedbackId} {
+      // Permettere list/query per tutti gli utenti autenticati
+      // (gli admin vedranno tutto, gli utenti normali devono filtrare per userId lato client)
+      allow list: if request.auth != null;
+
+      // Gli utenti possono leggere:
+      // 1. Il proprio feedback (sempre)
+      // 2. Tutto il feedback (solo se admin)
+      allow read: if request.auth != null && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Gli utenti autenticati possono creare feedback per se stessi
+      // 🔒 SECURITY: Validazione lunghezza messaggio per prevenire DoS
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.keys().hasAll([
+          'id',
+          'userId',
+          'message',
+          'category',
+          'status',
+          'createdAt'
+        ]) &&
+        request.resource.data.status == 'newFeedback' &&
+        validateStringField(request.resource.data, 'message', 1, 2000, false);
+
+      // Solo l'admin può aggiornare il feedback (per cambiare status, aggiungere note)
+      allow update: if request.auth != null && isAdmin() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'status',
+          'reviewedAt',
+          'reviewedBy',
+          'adminNotes'
+        ]);
+
+      // Solo l'admin può eliminare feedback
+      allow delete: if request.auth != null && isAdmin();
+    }
+
+    // ============= BACKUP COLLECTIONS (for data migration) =============
+    match /{collection}/{document} {
+      // Solo admin può creare collezioni di backup per migrazione dati
+      allow read, write: if request.auth != null && isAdmin() &&
+        collection.matches('.*_backup_.*');
     }
 
   }

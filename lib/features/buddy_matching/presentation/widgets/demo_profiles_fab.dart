@@ -1,22 +1,21 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Demo profiles loader
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Demo profiles loader
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
 
 class DemoProfilesFab extends ConsumerStatefulWidget {
   const DemoProfilesFab({super.key});
@@ -31,7 +30,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return const SizedBox.shrink(); // COMMENTED OUT - FAB disabled
     // return FloatingActionButton.extended(
@@ -53,7 +52,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
   }
 
   void _showDemoOptions() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
     showModalBottomSheet(
@@ -335,7 +334,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
       context: context,
       builder: (context) {
         final theme = Theme.of(context);
-        final l10n = AppLocalizations.of(context)!;
+        final l10n = AppLocalizations.of(context);
         
         return AlertDialog(
           title: Text(title),

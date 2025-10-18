@@ -1,0 +1,11 @@
+{
+  "routineSuccessCreatedInactive": "Routine \"{name}\" created! Go to Routine Center to activate it.",
+  "@routineSuccessCreatedInactive": {
+    "description": "Success message when routine is created as inactive",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}

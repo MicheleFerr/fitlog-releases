@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/live_activity_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
+import 'package:flutter/foundation.dart';
 
 /// Widget per RPE Live Activity senza ombreggiature
 class RPELiveActivityWidget extends ConsumerStatefulWidget {
-  final RPELiveActivityData rpeData;
-  final String activityId;
   
   const RPELiveActivityWidget({
     super.key,
     required this.rpeData,
     required this.activityId,
   });
+  final RPELiveActivityData rpeData;
+  final String activityId;
 
   @override
   ConsumerState<RPELiveActivityWidget> createState() => _RPELiveActivityWidgetState();
@@ -62,9 +63,9 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Text(
+        const Text(
           '💪 Set Completato!',
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -378,10 +379,14 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
         notes: null, // TODO: Aggiungere note se necessario
       );
       
-      print('✅ RPE confermato: $_actualReps reps, RPE: $_selectedRPE');
+      if (kDebugMode) {
+        debugPrint('✅ RPE confermato: $_actualReps reps, RPE: $_selectedRPE');
+      }
       
     } catch (e) {
-      print('❌ Errore confermando RPE: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore confermando RPE: $e');
+      }
       // TODO: Mostrare errore all'utente
     } finally {
       if (mounted) {
@@ -398,22 +403,26 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
         activityId: widget.activityId,
       );
       
-      print('❌ RPE cancellato dall\'utente');
+      if (kDebugMode) {
+        debugPrint('❌ RPE cancellato dall\'utente');
+      }
       
     } catch (e) {
-      print('❌ Errore cancellando RPE: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Errore cancellando RPE: $e');
+      }
     }
   }
 }
 
 /// Widget compatto per Live Activity iOS (design semplificato)
 class CompactRPELiveActivityWidget extends StatelessWidget {
-  final RPELiveActivityData rpeData;
   
   const CompactRPELiveActivityWidget({
     super.key,
     required this.rpeData,
   });
+  final RPELiveActivityData rpeData;
 
   @override
   Widget build(BuildContext context) {

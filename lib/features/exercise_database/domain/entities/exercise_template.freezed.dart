@@ -30,17 +30,14 @@ mixin _$ExerciseTemplate {
   List<String>? get instructions => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
   String? get videoUrl => throw _privateConstructorUsedError;
+  String? get difficulty => throw _privateConstructorUsedError;
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
-  /// Serializes this ExerciseTemplate to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ExerciseTemplate
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ExerciseTemplateCopyWith<ExerciseTemplate> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,6 +59,7 @@ abstract class $ExerciseTemplateCopyWith<$Res> {
       List<String>? instructions,
       String? imageUrl,
       String? videoUrl,
+      String? difficulty,
       Map<String, dynamic>? metadata,
       bool isActive,
       DateTime? createdAt,
@@ -78,8 +76,6 @@ class _$ExerciseTemplateCopyWithImpl<$Res, $Val extends ExerciseTemplate>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ExerciseTemplate
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -93,6 +89,7 @@ class _$ExerciseTemplateCopyWithImpl<$Res, $Val extends ExerciseTemplate>
     Object? instructions = freezed,
     Object? imageUrl = freezed,
     Object? videoUrl = freezed,
+    Object? difficulty = freezed,
     Object? metadata = freezed,
     Object? isActive = null,
     Object? createdAt = freezed,
@@ -139,6 +136,10 @@ class _$ExerciseTemplateCopyWithImpl<$Res, $Val extends ExerciseTemplate>
           ? _value.videoUrl
           : videoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      difficulty: freezed == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as String?,
       metadata: freezed == metadata
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -178,6 +179,7 @@ abstract class _$$ExerciseTemplateImplCopyWith<$Res>
       List<String>? instructions,
       String? imageUrl,
       String? videoUrl,
+      String? difficulty,
       Map<String, dynamic>? metadata,
       bool isActive,
       DateTime? createdAt,
@@ -192,8 +194,6 @@ class __$$ExerciseTemplateImplCopyWithImpl<$Res>
       $Res Function(_$ExerciseTemplateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ExerciseTemplate
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -207,6 +207,7 @@ class __$$ExerciseTemplateImplCopyWithImpl<$Res>
     Object? instructions = freezed,
     Object? imageUrl = freezed,
     Object? videoUrl = freezed,
+    Object? difficulty = freezed,
     Object? metadata = freezed,
     Object? isActive = null,
     Object? createdAt = freezed,
@@ -253,6 +254,10 @@ class __$$ExerciseTemplateImplCopyWithImpl<$Res>
           ? _value.videoUrl
           : videoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      difficulty: freezed == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as String?,
       metadata: freezed == metadata
           ? _value._metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -287,6 +292,7 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
       final List<String>? instructions,
       this.imageUrl,
       this.videoUrl,
+      this.difficulty,
       final Map<String, dynamic>? metadata,
       this.isActive = true,
       this.createdAt,
@@ -339,6 +345,8 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
   final String? imageUrl;
   @override
   final String? videoUrl;
+  @override
+  final String? difficulty;
   final Map<String, dynamic>? _metadata;
   @override
   Map<String, dynamic>? get metadata {
@@ -359,7 +367,7 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
 
   @override
   String toString() {
-    return 'ExerciseTemplate(id: $id, name: $name, description: $description, category: $category, type: $type, muscleGroups: $muscleGroups, equipment: $equipment, instructions: $instructions, imageUrl: $imageUrl, videoUrl: $videoUrl, metadata: $metadata, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ExerciseTemplate(id: $id, name: $name, description: $description, category: $category, type: $type, muscleGroups: $muscleGroups, equipment: $equipment, instructions: $instructions, imageUrl: $imageUrl, videoUrl: $videoUrl, difficulty: $difficulty, metadata: $metadata, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -384,6 +392,8 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
                 other.imageUrl == imageUrl) &&
             (identical(other.videoUrl, videoUrl) ||
                 other.videoUrl == videoUrl) &&
+            (identical(other.difficulty, difficulty) ||
+                other.difficulty == difficulty) &&
             const DeepCollectionEquality().equals(other._metadata, _metadata) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
@@ -393,7 +403,7 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -407,14 +417,13 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
       const DeepCollectionEquality().hash(_instructions),
       imageUrl,
       videoUrl,
+      difficulty,
       const DeepCollectionEquality().hash(_metadata),
       isActive,
       createdAt,
       updatedAt);
 
-  /// Create a copy of ExerciseTemplate
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseTemplateImplCopyWith<_$ExerciseTemplateImpl> get copyWith =>
@@ -441,6 +450,7 @@ abstract class _ExerciseTemplate implements ExerciseTemplate {
       final List<String>? instructions,
       final String? imageUrl,
       final String? videoUrl,
+      final String? difficulty,
       final Map<String, dynamic>? metadata,
       final bool isActive,
       final DateTime? createdAt,
@@ -470,6 +480,8 @@ abstract class _ExerciseTemplate implements ExerciseTemplate {
   @override
   String? get videoUrl;
   @override
+  String? get difficulty;
+  @override
   Map<String, dynamic>? get metadata;
   @override
   bool get isActive;
@@ -477,11 +489,8 @@ abstract class _ExerciseTemplate implements ExerciseTemplate {
   DateTime? get createdAt;
   @override
   DateTime? get updatedAt;
-
-  /// Create a copy of ExerciseTemplate
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ExerciseTemplateImplCopyWith<_$ExerciseTemplateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

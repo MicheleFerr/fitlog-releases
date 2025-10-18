@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
+import 'package:flutter/foundation.dart';
 
 /// Types of personal records
 enum PRType {
@@ -15,15 +16,6 @@ enum PRType {
 
 /// Personal Record entity
 class PersonalRecord {
-  final String id;
-  final String userId;
-  final String exerciseId;
-  final String exerciseName;
-  final PRType type;
-  final double value;
-  final double? previousValue;
-  final DateTime achievedAt;
-  final Map<String, dynamic> metadata;
 
   PersonalRecord({
     required this.id,
@@ -36,6 +28,34 @@ class PersonalRecord {
     required this.achievedAt,
     this.metadata = const {},
   });
+
+  factory PersonalRecord.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    
+    return PersonalRecord(
+      id: doc.id,
+      userId: data['userId'] ?? '',
+      exerciseId: data['exerciseId'] ?? '',
+      exerciseName: data['exerciseName'] ?? '',
+      type: PRType.values.firstWhere(
+        (t) => t.name == data['type'],
+        orElse: () => PRType.weight,
+      ),
+      value: (data['value'] ?? 0).toDouble(),
+      previousValue: data['previousValue']?.toDouble(),
+      achievedAt: (data['achievedAt'] as Timestamp).toDate(),
+      metadata: data['metadata'] ?? {},
+    );
+  }
+  final String id;
+  final String userId;
+  final String exerciseId;
+  final String exerciseName;
+  final PRType type;
+  final double value;
+  final double? previousValue;
+  final DateTime achievedAt;
+  final Map<String, dynamic> metadata;
 
   /// Calculate improvement percentage
   double get improvementPercentage {
@@ -57,25 +77,6 @@ class PersonalRecord {
       'achievedAt': Timestamp.fromDate(achievedAt),
       'metadata': metadata,
     };
-  }
-
-  factory PersonalRecord.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    
-    return PersonalRecord(
-      id: doc.id,
-      userId: data['userId'] ?? '',
-      exerciseId: data['exerciseId'] ?? '',
-      exerciseName: data['exerciseName'] ?? '',
-      type: PRType.values.firstWhere(
-        (t) => t.name == data['type'],
-        orElse: () => PRType.weight,
-      ),
-      value: (data['value'] ?? 0).toDouble(),
-      previousValue: data['previousValue']?.toDouble(),
-      achievedAt: (data['achievedAt'] as Timestamp).toDate(),
-      metadata: data['metadata'] ?? {},
-    );
   }
 
   PersonalRecord copyWith({
@@ -105,10 +106,10 @@ class PersonalRecord {
 
 /// Service for tracking and managing personal records
 class PRTracker {
-  final FirebaseFirestore _firestore;
   
   PRTracker({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
 
   /// Check and update PRs for a completed exercise
   Future<List<PersonalRecord>> checkAndUpdatePRs(
@@ -161,7 +162,9 @@ class PRTracker {
       
       return snapshot.docs.map((doc) => PersonalRecord.fromFirestore(doc)).toList();
     } catch (e) {
-      print('Error fetching user PRs: $e');
+      if (kDebugMode) {
+        debugPrint('Error fetching user PRs: $e');
+      }
       return [];
     }
   }
@@ -192,7 +195,9 @@ class PRTracker {
       
       return prs;
     } catch (e) {
-      print('Error fetching exercise PRs: $e');
+      if (kDebugMode) {
+        debugPrint('Error fetching exercise PRs: $e');
+      }
       return {};
     }
   }
@@ -211,7 +216,9 @@ class PRTracker {
       
       return snapshot.docs.map((doc) => PersonalRecord.fromFirestore(doc)).toList();
     } catch (e) {
-      print('Error fetching recent PRs: $e');
+      if (kDebugMode) {
+        debugPrint('Error fetching recent PRs: $e');
+      }
       return [];
     }
   }
@@ -221,7 +228,9 @@ class PRTracker {
     try {
       await _firestore.collection('personalRecords').add(pr.toFirestore());
     } catch (e) {
-      print('Error saving PR: $e');
+      if (kDebugMode) {
+        debugPrint('Error saving PR: $e');
+      }
     }
   }
 
@@ -230,7 +239,9 @@ class PRTracker {
     try {
       await _firestore.collection('personalRecords').doc(prId).delete();
     } catch (e) {
-      print('Error deleting PR: $e');
+      if (kDebugMode) {
+        debugPrint('Error deleting PR: $e');
+      }
     }
   }
 
@@ -251,7 +262,9 @@ class PRTracker {
       
       return snapshot.docs.map((doc) => PersonalRecord.fromFirestore(doc)).toList();
     } catch (e) {
-      print('Error fetching PR timeline: $e');
+      if (kDebugMode) {
+        debugPrint('Error fetching PR timeline: $e');
+      }
       return [];
     }
   }
@@ -470,11 +483,6 @@ class PRTracker {
 
 /// PR Statistics
 class PRStats {
-  final int totalPRs;
-  final int recentPRs;
-  final Map<PRType, int> prsByType;
-  final Map<String, int> prsByExercise;
-  final DateTime? lastPRDate;
 
   PRStats({
     required this.totalPRs,
@@ -483,6 +491,11 @@ class PRStats {
     required this.prsByExercise,
     this.lastPRDate,
   });
+  final int totalPRs;
+  final int recentPRs;
+  final Map<PRType, int> prsByType;
+  final Map<String, int> prsByExercise;
+  final DateTime? lastPRDate;
 
   /// Get most common PR type
   PRType? get mostCommonType {

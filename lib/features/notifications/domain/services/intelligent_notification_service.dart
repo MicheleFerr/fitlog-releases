@@ -1,34 +1,33 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: notifications
- * 🔧 Type: service
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: Provider
- * - Firebase: Firestore
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: notifications
+/// 🔧 Type: service
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: Provider
+/// - Firebase: Firestore
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../entities/notification.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../progress/domain/entities/progress_data.dart';
-import '../../../workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:flutter/foundation.dart';
 
 final intelligentNotificationServiceProvider = Provider<IntelligentNotificationService>((ref) {
   return IntelligentNotificationService(ref);
 });
 
 class IntelligentNotificationService {
-  final Ref ref;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   IntelligentNotificationService(this.ref);
+  final Ref ref;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   /// Analizza il workout completato e genera notifiche appropriate
   Future<List<AppNotification>> analyzeWorkoutCompletion(Workout workout) async {
@@ -75,7 +74,7 @@ class IntelligentNotificationService {
             title: '🏆 Nuovo Personal Record!',
             message: '${pr['weight']}kg su ${pr['exercise']}! Hai superato il tuo record precedente di ${pr['previous']}kg',
             emoji: '🎯',
-            action: NotificationAction(
+            action: const NotificationAction(
               label: 'Vedi dettagli',
               route: '/analytics',
             ),
@@ -113,7 +112,9 @@ class IntelligentNotificationService {
       }
       
     } catch (e) {
-      print('Errore nell\'analisi workout: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nell\'analisi workout: $e');
+      }
     }
     
     return notifications;
@@ -140,7 +141,7 @@ class IntelligentNotificationService {
           title: '💪 Tempo di allenarsi!',
           message: 'Sono passati 2 giorni dall\'ultimo workout. Mantieni il ritmo per non perdere i progressi!',
           emoji: '🏃',
-          action: NotificationAction(
+          action: const NotificationAction(
             label: 'Inizia workout',
             route: '/workout',
           ),
@@ -149,9 +150,9 @@ class IntelligentNotificationService {
         return AppNotification.create(
           type: NotificationType.aiTip,
           title: '🧠 Coach AI',
-          message: 'Dopo ${daysSinceLastWorkout} giorni di riposo, inizia con carichi leggermente ridotti per evitare infortuni.',
+          message: 'Dopo $daysSinceLastWorkout giorni di riposo, inizia con carichi leggermente ridotti per evitare infortuni.',
           emoji: '⚠️',
-          action: NotificationAction(
+          action: const NotificationAction(
             label: 'Vedi consigli',
             route: '/workout',
           ),
@@ -168,7 +169,7 @@ class IntelligentNotificationService {
           title: '📅 Il tuo giorno preferito!',
           message: 'Di solito ti alleni di ${_getWeekdayName(weekday)}. Pronto per oggi?',
           emoji: '💪',
-          action: NotificationAction(
+          action: const NotificationAction(
             label: 'Vai!',
             route: '/workout',
           ),
@@ -176,7 +177,9 @@ class IntelligentNotificationService {
       }
       
     } catch (e) {
-      print('Errore nella generazione suggerimento: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nella generazione suggerimento: $e');
+      }
     }
     
     return null;
@@ -201,7 +204,7 @@ class IntelligentNotificationService {
           title: '📊 Report Mensile',
           message: '${monthlyStats['totalWorkouts']} workout completati, ${monthlyStats['totalVolume']}kg di volume totale, frequenza media: ${monthlyStats['avgFrequency']}/settimana',
           emoji: '📈',
-          action: NotificationAction(
+          action: const NotificationAction(
             label: 'Vedi analytics',
             route: '/analytics',
           ),
@@ -220,7 +223,9 @@ class IntelligentNotificationService {
       }
       
     } catch (e) {
-      print('Errore nel report mensile: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel report mensile: $e');
+      }
     }
     
     return notifications;
@@ -264,7 +269,9 @@ class IntelligentNotificationService {
       
       return query.docs.map((doc) => doc.data()).toList();
     } catch (e) {
-      print('Errore nel recupero workout precedenti: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel recupero workout precedenti: $e');
+      }
       return [];
     }
   }
@@ -331,7 +338,9 @@ class IntelligentNotificationService {
       
       return query.docs.length;
     } catch (e) {
-      print('Errore nel conteggio settimanale: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel conteggio settimanale: $e');
+      }
       return 0;
     }
   }
@@ -350,7 +359,9 @@ class IntelligentNotificationService {
         return timestamp?.toDate();
       }
     } catch (e) {
-      print('Errore nel recupero ultima data workout: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel recupero ultima data workout: $e');
+      }
     }
     
     return null;
@@ -382,7 +393,9 @@ class IntelligentNotificationService {
           .reduce((a, b) => a.value > b.value ? a : b)
           .key;
     } catch (e) {
-      print('Errore nel calcolo giorno più attivo: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nel calcolo giorno più attivo: $e');
+      }
       return 1;
     }
   }
@@ -403,7 +416,7 @@ class IntelligentNotificationService {
           .get();
       
       double totalVolume = 0;
-      int totalWorkouts = query.docs.length;
+      final int totalWorkouts = query.docs.length;
       
       for (final doc in query.docs) {
         totalVolume += (doc.data()['totalVolume'] ?? 0).toDouble();
@@ -420,7 +433,9 @@ class IntelligentNotificationService {
         'year': DateTime.now().year,
       };
     } catch (e) {
-      print('Errore nelle statistiche mensili: $e');
+      if (kDebugMode) {
+        debugPrint('Errore nelle statistiche mensili: $e');
+      }
       return {
         'totalWorkouts': 0,
         'totalVolume': 0,

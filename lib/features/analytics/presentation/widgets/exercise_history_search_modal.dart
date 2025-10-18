@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:intl/intl.dart';
 
 class ExerciseHistorySearchModal extends StatefulWidget {
-  final List<ExerciseActivity> activities;
-  final Function(String exerciseName)? onExerciseSelected;
 
   const ExerciseHistorySearchModal({
     super.key,
     required this.activities,
     this.onExerciseSelected,
   });
+  final List<ExerciseActivity> activities;
+  final Function(String exerciseName)? onExerciseSelected;
 
   static Future<void> show(
     BuildContext context,
@@ -671,23 +671,23 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                             '$reps reps',
                             style: theme.textTheme.bodyMedium,
                           ),
-                          if (set.effort != null) ...[
-                            const SizedBox(width: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: _getEffortColor(set.effort!).withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                'RPE ${set.effort}',
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: _getEffortColor(set.effort!),
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          ...[
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: _getEffortColor(set.effort).withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              'RPE ${set.effort}',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: _getEffortColor(set.effort),
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ],
+                          ),
+                        ],
                         ],
                       ),
                     ),

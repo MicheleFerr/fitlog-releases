@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/live_activity_provider.dart';
-import 'rpe_live_activity_widget.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/widgets/rpe_live_activity_widget.dart';
 
 /// Screen di test per il sistema RPE Live Activities
 class RPETestScreen extends ConsumerWidget {
@@ -92,21 +92,21 @@ class RPETestScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     '💡 Come Funziona',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
+                  SizedBox(height: 8),
+                  Text(
                     '1. Timer termina → Audio + Live Activity RPE\n'
                     '2. Utente modifica reps se necessario\n'
                     '3. Utente seleziona RPE (5-10)\n'

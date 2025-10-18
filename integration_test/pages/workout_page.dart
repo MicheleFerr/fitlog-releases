@@ -4,9 +4,9 @@ import 'package:patrol/patrol.dart';
 
 /// Page Object for Workout screens
 class WorkoutPage {
-  final PatrolIntegrationTester $;
   
   WorkoutPage(this.$);
+  final PatrolIntegrationTester $;
   
   // Finders for workout list screen
   Finder get workoutsTab => find.byKey(const Key('workouts_tab'));

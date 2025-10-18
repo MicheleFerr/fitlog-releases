@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/exercise.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../../shared/presentation/widgets/error_boundary.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class EditExerciseModal extends ConsumerStatefulWidget {
-  final Exercise exercise;
-  final Function(Exercise) onSave;
 
   const EditExerciseModal({
     super.key,
     required this.exercise,
     required this.onSave,
   });
+  final Exercise exercise;
+  final Function(Exercise) onSave;
 
   @override
   ConsumerState<EditExerciseModal> createState() => _EditExerciseModalState();
@@ -22,9 +22,14 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
   late TextEditingController _nameController;
   late TextEditingController _notesController;
   late TextEditingController _restTimeController;
-  
+  late TextEditingController _apreBaseWeightController;
+
   bool _useCustomRestTime = false;
   int? _selectedRestTime;
+
+  // APRE configuration
+  bool _useAPRE = false;
+  int _apreProtocol = 6; // Default to APRE 6
 
   // Predefined rest time options in seconds
   static const List<int> _predefinedRestTimes = [30, 60, 90, 120, 180, 240, 300];
@@ -40,12 +45,19 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
       
       _nameController = TextEditingController(text: widget.exercise.name);
       _notesController = TextEditingController(text: widget.exercise.notes ?? '');
-      
+
       // Initialize rest time
       _selectedRestTime = widget.exercise.restTime;
       _useCustomRestTime = _selectedRestTime != null && !_predefinedRestTimes.contains(_selectedRestTime);
       _restTimeController = TextEditingController(
         text: _useCustomRestTime ? _selectedRestTime?.toString() ?? '' : ''
+      );
+
+      // Initialize APRE configuration
+      _useAPRE = widget.exercise.useAPRE ?? false;
+      _apreProtocol = widget.exercise.apreProtocol ?? 6;
+      _apreBaseWeightController = TextEditingController(
+        text: widget.exercise.apreBaseWeight?.toString() ?? ''
       );
       
       debugPrint('📝 Controllers initialized successfully');
@@ -63,6 +75,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
     _nameController.dispose();
     _notesController.dispose();
     _restTimeController.dispose();
+    _apreBaseWeightController.dispose();
     super.dispose();
   }
 
@@ -72,10 +85,6 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
     
     try {
       final l10n = AppLocalizations.of(context);
-      if (l10n == null) {
-        debugPrint('❌ AppLocalizations is null!');
-        throw Exception('AppLocalizations not found in context');
-      }
       
       // NON wrappare con ErrorBoundary qui - causa loop infiniti
       return GestureDetector(
@@ -98,7 +107,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.grey.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -208,7 +217,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
             
             // Predefined rest times
             Text(
-              'Quick Timer Options',
+              l10n.quickTimerOptions,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -310,7 +319,11 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               ),
             ),
             const SizedBox(height: 20),
-            
+
+            // APRE Configuration Section
+            _buildAPRESection(l10n),
+            const SizedBox(height: 20),
+
             // Action buttons
             Row(
               children: [
@@ -349,17 +362,185 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
             children: [
               const Icon(Icons.error, color: Colors.red, size: 48),
               const SizedBox(height: 16),
-              const Text('Error loading exercise editor'),
+              Text(context.l10n.errorLoadingEditor),
               Text('Error: $e', style: const TextStyle(fontSize: 12)),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+                child: Text(context.l10n.close),
               ),
             ],
           ),
         ),
       );
+    }
+  }
+
+  Widget _buildAPRESection(AppLocalizations l10n) {
+    return Card(
+      color: _useAPRE
+        ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.1)
+        : Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // APRE Toggle
+            Row(
+              children: [
+                Icon(
+                  Icons.trending_up,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.apreAutoregulation,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        l10n.apreAutoregulationDescription,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: _useAPRE,
+                  onChanged: (value) {
+                    setState(() {
+                      _useAPRE = value;
+                      if (!value) {
+                        _apreBaseWeightController.clear();
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+
+            // APRE Configuration (shown when enabled)
+            if (_useAPRE) ...[
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+
+              // Protocol Selection
+              Text(
+                l10n.apreProtocolSelect,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SegmentedButton<int>(
+                segments: const [
+                  ButtonSegment<int>(
+                    value: 3,
+                    label: Text('APRE 3'),
+                    icon: Icon(Icons.looks_3),
+                  ),
+                  ButtonSegment<int>(
+                    value: 6,
+                    label: Text('APRE 6'),
+                    icon: Icon(Icons.looks_6),
+                  ),
+                  ButtonSegment<int>(
+                    value: 10,
+                    label: Text('APRE 10'),
+                    icon: Icon(Icons.looks),
+                  ),
+                ],
+                selected: {_apreProtocol},
+                onSelectionChanged: (Set<int> newSelection) {
+                  setState(() {
+                    _apreProtocol = newSelection.first;
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
+
+              // Protocol Description
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _getProtocolDescription(l10n),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Base Weight Input
+              TextField(
+                controller: _apreBaseWeightController,
+                decoration: InputDecoration(
+                  labelText: l10n.apreBaseWeight,
+                  hintText: l10n.apreBaseWeightHint,
+                  prefixIcon: const Icon(Icons.fitness_center),
+                  suffixText: 'kg',
+                  helperText: _getBaseWeightHelper(l10n),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getProtocolDescription(AppLocalizations l10n) {
+    switch (_apreProtocol) {
+      case 3:
+        return l10n.apreProtocol3Description;
+      case 6:
+        return l10n.apreProtocol6Description;
+      case 10:
+        return l10n.apreProtocol10Description;
+      default:
+        return '';
+    }
+  }
+
+  String _getBaseWeightHelper(AppLocalizations l10n) {
+    switch (_apreProtocol) {
+      case 3:
+        return l10n.apreProtocol3Helper;
+      case 6:
+        return l10n.apreProtocol6Helper;
+      case 10:
+        return l10n.apreProtocol10Helper;
+      default:
+        return '';
     }
   }
 
@@ -379,7 +560,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${l10n.exerciseName} cannot be empty'),
+              content: Text(l10n.exerciseNameCannotBeEmpty(l10n.exerciseName)),
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
@@ -408,7 +589,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Please enter a valid rest time (1-3600 seconds)'),
+                content: Text(l10n.invalidRestTimeError),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
@@ -419,11 +600,22 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         restTime = _selectedRestTime;
       }
 
-      // Validate exercise object exists
-      if (widget.exercise == null) {
-        debugPrint('Error: exercise is null');
-        if (mounted) Navigator.pop(context);
-        return;
+      // Parse APRE base weight
+      double? apreBaseWeight;
+      if (_useAPRE && _apreBaseWeightController.text.isNotEmpty) {
+        apreBaseWeight = double.tryParse(_apreBaseWeightController.text.trim());
+        if (apreBaseWeight == null || apreBaseWeight <= 0) {
+          debugPrint('🔵 Invalid APRE base weight');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.invalidApreBaseWeight),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+          return;
+        }
       }
 
       debugPrint('🔵 Creating updated exercise...');
@@ -431,37 +623,39 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         name: name,
         notes: notes.isEmpty ? null : notes,
         restTime: restTime,
+        useAPRE: _useAPRE,
+        apreProtocol: _useAPRE ? _apreProtocol : null,
+        apreBaseWeight: _useAPRE ? apreBaseWeight : null,
       );
       debugPrint('🔵 Updated exercise created with restTime: ${updatedExercise.restTime}');
+      debugPrint('🔵 APRE enabled: ${updatedExercise.useAPRE}, Protocol: ${updatedExercise.apreProtocol}, Base weight: ${updatedExercise.apreBaseWeight}');
 
       // Call the onSave callback directly
-      if (widget.onSave != null) {
-        debugPrint('🔵 Calling onSave callback...');
-        try {
-          widget.onSave(updatedExercise);
-          debugPrint('🔵 onSave callback completed');
-          
-          // Show success message
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Exercise "$name" updated'),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                action: restTime != null 
-                    ? SnackBarAction(
-                        label: 'Timer: ${restTime}s',
-                        textColor: Colors.white,
-                        onPressed: () {},
-                      )
-                    : null,
-              ),
-            );
-          }
-        } catch (e) {
-          debugPrint('❌ Error in onSave callback: $e');
+      debugPrint('🔵 Calling onSave callback...');
+      try {
+        widget.onSave(updatedExercise);
+        debugPrint('🔵 onSave callback completed');
+        
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.exerciseUpdated(name)),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              action: restTime != null
+                  ? SnackBarAction(
+                      label: '${l10n.timerLabel}: ${restTime}s',
+                      textColor: Colors.white,
+                      onPressed: () {},
+                    )
+                  : null,
+            ),
+          );
         }
+      } catch (e) {
+        debugPrint('❌ Error in onSave callback: $e');
       }
-    } catch (e, stackTrace) {
+        } catch (e, stackTrace) {
       debugPrint('❌ Error saving exercise: $e');
       debugPrint('Stack trace: $stackTrace');
       
@@ -476,7 +670,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Error updating exercise. Please try again.'),
+            content: Text(context.l10n.errorUpdatingExercise),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

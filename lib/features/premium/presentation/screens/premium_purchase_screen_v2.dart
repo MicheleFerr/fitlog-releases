@@ -1,20 +1,19 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/screens
- * 🎯 Feature: premium
- * 🔧 Type: screen (tier-1 quality)
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: iOS & Android IAP
- * 
- * Premium subscription screen with tier-1 quality design:
- * - Netflix/Spotify/Apple Fitness+ inspired UI
- * - Glass morphism effects and modern animations
- * - Professional typography and layout
- * - Clear trust signals and social proof
- * - Smooth page transitions with hero animations
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/screens
+/// 🎯 Feature: premium
+/// 🔧 Type: screen (tier-1 quality)
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: iOS & Android IAP
+/// 
+/// Premium subscription screen with tier-1 quality design:
+/// - Netflix/Spotify/Apple Fitness+ inspired UI
+/// - Glass morphism effects and modern animations
+/// - Professional typography and layout
+/// - Clear trust signals and social proof
+/// - Smooth page transitions with hero animations
+library;
 
 import 'dart:io';
 import 'dart:math';
@@ -26,7 +25,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
-import 'package:gymbro_flutter_new/features/settings/presentation/screens/legal_document_screen.dart';
 
 class PremiumPurchaseScreenV2 extends ConsumerStatefulWidget {
   const PremiumPurchaseScreenV2({super.key});
@@ -157,7 +155,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final size = MediaQuery.of(context).size;
@@ -303,7 +301,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
   }
 
   Widget _buildHeroPage(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -354,7 +352,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
   }
 
   Widget _buildHeroSection(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -594,7 +592,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ...List.generate(5, (index) => 
-                Icon(
+                const Icon(
                   Icons.star_rounded,
                   color: Colors.amber,
                   size: 20,
@@ -1252,7 +1250,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
@@ -1273,7 +1271,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.rocket_launch_rounded,
                                 color: Colors.white,
                                 size: 24,
@@ -1651,11 +1649,6 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
 
 // Helper classes for type safety
 class _FeatureData {
-  final IconData icon;
-  final String title;
-  final String description;
-  final List<Color> gradient;
-  final int delay;
 
   const _FeatureData({
     required this.icon,
@@ -1664,17 +1657,22 @@ class _FeatureData {
     required this.gradient,
     required this.delay,
   });
+  final IconData icon;
+  final String title;
+  final String description;
+  final List<Color> gradient;
+  final int delay;
 }
 
 // Custom painter for animated background particles
 class ParticlesPainter extends CustomPainter {
-  final double animation;
-  final Color color;
 
   ParticlesPainter({
     required this.animation,
     required this.color,
   });
+  final double animation;
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {

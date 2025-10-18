@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: workout
- * 🔧 Type: dependency_injection
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod for DI
- * - Firebase services
- * - All layers (data, domain, presentation)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: workout
+/// 🔧 Type: dependency_injection
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod for DI
+/// - Firebase services
+/// - All layers (data, domain, presentation)
+library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -132,13 +131,13 @@ final workoutHistoryProvider = FutureProvider.family<WorkoutHistory?, WorkoutHis
 
 /// Parameter classes for family providers
 class WorkoutStatsParams {
-  final DateTime? startDate;
-  final DateTime? endDate;
   
   const WorkoutStatsParams({
     this.startDate,
     this.endDate,
   });
+  final DateTime? startDate;
+  final DateTime? endDate;
   
   @override
   bool operator ==(Object other) =>
@@ -152,13 +151,13 @@ class WorkoutStatsParams {
 }
 
 class WorkoutHistoryParams {
-  final int page;
-  final int limit;
   
   const WorkoutHistoryParams({
     this.page = 1,
     this.limit = 10,
   });
+  final int page;
+  final int limit;
   
   @override
   bool operator ==(Object other) =>

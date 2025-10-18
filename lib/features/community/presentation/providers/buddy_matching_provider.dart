@@ -21,7 +21,7 @@ final currentUserBuddyProfileProvider = FutureProvider<BuddyProfile?>((ref) asyn
     
     return BuddyProfile.fromFirestore(doc);
   } catch (e) {
-    print('Error loading buddy profile: $e');
+    // print('Error loading buddy profile: $e');
     // Return null instead of throwing to show setup view
     return null;
   }
@@ -43,11 +43,11 @@ final activeMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
         .map((snapshot) => snapshot.docs.map((doc) => 
           BuddyMatch.fromFirestore(doc)).toList())
         .handleError((error) {
-          print('Error loading active matches: $error');
+          // print('Error loading active matches: $error');
           return [];
         });
   } catch (e) {
-    print('Error in activeMatchesProvider: $e');
+    // print('Error in activeMatchesProvider: $e');
     return Stream.value([]);
   }
 });
@@ -68,11 +68,11 @@ final pendingMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
         .map((snapshot) => snapshot.docs.map((doc) => 
           BuddyMatch.fromFirestore(doc)).toList())
         .handleError((error) {
-          print('Error loading pending matches: $error');
+          // print('Error loading pending matches: $error');
           return [];
         });
   } catch (e) {
-    print('Error in pendingMatchesProvider: $e');
+    // print('Error in pendingMatchesProvider: $e');
     return Stream.value([]);
   }
 });
@@ -247,13 +247,6 @@ final buddyMatchingProvider = StateNotifierProvider<BuddyMatchingNotifier, Async
 
 // Additional entity classes
 class BuddyProfile {
-  final String userId;
-  final BuddyPreferences preferences;
-  final String? instagramHandle;
-  final String? location;
-  final String? bio;
-  final bool isLookingForBuddy;
-  final DateTime? createdAt;
   
   BuddyProfile({
     required this.userId,
@@ -277,14 +270,16 @@ class BuddyProfile {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
     );
   }
+  final String userId;
+  final BuddyPreferences preferences;
+  final String? instagramHandle;
+  final String? location;
+  final String? bio;
+  final bool isLookingForBuddy;
+  final DateTime? createdAt;
 }
 
 class BuddyMatch {
-  final String id;
-  final List<String> participants;
-  final String status;
-  final DateTime createdAt;
-  final DateTime lastActivity;
   
   BuddyMatch({
     required this.id,
@@ -304,4 +299,9 @@ class BuddyMatch {
       lastActivity: (data['lastActivity'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final List<String> participants;
+  final String status;
+  final DateTime createdAt;
+  final DateTime lastActivity;
 }

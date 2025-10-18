@@ -1,7 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';  // Temporarily disabled
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../workout/domain/entities/exercise.dart';
-import '../../domain/entities/exercise_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
 
 final exerciseRepositoryProvider = Provider<ExerciseRepository>((ref) {
   return MockExerciseRepository(); // Temporarily using mock implementation
@@ -119,7 +119,7 @@ class FirestoreExerciseRepository implements ExerciseRepository {
 // Temporary mock implementation for iOS build compatibility
 class MockExerciseRepository implements ExerciseRepository {
   final List<ExerciseTemplate> _mockExercises = [
-    ExerciseTemplate(
+    const ExerciseTemplate(
       id: '1',
       name: 'Push-up',
       description: 'Basic bodyweight chest exercise',

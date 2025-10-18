@@ -3,14 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Tier-1 Muscle Balance Radar Chart with full explanations and customization
 class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
-  final Map<MuscleGroup, MuscleStrengthData> muscleData;
-  final Function(MuscleGroup, double)? onTargetChanged;
-  final Function(MuscleGroup)? onMuscleGroupTap;
-  final bool showTutorial;
   
   const Tier1MuscleBalanceChart({
     super.key,
@@ -19,6 +15,10 @@ class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
     this.onMuscleGroupTap,
     this.showTutorial = true,
   });
+  final Map<MuscleGroup, MuscleStrengthData> muscleData;
+  final Function(MuscleGroup, double)? onTargetChanged;
+  final Function(MuscleGroup)? onMuscleGroupTap;
+  final bool showTutorial;
 
   @override
   ConsumerState<Tier1MuscleBalanceChart> createState() => _Tier1MuscleBalanceChartState();
@@ -35,7 +35,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   MuscleGroup? _selectedMuscle;
   MuscleGroup? _hoveredMuscle;
   bool _showComparison = false;
-  bool _showHelp = false;
+  final bool _showHelp = false;
   
   // Touch detection regions for accurate muscle selection
   final Map<MuscleGroup, Path> _muscleRegions = {};
@@ -89,7 +89,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Column(
       children: [
@@ -612,46 +612,6 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             ),
           ],
           
-          const SizedBox(height: 16),
-          
-          // Exercise recommendations
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.fitness_center,
-                    size: 16,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    l10n.recommendedExercises,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 6,
-                children: data.recommendedExercises.map((exercise) {
-                  return Chip(
-                    label: Text(
-                      exercise,
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    backgroundColor: theme.colorScheme.primaryContainer,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
           
           // Volume breakdown
           if (data.exerciseBreakdown.isNotEmpty) ...[
@@ -908,7 +868,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   }
 
   void _showHelpDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1119,13 +1079,6 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
 
 // Enhanced custom painter for better visuals
 class _EnhancedRadarPainter extends CustomPainter {
-  final Map<MuscleGroup, MuscleStrengthData> muscleData;
-  final MuscleGroup? selectedMuscle;
-  final MuscleGroup? hoveredMuscle;
-  final ThemeData theme;
-  final double animation;
-  final bool showComparison;
-  final Map<MuscleGroup, Path> muscleRegions;
 
   _EnhancedRadarPainter({
     required this.muscleData,
@@ -1136,6 +1089,13 @@ class _EnhancedRadarPainter extends CustomPainter {
     required this.showComparison,
     this.muscleRegions = const {},
   });
+  final Map<MuscleGroup, MuscleStrengthData> muscleData;
+  final MuscleGroup? selectedMuscle;
+  final MuscleGroup? hoveredMuscle;
+  final ThemeData theme;
+  final double animation;
+  final bool showComparison;
+  final Map<MuscleGroup, Path> muscleRegions;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1186,20 +1146,34 @@ enum MuscleGroup {
   core,
 }
 
-class MuscleStrengthData {
-  final double currentStrength; // 0-100 percentage
-  final double? previousStrength; // Previous period strength
-  final double targetStrength; // User-defined target
-  final double totalVolume; // Total volume in kg
-  final List<String> recommendedExercises;
-  final Map<String, double> exerciseBreakdown; // Exercise name -> volume
+class MuscleStrengthData { // Volume from secondary exercises (weighted)
 
   MuscleStrengthData({
     required this.currentStrength,
     this.previousStrength,
     this.targetStrength = 75,
     required this.totalVolume,
-    required this.recommendedExercises,
     this.exerciseBreakdown = const {},
+    this.primaryVolume = 0,
+    this.secondaryVolume = 0,
   });
+  final double currentStrength; // 0-100 percentage
+  final double? previousStrength; // Previous period strength
+  final double targetStrength; // User-defined target
+  final double totalVolume; // Total volume in kg
+  final Map<String, double> exerciseBreakdown; // Exercise name -> volume
+  final double primaryVolume; // Volume from primary exercises
+  final double secondaryVolume;
+
+  /// Percentage of volume from primary exercises
+  double get primaryPercentage {
+    if (totalVolume == 0) return 0;
+    return (primaryVolume / totalVolume * 100);
+  }
+
+  /// Percentage of volume from secondary exercises
+  double get secondaryPercentage {
+    if (totalVolume == 0) return 0;
+    return (secondaryVolume / totalVolume * 100);
+  }
 }

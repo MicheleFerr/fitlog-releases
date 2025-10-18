@@ -1,18 +1,18 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: analytics
- * 🔧 Type: repository (LOCAL FIRST)
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: iOS/Android/Universal
- * 
- * 💰 COST OPTIMIZATION: Local-first with periodic sync
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: analytics
+/// 🔧 Type: repository (LOCAL FIRST)
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: iOS/Android/Universal
+/// 
+/// 💰 COST OPTIMIZATION: Local-first with periodic sync
+library;
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class SkipAnalyticsLocalRepository {
   static const String _boxName = 'skip_analytics';
@@ -61,10 +61,14 @@ class SkipAnalyticsLocalRepository {
         await syncToFirebase();
       }
       
-      print('📱 Skip saved locally. Pending: ${pendingSkips.length}');
+      if (kDebugMode) {
+        debugPrint('📱 Skip saved locally. Pending: ${pendingSkips.length}');
+      }
       
     } catch (e) {
-      print('Error saving skip locally: $e');
+      if (kDebugMode) {
+        debugPrint('Error saving skip locally: $e');
+      }
     }
   }
   
@@ -126,17 +130,23 @@ class SkipAnalyticsLocalRepository {
   Future<void> syncToFirebase({String? userId}) async {
     try {
       if (userId == null) {
-        print('No user ID for sync');
+        if (kDebugMode) {
+          debugPrint('No user ID for sync');
+        }
         return;
       }
       
       final pendingSkips = _getPendingSkips();
       if (pendingSkips.isEmpty) {
-        print('No pending skips to sync');
+        if (kDebugMode) {
+          debugPrint('No pending skips to sync');
+        }
         return;
       }
       
-      print('☁️ Syncing ${pendingSkips.length} skips to Firebase...');
+      if (kDebugMode) {
+        debugPrint('☁️ Syncing ${pendingSkips.length} skips to Firebase...');
+      }
       
       // Aggregate data for efficient storage
       final aggregatedData = _aggregateSkipData(pendingSkips);
@@ -206,10 +216,14 @@ class SkipAnalyticsLocalRepository {
       await _box.put(_pendingSkipsKey, []);
       await _box.put(_lastSyncKey, DateTime.now().toIso8601String());
       
-      print('✅ Sync complete! Cleared ${pendingSkips.length} pending skips');
+      if (kDebugMode) {
+        debugPrint('✅ Sync complete! Cleared ${pendingSkips.length} pending skips');
+      }
       
     } catch (e) {
-      print('❌ Sync failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Sync failed: $e');
+      }
       // Keep pending skips for next sync attempt
     }
   }

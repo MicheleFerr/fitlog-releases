@@ -5,16 +5,16 @@ import 'package:intl/intl.dart';
 
 /// Widget showing personal records timeline
 class PRTimelineWidget extends StatelessWidget {
-  final List<PersonalRecord> personalRecords;
 
   const PRTimelineWidget({
     super.key,
     required this.personalRecords,
   });
+  final List<PersonalRecord> personalRecords;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     
     if (personalRecords.isEmpty) {
@@ -33,7 +33,7 @@ class PRTimelineWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.emoji_events,
                   color: Colors.amber,
                   size: 24,
@@ -125,7 +125,7 @@ class PRTimelineWidget extends StatelessWidget {
                     color: Colors.amber,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Text(
+                  child: const Text(
                     'NEW',
                     style: TextStyle(
                       fontSize: 8,
@@ -164,14 +164,14 @@ class PRTimelineWidget extends StatelessWidget {
               ),
               if (pr.isSignificant) ...[
                 const SizedBox(width: 4),
-                Icon(
+                const Icon(
                   Icons.trending_up,
                   size: 12,
                   color: Colors.green,
                 ),
                 Text(
                   '+${pr.improvementPercentage.toStringAsFixed(1)}%',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 10,
                     color: Colors.green,
                     fontWeight: FontWeight.bold,

@@ -221,13 +221,6 @@ class MockExerciseActivityRepository {
 }
 
 class ExerciseStats {
-  final String exerciseName;
-  final double maxWeight;
-  final int totalVolume;
-  final int totalSets;
-  final int totalReps;
-  final int totalWorkouts;
-  final DateTime lastWorkout;
   
   ExerciseStats({
     required this.exerciseName,
@@ -238,6 +231,13 @@ class ExerciseStats {
     required this.totalWorkouts,
     required this.lastWorkout,
   });
+  final String exerciseName;
+  final double maxWeight;
+  final int totalVolume;
+  final int totalSets;
+  final int totalReps;
+  final int totalWorkouts;
+  final DateTime lastWorkout;
 }
 
 void main() {

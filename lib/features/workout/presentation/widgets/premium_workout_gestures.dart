@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/exercise.dart';
-import '../providers/workout_provider.dart';
-import '../providers/exercise_optimization_provider.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_optimization_provider.dart';
 
 /// 🎯 TIER-1 PREMIUM GESTURES & ANIMATIONS
 /// Advanced interaction patterns for professional fitness app
@@ -14,12 +11,6 @@ import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
 // ============================================================================
 
 class SwipeableExerciseCard extends ConsumerStatefulWidget {
-  final String exerciseId;
-  final Widget child;
-  final VoidCallback? onDelete;
-  final VoidCallback? onDuplicate;
-  final VoidCallback? onComplete;
-  final VoidCallback? onEdit;
   
   const SwipeableExerciseCard({
     super.key,
@@ -30,6 +21,12 @@ class SwipeableExerciseCard extends ConsumerStatefulWidget {
     this.onComplete,
     this.onEdit,
   });
+  final String exerciseId;
+  final Widget child;
+  final VoidCallback? onDelete;
+  final VoidCallback? onDuplicate;
+  final VoidCallback? onComplete;
+  final VoidCallback? onEdit;
   
   @override
   ConsumerState<SwipeableExerciseCard> createState() => _SwipeableExerciseCardState();
@@ -256,13 +253,13 @@ class _SwipeableExerciseCardState extends ConsumerState<SwipeableExerciseCard>
 enum SwipeDirection { left, right }
 
 class _SwipeBackground extends StatelessWidget {
-  final SwipeDirection direction;
-  final double extent;
   
   const _SwipeBackground({
     required this.direction,
     required this.extent,
   });
+  final SwipeDirection direction;
+  final double extent;
   
   @override
   Widget build(BuildContext context) {
@@ -298,14 +295,14 @@ class _SwipeBackground extends StatelessWidget {
 // ============================================================================
 
 class PremiumReorderableWorkout extends ConsumerStatefulWidget {
-  final List<String> exerciseIds;
-  final Function(int, int) onReorder;
   
   const PremiumReorderableWorkout({
     super.key,
     required this.exerciseIds,
     required this.onReorder,
   });
+  final List<String> exerciseIds;
+  final Function(int, int) onReorder;
   
   @override
   ConsumerState<PremiumReorderableWorkout> createState() => _PremiumReorderableWorkoutState();
@@ -387,14 +384,14 @@ class _PremiumReorderableWorkoutState extends ConsumerState<PremiumReorderableWo
 }
 
 class _DraggableExerciseItem extends ConsumerWidget {
-  final String exerciseId;
-  final int index;
   
   const _DraggableExerciseItem({
     super.key,
     required this.exerciseId,
     required this.index,
   });
+  final String exerciseId;
+  final int index;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -447,14 +444,14 @@ class _DraggableExerciseItem extends ConsumerWidget {
 // ============================================================================
 
 class QuickActionMenu extends ConsumerStatefulWidget {
-  final String exerciseId;
-  final Widget child;
   
   const QuickActionMenu({
     super.key,
     required this.exerciseId,
     required this.child,
   });
+  final String exerciseId;
+  final Widget child;
   
   @override
   ConsumerState<QuickActionMenu> createState() => _QuickActionMenuState();
@@ -601,10 +598,6 @@ class _QuickActionMenuState extends ConsumerState<QuickActionMenu>
 }
 
 class _QuickActionButton extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-  final String tooltip;
   
   const _QuickActionButton({
     required this.icon,
@@ -612,6 +605,10 @@ class _QuickActionButton extends StatelessWidget {
     required this.onTap,
     required this.tooltip,
   });
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+  final String tooltip;
   
   @override
   Widget build(BuildContext context) {

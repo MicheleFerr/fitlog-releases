@@ -3,13 +3,16 @@ import UIKit
 import AVFoundation
 import BackgroundTasks
 import UserNotifications
+import FirebaseCore
+// import workmanager // Not needed - using flutter_background_service instead
 
 /// Refactored AppDelegate using modular manager pattern
 @main
 @objc class AppDelegate: FlutterAppDelegate {
-    
+
+
     // MARK: - Properties
-    
+
     private var backgroundTaskManager: BackgroundTaskManaging {
         if #available(iOS 13.0, *) {
             return BackgroundTaskManager.shared
@@ -17,18 +20,41 @@ import UserNotifications
             return BackgroundTaskManagerLegacy.shared
         }
     }
-    
+
     // MARK: - Application Lifecycle
-    
+
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        GeneratedPluginRegistrant.register(with: self)
-        
+        // Configure network before Firebase to avoid IPv6 issues
+        NetworkConfiguration.shared
+        NetworkConfiguration.preferIPv4ForFirebase()
+
+        // Configure Firebase FIRST before any other initialization
+        FirebaseApp.configure()
+        Logger.shared.log(.info, "✅ Firebase configured successfully", category: .general)
+
+        // Call super first to set up Flutter properly
+        let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
+
+        // Workmanager setup - commented out as we're using flutter_background_service instead
+        // WorkmanagerPlugin.setPluginRegistrantCallback { registry in
+        //     GeneratedPluginRegistrant.register(with: registry)
+        // }
+        // WorkmanagerPlugin.registerBGTaskWithIdentifier("dev.flutter.background.refresh")
+
+        // Register plugins with the controller
+        if let controller = window?.rootViewController as? FlutterViewController {
+            GeneratedPluginRegistrant.register(with: controller)
+        }
+
         // Initialize managers based on feature flags
         initializeManagers()
-        
+
+        // Setup keyboard monitoring to prevent warnings
+        KeyboardManager.shared.setupKeyboardMonitoring()
+
         // Setup Flutter integration
         setupFlutterIntegration()
         
@@ -40,11 +66,31 @@ import UserNotifications
         
         // Check permissions
         PermissionManager.shared.checkAllPermissions()
-        
+
+        // Request tracking authorization for better analytics (optional)
+        // This fixes the AdSupport Framework warning
+        // DISABLED: Comment out if you want to re-enable tracking request
+        /*
+        if #available(iOS 14.5, *) {
+            // Delay request to avoid showing on first launch
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                AdSupportManager.shared.requestTrackingAuthorization { _ in
+                    // Analytics will work with or without authorization
+                }
+            }
+        }
+        */
+
         // CRITICAL: Ensure notification permissions for timer audio
         ensureNotificationPermissions()
         
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+        // CRITICAL: Setup notification delegate to prevent double sounds
+        if let controller = window?.rootViewController as? FlutterViewController {
+            NotificationDelegate.shared.setupWithMessenger(controller.binaryMessenger)
+        }
+        Logger.shared.log(.info, "✅ NotificationDelegate configured", category: .general)
+
+        return result
     }
     
     // MARK: - Background/Foreground Transitions
@@ -87,11 +133,20 @@ import UserNotifications
         }
     }
     
+    private var lastActiveTime: Date?
+
     override func applicationDidBecomeActive(_ application: UIApplication) {
         super.applicationDidBecomeActive(application)
-        
+
+        // Prevent duplicate active events within 1 second
+        let now = Date()
+        if let lastTime = lastActiveTime, now.timeIntervalSince(lastTime) < 1.0 {
+            return // Skip duplicate event
+        }
+        lastActiveTime = now
+
         Logger.shared.log(.info, "App became active", category: .general)
-        
+
         if FeatureFlags.useNewAudioManager {
             AudioSessionManager.shared.reactivate()
         }
@@ -231,29 +286,27 @@ import UserNotifications
     }
     
     private func setupFlutterIntegration() {
-        guard let controller = window?.rootViewController as? FlutterViewController else {
-            Logger.shared.log(.error, "Failed to get FlutterViewController")
-            return
-        }
-        
-        // Setup Optimized Timer Manager (Tier 1 optimization)
-        OptimizedTimerManager.shared.setupFlutterChannel(with: controller.binaryMessenger)
-        
-        // Setup Background Audio Manager (fixes timer audio >15s)
-        BackgroundAudioManager.shared.setupFlutterChannel(with: controller.binaryMessenger)
-        
-        // Setup Timer Bridge per intercettare richieste audio da Flutter
-        TimerBridge.shared.setupChannel(with: controller.binaryMessenger)
-        
-        // Setup Timer Sound Fix for guaranteed audio playback
-        TimerSoundFix.shared.setupFlutterChannel(with: controller.binaryMessenger)
-        
-        // Setup Live Activity handler (already modular)
-        LiveActivityHandler.shared.setupMethodChannel(with: controller.binaryMessenger)
-        
+        // Use the shared Flutter engine's binary messenger
+        guard let controller = window?.rootViewController as? FlutterViewController else { return }
+        let messenger = controller.binaryMessenger
+
+        // UnifiedTimerCoordinator now coordinates ALL timer operations
+        // This prevents audio duplicates, race conditions, and manages Live Activities
+        UnifiedTimerCoordinator.shared.setupChannel(with: messenger)
+
+        // Legacy channels are now internally routed through UnifiedTimerCoordinator
+
+        // Legacy channels are now internally routed through UnifiedTimerCoordinator
+        // Individual manager setup removed to prevent conflicts
+
         // Setup feature flag channel for Flutter
-        setupFeatureFlagChannel(with: controller.binaryMessenger)
-        
+        setupFeatureFlagChannel(with: messenger)
+
+        // Setup notification channel for custom sounds
+        setupNotificationChannel(with: messenger)
+
+        // Test sound manager removed - functionality integrated in TimerSoundFix
+
         Logger.shared.log(.info, "Flutter integration setup completed")
     }
     
@@ -288,67 +341,233 @@ import UserNotifications
         }
     }
     
+    private func setupNotificationChannel(with messenger: FlutterBinaryMessenger) {
+        let channel = FlutterMethodChannel(
+            name: "com.gymbro/notifications",
+            binaryMessenger: messenger
+        )
+        
+        channel.setMethodCallHandler { [weak self] (call, result) in
+            switch call.method {
+            case "sendNotification":
+                if let args = call.arguments as? [String: Any],
+                   let title = args["title"] as? String,
+                   let body = args["body"] as? String {
+                    
+                    let soundName = args["sound"] as? String ?? "sound"
+                    let categoryIdentifier = args["categoryIdentifier"] as? String ?? "TIMER_COMPLETE"
+                    let isBackground = args["isBackground"] as? Bool ?? false
+                    
+                    Logger.shared.log(.info, "📱 Native notification requested: \(title), sound: \(soundName)", category: .general)
+                    
+                    // Use DirectNotificationManager for immediate notifications with custom sounds
+                    DirectNotificationManager.shared.sendTimerNotification(
+                        title: title,
+                        body: body,
+                        soundName: soundName,
+                        categoryIdentifier: categoryIdentifier,
+                        delay: 0  // Immediate
+                    )
+                    
+                    result(nil)
+                } else {
+                    result(FlutterError(
+                        code: "INVALID_ARGUMENTS",
+                        message: "Missing title or body",
+                        details: nil
+                    ))
+                }
+                
+            case "testLockscreenAudio":
+                // Run the lockscreen audio test
+                LockscreenAudioTest.runTestFromFlutter()
+                result(true)
+                
+            case "scheduleNotification":
+                if let args = call.arguments as? [String: Any],
+                   let title = args["title"] as? String,
+                   let body = args["body"] as? String,
+                   let delaySeconds = args["delaySeconds"] as? Int {
+                    
+                    let soundName = args["sound"] as? String ?? "sound"
+                    let categoryIdentifier = args["categoryIdentifier"] as? String ?? "TIMER_COMPLETE"
+                    let notificationId = args["notificationId"] as? Int ?? 100
+                    
+                    Logger.shared.log(.info, "⏰ Scheduled notification requested: \(title), delay: \(delaySeconds)s, sound: \(soundName)", category: .general)
+                    
+                    // Use DirectNotificationManager for scheduled notifications
+                    DirectNotificationManager.shared.sendTimerNotification(
+                        title: title,
+                        body: body,
+                        soundName: soundName,
+                        categoryIdentifier: categoryIdentifier,
+                        delay: TimeInterval(delaySeconds)
+                    )
+                    
+                    result(nil)
+                } else {
+                    result(FlutterError(
+                        code: "INVALID_ARGUMENTS",
+                        message: "Missing required parameters",
+                        details: nil
+                    ))
+                }
+                
+            case "cancelNotification":
+                if let args = call.arguments as? [String: Any],
+                   let notificationId = args["notificationId"] as? Int {
+                    
+                    Logger.shared.log(.info, "🚫 Cancel notification requested: ID \(notificationId)", category: .general)
+                    
+                    // Cancel pending notifications with this identifier
+                    UNUserNotificationCenter.current().removePendingNotificationRequests(
+                        withIdentifiers: [String(notificationId)]
+                    )
+                    
+                    result(nil)
+                } else {
+                    result(FlutterError(
+                        code: "INVALID_ARGUMENTS",
+                        message: "Missing notificationId",
+                        details: nil
+                    ))
+                }
+                
+            default:
+                result(FlutterMethodNotImplemented)
+            }
+        }
+        
+        Logger.shared.log(.info, "✅ Notification channel setup completed", category: .general)
+    }
+    
     // MARK: - Legacy Implementations (for gradual migration)
     
     private func legacySetupAudioSession() {
-        // Original audio session setup code (simplified)
+        // Modern audio session setup
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers])
+            try audioSession.setCategory(.playback, mode: .default, options: [
+                .mixWithOthers,
+                .duckOthers,
+                .allowBluetooth,
+                .allowBluetoothA2DP
+            ])
             try audioSession.setActive(true)
-            print("Legacy audio session configured")
+            Logger.shared.log(.info, "Audio session configured", category: .audioSession)
         } catch {
-            print("Legacy audio session setup failed: \(error)")
+            Logger.shared.log(.error, "Audio session setup failed: \(error)", category: .audioSession)
         }
     }
-    
+
     private func legacyConfigureBackgroundAudio() {
-        // Original background audio configuration
+        // Modern background audio configuration
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-            print("Legacy background audio configured")
+            try audioSession.setCategory(.playback, mode: .default, options: [
+                .mixWithOthers,
+                .duckOthers,
+                .allowBluetooth,
+                .allowBluetoothA2DP
+            ])
+            try audioSession.setActive(true)
+            Logger.shared.log(.info, "Background audio configured", category: .audioSession)
         } catch {
-            print("Legacy background audio configuration failed: \(error)")
+            Logger.shared.log(.error, "Background audio configuration failed: \(error)", category: .audioSession)
         }
     }
-    
+
     private func legacyConfigureForegroundAudio() {
-        // Original foreground audio configuration
+        // Modern foreground audio configuration
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers])
+            try audioSession.setCategory(.playback, mode: .default, options: [
+                .mixWithOthers,
+                .duckOthers,
+                .allowBluetooth,
+                .allowBluetoothA2DP
+            ])
             try audioSession.setActive(true)
-            print("Legacy foreground audio configured")
+            Logger.shared.log(.info, "Foreground audio configured", category: .audioSession)
         } catch {
-            print("Legacy foreground audio configuration failed: \(error)")
+            Logger.shared.log(.error, "Foreground audio configuration failed: \(error)", category: .audioSession)
         }
     }
     
     private func legacyRegisterBackgroundTasks() {
-        // Original background task registration
+        // Modern background task registration
         if #available(iOS 13.0, *) {
+            // Register com.gymbro.timer.refresh
             BGTaskScheduler.shared.register(
                 forTaskWithIdentifier: "com.gymbro.timer.refresh",
                 using: nil
             ) { task in
-                print("Legacy background task executed")
+                Logger.shared.log(.debug, "Background task executed: com.gymbro.timer.refresh", category: .backgroundTask)
                 task.setTaskCompleted(success: true)
             }
+
+            // Register dev.flutter.background.refresh (required by flutter_background_service)
+            BGTaskScheduler.shared.register(
+                forTaskWithIdentifier: "dev.flutter.background.refresh",
+                using: nil
+            ) { task in
+                Logger.shared.log(.debug, "Background task executed: dev.flutter.background.refresh", category: .backgroundTask)
+                task.setTaskCompleted(success: true)
+            }
+            Logger.shared.log(.info, "Background tasks registered", category: .backgroundTask)
         }
     }
-    
+
     private func legacyScheduleBackgroundTasks() {
-        // Original background task scheduling
+        // Modern background task scheduling
         if #available(iOS 13.0, *) {
-            let request = BGAppRefreshTaskRequest(identifier: "com.gymbro.timer.refresh")
-            request.earliestBeginDate = Date(timeIntervalSinceNow: 60)
-            
+            // Check if background refresh is available first
+            let status = UIApplication.shared.backgroundRefreshStatus
+            guard status == .available else {
+                if status == .denied {
+                    Logger.shared.log(.warning, "Background App Refresh disabled by user", category: .backgroundTask)
+                } else if status == .restricted {
+                    Logger.shared.log(.warning, "Background App Refresh restricted", category: .backgroundTask)
+                }
+                return
+            }
+
+            // Schedule com.gymbro.timer.refresh
+            BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: "com.gymbro.timer.refresh")
+            let gymbroRequest = BGAppRefreshTaskRequest(identifier: "com.gymbro.timer.refresh")
+            gymbroRequest.earliestBeginDate = Date(timeIntervalSinceNow: 60)
+
             do {
-                try BGTaskScheduler.shared.submit(request)
-                print("Legacy background task scheduled")
-            } catch {
-                print("Legacy background task scheduling failed: \(error)")
+                try BGTaskScheduler.shared.submit(gymbroRequest)
+                Logger.shared.log(.debug, "Background task scheduled: com.gymbro.timer.refresh", category: .backgroundTask)
+            } catch let error as NSError {
+                switch error.code {
+                case 1:
+                    Logger.shared.log(.error, "Task identifier not in Info.plist", category: .backgroundTask)
+                case 2:
+                    Logger.shared.log(.warning, "Too many pending background tasks", category: .backgroundTask)
+                case 3:
+                    Logger.shared.log(.warning, "Background App Refresh unavailable", category: .backgroundTask)
+                default:
+                    Logger.shared.log(.error, "Background task scheduling failed: \(error)", category: .backgroundTask)
+                }
+            }
+
+            // Schedule dev.flutter.background.refresh (for flutter_background_service)
+            BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: "dev.flutter.background.refresh")
+            let flutterRequest = BGAppRefreshTaskRequest(identifier: "dev.flutter.background.refresh")
+            flutterRequest.earliestBeginDate = Date(timeIntervalSinceNow: 60)
+
+            do {
+                try BGTaskScheduler.shared.submit(flutterRequest)
+                Logger.shared.log(.debug, "Background task scheduled: dev.flutter.background.refresh", category: .backgroundTask)
+            } catch let error as NSError {
+                switch error.code {
+                case 1, 2, 3:
+                    break // Already logged above
+                default:
+                    Logger.shared.log(.error, "Background task scheduling failed: \(error)", category: .backgroundTask)
+                }
             }
         }
     }
@@ -474,7 +693,7 @@ import UserNotifications
         )
         
         alert.addAction(UIAlertAction(title: "Test Silent Loop", style: .default) { _ in
-            BackgroundAudioManager.shared.scheduleTimerAudio(duration: 60, soundName: "timer_complete")
+            BackgroundAudioManager.shared.scheduleTimerAudio(duration: 60, soundName: "sound")
             Logger.shared.log(.info, "DEBUG: Started 60s test silent loop")
         })
         
@@ -493,7 +712,7 @@ import UserNotifications
 // MARK: - UNUserNotificationCenterDelegate
 
 extension AppDelegate {
-    
+
     // Handle notifications when app is in foreground
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                               willPresent notification: UNNotification,
@@ -504,13 +723,25 @@ extension AppDelegate {
         if categoryIdentifier == "TIMER_COMPLETE" {
             // Timer completion - show banner and play sound even in foreground
             Logger.shared.log(.info, "⏰ Timer completion notification received in foreground", category: .general)
+            
+            // CRITICAL FIX: Notify Flutter that audio has been played via iOS notification
+            if let controller = window?.rootViewController as? FlutterViewController {
+                let unifiedChannel = FlutterMethodChannel(name: "com.gymbro.timer/unified",
+                                                         binaryMessenger: controller.binaryMessenger)
+                unifiedChannel.invokeMethod("timerAudioPlayedByiOS", arguments: [
+                    "timestamp": Date().timeIntervalSince1970,
+                    "source": "notification"
+                ])
+                Logger.shared.log(.info, "✅ Notified Flutter that audio was played by iOS notification", category: .general)
+            }
+
             completionHandler([.banner, .sound, .badge])
         } else {
             // Other notifications
             completionHandler([.banner, .sound])
         }
     }
-    
+
     // Handle notification tap actions
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                               didReceive response: UNNotificationResponse,

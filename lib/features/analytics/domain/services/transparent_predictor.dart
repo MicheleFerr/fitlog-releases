@@ -219,7 +219,7 @@ Advanced: 0.5-1kg/week good progress
         applicability: 'For trained individuals seeking muscle growth',
       );
     } else if (currentSetsPerWeek > 20) {
-      return EvidenceBasedRecommendation(
+      return const EvidenceBasedRecommendation(
         topic: 'Training Volume',
         recommendation: 'Consider reducing volume or implementing periodization',
         evidence: 'Diminishing returns and increased injury risk above 20 sets/week per muscle',
@@ -229,7 +229,7 @@ Advanced: 0.5-1kg/week good progress
         applicability: 'When fatigue accumulation impairs performance',
       );
     } else {
-      return EvidenceBasedRecommendation(
+      return const EvidenceBasedRecommendation(
         topic: 'Training Volume',
         recommendation: 'Current volume is within optimal range',
         evidence: '10-20 sets per week shown optimal for most individuals',

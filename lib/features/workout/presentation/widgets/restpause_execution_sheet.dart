@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'dart:async';
 
 class RestPauseExecutionSheet extends ConsumerStatefulWidget {
+
+  const RestPauseExecutionSheet({
+    super.key,
+    required this.restPause,
+    required this.setIndex,
+    required this.onComplete,
+  });
   final RestPauseExercise restPause;
   final int setIndex;
   final Function(
@@ -13,20 +23,13 @@ class RestPauseExecutionSheet extends ConsumerStatefulWidget {
     int rpe,
   ) onComplete;
 
-  const RestPauseExecutionSheet({
-    super.key,
-    required this.restPause,
-    required this.setIndex,
-    required this.onComplete,
-  });
-
   @override
   ConsumerState<RestPauseExecutionSheet> createState() => _RestPauseExecutionSheetState();
 }
 
 class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionSheet> {
-  final TextEditingController _weightController = TextEditingController();
-  final Map<int, TextEditingController> _repsControllers = {};
+  double _weight = 0.0; // Store in kg
+  final Map<int, int> _reps = {};
   final Map<int, bool> _completedMiniSets = {};
   int _currentMiniSet = 0;
   int _rpe = 8;
@@ -44,22 +47,20 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
     // Initialize with target weight from first set if available
     if (widget.restPause.sets.isNotEmpty && widget.setIndex < widget.restPause.sets.length) {
       final set = widget.restPause.sets[widget.setIndex];
-      _weightController.text = set.weight > 0 ? set.weight.toString() : '';
+      _weight = set.weight; // Already in kg
     }
-    
-    // Initialize reps controllers for main set + mini sets
+
+    // Initialize reps for main set + mini sets
     final totalMiniSets = 1 + widget.restPause.miniSets; // Main set + additional mini sets
     for (int i = 0; i < totalMiniSets; i++) {
-      _repsControllers[i] = TextEditingController();
+      _reps[i] = 0;
       _completedMiniSets[i] = false;
     }
   }
-  
+
   @override
   void dispose() {
     _restTimer?.cancel();
-    _weightController.dispose();
-    _repsControllers.values.forEach((c) => c.dispose());
     super.dispose();
   }
   
@@ -74,10 +75,10 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
   }
   
   void _completeMiniSet(int index) {
-    if (_repsControllers[index]!.text.isEmpty) {
+    if (_reps[index] == null || _reps[index]! == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Inserisci il numero di ripetizioni'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).pleaseEnterValidData),
           backgroundColor: Colors.orange,
         ),
       );
@@ -131,15 +132,221 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
   }
   
   void _completeRestPause() {
-    final weight = double.tryParse(_weightController.text) ?? 0;
     final reps = <int>[];
-    
+
     for (int i = 0; i < _completedMiniSets.length; i++) {
-      reps.add(int.tryParse(_repsControllers[i]!.text) ?? 0);
+      reps.add(_reps[i] ?? 0);
     }
-    
-    widget.onComplete(weight, reps, _rpe);
+
+    widget.onComplete(_weight, reps, _rpe);
     Navigator.pop(context);
+  }
+
+  void _showWeightPicker(BuildContext context) {
+    final unit = ref.read(measurementUnitProvider);
+    double selectedWeight = _weight.toDisplayUnit(unit);
+
+    final controller = FixedExtentScrollController(
+      initialItem: WeightHelper.weightToIndex(selectedWeight, unit),
+    );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 16),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.tertiaryContainer.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${WeightHelper.formatPickerWeight(selectedWeight, unit)} $unit',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListWheelScrollView.useDelegate(
+                    controller: controller,
+                    itemExtent: 50,
+                    physics: const FixedExtentScrollPhysics(),
+                    diameterRatio: 1.5,
+                    onSelectedItemChanged: (index) {
+                      setModalState(() {
+                        selectedWeight = WeightHelper.indexToWeight(index, unit);
+                      });
+                      HapticFeedback.selectionClick();
+                    },
+                    childDelegate: ListWheelChildBuilderDelegate(
+                      childCount: WeightConversion.getChildCount(unit),
+                      builder: (context, index) {
+                        final weight = WeightHelper.indexToWeight(index, unit);
+                        final isSelected = weight == selectedWeight;
+                        return Center(
+                          child: Text(
+                            WeightHelper.formatPickerWeight(weight, unit),
+                            style: TextStyle(
+                              fontSize: isSelected ? 28 : 20,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          _weight = selectedWeight.fromDisplayUnit(unit);
+                        });
+                        Navigator.pop(context);
+                        HapticFeedback.mediumImpact();
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: Text(AppLocalizations.of(context).confirm),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _showRepsPicker(BuildContext context, int miniSetIndex) {
+    int selectedReps = _reps[miniSetIndex] ?? widget.restPause.targetReps;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.5,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 16),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.tertiaryContainer.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '$selectedReps ${AppLocalizations.of(context).reps}',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListWheelScrollView.useDelegate(
+                    controller: FixedExtentScrollController(
+                      initialItem: selectedReps - 1,
+                    ),
+                    itemExtent: 50,
+                    physics: const FixedExtentScrollPhysics(),
+                    diameterRatio: 1.5,
+                    onSelectedItemChanged: (index) {
+                      setModalState(() => selectedReps = index + 1);
+                      HapticFeedback.selectionClick();
+                    },
+                    childDelegate: ListWheelChildBuilderDelegate(
+                      childCount: 30,
+                      builder: (context, index) {
+                        final reps = index + 1;
+                        final isSelected = reps == selectedReps;
+                        return Center(
+                          child: Text(
+                            reps.toString(),
+                            style: TextStyle(
+                              fontSize: isSelected ? 28 : 20,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() => _reps[miniSetIndex] = selectedReps);
+                        Navigator.pop(context);
+                        HapticFeedback.mediumImpact();
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: Text(AppLocalizations.of(context).confirm),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
   
   @override
@@ -242,7 +449,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                       const SizedBox(height: 8),
                       LinearProgressIndicator(
                         value: _completionProgress,
-                        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                         valueColor: AlwaysStoppedAnimation<Color>(
                           Theme.of(context).colorScheme.tertiary,
                         ),
@@ -306,18 +513,63 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
               const SizedBox(height: 16),
             ],
             
-            // Weight input (shared for all mini-sets)
+            // Weight picker button (shared for all mini-sets)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                controller: _weightController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: 'Peso (kg) - Stesso per tutti i mini-set',
-                  prefixIcon: const Icon(Icons.fitness_center),
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+              child: InkWell(
+                onTap: () => _showWeightPicker(context),
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.fitness_center,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context).weight,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _weight > 0
+                                  ? _weight.formatWeight(ref.read(measurementUnitProvider))
+                                  : AppLocalizations.of(context).selectWeight,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              AppLocalizations.of(context).selectWeight,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_drop_down,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -358,7 +610,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                       ? Theme.of(context).colorScheme.secondary
                                       : isCurrent
                                           ? Theme.of(context).colorScheme.primary
-                                          : Theme.of(context).colorScheme.surfaceVariant,
+                                          : Theme.of(context).colorScheme.surfaceContainerHighest,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
@@ -381,7 +633,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      index == 0 ? 'Serie Principale' : 'Mini-Set ${index}',
+                                      index == 0 ? 'Serie Principale' : 'Mini-Set $index',
                                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -404,19 +656,60 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                           
                           const SizedBox(height: 12),
                           
-                          // Reps input
-                          TextField(
-                            controller: _repsControllers[index],
-                            keyboardType: TextInputType.number,
-                            enabled: !isCompleted && !isLocked && !_isResting,
-                            decoration: InputDecoration(
-                              labelText: 'Ripetizioni completate',
-                              hintText: index == 0 
-                                  ? 'Target: ${widget.restPause.targetReps}' 
-                                  : 'Massime possibili',
-                              prefixIcon: const Icon(Icons.repeat, size: 20),
-                              border: const OutlineInputBorder(),
-                              isDense: true,
+                          // Reps picker button
+                          InkWell(
+                            onTap: (!isCompleted && !isLocked && !_isResting)
+                                ? () => _showRepsPicker(context, index)
+                                : null,
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                color: (isCompleted || isLocked || _isResting)
+                                    ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                                    : null,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.repeat,
+                                    size: 20,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context).reps,
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          _reps[index] != null && _reps[index]! > 0
+                                              ? '${_reps[index]} ${AppLocalizations.of(context).reps}'
+                                              : (index == 0
+                                                  ? 'Target: ${widget.restPause.targetReps}'
+                                                  : AppLocalizations.of(context).selectTargetReps),
+                                          style: Theme.of(context).textTheme.bodyLarge,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (!isCompleted && !isLocked && !_isResting)
+                                    Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
                           
@@ -490,7 +783,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                           decoration: BoxDecoration(
                             color: _rpe == rpe
                                 ? _getRPEColor(rpe)
-                                : Theme.of(context).colorScheme.surfaceVariant,
+                                : Theme.of(context).colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(

@@ -38,15 +38,8 @@ enum GenderPreference {
 }
 
 class AgeRange {
-  final int min;
-  final int max;
   
   const AgeRange({required this.min, required this.max});
-  
-  Map<String, dynamic> toJson() => {
-    'min': min,
-    'max': max,
-  };
   
   factory AgeRange.fromJson(Map<String, dynamic> json) {
     return AgeRange(
@@ -54,18 +47,16 @@ class AgeRange {
       max: json['max'] ?? 99,
     );
   }
+  final int min;
+  final int max;
+  
+  Map<String, dynamic> toJson() => {
+    'min': min,
+    'max': max,
+  };
 }
 
 class BuddyPreferences {
-  List<WorkoutTime> workoutSchedule;
-  FitnessLevel fitnessLevel;
-  List<FitnessGoal> goals;
-  List<String> preferredActivities;
-  double maxDistance; // in km
-  AgeRange ageRange;
-  GenderPreference genderPreference;
-  PersonalityType personalityType;
-  bool isLookingForBuddy;
 
   BuddyPreferences({
     required this.workoutSchedule,
@@ -78,20 +69,6 @@ class BuddyPreferences {
     required this.personalityType,
     this.isLookingForBuddy = true,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'workoutSchedule': workoutSchedule.map((e) => e.toString()).toList(),
-      'fitnessLevel': fitnessLevel.toString(),
-      'goals': goals.map((e) => e.toString()).toList(),
-      'preferredActivities': preferredActivities,
-      'maxDistance': maxDistance,
-      'ageRange': ageRange.toJson(),
-      'genderPreference': genderPreference.toString(),
-      'personalityType': personalityType.toString(),
-      'isLookingForBuddy': isLookingForBuddy,
-    };
-  }
 
   factory BuddyPreferences.fromJson(Map<String, dynamic> json) {
     return BuddyPreferences(
@@ -124,5 +101,28 @@ class BuddyPreferences {
       ),
       isLookingForBuddy: json['isLookingForBuddy'] ?? true,
     );
+  }
+  List<WorkoutTime> workoutSchedule;
+  FitnessLevel fitnessLevel;
+  List<FitnessGoal> goals;
+  List<String> preferredActivities;
+  double maxDistance; // in km
+  AgeRange ageRange;
+  GenderPreference genderPreference;
+  PersonalityType personalityType;
+  bool isLookingForBuddy;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'workoutSchedule': workoutSchedule.map((e) => e.toString()).toList(),
+      'fitnessLevel': fitnessLevel.toString(),
+      'goals': goals.map((e) => e.toString()).toList(),
+      'preferredActivities': preferredActivities,
+      'maxDistance': maxDistance,
+      'ageRange': ageRange.toJson(),
+      'genderPreference': genderPreference.toString(),
+      'personalityType': personalityType.toString(),
+      'isLookingForBuddy': isLookingForBuddy,
+    };
   }
 }

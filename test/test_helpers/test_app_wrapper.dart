@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/helpers
- * 🎯 Feature: universal test wrapper
- * 🔧 Type: test helper
- * 🌍 Localization: ✅ AppLocalizations setup
- * 🎨 Theme: ✅ Light/Dark theme support
- * 📱 Platform: Universal
- * 
- * Universal test wrapper for widget tests with proper setup
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/helpers
+/// 🎯 Feature: universal test wrapper
+/// 🔧 Type: test helper
+/// 🌍 Localization: ✅ AppLocalizations setup
+/// 🎨 Theme: ✅ Light/Dark theme support
+/// 📱 Platform: Universal
+/// 
+/// Universal test wrapper for widget tests with proper setup
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,10 +23,6 @@ import 'firebase_test_helper.dart';
 /// Universal test wrapper that provides proper Material app setup
 /// with localization, themes, and common providers
 class TestAppWrapper extends StatelessWidget {
-  final Widget child;
-  final ThemeMode themeMode;
-  final Locale locale;
-  final List<Override> overrides;
 
   const TestAppWrapper({
     super.key,
@@ -36,6 +31,10 @@ class TestAppWrapper extends StatelessWidget {
     this.locale = const Locale('en'),
     this.overrides = const [],
   });
+  final Widget child;
+  final ThemeMode themeMode;
+  final Locale locale;
+  final List<Override> overrides;
 
   @override
   Widget build(BuildContext context) {

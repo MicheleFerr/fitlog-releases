@@ -1,13 +1,12 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/features/community
- * 🎯 Feature: community screen tests
- * 🔧 Type: widget test
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ ColorScheme tested
- * 📱 Platform: Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/features/community
+/// 🎯 Feature: community screen tests
+/// 🔧 Type: widget test
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ ColorScheme tested
+/// 📱 Platform: Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -358,7 +357,7 @@ void main() {
     });
 
     test('handles hashtag extraction', () {
-      final content = 'Great workout today! #legday #fitness #gymlife';
+      const content = 'Great workout today! #legday #fitness #gymlife';
       final tags = _extractHashtags(content);
       
       expect(tags.length, 3);
@@ -469,7 +468,7 @@ void main() {
       expect(ratio, 10.0);
 
       // Calculate workouts per month
-      final monthsSinceJoin = 12;
+      const monthsSinceJoin = 12;
       final workoutsPerMonth = user.workoutCount / monthsSinceJoin;
       expect(workoutsPerMonth, closeTo(41.67, 0.01));
     });

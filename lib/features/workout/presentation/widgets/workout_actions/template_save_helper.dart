@@ -1,13 +1,12 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: workout
- * 🔧 Type: helper
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: iOS/Android/Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: workout
+/// 🔧 Type: helper
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: iOS/Android/Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,8 +14,10 @@ import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../providers/workout_provider.dart';
-import '../providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class TemplateSaveHelper {
   static void showSaveAsTemplateDialog(BuildContext context, WidgetRef ref) async {
@@ -65,7 +66,7 @@ class TemplateSaveHelper {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.templateLimitReached),
+        title: Text(AppLocalizations.of(context).templateLimitReached),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -75,10 +76,10 @@ class TemplateSaveHelper {
               color: Theme.of(context).colorScheme.error,
             ),
             const SizedBox(height: 16),
-            Text(AppLocalizations.of(context)!.templateLimitMessage(quotaInfo.maxTemplates)),
+            Text(AppLocalizations.of(context).templateLimitMessage(quotaInfo.maxTemplates)),
             const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context)!.templateLimitSuggestion,
+              AppLocalizations.of(context).templateLimitSuggestion,
               style: const TextStyle(fontSize: 14),
             ),
           ],
@@ -86,14 +87,14 @@ class TemplateSaveHelper {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.ok),
+            child: Text(AppLocalizations.of(context).ok),
           ),
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop();
               // TODO: Navigate to premium screen
             },
-            child: Text(AppLocalizations.of(context)!.upgrade),
+            child: Text(AppLocalizations.of(context).upgrade),
           ),
         ],
       ),
@@ -114,7 +115,7 @@ class TemplateSaveHelper {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Text(AppLocalizations.of(context)!.saveAsTemplate),
+            Text(AppLocalizations.of(context).saveAsTemplate),
             const Spacer(),
             _buildQuotaIndicator(context, quotaInfo),
           ],
@@ -135,7 +136,7 @@ class TemplateSaveHelper {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton.icon(
             onPressed: () => _saveTemplate(
@@ -146,7 +147,7 @@ class TemplateSaveHelper {
               currentWorkout,
             ),
             icon: const Icon(Icons.cloud_upload),
-            label: Text(AppLocalizations.of(context)!.saveToFirebase),
+            label: Text(AppLocalizations.of(context).saveToFirebase),
           ),
         ],
       ),
@@ -196,7 +197,7 @@ class TemplateSaveHelper {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              AppLocalizations.of(context)!.templatesRemaining(quotaInfo.remaining),
+              AppLocalizations.of(context).templatesRemaining(quotaInfo.remaining),
               style: TextStyle(
                 fontSize: 13,
                 color: Theme.of(context).colorScheme.secondary,
@@ -212,8 +213,8 @@ class TemplateSaveHelper {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.templateName,
-        hintText: AppLocalizations.of(context)!.templateNameHint,
+        labelText: AppLocalizations.of(context).templateName,
+        hintText: AppLocalizations.of(context).templateNameHint,
         border: const OutlineInputBorder(),
         prefixIcon: const Icon(Icons.fitness_center),
       ),
@@ -225,8 +226,8 @@ class TemplateSaveHelper {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.description,
-        hintText: AppLocalizations.of(context)!.descriptionHint,
+        labelText: AppLocalizations.of(context).description,
+        hintText: AppLocalizations.of(context).descriptionHint,
         border: const OutlineInputBorder(),
         prefixIcon: const Icon(Icons.description),
       ),
@@ -254,7 +255,7 @@ class TemplateSaveHelper {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              AppLocalizations.of(context)!.templateSyncDescription,
+              AppLocalizations.of(context).templateSyncDescription,
               style: TextStyle(
                 fontSize: 12,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -274,7 +275,7 @@ class TemplateSaveHelper {
     dynamic currentWorkout,
   ) async {
     if (name.isEmpty) {
-      _showErrorSnackBar(context, AppLocalizations.of(context)!.enterTemplateName);
+      _showErrorSnackBar(context, AppLocalizations.of(context).enterTemplateName);
       return;
     }
     
@@ -282,21 +283,11 @@ class TemplateSaveHelper {
     
     try {
       // Show loading
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-              const SizedBox(width: 16),
-              Text(AppLocalizations.of(context)!.savingToFirebase),
-            ],
-          ),
-          duration: const Duration(seconds: 30),
-        ),
+      SnackBarService.showCustom(
+        context,
+        message: AppLocalizations.of(context).savingToFirebase,
+        icon: const LoadingIndicator(size: 20, strokeWidth: 2),
+        duration: const Duration(seconds: 30),
       );
       
       // Save template
@@ -304,35 +295,18 @@ class TemplateSaveHelper {
           .createTemplateFromWorkout(
             name: name,
             description: description.isEmpty 
-                ? AppLocalizations.of(context)!.customTemplate 
+                ? AppLocalizations.of(context).customTemplate 
                 : description,
             exercises: currentWorkout.exercises,
             tags: [],
           );
       
       // Show success
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: Theme.of(context).colorScheme.onTertiary,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(AppLocalizations.of(context)!.templateSavedSuccessfully(name)),
-              ),
-            ],
-          ),
-          backgroundColor: Theme.of(context).colorScheme.tertiary,
-          action: SnackBarAction(
-            label: AppLocalizations.of(context)!.view,
-            textColor: Theme.of(context).colorScheme.onTertiary,
-            onPressed: () => context.push('/templates'),
-          ),
-        ),
+      SnackBarService.showCustom(
+        context,
+        message: '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(name)}',
+        actionLabel: AppLocalizations.of(context).view,
+        onAction: () => context.push('/templates'),
       );
     } catch (e) {
       _handleSaveError(context, e);
@@ -340,8 +314,6 @@ class TemplateSaveHelper {
   }
 
   static void _handleSaveError(BuildContext context, dynamic error) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    
     final errorMessage = error.toString();
     final isQuotaError = errorMessage.contains('quota exceeded');
     
@@ -349,7 +321,7 @@ class TemplateSaveHelper {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.limitReached),
+          title: Text(AppLocalizations.of(context).limitReached),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -362,7 +334,7 @@ class TemplateSaveHelper {
               Text(errorMessage.replaceAll('Exception: ', '')),
               const SizedBox(height: 8),
               Text(
-                AppLocalizations.of(context)!.upgradeForMoreTemplates,
+                AppLocalizations.of(context).upgradeForMoreTemplates,
                 style: const TextStyle(fontSize: 14),
               ),
             ],
@@ -370,14 +342,14 @@ class TemplateSaveHelper {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context)!.ok),
+              child: Text(AppLocalizations.of(context).ok),
             ),
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 // TODO: Navigate to premium
               },
-              child: Text(AppLocalizations.of(context)!.upgrade),
+              child: Text(AppLocalizations.of(context).upgrade),
             ),
           ],
         ),
@@ -385,29 +357,24 @@ class TemplateSaveHelper {
     } else {
       _showErrorSnackBar(
         context, 
-        AppLocalizations.of(context)!.saveError(errorMessage.replaceAll('Exception: ', '')),
+        AppLocalizations.of(context).saveError(errorMessage.replaceAll('Exception: ', '')),
       );
     }
   }
 
   static void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
+    SnackBarService.showError(context, message);
   }
 }
 
 class _QuotaInfo {
-  final int usedTemplates;
-  final int maxTemplates;
 
   const _QuotaInfo({
     required this.usedTemplates,
     required this.maxTemplates,
   });
+  final int usedTemplates;
+  final int maxTemplates;
 
   bool get isExceeded => usedTemplates >= maxTemplates;
   bool get isNearLimit => maxTemplates - usedTemplates <= 2 && maxTemplates - usedTemplates > 0;

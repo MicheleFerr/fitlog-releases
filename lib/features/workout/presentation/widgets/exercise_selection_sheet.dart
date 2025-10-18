@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/exercise.dart';
-import '../providers/exercise_selection_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
 
 /// 🚀 TIER-1: Optimized selection sheet with lazy loading
 class ExerciseSelectionSheet extends ConsumerStatefulWidget {
-  final ExerciseType? targetType;
-  final void Function(List<ExerciseData> selected) onConfirm;
   
   const ExerciseSelectionSheet({
     super.key,
     this.targetType,
     required this.onConfirm,
   });
+  final ExerciseType? targetType;
+  final void Function(List<ExerciseData> selected) onConfirm;
   
   @override
   ConsumerState<ExerciseSelectionSheet> createState() => _ExerciseSelectionSheetState();
@@ -23,7 +24,13 @@ class ExerciseSelectionSheet extends ConsumerStatefulWidget {
 class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet> {
   late final ScrollController _scrollController;
   late final TextEditingController _searchController;
-  
+
+  // GlobalKeys for onboarding (steps 2-5)
+  final _searchBarKey = GlobalKey();
+  final _filtersKey = GlobalKey();
+  final _firstExerciseKey = GlobalKey();
+  final _confirmButtonKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -50,8 +57,10 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
     final theme = Theme.of(context);
     final selection = ref.watch(exerciseSelectionProvider);
     final exercises = ref.watch(filteredExercisesProvider);
-    
-    return DraggableScrollableSheet(
+
+    return Stack(
+      children: [
+        DraggableScrollableSheet(
       initialChildSize: 0.9,
       minChildSize: 0.5,
       maxChildSize: 0.95,
@@ -102,12 +111,24 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
           ),
         );
       },
+        ),
+
+        // Onboarding overlay (steps 2-5 visible in this sheet)
+        ExerciseOnboardingOverlay(
+          singleExerciseTabKey: GlobalKey(), // Dummy - used in EnhancedAddExerciseModal
+          selectExerciseButtonKey: GlobalKey(), // Dummy - used in EnhancedAddExerciseModal
+          searchBarKey: _searchBarKey,
+          firstExerciseKey: _firstExerciseKey,
+          filtersKey: _filtersKey,
+          confirmButtonKey: _confirmButtonKey,
+        ),
+      ],
     );
   }
-  
+
   Widget _buildHeader(BuildContext context, ExerciseSelectionState selection) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     String title;
     switch (selection.targetType) {
@@ -158,9 +179,10 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
   
   Widget _buildSearchBar(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-    
+    final l10n = AppLocalizations.of(context);
+
     return Padding(
+      key: _searchBarKey,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: TextField(
         controller: _searchController,
@@ -177,7 +199,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
                 )
               : null,
           filled: true,
-          fillColor: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+          fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -199,8 +221,9 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
     final theme = Theme.of(context);
     final categories = ['PETTO', 'DORSO', 'GAMBE', 'SPALLE', 'BRACCIA', 'ADDOME'];
     final selection = ref.watch(exerciseSelectionProvider.select((s) => s.focusedCategory));
-    
+
     return SizedBox(
+      key: _filtersKey,
       height: 40,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -219,7 +242,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
                 ref.read(exerciseSelectionProvider.notifier)
                     .setCategory(selected ? category : null);
               },
-              backgroundColor: theme.colorScheme.surfaceVariant,
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
               selectedColor: theme.colorScheme.primaryContainer,
             ),
           );
@@ -245,7 +268,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
             ),
             const SizedBox(height: 16),
             Text(
-              AppLocalizations.of(context)!.noExercisesFound,
+              AppLocalizations.of(context).noExercisesFound,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ],
@@ -263,7 +286,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
       itemBuilder: (context, index) {
         final exercise = exercises[index];
         return ExerciseSelectionTile(
-          key: ValueKey(exercise.id),
+          key: index == 0 ? _firstExerciseKey : ValueKey(exercise.id),
           exercise: exercise,
         );
       },
@@ -272,7 +295,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
   
   Widget _buildBottomActions(BuildContext context, ExerciseSelectionState selection) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     // Validation based on exercise type
     bool canConfirm = false;
@@ -319,6 +342,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
           const SizedBox(width: 16),
           Expanded(
             child: FilledButton(
+              key: _confirmButtonKey,
               onPressed: canConfirm
                   ? () {
                       final selected = ref.read(selectedExercisesProvider);
@@ -337,12 +361,12 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
 
 /// 🚀 TIER-1: Optimized exercise tile with const constructor
 class ExerciseSelectionTile extends ConsumerWidget {
-  final ExerciseData exercise;
   
   const ExerciseSelectionTile({
     super.key,
     required this.exercise,
   });
+  final ExerciseData exercise;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -471,7 +495,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
         width: 60,
         height: 60,
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
@@ -494,7 +518,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
         placeholder: (context, url) => Container(
           width: 60,
           height: 60,
-          color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
           child: const Center(
             child: SizedBox(
               width: 20,
@@ -506,7 +530,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
         errorWidget: (context, url, error) => Container(
           width: 60,
           height: 60,
-          color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
           child: Icon(
             Icons.broken_image,
             size: 30,

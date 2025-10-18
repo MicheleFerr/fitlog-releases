@@ -254,7 +254,7 @@ class DatabaseService {
   // Statistics
   DatabaseStats getStats() {
     int totalDocuments = 0;
-    int totalCollections = _collections.length;
+    final int totalCollections = _collections.length;
     
     for (final collection in _collections.values) {
       totalDocuments += collection.length;
@@ -286,11 +286,6 @@ class DatabaseService {
 typedef DatabaseListener = void Function(Map<String, dynamic> event);
 
 class DatabaseOperation {
-  final OperationType type;
-  final String? collection;
-  final String? documentId;
-  final Map<String, dynamic>? data;
-  final DateTime timestamp;
   
   DatabaseOperation({
     required this.type,
@@ -299,6 +294,11 @@ class DatabaseOperation {
     this.data,
     required this.timestamp,
   });
+  final OperationType type;
+  final String? collection;
+  final String? documentId;
+  final Map<String, dynamic>? data;
+  final DateTime timestamp;
 }
 
 enum OperationType {
@@ -315,10 +315,6 @@ enum OperationType {
 }
 
 class BatchOperation {
-  final BatchOperationType type;
-  final String collection;
-  final String? documentId;
-  final Map<String, dynamic>? data;
   
   BatchOperation({
     required this.type,
@@ -326,6 +322,10 @@ class BatchOperation {
     this.documentId,
     this.data,
   });
+  final BatchOperationType type;
+  final String collection;
+  final String? documentId;
+  final Map<String, dynamic>? data;
 }
 
 enum BatchOperationType {
@@ -335,10 +335,10 @@ enum BatchOperationType {
 }
 
 class Transaction {
-  final DatabaseService _db;
-  final List<BatchOperation> _operations = [];
   
   Transaction(this._db);
+  final DatabaseService _db;
+  final List<BatchOperation> _operations = [];
   
   void create(String collection, Map<String, dynamic> data) {
     _operations.add(BatchOperation(
@@ -375,10 +375,6 @@ class Transaction {
 }
 
 class DatabaseStats {
-  final int totalCollections;
-  final int totalDocuments;
-  final int totalOperations;
-  final bool isConnected;
   
   DatabaseStats({
     required this.totalCollections,
@@ -386,6 +382,10 @@ class DatabaseStats {
     required this.totalOperations,
     required this.isConnected,
   });
+  final int totalCollections;
+  final int totalDocuments;
+  final int totalOperations;
+  final bool isConnected;
 }
 
 void main() {

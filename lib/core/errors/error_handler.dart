@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Error types for categorization
@@ -26,9 +25,9 @@ enum ErrorSeverity {
 
 /// Centralized error handling system for GymBro
 class ErrorHandler {
-  static final ErrorHandler _instance = ErrorHandler._internal();
   factory ErrorHandler() => _instance;
   ErrorHandler._internal();
+  static final ErrorHandler _instance = ErrorHandler._internal();
 
   /// Handle error with appropriate UI feedback
   static Future<void> handle(
@@ -133,7 +132,7 @@ class ErrorHandler {
     String? userMessage,
     VoidCallback? onRetry,
   ) async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final message = userMessage ?? _getLocalizedMessage(context, type, error);
 
     switch (severity) {
@@ -222,7 +221,7 @@ class ErrorHandler {
     ErrorType type,
     dynamic error,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     switch (type) {
       case ErrorType.network:
@@ -247,7 +246,7 @@ class ErrorHandler {
     BuildContext context,
     FirebaseAuthException error,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     switch (error.code) {
       case 'user-not-found':
@@ -270,9 +269,6 @@ class ErrorHandler {
 
 /// Full screen error widget for critical errors
 class ErrorScreen extends StatelessWidget {
-  final dynamic error;
-  final String message;
-  final VoidCallback? onRetry;
 
   const ErrorScreen({
     super.key,
@@ -280,10 +276,13 @@ class ErrorScreen extends StatelessWidget {
     required this.message,
     this.onRetry,
   });
+  final dynamic error;
+  final String message;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Scaffold(
       body: SafeArea(

@@ -1,31 +1,30 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerStatefulWidget
- * - Firebase: Via repository
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerStatefulWidget
+/// - Firebase: Via repository
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/buddy_preferences.dart';
-import '../providers/buddy_matching_provider.dart';
-import '../widgets/onboarding/welcome_step.dart';
-import '../widgets/onboarding/fitness_level_step.dart';
-import '../widgets/onboarding/goals_step.dart';
-import '../widgets/onboarding/schedule_step.dart';
-import '../widgets/onboarding/location_step.dart';
-import '../widgets/onboarding/profile_step.dart';
-import '../widgets/onboarding/complete_step.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/welcome_step.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/fitness_level_step.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/goals_step.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/schedule_step.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/location_step.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/profile_step.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/complete_step.dart';
 
 class BuddyOnboardingScreen extends ConsumerStatefulWidget {
   const BuddyOnboardingScreen({super.key});
@@ -93,7 +92,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -186,7 +185,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
               if (_currentStep < _stepTitles.length - 1)
                 TextButton(
                   onPressed: _skipOnboarding,
-                  child: Text('Salta'),
+                  child: const Text('Salta'),
                 ),
             ],
           ),
@@ -295,7 +294,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore nel salvataggio delle preferenze'),
+            content: const Text('Errore nel salvataggio delle preferenze'),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -307,19 +306,19 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Salta configurazione?'),
-        content: Text('Puoi sempre modificare le tue preferenze successivamente'),
+        title: const Text('Salta configurazione?'),
+        content: const Text('Puoi sempre modificare le tue preferenze successivamente'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Annulla'),
+            child: const Text('Annulla'),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               _completeOnboarding();
             },
-            child: Text('Salta'),
+            child: const Text('Salta'),
           ),
         ],
       ),

@@ -4,16 +4,16 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class WeeklyDistributionModal extends ConsumerWidget {
-  final Map<String, double> weeklyData;
   
   const WeeklyDistributionModal({
     super.key,
     required this.weeklyData,
   });
+  final Map<String, double> weeklyData;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     
     // Calculate statistics
@@ -349,11 +349,6 @@ class WeeklyDistributionModal extends ConsumerWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
   
   const _StatCard({
     required this.title,
@@ -362,6 +357,11 @@ class _StatCard extends StatelessWidget {
     required this.icon,
     required this.color,
   });
+  final String title;
+  final String value;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
   
   @override
   Widget build(BuildContext context) {

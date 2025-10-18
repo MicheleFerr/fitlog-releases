@@ -1,35 +1,29 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/buddy_profile.dart';
-import '../screens/buddy_matching_screen.dart';
-import 'buddy_profile_details.dart';
-import 'fitness_level_badge.dart';
-import 'workout_goals_chips.dart';
-import 'instagram_link_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/screens/buddy_matching_screen.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/buddy_profile_details.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/fitness_level_badge.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/workout_goals_chips.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/instagram_link_button.dart';
 
 class SwipeableBuddyCard extends StatefulWidget {
-  final BuddyProfile profile;
-  final bool isInteractable;
-  final Function(SwipeDirection direction, String profileId)? onSwipe;
-  final AnimationController? animationController;
 
   const SwipeableBuddyCard({
     super.key,
@@ -38,6 +32,10 @@ class SwipeableBuddyCard extends StatefulWidget {
     this.onSwipe,
     this.animationController,
   });
+  final BuddyProfile profile;
+  final bool isInteractable;
+  final Function(SwipeDirection direction, String profileId)? onSwipe;
+  final AnimationController? animationController;
 
   @override
   State<SwipeableBuddyCard> createState() => _SwipeableBuddyCardState();
@@ -234,7 +232,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                           ),
                           const SizedBox(width: 8),
                           if (widget.profile.isVerified)
-                            Icon(
+                            const Icon(
                               Icons.verified,
                               color: Colors.blue,
                               size: 20,
@@ -253,7 +251,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                             Flexible(
                               child: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.location_on,
                                     color: Colors.white70,
                                     size: 14,
@@ -313,7 +311,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
   }
 
   Widget _buildProfileInfo(BuildContext context, ThemeData theme) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -520,7 +518,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
   }
 
   Widget _buildActionHint(BuildContext context, ThemeData theme) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Positioned(
       top: 16,
@@ -559,7 +557,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
     _isDragging = false;
     _bounceController.reverse();
     
-    final threshold = 100.0;
+    const threshold = 100.0;
     
     if (_dragDistance > threshold) {
       // Right swipe - Like

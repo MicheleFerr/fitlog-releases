@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'firebase_exercise_importer.dart';
+import 'package:gymbro_flutter_new/tools/firebase_exercise_importer.dart';
 
 class ImportExercisesScreen extends StatefulWidget {
   const ImportExercisesScreen({super.key});

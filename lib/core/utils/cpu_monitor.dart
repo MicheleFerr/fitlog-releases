@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 /// CPU Performance Monitor for GymBro
 /// Tracks and reports CPU usage patterns to identify performance issues
 class CPUMonitor {
-  static final CPUMonitor _instance = CPUMonitor._internal();
   factory CPUMonitor() => _instance;
   CPUMonitor._internal();
+  static final CPUMonitor _instance = CPUMonitor._internal();
 
   final List<Timer> _activeTimers = [];
   final List<StreamSubscription> _activeSubscriptions = [];
@@ -18,15 +18,15 @@ class CPUMonitor {
   void trackTimer(Timer timer, String source) {
     _activeTimers.add(timer);
     if (kDebugMode) {
-      print('📊 CPU Monitor: Timer added from $source (Total: ${_activeTimers.length})');
+      debugPrint('📊 CPU Monitor: Timer added from $source (Total: ${_activeTimers.length})');
     }
   }
-  
+
   /// Track stream subscriptions
   void trackSubscription(StreamSubscription subscription, String source) {
     _activeSubscriptions.add(subscription);
     if (kDebugMode) {
-      print('📊 CPU Monitor: Subscription added from $source (Total: ${_activeSubscriptions.length})');
+      debugPrint('📊 CPU Monitor: Subscription added from $source (Total: ${_activeSubscriptions.length})');
     }
   }
   
@@ -39,17 +39,17 @@ class CPUMonitor {
       final timeSinceLastRebuild = now.difference(_lastRebuild!).inMilliseconds;
       if (timeSinceLastRebuild < 16) {  // Less than 1 frame (60fps)
         if (kDebugMode) {
-          print('⚠️ CPU Warning: $widgetName rebuilding too fast (${timeSinceLastRebuild}ms)');
+          debugPrint('⚠️ CPU Warning: $widgetName rebuilding too fast (${timeSinceLastRebuild}ms)');
         }
       }
     }
-    
+
     _lastRebuild = now;
-    
+
     // Log every 100 rebuilds
     if (_widgetRebuildCount % 100 == 0) {
       if (kDebugMode) {
-        print('📊 CPU Monitor: $widgetName rebuild count: $_widgetRebuildCount');
+        debugPrint('📊 CPU Monitor: $widgetName rebuild count: $_widgetRebuildCount');
       }
     }
   }
@@ -71,16 +71,34 @@ class CPUMonitor {
   void printReport() {
     final status = getStatus();
     if (kDebugMode) {
-      print('');
-      print('=' * 50);
-      print('📊 CPU PERFORMANCE REPORT');
-      print('=' * 50);
-      print('Active Timers: ${status['activeTimers']}');
-      print('Active Subscriptions: ${status['activeSubscriptions']}');
-      print('Widget Rebuilds: ${status['rebuildCount']}');
-      print('Timers Actually Running: ${status['timersActive']}');
-      print('=' * 50);
-      print('');
+      debugPrint('');
+      if (kDebugMode) {
+        debugPrint('=' * 50);
+      }
+      if (kDebugMode) {
+        debugPrint('📊 CPU PERFORMANCE REPORT');
+      }
+      if (kDebugMode) {
+        debugPrint('=' * 50);
+      }
+      if (kDebugMode) {
+        debugPrint('Active Timers: ${status['activeTimers']}');
+      }
+      if (kDebugMode) {
+        debugPrint('Active Subscriptions: ${status['activeSubscriptions']}');
+      }
+      if (kDebugMode) {
+        debugPrint('Widget Rebuilds: ${status['rebuildCount']}');
+      }
+      if (kDebugMode) {
+        debugPrint('Timers Actually Running: ${status['timersActive']}');
+      }
+      if (kDebugMode) {
+        debugPrint('=' * 50);
+      }
+      if (kDebugMode) {
+        debugPrint('');
+      }
     }
   }
   
@@ -102,9 +120,9 @@ class CPUMonitor {
     
     _widgetRebuildCount = 0;
     _lastRebuild = null;
-    
+
     if (kDebugMode) {
-      print('✅ CPU Monitor: All resources cleaned up');
+      debugPrint('✅ CPU Monitor: All resources cleaned up');
     }
   }
   
@@ -120,13 +138,13 @@ class CPUMonitor {
       final status = getStatus();
       if (status['activeTimers'] > 5) {
         if (kDebugMode) {
-          print('⚠️ CPU WARNING: Too many active timers (${status['activeTimers']})');
+          debugPrint('⚠️ CPU WARNING: Too many active timers (${status['activeTimers']})');
         }
       }
-      
+
       if (status['activeSubscriptions'] > 20) {
         if (kDebugMode) {
-          print('⚠️ CPU WARNING: Too many active subscriptions (${status['activeSubscriptions']})');
+          debugPrint('⚠️ CPU WARNING: Too many active subscriptions (${status['activeSubscriptions']})');
         }
       }
     });
@@ -140,14 +158,14 @@ class CPUMonitor {
 
 /// Widget wrapper to track rebuilds
 class CPUMonitorWidget extends StatelessWidget {
-  final String widgetName;
-  final Widget child;
   
   const CPUMonitorWidget({
     super.key,
     required this.widgetName,
     required this.child,
   });
+  final String widgetName;
+  final Widget child;
   
   @override
   Widget build(BuildContext context) {

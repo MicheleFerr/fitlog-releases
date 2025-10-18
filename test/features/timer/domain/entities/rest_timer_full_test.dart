@@ -787,7 +787,7 @@ void main() {
 
     group('🎯 TimerStatus Enum', () {
       test('all status values are unique', () {
-        final statuses = TimerStatus.values;
+        const statuses = TimerStatus.values;
         final uniqueStatuses = statuses.toSet();
         expect(uniqueStatuses.length, statuses.length);
       });
@@ -803,7 +803,7 @@ void main() {
 
     group('🎯 TimerType Enum', () {
       test('all type values are unique', () {
-        final types = TimerType.values;
+        const types = TimerType.values;
         final uniqueTypes = types.toSet();
         expect(uniqueTypes.length, types.length);
       });

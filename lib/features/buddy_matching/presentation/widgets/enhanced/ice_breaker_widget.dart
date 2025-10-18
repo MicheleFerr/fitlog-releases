@@ -1,28 +1,24 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../domain/entities/ice_breaker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/ice_breaker.dart';
 
 class IceBreakerWidget extends ConsumerStatefulWidget {
-  final String userId;
-  final String targetUserId;
-  final Function(String) onSendMessage;
 
   const IceBreakerWidget({
     super.key,
@@ -30,6 +26,9 @@ class IceBreakerWidget extends ConsumerStatefulWidget {
     required this.targetUserId,
     required this.onSendMessage,
   });
+  final String userId;
+  final String targetUserId;
+  final Function(String) onSendMessage;
 
   @override
   ConsumerState<IceBreakerWidget> createState() => _IceBreakerWidgetState();
@@ -87,7 +86,7 @@ class _IceBreakerWidgetState extends ConsumerState<IceBreakerWidget>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -128,7 +127,7 @@ class _IceBreakerWidgetState extends ConsumerState<IceBreakerWidget>
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceVariant.withOpacity(0.5),
+              color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: TabBar(
@@ -189,7 +188,7 @@ class _IceBreakerWidgetState extends ConsumerState<IceBreakerWidget>
 
     return Card(
       elevation: 0,
-      color: colorScheme.surfaceVariant.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
@@ -300,14 +299,14 @@ class _IceBreakerWidgetState extends ConsumerState<IceBreakerWidget>
 
 /// Quick ice breaker suggestions for instant use
 class QuickIceBreakers extends ConsumerWidget {
-  final Function(String) onSendMessage;
-  final int limit;
 
   const QuickIceBreakers({
     super.key,
     required this.onSendMessage,
     this.limit = 3,
   });
+  final Function(String) onSendMessage;
+  final int limit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -367,7 +366,7 @@ class QuickIceBreakers extends ConsumerWidget {
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../analytics/presentation/providers/analytics_provider.dart';
-import '../../domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:intl/intl.dart';
 
 class StreakTrackerWidget extends ConsumerWidget {
-  final WidgetSize size;
   
   const StreakTrackerWidget({
     super.key,
     required this.size,
   });
+  final WidgetSize size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -485,7 +485,7 @@ class StreakTrackerWidget extends ConsumerWidget {
         children: [
           // Month header
           Text(
-            _getMonthName(today.month) + ' ${today.year}',
+            '${_getMonthName(today.month)} ${today.year}',
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),

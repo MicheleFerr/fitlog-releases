@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class ThemeModeAdapter extends TypeAdapter<ThemeMode> {
   @override
-  final int typeId = 1;
+  final int typeId = 102; // Choose a unique typeId
 
   @override
   ThemeMode read(BinaryReader reader) {

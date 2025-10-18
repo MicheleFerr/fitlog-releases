@@ -8,12 +8,6 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 /// Separato dalla logica timer per rispettare CLAUDE.md (max 3 providers)
 /// Gestisce: posizione, visibilità, espansione, animazioni
 class TimerUIState {
-  final Offset position;
-  final bool isVisible;
-  final bool isExpanded;
-  final bool isMinimized;
-  final bool isDragging;
-  final double opacity;
   
   const TimerUIState({
     this.position = const Offset(20, 100),
@@ -23,6 +17,12 @@ class TimerUIState {
     this.isDragging = false,
     this.opacity = 1.0,
   });
+  final Offset position;
+  final bool isVisible;
+  final bool isExpanded;
+  final bool isMinimized;
+  final bool isDragging;
+  final double opacity;
   
   TimerUIState copyWith({
     Offset? position,
@@ -44,12 +44,12 @@ class TimerUIState {
 }
 
 class TimerUIStateNotifier extends StateNotifier<TimerUIState> {
-  final Ref ref;
-  SharedPreferences? _prefs;
   
   TimerUIStateNotifier(this.ref) : super(const TimerUIState()) {
     _loadPreferences();
   }
+  final Ref ref;
+  SharedPreferences? _prefs;
   
   Future<void> _loadPreferences() async {
     _prefs = await SharedPreferences.getInstance();

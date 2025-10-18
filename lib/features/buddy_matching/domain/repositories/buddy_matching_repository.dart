@@ -1,25 +1,24 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: buddy_matching
- * 🔧 Type: repository interface
- * 🌍 Localization: N/A - Repository interface
- * 🎨 Theme: N/A - Repository interface  
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None (abstract interface)
- * - Hive: None (abstract interface)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: repository interface
+/// 🌍 Localization: N/A - Repository interface
+/// 🎨 Theme: N/A - Repository interface  
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None (abstract interface)
+/// - Hive: None (abstract interface)
+library;
 
-import '../entities/buddy_profile.dart';
-import '../entities/buddy_match.dart';
-import '../entities/buddy_preferences.dart';
-import '../entities/buddy_action.dart';
-import '../entities/ice_breaker.dart';
-import '../../../shared/domain/entities/italian_city.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_match.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_action.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/ice_breaker.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
 
 /// Repository interface for buddy matching operations
 abstract class BuddyMatchingRepository {

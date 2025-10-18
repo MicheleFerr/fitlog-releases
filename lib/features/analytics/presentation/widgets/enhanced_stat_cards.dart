@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
-import '../enhanced_statistics_dashboard.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/enhanced_statistics_dashboard.dart';
 
 /// Enhanced Stat Card with Material 3 styling
 class EnhancedStatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final StatTrend trend;
-  final String subtitle;
-  final VoidCallback? onTap;
 
   const EnhancedStatCard({
     super.key,
@@ -21,6 +15,12 @@ class EnhancedStatCard extends StatelessWidget {
     required this.subtitle,
     this.onTap,
   });
+  final String title;
+  final String value;
+  final IconData icon;
+  final StatTrend trend;
+  final String subtitle;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -136,16 +136,16 @@ class EnhancedStatCard extends StatelessWidget {
 
 /// Exercise Ranking Card showing top performing exercises
 class EnhancedExerciseRankingCard extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const EnhancedExerciseRankingCard({
     super.key,
     required this.activities,
   });
+  final List<ExerciseActivity> activities;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final topExercises = _getTopExercises();
 
@@ -184,7 +184,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
                   exercise,
                   colorScheme,
                 );
-              }).toList(),
+              }),
           ],
         ),
       ),
@@ -341,16 +341,16 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
 
 /// Streak Card showing workout consistency
 class EnhancedStreakCard extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const EnhancedStreakCard({
     super.key,
     required this.activities,
   });
+  final List<ExerciseActivity> activities;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final streakData = _calculateStreak();
 
@@ -362,7 +362,7 @@ class EnhancedStreakCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.local_fire_department,
                   color: Colors.orange,
                   size: 24,
@@ -588,15 +588,15 @@ class EnhancedStreakCard extends StatelessWidget {
 
 // Data classes
 class ExerciseRankData {
-  final String name;
-  final double totalVolume;
-  final int frequency;
 
   ExerciseRankData({
     required this.name,
     required this.totalVolume,
     required this.frequency,
   });
+  final String name;
+  final double totalVolume;
+  final int frequency;
 
   ExerciseRankData copyWith({
     String? name,
@@ -612,10 +612,6 @@ class ExerciseRankData {
 }
 
 class StreakData {
-  final int currentStreak;
-  final int longestStreak;
-  final int weeklyGoal;
-  final int weeklyGoalTarget;
 
   StreakData({
     required this.currentStreak,
@@ -623,4 +619,8 @@ class StreakData {
     required this.weeklyGoal,
     required this.weeklyGoalTarget,
   });
+  final int currentStreak;
+  final int longestStreak;
+  final int weeklyGoal;
+  final int weeklyGoalTarget;
 }

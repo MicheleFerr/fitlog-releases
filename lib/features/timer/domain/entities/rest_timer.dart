@@ -15,20 +15,7 @@ enum TimerType {
   cooldown,
 }
 
-class RestTimer {
-  final String id;
-  final TimerType type;
-  final int totalDurationSeconds;
-  final int remainingSeconds;
-  final TimerStatus status;
-  final DateTime? startTime;
-  final DateTime? endTime;
-  final String? exerciseName;
-  final int? currentSet;
-  final int? totalSets;
-  final String? workoutId;
-  final bool audioAlreadyPlayed;  // Flag to track if audio was already played
-  final DateTime? completionTime;  // When the timer completed
+class RestTimer {  // When the timer completed
 
   RestTimer({
     String? id,
@@ -47,6 +34,49 @@ class RestTimer {
   }) : 
     id = id ?? const Uuid().v4(),
     remainingSeconds = remainingSeconds ?? totalDurationSeconds;
+
+  factory RestTimer.fromJson(Map<String, dynamic> json) {
+    return RestTimer(
+      id: json['id'],
+      type: TimerType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => TimerType.rest,
+      ),
+      totalDurationSeconds: json['totalDurationSeconds'],
+      remainingSeconds: json['remainingSeconds'],
+      status: TimerStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => TimerStatus.idle,
+      ),
+      startTime: json['startTime'] != null 
+          ? DateTime.parse(json['startTime']) 
+          : null,
+      endTime: json['endTime'] != null 
+          ? DateTime.parse(json['endTime']) 
+          : null,
+      exerciseName: json['exerciseName'],
+      currentSet: json['currentSet'],
+      totalSets: json['totalSets'],
+      workoutId: json['workoutId'],
+      audioAlreadyPlayed: json['audioAlreadyPlayed'] ?? false,
+      completionTime: json['completionTime'] != null
+          ? DateTime.parse(json['completionTime'])
+          : null,
+    );
+  }
+  final String id;
+  final TimerType type;
+  final int totalDurationSeconds;
+  final int remainingSeconds;
+  final TimerStatus status;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final String? exerciseName;
+  final int? currentSet;
+  final int? totalSets;
+  final String? workoutId;
+  final bool audioAlreadyPlayed;  // Flag to track if audio was already played
+  final DateTime? completionTime;
 
   /// Progress from 0.0 to 1.0
   double get progress {
@@ -206,36 +236,6 @@ class RestTimer {
       'audioAlreadyPlayed': audioAlreadyPlayed,
       'completionTime': completionTime?.toIso8601String(),
     };
-  }
-
-  factory RestTimer.fromJson(Map<String, dynamic> json) {
-    return RestTimer(
-      id: json['id'],
-      type: TimerType.values.firstWhere(
-        (e) => e.name == json['type'],
-        orElse: () => TimerType.rest,
-      ),
-      totalDurationSeconds: json['totalDurationSeconds'],
-      remainingSeconds: json['remainingSeconds'],
-      status: TimerStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => TimerStatus.idle,
-      ),
-      startTime: json['startTime'] != null 
-          ? DateTime.parse(json['startTime']) 
-          : null,
-      endTime: json['endTime'] != null 
-          ? DateTime.parse(json['endTime']) 
-          : null,
-      exerciseName: json['exerciseName'],
-      currentSet: json['currentSet'],
-      totalSets: json['totalSets'],
-      workoutId: json['workoutId'],
-      audioAlreadyPlayed: json['audioAlreadyPlayed'] ?? false,
-      completionTime: json['completionTime'] != null
-          ? DateTime.parse(json['completionTime'])
-          : null,
-    );
   }
 
   @override

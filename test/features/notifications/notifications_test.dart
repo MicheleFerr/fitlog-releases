@@ -255,15 +255,6 @@ class NotificationService {
 }
 
 class AppNotification {
-  final String id;
-  final NotificationType type;
-  final String title;
-  final String body;
-  final DateTime scheduledTime;
-  final DateTime createdAt;
-  final Map<String, dynamic>? metadata;
-  bool isRead;
-  bool isCancelled;
   
   AppNotification({
     required this.id,
@@ -276,6 +267,15 @@ class AppNotification {
     this.isRead = false,
     this.isCancelled = false,
   });
+  final String id;
+  final NotificationType type;
+  final String title;
+  final String body;
+  final DateTime scheduledTime;
+  final DateTime createdAt;
+  final Map<String, dynamic>? metadata;
+  bool isRead;
+  bool isCancelled;
 }
 
 enum NotificationType {

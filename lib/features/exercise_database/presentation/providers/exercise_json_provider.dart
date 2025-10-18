@@ -2,12 +2,22 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 
 /// Provider che carica gli esercizi dal file JSON
 final exerciseJsonProvider = FutureProvider<List<Exercise>>((ref) async {
   try {
+    // Get current locale
+    final locale = ref.watch(localeProvider);
+
+    // Load the correct JSON file based on locale
+    final String fileName = locale.languageCode == 'it'
+        ? 'assets/data/exercises_it.json'
+        : 'assets/data/exercises.json';
+
     // Carica il file JSON
-    final String jsonString = await rootBundle.loadString('assets/data/exercises.json');
+    final String jsonString = await rootBundle.loadString(fileName);
     final List<dynamic> jsonData = json.decode(jsonString);
     
     // Converte in Exercise entities
@@ -17,13 +27,13 @@ final exerciseJsonProvider = FutureProvider<List<Exercise>>((ref) async {
         name: item['nome'] ?? item['name'] ?? '',
         type: _getExerciseType(item['tipoEsercizio']),
         category: _getExerciseCategory(item['focus']),
-        notes: item['noteTecniche'],
+        notes: null, // Note utente separate - non mappare noteTecniche qui
       );
     }).toList();
     
     return exercises;
   } catch (e) {
-    print('Error loading exercises: $e');
+    // print('Error loading exercises: $e');
     // Ritorna una lista di fallback
     return _getFallbackExercises();
   }
@@ -46,32 +56,12 @@ ExerciseType _getExerciseType(String? tipo) {
 
 ExerciseCategory _getExerciseCategory(String? focus) {
   if (focus == null) return ExerciseCategory.other;
-  
-  final focusLower = focus.toLowerCase();
-  
-  if (focusLower.contains('pett') || focusLower.contains('chest')) {
-    return ExerciseCategory.chest;
-  } else if (focusLower.contains('dors') || focusLower.contains('back') || focusLower.contains('lat')) {
-    return ExerciseCategory.back;
-  } else if (focusLower.contains('spall') || focusLower.contains('delt') || focusLower.contains('shoulder')) {
-    return ExerciseCategory.shoulders;
-  } else if (focusLower.contains('bicipit') || focusLower.contains('bicep')) {
-    return ExerciseCategory.arms;
-  } else if (focusLower.contains('tricipit') || focusLower.contains('tricep')) {
-    return ExerciseCategory.arms;
-  } else if (focusLower.contains('quad') || focusLower.contains('femor') || focusLower.contains('leg') || focusLower.contains('gamb')) {
-    return ExerciseCategory.legs;
-  } else if (focusLower.contains('glut')) {
-    return ExerciseCategory.legs;
-  } else if (focusLower.contains('core') || focusLower.contains('add') || focusLower.contains('abs')) {
-    return ExerciseCategory.abs;
-  } else if (focusLower.contains('cardio')) {
-    return ExerciseCategory.cardio;
-  } else if (focusLower.contains('polp') || focusLower.contains('calf')) {
-    return ExerciseCategory.legs;
-  } else {
-    return ExerciseCategory.other;
-  }
+
+  // Split focus string by comma to create a list (handles both single and multi-muscle)
+  final focusList = focus.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+
+  // Use centralized converter for consistent category mapping
+  return ExerciseConverter.mapFocusToCategory(focusList);
 }
 
 List<Exercise> _getFallbackExercises() {

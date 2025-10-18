@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
 class AnimatedSearchIcon extends StatefulWidget {
-  final VoidCallback onPressed;
-  final bool showInitialAnimation;
   
   const AnimatedSearchIcon({
     super.key,
     required this.onPressed,
     this.showInitialAnimation = true,
   });
+  final VoidCallback onPressed;
+  final bool showInitialAnimation;
 
   @override
   State<AnimatedSearchIcon> createState() => _AnimatedSearchIconState();
@@ -254,12 +254,12 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
 }
 
 class PulsingSearchIcon extends StatefulWidget {
-  final VoidCallback onPressed;
   
   const PulsingSearchIcon({
     super.key,
     required this.onPressed,
   });
+  final VoidCallback onPressed;
 
   @override
   State<PulsingSearchIcon> createState() => _PulsingSearchIconState();

@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/skip_analytics_local_repository.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
@@ -37,7 +36,7 @@ class MockFirebasePlatform extends FirebasePlatform {
 }
 
 class MockFirebaseAppPlatform extends FirebaseAppPlatform {
-  MockFirebaseAppPlatform(String name, FirebaseOptions options) : super(name, options);
+  MockFirebaseAppPlatform(super.name, super.options);
   
   @override
   bool get isAutomaticDataCollectionEnabled => false;

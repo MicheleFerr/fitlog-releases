@@ -41,13 +41,34 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       plateCalculator: fields[21] as bool?,
       warmupSuggestions: fields[22] as bool?,
       availablePlates: (fields[23] as List?)?.cast<double>(),
+      isProMode: fields[24] as bool?,
+      autoCollapseCompleted: fields[25] as bool?,
+      showTutInfo: fields[26] as bool?,
+      showExerciseNotes: fields[27] as bool?,
+      showCommunitySuggestions: fields[28] as bool?,
+      showExerciseInsights: fields[29] as bool?,
+      showCustomTimers: fields[30] as bool?,
+      showAdvancedMenu: fields[31] as bool?,
+      showCollapseCountdown: fields[32] as bool?,
+      simplifiedAnimations: fields[33] as bool?,
+      hasSeenWorkoutOnboarding: fields[34] as bool,
+      onboardingVersion: fields[35] as int,
+      betaModeEnabled: fields[36] as bool?,
+      enableApre: fields[37] as bool?,
+      defaultApreProtocol: fields[38] as int?,
+      autoAdjustRestTime: fields[39] as bool?,
+      showQuickInfoIcon: fields[40] as bool?,
+      showWarmupIcon: fields[41] as bool?,
+      showPreventionIcon: fields[42] as bool?,
+      autoAdjustWeightFromRpe: fields[43] as bool?,
+      autoAdjustRestFromRpe: fields[44] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(24)
+      ..writeByte(45)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -95,7 +116,49 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(22)
       ..write(obj.warmupSuggestions)
       ..writeByte(23)
-      ..write(obj.availablePlates);
+      ..write(obj.availablePlates)
+      ..writeByte(24)
+      ..write(obj.isProMode)
+      ..writeByte(25)
+      ..write(obj.autoCollapseCompleted)
+      ..writeByte(26)
+      ..write(obj.showTutInfo)
+      ..writeByte(27)
+      ..write(obj.showExerciseNotes)
+      ..writeByte(28)
+      ..write(obj.showCommunitySuggestions)
+      ..writeByte(29)
+      ..write(obj.showExerciseInsights)
+      ..writeByte(30)
+      ..write(obj.showCustomTimers)
+      ..writeByte(31)
+      ..write(obj.showAdvancedMenu)
+      ..writeByte(32)
+      ..write(obj.showCollapseCountdown)
+      ..writeByte(33)
+      ..write(obj.simplifiedAnimations)
+      ..writeByte(34)
+      ..write(obj.hasSeenWorkoutOnboarding)
+      ..writeByte(35)
+      ..write(obj.onboardingVersion)
+      ..writeByte(36)
+      ..write(obj.betaModeEnabled)
+      ..writeByte(37)
+      ..write(obj.enableApre)
+      ..writeByte(38)
+      ..write(obj.defaultApreProtocol)
+      ..writeByte(39)
+      ..write(obj.autoAdjustRestTime)
+      ..writeByte(40)
+      ..write(obj.showQuickInfoIcon)
+      ..writeByte(41)
+      ..write(obj.showWarmupIcon)
+      ..writeByte(42)
+      ..write(obj.showPreventionIcon)
+      ..writeByte(43)
+      ..write(obj.autoAdjustWeightFromRpe)
+      ..writeByte(44)
+      ..write(obj.autoAdjustRestFromRpe);
   }
 
   @override

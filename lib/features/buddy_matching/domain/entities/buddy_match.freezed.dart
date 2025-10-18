@@ -416,7 +416,7 @@ class __$$BuddyMatchImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$BuddyMatchImpl implements _BuddyMatch {
+class _$BuddyMatchImpl extends _BuddyMatch {
   const _$BuddyMatchImpl(
       {required this.id,
       required this.user1Id,
@@ -442,7 +442,8 @@ class _$BuddyMatchImpl implements _BuddyMatch {
       this.user1Feedback,
       this.user2Feedback,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt})
+      : super._();
 
   factory _$BuddyMatchImpl.fromJson(Map<String, dynamic> json) =>
       _$$BuddyMatchImplFromJson(json);
@@ -613,7 +614,7 @@ class _$BuddyMatchImpl implements _BuddyMatch {
   }
 }
 
-abstract class _BuddyMatch implements BuddyMatch {
+abstract class _BuddyMatch extends BuddyMatch {
   const factory _BuddyMatch(
       {required final String id,
       required final String user1Id,
@@ -640,6 +641,7 @@ abstract class _BuddyMatch implements BuddyMatch {
       final String? user2Feedback,
       final DateTime? createdAt,
       final DateTime? updatedAt}) = _$BuddyMatchImpl;
+  const _BuddyMatch._() : super._();
 
   factory _BuddyMatch.fromJson(Map<String, dynamic> json) =
       _$BuddyMatchImpl.fromJson;

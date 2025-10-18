@@ -1,12 +1,11 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: admin
- * 🔧 Type: provider (admin analytics sync)
- * 
- * Admin-only reverse sync system to collect analytics from all users
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: admin
+/// 🔧 Type: provider (admin analytics sync)
+/// 
+/// Admin-only reverse sync system to collect analytics from all users
+library;
 
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,19 +14,12 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
-import '../../../auth/presentation/providers/current_user_provider.dart';
-import '../../../analytics/domain/entities/workout_metrics.dart';
-import '../../../analytics/domain/entities/personal_record.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart';
 
 /// Admin analytics sync state
 class AdminAnalyticsSyncState {
-  final bool isSyncing;
-  final bool isCollecting;
-  final String? lastSyncTime;
-  final Map<String, UserAnalyticsData> collectedData;
-  final List<String> syncErrors;
-  final SyncProgress? currentProgress;
-  final AnalyticsAggregates? aggregates;
   
   const AdminAnalyticsSyncState({
     this.isSyncing = false,
@@ -38,6 +30,13 @@ class AdminAnalyticsSyncState {
     this.currentProgress,
     this.aggregates,
   });
+  final bool isSyncing;
+  final bool isCollecting;
+  final String? lastSyncTime;
+  final Map<String, UserAnalyticsData> collectedData;
+  final List<String> syncErrors;
+  final SyncProgress? currentProgress;
+  final AnalyticsAggregates? aggregates;
   
   AdminAnalyticsSyncState copyWith({
     bool? isSyncing,
@@ -62,21 +61,6 @@ class AdminAnalyticsSyncState {
 
 /// User analytics data model
 class UserAnalyticsData {
-  final String userId;
-  final String? userName;
-  final String? userEmail;
-  final String accountTier;
-  final DateTime lastWorkout;
-  final int totalWorkouts;
-  final int totalVolume;
-  final int totalSets;
-  final double avgSessionDuration;
-  final Map<String, int> exerciseFrequency;
-  final Map<String, double> muscleGroupDistribution;
-  final List<PersonalRecord> recentPRs;
-  final WorkoutMetrics? lastMetrics;
-  final Map<String, dynamic> insights;
-  final DateTime syncedAt;
   
   UserAnalyticsData({
     required this.userId,
@@ -119,6 +103,21 @@ class UserAnalyticsData {
       syncedAt: DateTime.parse(json['syncedAt']),
     );
   }
+  final String userId;
+  final String? userName;
+  final String? userEmail;
+  final String accountTier;
+  final DateTime lastWorkout;
+  final int totalWorkouts;
+  final int totalVolume;
+  final int totalSets;
+  final double avgSessionDuration;
+  final Map<String, int> exerciseFrequency;
+  final Map<String, double> muscleGroupDistribution;
+  final List<PersonalRecord> recentPRs;
+  final WorkoutMetrics? lastMetrics;
+  final Map<String, dynamic> insights;
+  final DateTime syncedAt;
   
   Map<String, dynamic> toJson() => {
     'userId': userId,
@@ -141,11 +140,6 @@ class UserAnalyticsData {
 
 /// Sync progress tracking
 class SyncProgress {
-  final int totalUsers;
-  final int syncedUsers;
-  final int failedUsers;
-  final String currentUser;
-  final double percentage;
   
   SyncProgress({
     required this.totalUsers,
@@ -153,18 +147,15 @@ class SyncProgress {
     required this.failedUsers,
     required this.currentUser,
   }) : percentage = totalUsers > 0 ? (syncedUsers / totalUsers) * 100 : 0;
+  final int totalUsers;
+  final int syncedUsers;
+  final int failedUsers;
+  final String currentUser;
+  final double percentage;
 }
 
 /// Analytics aggregates
 class AnalyticsAggregates {
-  final int totalUsers;
-  final int activeUsers;
-  final int totalWorkouts;
-  final double totalVolume;
-  final Map<String, int> topExercises;
-  final Map<String, double> avgMetricsByTier;
-  final List<TrendData> volumeTrends;
-  final List<TrendData> frequencyTrends;
   
   AnalyticsAggregates({
     required this.totalUsers,
@@ -176,23 +167,36 @@ class AnalyticsAggregates {
     required this.volumeTrends,
     required this.frequencyTrends,
   });
+  final int totalUsers;
+  final int activeUsers;
+  final int totalWorkouts;
+  final double totalVolume;
+  final Map<String, int> topExercises;
+  final Map<String, double> avgMetricsByTier;
+  final List<TrendData> volumeTrends;
+  final List<TrendData> frequencyTrends;
 }
 
 /// Trend data point
 class TrendData {
-  final DateTime date;
-  final double value;
-  final String label;
   
   TrendData({
     required this.date,
     required this.value,
     required this.label,
   });
+  final DateTime date;
+  final double value;
+  final String label;
 }
 
 /// Admin analytics sync notifier
 class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> {
+
+  AdminAnalyticsSyncNotifier(this._ref) : super(const AdminAnalyticsSyncState()) {
+    _initCompleter = Completer<void>();
+    _initialize();
+  }
   final Ref _ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
@@ -205,11 +209,6 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   int _initRetryCount = 0;
   static const int _maxInitRetries = 3;
   Box? _adminPrefsBox;
-
-  AdminAnalyticsSyncNotifier(this._ref) : super(const AdminAnalyticsSyncState()) {
-    _initCompleter = Completer<void>();
-    _initialize();
-  }
   
   /// Initialize with retry logic
   Future<void> _initialize() async {

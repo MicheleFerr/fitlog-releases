@@ -1,32 +1,30 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Firebase: Via repository
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Firebase: Via repository
+/// - Hive: None
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../providers/buddy_matching_provider.dart';
-import '../widgets/swipeable_buddy_card.dart';
-import '../widgets/buddy_action_buttons.dart';
-import '../widgets/buddy_filter_sheet.dart';
-import '../widgets/matches_preview_bar.dart';
-import '../widgets/empty_matches_view.dart';
-import '../widgets/demo_profiles_fab.dart';
-import '../widgets/location_permission_widget.dart';
-import 'edit_buddy_profile_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/swipeable_buddy_card.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/buddy_action_buttons.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/buddy_filter_sheet.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/matches_preview_bar.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/empty_matches_view.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/location_permission_widget.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/presentation/screens/edit_buddy_profile_screen.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
   const BuddyMatchingScreen({super.key});
@@ -73,7 +71,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final matchingState = ref.watch(matchingProvider);
     final activeMatches = ref.watch(activeMatchesProvider);
 
@@ -270,7 +268,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.favorite,
                               size: 48,
                               color: Colors.white,
@@ -418,7 +416,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
   void _handleSuperLike() async {
     HapticFeedback.heavyImpact();
     // Super like implementation
-    await _handleLike();
+    _handleLike();
   }
 
   void _showMatchCelebration() {

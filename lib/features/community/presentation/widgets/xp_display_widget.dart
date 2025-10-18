@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/community_provider.dart';
-import 'dart:math' as math;
+import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 
 class XPDisplayWidget extends ConsumerStatefulWidget {
-  final bool showDetails;
-  final VoidCallback? onTap;
   
   const XPDisplayWidget({
     super.key,
     this.showDetails = true,
     this.onTap,
   });
+  final bool showDetails;
+  final VoidCallback? onTap;
 
   @override
   ConsumerState<XPDisplayWidget> createState() => _XPDisplayWidgetState();
@@ -120,14 +119,14 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.star,
                                 color: Colors.white,
                                 size: 28,
                               ),
                               Text(
                                 'Lv.$level',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -313,10 +312,6 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
 }
 
 class _StatItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
   
   const _StatItem({
     required this.icon,
@@ -324,6 +319,10 @@ class _StatItem extends StatelessWidget {
     required this.value,
     required this.color,
   });
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
   
   @override
   Widget build(BuildContext context) {
@@ -362,9 +361,9 @@ class _StatItem extends StatelessWidget {
 }
 
 class _BadgeChip extends StatelessWidget {
-  final String badge;
   
   const _BadgeChip({required this.badge});
+  final String badge;
   
   @override
   Widget build(BuildContext context) {

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: debug
- * 🎯 Feature: workout
- * 🔧 Type: debug_screen
- * 🌍 Localization: N/A
- * 🎨 Theme: Universal
- * 📱 Platform: Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: debug
+/// 🎯 Feature: workout
+/// 🔧 Type: debug_screen
+/// 🌍 Localization: N/A
+/// 🎨 Theme: Universal
+/// 📱 Platform: Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../features/auth/presentation/providers/auth_provider.dart';
-import 'exercise_history_debug.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/debug/exercise_history_debug.dart';
 
 class ExerciseHistoryDebugScreen extends ConsumerStatefulWidget {
   const ExerciseHistoryDebugScreen({super.key});

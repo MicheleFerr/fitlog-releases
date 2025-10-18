@@ -1,15 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/smart_training_metrics.dart';
-import '../../domain/entities/progressive_overload_analysis.dart';
-import '../../domain/entities/smart_suggestion.dart';
-import '../../domain/entities/smart_workout_template.dart';
-import '../../domain/services/progressive_overload_engine.dart';
-import '../../domain/services/deload_detection_service.dart';
-import '../../domain/services/plateau_breaker_service.dart';
-import '../../domain/services/volume_optimizer_service.dart';
-import '../../domain/services/smart_workout_templates_service.dart';
-import '../../domain/services/smart_suggestions_engine.dart';
-import '../../../workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/progressive_overload_analysis.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_suggestion.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_workout_template.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/progressive_overload_engine.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/deload_detection_service.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/plateau_breaker_service.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/volume_optimizer_service.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/smart_workout_templates_service.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/smart_suggestions_engine.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 /// Provider for smart training metrics analysis
 final smartTrainingMetricsProvider = StateNotifierProvider<SmartTrainingMetricsNotifier, AsyncValue<List<SmartTrainingMetrics>>>(
@@ -41,7 +42,7 @@ class SmartTrainingMetricsNotifier extends StateNotifier<AsyncValue<List<SmartTr
     double totalVolume = 0.0;
     int totalSets = 0;
     int totalReps = 0;
-    double totalIntensity = 0.0;
+    const double totalIntensity = 0.0;
     final exerciseMetrics = <ExerciseMetrics>[];
     final muscleGroupVolume = <String, double>{};
 
@@ -305,9 +306,9 @@ final smartSuggestionsProvider = StateNotifierProvider<SmartSuggestionsNotifier,
 );
 
 class SmartSuggestionsNotifier extends StateNotifier<List<SmartSuggestion>> {
-  final Ref _ref;
   
   SmartSuggestionsNotifier(this._ref) : super([]);
+  final Ref _ref;
 
   /// Generate suggestions for current context
   Future<void> generateSuggestions(SuggestionContext context) async {
@@ -361,12 +362,6 @@ class SmartSuggestionsNotifier extends StateNotifier<List<SmartSuggestion>> {
 
 /// Template filter model
 class TemplateFilter {
-  final WorkoutCategory? category;
-  final DifficultyLevel? difficulty;
-  final TrainingStyle? style;
-  final int? maxDuration;
-  final List<String>? requiredTags;
-  final bool? premiumOnly;
 
   const TemplateFilter({
     this.category,
@@ -376,6 +371,12 @@ class TemplateFilter {
     this.requiredTags,
     this.premiumOnly,
   });
+  final WorkoutCategory? category;
+  final DifficultyLevel? difficulty;
+  final TrainingStyle? style;
+  final int? maxDuration;
+  final List<String>? requiredTags;
+  final bool? premiumOnly;
 
   TemplateFilter copyWith({
     WorkoutCategory? category,

@@ -1,28 +1,27 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/screens
- * 🎯 Feature: settings
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Legal document viewer for Privacy Policy and Terms of Service
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/screens
+/// 🎯 Feature: settings
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Legal document viewer for Privacy Policy and Terms of Service
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
-class LegalDocumentScreen extends ConsumerStatefulWidget {
-  final String documentType; // 'privacy' or 'terms'
+class LegalDocumentScreen extends ConsumerStatefulWidget { // 'privacy' or 'terms'
   
   const LegalDocumentScreen({
     super.key,
     required this.documentType,
   });
+  final String documentType;
 
   @override
   ConsumerState<LegalDocumentScreen> createState() => _LegalDocumentScreenState();
@@ -243,7 +242,7 @@ Version 1.0.0 | EU Compliant
   
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     

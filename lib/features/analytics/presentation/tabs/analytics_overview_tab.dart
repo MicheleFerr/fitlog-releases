@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/compact_stat_card.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
 import 'package:intl/intl.dart';
-import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
-
-enum TimePeriod { week, month, year, all }
-
-// Provider for exercise repository
-final exerciseRepositoryProvider = Provider((ref) => JsonExerciseRepository());
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/compact_stat_card.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/memoized_analytics_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:flutter/foundation.dart';
 
 class AnalyticsOverviewTab extends ConsumerStatefulWidget {
-  final List<ExerciseActivity> activities;
-  
+
   const AnalyticsOverviewTab({
     super.key,
-    required this.activities,
+    required this.workouts,
   });
+  final List<Workout> workouts;
 
   @override
   ConsumerState<AnalyticsOverviewTab> createState() => _AnalyticsOverviewTabState();
@@ -26,29 +24,31 @@ class AnalyticsOverviewTab extends ConsumerStatefulWidget {
 
 class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   TimePeriod _selectedPeriod = TimePeriod.week;
-  
-  List<ExerciseActivity> get filteredActivities {
+
+  List<Workout> get filteredWorkouts {
     final now = DateTime.now();
-    
     switch (_selectedPeriod) {
       case TimePeriod.week:
         final weekAgo = now.subtract(const Duration(days: 7));
-        return widget.activities.where((a) => a.createdAt.isAfter(weekAgo)).toList();
+        return widget.workouts.where((w) => (w.endTime ?? w.createdAt).isAfter(weekAgo)).toList();
       case TimePeriod.month:
         final monthAgo = now.subtract(const Duration(days: 30));
-        return widget.activities.where((a) => a.createdAt.isAfter(monthAgo)).toList();
+        return widget.workouts.where((w) => (w.endTime ?? w.createdAt).isAfter(monthAgo)).toList();
       case TimePeriod.year:
         final yearAgo = now.subtract(const Duration(days: 365));
-        return widget.activities.where((a) => a.createdAt.isAfter(yearAgo)).toList();
+        return widget.workouts.where((w) => (w.endTime ?? w.createdAt).isAfter(yearAgo)).toList();
       case TimePeriod.all:
-        return widget.activities;
+        return widget.workouts;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final stats = _calculateStats(filteredActivities, _selectedPeriod);
+    final l10n = AppLocalizations.of(context);
+
+    // Watch memoized stats provider - this is cached!
+    final stats = ref.watch(periodAnalyticsStatsProvider(_selectedPeriod));
     
     return RefreshIndicator(
       onRefresh: () async {
@@ -61,12 +61,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           // Period Selector
           _buildPeriodSelector(context),
           const SizedBox(height: 20),
-          
+
           // Hero Card - Period Summary
           HeroStatCard(
-            title: _getPeriodTitle(),
-            value: '${stats['periodWorkouts']}',
-            subtitle: '${stats['periodVolume']} kg total volume',
+            title: _getPeriodTitle(context, _selectedPeriod),
+            value: '${stats.totalWorkouts}',
+            subtitle: '${stats.totalVolume.round()} kg total volume',
             icon: Icons.fitness_center,
             gradientColors: [
               theme.colorScheme.primary,
@@ -77,7 +77,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             },
           ),
           const SizedBox(height: 16),
-          
+
           // Stats Grid
           GridView.count(
             shrinkWrap: true,
@@ -88,41 +88,49 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             childAspectRatio: 1.2,
             children: [
               CompactStatCard(
-                value: '${stats['totalWorkouts']}',
-                label: 'Total Workouts',
+                value: '${stats.totalWorkouts}',
+                label: l10n.totalWorkouts,
                 icon: Icons.calendar_today,
                 color: Colors.blue,
-                subtitle: _getPeriodSubtitle(),
-                trend: _buildTrend(stats['workoutTrend'] as double),
+                subtitle: _getPeriodSubtitle(context, _selectedPeriod),
+                trend: _buildTrend(stats.workoutTrend),
+                tooltipTitle: l10n.totalWorkouts,
+                tooltipDescription: l10n.workoutFrequencyTooltip,
               ),
               CompactStatCard(
-                value: _formatVolume(stats['totalVolume'] as double),
-                label: 'Total Volume',
+                value: _formatVolume(stats.totalVolume),
+                label: l10n.totalVolume,
                 icon: Icons.fitness_center,
                 color: Colors.orange,
-                subtitle: _getPeriodSubtitle(),
-                trend: _buildTrend(stats['volumeTrend'] as double),
+                subtitle: _getPeriodSubtitle(context, _selectedPeriod),
+                trend: _buildTrend(stats.volumeTrend),
+                tooltipTitle: l10n.totalVolume,
+                tooltipDescription: l10n.totalVolumeTooltip,
               ),
               CompactStatCard(
-                value: '${stats['currentStreak']}',
-                label: 'Day Streak',
+                value: '${stats.currentStreak}',
+                label: l10n.dayStreak,
                 icon: Icons.local_fire_department,
                 color: Colors.red,
-                subtitle: stats['currentStreak'] as int > 0 ? 'Keep it up!' : 'Start today',
+                subtitle: stats.currentStreak > 0 ? l10n.keepItUp : l10n.startToday,
+                tooltipTitle: l10n.dayStreak,
+                tooltipDescription: l10n.currentStreakTooltip,
               ),
               CompactStatCard(
-                value: '${stats['consistency']}%',
-                label: 'Consistency',
+                value: '${stats.consistency}%',
+                label: l10n.consistency,
                 icon: Icons.insights,
                 color: Colors.green,
-                subtitle: 'Last 30 days',
+                subtitle: l10n.last30Days,
+                tooltipTitle: l10n.consistency,
+                tooltipDescription: l10n.consistencyTooltip,
               ),
             ],
           ),
           const SizedBox(height: 20),
           
-          // Recent Activities Section
-          _buildRecentActivities(context, filteredActivities),
+          // Recent Workouts Section
+          _buildRecentWorkouts(context, filteredWorkouts),
           const SizedBox(height: 20),
           
           // Quick Actions
@@ -135,7 +143,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   
   Widget _buildPeriodSelector(BuildContext context) {
     final theme = Theme.of(context);
-    
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       height: 40,
       decoration: BoxDecoration(
@@ -144,18 +153,23 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ),
       child: Row(
         children: [
-          _buildPeriodButton(context, 'Week', _selectedPeriod == TimePeriod.week, TimePeriod.week),
-          _buildPeriodButton(context, 'Month', _selectedPeriod == TimePeriod.month, TimePeriod.month),
-          _buildPeriodButton(context, 'Year', _selectedPeriod == TimePeriod.year, TimePeriod.year),
-          _buildPeriodButton(context, 'All', _selectedPeriod == TimePeriod.all, TimePeriod.all),
+          _buildPeriodButton(context, l10n.week, _selectedPeriod == TimePeriod.week, TimePeriod.week),
+          _buildPeriodButton(context, l10n.month, _selectedPeriod == TimePeriod.month, TimePeriod.month),
+          _buildPeriodButton(context, l10n.year, _selectedPeriod == TimePeriod.year, TimePeriod.year),
+          _buildPeriodButton(context, l10n.all, _selectedPeriod == TimePeriod.all, TimePeriod.all),
         ],
       ),
     );
   }
-  
-  Widget _buildPeriodButton(BuildContext context, String label, bool isSelected, TimePeriod period) {
+
+  Widget _buildPeriodButton(
+    BuildContext context,
+    String label,
+    bool isSelected,
+    TimePeriod period,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -185,10 +199,11 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     );
   }
   
-  Widget _buildRecentActivities(BuildContext context, List<ExerciseActivity> activities) {
+  Widget _buildRecentWorkouts(BuildContext context, List<Workout> workouts) {
     final theme = Theme.of(context);
-    final recent = activities.take(3).toList();
-    
+    final l10n = AppLocalizations.of(context);
+    final recent = workouts.take(3).toList();
+
     if (recent.isEmpty) {
       return Card(
         child: Padding(
@@ -203,14 +218,14 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'No recent workouts',
+                  l10n.noRecentWorkouts,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Start a workout to see your progress',
+                  l10n.noRecentWorkoutsDesc,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                   ),
@@ -221,7 +236,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         ),
       );
     }
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -232,32 +247,34 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Recent Activities',
+                  l10n.recentWorkouts,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigate to full activities list
-                    _showAllActivities(context);
+                    _showAllWorkouts(context);
                   },
-                  child: const Text('See All'),
+                  child: Text(l10n.seeAll),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            ...recent.map((activity) => _buildActivityItem(context, activity)),
+            ...recent.map((workout) => _buildWorkoutItem(context, workout)),
           ],
         ),
       ),
     );
   }
   
-  Widget _buildActivityItem(BuildContext context, ExerciseActivity activity) {
+  Widget _buildWorkoutItem(BuildContext context, Workout workout) {
     final theme = Theme.of(context);
-    final timeAgo = _getTimeAgo(activity.createdAt);
-    
+    final l10n = AppLocalizations.of(context);
+    final timeAgo = _getTimeAgo(context, workout.endTime ?? workout.createdAt);
+    final volume = workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume);
+    final workoutName = workout.name ?? 'Unnamed Workout';
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -276,13 +293,13 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  activity.exerciseName,
+                  workoutName,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  '${activity.sets.length} sets • $timeAgo',
+                  '${workout.exercises.length} ${l10n.exercises} • $timeAgo',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -291,7 +308,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             ),
           ),
           Text(
-            '${_calculateExerciseVolume(activity).toStringAsFixed(0)} kg',
+            '${volume.toStringAsFixed(0)} kg',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.bold,
@@ -303,8 +320,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   }
   
   Widget _buildQuickActions(BuildContext context) {
-    final theme = Theme.of(context);
-    
+    final l10n = AppLocalizations.of(context);
+
     return Row(
       children: [
         Expanded(
@@ -313,7 +330,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               Navigator.pushNamed(context, '/workout');
             },
             icon: const Icon(Icons.add),
-            label: const Text('Start Workout'),
+            label: Text(l10n.startWorkout),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
@@ -329,7 +346,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               // Navigate to detailed stats
             },
             icon: const Icon(Icons.bar_chart),
-            label: const Text('View Stats'),
+            label: Text(l10n.viewStats),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
@@ -370,95 +387,272 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     );
   }
   
-  void _showAllActivities(BuildContext context) {
+  void _showAllWorkouts(BuildContext context) {
+    if (kDebugMode) {
+      debugPrint('🔍 [Analytics] _showAllWorkouts called');
+    }
+    if (kDebugMode) {
+      debugPrint('📊 [Analytics] Total workouts to process: ${widget.workouts.length}');
+    }
+
+    // TEMPORARY FIX: Don't filter by isCompleted since all sets from Firebase have isCompleted=false
+    // after the Model→Domain conversion. We'll filter based on having exercises and sets only.
+    final validWorkouts = widget.workouts.where((w) {
+      final hasValidExercises = w.exercises.any((e) => e.sets.isNotEmpty);
+      if (!hasValidExercises) {
+        if (kDebugMode) {
+          debugPrint('  ⚠️ [Analytics] Skipping workout "${w.name}" - no exercises with sets');
+        }
+      }
+      return hasValidExercises;
+    }).toList();
+
+    if (kDebugMode) {
+      debugPrint('📋 [Analytics] Valid workouts after filtering: ${validWorkouts.length}/${widget.workouts.length}');
+    }
+
+    // Log detailed workout information (only for valid workouts)
+    for (var i = 0; i < validWorkouts.length.clamp(0, 5); i++) {  // Log first 5 workouts max
+      final workout = validWorkouts[i];
+      if (kDebugMode) {
+        debugPrint('  📋 [Analytics] Workout $i: "${workout.name}"');
+      }
+      if (kDebugMode) {
+        debugPrint('     - Status: ${workout.status}');
+      }
+      if (kDebugMode) {
+        debugPrint('     - Exercises: ${workout.exercises.length}');
+      }
+
+      for (var j = 0; j < workout.exercises.length; j++) {
+        final exercise = workout.exercises[j];
+        if (kDebugMode) {
+          debugPrint('       💪 [Analytics] Exercise $j: "${exercise.name}"');
+        }
+        if (kDebugMode) {
+          debugPrint('          - Total sets: ${exercise.sets.length}');
+        }
+        if (kDebugMode) {
+          debugPrint('          - Exercise isCompleted: ${exercise.isCompleted}');
+        }
+
+        if (exercise.sets.isEmpty) {
+          if (kDebugMode) {
+            debugPrint('          ⚠️ [Analytics] WARNING: Exercise has NO sets!');
+          }
+          continue;
+        }
+
+        for (var k = 0; k < exercise.sets.length; k++) {
+          final set = exercise.sets[k];
+          if (kDebugMode) {
+            debugPrint('          ✓ [Analytics] Set ${k + 1}: weight=${set.weight}, reps=${set.reps}, isCompleted=${set.isCompleted}');
+          }
+        }
+
+        final completedSets = exercise.sets.where((s) => s.isCompleted).length;
+        if (kDebugMode) {
+          debugPrint('          - Completed sets: $completedSets/${exercise.sets.length}');
+        }
+        if (kDebugMode) {
+          debugPrint('          - Has any completed set: ${exercise.sets.any((s) => s.isCompleted)}');
+        }
+      }
+    }
+
+    if (validWorkouts.length > 5) {
+      if (kDebugMode) {
+        debugPrint('  ... (${validWorkouts.length - 5} more workouts not logged)');
+      }
+    }
+
+    // If no valid workouts, show error message
+    if (validWorkouts.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('❌ [Analytics] ERROR: No valid workouts found!');
+      }
+      if (kDebugMode) {
+        debugPrint('   All ${widget.workouts.length} workouts have either:');
+      }
+      if (kDebugMode) {
+        debugPrint('   - Empty exercises array');
+      }
+      if (kDebugMode) {
+        debugPrint('   - Exercises with empty sets array');
+      }
+      if (kDebugMode) {
+        debugPrint('   - Exercises with no completed sets');
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('No completed exercises found in your workouts'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+
+    final syntheticActivities = validWorkouts.expand((w) {
+      if (kDebugMode) {
+        debugPrint('🔄 [Analytics] Processing workout: "${w.name}"');
+      }
+
+      final filteredExercises = w.exercises
+        .where((e) {
+          // Extra safety check: ensure sets array is not empty
+          if (e.sets.isEmpty) {
+            if (kDebugMode) {
+              debugPrint('  ⚠️ [Analytics] Exercise "${e.name}" has EMPTY sets array - skipping');
+            }
+            return false;
+          }
+
+          final hasCompletedSets = e.sets.any((s) => s.isCompleted);
+          if (kDebugMode) {
+            debugPrint('  🔎 [Analytics] Exercise "${e.name}": hasCompletedSets=$hasCompletedSets (${e.sets.length} sets)');
+          }
+          return hasCompletedSets;
+        })
+        .toList();
+
+      if (kDebugMode) {
+        debugPrint('  ✅ [Analytics] Filtered exercises for "${w.name}": ${filteredExercises.length}/${w.exercises.length}');
+      }
+
+      return filteredExercises.map((e) {
+        if (kDebugMode) {
+          debugPrint('  🏗️ [Analytics] Creating ExerciseActivity for "${e.name}"');
+        }
+        final activity = ExerciseActivity.fromExercise(
+          exercise: e,
+          userEmail: '',
+          workoutName: w.name ?? 'Unnamed Workout',
+          workoutDate: w.endTime,
+        );
+        if (kDebugMode) {
+          debugPrint('     - Activity sets: ${activity.sets.length}');
+        }
+        return activity;
+      });
+    }).toList();
+
+    if (kDebugMode) {
+      debugPrint('🎯 [Analytics] Total synthetic activities created: ${syntheticActivities.length}');
+    }
+    if (kDebugMode) {
+      debugPrint('');
+    }
+
+    // Safety check before showing modal
+    if (syntheticActivities.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!');
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Unable to load exercise activities'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => _AllActivitiesModal(
-        activities: filteredActivities,
+        activities: syntheticActivities,
         exerciseRepository: ref.read(exerciseRepositoryProvider),
       ),
     );
   }
   
-  String _getPeriodTitle() {
-    switch (_selectedPeriod) {
+  String _getPeriodTitle(BuildContext context, TimePeriod period) {
+    final l10n = AppLocalizations.of(context);
+    switch (period) {
       case TimePeriod.week:
-        return 'This Week Progress';
+        return l10n.thisWeekProgress;
       case TimePeriod.month:
-        return 'This Month Progress';
+        return l10n.thisMonthProgress;
       case TimePeriod.year:
-        return 'This Year Progress';
+        return l10n.thisYearProgress;
       case TimePeriod.all:
-        return 'All Time Progress';
+        return l10n.allTimeProgress;
     }
   }
-  
-  String _getPeriodSubtitle() {
-    switch (_selectedPeriod) {
+
+  String _getPeriodSubtitle(BuildContext context, TimePeriod period) {
+    final l10n = AppLocalizations.of(context);
+    switch (period) {
       case TimePeriod.week:
-        return 'Last 7 days';
+        return l10n.last7Days;
       case TimePeriod.month:
-        return 'Last 30 days';
+        return l10n.last30Days;
       case TimePeriod.year:
-        return 'Last 365 days';
+        return l10n.last365Days;
       case TimePeriod.all:
-        return 'All time';
+        return l10n.allTime;
     }
   }
-  
-  Map<String, dynamic> _calculateStats(List<ExerciseActivity> activities, TimePeriod period) {
+
+  // REMOVED: _calculateStats - now using memoized provider
+  Map<String, dynamic> _calculateStatsOLD_UNUSED(List<Workout> workouts, TimePeriod period) {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
     final monthStart = DateTime(now.year, now.month, 1);
     
     // Period stats
-    final periodWorkouts = _countUniqueWorkoutDays(activities);
-    final periodVolume = _calculateTotalVolume(activities);
+    final periodWorkouts = workouts.length;
+    final periodVolume = _calculateTotalVolume(workouts);
     
-    // Total stats (using all activities if not already 'all')
-    final allActivities = period == TimePeriod.all ? activities : widget.activities;
-    final totalWorkouts = _countUniqueWorkoutDays(activities);
-    final totalVolume = _calculateTotalVolume(activities);
+    // Total stats (using all workouts if not already 'all')
+    final allWorkouts = period == TimePeriod.all ? workouts : widget.workouts;
+    final totalWorkouts = allWorkouts.length;
+    final totalVolume = _calculateTotalVolume(allWorkouts);
     
     // Trends (comparing to previous period)
-    List<ExerciseActivity> prevPeriodActivities;
+    List<Workout> prevPeriodWorkouts;
     switch (period) {
       case TimePeriod.week:
         final prevWeekStart = weekStart.subtract(const Duration(days: 7));
-        prevPeriodActivities = widget.activities.where((a) => 
-          a.createdAt.isAfter(prevWeekStart) && a.createdAt.isBefore(weekStart)).toList();
+        prevPeriodWorkouts = widget.workouts.where((w) => 
+          (w.endTime ?? w.createdAt).isAfter(prevWeekStart) && (w.endTime ?? w.createdAt).isBefore(weekStart)).toList();
+        break;
       case TimePeriod.month:
         final prevMonthStart = monthStart.subtract(const Duration(days: 30));
-        prevPeriodActivities = widget.activities.where((a) => 
-          a.createdAt.isAfter(prevMonthStart) && a.createdAt.isBefore(monthStart)).toList();
+        prevPeriodWorkouts = widget.workouts.where((w) => 
+          (w.endTime ?? w.createdAt).isAfter(prevMonthStart) && (w.endTime ?? w.createdAt).isBefore(monthStart)).toList();
+        break;
       case TimePeriod.year:
         final prevYearStart = DateTime(now.year - 1);
-        prevPeriodActivities = widget.activities.where((a) => 
-          a.createdAt.isAfter(prevYearStart) && a.createdAt.isBefore(DateTime(now.year))).toList();
+        prevPeriodWorkouts = widget.workouts.where((w) => 
+          (w.endTime ?? w.createdAt).isAfter(prevYearStart) && (w.endTime ?? w.createdAt).isBefore(DateTime(now.year))).toList();
+        break;
       case TimePeriod.all:
-        prevPeriodActivities = [];
+        prevPeriodWorkouts = [];
+        break;
     }
     
-    final prevPeriodVolume = _calculateTotalVolume(prevPeriodActivities);
+    final prevPeriodVolume = _calculateTotalVolume(prevPeriodWorkouts);
     final volumeTrend = prevPeriodVolume > 0 
         ? ((periodVolume - prevPeriodVolume) / prevPeriodVolume * 100)
-        : 0.0;
+        : periodVolume > 0 ? 100.0 : 0.0;
     
-    final prevPeriodWorkouts = _countUniqueWorkoutDays(prevPeriodActivities);
-    final workoutTrend = prevPeriodWorkouts > 0
-        ? ((periodWorkouts - prevPeriodWorkouts) / prevPeriodWorkouts * 100)
-        : 0.0;
+    final prevPeriodWorkoutCount = prevPeriodWorkouts.length;
+    final workoutTrend = prevPeriodWorkoutCount > 0
+        ? ((periodWorkouts - prevPeriodWorkoutCount) / prevPeriodWorkoutCount * 100)
+        : periodWorkouts > 0 ? 100.0 : 0.0;
     
     // Streak
-    final streak = _calculateStreak(activities);
+    final streak = _calculateStreak(allWorkouts);
     
     // Consistency (last 30 days)
     final thirtyDaysAgo = now.subtract(const Duration(days: 30));
-    final last30DaysActivities = activities.where((a) => 
-      a.createdAt.isAfter(thirtyDaysAgo)).toList();
-    final daysWithWorkout = _countUniqueWorkoutDays(last30DaysActivities);
+    final last30DaysWorkouts = allWorkouts.where((w) => 
+      (w.endTime ?? w.createdAt).isAfter(thirtyDaysAgo)).toList();
+    final daysWithWorkout = _countUniqueWorkoutDays(last30DaysWorkouts);
     final consistency = (daysWithWorkout / 30 * 100).round();
     
     return {
@@ -473,73 +667,50 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     };
   }
   
-  int _countUniqueWorkoutDays(List<ExerciseActivity> activities) {
+  int _countUniqueWorkoutDays(List<Workout> workouts) {
     final uniqueDays = <String>{};
-    for (final activity in activities) {
-      uniqueDays.add(DateFormat('yyyy-MM-dd').format(activity.createdAt));
+    for (final workout in workouts) {
+      uniqueDays.add(DateFormat('yyyy-MM-dd').format(workout.endTime ?? workout.createdAt));
     }
     return uniqueDays.length;
   }
   
-  double _calculateTotalVolume(List<ExerciseActivity> activities) {
+  double _calculateTotalVolume(List<Workout> workouts) {
     double total = 0;
-    for (final activity in activities) {
-      total += _calculateExerciseVolume(activity);
+    for (final workout in workouts) {
+      total += workout.exercises.fold(0.0, (sum, exercise) => sum + exercise.totalVolume);
     }
     return total;
   }
   
-  double _calculateExerciseVolume(ExerciseActivity activity) {
-    double volume = 0;
-    for (final set in activity.sets) {
-      final weight = double.tryParse(set.weight) ?? 0;
-      final reps = int.tryParse(set.reps) ?? 0;
-      volume += weight * reps;
-    }
-    return volume;
-  }
-  
-  int _calculateStreak(List<ExerciseActivity> activities) {
-    if (activities.isEmpty) return 0;
+  int _calculateStreak(List<Workout> workouts) {
+    if (workouts.isEmpty) return 0;
     
-    final sortedActivities = activities.toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final sortedWorkouts = workouts.toList()
+      ..sort((a, b) => (b.endTime ?? b.createdAt).compareTo(a.endTime ?? a.createdAt));
+    
+    final uniqueDates = sortedWorkouts
+        .map((w) => w.endTime ?? w.createdAt)
+        .map((date) => DateTime(date.year, date.month, date.day))
+        .toSet()
+        .toList();
+    
+    if (uniqueDates.isEmpty) return 0;
     
     int streak = 0;
-    DateTime? lastDate;
     final today = DateTime.now();
-    
-    for (final activity in sortedActivities) {
-      final activityDate = DateTime(
-        activity.createdAt.year,
-        activity.createdAt.month,
-        activity.createdAt.day,
-      );
-      
-      if (lastDate == null) {
-        // First activity
-        final todayDate = DateTime(today.year, today.month, today.day);
-        final diff = todayDate.difference(activityDate).inDays;
-        
-        if (diff <= 1) {
-          streak = 1;
-          lastDate = activityDate;
-        } else {
-          break;
+    final todayDate = DateTime(today.year, today.month, today.day);
+    final yesterday = todayDate.subtract(const Duration(days: 1));
+
+    if (uniqueDates.first == todayDate || uniqueDates.first == yesterday) {
+        streak = 1;
+        for (int i = 1; i < uniqueDates.length; i++) {
+            if (uniqueDates[i-1].difference(uniqueDates[i]).inDays == 1) {
+                streak++;
+            } else {
+                break;
+            }
         }
-      } else {
-        final diff = lastDate.difference(activityDate).inDays;
-        
-        if (diff == 1) {
-          streak++;
-          lastDate = activityDate;
-        } else if (diff == 0) {
-          // Same day, continue
-          continue;
-        } else {
-          break;
-        }
-      }
     }
     
     return streak;
@@ -554,30 +725,31 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     return volume.toStringAsFixed(0);
   }
   
-  String _getTimeAgo(DateTime date) {
+  String _getTimeAgo(BuildContext context, DateTime date) {
+    final l10n = AppLocalizations.of(context);
     final now = DateTime.now();
     final diff = now.difference(date);
-    
+
     if (diff.inDays > 0) {
-      return '${diff.inDays}d ago';
+      return l10n.daysAgo(diff.inDays);
     } else if (diff.inHours > 0) {
-      return '${diff.inHours}h ago';
+      return l10n.hoursAgo(diff.inHours);
     } else if (diff.inMinutes > 0) {
-      return '${diff.inMinutes}m ago';
+      return l10n.minutesAgo(diff.inMinutes);
     }
-    return 'Just now';
+    return l10n.justNow;
   }
 }
 
 // Enhanced modal with muscle group filters
 class _AllActivitiesModal extends StatefulWidget {
-  final List<ExerciseActivity> activities;
-  final JsonExerciseRepository exerciseRepository;
-  
+
   const _AllActivitiesModal({
     required this.activities,
     required this.exerciseRepository,
   });
+  final List<ExerciseActivity> activities;
+  final ExerciseRepository exerciseRepository;
   
   @override
   State<_AllActivitiesModal> createState() => _AllActivitiesModalState();
@@ -601,10 +773,10 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       for (final activity in widget.activities) {
         final exercise = await widget.exerciseRepository.getExerciseById(activity.exerciseId);
         if (exercise != null) {
-          exerciseMuscleGroups[activity.id] = exercise.focus;
-          
+          exerciseMuscleGroups[activity.id] = exercise.muscleGroups;
+
           // Calculate stats for each muscle group
-          for (final muscleGroup in exercise.focus) {
+          for (final muscleGroup in exercise.muscleGroups) {
             final stats = muscleGroupStats[muscleGroup] ?? MuscleGroupStats();
             stats.workoutCount++;
             stats.totalSets += activity.sets.length;
@@ -619,7 +791,9 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error loading exercise data: $e');
+      if (kDebugMode) {
+        debugPrint('Error loading exercise data: $e');
+      }
       setState(() {
         isLoading = false;
       });
@@ -640,7 +814,8 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+    final l10n = AppLocalizations.of(context);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.9,
       minChildSize: 0.5,
@@ -671,7 +846,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'All Activities (${filteredActivities.length})',
+                      l10n.allActivitiesCount(filteredActivities.length),
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -693,7 +868,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       _buildFilterChip(
-                        'All',
+                        l10n.all,
                         selectedMuscleGroups.isEmpty,
                         () {
                           setState(() {
@@ -732,7 +907,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                   child: ExpansionTile(
                     title: Text(
-                      'Muscle Group Statistics',
+                      l10n.muscleGroupStatistics,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -766,8 +941,8 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                 const SizedBox(height: 16),
                                 Text(
                                   selectedMuscleGroups.isEmpty
-                                      ? 'No activities in this period'
-                                      : 'No activities for selected muscle groups',
+                                      ? l10n.noActivitiesInPeriod
+                                      : l10n.noActivitiesForSelectedMuscleGroups,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
@@ -811,6 +986,8 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
   }
   
   Widget _buildMuscleGroupStatCard(String group, MuscleGroupStats stats, ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
@@ -835,7 +1012,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${stats.workoutCount} workouts',
+                    l10n.workoutsCount(stats.workoutCount),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onPrimaryContainer,
                     ),
@@ -848,15 +1025,15 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
               spacing: 12,
               runSpacing: 8,
               children: [
-                _buildStatChip(Icons.fitness_center, '${stats.exercises.length} exercises', theme),
-                _buildStatChip(Icons.format_list_numbered, '${stats.totalSets} sets', theme),
+                _buildStatChip(Icons.fitness_center, l10n.exercisesCount(stats.exercises.length), theme),
+                _buildStatChip(Icons.format_list_numbered, l10n.setsCount(stats.totalSets), theme),
                 _buildStatChip(Icons.monitor_weight, '${stats.totalVolume.toStringAsFixed(0)} kg', theme),
               ],
             ),
             if (stats.exercises.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'Exercises: ${stats.exercises.take(3).join(', ')}${stats.exercises.length > 3 ? '...' : ''}',
+                '${l10n.exercises}: ${stats.exercises.take(3).join(', ')}${stats.exercises.length > 3 ? '...' : ''}',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -872,60 +1049,36 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     final theme = Theme.of(context);
     final volume = _calculateExerciseVolume(activity);
     final dateStr = DateFormat('MMM d, yyyy • h:mm a').format(activity.createdAt);
-    
+
     return Card(
-      child: InkWell(
-        onTap: () {
-          // Could navigate to detailed view if needed
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+      clipBehavior: Clip.antiAlias,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+          leading: Icon(
+            Icons.fitness_center,
+            color: theme.colorScheme.primary,
+          ),
+          title: Text(
+            activity.exerciseName,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          activity.exerciseName,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          dateStr,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      '${volume.toStringAsFixed(0)} kg',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: theme.colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 4),
+              Text(
+                dateStr,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-              const SizedBox(height: 12),
-              // Muscle groups tags
-              if (muscleGroups.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              if (muscleGroups.isNotEmpty)
                 Wrap(
                   spacing: 6,
                   runSpacing: 6,
@@ -943,32 +1096,206 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     ),
                   )).toList(),
                 ),
-                const SizedBox(height: 8),
-              ],
-              // Sets summary
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _buildStatChip(Icons.format_list_numbered, '${activity.sets.length} sets', theme),
-                  if (activity.sets.isNotEmpty) ...[
-                    _buildStatChip(
-                      Icons.fitness_center, 
-                      '${_getMaxWeight(activity)} kg max', 
-                      theme
-                    ),
-                    _buildStatChip(
-                      Icons.repeat, 
-                      '${_getTotalReps(activity)} total reps', 
-                      theme
-                    ),
-                  ],
-                ],
-              ),
             ],
           ),
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '${volume.toStringAsFixed(0)} kg',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(color: theme.colorScheme.outlineVariant),
+                const SizedBox(height: 8),
+                Text(
+                  AppLocalizations.of(context).setsDetails,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ...activity.sets.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final set = entry.value;
+                  final weight = double.tryParse(set.weight) ?? 0;
+                  final reps = int.tryParse(set.reps) ?? 0;
+                  final setVolume = weight * reps;
+                  final rpe = set.effort;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainer,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: theme.colorScheme.outlineVariant,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primaryContainer,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  color: theme.colorScheme.onPrimaryContainer,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.fitness_center,
+                                      size: 16,
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} kg',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Icon(
+                                      Icons.repeat,
+                                      size: 16,
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      AppLocalizations.of(context).repsCount(reps),
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context).volumeWithValue(setVolume.toStringAsFixed(0)),
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                    ...[
+                                    const SizedBox(width: 12),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.secondaryContainer,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.speed,
+                                            size: 12,
+                                            color: theme.colorScheme.onSecondaryContainer,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            AppLocalizations.of(context).rpeWithValue(rpe.toString()),
+                                            style: theme.textTheme.labelSmall?.copyWith(
+                                              color: theme.colorScheme.onSecondaryContainer,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildSummaryItem(
+                        Icons.format_list_numbered,
+                        AppLocalizations.of(context).setsCount(activity.sets.length),
+                        theme,
+                      ),
+                      _buildSummaryItem(
+                        Icons.fitness_center,
+                        AppLocalizations.of(context).kgMax(_getMaxWeight(activity).toStringAsFixed(0)),
+                        theme,
+                      ),
+                      _buildSummaryItem(
+                        Icons.repeat,
+                        AppLocalizations.of(context).repsCount(_getTotalReps(activity)),
+                        theme,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSummaryItem(IconData icon, String label, ThemeData theme) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 20, color: theme.colorScheme.primary),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
   
@@ -995,16 +1322,17 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     );
   }
   
+
   double _calculateExerciseVolume(ExerciseActivity activity) {
-    double volume = 0;
+    double total = 0;
     for (final set in activity.sets) {
       final weight = double.tryParse(set.weight) ?? 0;
       final reps = int.tryParse(set.reps) ?? 0;
-      volume += weight * reps;
+      total += weight * reps;
     }
-    return volume;
+    return total;
   }
-  
+
   double _getMaxWeight(ExerciseActivity activity) {
     double maxWeight = 0;
     for (final set in activity.sets) {

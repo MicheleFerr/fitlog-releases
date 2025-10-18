@@ -7,18 +7,17 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'dart:math' as math;
 
 /// Tier-1 Exercise Replacement Dialog with intelligent suggestions
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
-  final Exercise currentExercise;
-  final Function(ExerciseDatabase) onReplace;
 
   const ExerciseReplacementDialog({
     super.key,
     required this.currentExercise,
     required this.onReplace,
   });
+  final Exercise currentExercise;
+  final Function(ExerciseDatabase) onReplace;
 
   @override
   ConsumerState<ExerciseReplacementDialog> createState() => _ExerciseReplacementDialogState();
@@ -37,7 +36,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   bool _showOnlyFavorites = false;
   
   // Filter mode: 'smart' or 'all'
-  String _filterMode = 'smart';
+  final String _filterMode = 'smart';
 
   @override
   void initState() {
@@ -79,7 +78,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   }
 
   List<ExerciseDatabase> _filterExercises(List<ExerciseDatabase> exercises) {
-    var filtered = exercises.where((exercise) {
+    final filtered = exercises.where((exercise) {
       // Search query filter
       if (_searchQuery.isNotEmpty) {
         final query = _searchQuery.toLowerCase();
@@ -116,7 +115,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final exercisesAsync = ref.watch(exerciseDatabaseProvider);
 
     return Dialog.fullscreen(

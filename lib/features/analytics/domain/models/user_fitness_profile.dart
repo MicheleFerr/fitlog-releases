@@ -2,7 +2,58 @@ import 'package:flutter/foundation.dart';
 
 /// User Fitness Profile for personalized efficiency calculations
 @immutable
-class UserFitnessProfile {
+class UserFitnessProfile { // multiplier for high intensity capacity
+  
+  const UserFitnessProfile({
+    required this.age,
+    required this.gender,
+    required this.bodyWeight,
+    required this.height,
+    required this.experienceLevel,
+    required this.trainingYears,
+    required this.primaryGoal,
+    required this.dailyActivityLevel,
+    required this.averageSleepHours,
+    required this.stressLevel,
+    required this.nutritionQuality,
+    required this.recoveryCapacity,
+    this.hasInjuries = false,
+    this.injuredAreas = const [],
+    this.personalRecords = const {},
+    this.averageWorkoutDuration = 60,
+    this.weeklyWorkoutFrequency = 3,
+    this.muscleRecoveryRates = const {},
+    this.volumeTolerance = 1.0,
+    this.intensityTolerance = 1.0,
+  });
+  
+  /// Create default profile for new user
+  factory UserFitnessProfile.createDefault({
+    required int age,
+    required Gender gender,
+    required double bodyWeight,
+    required double height,
+  }) {
+    // Estimate experience level based on age
+    final experienceLevel = age < 20 ? ExperienceLevel.beginner
+        : age < 30 ? ExperienceLevel.intermediate
+        : ExperienceLevel.intermediate;
+    
+    return UserFitnessProfile(
+      age: age,
+      gender: gender,
+      bodyWeight: bodyWeight,
+      height: height,
+      experienceLevel: experienceLevel,
+      trainingYears: 0,
+      primaryGoal: TrainingGoal.hypertrophy,
+      dailyActivityLevel: ActivityLevel.moderate,
+      averageSleepHours: 7,
+      stressLevel: StressLevel.medium,
+      nutritionQuality: NutritionQuality.average,
+      recoveryCapacity: RecoveryCapacity.average,
+    );
+  }
   // Basic Demographics
   final int age;
   final Gender gender;
@@ -33,30 +84,7 @@ class UserFitnessProfile {
   // Adaptive Factors (learned over time)
   final Map<String, double> muscleRecoveryRates; // muscle -> days needed
   final double volumeTolerance; // multiplier for volume capacity
-  final double intensityTolerance; // multiplier for high intensity capacity
-  
-  const UserFitnessProfile({
-    required this.age,
-    required this.gender,
-    required this.bodyWeight,
-    required this.height,
-    required this.experienceLevel,
-    required this.trainingYears,
-    required this.primaryGoal,
-    required this.dailyActivityLevel,
-    required this.averageSleepHours,
-    required this.stressLevel,
-    required this.nutritionQuality,
-    required this.recoveryCapacity,
-    this.hasInjuries = false,
-    this.injuredAreas = const [],
-    this.personalRecords = const {},
-    this.averageWorkoutDuration = 60,
-    this.weeklyWorkoutFrequency = 3,
-    this.muscleRecoveryRates = const {},
-    this.volumeTolerance = 1.0,
-    this.intensityTolerance = 1.0,
-  });
+  final double intensityTolerance;
   
   /// Calculate personalized recovery days for muscle group
   int getOptimalRecoveryDays(String muscleGroup) {
@@ -281,34 +309,6 @@ class UserFitnessProfile {
     );
   }
   
-  /// Create default profile for new user
-  factory UserFitnessProfile.createDefault({
-    required int age,
-    required Gender gender,
-    required double bodyWeight,
-    required double height,
-  }) {
-    // Estimate experience level based on age
-    final experienceLevel = age < 20 ? ExperienceLevel.beginner
-        : age < 30 ? ExperienceLevel.intermediate
-        : ExperienceLevel.intermediate;
-    
-    return UserFitnessProfile(
-      age: age,
-      gender: gender,
-      bodyWeight: bodyWeight,
-      height: height,
-      experienceLevel: experienceLevel,
-      trainingYears: 0,
-      primaryGoal: TrainingGoal.hypertrophy,
-      dailyActivityLevel: ActivityLevel.moderate,
-      averageSleepHours: 7,
-      stressLevel: StressLevel.medium,
-      nutritionQuality: NutritionQuality.average,
-      recoveryCapacity: RecoveryCapacity.average,
-    );
-  }
-  
   /// Update profile with learned data
   UserFitnessProfile updateWithLearnedData({
     Map<String, double>? muscleRecoveryRates,
@@ -373,13 +373,13 @@ enum NutritionQuality { poor, average, good, excellent }
 enum RecoveryCapacity { poor, average, good, excellent }
 
 class IntensityDistribution {
-  final double high;
-  final double medium;
-  final double low;
   
   const IntensityDistribution({
     required this.high,
     required this.medium,
     required this.low,
   });
+  final double high;
+  final double medium;
+  final double low;
 }

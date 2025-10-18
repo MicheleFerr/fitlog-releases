@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain/usecases
- * 🎯 Feature: workout
- * 🔧 Type: usecase
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Domain entities
- * - Repository interface
- * - Shared failures
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain/usecases
+/// 🎯 Feature: workout
+/// 🔧 Type: usecase
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Domain entities
+/// - Repository interface
+/// - Shared failures
+library;
 
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
@@ -22,9 +21,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 
 /// Use case for completing workouts with comprehensive business logic
 class CompleteWorkoutUseCase {
-  final WorkoutRepository _repository;
   
   const CompleteWorkoutUseCase(this._repository);
+  final WorkoutRepository _repository;
   
   /// Complete workout with validation and post-completion processing
   Future<Either<Failure, CompleteWorkoutResult>> call(CompleteWorkoutParams params) async {
@@ -126,7 +125,7 @@ class CompleteWorkoutUseCase {
     final now = DateTime.now();
     
     // Mark workout as completed
-    var result = workout.copyWith(
+    final result = workout.copyWith(
       status: WorkoutStatus.completed,
       endTime: now,
       updatedAt: now,
@@ -280,24 +279,19 @@ class CompleteWorkoutUseCase {
 
 /// Parameters for CompleteWorkoutUseCase
 class CompleteWorkoutParams {
-  final Workout workout;
-  final String userEmail;
-  final bool saveAsActivities;
   
   const CompleteWorkoutParams({
     required this.workout,
     required this.userEmail,
     this.saveAsActivities = true,
   });
+  final Workout workout;
+  final String userEmail;
+  final bool saveAsActivities;
 }
 
 /// Result of completing a workout
 class CompleteWorkoutResult {
-  final String workoutId;
-  final Workout completedWorkout;
-  final List<String> activityIds;
-  final WorkoutCompletionStats stats;
-  final List<Achievement> achievements;
   
   const CompleteWorkoutResult({
     required this.workoutId,
@@ -306,17 +300,15 @@ class CompleteWorkoutResult {
     required this.stats,
     required this.achievements,
   });
+  final String workoutId;
+  final Workout completedWorkout;
+  final List<String> activityIds;
+  final WorkoutCompletionStats stats;
+  final List<Achievement> achievements;
 }
 
 /// Workout completion statistics
 class WorkoutCompletionStats {
-  final Duration duration;
-  final double totalVolume;
-  final int completedSets;
-  final double completionRate;
-  final Duration averageRestTime;
-  final Map<ExerciseCategory, int> exercisesByCategory;
-  final double? averageRpe;
   
   const WorkoutCompletionStats({
     required this.duration,
@@ -327,14 +319,17 @@ class WorkoutCompletionStats {
     required this.exercisesByCategory,
     this.averageRpe,
   });
+  final Duration duration;
+  final double totalVolume;
+  final int completedSets;
+  final double completionRate;
+  final Duration averageRestTime;
+  final Map<ExerciseCategory, int> exercisesByCategory;
+  final double? averageRpe;
 }
 
 /// Achievement unlocked during workout
 class Achievement {
-  final String id;
-  final String name;
-  final String description;
-  final String iconPath;
   
   const Achievement({
     required this.id,
@@ -342,4 +337,8 @@ class Achievement {
     required this.description,
     required this.iconPath,
   });
+  final String id;
+  final String name;
+  final String description;
+  final String iconPath;
 }

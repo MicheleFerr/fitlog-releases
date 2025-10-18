@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: analytics
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Material: Card, LinearProgressIndicator
- * - analytics/presentation/providers: workoutAnalyticsProvider
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: analytics
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Material: Card, LinearProgressIndicator
+/// - analytics/presentation/providers: workoutAnalyticsProvider
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,16 +21,16 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_me
 
 /// Widget showing comparison with previous similar workout
 class WorkoutComparisonWidget extends ConsumerWidget {
-  final bool isCompact;
 
   const WorkoutComparisonWidget({
     super.key,
     this.isCompact = false,
   });
+  final bool isCompact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -264,7 +263,7 @@ class WorkoutComparisonWidget extends ConsumerWidget {
     } else if (comparison.isRegression) {
       return colorScheme.error.withOpacity(0.05);
     } else {
-      return colorScheme.surfaceVariant.withOpacity(0.3);
+      return colorScheme.surfaceContainerHighest.withOpacity(0.3);
     }
   }
 
@@ -330,16 +329,16 @@ class WorkoutComparisonWidget extends ConsumerWidget {
 
 /// Detailed workout comparison view
 class DetailedWorkoutComparison extends ConsumerWidget {
-  final String workoutId;
 
   const DetailedWorkoutComparison({
     super.key,
     required this.workoutId,
   });
+  final String workoutId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -493,7 +492,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
                   const SizedBox(height: 12),
                   LinearProgressIndicator(
                     value: (comparison.improvementScore + 100) / 200,
-                    backgroundColor: colorScheme.surfaceVariant,
+                    backgroundColor: colorScheme.surfaceContainerHighest,
                     valueColor: AlwaysStoppedAnimation(
                       _getComparisonColor(comparison, colorScheme),
                     ),
@@ -629,7 +628,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
     } else if (comparison.isRegression) {
       return colorScheme.error.withOpacity(0.05);
     } else {
-      return colorScheme.surfaceVariant.withOpacity(0.3);
+      return colorScheme.surfaceContainerHighest.withOpacity(0.3);
     }
   }
 

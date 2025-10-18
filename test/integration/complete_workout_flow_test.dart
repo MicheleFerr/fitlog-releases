@@ -10,7 +10,8 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exe
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
+// MIGRATION: Using bridge provider for backward compatibility
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/skip_analytics_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -139,8 +140,8 @@ void main() {
       );
 
       workoutNotifier.addExercise(benchPress);
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      expect(workout!.exercises.length, 1);
+      workout = container.read(currentWorkoutProvider);
+      expect(workout.exercises.length, 1);
       expect(workout.exercises.first.name, 'Bench Press');
       expect(workout.exercises.first.sets.length, 3);
 
@@ -168,21 +169,21 @@ void main() {
       );
 
       workoutNotifier.addExercise(squats);
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      expect(workout!.exercises.length, 2);
+      workout = container.read(currentWorkoutProvider);
+      expect(workout.exercises.length, 2);
 
       // 4. Complete some sets
       // Get the current sets and update them to completed
       var currentWorkout = container.read(currentWorkoutProvider);
       var currentBenchPress = currentWorkout!.exercises.first;
-      var set1 = currentBenchPress.sets[0].copyWith(isCompleted: true);
-      var set2 = currentBenchPress.sets[1].copyWith(isCompleted: true, reps: 9);
+      final set1 = currentBenchPress.sets[0].copyWith(isCompleted: true);
+      final set2 = currentBenchPress.sets[1].copyWith(isCompleted: true, reps: 9);
 
       workoutNotifier.updateSet('bench-1', set1);
       workoutNotifier.updateSet('bench-1', set2);
 
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      final completedSets = workout!.exercises.first.sets
+      workout = container.read(currentWorkoutProvider);
+      final completedSets = workout.exercises.first.sets
           .where((s) => s.isCompleted)
           .length;
       expect(completedSets, 2);
@@ -201,13 +202,13 @@ void main() {
 
       // 6. Pause workout
       workoutNotifier.pauseWorkout();
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      expect(workout!.isActive, false);
+      workout = container.read(currentWorkoutProvider);
+      expect(workout.isActive, false);
 
       // 7. Resume workout
       workoutNotifier.resumeWorkout();
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      expect(workout!.isActive, true);
+      workout = container.read(currentWorkoutProvider);
+      expect(workout.isActive, true);
 
       // 8. Add notes to exercise (skip if method doesn't exist)
       // workoutNotifier.updateExerciseNotes('bench-1', 'Felt strong today!');
@@ -216,25 +217,25 @@ void main() {
 
       // 9. Reorder exercises (move first exercise to position after second)
       workoutNotifier.reorderExercises(0, 2);
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      expect(workout!.exercises.first.name, 'Squats');
+      workout = container.read(currentWorkoutProvider);
+      expect(workout.exercises.first.name, 'Squats');
       expect(workout.exercises[1].name, 'Bench Press');
 
       // 10. Complete remaining sets
-      currentWorkout = container.read(currentWorkoutProvider) as Workout?;
-      currentBenchPress = currentWorkout!.exercises.firstWhere((e) => e.name == 'Bench Press');
-      var currentSquats = currentWorkout.exercises.firstWhere((e) => e.name == 'Squats');
+      currentWorkout = container.read(currentWorkoutProvider);
+      currentBenchPress = currentWorkout.exercises.firstWhere((e) => e.name == 'Bench Press');
+      final currentSquats = currentWorkout.exercises.firstWhere((e) => e.name == 'Squats');
       
-      var set3 = currentBenchPress.sets[2].copyWith(isCompleted: true, reps: 7);
-      var squatSet1 = currentSquats.sets[0].copyWith(isCompleted: true);
-      var squatSet2 = currentSquats.sets[1].copyWith(isCompleted: true);
+      final set3 = currentBenchPress.sets[2].copyWith(isCompleted: true, reps: 7);
+      final squatSet1 = currentSquats.sets[0].copyWith(isCompleted: true);
+      final squatSet2 = currentSquats.sets[1].copyWith(isCompleted: true);
 
       workoutNotifier.updateSet('bench-1', set3);
       workoutNotifier.updateSet('squat-1', squatSet1);
       workoutNotifier.updateSet('squat-1', squatSet2);
 
       // 11. Calculate workout stats
-      workout = container.read(currentWorkoutProvider) as Workout?;
+      workout = container.read(currentWorkoutProvider);
       final totalSets = container.read(workoutTotalSetsProvider);
       final completedSetsCount = container.read(workoutCompletedSetsProvider);
       
@@ -243,9 +244,9 @@ void main() {
 
       // 12. Complete workout
       workoutNotifier.completeWorkout();
-      workout = container.read(currentWorkoutProvider) as Workout?;
+      workout = container.read(currentWorkoutProvider);
       
-      expect(workout!.isCompleted, true);
+      expect(workout.isCompleted, true);
       expect(workout.endTime, isNotNull);
       
       // Calculate duration
@@ -279,7 +280,7 @@ void main() {
 
       // 15. Clear workout
       workoutNotifier.clearWorkout();
-      workout = container.read(currentWorkoutProvider) as Workout?;
+      workout = container.read(currentWorkoutProvider);
       expect(workout, isNull);
     });
 
@@ -395,8 +396,8 @@ void main() {
       // Remove first exercise
       workoutNotifier.removeExercise('remove-1');
       
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      expect(workout!.exercises.length, 1);
+      workout = container.read(currentWorkoutProvider);
+      expect(workout.exercises.length, 1);
       expect(workout.exercises.first.name, 'Exercise 2');
     });
 
@@ -432,8 +433,8 @@ void main() {
       // Remove set
       workoutNotifier.removeSetFromExercise('sets-1', 's1');
       
-      workout = container.read(currentWorkoutProvider) as Workout?;
-      expect(workout!.exercises.first.sets.length, 1);
+      workout = container.read(currentWorkoutProvider);
+      expect(workout.exercises.first.sets.length, 1);
       // The remaining set gets renumbered to 1 after removal
       expect(workout.exercises.first.sets.first.setNumber, 1);
     });

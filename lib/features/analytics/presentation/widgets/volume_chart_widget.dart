@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: analytics
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: ConsumerWidget
- * - Material: CustomPainter, Canvas
- * - analytics/presentation/providers: workoutAnalyticsProvider
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: analytics
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: ConsumerWidget
+/// - Material: CustomPainter, Canvas
+/// - analytics/presentation/providers: workoutAnalyticsProvider
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,16 +22,16 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 /// Real-time volume chart showing muscle group breakdown
 class VolumeChartWidget extends ConsumerWidget {
-  final bool isCompact;
   
   const VolumeChartWidget({
     super.key,
     this.isCompact = false,
   });
+  final bool isCompact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -47,7 +46,7 @@ class VolumeChartWidget extends ConsumerWidget {
     
     return Card(
       elevation: 0,
-      color: colorScheme.surfaceVariant.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -182,7 +181,7 @@ class VolumeChartWidget extends ConsumerWidget {
                 l10n,
               ),
             ))
-            .toList(),
+            ,
       ],
     );
   }
@@ -219,7 +218,7 @@ class VolumeChartWidget extends ConsumerWidget {
         Text(
           '${volume.toStringAsFixed(0)} kg',
           style: theme.textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.medium,
+            fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(width: 8),
@@ -247,7 +246,7 @@ class VolumeChartWidget extends ConsumerWidget {
       case ExerciseCategory.legs:
         return colorScheme.outline;
       case ExerciseCategory.abs:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
       case ExerciseCategory.cardio:
         return colorScheme.inversePrimary;
       case ExerciseCategory.other:
@@ -279,15 +278,15 @@ class VolumeChartWidget extends ConsumerWidget {
 
 /// Custom painter for volume pie chart
 class VolumePieChartPainter extends CustomPainter {
-  final Map<ExerciseCategory, double> volumeByMuscleGroup;
-  final double totalVolume;
-  final ColorScheme colorScheme;
 
   VolumePieChartPainter(
     this.volumeByMuscleGroup,
     this.totalVolume,
     this.colorScheme,
   );
+  final Map<ExerciseCategory, double> volumeByMuscleGroup;
+  final double totalVolume;
+  final ColorScheme colorScheme;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -354,7 +353,7 @@ class VolumePieChartPainter extends CustomPainter {
       case ExerciseCategory.legs:
         return colorScheme.outline;
       case ExerciseCategory.abs:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
       case ExerciseCategory.cardio:
         return colorScheme.inversePrimary;
       case ExerciseCategory.other:
@@ -368,10 +367,6 @@ class VolumePieChartPainter extends CustomPainter {
 
 /// Animated volume progress bar
 class VolumeProgressBar extends ConsumerWidget {
-  final ExerciseCategory category;
-  final double currentVolume;
-  final double targetVolume;
-  final bool showPercentage;
 
   const VolumeProgressBar({
     super.key,
@@ -380,10 +375,14 @@ class VolumeProgressBar extends ConsumerWidget {
     required this.targetVolume,
     this.showPercentage = true,
   });
+  final ExerciseCategory category;
+  final double currentVolume;
+  final double targetVolume;
+  final bool showPercentage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -418,7 +417,7 @@ class VolumeProgressBar extends ConsumerWidget {
           builder: (context, value, child) {
             return LinearProgressIndicator(
               value: value,
-              backgroundColor: colorScheme.surfaceVariant,
+              backgroundColor: colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation(color),
               minHeight: 6,
             );
@@ -448,7 +447,7 @@ class VolumeProgressBar extends ConsumerWidget {
       case ExerciseCategory.legs:
         return colorScheme.outline;
       case ExerciseCategory.abs:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
       case ExerciseCategory.cardio:
         return colorScheme.inversePrimary;
       case ExerciseCategory.other:

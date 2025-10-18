@@ -99,9 +99,9 @@ class FormAnalyzerService {
   FormFeedback getFormFeedback() {
     if (_formScoreHistory.length < 5) {
       return const FormFeedback(
-        message: "Establishing baseline...",
+        message: 'Establishing baseline...',
         severity: FeedbackSeverity.info,
-        recommendation: "Continue with current form",
+        recommendation: 'Continue with current form',
       );
     }
     
@@ -114,32 +114,32 @@ class FormAnalyzerService {
     // Provide contextual feedback
     if (averageRecent < 60) {
       return const FormFeedback(
-        message: "Form quality declining",
+        message: 'Form quality declining',
         severity: FeedbackSeverity.warning,
-        recommendation: "Focus on controlled movement",
+        recommendation: 'Focus on controlled movement',
       );
     }
     
     if (trend < -5) {
       return const FormFeedback(
-        message: "Form deteriorating",
+        message: 'Form deteriorating',
         severity: FeedbackSeverity.caution,
-        recommendation: "Consider reducing weight or resting",
+        recommendation: 'Consider reducing weight or resting',
       );
     }
     
     if (averageRecent > 85) {
       return const FormFeedback(
-        message: "Excellent form!",
+        message: 'Excellent form!',
         severity: FeedbackSeverity.positive,
-        recommendation: "Maintain current technique",
+        recommendation: 'Maintain current technique',
       );
     }
     
     return const FormFeedback(
-      message: "Good form",
+      message: 'Good form',
       severity: FeedbackSeverity.info,
-      recommendation: "Keep up the consistency",
+      recommendation: 'Keep up the consistency',
     );
   }
 
@@ -331,10 +331,6 @@ class FormAnalyzerService {
 
 /// Form analysis weights for different exercises
 class FormWeights {
-  final double consistency;
-  final double smoothness;
-  final double rhythm;
-  final double range;
   
   const FormWeights({
     required this.consistency,
@@ -342,19 +338,23 @@ class FormWeights {
     required this.rhythm,
     required this.range,
   });
+  final double consistency;
+  final double smoothness;
+  final double rhythm;
+  final double range;
 }
 
 /// Form feedback data
 class FormFeedback {
-  final String message;
-  final FeedbackSeverity severity;
-  final String recommendation;
   
   const FormFeedback({
     required this.message,
     required this.severity,
     required this.recommendation,
   });
+  final String message;
+  final FeedbackSeverity severity;
+  final String recommendation;
 }
 
 /// Feedback severity levels
@@ -367,11 +367,6 @@ enum FeedbackSeverity {
 
 /// Form analysis statistics
 class FormStatistics {
-  final double averageScore;
-  final double bestScore;
-  final double worstScore;
-  final double trend;
-  final int sampleCount;
   
   const FormStatistics({
     required this.averageScore,
@@ -380,6 +375,11 @@ class FormStatistics {
     required this.trend,
     required this.sampleCount,
   });
+  final double averageScore;
+  final double bestScore;
+  final double worstScore;
+  final double trend;
+  final int sampleCount;
 }
 
 // Provider for the service

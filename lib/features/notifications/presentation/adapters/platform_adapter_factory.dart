@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'notification_platform_adapter.dart';
-import 'ios_notification_adapter.dart';
-import 'android_notification_adapter.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/notification_platform_adapter.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/ios_notification_adapter.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/android_notification_adapter.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/null_notification_adapter.dart';
+import 'package:flutter/foundation.dart';
 
 /// Factory class for creating platform-specific notification adapters
 /// Automatically detects the platform and returns the appropriate adapter
@@ -10,7 +12,9 @@ class NotificationPlatformAdapterFactory {
   /// Create the appropriate platform adapter based on the current platform
   static NotificationPlatformAdapter create() {
     if (Platform.isIOS) {
-      return IOSNotificationAdapter();
+      // CRITICAL FIX: Use NullNotificationAdapter for iOS to prevent duplicate notifications
+      // iOS uses native DirectNotificationManager instead of flutter_local_notifications
+      return NullNotificationAdapter();
     } else if (Platform.isAndroid) {
       return AndroidNotificationAdapter();
     } else {
@@ -201,13 +205,17 @@ final notificationPlatformAdapterProvider = Provider<NotificationPlatformAdapter
   
   // Initialize the adapter when first created
   adapter.initialize().catchError((error) {
-    print('Failed to initialize notification platform adapter: $error');
+    if (kDebugMode) {
+      debugPrint('Failed to initialize notification platform adapter: $error');
+    }
   });
 
   // Dispose when the provider is disposed
   ref.onDispose(() {
     adapter.dispose().catchError((error) {
-      print('Failed to dispose notification platform adapter: $error');
+      if (kDebugMode) {
+        debugPrint('Failed to dispose notification platform adapter: $error');
+      }
     });
   });
 

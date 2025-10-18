@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class WarmupSet {
-  final int percentage;
-  final double weight;
-  final int reps;
-  final String? notes;
-  bool completed;
 
   WarmupSet({
     required this.percentage,
@@ -16,12 +11,14 @@ class WarmupSet {
     this.notes,
     this.completed = false,
   });
+  final int percentage;
+  final double weight;
+  final int reps;
+  final String? notes;
+  bool completed;
 }
 
 class WarmupProgressionV2 extends StatefulWidget {
-  final String exerciseName;
-  final double workingWeight;
-  final VoidCallback? onComplete;
 
   const WarmupProgressionV2({
     super.key,
@@ -29,6 +26,9 @@ class WarmupProgressionV2 extends StatefulWidget {
     required this.workingWeight,
     this.onComplete,
   });
+  final String exerciseName;
+  final double workingWeight;
+  final VoidCallback? onComplete;
 
   @override
   State<WarmupProgressionV2> createState() => _WarmupProgressionV2State();
@@ -115,7 +115,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -133,7 +133,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                 Navigator.pop(context);
               }
             },
-            child: Text(AppLocalizations.of(context)!.save),
+            child: Text(AppLocalizations.of(context).save),
           ),
         ],
       ),
@@ -149,20 +149,20 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
     if (warmupSets.every((set) => set.completed)) {
       widget.onComplete?.call();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Warmup completed! Ready for working sets 💪'),
           backgroundColor: Colors.green,
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
         ),
       );
     }
   }
 
   String _getWarmupTip(int percentage) {
-    if (percentage <= 40) return "Focus on perfect form";
-    if (percentage <= 60) return "Activate target muscles";
-    if (percentage <= 80) return "Prepare nervous system";
-    return "Almost at working weight";
+    if (percentage <= 40) return 'Focus on perfect form';
+    if (percentage <= 60) return 'Activate target muscles';
+    if (percentage <= 80) return 'Prepare nervous system';
+    return 'Almost at working weight';
   }
 
   @override
@@ -239,7 +239,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: LinearProgressIndicator(
               value: completedCount / warmupSets.length,
-              backgroundColor: theme.colorScheme.surfaceVariant,
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(
                 completedCount == warmupSets.length 
                   ? Colors.green 
@@ -260,7 +260,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                   margin: const EdgeInsets.only(bottom: 8),
                   elevation: set.completed ? 0 : 1,
                   color: set.completed 
-                    ? theme.colorScheme.surfaceVariant.withOpacity(0.5)
+                    ? theme.colorScheme.surfaceContainerHighest.withOpacity(0.5)
                     : null,
                   child: Padding(
                     padding: const EdgeInsets.all(12),
@@ -384,7 +384,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                         
                         // Action button
                         if (set.completed)
-                          Icon(
+                          const Icon(
                             Icons.check_circle,
                             color: Colors.green,
                             size: 32,
@@ -409,7 +409,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
               color: theme.colorScheme.primaryContainer.withOpacity(0.1),
               border: Border(
                 top: BorderSide(
-                  color: theme.colorScheme.surfaceVariant,
+                  color: theme.colorScheme.surfaceContainerHighest,
                 ),
               ),
             ),

@@ -4,18 +4,18 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/lazy_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/strength_progression_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_heatmap.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/analytics_overview_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_stats_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_timeline_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/insights_carousel.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_balance_widget.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/export_dialog.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart' as trend_analyzer;
+import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 /// Analytics screen with lazy loading and optimized performance
 class LazyAnalyticsScreen extends ConsumerStatefulWidget {
@@ -66,7 +66,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final authState = ref.watch(authStateProvider);
     final analyticsState = ref.watch(lazyAnalyticsProvider);
     final isLoadingMore = ref.watch(isLoadingMoreAnalyticsProvider);
@@ -85,7 +85,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             Text(localizations.analytics),
             if (activitiesCount > 0)
               Text(
-                '${activitiesCount} workouts loaded',
+                '$activitiesCount workouts loaded',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
           ],
@@ -193,10 +193,13 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                   const SizedBox(height: 16),
                 ],
                 
-                // Muscle Balance
+                // Muscle Balance (Scientific)
                 _buildSectionTitle(context, localizations.muscleBalance),
                 const SizedBox(height: 8),
-                MuscleBalanceWidget(balance: analyticsState.muscleBalance),
+                ScientificMuscleBalanceWidget(
+                  activities: analyticsState.activities,
+                  showRatios: true,
+                ),
                 const SizedBox(height: 16),
                 
                 // Workout Frequency
@@ -204,13 +207,12 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 const SizedBox(height: 8),
                 WorkoutFrequencyChart(activities: analyticsState.activities),
                 const SizedBox(height: 16),
-                
+
                 // Top Exercises
                 _buildSectionTitle(context, localizations.topExercises),
                 const SizedBox(height: 8),
                 ExerciseStatsCard(
                   activities: analyticsState.activities,
-                  userEmail: ref.read(firebaseUserProvider).valueOrNull?.email ?? '',
                 ),
               ]),
             ),
@@ -475,9 +477,9 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
     );
   }
   
-  Widget _buildTrendCard(BuildContext context, String exercise, TrendAnalysis trend) {
+  Widget _buildTrendCard(BuildContext context, String exercise, trend_analyzer.TrendAnalysis trend) {
     final theme = Theme.of(context);
-    final isImproving = trend.trend == TrendDirection.up;
+    final isImproving = trend.trend == trend_analyzer.TrendDirection.up;
     
     return Card(
       margin: const EdgeInsets.only(bottom: 8),

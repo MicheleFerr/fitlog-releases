@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test
- * 🎯 Feature: buddy_matching
- * 🔧 Type: unit test
- * 🌍 Localization: N/A - Test file
- * 🎨 Theme: N/A - Test file
- * 📱 Platform: Universal
- * 
- * Testing ice breaker system for enhanced chat functionality
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: unit test
+/// 🌍 Localization: N/A - Test file
+/// 🎨 Theme: N/A - Test file
+/// 📱 Platform: Universal
+/// 
+/// Testing ice breaker system for enhanced chat functionality
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/ice_breaker.dart';

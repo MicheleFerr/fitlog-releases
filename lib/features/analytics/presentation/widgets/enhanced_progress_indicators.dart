@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 /// Enhanced Progress Ring Indicator
 class EnhancedProgressRing extends StatelessWidget {
-  final double progress; // 0.0 to 1.0
-  final double size;
-  final double strokeWidth;
-  final Color? progressColor;
-  final Color? backgroundColor;
-  final Widget? child;
 
   const EnhancedProgressRing({
     super.key,
@@ -20,6 +14,12 @@ class EnhancedProgressRing extends StatelessWidget {
     this.backgroundColor,
     this.child,
   });
+  final double progress; // 0.0 to 1.0
+  final double size;
+  final double strokeWidth;
+  final Color? progressColor;
+  final Color? backgroundColor;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +71,6 @@ class EnhancedProgressRing extends StatelessWidget {
 
 /// Enhanced Linear Progress Bar
 class EnhancedLinearProgress extends StatelessWidget {
-  final double progress; // 0.0 to 1.0
-  final double height;
-  final Color? progressColor;
-  final Color? backgroundColor;
-  final String? label;
-  final String? value;
 
   const EnhancedLinearProgress({
     super.key,
@@ -87,6 +81,12 @@ class EnhancedLinearProgress extends StatelessWidget {
     this.label,
     this.value,
   });
+  final double progress; // 0.0 to 1.0
+  final double height;
+  final Color? progressColor;
+  final Color? backgroundColor;
+  final String? label;
+  final String? value;
 
   @override
   Widget build(BuildContext context) {
@@ -155,14 +155,14 @@ class EnhancedLinearProgress extends StatelessWidget {
 
 /// Enhanced Progress Indicator for specific activities
 class EnhancedProgressIndicator extends StatelessWidget {
-  final ExerciseActivity activity;
-  final bool showDetailedMetrics;
 
   const EnhancedProgressIndicator({
     super.key,
     required this.activity,
     this.showDetailedMetrics = false,
   });
+  final ExerciseActivity activity;
+  final bool showDetailedMetrics;
 
   @override
   Widget build(BuildContext context) {
@@ -365,11 +365,11 @@ class EnhancedProgressIndicator extends StatelessWidget {
     // This is a simplified calculation - in a real app, you'd compare against
     // previous performances, goals, or standards
     final completedSets = sets.length;
-    final targetSets = 4; // Example target
+    const targetSets = 4; // Example target
     final setsProgress = (completedSets / targetSets).clamp(0.0, 1.0);
     
     // Volume progress based on a target volume (this would be more sophisticated in reality)
-    final targetVolume = 2000.0; // Example target in kg
+    const targetVolume = 2000.0; // Example target in kg
     final volumeProgress = (totalVolume / targetVolume).clamp(0.0, 1.0);
     
     // Intensity progress (simplified calculation)
@@ -406,12 +406,6 @@ class EnhancedProgressIndicator extends StatelessWidget {
 
 /// Goal Progress Widget
 class GoalProgressWidget extends StatelessWidget {
-  final String title;
-  final double currentValue;
-  final double targetValue;
-  final String unit;
-  final IconData icon;
-  final Color? color;
 
   const GoalProgressWidget({
     super.key,
@@ -422,6 +416,12 @@ class GoalProgressWidget extends StatelessWidget {
     required this.icon,
     this.color,
   });
+  final String title;
+  final double currentValue;
+  final double targetValue;
+  final String unit;
+  final IconData icon;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -518,16 +518,16 @@ class GoalProgressWidget extends StatelessWidget {
 
 /// Weekly Progress Summary
 class WeeklyProgressSummary extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const WeeklyProgressSummary({
     super.key,
     required this.activities,
   });
+  final List<ExerciseActivity> activities;
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final weeklyData = _calculateWeeklyData();
 
@@ -615,12 +615,6 @@ class WeeklyProgressSummary extends StatelessWidget {
 
 // Data classes
 class ProgressData {
-  final double currentVolume;
-  final double volumeProgress;
-  final int completedSets;
-  final int targetSets;
-  final double setsProgress;
-  final double intensityProgress;
 
   ProgressData({
     required this.currentVolume,
@@ -630,14 +624,20 @@ class ProgressData {
     required this.setsProgress,
     required this.intensityProgress,
   });
+  final double currentVolume;
+  final double volumeProgress;
+  final int completedSets;
+  final int targetSets;
+  final double setsProgress;
+  final double intensityProgress;
 }
 
 class WeeklyData {
-  final int workoutsCompleted;
-  final double totalVolume;
 
   WeeklyData({
     required this.workoutsCompleted,
     required this.totalVolume,
   });
+  final int workoutsCompleted;
+  final double totalVolume;
 }

@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../domain/entities/workout_template.dart';
-import '../../data/repositories/firebase_workout_template_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/firebase_workout_template_repository.dart';
+import 'package:flutter/foundation.dart';
 
 /// Provider specifico per Firebase template con sincronizzazione automatica
 final firebaseTemplateRepositoryProvider = Provider<FirebaseWorkoutTemplateRepository>((ref) {
@@ -46,12 +47,6 @@ final firebaseTemplateNotifierProvider = StateNotifierProvider<FirebaseTemplateN
 });
 
 class FirebaseTemplateState {
-  final List<WorkoutTemplate> templates;
-  final bool isLoading;
-  final bool isSyncing;
-  final String? error;
-  final DateTime? lastSyncTime;
-  final bool hasOfflineChanges;
 
   const FirebaseTemplateState({
     this.templates = const [],
@@ -61,6 +56,12 @@ class FirebaseTemplateState {
     this.lastSyncTime,
     this.hasOfflineChanges = false,
   });
+  final List<WorkoutTemplate> templates;
+  final bool isLoading;
+  final bool isSyncing;
+  final String? error;
+  final DateTime? lastSyncTime;
+  final bool hasOfflineChanges;
 
   FirebaseTemplateState copyWith({
     List<WorkoutTemplate>? templates,
@@ -226,7 +227,9 @@ class FirebaseTemplateNotifier extends StateNotifier<FirebaseTemplateState> {
       state = state.copyWith(templates: updatedTemplates);
     } catch (e) {
       // Silently fail per incrementUsage
-      print('Errore incremento utilizzo: $e');
+      if (kDebugMode) {
+        debugPrint('Errore incremento utilizzo: $e');
+      }
     }
   }
 

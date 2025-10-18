@@ -1,27 +1,22 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: shared
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Draggable action button con salvataggio posizione
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: shared
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Draggable action button con salvataggio posizione
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'premium_action_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 
 /// Opzione aggiuntiva per il menu del long press
 class DraggableActionOption {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final Color? color;
   
   const DraggableActionOption({
     required this.icon,
@@ -29,17 +24,13 @@ class DraggableActionOption {
     required this.onTap,
     this.color,
   });
-}
-
-class DraggableActionButton extends StatefulWidget {
-  final VoidCallback onPressed;
   final IconData icon;
   final String label;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final String positionKey; // Chiave unica per salvare la posizione
-  final VoidCallback? onShowHistory; // Callback per mostrare lo storico
-  final List<DraggableActionOption>? additionalOptions; // Opzioni aggiuntive nel menu
+  final VoidCallback onTap;
+  final Color? color;
+}
+
+class DraggableActionButton extends StatefulWidget { // Opzioni aggiuntive nel menu
   
   const DraggableActionButton({
     super.key,
@@ -52,6 +43,14 @@ class DraggableActionButton extends StatefulWidget {
     this.onShowHistory,
     this.additionalOptions,
   });
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String label;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final String positionKey; // Chiave unica per salvare la posizione
+  final VoidCallback? onShowHistory; // Callback per mostrare lo storico
+  final List<DraggableActionOption>? additionalOptions;
   
   @override
   State<DraggableActionButton> createState() => _DraggableActionButtonState();
@@ -122,7 +121,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
   
   void _onHorizontalDragEnd(DragEndDetails details) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final buttonWidth = 180.0; // Larghezza stimata del button
+    const buttonWidth = 180.0; // Larghezza stimata del button
     final centerX = (screenWidth - buttonWidth) / 2;
     
     // Calcola se siamo più vicini a sinistra o destra
@@ -308,7 +307,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
     final colorScheme = theme.colorScheme;
     
     // Calcola la posizione base (sinistra o destra)
-    double baseX = _isOnLeft 
+    final double baseX = _isOnLeft 
         ? _edgePadding 
         : screenWidth - 180 - _edgePadding; // 180 è la larghezza stimata
     
@@ -407,12 +406,6 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
 
 /// Widget wrapper che gestisce il posizionamento assoluto
 class DraggableActionButtonWrapper extends StatelessWidget {
-  final VoidCallback onPressed;
-  final IconData icon;
-  final String label;
-  final String positionKey;
-  final Color? backgroundColor;
-  final Widget child;
   
   const DraggableActionButtonWrapper({
     super.key,
@@ -423,6 +416,12 @@ class DraggableActionButtonWrapper extends StatelessWidget {
     required this.child,
     this.backgroundColor,
   });
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String label;
+  final String positionKey;
+  final Color? backgroundColor;
+  final Widget child;
   
   @override
   Widget build(BuildContext context) {

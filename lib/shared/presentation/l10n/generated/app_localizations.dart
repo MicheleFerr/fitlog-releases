@@ -98,10 +98,10 @@ abstract class AppLocalizations {
     Locale('it'),
   ];
 
-  /// The title of the application
+  /// Main application title
   ///
   /// In en, this message translates to:
-  /// **'GymBro TrackLog'**
+  /// **'FitLog Pro'**
   String get appTitle;
 
   /// Welcome message on the main screen
@@ -110,11 +110,491 @@ abstract class AppLocalizations {
   /// **'Ready to train?'**
   String get welcome;
 
-  /// Welcome description explaining the app functionality
+  /// Welcome description on login screen
   ///
   /// In en, this message translates to:
-  /// **'Start a new workout and track your exercises with sets, supersets, dropsets, and rest-pause techniques.'**
+  /// **'Track workouts, time your rest periods, and sync with Apple Health.'**
   String get welcomeDescription;
+
+  /// Title for the onboarding welcome step
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Your Workout Hub'**
+  String get onboardingWelcomeTitle;
+
+  /// Description for the onboarding welcome step
+  ///
+  /// In en, this message translates to:
+  /// **'Track your progress, achieve your goals with the most comprehensive workout tracker'**
+  String get onboardingWelcomeDescription;
+
+  /// Skip button in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// Back button in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboardingBack;
+
+  /// Next button in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// Start button in onboarding final step
+  ///
+  /// In en, this message translates to:
+  /// **'Start!'**
+  String get onboardingStart;
+
+  /// Step indicator in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String onboardingStepOf(int current, int total);
+
+  /// What to expect section title in welcome step
+  ///
+  /// In en, this message translates to:
+  /// **'What to expect:'**
+  String get onboardingWhatToExpect;
+
+  /// Title for the mode selection step
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your Experience'**
+  String get onboardingModeTitle;
+
+  /// Base mode option in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Base Mode'**
+  String get onboardingBaseMode;
+
+  /// Description of base mode in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Essential features for effective workouts. Perfect for beginners and focused training.'**
+  String get onboardingBaseModeDescription;
+
+  /// Pro mode option in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Pro Mode'**
+  String get onboardingProMode;
+
+  /// Description of pro mode in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced tracking with RPE, TUT, analytics and all features unlocked.'**
+  String get onboardingProModeDescription;
+
+  /// Description explaining how mode selection affects app features
+  ///
+  /// In en, this message translates to:
+  /// **'The mode influences which features are visible and available'**
+  String get onboardingModeInfluenceDescription;
+
+  /// Title for timer and rest onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Timer and Rest'**
+  String get onboardingTimerRestTitle;
+
+  /// Description of timer and rest features
+  ///
+  /// In en, this message translates to:
+  /// **'Discover how it works:\\n\\n• Automatic rest timer\\n• Live Activities on iOS\\n• Duration customization\\n• Sounds and notifications\\n• Custom timers per exercise\\n• Background functionality'**
+  String get onboardingTimerRestDescription;
+
+  /// Title for advanced features onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Features'**
+  String get onboardingAdvancedFeaturesTitle;
+
+  /// Description of advanced pro features
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Pro features:\\n\\n• Supersets and Dropsets\\n• Rest-Pause and advanced techniques\\n• Analytics and insights\\n• Community suggestions\\n• Automatic warmups\\n• 1-Rep Max calculation\\n• Export and sharing'**
+  String get onboardingAdvancedFeaturesDescription;
+
+  /// Congratulations message in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get onboardingCongratulations;
+
+  /// Message shown when onboarding is completed
+  ///
+  /// In en, this message translates to:
+  /// **'You have completed the complete FitLog Pro tutorial. Now you\'re ready to start your workouts!'**
+  String get onboardingCompletedMessage;
+
+  /// Selected count suffix
+  ///
+  /// In en, this message translates to:
+  /// **'selected'**
+  String get selected;
+
+  /// Title for the features overview step
+  ///
+  /// In en, this message translates to:
+  /// **'Powerful Features'**
+  String get onboardingFeaturesTitle;
+
+  /// First feature in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Track sets, reps, and weight'**
+  String get onboardingFeature1;
+
+  /// Second feature in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Rest timer with Live Activities'**
+  String get onboardingFeature2;
+
+  /// Third feature in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Create and save templates'**
+  String get onboardingFeature3;
+
+  /// Fourth feature in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Supersets and dropsets'**
+  String get onboardingFeature4;
+
+  /// Title for the customization step
+  ///
+  /// In en, this message translates to:
+  /// **'Make It Yours'**
+  String get onboardingCustomizeTitle;
+
+  /// Description for the customization step
+  ///
+  /// In en, this message translates to:
+  /// **'Customize timers, sounds, themes and display options to match your training style.'**
+  String get onboardingCustomizeDescription;
+
+  /// Title for the get started step
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to Train'**
+  String get onboardingGetStartedTitle;
+
+  /// Description for the get started step
+  ///
+  /// In en, this message translates to:
+  /// **'Start with a template or create your own custom workout. Let\'s begin your fitness journey!'**
+  String get onboardingGetStartedDescription;
+
+  /// Done button in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get onboardingDone;
+
+  /// Progress indicator in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String onboardingProgress(int current, int total);
+
+  /// Title for global onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Complete FitLog Pro Guide'**
+  String get globalOnboardingTitle;
+
+  /// Description for global onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Learn everything about the app with this interactive step-by-step tutorial'**
+  String get globalOnboardingDescription;
+
+  /// Title for toggle panorama step
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle Overview & Customizations'**
+  String get togglePanoramaTitle;
+
+  /// Description for toggle panorama step
+  ///
+  /// In en, this message translates to:
+  /// **'Explore all available features and discover how to customize your experience'**
+  String get togglePanoramaDescription;
+
+  /// Shows the current mode (Base/Pro)
+  ///
+  /// In en, this message translates to:
+  /// **'Current mode: {mode}'**
+  String currentMode(String mode);
+
+  /// Hint about changing toggles in settings
+  ///
+  /// In en, this message translates to:
+  /// **'You can change any toggle anytime from settings ⚙️'**
+  String get toggleSettingsHint;
+
+  /// Title for create workout step
+  ///
+  /// In en, this message translates to:
+  /// **'Creating a Workout'**
+  String get createWorkoutStepTitle;
+
+  /// Description for create workout step
+  ///
+  /// In en, this message translates to:
+  /// **'Learn how to:\\n\\n• Create a new workout\\n• Use existing templates\\n• Customize the name\\n• Set your goals'**
+  String get createWorkoutStepDescription;
+
+  /// Title for add exercise step
+  ///
+  /// In en, this message translates to:
+  /// **'Adding an Exercise'**
+  String get addExerciseStepTitle;
+
+  /// Description for add exercise step
+  ///
+  /// In en, this message translates to:
+  /// **'Step-by-step tutorial for:\\n\\n• Searching exercises in database\\n• Adding manual exercises\\n• Setting sets and reps\\n• Configuring weight and RPE\\n• Adding personal notes'**
+  String get addExerciseStepDescription;
+
+  /// Title for execute set step
+  ///
+  /// In en, this message translates to:
+  /// **'Executing a Set'**
+  String get executeSetStepTitle;
+
+  /// Description for execute set step
+  ///
+  /// In en, this message translates to:
+  /// **'Learn to:\\n\\n• Mark sets as completed\\n• Use Quick Edit for rapid changes\\n• Rate RPE (Pro mode)\\n• Track weight and reps\\n• Handle failed or partial sets'**
+  String get executeSetStepDescription;
+
+  /// Title for timer rest step
+  ///
+  /// In en, this message translates to:
+  /// **'Timer & Rest'**
+  String get timerRestStepTitle;
+
+  /// Title for advanced features step
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Features'**
+  String get advancedFeaturesStepTitle;
+
+  /// Congratulations message
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations!'**
+  String get congratulations;
+
+  /// Onboarding completion message
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve completed the complete FitLog Pro tutorial. You\'re now ready to start your workouts!'**
+  String get onboardingComplete;
+
+  /// Try it out button for interactive demos
+  ///
+  /// In en, this message translates to:
+  /// **'Try it out!'**
+  String get onboardingTryItOut;
+
+  /// Instruction for tapping to complete interactive demo
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to complete'**
+  String get onboardingTapToComplete;
+
+  /// Title for example workout in demo
+  ///
+  /// In en, this message translates to:
+  /// **'Example Workout'**
+  String get onboardingExampleWorkout;
+
+  /// Placeholder for exercise search in demo
+  ///
+  /// In en, this message translates to:
+  /// **'Search exercises...'**
+  String get onboardingSearchExercises;
+
+  /// Example exercise name in demo
+  ///
+  /// In en, this message translates to:
+  /// **'Push ups'**
+  String get onboardingMockExercise;
+
+  /// Example exercise description in demo
+  ///
+  /// In en, this message translates to:
+  /// **'Classic bodyweight exercise for chest, shoulders and triceps'**
+  String get onboardingMockDescription;
+
+  /// Completed status in interactive demo
+  ///
+  /// In en, this message translates to:
+  /// **'Completed!'**
+  String get onboardingCompleted;
+
+  /// Title for the mission section in onboarding welcome
+  ///
+  /// In en, this message translates to:
+  /// **'Our Mission'**
+  String get onboardingWelcomeMissionTitle;
+
+  /// Mission statement for the app in onboarding welcome
+  ///
+  /// In en, this message translates to:
+  /// **'Your workout companion that never replaces your trainer but provides scientific data to help you reach your goals.'**
+  String get onboardingWelcomeMission;
+
+  /// Title for first onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'Interactive Tutorial'**
+  String get onboardingWelcomeFeature1Title;
+
+  /// Description for first onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'Learn by using the app in real time'**
+  String get onboardingWelcomeFeature1Description;
+
+  /// Title for second onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Customization'**
+  String get onboardingWelcomeFeature2Title;
+
+  /// Description for second onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'Discover all toggles and options'**
+  String get onboardingWelcomeFeature2Description;
+
+  /// Title for third onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Workflow'**
+  String get onboardingWelcomeFeature3Title;
+
+  /// Description for third onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'From setup to execution'**
+  String get onboardingWelcomeFeature3Description;
+
+  /// Title for fourth onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'Base and Pro Modes'**
+  String get onboardingWelcomeFeature4Title;
+
+  /// Description for fourth onboarding welcome feature
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your functionality level'**
+  String get onboardingWelcomeFeature4Description;
+
+  /// Call to action text in welcome step
+  ///
+  /// In en, this message translates to:
+  /// **'This tutorial will guide you step by step through all app features. You can skip or repeat any section.'**
+  String get onboardingWelcomeCallToAction;
+
+  /// Placeholder text for missing videos in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Video Missing'**
+  String get onboardingVideoPlaceholder;
+
+  /// Text indicating that tutorial video will be available soon
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorial video coming soon!'**
+  String get onboardingVideoComingSoon;
+
+  /// Title for toggle panorama onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle Overview & Customizations'**
+  String get onboardingTogglePanoramaTitle;
+
+  /// Description for toggle panorama onboarding step
+  ///
+  /// In en, this message translates to:
+  /// **'Explore all available features and discover how to customize your experience'**
+  String get onboardingTogglePanoramaDescription;
+
+  /// Title for advanced tracking toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Tracking'**
+  String get onboardingToggleAdvancedTrackingTitle;
+
+  /// Description for advanced tracking toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'Features for detailed monitoring'**
+  String get onboardingToggleAdvancedTrackingDescription;
+
+  /// Title for timer and automation toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'Timer and Automation'**
+  String get onboardingToggleTimerAutomationTitle;
+
+  /// Description for timer and automation toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic rest time management'**
+  String get onboardingToggleTimerAutomationDescription;
+
+  /// Title for interface and tips toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'Interface and Tips'**
+  String get onboardingToggleInterfaceTitle;
+
+  /// Description for interface and tips toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'User experience customization'**
+  String get onboardingToggleInterfaceDescription;
+
+  /// Title for support and assistance toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'Support and Assistance'**
+  String get onboardingToggleSupportTitle;
+
+  /// Description for support and assistance toggle category
+  ///
+  /// In en, this message translates to:
+  /// **'Tips and help during workouts'**
+  String get onboardingToggleSupportDescription;
+
+  /// First part of toggle settings change information
+  ///
+  /// In en, this message translates to:
+  /// **'You can change any toggle anytime from'**
+  String get onboardingToggleSettingsChangePart1;
+
+  /// Second part of toggle settings change information
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Workout'**
+  String get onboardingToggleSettingsChangePart2;
 
   /// Quick start section title
   ///
@@ -158,6 +638,228 @@ abstract class AppLocalizations {
   /// **'Legs, Glutes, Calves'**
   String get lowerBodySubtitle;
 
+  /// Exercise synchronization section title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Sync'**
+  String get exerciseSync;
+
+  /// Sync status when idle
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get syncIdle;
+
+  /// Sync status when loading
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get syncLoading;
+
+  /// Sync status when syncing
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get syncSyncing;
+
+  /// Sync status when successful
+  ///
+  /// In en, this message translates to:
+  /// **'Up to date'**
+  String get syncSuccess;
+
+  /// Sync status when error occurs
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get syncError;
+
+  /// Message when checking sync status
+  ///
+  /// In en, this message translates to:
+  /// **'Checking status...'**
+  String get checkingStatus;
+
+  /// Error message prefix for status errors
+  ///
+  /// In en, this message translates to:
+  /// **'Status error'**
+  String get statusError;
+
+  /// Version information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Version Info'**
+  String get versionInfo;
+
+  /// Local version label
+  ///
+  /// In en, this message translates to:
+  /// **'Local Version'**
+  String get localVersion;
+
+  /// Remote version label
+  ///
+  /// In en, this message translates to:
+  /// **'Remote Version'**
+  String get remoteVersion;
+
+  /// Message when update is available
+  ///
+  /// In en, this message translates to:
+  /// **'Update Available'**
+  String get updateAvailable;
+
+  /// Message when checking version
+  ///
+  /// In en, this message translates to:
+  /// **'Checking version...'**
+  String get checkingVersion;
+
+  /// Error message for version check failures
+  ///
+  /// In en, this message translates to:
+  /// **'Version check error'**
+  String get versionCheckError;
+
+  /// Button to force synchronization
+  ///
+  /// In en, this message translates to:
+  /// **'Force Sync'**
+  String get forceSync;
+
+  /// Sync settings button and title
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Settings'**
+  String get syncSettings;
+
+  /// Auto sync toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Sync'**
+  String get autoSync;
+
+  /// Auto sync description
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically sync exercises in background'**
+  String get autoSyncDescription;
+
+  /// Sync frequency setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Frequency'**
+  String get syncFrequency;
+
+  /// Sync frequency option
+  ///
+  /// In en, this message translates to:
+  /// **'Every Hour'**
+  String get everyHour;
+
+  /// Sync frequency option
+  ///
+  /// In en, this message translates to:
+  /// **'Every 6 Hours'**
+  String get every6Hours;
+
+  /// Sync frequency option
+  ///
+  /// In en, this message translates to:
+  /// **'Every 12 Hours'**
+  String get every12Hours;
+
+  /// Sync frequency option
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily;
+
+  /// Prefix for custom frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Every'**
+  String get every;
+
+  /// Unit label for hours
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get hours;
+
+  /// Dialog title for frequency selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select Sync Frequency'**
+  String get selectSyncFrequency;
+
+  /// Cache statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Cache Statistics'**
+  String get cacheStatistics;
+
+  /// Number of cached exercises label
+  ///
+  /// In en, this message translates to:
+  /// **'Cached Exercises'**
+  String get cachedExercises;
+
+  /// Cache size label
+  ///
+  /// In en, this message translates to:
+  /// **'Cache Size'**
+  String get cacheSize;
+
+  /// Last update stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Last Update'**
+  String get lastUpdate;
+
+  /// Loading status text
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// Time ago suffix
+  ///
+  /// In en, this message translates to:
+  /// **'ago'**
+  String get ago;
+
+  /// Clear cache button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Cache'**
+  String get clearCache;
+
+  /// Confirmation message for clearing cache
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear the exercise cache? This will remove all cached exercises and they will be downloaded again on next sync.'**
+  String get clearCacheConfirmation;
+
+  /// Cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Clear button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// Done button
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
   /// HIIT training template
   ///
   /// In en, this message translates to:
@@ -170,19 +872,19 @@ abstract class AppLocalizations {
   /// **'High intensity intervals'**
   String get hiitTrainingSubtitle;
 
-  /// Start workout button text
+  /// Start workout action
   ///
   /// In en, this message translates to:
   /// **'Start Workout'**
   String get startWorkout;
 
-  /// Add exercise button text
+  /// Add new exercise button
   ///
   /// In en, this message translates to:
   /// **'Add Exercise'**
   String get addExercise;
 
-  /// Complete workout button text
+  /// Complete workout button tooltip
   ///
   /// In en, this message translates to:
   /// **'Complete Workout'**
@@ -206,46 +908,526 @@ abstract class AppLocalizations {
   /// **'e.g., Push Day, Leg Day'**
   String get workoutNameHint;
 
-  /// Exercise name input label
+  /// Exercise name field label
   ///
   /// In en, this message translates to:
   /// **'Exercise Name'**
   String get exerciseName;
 
-  /// Exercise name input hint
+  /// Exercise name input field hint
   ///
   /// In en, this message translates to:
   /// **'e.g., Bench Press'**
   String get exerciseNameHint;
 
-  /// Exercise category selection label
+  /// Import workout template screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Import Workout Template'**
+  String get importWorkoutTemplate;
+
+  /// Export templates screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Export Templates'**
+  String get exportTemplates;
+
+  /// Import format selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Import Format'**
+  String get importFormat;
+
+  /// Natural language text import option
+  ///
+  /// In en, this message translates to:
+  /// **'Natural Language'**
+  String get naturalLanguageText;
+
+  /// JSON file import option
+  ///
+  /// In en, this message translates to:
+  /// **'JSON File'**
+  String get jsonFile;
+
+  /// Workout description input label
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Description'**
+  String get workoutDescription;
+
+  /// Workout text input placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your workout description here...\n\nExample:\nLUNEDÌ - PUSH\nPanca Piana - 3 min\nSet1 x 5: 80kg\nSet2 x 5: 82.5kg'**
+  String get pasteWorkoutHere;
+
+  /// AI parsing instructions label
+  ///
+  /// In en, this message translates to:
+  /// **'AI Parsing Instructions'**
+  String get aiParsingInstructions;
+
+  /// AI instructions input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Optional: Provide additional context for better parsing (e.g., language, units, custom exercise names)'**
+  String get aiInstructionsHint;
+
+  /// AI instructions example text
+  ///
+  /// In en, this message translates to:
+  /// **'Example: \"Text is in Italian, weights are in kg, \'Panca\' means Bench Press\"'**
+  String get aiInstructionsExample;
+
+  /// JSON file selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Select JSON File'**
+  String get selectJsonFile;
+
+  /// File selection button text
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select file'**
+  String get tapToSelectFile;
+
+  /// Supported file formats info
+  ///
+  /// In en, this message translates to:
+  /// **'Supports .json and .txt files'**
+  String get supportedFormats;
+
+  /// Start import button text
+  ///
+  /// In en, this message translates to:
+  /// **'Start Import'**
+  String get startImport;
+
+  /// Exercise disambiguation section title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Disambiguation'**
+  String get exerciseDisambiguation;
+
+  /// Percentage conversion section title
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage Weight Conversion'**
+  String get percentageConversion;
+
+  /// Continue import button text
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Import'**
+  String get continueImport;
+
+  /// Finalize import button text
+  ///
+  /// In en, this message translates to:
+  /// **'Finalize Import'**
+  String get finalizeImport;
+
+  /// Import success message
+  ///
+  /// In en, this message translates to:
+  /// **'Import completed successfully!'**
+  String get importSuccessful;
+
+  /// Exporting progress text
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting Templates'**
+  String get exportingTemplates;
+
+  /// Templates selection count suffix
+  ///
+  /// In en, this message translates to:
+  /// **'templates selected'**
+  String get templatesSelected;
+
+  /// Free account tier label
+  ///
+  /// In en, this message translates to:
+  /// **'Free Account'**
+  String get freeAccount;
+
+  /// Premium account tier label
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Account'**
+  String get premiumAccount;
+
+  /// Free tier export limitations
+  ///
+  /// In en, this message translates to:
+  /// **'Limited to 1 template export, no analytics data'**
+  String get freeExportLimitations;
+
+  /// Premium tier export features
+  ///
+  /// In en, this message translates to:
+  /// **'Batch export, analytics data, multiple formats'**
+  String get premiumExportFeatures;
+
+  /// Upgrade button
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get upgrade;
+
+  /// Download JSON button text
+  ///
+  /// In en, this message translates to:
+  /// **'Download JSON'**
+  String get downloadJson;
+
+  /// Share button text
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// Copy button text
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy;
+
+  /// Export success message
+  ///
+  /// In en, this message translates to:
+  /// **'Export completed successfully!'**
+  String get exportSuccessful;
+
+  /// Export failure message
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed. Please try again.'**
+  String get exportFailed;
+
+  /// Export file sharing text
+  ///
+  /// In en, this message translates to:
+  /// **'FitLog Pro Workout Templates Export'**
+  String get gymbroTemplatesExport;
+
+  /// Export limits dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Export Limits'**
+  String get exportLimits;
+
+  /// Export limits description
+  ///
+  /// In en, this message translates to:
+  /// **'Your current export limits:'**
+  String get yourCurrentLimits;
+
+  /// Close button
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// Quota limit reached title
+  ///
+  /// In en, this message translates to:
+  /// **'Limit Reached'**
+  String get limitReached;
+
+  /// Upgrade prompt for export limits
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to premium to export more templates with analytics data.'**
+  String get upgradeToExportMore;
+
+  /// Sign in requirement message
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in to use export features'**
+  String get pleaseSignIn;
+
+  /// AI prompt helper screen title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Prompt Helper'**
+  String get aiPromptHelper;
+
+  /// Create new workout tab
+  ///
+  /// In en, this message translates to:
+  /// **'Create New'**
+  String get createNew;
+
+  /// Convert existing workout tab
+  ///
+  /// In en, this message translates to:
+  /// **'Convert Existing'**
+  String get convertExisting;
+
+  /// How to use tab
+  ///
+  /// In en, this message translates to:
+  /// **'How to Use'**
+  String get howToUse;
+
+  /// Create new workout section title
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Workout with AI'**
+  String get createNewWorkout;
+
+  /// Create new workout description
+  ///
+  /// In en, this message translates to:
+  /// **'Generate a custom prompt to create workout templates with external AI services'**
+  String get createNewWorkoutDesc;
+
+  /// Workout type selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Select Workout Type'**
+  String get selectWorkoutType;
+
+  /// Difficulty selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Select Difficulty Level'**
+  String get selectDifficulty;
+
+  /// Beginner difficulty level
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get beginner;
+
+  /// Intermediate difficulty level
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get intermediate;
+
+  /// Advanced section header
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advanced;
+
+  /// Custom request input label
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Request (Optional)'**
+  String get customRequest;
+
+  /// Custom request input hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Focus on compound movements, 45-minute workout, minimal equipment'**
+  String get customRequestHint;
+
+  /// Generated prompt section title
+  ///
+  /// In en, this message translates to:
+  /// **'Generated AI Prompt'**
+  String get generatedPrompt;
+
+  /// Convert existing workout section title
+  ///
+  /// In en, this message translates to:
+  /// **'Convert Existing Workout'**
+  String get convertExistingWorkout;
+
+  /// Convert existing workout description
+  ///
+  /// In en, this message translates to:
+  /// **'Convert your existing workout text into FitLog Pro JSON format'**
+  String get convertExistingDesc;
+
+  /// Paste workout text label
+  ///
+  /// In en, this message translates to:
+  /// **'Paste Your Workout Text'**
+  String get pasteWorkoutText;
+
+  /// Workout text input hint
+  ///
+  /// In en, this message translates to:
+  /// **'MONDAY - PUSH\nBench Press - 3 min\nSet1 x 5: 80kg\nSet2 x 5: 82.5kg\n...'**
+  String get workoutTextHint;
+
+  /// Generate conversion prompt button
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Conversion Prompt'**
+  String get generateConversionPrompt;
+
+  /// Conversion prompt section title
+  ///
+  /// In en, this message translates to:
+  /// **'Conversion Prompt'**
+  String get conversionPrompt;
+
+  /// Step by step guide title
+  ///
+  /// In en, this message translates to:
+  /// **'Step-by-Step Guide'**
+  String get stepByStepGuide;
+
+  /// Follow steps description
+  ///
+  /// In en, this message translates to:
+  /// **'Follow these simple steps to create workout templates with AI'**
+  String get followTheseSteps;
+
+  /// Troubleshooting section title
+  ///
+  /// In en, this message translates to:
+  /// **'Troubleshooting'**
+  String get troubleshooting;
+
+  /// Prompt to copy label
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt to Copy'**
+  String get promptToCopy;
+
+  /// Copy prompt tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Prompt'**
+  String get copyPrompt;
+
+  /// Quick AI access section title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick AI Access'**
+  String get quickAIAccess;
+
+  /// Copy prompt and open AI button
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Prompt & Open AI Service'**
+  String get copyPromptAndOpenAI;
+
+  /// Instructions label
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get instructions;
+
+  /// Conversion instructions text
+  ///
+  /// In en, this message translates to:
+  /// **'1. Copy the prompt above 2. Open an AI service 3. Paste and send 4. Copy the JSON result 5. Import to FitLog Pro'**
+  String get conversionInstructions;
+
+  /// Creation instructions text
+  ///
+  /// In en, this message translates to:
+  /// **'1. Copy the prompt above 2. Open an AI service 3. Paste and send 4. Copy the JSON result 5. Import to FitLog Pro'**
+  String get creationInstructions;
+
+  /// Prompt copied confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt Copied!'**
+  String get promptCopied;
+
+  /// Prompt copied description
+  ///
+  /// In en, this message translates to:
+  /// **'The AI prompt has been copied to your clipboard.'**
+  String get promptCopiedDesc;
+
+  /// Next steps label
+  ///
+  /// In en, this message translates to:
+  /// **'Next steps:'**
+  String get nextSteps;
+
+  /// Step 1 instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Open your preferred AI service (ChatGPT, Claude, etc.)'**
+  String get step1OpenAI;
+
+  /// Step 2 instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the copied prompt and send'**
+  String get step2PastePrompt;
+
+  /// Step 3 instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the JSON response from the AI'**
+  String get step3CopyJSON;
+
+  /// Step 4 instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Return to FitLog Pro and use \'Import Template\''**
+  String get step4ReturnToApp;
+
+  /// Button to dismiss explanation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get gotIt;
+
+  /// Open ChatGPT button
+  ///
+  /// In en, this message translates to:
+  /// **'Open ChatGPT'**
+  String get openChatGPT;
+
+  /// Cannot open URL error
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot open this URL'**
+  String get cannotOpenUrl;
+
+  /// Error opening URL message
+  ///
+  /// In en, this message translates to:
+  /// **'Error opening URL'**
+  String get errorOpeningUrl;
+
+  /// Please enter workout text message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter workout text to convert'**
+  String get pleaseEnterWorkoutText;
+
+  /// Label for exercise category selection
   ///
   /// In en, this message translates to:
   /// **'Exercise Category'**
   String get exerciseCategory;
 
-  /// Sets label
+  /// Label for sets section
   ///
   /// In en, this message translates to:
   /// **'Sets'**
   String get sets;
 
-  /// Add set button text
+  /// Button to add a new set
   ///
   /// In en, this message translates to:
   /// **'Add Set'**
   String get addSet;
 
-  /// Weight input label
+  /// Weight metric label
   ///
   /// In en, this message translates to:
-  /// **'Weight (kg)'**
+  /// **'Weight'**
   String get weight;
 
-  /// Abbreviation for repetitions
+  /// Reps metric label
   ///
   /// In en, this message translates to:
-  /// **'reps'**
+  /// **'Reps'**
   String get reps;
 
   /// Notes input label
@@ -254,10 +1436,10 @@ abstract class AppLocalizations {
   /// **'Notes (optional)'**
   String get notes;
 
-  /// Notes input hint
+  /// Notes input field hint
   ///
   /// In en, this message translates to:
-  /// **'Add any notes about form, weight progression, etc.'**
+  /// **'Add form cues, progression notes, etc.'**
   String get notesHint;
 
   /// Single exercise type
@@ -356,10 +1538,10 @@ abstract class AppLocalizations {
   /// **'Paused'**
   String get workoutStatusPaused;
 
-  /// Exercises label
+  /// Exercises label (plural)
   ///
   /// In en, this message translates to:
-  /// **'Exercises'**
+  /// **'exercises'**
   String get exercises;
 
   /// Progress label
@@ -374,6 +1556,257 @@ abstract class AppLocalizations {
   /// **'Workout Progress'**
   String get workoutProgress;
 
+  /// TUT explanation modal title
+  ///
+  /// In en, this message translates to:
+  /// **'Time Under Tension (T.U.T.)'**
+  String get tutTitle;
+
+  /// TUT eccentric phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Eccentric'**
+  String get tutEccentricPhase;
+
+  /// TUT eccentric phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Lowering/lengthening phase (seconds)'**
+  String get tutEccentricDescription;
+
+  /// TUT bottom pause phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom Pause'**
+  String get tutBottomPausePhase;
+
+  /// TUT bottom pause phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Pause at bottom position (seconds)'**
+  String get tutBottomPauseDescription;
+
+  /// TUT concentric phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Concentric'**
+  String get tutConcentricPhase;
+
+  /// TUT concentric phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Lifting/shortening phase (seconds)'**
+  String get tutConcentricDescription;
+
+  /// TUT top pause phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Top Pause'**
+  String get tutTopPausePhase;
+
+  /// TUT top pause phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Pause at top position (seconds)'**
+  String get tutTopPauseDescription;
+
+  /// TUT presets section title
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get tutPresets;
+
+  /// TUT standard preset
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get tutPresetStandard;
+
+  /// TUT slow preset
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get tutPresetSlow;
+
+  /// TUT explosive preset
+  ///
+  /// In en, this message translates to:
+  /// **'Explosive'**
+  String get tutPresetExplosive;
+
+  /// TUT isometric preset
+  ///
+  /// In en, this message translates to:
+  /// **'Isometric'**
+  String get tutPresetIsometric;
+
+  /// Current TUT tempo label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Tempo'**
+  String get tutCurrentTempo;
+
+  /// TUT phase breakdown section title
+  ///
+  /// In en, this message translates to:
+  /// **'Phase Breakdown'**
+  String get tutPhaseBreakdown;
+
+  /// Full description of eccentric phase
+  ///
+  /// In en, this message translates to:
+  /// **'Slowly lower the weight, controlling the movement with muscle tension'**
+  String get tutEccentricFullDescription;
+
+  /// Full description of bottom pause phase
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the stretched position briefly to maximize muscle activation'**
+  String get tutBottomPauseFullDescription;
+
+  /// Full description of concentric phase
+  ///
+  /// In en, this message translates to:
+  /// **'Lift the weight with controlled force, focusing on muscle contraction'**
+  String get tutConcentricFullDescription;
+
+  /// Full description of top pause phase
+  ///
+  /// In en, this message translates to:
+  /// **'Brief pause at peak contraction to enhance muscle engagement'**
+  String get tutTopPauseFullDescription;
+
+  /// TUT example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 3-1-2-0'**
+  String get tutExample;
+
+  /// Standard TUT example with parameters
+  ///
+  /// In en, this message translates to:
+  /// **'Take {eccentric} seconds to lower, pause {bottomPause} seconds at bottom, take {concentric} seconds to lift, then pause {topPause} seconds at top.'**
+  String tutExampleStandard(
+    String eccentric,
+    String bottomPause,
+    String concentric,
+    String topPause,
+  );
+
+  /// Explosive TUT example
+  ///
+  /// In en, this message translates to:
+  /// **'Move explosively during the marked phases (X) while maintaining control during the timed phases.'**
+  String get tutExampleExplosive;
+
+  /// Isometric TUT example
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the position without movement for the specified duration, focusing on muscle tension.'**
+  String get tutExampleIsometric;
+
+  /// TUT explanation modal subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Control your tempo for better results'**
+  String get tutSubtitle;
+
+  /// TUT format explanation section title
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding T.U.T. Format'**
+  String get tutExplanationTitle;
+
+  /// TUT format explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Format: Eccentric - Pause 1 - Concentric - Pause 2'**
+  String get tutFormat;
+
+  /// Eccentric phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Eccentric Phase'**
+  String get tutPhaseEccentric;
+
+  /// Eccentric phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Lowering/lengthening the muscle (e.g., lowering the bar in bench press)'**
+  String get tutPhaseEccentricDesc;
+
+  /// First pause phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom Pause'**
+  String get tutPhasePause1;
+
+  /// First pause phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Hold at the bottom/stretched position'**
+  String get tutPhasePause1Desc;
+
+  /// Concentric phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Concentric Phase'**
+  String get tutPhaseConcentric;
+
+  /// Concentric phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Lifting/shortening the muscle (e.g., pressing the bar up)'**
+  String get tutPhaseConcentricDesc;
+
+  /// Second pause phase label
+  ///
+  /// In en, this message translates to:
+  /// **'Top Pause'**
+  String get tutPhasePause2;
+
+  /// Second pause phase description
+  ///
+  /// In en, this message translates to:
+  /// **'Hold at the top/contracted position'**
+  String get tutPhasePause2Desc;
+
+  /// TUT example description
+  ///
+  /// In en, this message translates to:
+  /// **'3 seconds down, 1 second pause, 2 seconds up, no pause at top'**
+  String get tutExampleDesc;
+
+  /// TUT benefits section title
+  ///
+  /// In en, this message translates to:
+  /// **'Benefits of Controlled Tempo'**
+  String get tutBenefits;
+
+  /// First TUT benefit
+  ///
+  /// In en, this message translates to:
+  /// **'Increased muscle tension and growth'**
+  String get tutBenefit1;
+
+  /// Second TUT benefit
+  ///
+  /// In en, this message translates to:
+  /// **'Better mind-muscle connection'**
+  String get tutBenefit2;
+
+  /// Third TUT benefit
+  ///
+  /// In en, this message translates to:
+  /// **'Improved form and control'**
+  String get tutBenefit3;
+
+  /// Fourth TUT benefit
+  ///
+  /// In en, this message translates to:
+  /// **'Reduced injury risk'**
+  String get tutBenefit4;
+
   /// Empty exercise list message
   ///
   /// In en, this message translates to:
@@ -386,11 +1819,11 @@ abstract class AppLocalizations {
   /// **'Tap the + button to add your first exercise'**
   String get tapToAddExercise;
 
-  /// Cancel button text
+  /// Confirm button text
   ///
   /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
+  /// **'Confirm'**
+  String get confirm;
 
   /// Start button text
   ///
@@ -422,10 +1855,10 @@ abstract class AppLocalizations {
   /// **'Duplicate'**
   String get duplicate;
 
-  /// Search exercises input label
+  /// Search exercises placeholder
   ///
   /// In en, this message translates to:
-  /// **'Search Exercises'**
+  /// **'Search exercises...'**
   String get searchExercises;
 
   /// Search exercises input hint
@@ -470,7 +1903,7 @@ abstract class AppLocalizations {
   /// **'Pause Workout'**
   String get pauseWorkout;
 
-  /// End workout dialog title
+  /// End workout menu item
   ///
   /// In en, this message translates to:
   /// **'End Workout'**
@@ -728,12 +2161,6 @@ abstract class AppLocalizations {
   /// **'Haptic feedback for interactions'**
   String get vibrationsDesc;
 
-  /// Advanced section header
-  ///
-  /// In en, this message translates to:
-  /// **'Advanced'**
-  String get advanced;
-
   /// Export settings option
   ///
   /// In en, this message translates to:
@@ -758,7 +2185,7 @@ abstract class AppLocalizations {
   /// **'Load settings from JSON file'**
   String get importSettingsDesc;
 
-  /// Reset to defaults option
+  /// Reset settings to default values
   ///
   /// In en, this message translates to:
   /// **'Reset to Defaults'**
@@ -818,6 +2245,24 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
+  /// Accept button
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
+
+  /// Dismiss button
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// Title for rest time suggestion banner
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Time Suggestion'**
+  String get restTimeSuggestion;
+
   /// Reset button
   ///
   /// In en, this message translates to:
@@ -842,7 +2287,7 @@ abstract class AppLocalizations {
   /// **'Import functionality coming soon'**
   String get importFunctioningComingSoon;
 
-  /// Edit exercise dialog title
+  /// Edit exercise screen title
   ///
   /// In en, this message translates to:
   /// **'Edit Exercise'**
@@ -884,7 +2329,7 @@ abstract class AppLocalizations {
   /// **'Use Default Timer'**
   String get useDefaultRestTime;
 
-  /// Your custom templates section title
+  /// Your templates tab title
   ///
   /// In en, this message translates to:
   /// **'Your Templates'**
@@ -896,16 +2341,16 @@ abstract class AppLocalizations {
   /// **'Popular Templates'**
   String get popularTemplates;
 
-  /// See all button text
+  /// See all button
   ///
   /// In en, this message translates to:
-  /// **'See All'**
+  /// **'See all'**
   String get seeAll;
 
-  /// Welcome title on home screen
+  /// Welcome message on login screen
   ///
   /// In en, this message translates to:
-  /// **'Welcome to GymBro!'**
+  /// **'Welcome to your new fitness companion!'**
   String get welcomeToGymBro;
 
   /// Welcome description on home screen
@@ -992,22 +2437,22 @@ abstract class AppLocalizations {
   /// **'Paused Workout'**
   String get pausedWorkout;
 
-  /// Continue workout button
+  /// Continue button text
   ///
   /// In en, this message translates to:
-  /// **'Continue'**
+  /// **'CONTINUE'**
   String get continueButton;
 
-  /// Resume workout button
+  /// Resume button
   ///
   /// In en, this message translates to:
   /// **'Resume'**
   String get resume;
 
-  /// End workout button
+  /// End button text
   ///
   /// In en, this message translates to:
-  /// **'End'**
+  /// **'END'**
   String get end;
 
   /// End workout confirmation message
@@ -1118,13 +2563,13 @@ abstract class AppLocalizations {
   /// **'This Week'**
   String get thisWeek;
 
-  /// Total volume statistic
+  /// Total volume label
   ///
   /// In en, this message translates to:
   /// **'Total Volume'**
   String get totalVolume;
 
-  /// Consistency statistic
+  /// Consistency metric label
   ///
   /// In en, this message translates to:
   /// **'Consistency'**
@@ -1208,7 +2653,7 @@ abstract class AppLocalizations {
   /// **'Export Data'**
   String get exportData;
 
-  /// View details menu option
+  /// Button text to view correction details
   ///
   /// In en, this message translates to:
   /// **'View Details'**
@@ -1388,6 +2833,108 @@ abstract class AppLocalizations {
   /// **'Muscle Groups'**
   String get muscleGroups;
 
+  /// Pectorals muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Pectorals'**
+  String get musclePectorals;
+
+  /// Latissimus dorsi muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Lats'**
+  String get muscleLats;
+
+  /// Deltoid muscles (shoulders)
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get muscleDeltoids;
+
+  /// Biceps muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Biceps'**
+  String get muscleBiceps;
+
+  /// Triceps muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Triceps'**
+  String get muscleTriceps;
+
+  /// Trapezius muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Traps'**
+  String get muscleTrapezius;
+
+  /// Rhomboid muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Rhomboids'**
+  String get muscleRhomboids;
+
+  /// Quadriceps muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Quads'**
+  String get muscleQuads;
+
+  /// Gluteus muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Glutes'**
+  String get muscleGlutes;
+
+  /// Hamstring muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Hamstrings'**
+  String get muscleHamstrings;
+
+  /// Calf muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Calves'**
+  String get muscleCalves;
+
+  /// Abdominal muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Abs'**
+  String get muscleAbs;
+
+  /// Oblique muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Obliques'**
+  String get muscleObliques;
+
+  /// Core muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get muscleCore;
+
+  /// Forearm muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Forearms'**
+  String get muscleForearms;
+
+  /// Adductor muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Adductors'**
+  String get muscleAdductors;
+
+  /// Lower back muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Lower Back'**
+  String get muscleLowerBack;
+
   /// Last week filter option
   ///
   /// In en, this message translates to:
@@ -1448,7 +2995,7 @@ abstract class AppLocalizations {
   /// **'Volume Goal'**
   String get volumeGoal;
 
-  /// Rate of Perceived Exertion abbreviation
+  /// Rate of perceived exertion label
   ///
   /// In en, this message translates to:
   /// **'RPE'**
@@ -1478,11 +3025,11 @@ abstract class AppLocalizations {
   /// **'Actual Reps'**
   String get actualReps;
 
-  /// Target repetitions planned
+  /// Target reps for dropset stage
   ///
   /// In en, this message translates to:
-  /// **'Target Reps'**
-  String get targetReps;
+  /// **'{reps} reps target'**
+  String targetReps(int reps);
 
   /// Number of reps completed
   ///
@@ -1592,7 +3139,7 @@ abstract class AppLocalizations {
   /// **'Start with an empty workout'**
   String get startWithEmptyWorkout;
 
-  /// Instruction to tap to start workout
+  /// Exercise start button hint text
   ///
   /// In en, this message translates to:
   /// **'Tap to start'**
@@ -1603,6 +3150,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading templates'**
   String get errorLoadingTemplates;
+
+  /// Message shown when syncing workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing workouts...'**
+  String get syncingWorkouts;
+
+  /// Message shown when loading workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Loading workouts...'**
+  String get loadingWorkouts;
+
+  /// Error message when workouts fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading workouts'**
+  String get errorLoadingWorkouts;
 
   /// Notifications title
   ///
@@ -1634,7 +3199,7 @@ abstract class AppLocalizations {
   /// **'Your Progress'**
   String get quickStats;
 
-  /// Workout streak label
+  /// Streak metric label
   ///
   /// In en, this message translates to:
   /// **'Streak'**
@@ -1700,6 +3265,82 @@ abstract class AppLocalizations {
   /// **'Warmup Sets'**
   String get warmupSets;
 
+  /// Title for recommended warmup card
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Warmup'**
+  String get recommendedWarmup;
+
+  /// Smart warmup badge label
+  ///
+  /// In en, this message translates to:
+  /// **'SMART'**
+  String get warmupSmart;
+
+  /// Warmup tap action text
+  ///
+  /// In en, this message translates to:
+  /// **'Tap'**
+  String get warmupTap;
+
+  /// Warmup intelligent progression title
+  ///
+  /// In en, this message translates to:
+  /// **'Intelligent Progression'**
+  String get warmupIntelligentProgression;
+
+  /// Warmup progression description with placeholders
+  ///
+  /// In en, this message translates to:
+  /// **'From {startWeight}kg to {endWeight}kg in {steps} steps'**
+  String warmupProgressionDescription(
+    String startWeight,
+    String endWeight,
+    String steps,
+  );
+
+  /// Working weight label
+  ///
+  /// In en, this message translates to:
+  /// **'Working Weight'**
+  String get workingWeight;
+
+  /// Empty barbell label
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Barbell'**
+  String get emptyBarbell;
+
+  /// Customize button label
+  ///
+  /// In en, this message translates to:
+  /// **'Customize'**
+  String get customize;
+
+  /// Add all button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add All'**
+  String get addAll;
+
+  /// Edit set dialog title with percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Set {percentage}%'**
+  String editSet(String percentage);
+
+  /// Coming soon dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get comingSoon;
+
+  /// Snackbar message for added warmup sets
+  ///
+  /// In en, this message translates to:
+  /// **'Added {count} warmup sets'**
+  String warmupSetsAdded(String count);
+
   /// Warmup duration section title
   ///
   /// In en, this message translates to:
@@ -1712,7 +3353,7 @@ abstract class AppLocalizations {
   /// **'Primary Muscles'**
   String get primaryMuscles;
 
-  /// Secondary muscles section title
+  /// Secondary muscles label
   ///
   /// In en, this message translates to:
   /// **'Secondary Muscles'**
@@ -1724,25 +3365,25 @@ abstract class AppLocalizations {
   /// **'Difficulty Level'**
   String get difficultyLevel;
 
-  /// Exercise type section title
+  /// Exercise type field label
   ///
   /// In en, this message translates to:
   /// **'Exercise Type'**
   String get exerciseType;
 
-  /// Equipment section title
+  /// Equipment field label
   ///
   /// In en, this message translates to:
   /// **'Equipment'**
   String get equipment;
 
-  /// Movement pattern section title
+  /// Movement pattern label
   ///
   /// In en, this message translates to:
   /// **'Movement Pattern'**
   String get movementPattern;
 
-  /// Rep range section title
+  /// Repetition range field label
   ///
   /// In en, this message translates to:
   /// **'Rep Range'**
@@ -1766,19 +3407,19 @@ abstract class AppLocalizations {
   /// **'Technical Drills'**
   String get technicalDrills;
 
-  /// Technical notes section title
+  /// Technical tips from exercise database (not personal notes)
   ///
   /// In en, this message translates to:
-  /// **'Technical Notes'**
+  /// **'Technical Tips'**
   String get technicalNotes;
 
-  /// Target muscles group title
+  /// Label for target muscle groups
   ///
   /// In en, this message translates to:
-  /// **'Target Muscles'**
+  /// **'Target muscles'**
   String get targetMuscles;
 
-  /// Exercise details group title
+  /// Exercise details screen title
   ///
   /// In en, this message translates to:
   /// **'Exercise Details'**
@@ -1807,6 +3448,13324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recovery'**
   String get recovery;
+
+  /// Morning greeting
+  ///
+  /// In en, this message translates to:
+  /// **'Good Morning'**
+  String get goodMorning;
+
+  /// Afternoon greeting
+  ///
+  /// In en, this message translates to:
+  /// **'Good Afternoon'**
+  String get goodAfternoon;
+
+  /// Evening greeting
+  ///
+  /// In en, this message translates to:
+  /// **'Good Evening'**
+  String get goodEvening;
+
+  /// Motivational subtitle under greeting
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to dominate?'**
+  String get readyToDominate;
+
+  /// Active workout status
+  ///
+  /// In en, this message translates to:
+  /// **'WORKOUT ACTIVE'**
+  String get workoutActive;
+
+  /// Paused workout status
+  ///
+  /// In en, this message translates to:
+  /// **'PAUSED'**
+  String get workoutPaused;
+
+  /// Duration label
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// Tooltip for reordering exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder exercises'**
+  String get reorderExercises;
+
+  /// Tooltip for confirming reorder
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm order'**
+  String get confirmReorder;
+
+  /// Feedback message when exercise order is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Order saved'**
+  String get orderSaved;
+
+  /// Quick start workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Start Now'**
+  String get startNow;
+
+  /// Start immediately description
+  ///
+  /// In en, this message translates to:
+  /// **'Start immediately and add exercises on the fly'**
+  String get startImmediately;
+
+  /// Feedback when quick workout starts
+  ///
+  /// In en, this message translates to:
+  /// **'Workout started! Add exercises as you go'**
+  String get workoutStartedQuickly;
+
+  /// Calories label
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get calories;
+
+  /// AI Coach section title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach'**
+  String get aiCoach;
+
+  /// Volume metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get volume;
+
+  /// Quick start workout button
+  ///
+  /// In en, this message translates to:
+  /// **'START WORKOUT'**
+  String get startWorkoutQuick;
+
+  /// Suggested workout subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested for today'**
+  String get suggestedForToday;
+
+  /// Progress section title
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress'**
+  String get yourProgress;
+
+  /// Push day workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Push Day'**
+  String get pushDay;
+
+  /// Pull day workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Pull Day'**
+  String get pullDay;
+
+  /// Leg day workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Leg Day'**
+  String get legDay;
+
+  /// Push day muscle groups
+  ///
+  /// In en, this message translates to:
+  /// **'Chest, Shoulders, Triceps'**
+  String get chestShouldersTriceps;
+
+  /// Pull day muscle groups
+  ///
+  /// In en, this message translates to:
+  /// **'Back, Biceps'**
+  String get backBiceps;
+
+  /// Leg day muscle groups
+  ///
+  /// In en, this message translates to:
+  /// **'Legs, Glutes'**
+  String get legsGlutes;
+
+  /// HIIT workout description
+  ///
+  /// In en, this message translates to:
+  /// **'Intensive Cardio'**
+  String get intensiveCardio;
+
+  /// Templates section title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Templates'**
+  String get quickTemplates;
+
+  /// Predefined templates tab
+  ///
+  /// In en, this message translates to:
+  /// **'Predefined'**
+  String get predefined;
+
+  /// Tab label for user's templates
+  ///
+  /// In en, this message translates to:
+  /// **'My Templates'**
+  String get myTemplates;
+
+  /// Empty state title for personal templates
+  ///
+  /// In en, this message translates to:
+  /// **'No personal templates'**
+  String get noPersonalTemplates;
+
+  /// CTA for creating first template
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first template!'**
+  String get createFirstTemplate;
+
+  /// Button and dialog title for creating template
+  ///
+  /// In en, this message translates to:
+  /// **'Create Template'**
+  String get createTemplate;
+
+  /// Secondary actions section title
+  ///
+  /// In en, this message translates to:
+  /// **'Other tools'**
+  String get otherTools;
+
+  /// Workout history card title
+  ///
+  /// In en, this message translates to:
+  /// **'Workout History'**
+  String get workoutHistory;
+
+  /// Past workouts subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Past workouts'**
+  String get pastWorkouts;
+
+  /// Workout started snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Workout \"{name}\" started!'**
+  String workoutStarted(String name);
+
+  /// Workout already in progress warning
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a workout in progress: {name}'**
+  String workoutInProgress(String name);
+
+  /// Workout discarded message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout discarded'**
+  String get workoutDiscarded;
+
+  /// Workout saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout saved successfully!'**
+  String get workoutSavedSuccessfully;
+
+  /// End workout dialog question
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to end the workout?'**
+  String get howToEndWorkout;
+
+  /// Discard button
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// Save and end button
+  ///
+  /// In en, this message translates to:
+  /// **'Save and End'**
+  String get saveAndEnd;
+
+  /// AI Coach prompt to start first workout
+  ///
+  /// In en, this message translates to:
+  /// **'Start your first workout to unlock personalized tips!'**
+  String get aiCoachFirstWorkout;
+
+  /// AI Coach streak encouragement
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! {days} consecutive days of training. Keep this excellent pace!'**
+  String aiCoachStreakMessage(int days);
+
+  /// AI Coach volume increase message
+  ///
+  /// In en, this message translates to:
+  /// **'Your volume increased by {increase}! Keep going to maximize results'**
+  String aiCoachVolumeIncrease(String increase);
+
+  /// AI Coach personal record message
+  ///
+  /// In en, this message translates to:
+  /// **'You set a new PR of {weight} on {exercise}! Aim to beat it'**
+  String aiCoachNewPR(String weight, String exercise);
+
+  /// AI Coach consistency advice
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on consistency: try to work out at least 3-4 times this week'**
+  String get aiCoachConsistency;
+
+  /// AI Coach personalization subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized for you'**
+  String get aiCoachPersonalized;
+
+  /// Hint to tap AI Coach card for more details
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for detailed insights'**
+  String get aiCoachTapHint;
+
+  /// Title for detailed AI Coach modal
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach Insights'**
+  String get aiCoachDetailed;
+
+  /// Placeholder text for AI Coach modal
+  ///
+  /// In en, this message translates to:
+  /// **'Smart insights coming soon! Your AI Coach will analyze your training patterns and provide personalized recommendations.'**
+  String get aiCoachModalPlaceholder;
+
+  /// Disclaimer for AI Coach recommendations
+  ///
+  /// In en, this message translates to:
+  /// **'These are general recommendations based on your training data. Always consult with a qualified fitness professional before making significant changes to your training program.'**
+  String get aiCoachDisclaimer;
+
+  /// AI badge text shown in AI Coach card header
+  ///
+  /// In en, this message translates to:
+  /// **'AI'**
+  String get aiBadge;
+
+  /// Critical severity badge for AI insights (injury risk, overtraining)
+  ///
+  /// In en, this message translates to:
+  /// **'CRITICAL'**
+  String get badgeCritical;
+
+  /// Warning severity badge for AI insights (plateaus, imbalances)
+  ///
+  /// In en, this message translates to:
+  /// **'WARNING'**
+  String get badgeWarning;
+
+  /// Info severity badge for AI insights (educational content)
+  ///
+  /// In en, this message translates to:
+  /// **'INFO'**
+  String get badgeInfo;
+
+  /// Success severity badge for AI insights (positive feedback)
+  ///
+  /// In en, this message translates to:
+  /// **'GREAT'**
+  String get badgeSuccess;
+
+  /// AI insight title for first workout
+  ///
+  /// In en, this message translates to:
+  /// **'Start Your Journey'**
+  String get aiInsightStartJourney;
+
+  /// AI insight description for first workout
+  ///
+  /// In en, this message translates to:
+  /// **'Begin tracking workouts to unlock personalized insights'**
+  String get aiInsightStartJourneyDesc;
+
+  /// AI insight recommendation for first workout
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your first workout to get started'**
+  String get aiInsightStartJourneyRec;
+
+  /// AI insight title for new users (1-3 workouts)
+  ///
+  /// In en, this message translates to:
+  /// **'Great Start!'**
+  String get aiInsightNewUser;
+
+  /// AI insight description for new users
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re building a strong foundation! Keep consistent for better insights'**
+  String get aiInsightNewUserDesc;
+
+  /// AI insight recommendation for new users
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 5+ workouts to unlock advanced AI analysis'**
+  String get aiInsightNewUserRec;
+
+  /// AI insight title for muscle group imbalance
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Group Imbalance'**
+  String get aiInsightMuscleImbalance;
+
+  /// AI insight description for muscle group imbalance
+  ///
+  /// In en, this message translates to:
+  /// **'{muscleGroup} is undertrained this week'**
+  String aiInsightMuscleImbalanceDesc(String muscleGroup);
+
+  /// AI insight recommendation for muscle group imbalance
+  ///
+  /// In en, this message translates to:
+  /// **'Add 2-3 {muscleGroup} exercises to your next workout'**
+  String aiInsightMuscleImbalanceRec(String muscleGroup);
+
+  /// AI insight title for plateau
+  ///
+  /// In en, this message translates to:
+  /// **'Plateau Alert'**
+  String get aiInsightPlateauAlert;
+
+  /// AI insight description for plateau
+  ///
+  /// In en, this message translates to:
+  /// **'{exercise} weight hasn\'t increased in 3+ sessions'**
+  String aiInsightPlateauDesc(String exercise);
+
+  /// AI insight recommendation for plateau
+  ///
+  /// In en, this message translates to:
+  /// **'Try increasing weight by 2.5-5kg or add more reps'**
+  String get aiInsightPlateauRec;
+
+  /// AI insight title for insufficient recovery
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient Recovery'**
+  String get aiInsightInsufficientRecovery;
+
+  /// AI insight description for insufficient recovery
+  ///
+  /// In en, this message translates to:
+  /// **'Training too frequently without rest'**
+  String get aiInsightInsufficientRecoveryDesc;
+
+  /// AI insight recommendation for insufficient recovery
+  ///
+  /// In en, this message translates to:
+  /// **'Consider adding 1-2 rest days between sessions'**
+  String get aiInsightInsufficientRecoveryRec;
+
+  /// AI insight title for long recovery
+  ///
+  /// In en, this message translates to:
+  /// **'Long Recovery Periods'**
+  String get aiInsightLongRecovery;
+
+  /// AI insight description for long recovery
+  ///
+  /// In en, this message translates to:
+  /// **'Too much time between workouts'**
+  String get aiInsightLongRecoveryDesc;
+
+  /// AI insight recommendation for long recovery
+  ///
+  /// In en, this message translates to:
+  /// **'Try to maintain 2-3 days between sessions for optimal progress'**
+  String get aiInsightLongRecoveryRec;
+
+  /// AI insight title for low volume
+  ///
+  /// In en, this message translates to:
+  /// **'Low Training Volume'**
+  String get aiInsightLowVolume;
+
+  /// AI insight description for low volume
+  ///
+  /// In en, this message translates to:
+  /// **'Current average: {sets} sets per workout'**
+  String aiInsightLowVolumeDesc(int sets);
+
+  /// AI insight recommendation for low volume
+  ///
+  /// In en, this message translates to:
+  /// **'Consider adding 3-5 more sets to maximize growth'**
+  String get aiInsightLowVolumeRec;
+
+  /// AI insight title for high volume
+  ///
+  /// In en, this message translates to:
+  /// **'High Training Volume'**
+  String get aiInsightHighVolume;
+
+  /// AI insight description for high volume
+  ///
+  /// In en, this message translates to:
+  /// **'Current average: {sets} sets per workout'**
+  String aiInsightHighVolumeDesc(int sets);
+
+  /// AI insight recommendation for high volume
+  ///
+  /// In en, this message translates to:
+  /// **'Consider reducing volume to avoid overtraining'**
+  String get aiInsightHighVolumeRec;
+
+  /// AI insight title for low frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Low Training Frequency'**
+  String get aiInsightLowFrequency;
+
+  /// AI insight description for low frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Currently training {frequency} times per week'**
+  String aiInsightLowFrequencyDesc(String frequency);
+
+  /// AI insight recommendation for low frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Aim for 3-4 sessions per week for optimal results'**
+  String get aiInsightLowFrequencyRec;
+
+  /// AI insight title for high frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Very High Frequency'**
+  String get aiInsightHighFrequency;
+
+  /// AI insight description for high frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Training {frequency} times per week'**
+  String aiInsightHighFrequencyDesc(String frequency);
+
+  /// AI insight recommendation for high frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Consider adding more rest days to prevent burnout'**
+  String get aiInsightHighFrequencyRec;
+
+  /// AI insight title for volume plateau
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Plateau Detected'**
+  String get aiInsightVolumePlateau;
+
+  /// AI insight description for volume plateau
+  ///
+  /// In en, this message translates to:
+  /// **'Training volume hasn\'t increased significantly'**
+  String get aiInsightVolumePlateauDesc;
+
+  /// AI insight recommendation for volume plateau
+  ///
+  /// In en, this message translates to:
+  /// **'Try new exercises, techniques, or increase intensity'**
+  String get aiInsightVolumePlateauRec;
+
+  /// AI insight title for optimal training volume
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Volume!'**
+  String get aiInsightOptimalVolume;
+
+  /// AI insight description for optimal volume
+  ///
+  /// In en, this message translates to:
+  /// **'{muscleGroup} volume is in the optimal range ({sets} sets/week)'**
+  String aiInsightOptimalVolumeDesc(String muscleGroup, int sets);
+
+  /// AI insight recommendation for optimal volume
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this up! You\'re in the sweet spot for muscle growth'**
+  String get aiInsightOptimalVolumeRec;
+
+  /// AI insight title for large weight jump
+  ///
+  /// In en, this message translates to:
+  /// **'Large Weight Jump'**
+  String get aiInsightLargeWeightJump;
+
+  /// AI insight description for large weight jump
+  ///
+  /// In en, this message translates to:
+  /// **'{exercise} weight increased by {increase}%'**
+  String aiInsightLargeWeightJumpDesc(String exercise, int increase);
+
+  /// AI insight recommendation for large weight jump
+  ///
+  /// In en, this message translates to:
+  /// **'Ensure proper form with this weight increase'**
+  String get aiInsightLargeWeightJumpRec;
+
+  /// Muscle group name for legs
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get muscleGroupLegs;
+
+  /// Muscle group name for chest
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get muscleGroupChest;
+
+  /// Muscle group name for back
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get muscleGroupBack;
+
+  /// Muscle group name for shoulders
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get muscleGroupShoulders;
+
+  /// Muscle group name for arms
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get muscleGroupArms;
+
+  /// Muscle group name for other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get muscleGroupOther;
+
+  /// Days plural
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 days} =1{1 day} other{{count} days}}'**
+  String days(int count);
+
+  /// Per week suffix
+  ///
+  /// In en, this message translates to:
+  /// **'/week'**
+  String get perWeek;
+
+  /// Target label
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
+
+  /// Frequency label
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get frequency;
+
+  /// No record placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'No record'**
+  String get noRecord;
+
+  /// Start today encouragement
+  ///
+  /// In en, this message translates to:
+  /// **'Start today!'**
+  String get startToday;
+
+  /// Great exclamation
+  ///
+  /// In en, this message translates to:
+  /// **'Great!'**
+  String get great;
+
+  /// Keep going encouragement
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going!'**
+  String get keepGoing;
+
+  /// Generic day label
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// Error message when data fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load data'**
+  String get errorLoadingData;
+
+  /// Pull to refresh instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Pull to refresh'**
+  String get pullToRefresh;
+
+  /// Weekly frequency label
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Frequency'**
+  String get weeklyFrequency;
+
+  /// Excellent progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent Progress!'**
+  String get excellentProgress;
+
+  /// Good progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Good Progress!'**
+  String get goodProgress;
+
+  /// Get started encouragement
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s Get Started!'**
+  String get getStarted;
+
+  /// Motivation for users with good streaks
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing streak! You\'re building a strong habit.'**
+  String get streakMotivation;
+
+  /// Motivation for consistent users
+  ///
+  /// In en, this message translates to:
+  /// **'Great consistency! Keep building your momentum.'**
+  String get consistencyMotivation;
+
+  /// Motivation to build a workout streak
+  ///
+  /// In en, this message translates to:
+  /// **'Build your streak by staying consistent!'**
+  String get buildStreakMotivation;
+
+  /// Information about how workout streaks are calculated
+  ///
+  /// In en, this message translates to:
+  /// **'Streak counts consecutive days with at least one completed workout.'**
+  String get streakInfo;
+
+  /// Information about total workouts metric
+  ///
+  /// In en, this message translates to:
+  /// **'Total number of workout sessions you\'ve completed.'**
+  String get totalWorkoutsInfo;
+
+  /// Information about weekly frequency calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Average number of workout days per week over the last 4 weeks.'**
+  String get weeklyFrequencyInfo;
+
+  /// Retry button text
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// Community section title
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get community;
+
+  /// General information section title
+  ///
+  /// In en, this message translates to:
+  /// **'General Information'**
+  String get generalInformation;
+
+  /// Technical notes and Time under Tension section title
+  ///
+  /// In en, this message translates to:
+  /// **'Technical Notes & TuT'**
+  String get technicalNotesAndTut;
+
+  /// Warmup and preparation section title
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup & Preparation'**
+  String get warmupAndPreparation;
+
+  /// Technical drill section title
+  ///
+  /// In en, this message translates to:
+  /// **'Technical Drill'**
+  String get technicalDrill;
+
+  /// Terms explanation section title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms Explanation'**
+  String get termsExplanation;
+
+  /// Add exercise to selection button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Selection'**
+  String get addToSelection;
+
+  /// Number of exercises found in search results
+  ///
+  /// In en, this message translates to:
+  /// **'exercises found'**
+  String get exercisesFound;
+
+  /// Message when exercise is added to selection
+  ///
+  /// In en, this message translates to:
+  /// **'added to selection'**
+  String get addedToSelection;
+
+  /// Primary focus muscles label
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Focus'**
+  String get primaryFocus;
+
+  /// Pre-workout mobility work label
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Mobility Work'**
+  String get preMobilityWork;
+
+  /// Pre-workout activation label
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Activation'**
+  String get preActivation;
+
+  /// Filters section title
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// Add to workout button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Workout'**
+  String get addToWorkout;
+
+  /// Number of exercises selected text
+  ///
+  /// In en, this message translates to:
+  /// **'exercises selected'**
+  String get exercisesSelected;
+
+  /// Empty state when no exercises match search
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises found'**
+  String get noExercisesFound;
+
+  /// Suggestion when no exercises found
+  ///
+  /// In en, this message translates to:
+  /// **'Try modifying the search filters'**
+  String get tryModifyingFilters;
+
+  /// Clear all filters button text
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all filters'**
+  String get clearAllFilters;
+
+  /// Minutes abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get minutes;
+
+  /// Message when user has no templates
+  ///
+  /// In en, this message translates to:
+  /// **'No templates yet'**
+  String get noTemplatesYet;
+
+  /// Difficulty field label
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get difficulty;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while loading the workout'**
+  String get errorOccurred;
+
+  /// OK button
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// Network connection error message
+  ///
+  /// In en, this message translates to:
+  /// **'Network Error'**
+  String get networkError;
+
+  /// Database operation error message
+  ///
+  /// In en, this message translates to:
+  /// **'Database Error'**
+  String get databaseError;
+
+  /// Input validation error message
+  ///
+  /// In en, this message translates to:
+  /// **'Validation Error'**
+  String get validationError;
+
+  /// Permission denied error message
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Denied'**
+  String get permissionDenied;
+
+  /// Storage operation error message
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Error'**
+  String get storageError;
+
+  /// Generic unknown error message
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Error'**
+  String get unknownError;
+
+  /// User not found error message
+  ///
+  /// In en, this message translates to:
+  /// **'User Not Found'**
+  String get userNotFound;
+
+  /// Wrong password error message
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong Password'**
+  String get wrongPassword;
+
+  /// Email already in use error message
+  ///
+  /// In en, this message translates to:
+  /// **'Email Already In Use'**
+  String get emailAlreadyInUse;
+
+  /// Invalid email format error message
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Email'**
+  String get invalidEmail;
+
+  /// Password too weak error message
+  ///
+  /// In en, this message translates to:
+  /// **'Weak Password'**
+  String get weakPassword;
+
+  /// General authentication error message
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication Error'**
+  String get authenticationError;
+
+  /// Critical system error message
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Error'**
+  String get criticalError;
+
+  /// Button to go back to previous screen
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get goBack;
+
+  /// Start new workout cycle suggestion message
+  ///
+  /// In en, this message translates to:
+  /// **'Start new cycle'**
+  String get startNewCycle;
+
+  /// Continue workout routine suggestion message
+  ///
+  /// In en, this message translates to:
+  /// **'Continue your routine'**
+  String get continueRoutine;
+
+  /// Resume workout after N days message
+  ///
+  /// In en, this message translates to:
+  /// **'Resume after {days} {days, plural, =1{day} other{days}}'**
+  String resumeAfterDays(int days);
+
+  /// Restart workout cycle after N days message
+  ///
+  /// In en, this message translates to:
+  /// **'Restart cycle after {days} {days, plural, =1{day} other{days}}'**
+  String restartCycleAfterDays(int days);
+
+  /// Next workout in rotation suggestion message
+  ///
+  /// In en, this message translates to:
+  /// **'Next in rotation'**
+  String get nextInRotation;
+
+  /// Most frequent workout suggestion message
+  ///
+  /// In en, this message translates to:
+  /// **'Your most frequent workout'**
+  String get yourMostFrequentWorkout;
+
+  /// Hint to select an exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Select an exercise to view progress'**
+  String get selectExercise;
+
+  /// Label for original exercise name in selection dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Original exercise'**
+  String get originalExercise;
+
+  /// Title for suggested exercise matches section
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested matches'**
+  String get suggestedMatches;
+
+  /// Match percentage label
+  ///
+  /// In en, this message translates to:
+  /// **'match'**
+  String get match;
+
+  /// Button to skip current exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Exercise'**
+  String get skipExercise;
+
+  /// Button to create new exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Create New'**
+  String get createNewExercise;
+
+  /// Button to confirm exercise selection
+  ///
+  /// In en, this message translates to:
+  /// **'Use Selected'**
+  String get useSelectedExercise;
+
+  /// Title for workout templates screen
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Templates'**
+  String get workoutTemplates;
+
+  /// Tab label for discovering public templates
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get discover;
+
+  /// Tab label for trending templates
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get trending;
+
+  /// Average rating statistic label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Rating'**
+  String get avgRating;
+
+  /// Button to create new template
+  ///
+  /// In en, this message translates to:
+  /// **'New Template'**
+  String get newTemplate;
+
+  /// Placeholder text for template search
+  ///
+  /// In en, this message translates to:
+  /// **'Search templates...'**
+  String get searchTemplates;
+
+  /// Message when no public templates match search
+  ///
+  /// In en, this message translates to:
+  /// **'No public templates found'**
+  String get noPublicTemplatesFound;
+
+  /// Placeholder message for trending templates
+  ///
+  /// In en, this message translates to:
+  /// **'Trending templates coming soon!'**
+  String get trendingComingSoon;
+
+  /// Error message when template limit reached
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached the maximum number of templates'**
+  String get maxTemplatesReached;
+
+  /// Option to create template manually
+  ///
+  /// In en, this message translates to:
+  /// **'Create Manually'**
+  String get createManually;
+
+  /// Description for manual template creation
+  ///
+  /// In en, this message translates to:
+  /// **'Build your template from scratch'**
+  String get buildFromScratch;
+
+  /// Option to import template from JSON
+  ///
+  /// In en, this message translates to:
+  /// **'Import from JSON'**
+  String get importFromJSON;
+
+  /// Description for JSON import option
+  ///
+  /// In en, this message translates to:
+  /// **'Import a template from JSON format'**
+  String get importJSONDescription;
+
+  /// Title for JSON format guidelines
+  ///
+  /// In en, this message translates to:
+  /// **'JSON Format Guide'**
+  String get jsonFormatGuide;
+
+  /// Description of required JSON format
+  ///
+  /// In en, this message translates to:
+  /// **'📝 How to convert your workout:\n1. Copy your workout (text or photo)\n2. Go to ChatGPT (free at chat.openai.com)\n3. Ask: \"Convert this workout to JSON format like this example\"\n4. Copy and paste the result below\n\n⚙️ Required fields: name, description, exercises array. Each exercise needs: exerciseName, sets with targetReps/targetWeight. Supersets need type:\"superset\" and exercises array.'**
+  String get jsonFormatDescription;
+
+  /// Tooltip for copying JSON example
+  ///
+  /// In en, this message translates to:
+  /// **'Copy example'**
+  String get copyExample;
+
+  /// Message when JSON example is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Example copied to clipboard'**
+  String get exampleCopied;
+
+  /// Confirmation message when example is copied and pasted
+  ///
+  /// In en, this message translates to:
+  /// **'Example copied and pasted in field'**
+  String get exampleCopiedAndPasted;
+
+  /// Instruction to tap example to copy and paste
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to copy and paste in field below'**
+  String get tapToCopyAndPaste;
+
+  /// Instruction to tap example to copy to clipboard only
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to copy to clipboard'**
+  String get tapToCopyToClipboard;
+
+  /// Text shown when example is minimized
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to expand example and guide'**
+  String get tapToExpandExample;
+
+  /// Button to hide keyboard
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Keyboard'**
+  String get hideKeyboard;
+
+  /// Message when exercise is not found in database during JSON import
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise \"{exerciseName}\" not found in database - using original name'**
+  String exerciseNotFoundInDatabase(String exerciseName);
+
+  /// Header for missing exercise widget
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t find the exercise?'**
+  String get exerciseNotFound;
+
+  /// Description when exercise is not found
+  ///
+  /// In en, this message translates to:
+  /// **'The exercise \"{exerciseName}\" was not found in our database. What would you like to do?'**
+  String exerciseNotFoundDescription(String exerciseName);
+
+  /// Generic help text for missing exercise feature
+  ///
+  /// In en, this message translates to:
+  /// **'Add it temporarily and we\'ll include it in the database soon!'**
+  String get exerciseNotFoundHelpText;
+
+  /// Question asking user what they want to do
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do?'**
+  String get whatWouldYouLikeToDo;
+
+  /// Option to choose exercise from database
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Database'**
+  String get chooseFromDatabase;
+
+  /// Option to create custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Create Custom'**
+  String get createCustom;
+
+  /// Option to use original exercise name
+  ///
+  /// In en, this message translates to:
+  /// **'Use Original Name'**
+  String get useOriginalName;
+
+  /// Option to skip this exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// Dialog title for selecting exercise from database
+  ///
+  /// In en, this message translates to:
+  /// **'Select Exercise from Database'**
+  String get selectExerciseFromDatabase;
+
+  /// Message when database is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises found in database'**
+  String get noExercisesInDatabase;
+
+  /// Dialog title for creating custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Create Custom Exercise'**
+  String get createCustomExercise;
+
+  /// Label for category field
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// Note about custom exercises
+  ///
+  /// In en, this message translates to:
+  /// **'This exercise will be saved to your personal list'**
+  String get customExerciseNote;
+
+  /// Button to create something
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// Dialog title for premium features
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Feature'**
+  String get premiumFeature;
+
+  /// Message about custom exercise limit for free users
+  ///
+  /// In en, this message translates to:
+  /// **'Free users can create up to 3 custom exercises per import. Upgrade to Premium for unlimited custom exercises!'**
+  String get customExerciseLimit;
+
+  /// Button to upgrade to premium
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium'**
+  String get upgradeToPremium;
+
+  /// Delete template menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Template'**
+  String get deleteTemplate;
+
+  /// Confirmation message for deleting template
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{templateName}\"?'**
+  String confirmDeleteTemplate(String templateName);
+
+  /// Template deleted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Template \"{name}\" deleted'**
+  String templateDeleted(String name);
+
+  /// Success message when share link is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Share link copied to clipboard!'**
+  String get shareLinkCopied;
+
+  /// Success message when template is downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'Template \"{templateName}\" downloaded!'**
+  String templateDownloaded(String templateName);
+
+  /// Error message when template download fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to download template'**
+  String get failedToDownload;
+
+  /// Instructions for JSON import dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your workout template JSON below:'**
+  String get pasteWorkoutJSON;
+
+  /// Button to show JSON format example
+  ///
+  /// In en, this message translates to:
+  /// **'View JSON Format'**
+  String get viewJSONFormat;
+
+  /// Placeholder text for JSON input field
+  ///
+  /// In en, this message translates to:
+  /// **'Paste JSON here...'**
+  String get pasteJSONHere;
+
+  /// Import button
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get import;
+
+  /// Error message when JSON field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please paste JSON content'**
+  String get pleaseProvideJSON;
+
+  /// Success message when template is imported
+  ///
+  /// In en, this message translates to:
+  /// **'Template \"{templateName}\" imported successfully!'**
+  String templateImportedSuccessfully(String templateName);
+
+  /// Default name for imported programs
+  ///
+  /// In en, this message translates to:
+  /// **'Imported Program'**
+  String get importedProgram;
+
+  /// Error message when program has no days
+  ///
+  /// In en, this message translates to:
+  /// **'No days found in program'**
+  String get noDaysFoundInProgram;
+
+  /// Dialog title for selecting which day to import
+  ///
+  /// In en, this message translates to:
+  /// **'Select Day to Import'**
+  String get selectDayToImport;
+
+  /// Program information in day selection dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Found program \"{programName}\" with {dayCount} days:'**
+  String programFoundWithDays(String programName, int dayCount);
+
+  /// Select button text
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
+  /// Exercise count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises'**
+  String exercisesCount(int count);
+
+  /// Template description for imported days
+  ///
+  /// In en, this message translates to:
+  /// **'Imported from program: {programName}'**
+  String importedFromProgram(String programName);
+
+  /// Error message when JSON import fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error importing JSON: {error}'**
+  String errorImportingJSON(String error);
+
+  /// Placeholder for filter functionality
+  ///
+  /// In en, this message translates to:
+  /// **'Filters coming soon'**
+  String get filtersComingSoon;
+
+  /// Template author attribution
+  ///
+  /// In en, this message translates to:
+  /// **'by {authorName}'**
+  String byAuthor(String authorName);
+
+  /// Fallback name for unknown author
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous'**
+  String get anonymous;
+
+  /// Week time period label
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// Month time period label
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// Progress improvement label
+  ///
+  /// In en, this message translates to:
+  /// **'Improvement'**
+  String get improvement;
+
+  /// Progress decline label
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get decline;
+
+  /// Progress stall label
+  ///
+  /// In en, this message translates to:
+  /// **'Stall'**
+  String get stall;
+
+  /// Total exercises stats label
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get totalExercises;
+
+  /// Total sets statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sets'**
+  String get totalSets;
+
+  /// Average volume per workout statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Volume Per Workout'**
+  String get avgVolumePerWorkout;
+
+  /// Average label
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get average;
+
+  /// Personal record label
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get record;
+
+  /// Trend label
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get trend;
+
+  /// Chest muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get chest;
+
+  /// Back muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'DORSO (Back)'**
+  String get back;
+
+  /// Shoulders muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get shoulders;
+
+  /// Arms muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'BRACCI (Arms)'**
+  String get arms;
+
+  /// Legs muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'GAMBE (Legs)'**
+  String get legs;
+
+  /// Core muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'CORE (Abs/Lower Back)'**
+  String get core;
+
+  /// Full chest muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Chest Muscles'**
+  String get chestFull;
+
+  /// Full back muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Back Muscles'**
+  String get backFull;
+
+  /// Full shoulders muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulder Muscles'**
+  String get shouldersFull;
+
+  /// Full arms muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Arm Muscles'**
+  String get armsFull;
+
+  /// Full legs muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Leg Muscles'**
+  String get legsFull;
+
+  /// Full core muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Core Muscles'**
+  String get coreFull;
+
+  /// Overview tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// Strength tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get strength;
+
+  /// Insights tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get insights;
+
+  /// Muscle balance section title
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Balance'**
+  String get muscleBalance;
+
+  /// All exercises section title
+  ///
+  /// In en, this message translates to:
+  /// **'All Exercises'**
+  String get allExercises;
+
+  /// Training insights section title
+  ///
+  /// In en, this message translates to:
+  /// **'Training Insights'**
+  String get trainingInsights;
+
+  /// Recommendations section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendations'**
+  String get recommendations;
+
+  /// Exercise trends section title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Trends'**
+  String get exerciseTrends;
+
+  /// Current workout streak statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak'**
+  String get currentStreak;
+
+  /// Total personal records statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Total PRs'**
+  String get totalPRs;
+
+  /// Volume change statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Change'**
+  String get volumeChange;
+
+  /// Maximum weight label
+  ///
+  /// In en, this message translates to:
+  /// **'Max Weight'**
+  String get maxWeight;
+
+  /// Maximum reps statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Max Reps'**
+  String get maxReps;
+
+  /// Estimated one rep max
+  ///
+  /// In en, this message translates to:
+  /// **'Est. 1RM'**
+  String get estimated1RM;
+
+  /// Volume progression chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Progression'**
+  String get volumeProgression;
+
+  /// Weekly period label
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get weekly;
+
+  /// Monthly period label
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// Volume statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Statistics'**
+  String get volumeStatistics;
+
+  /// Please login message
+  ///
+  /// In en, this message translates to:
+  /// **'Please Login'**
+  String get pleaseLogin;
+
+  /// Message to start workout for analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Start a workout to see your analytics'**
+  String get startWorkoutToSeeAnalytics;
+
+  /// Recent workouts section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Workouts'**
+  String get recentWorkouts;
+
+  /// No workouts message
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts yet'**
+  String get noWorkoutsYet;
+
+  /// Label for high priority recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'High Priority'**
+  String get highPriority;
+
+  /// Insight label
+  ///
+  /// In en, this message translates to:
+  /// **'Insight'**
+  String get insight;
+
+  /// Recommendation label
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendation'**
+  String get recommendation;
+
+  /// About strength progression dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'About Strength Progression'**
+  String get aboutStrengthProgression;
+
+  /// Strength progression information text
+  ///
+  /// In en, this message translates to:
+  /// **'Track your strength gains over time with estimated 1RM calculations and progressive overload indicators.'**
+  String get strengthProgressionInfo;
+
+  /// Back to home button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// Back to home while keeping workout active
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home (Keep Workout)'**
+  String get backToHomeKeepWorkout;
+
+  /// Back to home tooltip while keeping workout active
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home (Keep Workout Active)'**
+  String get backToHomeKeepWorkoutActive;
+
+  /// Button text to unlock premium features
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium Features'**
+  String get unlockPremiumFeatures;
+
+  /// Title for premium volume analysis features
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Volume Features'**
+  String get premiumVolumeFeatures;
+
+  /// Advanced analytics insights section title
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Insights'**
+  String get advancedInsights;
+
+  /// Recovery recommendation section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Recommendation'**
+  String get recoveryRecommendation;
+
+  /// Training intensity metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Training Intensity'**
+  String get trainingIntensity;
+
+  /// Message when no data exists for selected time period
+  ///
+  /// In en, this message translates to:
+  /// **'No data available for the selected period'**
+  String get noDataForSelectedPeriod;
+
+  /// Previous period label
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// Instruction to tap for more details
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for details'**
+  String get tapForDetails;
+
+  /// Option to compare with historical data
+  ///
+  /// In en, this message translates to:
+  /// **'Compare with history'**
+  String get compareWithHistory;
+
+  /// Best volume achieved label
+  ///
+  /// In en, this message translates to:
+  /// **'Best Volume'**
+  String get bestVolume;
+
+  /// Title for muscle balance chart
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Group Balance'**
+  String get muscleGroupBalance;
+
+  /// Overall muscle balance score
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Balance'**
+  String get overallBalance;
+
+  /// Excellent muscle balance rating
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get excellentBalance;
+
+  /// Good muscle balance rating
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get goodBalance;
+
+  /// Moderate muscle balance rating
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get moderateBalance;
+
+  /// Poor muscle balance rating
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get poorBalance;
+
+  /// Compare with previous period option
+  ///
+  /// In en, this message translates to:
+  /// **'Compare Previous'**
+  String get comparePrevious;
+
+  /// Current strength level label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Strength'**
+  String get currentStrength;
+
+  /// Explanation of how strength is calculated
+  ///
+  /// In en, this message translates to:
+  /// **'Strength is calculated based on volume progression relative to your previous best'**
+  String get strengthCalculationHint;
+
+  /// Button tooltip asking about calculation method
+  ///
+  /// In en, this message translates to:
+  /// **'How is this calculated?'**
+  String get howIsThisCalculated;
+
+  /// Tooltip for refresh animation button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Animation'**
+  String get refreshAnimation;
+
+  /// Button to edit target values
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Targets'**
+  String get editTargets;
+
+  /// Instruction to tap to edit target
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to edit target'**
+  String get tapToEditTarget;
+
+  /// Target strength level label
+  ///
+  /// In en, this message translates to:
+  /// **'Target Strength'**
+  String get targetStrength;
+
+  /// Comparison with last month
+  ///
+  /// In en, this message translates to:
+  /// **'Compared to last month'**
+  String get comparedToLastMonth;
+
+  /// Recommended exercises section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Exercises'**
+  String get recommendedExercises;
+
+  /// Volume breakdown by exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Breakdown'**
+  String get volumeBreakdown;
+
+  /// Explanation of strength calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Based on {volume}kg total volume'**
+  String strengthExplanation(String volume);
+
+  /// Dialog title explaining strength calculation
+  ///
+  /// In en, this message translates to:
+  /// **'How Strength is Calculated'**
+  String get howStrengthIsCalculated;
+
+  /// Detailed explanation of strength calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Strength percentage is calculated based on your training volume compared to your historical maximum volume for each muscle group.'**
+  String get strengthCalculationExplanation;
+
+  /// Volume calculation formula title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Formula'**
+  String get volumeFormula;
+
+  /// Strength percentage calculation title
+  ///
+  /// In en, this message translates to:
+  /// **'Strength Percentage'**
+  String get strengthPercentage;
+
+  /// Explanation of target system
+  ///
+  /// In en, this message translates to:
+  /// **'Targets are customizable goals that help you maintain balanced training across all muscle groups.'**
+  String get targetExplanation;
+
+  /// Message when previous workout weights are loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Previous weights loaded successfully'**
+  String get previousWeightsLoaded;
+
+  /// Title for strength gains insight
+  ///
+  /// In en, this message translates to:
+  /// **'Strength Gains'**
+  String get insightStrengthGainsTitle;
+
+  /// Message for strength gains insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve made significant strength improvements'**
+  String get insightStrengthGainsMessage;
+
+  /// Recommendation for strength gains insight
+  ///
+  /// In en, this message translates to:
+  /// **'Keep pushing progressive overload to maintain momentum'**
+  String get insightStrengthGainsRecommendation;
+
+  /// Title for plateau insight
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Plateau'**
+  String get insightPlateauTitle;
+
+  /// Message for plateau insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your performance has plateaued recently'**
+  String get insightPlateauMessage;
+
+  /// Recommendation for plateau insight
+  ///
+  /// In en, this message translates to:
+  /// **'Consider changing your routine or taking a deload week'**
+  String get insightPlateauRecommendation;
+
+  /// Title for volume surge insight
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Surge'**
+  String get insightVolumeSurgeTitle;
+
+  /// Message for volume surge insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your training volume has increased significantly'**
+  String get insightVolumeSurgeMessage;
+
+  /// Recommendation for volume surge insight
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor recovery and adjust if needed'**
+  String get insightVolumeSurgeRecommendation;
+
+  /// Title for volume drop insight
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Drop'**
+  String get insightVolumeDropTitle;
+
+  /// Message for volume drop insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your training volume has decreased'**
+  String get insightVolumeDropMessage;
+
+  /// Recommendation for volume drop insight
+  ///
+  /// In en, this message translates to:
+  /// **'Gradually increase volume to maintain progress'**
+  String get insightVolumeDropRecommendation;
+
+  /// Title for volume plateau insight
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Plateau'**
+  String get insightVolumePlateauTitle;
+
+  /// Message for volume plateau insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your volume has remained stable'**
+  String get insightVolumePlateauMessage;
+
+  /// Recommendation for volume plateau insight
+  ///
+  /// In en, this message translates to:
+  /// **'Consider progressive overload techniques'**
+  String get insightVolumePlateauRecommendation;
+
+  /// Title for low frequency insight
+  ///
+  /// In en, this message translates to:
+  /// **'Low Training Frequency'**
+  String get insightLowFrequencyTitle;
+
+  /// Message for low frequency insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve been training less frequently'**
+  String get insightLowFrequencyMessage;
+
+  /// Recommendation for low frequency insight
+  ///
+  /// In en, this message translates to:
+  /// **'Try to maintain consistent training schedule'**
+  String get insightLowFrequencyRecommendation;
+
+  /// Title for high load insight
+  ///
+  /// In en, this message translates to:
+  /// **'High Training Load'**
+  String get insightHighLoadTitle;
+
+  /// Message for high load insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve been training with high intensity'**
+  String get insightHighLoadMessage;
+
+  /// Recommendation for high load insight
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure to get adequate rest and recovery'**
+  String get insightHighLoadRecommendation;
+
+  /// Title for consistency insight
+  ///
+  /// In en, this message translates to:
+  /// **'Great Consistency'**
+  String get insightGreatConsistencyTitle;
+
+  /// Message for consistency insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve maintained excellent training consistency'**
+  String get insightGreatConsistencyMessage;
+
+  /// Recommendation for consistency insight
+  ///
+  /// In en, this message translates to:
+  /// **'Keep up the great work!'**
+  String get insightGreatConsistencyRecommendation;
+
+  /// Title for extended break insight
+  ///
+  /// In en, this message translates to:
+  /// **'Extended Break'**
+  String get insightExtendedBreakTitle;
+
+  /// Message for extended break insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve taken an extended break from training'**
+  String get insightExtendedBreakMessage;
+
+  /// Recommendation for extended break insight
+  ///
+  /// In en, this message translates to:
+  /// **'Start with lighter loads and gradually progress'**
+  String get insightExtendedBreakRecommendation;
+
+  /// Title for chase PRs insight
+  ///
+  /// In en, this message translates to:
+  /// **'Chase PRs'**
+  String get insightChasePRsTitle;
+
+  /// Message for chase PRs insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re close to setting new personal records'**
+  String get insightChasePRsMessage;
+
+  /// Recommendation for chase PRs insight
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on your strongest exercises for PR attempts'**
+  String get insightChasePRsRecommendation;
+
+  /// Title for PR week insight
+  ///
+  /// In en, this message translates to:
+  /// **'PR Week'**
+  String get insightPRWeekTitle;
+
+  /// Message for PR week insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve set multiple PRs this week'**
+  String get insightPRWeekMessage;
+
+  /// Recommendation for PR week insight
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! Consider a deload to consolidate gains'**
+  String get insightPRWeekRecommendation;
+
+  /// Title for PR drought insight
+  ///
+  /// In en, this message translates to:
+  /// **'PR Drought'**
+  String get insightPRDroughtTitle;
+
+  /// Message for PR drought insight
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s been a while since your last PR'**
+  String get insightPRDroughtMessage;
+
+  /// Recommendation for PR drought insight
+  ///
+  /// In en, this message translates to:
+  /// **'Try different rep ranges or exercise variations'**
+  String get insightPRDroughtRecommendation;
+
+  /// Title for muscle imbalance insight
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Imbalance'**
+  String get insightMuscleImbalanceTitle;
+
+  /// Message for muscle imbalance insight
+  ///
+  /// In en, this message translates to:
+  /// **'Some muscle groups are lagging behind'**
+  String get insightMuscleImbalanceMessage;
+
+  /// Recommendation for muscle imbalance insight
+  ///
+  /// In en, this message translates to:
+  /// **'Focus more on weaker muscle groups'**
+  String get insightMuscleImbalanceRecommendation;
+
+  /// Title for focus adjustment insight
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Adjustment'**
+  String get insightFocusAdjustmentTitle;
+
+  /// Message for focus adjustment insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your training focus could be better balanced'**
+  String get insightFocusAdjustmentMessage;
+
+  /// Recommendation for focus adjustment insight
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust your program for better balance'**
+  String get insightFocusAdjustmentRecommendation;
+
+  /// Title for well balanced insight
+  ///
+  /// In en, this message translates to:
+  /// **'Well Balanced'**
+  String get insightWellBalancedTitle;
+
+  /// Message for well balanced insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your training is well balanced across muscle groups'**
+  String get insightWellBalancedMessage;
+
+  /// Recommendation for well balanced insight
+  ///
+  /// In en, this message translates to:
+  /// **'Keep maintaining this balanced approach'**
+  String get insightWellBalancedRecommendation;
+
+  /// Title for overtraining insight
+  ///
+  /// In en, this message translates to:
+  /// **'Overtraining Risk'**
+  String get insightOvertrainingTitle;
+
+  /// Message for overtraining insight
+  ///
+  /// In en, this message translates to:
+  /// **'You may be at risk of overtraining'**
+  String get insightOvertrainingMessage;
+
+  /// Recommendation for overtraining insight
+  ///
+  /// In en, this message translates to:
+  /// **'Consider taking a rest day or deload week'**
+  String get insightOvertrainingRecommendation;
+
+  /// Title for recovery note insight
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Note'**
+  String get insightRecoveryNoteTitle;
+
+  /// Message for recovery note insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your recovery metrics need attention'**
+  String get insightRecoveryNoteMessage;
+
+  /// Recommendation for recovery note insight
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on sleep, nutrition, and stress management'**
+  String get insightRecoveryNoteRecommendation;
+
+  /// Title for streak insight
+  ///
+  /// In en, this message translates to:
+  /// **'Training Streak'**
+  String get insightStreakTitle;
+
+  /// Message for streak insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re on an impressive training streak'**
+  String get insightStreakMessage;
+
+  /// Recommendation for streak insight
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up while listening to your body'**
+  String get insightStreakRecommendation;
+
+  /// Title for volume milestone insight
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Milestone'**
+  String get insightVolumeMilestoneTitle;
+
+  /// Message for volume milestone insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached a new volume milestone'**
+  String get insightVolumeMilestoneMessage;
+
+  /// Recommendation for volume milestone insight
+  ///
+  /// In en, this message translates to:
+  /// **'Celebrate this achievement!'**
+  String get insightVolumeMilestoneRecommendation;
+
+  /// Title for PR machine insight
+  ///
+  /// In en, this message translates to:
+  /// **'PR Machine'**
+  String get insightPRMachineTitle;
+
+  /// Message for PR machine insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re setting PRs consistently'**
+  String get insightPRMachineMessage;
+
+  /// Recommendation for PR machine insight
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing progress! Keep pushing your limits'**
+  String get insightPRMachineRecommendation;
+
+  /// Title for consistency bonus insight
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency Bonus'**
+  String get insightConsistencyBonusTitle;
+
+  /// Message for consistency bonus insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your consistency is paying off'**
+  String get insightConsistencyBonusMessage;
+
+  /// Recommendation for consistency bonus insight
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency is the key to long-term success'**
+  String get insightConsistencyBonusRecommendation;
+
+  /// Sign in required message
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in required'**
+  String get signInRequired;
+
+  /// Sign in button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signIn;
+
+  /// Strength progression chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Strength Progression'**
+  String get strengthProgression;
+
+  /// Label for actual achievable weight
+  ///
+  /// In en, this message translates to:
+  /// **'Actual Weight'**
+  String get actualWeight;
+
+  /// Trend line in charts
+  ///
+  /// In en, this message translates to:
+  /// **'Trend Line'**
+  String get trendLine;
+
+  /// Current one rep max
+  ///
+  /// In en, this message translates to:
+  /// **'Current 1RM'**
+  String get current1RM;
+
+  /// Best performance ever achieved
+  ///
+  /// In en, this message translates to:
+  /// **'Best Ever'**
+  String get bestEver;
+
+  /// Message when no data exists for exercise
+  ///
+  /// In en, this message translates to:
+  /// **'No data available for this exercise'**
+  String get noDataForExercise;
+
+  /// Volume heatmap chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Heatmap'**
+  String get volumeHeatmap;
+
+  /// Days when workouts were performed
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Days'**
+  String get workoutDays;
+
+  /// Number of weeks to display
+  ///
+  /// In en, this message translates to:
+  /// **'Weeks to Show'**
+  String get weeksToShow;
+
+  /// Less option
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get less;
+
+  /// More option
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// Number of exercises performed
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises Performed'**
+  String get exercisesPerformed;
+
+  /// Highest number of sets
+  ///
+  /// In en, this message translates to:
+  /// **'Most Sets'**
+  String get mostSets;
+
+  /// Zoom out button
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom Out'**
+  String get zoomOut;
+
+  /// Reset zoom button
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Zoom'**
+  String get resetZoom;
+
+  /// Zoom in button
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom In'**
+  String get zoomIn;
+
+  /// Longest consecutive workout streak
+  ///
+  /// In en, this message translates to:
+  /// **'Longest Streak'**
+  String get longestStreak;
+
+  /// Workout name with exercise count
+  ///
+  /// In en, this message translates to:
+  /// **'{workoutName} with {exerciseCount} exercises'**
+  String workoutWithExercises(Object workoutName, Object exerciseCount);
+
+  /// Total duration of workout
+  ///
+  /// In en, this message translates to:
+  /// **'Total Duration'**
+  String get totalDuration;
+
+  /// Day designated for rest
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Day'**
+  String get restDay;
+
+  /// Exercise count with pluralization
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No exercises} =1{1 exercise} other{{count} exercises}}'**
+  String exerciseCount(int count);
+
+  /// Duration in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String durationMinutes(Object minutes);
+
+  /// Number of sets
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sets'**
+  String setsCount(int count);
+
+  /// Label for a numbered set
+  ///
+  /// In en, this message translates to:
+  /// **'Set {number}'**
+  String setLabel(Object number);
+
+  /// Weight input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get weightLabel;
+
+  /// Reps input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get repsLabel;
+
+  /// Effort or intensity label
+  ///
+  /// In en, this message translates to:
+  /// **'Effort'**
+  String get effortLabel;
+
+  /// No description provided for @importedTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported Template'**
+  String get importedTemplate;
+
+  /// No description provided for @noExercisesFoundInJSON.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises found in JSON'**
+  String get noExercisesFoundInJSON;
+
+  /// No description provided for @exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get exercise;
+
+  /// Round number label
+  ///
+  /// In en, this message translates to:
+  /// **'Round {number}'**
+  String roundNumber(int number);
+
+  /// Edit round data subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Edit round data'**
+  String get editRoundData;
+
+  /// Weight input label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get weightKg;
+
+  /// Set updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Set updated successfully'**
+  String get setUpdated;
+
+  /// Weight tab label in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get quickEditWeight;
+
+  /// Plates tab label in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'Plates'**
+  String get quickEditPlates;
+
+  /// Percentage tab label in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'%'**
+  String get quickEditPercentage;
+
+  /// Reps label in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'Reps:'**
+  String get quickEditReps;
+
+  /// RPE label in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'RPE:'**
+  String get quickEditRpe;
+
+  /// Cancel button in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get quickEditCancel;
+
+  /// Save button in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get quickEditSave;
+
+  /// Calculate button for 1RM in quick edit
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate'**
+  String get quickEditCalculate;
+
+  /// Message when copying values from previous set
+  ///
+  /// In en, this message translates to:
+  /// **'Copied from Set {setNumber}'**
+  String quickEditCopiedFromSet(int setNumber);
+
+  /// Plate calculator section title
+  ///
+  /// In en, this message translates to:
+  /// **'Plate Calculator'**
+  String get plateCalculatorTitle;
+
+  /// Italian 'Dischi' button for plate calculator
+  ///
+  /// In en, this message translates to:
+  /// **'Plates'**
+  String get plateCalculatorDischi;
+
+  /// Select all plates button
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get plateCalculatorAll;
+
+  /// Select standard plates button
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get plateCalculatorStandard;
+
+  /// Recent weights section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Weights'**
+  String get recentWeights;
+
+  /// Quick weight adjustment section title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Adjustment'**
+  String get quickAdjustment;
+
+  /// Barbell weight included message
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell {weight}kg included'**
+  String barbellIncluded(double weight);
+
+  /// No barbell selected message
+  ///
+  /// In en, this message translates to:
+  /// **'No barbell'**
+  String get noBarbell;
+
+  /// Per side label for plate calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Per side:'**
+  String get perSide;
+
+  /// Only barbell message when no plates needed
+  ///
+  /// In en, this message translates to:
+  /// **'Only barbell'**
+  String get onlyBarbell;
+
+  /// No plates needed message
+  ///
+  /// In en, this message translates to:
+  /// **'No plates'**
+  String get noPlates;
+
+  /// Configure plates button text
+  ///
+  /// In en, this message translates to:
+  /// **'Configure available plates'**
+  String get configureAvailablePlates;
+
+  /// Instructions for selecting available plates
+  ///
+  /// In en, this message translates to:
+  /// **'Select the plates available in your gym:'**
+  String get selectAvailablePlates;
+
+  /// Select barbell dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Barbell'**
+  String get selectBarbell;
+
+  /// Select barbell button text
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get selectBarbellButton;
+
+  /// Replace exercise swipe action
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get replace;
+
+  /// Action button to replace exercise in templates
+  ///
+  /// In en, this message translates to:
+  /// **'Replace Exercise'**
+  String get replaceExercise;
+
+  /// Delete exercise dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Exercise'**
+  String get deleteExercise;
+
+  /// Delete exercise confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently remove this exercise from your workout.'**
+  String get deleteExerciseDescription;
+
+  /// Delete superset dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Superset'**
+  String get deleteSuperset;
+
+  /// Delete superset confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently remove this superset and all its exercises from your workout.'**
+  String get deleteSupersetDescription;
+
+  /// Delete set dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete set {setNumber}?'**
+  String deleteSetTitle(int setNumber);
+
+  /// Delete warmup set dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete warmup set?'**
+  String get deleteWarmupSetTitle;
+
+  /// Delete set confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get deleteSetMessage;
+
+  /// Button to manually collapse completed exercise card
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse'**
+  String get collapseExercise;
+
+  /// Confirm action dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Action'**
+  String get confirmAction;
+
+  /// Swipe instruction for deleting exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left to delete'**
+  String get swipeToDeleteExercise;
+
+  /// Swipe instruction for editing exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left to edit'**
+  String get swipeToEditExercise;
+
+  /// Swipe instruction for replacing exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left to replace'**
+  String get swipeToReplaceExercise;
+
+  /// Superset training title
+  ///
+  /// In en, this message translates to:
+  /// **'Superset Training'**
+  String get supersetTraining;
+
+  /// Superset technique description
+  ///
+  /// In en, this message translates to:
+  /// **'Superset: Perform two exercises back-to-back with no rest between them.'**
+  String get supersetDescription;
+
+  /// Selected exercises section title
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Exercises'**
+  String get selectedExercises;
+
+  /// Minimum exercises requirement message
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least 2 exercises to create a superset'**
+  String get addAtLeastTwoExercises;
+
+  /// Add round button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add Round'**
+  String get addRound;
+
+  /// Rounds configuration section title
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds Configuration'**
+  String get roundsConfiguration;
+
+  /// Create superset button text
+  ///
+  /// In en, this message translates to:
+  /// **'Create Superset'**
+  String get createSuperset;
+
+  /// Round label
+  ///
+  /// In en, this message translates to:
+  /// **'Round'**
+  String get round;
+
+  /// Exercise count message
+  ///
+  /// In en, this message translates to:
+  /// **'All {count} exercises will be performed in this round'**
+  String allExercisesWillBePerformed(int count);
+
+  /// Optional field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// Rest settings section title
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Settings'**
+  String get restSettings;
+
+  /// Between exercises rest label
+  ///
+  /// In en, this message translates to:
+  /// **'Between Exercises'**
+  String get betweenExercises;
+
+  /// Rest time between exercises description
+  ///
+  /// In en, this message translates to:
+  /// **'Rest time between each exercise in a round'**
+  String get restTimeBetweenExercises;
+
+  /// After round rest label
+  ///
+  /// In en, this message translates to:
+  /// **'After Round'**
+  String get afterRound;
+
+  /// Rest time after round description
+  ///
+  /// In en, this message translates to:
+  /// **'Rest time after completing all exercises'**
+  String get restTimeAfterRound;
+
+  /// Message shown when a set is completed
+  ///
+  /// In en, this message translates to:
+  /// **'Set completed!'**
+  String get setCompleted;
+
+  /// Next button text
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// Single exercise type
+  ///
+  /// In en, this message translates to:
+  /// **'Single'**
+  String get single;
+
+  /// Superset exercise type
+  ///
+  /// In en, this message translates to:
+  /// **'Superset'**
+  String get superset;
+
+  /// Drop set exercise type
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Set'**
+  String get dropset;
+
+  /// Rest-pause exercise type
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause'**
+  String get restPause;
+
+  /// Instruction to select exercise from database
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select from database'**
+  String get tapToSelectFromDatabase;
+
+  /// Rest time between exercises label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest between exercises'**
+  String get restBetweenExercises;
+
+  /// Seconds time unit
+  ///
+  /// In en, this message translates to:
+  /// **'seconds'**
+  String get seconds;
+
+  /// Title for superset exercise selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select exercises for superset'**
+  String get selectExercisesForSuperset;
+
+  /// Title for drop set exercise selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select exercise for drop set'**
+  String get selectExerciseForDropset;
+
+  /// Title for rest-pause exercise selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select exercise for rest-pause'**
+  String get selectExerciseForRestPause;
+
+  /// Clear all selections button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// Drop set stages label
+  ///
+  /// In en, this message translates to:
+  /// **'Stages'**
+  String get stages;
+
+  /// Add new drop set stage button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Stage'**
+  String get addStage;
+
+  /// Label for number of mini-sets in rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'mini-sets'**
+  String get miniSets;
+
+  /// Rest time label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Time'**
+  String get restTime;
+
+  /// Shows current exercise position in superset
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise {current} of {total}'**
+  String supersetProgress(int current, int total);
+
+  /// Instruction for superset navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left or right to navigate between exercises'**
+  String get swipeToNavigate;
+
+  /// Label for current exercise in superset
+  ///
+  /// In en, this message translates to:
+  /// **'Current Exercise'**
+  String get currentExercise;
+
+  /// Next exercise button text
+  ///
+  /// In en, this message translates to:
+  /// **'Next Exercise'**
+  String get nextExercise;
+
+  /// Previous exercise button text
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Exercise'**
+  String get previousExercise;
+
+  /// Complete current exercise and move to next
+  ///
+  /// In en, this message translates to:
+  /// **'Complete & Next'**
+  String get completeAndNext;
+
+  /// Complete current exercise and finish superset
+  ///
+  /// In en, this message translates to:
+  /// **'Complete & Finish'**
+  String get completeAndFinish;
+
+  /// Header text for RPE rating section
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Your Effort'**
+  String get rateYourEffort;
+
+  /// Button text to complete a set
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Set'**
+  String get completeSet;
+
+  /// Toggle text to verify weight and reps before RPE
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Weight & Reps'**
+  String get verifyWeightReps;
+
+  /// Title for exercise history bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise History'**
+  String get exerciseHistory;
+
+  /// Error message when history fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading history'**
+  String get errorLoadingHistory;
+
+  /// Statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// Average weight statistic label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Weight'**
+  String get avgWeight;
+
+  /// First workout date statistic label
+  ///
+  /// In en, this message translates to:
+  /// **'First Workout'**
+  String get firstWorkout;
+
+  /// Message when no exercise history is available
+  ///
+  /// In en, this message translates to:
+  /// **'No History Found'**
+  String get noHistoryFound;
+
+  /// Instruction text when no history is available
+  ///
+  /// In en, this message translates to:
+  /// **'Complete workouts to see history'**
+  String get completeWorkoutsToSeeHistory;
+
+  /// Today date label
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// Yesterday date label
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// Workout database screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Database'**
+  String get workoutDatabase;
+
+  /// Subtitle for editable workout history
+  ///
+  /// In en, this message translates to:
+  /// **'Editable Workout History'**
+  String get editableWorkoutHistory;
+
+  /// Button to edit workout
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Workout'**
+  String get editWorkout;
+
+  /// Button to delete workout
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Workout'**
+  String get deleteWorkout;
+
+  /// Workout date format
+  ///
+  /// In en, this message translates to:
+  /// **'Workout {day}/{month}/{year}'**
+  String workoutDate(int day, int month, int year);
+
+  /// Label for workout time
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Time'**
+  String get workoutTime;
+
+  /// Tooltip for removing a set
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Set'**
+  String get removeSet;
+
+  /// Button to save changes
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// Button to discard changes
+  ///
+  /// In en, this message translates to:
+  /// **'Discard Changes'**
+  String get discardChanges;
+
+  /// Confirm delete dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDelete;
+
+  /// Confirmation message for workout deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this workout? This action cannot be undone.'**
+  String get deleteWorkoutConfirmation;
+
+  /// Success message for workout deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Workout deleted successfully'**
+  String get workoutDeletedSuccessfully;
+
+  /// Success message for workout update
+  ///
+  /// In en, this message translates to:
+  /// **'Workout updated successfully'**
+  String get workoutUpdatedSuccessfully;
+
+  /// Message when no workouts exist
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts in history'**
+  String get noWorkoutsInHistory;
+
+  /// Instructions when no workouts exist
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your workouts to see them here'**
+  String get startTrackingWorkouts;
+
+  /// Placeholder for workout search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search workouts...'**
+  String get searchWorkouts;
+
+  /// Option to filter workouts by exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by exercise'**
+  String get filterByExercise;
+
+  /// Option to sort workouts by date
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by date'**
+  String get sortByDate;
+
+  /// Option to sort workouts by duration
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by duration'**
+  String get sortByDuration;
+
+  /// Option to sort workouts by volume
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by volume'**
+  String get sortByVolume;
+
+  /// Title for data migration screen
+  ///
+  /// In en, this message translates to:
+  /// **'Data Migration'**
+  String get dataMigration;
+
+  /// Description of what data migration does
+  ///
+  /// In en, this message translates to:
+  /// **'Migrate your workout history from the old format to the new system for better performance and features.'**
+  String get dataMigrationDescription;
+
+  /// Message when no data needs migration
+  ///
+  /// In en, this message translates to:
+  /// **'No data to migrate'**
+  String get noDataToMigrate;
+
+  /// Title for migration options section
+  ///
+  /// In en, this message translates to:
+  /// **'Migration Options'**
+  String get migrationOptions;
+
+  /// Label for time window option
+  ///
+  /// In en, this message translates to:
+  /// **'Time Window (hours)'**
+  String get timeWindowHours;
+
+  /// Option to create backup before migration
+  ///
+  /// In en, this message translates to:
+  /// **'Create Backup'**
+  String get createBackup;
+
+  /// Description for backup option
+  ///
+  /// In en, this message translates to:
+  /// **'Create a backup of your data before migration'**
+  String get createBackupDescription;
+
+  /// Minimum exercises required to create a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Min exercises per workout'**
+  String get minExercisesPerWorkout;
+
+  /// Title for migration preview results
+  ///
+  /// In en, this message translates to:
+  /// **'Migration Preview'**
+  String get migrationPreview;
+
+  /// Title for migration final results
+  ///
+  /// In en, this message translates to:
+  /// **'Migration Results'**
+  String get migrationResults;
+
+  /// Label for number of workouts found
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts found'**
+  String get workoutsFound;
+
+  /// Label for number of successfully migrated workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Migrated workouts'**
+  String get migratedWorkouts;
+
+  /// Label for number of skipped exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped exercises'**
+  String get skippedExercises;
+
+  /// Label for errors section
+  ///
+  /// In en, this message translates to:
+  /// **'Errors'**
+  String get errors;
+
+  /// Title for workout groups preview list
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Groups Preview'**
+  String get workoutGroupsPreview;
+
+  /// Status when analyzing data
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing'**
+  String get analyzing;
+
+  /// Status when migrating data
+  ///
+  /// In en, this message translates to:
+  /// **'Migrating'**
+  String get migrating;
+
+  /// Button to analyze data for migration
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze Data'**
+  String get analyzeData;
+
+  /// Button to start the migration process
+  ///
+  /// In en, this message translates to:
+  /// **'Start Migration'**
+  String get startMigration;
+
+  /// Title for migration confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Migration'**
+  String get confirmMigration;
+
+  /// Description for migration confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to start the migration? This process cannot be undone.'**
+  String get confirmMigrationDescription;
+
+  /// Title for Firebase initialization section
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase Initialization'**
+  String get firebaseInitialization;
+
+  /// Title for current status section
+  ///
+  /// In en, this message translates to:
+  /// **'Current Status'**
+  String get currentStatus;
+
+  /// Label for Firebase status
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase Status'**
+  String get firebaseStatus;
+
+  /// Status when Firebase is initialized
+  ///
+  /// In en, this message translates to:
+  /// **'Initialized'**
+  String get initialized;
+
+  /// Status when Firebase is not initialized
+  ///
+  /// In en, this message translates to:
+  /// **'Not Initialized'**
+  String get notInitialized;
+
+  /// Status when checking something
+  ///
+  /// In en, this message translates to:
+  /// **'Checking...'**
+  String get checking;
+
+  /// Status when a check fails
+  ///
+  /// In en, this message translates to:
+  /// **'Check Failed'**
+  String get checkFailed;
+
+  /// Current version label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Version'**
+  String get currentVersion;
+
+  /// Text when something is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Not Available'**
+  String get notAvailable;
+
+  /// Generic loading error message with error details
+  ///
+  /// In en, this message translates to:
+  /// **'Loading error: {error}'**
+  String loadingError(String error);
+
+  /// Title for collection statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Collection Statistics'**
+  String get collectionStats;
+
+  /// Version metadata stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Version Metadata'**
+  String get versionMetadata;
+
+  /// Present status label
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get present;
+
+  /// Missing status label
+  ///
+  /// In en, this message translates to:
+  /// **'Missing'**
+  String get missing;
+
+  /// Search index stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Search Index'**
+  String get searchIndex;
+
+  /// Title for actions section
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get actions;
+
+  /// Button text to initialize exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Initialize Exercises'**
+  String get initializeExercises;
+
+  /// Button text to verify data integrity
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Integrity'**
+  String get verifyIntegrity;
+
+  /// Button text to reset status
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Status'**
+  String get resetStatus;
+
+  /// Status text when operation is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Operation in progress...'**
+  String get operationInProgress;
+
+  /// Status text when operation succeeds
+  ///
+  /// In en, this message translates to:
+  /// **'Operation Successful'**
+  String get operationSuccess;
+
+  /// Status text when operation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Operation Error'**
+  String get operationError;
+
+  /// Label for details section
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// Description for initialize operation
+  ///
+  /// In en, this message translates to:
+  /// **'This will load all exercises from the local JSON file into Firebase. This operation may take several minutes.'**
+  String get initializeDescription;
+
+  /// Checkbox label to overwrite existing data
+  ///
+  /// In en, this message translates to:
+  /// **'Overwrite Existing Data'**
+  String get overwriteExisting;
+
+  /// Warning description for overwrite option
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: This will delete all existing exercise data in Firebase'**
+  String get overwriteExistingDescription;
+
+  /// Label for optional version field
+  ///
+  /// In en, this message translates to:
+  /// **'Version (Optional)'**
+  String get versionOptional;
+
+  /// Initialize button text
+  ///
+  /// In en, this message translates to:
+  /// **'Initialize'**
+  String get initialize;
+
+  /// Admin dashboard title
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Dashboard'**
+  String get adminDashboard;
+
+  /// Manage exercises action title
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Exercises'**
+  String get manageExercises;
+
+  /// Manage exercises action description
+  ///
+  /// In en, this message translates to:
+  /// **'Add, edit, remove exercises'**
+  String get manageExercisesDescription;
+
+  /// Review corrections action title
+  ///
+  /// In en, this message translates to:
+  /// **'Review Corrections'**
+  String get reviewCorrections;
+
+  /// Review corrections action description
+  ///
+  /// In en, this message translates to:
+  /// **'Review community exercise corrections'**
+  String get reviewCorrectionsDescription;
+
+  /// User analytics action title
+  ///
+  /// In en, this message translates to:
+  /// **'User Analytics'**
+  String get userAnalytics;
+
+  /// User analytics action description
+  ///
+  /// In en, this message translates to:
+  /// **'View user statistics'**
+  String get userAnalyticsDescription;
+
+  /// Database backup action title
+  ///
+  /// In en, this message translates to:
+  /// **'Database Backup'**
+  String get databaseBackup;
+
+  /// Database backup action description
+  ///
+  /// In en, this message translates to:
+  /// **'Backup system data'**
+  String get databaseBackupDescription;
+
+  /// Push notifications action title
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// Push notifications action description
+  ///
+  /// In en, this message translates to:
+  /// **'Send notifications to users'**
+  String get pushNotificationsDescription;
+
+  /// Message for features not yet implemented
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is coming soon'**
+  String get featureComingSoon;
+
+  /// Loading activity message
+  ///
+  /// In en, this message translates to:
+  /// **'Loading activity...'**
+  String get loadingActivity;
+
+  /// Error loading activity message
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading activity'**
+  String get errorLoadingActivity;
+
+  /// No recent activity message
+  ///
+  /// In en, this message translates to:
+  /// **'No Recent Activity'**
+  String get noRecentActivity;
+
+  /// No recent activity description
+  ///
+  /// In en, this message translates to:
+  /// **'Community corrections and activities will appear here'**
+  String get noRecentActivityDescription;
+
+  /// All recent activity dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'All Recent Activity'**
+  String get allRecentActivity;
+
+  /// Suggested correction activity type
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested correction'**
+  String get suggestedCorrection;
+
+  /// Approved correction activity type
+  ///
+  /// In en, this message translates to:
+  /// **'Approved correction'**
+  String get approvedCorrection;
+
+  /// Rejected correction activity type
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected correction'**
+  String get rejectedCorrection;
+
+  /// Generic activity type prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Activity for'**
+  String get activityFor;
+
+  /// Days ago time format
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String daysAgo(int count);
+
+  /// Hours ago time format
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String hoursAgo(int count);
+
+  /// Minutes ago time format
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String minutesAgo(int count);
+
+  /// Time indicator for very recent activities
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// Button text to view all items
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// Admin info section title
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Information'**
+  String get adminInfo;
+
+  /// Welcome message for admin
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, Admin!'**
+  String get welcomeAdmin;
+
+  /// Admin dashboard description
+  ///
+  /// In en, this message translates to:
+  /// **'Manage the FitLog Pro system and review community contributions'**
+  String get adminDashboardDescription;
+
+  /// System stats section title
+  ///
+  /// In en, this message translates to:
+  /// **'System Statistics'**
+  String get systemStatistics;
+
+  /// Firebase database section title
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase Database'**
+  String get firebaseDatabase;
+
+  /// Community activity section title
+  ///
+  /// In en, this message translates to:
+  /// **'Community Activity'**
+  String get communityActivity;
+
+  /// Recent activity section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// Version control action title
+  ///
+  /// In en, this message translates to:
+  /// **'Version Control'**
+  String get versionControl;
+
+  /// Version control action description
+  ///
+  /// In en, this message translates to:
+  /// **'Manage app versions'**
+  String get versionControlDescription;
+
+  /// Exercise count stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Count'**
+  String get exerciseCountLabel;
+
+  /// Title for pending corrections section
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Corrections'**
+  String get pendingCorrections;
+
+  /// Title for approved corrections
+  ///
+  /// In en, this message translates to:
+  /// **'Approved Corrections'**
+  String get approvedCorrections;
+
+  /// Title for rejected corrections
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected Corrections'**
+  String get rejectedCorrections;
+
+  /// Total users stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get totalUsers;
+
+  /// Loading stats message
+  ///
+  /// In en, this message translates to:
+  /// **'Loading statistics...'**
+  String get loadingStats;
+
+  /// Error loading stats message
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading statistics'**
+  String get errorLoadingStats;
+
+  /// Version label
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// Refresh button text
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// Secure admin access label
+  ///
+  /// In en, this message translates to:
+  /// **'Secure Admin Access'**
+  String get secureAdminAccess;
+
+  /// System overview section title
+  ///
+  /// In en, this message translates to:
+  /// **'System Overview'**
+  String get systemOverview;
+
+  /// Firebase management section title
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase Management'**
+  String get firebaseManagement;
+
+  /// Admin info description text
+  ///
+  /// In en, this message translates to:
+  /// **'Admin panel for system management and community oversight'**
+  String get adminInfoDescription;
+
+  /// Exercise management title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Management'**
+  String get exerciseManagement;
+
+  /// Exercise management description
+  ///
+  /// In en, this message translates to:
+  /// **'Add, edit, and organize exercise database'**
+  String get exerciseManagementDescription;
+
+  /// Community corrections title
+  ///
+  /// In en, this message translates to:
+  /// **'Community Corrections'**
+  String get communityCorrections;
+
+  /// Community corrections description
+  ///
+  /// In en, this message translates to:
+  /// **'Review and approve community-submitted exercise corrections'**
+  String get communityCorrectionsDescription;
+
+  /// Button to fix missing exercises in database
+  ///
+  /// In en, this message translates to:
+  /// **'Fix Missing Data'**
+  String get fixMissingData;
+
+  /// Description for the fix missing data action
+  ///
+  /// In en, this message translates to:
+  /// **'Identify and add missing exercises to the database'**
+  String get fixMissingDataDescription;
+
+  /// Error message when corrections fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading corrections'**
+  String get errorLoadingCorrections;
+
+  /// Message when no corrections are available
+  ///
+  /// In en, this message translates to:
+  /// **'No corrections found'**
+  String get noCorrections;
+
+  /// Description for empty corrections state
+  ///
+  /// In en, this message translates to:
+  /// **'Community corrections will appear here when submitted'**
+  String get noCorrectionsDescription;
+
+  /// Title for reviewed corrections section
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed Corrections'**
+  String get reviewedCorrections;
+
+  /// Title for approve correction dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Approve Correction'**
+  String get approveCorrection;
+
+  /// Title for reject correction dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Correction'**
+  String get rejectCorrection;
+
+  /// Confirmation message for approving correction
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to approve this correction?'**
+  String get confirmApproval;
+
+  /// Approve button text
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approve;
+
+  /// Reject button text
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get reject;
+
+  /// Label for rejection reason field
+  ///
+  /// In en, this message translates to:
+  /// **'Rejection Reason'**
+  String get rejectionReason;
+
+  /// Hint text for rejection reason field
+  ///
+  /// In en, this message translates to:
+  /// **'Explain why this correction is being rejected'**
+  String get rejectionReasonHint;
+
+  /// Label for who suggested the correction
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested by'**
+  String get suggestedBy;
+
+  /// Label for type of correction
+  ///
+  /// In en, this message translates to:
+  /// **'Correction Type'**
+  String get correctionType;
+
+  /// Label for current value in correction
+  ///
+  /// In en, this message translates to:
+  /// **'Current Value'**
+  String get currentValue;
+
+  /// Label for proposed value in correction
+  ///
+  /// In en, this message translates to:
+  /// **'Proposed Value'**
+  String get proposedValue;
+
+  /// Label for submission timestamp
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted At'**
+  String get submittedAt;
+
+  /// Label for who reviewed the correction
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed by'**
+  String get reviewedBy;
+
+  /// Label for exercise image correction type
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Image'**
+  String get exerciseImage;
+
+  /// Label for muscle focus correction type
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Focus'**
+  String get muscleFocus;
+
+  /// Label for correction contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Correction'**
+  String get correction;
+
+  /// Label for tip contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Tip'**
+  String get tip;
+
+  /// Warning type filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
+
+  /// Label for variant contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Variant'**
+  String get variant;
+
+  /// Label for translation contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get translation;
+
+  /// Label for technique contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Technique'**
+  String get technique;
+
+  /// Status label for pending items
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// Status label for approved items
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get approved;
+
+  /// Status label for rejected items
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// Button text for fix action
+  ///
+  /// In en, this message translates to:
+  /// **'Fix'**
+  String get fix;
+
+  /// Description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// Generic label for status field
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// Database Manager screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Database Manager'**
+  String get databaseManager;
+
+  /// Multi-select mode toggle tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-Select Mode'**
+  String get multiSelectMode;
+
+  /// Export all exercises to JSON menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Export All to JSON'**
+  String get exportAllJson;
+
+  /// Export selected exercises to JSON menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Export Selected to JSON'**
+  String get exportSelectedJson;
+
+  /// Import exercises from JSON menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Import from JSON'**
+  String get importJson;
+
+  /// Bodyweight exercises stats label
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight'**
+  String get bodyweight;
+
+  /// Unique muscles stats label
+  ///
+  /// In en, this message translates to:
+  /// **'Muscles'**
+  String get uniqueMuscles;
+
+  /// Button to clear all active filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Filters'**
+  String get clearFilters;
+
+  /// Bulk edit button
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk Edit'**
+  String get bulkEdit;
+
+  /// Export file subject
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises Export'**
+  String get exercisesExport;
+
+  /// Export success message
+  ///
+  /// In en, this message translates to:
+  /// **'Export completed successfully'**
+  String get exportSuccess;
+
+  /// Import JSON dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'Import exercises from JSON file'**
+  String get importJsonDescription;
+
+  /// Import warning message
+  ///
+  /// In en, this message translates to:
+  /// **'This will overwrite existing exercises!'**
+  String get importWarning;
+
+  /// Select file button
+  ///
+  /// In en, this message translates to:
+  /// **'Select File'**
+  String get selectFile;
+
+  /// Select field to bulk edit
+  ///
+  /// In en, this message translates to:
+  /// **'Select Field'**
+  String get selectField;
+
+  /// New value for bulk edit
+  ///
+  /// In en, this message translates to:
+  /// **'New Value'**
+  String get newValue;
+
+  /// Apply button text
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// Confirm delete multiple exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {count} exercises?'**
+  String confirmDeleteMultiple(int count);
+
+  /// Exercise name validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise name is required'**
+  String get exerciseNameRequired;
+
+  /// Update exercise button
+  ///
+  /// In en, this message translates to:
+  /// **'Update Exercise'**
+  String get updateExercise;
+
+  /// Create exercise button
+  ///
+  /// In en, this message translates to:
+  /// **'Create Exercise'**
+  String get createExercise;
+
+  /// Title for exercise database update dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Update Available'**
+  String get exerciseUpdateAvailable;
+
+  /// Description for exercise update dialog
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the exercise database is available with improved exercises and features.'**
+  String get exerciseUpdateDescription;
+
+  /// Download now button text
+  ///
+  /// In en, this message translates to:
+  /// **'Download Now'**
+  String get downloadNow;
+
+  /// Downloading progress text
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading...'**
+  String get downloading;
+
+  /// Note about exercise update benefits
+  ///
+  /// In en, this message translates to:
+  /// **'This will download the latest exercise data and improve your workout experience.'**
+  String get exerciseUpdateNote;
+
+  /// Time under tension field label
+  ///
+  /// In en, this message translates to:
+  /// **'Time Under Tension'**
+  String get tempoEsecuzione;
+
+  /// Execution time note field label
+  ///
+  /// In en, this message translates to:
+  /// **'Execution Time Note'**
+  String get tempoNote;
+
+  /// Image preview modal title
+  ///
+  /// In en, this message translates to:
+  /// **'Image Preview'**
+  String get imagePreview;
+
+  /// Change image button text
+  ///
+  /// In en, this message translates to:
+  /// **'Change Image'**
+  String get changeImage;
+
+  /// Expand details section button
+  ///
+  /// In en, this message translates to:
+  /// **'Expand Details'**
+  String get expandDetails;
+
+  /// Clear individual filter button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearFilter;
+
+  /// Explanation of what Time Under Tension means
+  ///
+  /// In en, this message translates to:
+  /// **'Time Under Tension (TUT) is the total amount of time a muscle is under strain during a set. It\'s a key factor for muscle growth and strength.'**
+  String get timeUnderTensionExplanation;
+
+  /// Basic explanation of Time Under Tension
+  ///
+  /// In en, this message translates to:
+  /// **'TUT is the duration your muscles work during an exercise set. Longer TUT can lead to more muscle growth.'**
+  String get tutBasicExplanation;
+
+  /// Title showing the TUT format structure
+  ///
+  /// In en, this message translates to:
+  /// **'TUT Format: X-Y-Z-W'**
+  String get tutFormatTitle;
+
+  /// Detailed explanation of the TUT format phases
+  ///
+  /// In en, this message translates to:
+  /// **'The TUT format X-Y-Z-W represents the duration in seconds for each phase of an exercise: X (eccentric/lowering), Y (pause at bottom), Z (concentric/lifting), W (pause at top).'**
+  String get tutFormatExplanation;
+
+  /// Warmup tip for light intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Light warmup: Focus on dynamic stretches and light cardio to get your blood flowing.'**
+  String get warmupTipLight;
+
+  /// Warmup tip for moderate intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate warmup: Include some light sets of your main exercise to prepare your muscles.'**
+  String get warmupTipModerate;
+
+  /// Warmup tip for heavy intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy warmup: Gradually increase weight with several sets, ensuring proper form and muscle activation.'**
+  String get warmupTipHeavy;
+
+  /// Warmup tip for maximum effort intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Max effort warmup: Perform a few very light sets, then jump straight into your working sets with minimal rest.'**
+  String get warmupTipMax;
+
+  /// Text for chip to share advice with community
+  ///
+  /// In en, this message translates to:
+  /// **'Share an advice'**
+  String get shareAdviceWithCommunity;
+
+  /// Menu option to view community advice for exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Community Advice'**
+  String get communityAdvice;
+
+  /// Admin section title for managing community contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Community Contributions'**
+  String get communityContributions;
+
+  /// Description for community contributions admin action
+  ///
+  /// In en, this message translates to:
+  /// **'Review and manage community contributions'**
+  String get reviewContributionsDescription;
+
+  /// Text showing how many people found a contribution helpful
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =0{people} =1{person} other{people}} found this helpful'**
+  String peopleFoundHelpful(int count);
+
+  /// Message when no community advice is available for an exercise
+  ///
+  /// In en, this message translates to:
+  /// **'No advice available for this exercise yet'**
+  String get noAdviceAvailable;
+
+  /// Encouraging message to be first to contribute advice
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to share your advice!'**
+  String get beFirstToShare;
+
+  /// Success message after submitting a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Your contribution has been submitted for review!'**
+  String get contributionSubmittedSuccess;
+
+  /// Thank you message for community contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for helping the community!'**
+  String get thankYouForContributing;
+
+  /// Start workout menu item subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Start workout with this template'**
+  String get startWorkoutWithTemplate;
+
+  /// Edit template menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Template'**
+  String get editTemplate;
+
+  /// Edit template menu item subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Modify exercises and sets'**
+  String get editTemplateSubtitle;
+
+  /// Share PDF menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Share PDF'**
+  String get sharePdf;
+
+  /// Share PDF menu item subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Export as PDF and share'**
+  String get sharePdfSubtitle;
+
+  /// Print menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Print'**
+  String get print;
+
+  /// Print template menu item subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Print workout template'**
+  String get printTemplate;
+
+  /// Title for PDF export options dialog
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Export Options'**
+  String get pdfExportOptions;
+
+  /// Option for compact PDF format
+  ///
+  /// In en, this message translates to:
+  /// **'Compact Format'**
+  String get pdfDetailLevelCompact;
+
+  /// Description for compact PDF format
+  ///
+  /// In en, this message translates to:
+  /// **'Groups identical sets (e.g., 3 x 10)'**
+  String get pdfDetailLevelCompactDesc;
+
+  /// Option for detailed PDF format with weight
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed with Weight'**
+  String get pdfDetailLevelDetailed;
+
+  /// Description for detailed PDF format with weight
+  ///
+  /// In en, this message translates to:
+  /// **'Shows each set with weight (e.g., Set 1: 20kg x 10)'**
+  String get pdfDetailLevelDetailedDesc;
+
+  /// Option for detailed PDF format without weight
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed without Weight'**
+  String get pdfDetailLevelNoWeight;
+
+  /// Description for detailed PDF format without weight
+  ///
+  /// In en, this message translates to:
+  /// **'Shows each set with reps only (e.g., Set 1: 10 reps)'**
+  String get pdfDetailLevelNoWeightDesc;
+
+  /// Checkbox to save PDF export preference
+  ///
+  /// In en, this message translates to:
+  /// **'Remember my choice'**
+  String get rememberMyChoice;
+
+  /// Delete template subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Remove permanently'**
+  String get deleteTemplateSubtitle;
+
+  /// Error message when workout fails to start
+  ///
+  /// In en, this message translates to:
+  /// **'Error starting workout: {error}'**
+  String workoutStartError(String error);
+
+  /// Timer notification title for rest timer completion
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Complete'**
+  String get restComplete;
+
+  /// Timer notification title for workout timer completion
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Complete'**
+  String get workoutComplete;
+
+  /// Timer notification title for warmup timer completion
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Complete'**
+  String get warmupComplete;
+
+  /// Timer notification title for cooldown timer completion
+  ///
+  /// In en, this message translates to:
+  /// **'Cooldown Complete'**
+  String get cooldownComplete;
+
+  /// Generic timer notification body when exercise name is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Your timer has finished'**
+  String get timerFinished;
+
+  /// Timer notification body with set information
+  ///
+  /// In en, this message translates to:
+  /// **'{exercise} - Set {currentSet}/{totalSets} complete'**
+  String setComplete(String exercise, int currentSet, int totalSets);
+
+  /// Timer notification body for exercise completion
+  ///
+  /// In en, this message translates to:
+  /// **'{exercise} complete'**
+  String exerciseComplete(String exercise);
+
+  /// Success message after saving workout
+  ///
+  /// In en, this message translates to:
+  /// **'Workout saved!'**
+  String get workoutSaved;
+
+  /// Error message when workout save fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving workout'**
+  String get errorSavingWorkout;
+
+  /// Label for effort/RPE input field
+  ///
+  /// In en, this message translates to:
+  /// **'Effort'**
+  String get effortLevel;
+
+  /// Title for unsaved changes dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved Changes'**
+  String get unsavedChanges;
+
+  /// Message for unsaved changes dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes. Are you sure you want to discard them?'**
+  String get unsavedChangesMessage;
+
+  /// Placeholder for workout name input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter workout name'**
+  String get enterWorkoutName;
+
+  /// Info message about exercise replacement
+  ///
+  /// In en, this message translates to:
+  /// **'Replacement keeps all sets and reps'**
+  String get replacementKeepsSetsAndReps;
+
+  /// Section title for smart exercise suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Suggestions'**
+  String get smartSuggestions;
+
+  /// Error message when exercises fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading exercises'**
+  String get errorLoadingExercises;
+
+  /// Title for exercise replacement confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Replacement'**
+  String get confirmReplacement;
+
+  /// Confirmation message for exercise replacement
+  ///
+  /// In en, this message translates to:
+  /// **'Replace {oldExercise} with {newExercise}?'**
+  String replaceExerciseConfirmation(String oldExercise, String newExercise);
+
+  /// Success message for exercise replacement
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise replaced successfully'**
+  String get exerciseReplaced;
+
+  /// Label for highly compatible exercise replacement
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent replacement'**
+  String get excellentReplacement;
+
+  /// Label for compatible exercise replacement
+  ///
+  /// In en, this message translates to:
+  /// **'Highly compatible'**
+  String get highlyCompatible;
+
+  /// Label for good exercise alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Good alternative'**
+  String get goodAlternative;
+
+  /// Label for possible exercise alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Possible alternative'**
+  String get possibleAlternative;
+
+  /// Label for exercise with different muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Different muscle group'**
+  String get differentMuscleGroup;
+
+  /// Browse exercise database button text
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Exercise Database'**
+  String get browseExerciseDatabase;
+
+  /// Exercise library description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from our exercise library'**
+  String get chooseFromLibrary;
+
+  /// Prompt to create custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t find the exercise? Create a custom one'**
+  String get cantFindExercise;
+
+  /// Helper text for custom exercise section
+  ///
+  /// In en, this message translates to:
+  /// **'Enter custom exercise details below:'**
+  String get enterCustomExerciseDetails;
+
+  /// Single exercise tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Single'**
+  String get singleTab;
+
+  /// Advanced exercises tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advancedTab;
+
+  /// Optional notes field label
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get notesOptional;
+
+  /// Placeholder for notes field
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes about form, weight progression, etc.'**
+  String get addNotesAboutForm;
+
+  /// Exercise name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Name'**
+  String get exerciseNameLabel;
+
+  /// Example for exercise name field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Bench Press'**
+  String get exerciseNameExample;
+
+  /// Success message when exercise is added
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} to workout'**
+  String addedToWorkout(String exerciseName);
+
+  /// Label for APRE protocol
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Protocol'**
+  String get apreProtocol;
+
+  /// Label for APRE weight adjustment
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Adjustment'**
+  String get apreAdjustment;
+
+  /// Label for set weight in APRE
+  ///
+  /// In en, this message translates to:
+  /// **'Set {setNumber} Weight:'**
+  String apreSetWeight(int setNumber);
+
+  /// APRE reps completed message
+  ///
+  /// In en, this message translates to:
+  /// **'You completed {actual} reps (target: {target})'**
+  String apreCompletedReps(int actual, int target);
+
+  /// Button to apply APRE suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apreApply;
+
+  /// Confirmation message for APRE weight adjustment
+  ///
+  /// In en, this message translates to:
+  /// **'APRE: Set {setNumber} weight adjusted to {weight} kg'**
+  String apreWeightAdjusted(int setNumber, String weight);
+
+  /// APRE autoregulation toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Autoregulation'**
+  String get apreAutoregulation;
+
+  /// APRE autoregulation description
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic weight adjustment based on performance'**
+  String get apreAutoregulationDescription;
+
+  /// Label for APRE protocol selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select APRE Protocol'**
+  String get apreProtocolSelect;
+
+  /// Description for APRE 3 protocol
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy strength protocol (3 reps target)'**
+  String get apreProtocol3Description;
+
+  /// Description for APRE 6 protocol
+  ///
+  /// In en, this message translates to:
+  /// **'Strength and hypertrophy protocol (6 reps target)'**
+  String get apreProtocol6Description;
+
+  /// Description for APRE 10 protocol
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy and endurance protocol (10 reps target)'**
+  String get apreProtocol10Description;
+
+  /// Label for APRE base weight input
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Base Weight'**
+  String get apreBaseWeight;
+
+  /// Hint for APRE base weight input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your 3RM, 6RM or 10RM weight'**
+  String get apreBaseWeightHint;
+
+  /// Helper text for APRE 3 protocol
+  ///
+  /// In en, this message translates to:
+  /// **'Use your 3 rep max weight'**
+  String get apreProtocol3Helper;
+
+  /// Helper text for APRE 6 protocol
+  ///
+  /// In en, this message translates to:
+  /// **'Use your 6 rep max weight'**
+  String get apreProtocol6Helper;
+
+  /// Helper text for APRE 10 protocol
+  ///
+  /// In en, this message translates to:
+  /// **'Use your 10 rep max weight'**
+  String get apreProtocol10Helper;
+
+  /// Label for automatic load adjustment feature
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Adjustment'**
+  String get autoAdjustment;
+
+  /// Description for auto adjustment feature
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic weight adjustment based on your performance'**
+  String get autoAdjustmentDescription;
+
+  /// Label for selecting auto adjustment type
+  ///
+  /// In en, this message translates to:
+  /// **'Select Adjustment Type'**
+  String get selectAutoAdjustmentType;
+
+  /// Label for RPE/RIR based adjustment
+  ///
+  /// In en, this message translates to:
+  /// **'RPE/RIR Based'**
+  String get rpeBasedAdjustment;
+
+  /// Description for RPE based adjustment
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust weight based on your perceived exertion'**
+  String get rpeBasedDescription;
+
+  /// Label for target RPE range
+  ///
+  /// In en, this message translates to:
+  /// **'Target RPE Range'**
+  String get rpeTargetRange;
+
+  /// Hint for RPE target range input
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 7-9 RPE'**
+  String get rpeTargetRangeHint;
+
+  /// Label for adjustment percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Adjustment %'**
+  String get adjustmentPercentage;
+
+  /// Increase weight suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Increase by {percent}%'**
+  String increaseWeightBy(String percent);
+
+  /// Decrease weight suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease by {percent}%'**
+  String decreaseWeightBy(String percent);
+
+  /// Maintain weight suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain current weight'**
+  String get maintainWeight;
+
+  /// RPE autoregulation title
+  ///
+  /// In en, this message translates to:
+  /// **'RPE Autoregulation'**
+  String get rpeAutoregulation;
+
+  /// Actual RPE label
+  ///
+  /// In en, this message translates to:
+  /// **'Actual RPE'**
+  String get actualRpe;
+
+  /// Target range label
+  ///
+  /// In en, this message translates to:
+  /// **'Target: {range}'**
+  String targetRange(Object range);
+
+  /// Actual RIR label
+  ///
+  /// In en, this message translates to:
+  /// **'Actual RIR'**
+  String get actualRir;
+
+  /// Target RIR label
+  ///
+  /// In en, this message translates to:
+  /// **'Target RIR'**
+  String get targetRir;
+
+  /// Suggested weight label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Weight'**
+  String get suggestedWeight;
+
+  /// Next set weight label
+  ///
+  /// In en, this message translates to:
+  /// **'Next Set Weight'**
+  String get nextSetWeight;
+
+  /// Weight adjusted to message
+  ///
+  /// In en, this message translates to:
+  /// **'Weight adjusted to'**
+  String get weightAdjustedTo;
+
+  /// Template onboarding step 1 - name field
+  ///
+  /// In en, this message translates to:
+  /// **'Here insert the name of your workout plan'**
+  String get templateOnboardingNameTitle;
+
+  /// Template onboarding step 2 - description field
+  ///
+  /// In en, this message translates to:
+  /// **'This is a description of what the plan includes'**
+  String get templateOnboardingDescriptionTitle;
+
+  /// Template onboarding step 2 - description subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Optional - helps you remember what this plan is about'**
+  String get templateOnboardingDescriptionSubtitle;
+
+  /// Template onboarding step 3 - tags
+  ///
+  /// In en, this message translates to:
+  /// **'Tags for community recognition'**
+  String get templateOnboardingTagsTitle;
+
+  /// Template onboarding step 3 - tags subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Select tags that describe your template to help others find it in the community'**
+  String get templateOnboardingTagsSubtitle;
+
+  /// Template onboarding step 4 - rest timer
+  ///
+  /// In en, this message translates to:
+  /// **'Default rest timer for all exercises'**
+  String get templateOnboardingRestTimerTitle;
+
+  /// Template onboarding step 4 - rest timer subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'When you add a new exercise without manually setting the timer, this default timer will be applied'**
+  String get templateOnboardingRestTimerSubtitle;
+
+  /// Template onboarding next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get templateOnboardingNext;
+
+  /// Template onboarding skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Tutorial'**
+  String get templateOnboardingSkip;
+
+  /// Template onboarding finish button
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get templateOnboardingGotIt;
+
+  /// Exercise onboarding step 1 - single tab
+  ///
+  /// In en, this message translates to:
+  /// **'Start by adding a single exercise'**
+  String get exerciseOnboardingSingleTabTitle;
+
+  /// Exercise onboarding step 1 - single tab subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'This tab allows you to add one exercise at a time. You can also add supersets, dropsets, or rest-pause from other tabs'**
+  String get exerciseOnboardingSingleTabSubtitle;
+
+  /// Exercise onboarding step 2 - select button
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to browse exercises'**
+  String get exerciseOnboardingSelectButtonTitle;
+
+  /// Exercise onboarding step 2 - select button subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Open the exercise database to choose from hundreds of exercises'**
+  String get exerciseOnboardingSelectButtonSubtitle;
+
+  /// Exercise onboarding step 3 - search bar
+  ///
+  /// In en, this message translates to:
+  /// **'Search for exercises'**
+  String get exerciseOnboardingSearchTitle;
+
+  /// Exercise onboarding step 3 - search bar subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Type the name of the exercise you\'re looking for, like \"bench press\" or \"squat\"'**
+  String get exerciseOnboardingSearchSubtitle;
+
+  /// Exercise onboarding step 4 - exercise item
+  ///
+  /// In en, this message translates to:
+  /// **'Select an exercise'**
+  String get exerciseOnboardingExerciseItemTitle;
+
+  /// Exercise onboarding step 4 - exercise item subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add it to your workout. Long press to see detailed information and execution tips'**
+  String get exerciseOnboardingExerciseItemSubtitle;
+
+  /// Exercise onboarding step 5 - filters
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by category or muscle group'**
+  String get exerciseOnboardingFiltersTitle;
+
+  /// Exercise onboarding step 5 - filters subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Use filters to quickly find exercises for specific body parts'**
+  String get exerciseOnboardingFiltersSubtitle;
+
+  /// Exercise onboarding step 6 - confirm button
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm to add the exercise'**
+  String get exerciseOnboardingConfirmTitle;
+
+  /// Exercise onboarding step 6 - confirm button subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Once you\'ve selected your exercises, tap here to add them to your workout'**
+  String get exerciseOnboardingConfirmSubtitle;
+
+  /// Exercise onboarding next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get exerciseOnboardingNext;
+
+  /// Exercise onboarding skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Tutorial'**
+  String get exerciseOnboardingSkip;
+
+  /// Exercise onboarding finish button
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get exerciseOnboardingGotIt;
+
+  /// Reset onboarding option title
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Onboarding Tutorials'**
+  String get resetOnboarding;
+
+  /// Reset onboarding option description
+  ///
+  /// In en, this message translates to:
+  /// **'Re-show tutorial guides for templates and exercises'**
+  String get resetOnboardingDesc;
+
+  /// Reset onboarding confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset all onboarding tutorials. They will be shown again the next time you create a template or add an exercise.'**
+  String get resetOnboardingConfirm;
+
+  /// Reset onboarding success message
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding tutorials reset successfully'**
+  String get onboardingResetSuccess;
+
+  /// Optional description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get templateDescriptionOptional;
+
+  /// Template name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Template Name *'**
+  String get templateNameLabel;
+
+  /// Template name validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get templateNameRequired;
+
+  /// Template description field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Brief workout description...'**
+  String get templateDescriptionHint;
+
+  /// Tags section title
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tags;
+
+  /// Tags section description
+  ///
+  /// In en, this message translates to:
+  /// **'Select tags that describe your template'**
+  String get selectTagsDescription;
+
+  /// Default rest timer section title
+  ///
+  /// In en, this message translates to:
+  /// **'Default Rest Timer'**
+  String get defaultRestTimer;
+
+  /// Default rest timer section description
+  ///
+  /// In en, this message translates to:
+  /// **'Set a default timer that will be applied to all exercises in the template'**
+  String get defaultRestTimerDescription;
+
+  /// Warmup protocol section title
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Protocol'**
+  String get warmupProtocol;
+
+  /// Title for warmup phases info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding Warmup Phases'**
+  String get warmupPhaseInfo;
+
+  /// Title for mobility phase
+  ///
+  /// In en, this message translates to:
+  /// **'🔄 Phase 1: Mobility (3-5 min)'**
+  String get warmupPhase1Title;
+
+  /// Description for mobility phase
+  ///
+  /// In en, this message translates to:
+  /// **'Prepares joints and range of motion with dynamic stretches. Examples: hip circles, arm swings, leg swings.'**
+  String get warmupPhase1Desc;
+
+  /// Title for activation phase
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Phase 2: Activation (3-4 min)'**
+  String get warmupPhase2Title;
+
+  /// Description for activation phase
+  ///
+  /// In en, this message translates to:
+  /// **'Activates target muscles and stabilizers with light contractions. Examples: glute bridges, band work, light sets.'**
+  String get warmupPhase2Desc;
+
+  /// Title for warmup sets phase
+  ///
+  /// In en, this message translates to:
+  /// **'🏋️ Phase 3: Warmup Sets (5-10 min)'**
+  String get warmupPhase3Title;
+
+  /// Description for warmup sets phase
+  ///
+  /// In en, this message translates to:
+  /// **'Gradual progression towards working weight with the actual exercise. Examples: Bar×10, 40%×8, 60%×5, 80%×3.'**
+  String get warmupPhase3Desc;
+
+  /// Label for warmup sets field
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Sets'**
+  String get warmupSetsLabel;
+
+  /// Label for warmup time field
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Time'**
+  String get warmupTimeLabel;
+
+  /// Title for warmup info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Warmup Protocol'**
+  String get warmupInfoDialogTitle;
+
+  /// Question about warmup importance
+  ///
+  /// In en, this message translates to:
+  /// **'Why is a proper warmup important?'**
+  String get warmupWhyImportant;
+
+  /// Answer about warmup importance
+  ///
+  /// In en, this message translates to:
+  /// **'A proper warmup reduces injury risk, improves performance, prepares your nervous system, and optimizes your workout quality.'**
+  String get warmupWhyImportantAnswer;
+
+  /// Customize workout menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Workout'**
+  String get customizeWorkout;
+
+  /// Workout customization modal subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Enable or disable features'**
+  String get customizeWorkoutSubtitle;
+
+  /// Display mode section title
+  ///
+  /// In en, this message translates to:
+  /// **'Display Mode'**
+  String get displayMode;
+
+  /// Display mode section description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your metrics detail level'**
+  String get displayModeDescription;
+
+  /// Base mode label
+  ///
+  /// In en, this message translates to:
+  /// **'🌱 Base'**
+  String get baseMode;
+
+  /// Pro mode label
+  ///
+  /// In en, this message translates to:
+  /// **'🚀 Pro'**
+  String get proMode;
+
+  /// Base mode activation message
+  ///
+  /// In en, this message translates to:
+  /// **'Base Mode activated'**
+  String get baseModeActivated;
+
+  /// Pro mode activation message
+  ///
+  /// In en, this message translates to:
+  /// **'Pro Mode activated'**
+  String get proModeActivated;
+
+  /// Core features section title
+  ///
+  /// In en, this message translates to:
+  /// **'🏋️ Core Features'**
+  String get coreFeaturesSection;
+
+  /// Auto rest timer toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Rest Timer'**
+  String get autoRestTimerTitle;
+
+  /// Auto rest timer toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically start timer after each set'**
+  String get autoRestTimerDescription;
+
+  /// Auto rest timer tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'When enabled, the rest timer starts automatically when you complete a set, helping you maintain consistent rest intervals.'**
+  String get autoRestTimerTooltip;
+
+  /// Warmup suggestions toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Suggestions'**
+  String get warmupSuggestionsTitle;
+
+  /// Warmup suggestions toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically calculate warmup sets'**
+  String get warmupSuggestionsDescription;
+
+  /// Warmup suggestions tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'The system will suggest progressive warmup sets based on your working weight, preparing your muscles and nervous system.'**
+  String get warmupSuggestionsTooltip;
+
+  /// Auto collapse toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Collapse Completed'**
+  String get autoCollapseTitle;
+
+  /// Auto collapse toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically collapse completed exercises'**
+  String get autoCollapseDescription;
+
+  /// Auto collapse tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Completed exercises will automatically minimize to keep your workout screen clean and focused on active exercises.'**
+  String get autoCollapseTooltip;
+
+  /// Auto-regulation section title
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Intelligent Auto-Regulation'**
+  String get intelligentAutoRegulation;
+
+  /// APRE system subsection title
+  ///
+  /// In en, this message translates to:
+  /// **'📈 APRE System'**
+  String get apreSystemTitle;
+
+  /// APRE system subsection subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Reps-Based Auto-Regulation'**
+  String get apreSystemSubtitle;
+
+  /// Enable APRE toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Enable APRE'**
+  String get enableApreTitle;
+
+  /// Enable APRE toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic weight calculation from history for new exercises'**
+  String get enableApreDescription;
+
+  /// Enable APRE tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'APRE analyzes your training history to calculate your 1RM and automatically suggests appropriate weights for each protocol (3, 6, or 10 reps).'**
+  String get enableApreTooltip;
+
+  /// APRE protocol selector title
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Protocol'**
+  String get apreProtocolTitle;
+
+  /// APRE 3 protocol label
+  ///
+  /// In en, this message translates to:
+  /// **'APRE 3'**
+  String get apre3;
+
+  /// APRE 6 protocol label
+  ///
+  /// In en, this message translates to:
+  /// **'APRE 6'**
+  String get apre6;
+
+  /// APRE 10 protocol label
+  ///
+  /// In en, this message translates to:
+  /// **'APRE 10'**
+  String get apre10;
+
+  /// APRE 3 protocol description
+  ///
+  /// In en, this message translates to:
+  /// **'Ideal for maximum strength (3+ reps to failure)'**
+  String get apre3Description;
+
+  /// APRE 6 protocol description
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced for strength and hypertrophy (6+ reps)'**
+  String get apre6Description;
+
+  /// APRE 10 protocol description
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect for hypertrophy and endurance (10+ reps)'**
+  String get apre10Description;
+
+  /// Auto-adjust rest from APRE toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Adjust Rest Time'**
+  String get autoAdjustRestApreTitle;
+
+  /// Auto-adjust rest from APRE toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Increase rest if load decreases'**
+  String get autoAdjustRestApreDescription;
+
+  /// Auto-adjust rest from APRE tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'When your lifted weight decreases, the system automatically increases rest time to help manage fatigue.'**
+  String get autoAdjustRestApreTooltip;
+
+  /// RPE system subsection title
+  ///
+  /// In en, this message translates to:
+  /// **'💪 RPE/RIR System'**
+  String get rpeSystemTitle;
+
+  /// RPE system subsection subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Effort-Based Auto-Regulation'**
+  String get rpeSystemSubtitle;
+
+  /// Enable RPE toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Enable RPE Tracking'**
+  String get enableRpeTitle;
+
+  /// Enable RPE toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Request perceived effort after each set'**
+  String get enableRpeDescription;
+
+  /// Enable RPE tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'RPE (Rate of Perceived Exertion) helps you track how hard each set feels, enabling smart auto-regulation based on your fatigue level.'**
+  String get enableRpeTooltip;
+
+  /// Enable TUT toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Enable TUT Tracking'**
+  String get enableTutTitle;
+
+  /// Enable TUT toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Track Time Under Tension for each set'**
+  String get enableTutDescription;
+
+  /// Enable TUT tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'TUT (Time Under Tension) measures how long each set takes, helping you optimize muscle growth by tracking execution speed and rest times.'**
+  String get enableTutTooltip;
+
+  /// Set duration tracking toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Track Set Duration (TUT)'**
+  String get setDurationTrackingTitle;
+
+  /// Set duration tracking toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Measure Time Under Tension for each set'**
+  String get setDurationTrackingDescription;
+
+  /// Set duration tracking tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically track how long each set takes from start to completion, excluding rest time. This helps analyze your execution speed and optimize muscle growth.'**
+  String get setDurationTrackingTooltip;
+
+  /// Exercise start button main text
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking duration'**
+  String get startTrackingDuration;
+
+  /// Countdown message during set preparation
+  ///
+  /// In en, this message translates to:
+  /// **'Get ready...'**
+  String get getReady;
+
+  /// Message when countdown reaches zero
+  ///
+  /// In en, this message translates to:
+  /// **'GO! Start your set'**
+  String get goStartYourSet;
+
+  /// Auto-adjust weight from RPE toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Adjust Weight'**
+  String get autoAdjustWeightRpeTitle;
+
+  /// Auto-adjust weight from RPE toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust weight based on RPE feedback'**
+  String get autoAdjustWeightRpeDescription;
+
+  /// Auto-adjust weight from RPE tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 9-10: suggest -2.5kg/-5%. RPE ≤6: suggest +2.5kg/+5%. Helps you find the optimal load for your current state.'**
+  String get autoAdjustWeightRpeTooltip;
+
+  /// Auto-adjust rest from RPE toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Adjust Rest Time'**
+  String get autoAdjustRestRpeTitle;
+
+  /// Auto-adjust rest from RPE toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust rest based on effort level'**
+  String get autoAdjustRestRpeDescription;
+
+  /// Auto-adjust rest from RPE tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 8-10: +30s rest. RPE ≤6: -15s rest. Automatically adapts recovery time to your fatigue level.'**
+  String get autoAdjustRestRpeTooltip;
+
+  /// Information section title
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Information & Insights'**
+  String get informationInsightsSection;
+
+  /// Exercise details toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Details'**
+  String get exerciseDetailsTitle;
+
+  /// Exercise details toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Show notes and detailed statistics'**
+  String get exerciseDetailsDescription;
+
+  /// Exercise details tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Display comprehensive exercise information including personal notes, progress statistics, and performance insights.'**
+  String get exerciseDetailsTooltip;
+
+  /// Community suggestions toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Community Suggestions'**
+  String get communitySuggestionsTitle;
+
+  /// Community suggestions toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Show tips from the community'**
+  String get communitySuggestionsDescription;
+
+  /// Community suggestions tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Get helpful advice and tips from other experienced athletes for each exercise.'**
+  String get communitySuggestionsTooltip;
+
+  /// TUT info toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'TUT Information'**
+  String get tutInfoTitle;
+
+  /// TUT info toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Display Time Under Tension info'**
+  String get tutInfoDescription;
+
+  /// TUT info tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Show tempo (e.g., 3-1-2-0) to control exercise speed and maximize muscle engagement.'**
+  String get tutInfoTooltip;
+
+  /// Quick access section title
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Quick Access'**
+  String get quickAccessSection;
+
+  /// Quick access icons toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Access Icons'**
+  String get quickAccessIconsTitle;
+
+  /// Quick access icons toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Show info, warmup, and prevention icons'**
+  String get quickAccessIconsDescription;
+
+  /// Quick access icons tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Enable quick access buttons in exercise headers for instant access to information, warmup suggestions, and injury prevention tips.'**
+  String get quickAccessIconsTooltip;
+
+  /// Interface section title
+  ///
+  /// In en, this message translates to:
+  /// **'⚙️ Interface & Performance'**
+  String get interfaceSection;
+
+  /// Advanced menu toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Options Menu'**
+  String get advancedMenuTitle;
+
+  /// Advanced menu toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Show advanced options in exercise menu'**
+  String get advancedMenuDescription;
+
+  /// Advanced menu tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Display additional advanced options like exercise replacement, technique variations, and detailed settings.'**
+  String get advancedMenuTooltip;
+
+  /// Custom timers toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Timers'**
+  String get customTimersTitle;
+
+  /// Custom timers toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Show custom timer settings per exercise'**
+  String get customTimersDescription;
+
+  /// Custom timers tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Set specific rest times for individual exercises, perfect for different training intensities.'**
+  String get customTimersTooltip;
+
+  /// Collapse countdown toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse Countdown Animation'**
+  String get collapseCountdownTitle;
+
+  /// Collapse countdown toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Show countdown before auto-collapse'**
+  String get collapseCountdownDescription;
+
+  /// Collapse countdown tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Display a visual countdown before exercises automatically collapse, giving you time to review.'**
+  String get collapseCountdownTooltip;
+
+  /// Simplified animations toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Simplified Animations'**
+  String get simplifiedAnimationsTitle;
+
+  /// Simplified animations toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Use simpler and faster animations'**
+  String get simplifiedAnimationsDescription;
+
+  /// Simplified animations tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce animation complexity for better performance on older devices or if you prefer a snappier interface.'**
+  String get simplifiedAnimationsTooltip;
+
+  /// Settings auto-save info message
+  ///
+  /// In en, this message translates to:
+  /// **'Settings are automatically saved and applied to all future workouts'**
+  String get settingsAutoSaved;
+
+  /// Action button with exercise name and reason
+  ///
+  /// In en, this message translates to:
+  /// **'Replace {exercise} ({reason})'**
+  String replaceExerciseReason(String exercise, String reason);
+
+  /// Reason for exercise replacement - plateau
+  ///
+  /// In en, this message translates to:
+  /// **'Plateau Detected'**
+  String get plateauDetected;
+
+  /// Reason for exercise replacement - form warning
+  ///
+  /// In en, this message translates to:
+  /// **'Form Risk'**
+  String get formRisk;
+
+  /// Title for replacement exercise selection dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Select Replacement Exercise'**
+  String get selectReplacement;
+
+  /// Section title for similar exercises list
+  ///
+  /// In en, this message translates to:
+  /// **'Similar Exercises'**
+  String get similarExercises;
+
+  /// Title for template selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select Templates to Update'**
+  String get selectTemplates;
+
+  /// Confirm button text with template count
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to {count, plural, =1{1 template} other{{count} templates}}'**
+  String applyToTemplates(int count);
+
+  /// Success message after exercise replacement
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise replaced successfully in {count, plural, =1{1 template} other{{count} templates}}'**
+  String exerciseReplacedSuccess(int count);
+
+  /// Message when no similar exercises are available
+  ///
+  /// In en, this message translates to:
+  /// **'No similar exercises found'**
+  String get noSimilarExercises;
+
+  /// Error message when no template is selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one template'**
+  String get selectAtLeastOneTemplate;
+
+  /// Section title for weight handling options
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Handling'**
+  String get weightHandling;
+
+  /// Option to keep current weight when replacing exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Keep current weight'**
+  String get keepCurrentWeight;
+
+  /// Option to reset weight when replacing exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Reset weight (start fresh)'**
+  String get resetWeight;
+
+  /// Option to set weight manually later
+  ///
+  /// In en, this message translates to:
+  /// **'Set manually later'**
+  String get setManually;
+
+  /// Subtitle for muscle balance chart
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Distribution'**
+  String get volumeDistribution;
+
+  /// Title for scientific ratios section
+  ///
+  /// In en, this message translates to:
+  /// **'Scientific Ratios'**
+  String get scientificRatios;
+
+  /// Empty state message for muscle balance
+  ///
+  /// In en, this message translates to:
+  /// **'No muscle group data available'**
+  String get noMuscleGroupData;
+
+  /// Title for help dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Balance Science'**
+  String get muscleBalanceScience;
+
+  /// Explanation of muscle balance
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle balance analysis shows volume distribution and scientifically validated ratios to prevent injury and optimize performance.'**
+  String get muscleBalanceExplanation;
+
+  /// Title for progressive overload regression insight
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Regression Detected'**
+  String get insightProgressiveOverloadRegressionTitle;
+
+  /// Message for progressive overload regression
+  ///
+  /// In en, this message translates to:
+  /// **'Volume decreased by {overloadPercent}% on {exerciseName}'**
+  String insightProgressiveOverloadRegressionMessage(
+    String overloadPercent,
+    String exerciseName,
+  );
+
+  /// Recommendation for regression
+  ///
+  /// In en, this message translates to:
+  /// **'Verify recovery status and training stress. Reference: Kraemer & Ratamess (2004)'**
+  String get insightProgressiveOverloadRegressionRec;
+
+  /// Title for excessive overload
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive Volume Increase'**
+  String get insightProgressiveOverloadExcessiveTitle;
+
+  /// Message for excessive overload
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseName} volume increased by {overloadPercent}%'**
+  String insightProgressiveOverloadExcessiveMessage(
+    String overloadPercent,
+    String exerciseName,
+  );
+
+  /// Recommendation for excessive overload
+  ///
+  /// In en, this message translates to:
+  /// **'HIGH risk of overtraining/injury. Consider reducing volume. Reference: ACSM (2009)'**
+  String get insightProgressiveOverloadExcessiveRec;
+
+  /// Title for optimal overload
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal Progressive Overload'**
+  String get insightProgressiveOverloadOptimalTitle;
+
+  /// Message for optimal overload
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseName}: +{overloadPercent}% volume increase'**
+  String insightProgressiveOverloadOptimalMessage(
+    String overloadPercent,
+    String exerciseName,
+  );
+
+  /// Recommendation for optimal overload
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect sustainable progression rate! Reference: Kraemer & Ratamess (2004)'**
+  String get insightProgressiveOverloadOptimalRec;
+
+  /// Title for low volume
+  ///
+  /// In en, this message translates to:
+  /// **'Below Optimal Volume'**
+  String get insightVolumeLowTitle;
+
+  /// Message for low volume
+  ///
+  /// In en, this message translates to:
+  /// **'{muscleGroup}: {currentSets} sets/week (target: {targetMin}+)'**
+  String insightVolumeLowMessage(
+    String muscleGroup,
+    String currentSets,
+    String targetMin,
+  );
+
+  /// Recommendation for low volume
+  ///
+  /// In en, this message translates to:
+  /// **'Consider adding sets for optimal hypertrophy. Reference: Schoenfeld et al. (2017)'**
+  String get insightVolumeLowRec;
+
+  /// Title for excessive volume
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive Weekly Volume'**
+  String get insightVolumeExcessiveTitle;
+
+  /// Message for excessive volume
+  ///
+  /// In en, this message translates to:
+  /// **'{muscleGroup}: {currentSets} sets/week (max recommended: {maxRecommended})'**
+  String insightVolumeExcessiveMessage(
+    String muscleGroup,
+    String currentSets,
+    String maxRecommended,
+  );
+
+  /// Recommendation for excessive volume
+  ///
+  /// In en, this message translates to:
+  /// **'Risk of overtraining. Consider deload week. Reference: Schoenfeld et al. (2017)'**
+  String get insightVolumeExcessiveRec;
+
+  /// Title for low intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Low Training Intensity'**
+  String get insightIntensityLowTitle;
+
+  /// Message for low intensity
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseName}: {percentOf1RM}% 1RM ({weight}kg × {reps} reps)'**
+  String insightIntensityLowMessage(
+    String exerciseName,
+    String percentOf1RM,
+    String weight,
+    String reps,
+  );
+
+  /// Recommendation for low intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Better for muscular endurance. Increase weight for hypertrophy/strength. Reference: Reynolds et al. (2006)'**
+  String get insightIntensityLowRec;
+
+  /// Title for push pull imbalance
+  ///
+  /// In en, this message translates to:
+  /// **'Push:Pull Imbalance'**
+  String get insightPushPullImbalanceTitle;
+
+  /// Message for push pull imbalance
+  ///
+  /// In en, this message translates to:
+  /// **'Ratio: {ratio}:1 ({pushSets} push, {pullSets} pull sets)'**
+  String insightPushPullImbalanceMessage(
+    String ratio,
+    String pushSets,
+    String pullSets,
+  );
+
+  /// Recommendation for push pull imbalance
+  ///
+  /// In en, this message translates to:
+  /// **'{feedback} Reference: Boyle (2016)'**
+  String insightPushPullImbalanceRec(String feedback);
+
+  /// Title for high risk quad ham ratio
+  ///
+  /// In en, this message translates to:
+  /// **'HIGH Hamstring Injury Risk'**
+  String get insightQuadHamHighRiskTitle;
+
+  /// Message for high risk
+  ///
+  /// In en, this message translates to:
+  /// **'Quad:Ham ratio {ratio}:1 ({quadSets} quad, {hamSets} hamstring sets)'**
+  String insightQuadHamHighRiskMessage(
+    String ratio,
+    String quadSets,
+    String hamSets,
+  );
+
+  /// Recommendation for high risk
+  ///
+  /// In en, this message translates to:
+  /// **'Hamstrings severely under-trained ({riskMultiplier} injury risk). Add RDLs, leg curls immediately. Reference: Croisier et al. (2008)'**
+  String insightQuadHamHighRiskRec(String riskMultiplier);
+
+  /// Generic processing message shown during async operations
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// Error message when user needs to authenticate
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication required. Please sign in again.'**
+  String get errorAuthenticationRequired;
+
+  /// Error when user tries to modify someone else's template
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot modify this template. You can only edit your own templates.'**
+  String get errorCannotModifyTemplate;
+
+  /// Error for network/connection issues
+  ///
+  /// In en, this message translates to:
+  /// **'Network connection error. Please check your internet and try again.'**
+  String get errorNetworkConnection;
+
+  /// Generic error message for unexpected errors
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again.'**
+  String get errorUnexpected;
+
+  /// No description provided for @pushPullRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Push:Pull Ratio'**
+  String get pushPullRatio;
+
+  /// No description provided for @quadHamstringRatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Quad:Hamstring Ratio'**
+  String get quadHamstringRatio;
+
+  /// No description provided for @pushSetsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Push sets'**
+  String pushSetsLabel(Object count);
+
+  /// No description provided for @pullSetsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Pull sets'**
+  String pullSetsLabel(Object count);
+
+  /// No description provided for @quadSetsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Quad sets'**
+  String quadSetsLabel(Object count);
+
+  /// No description provided for @hamstringSetsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Hamstring sets'**
+  String hamstringSetsLabel(Object count);
+
+  /// No description provided for @pushPullExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Equal or Pull-emphasized for shoulder health and posture'**
+  String get pushPullExplanation;
+
+  /// No description provided for @quadHamExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Ratio <0.6 increases hamstring injury risk by 17x'**
+  String get quadHamExplanation;
+
+  /// No description provided for @feedbackTooMuchPull.
+  ///
+  /// In en, this message translates to:
+  /// **'Too much Pull volume - increase Push work'**
+  String get feedbackTooMuchPull;
+
+  /// No description provided for @feedbackTooMuchPush.
+  ///
+  /// In en, this message translates to:
+  /// **'Too much Push volume - risk of postural imbalances. Increase Pull work'**
+  String get feedbackTooMuchPush;
+
+  /// No description provided for @feedbackSlightPushExcess.
+  ///
+  /// In en, this message translates to:
+  /// **'Slight Push excess - consider more Pull volume for shoulder health'**
+  String get feedbackSlightPushExcess;
+
+  /// No description provided for @feedbackOptimalPushPull.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal Push:Pull balance'**
+  String get feedbackOptimalPushPull;
+
+  /// No description provided for @feedbackGoodPullEmphasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Pull emphasis - ideal for shoulder health'**
+  String get feedbackGoodPullEmphasis;
+
+  /// No description provided for @feedbackHamstringSeverelyUndertrained.
+  ///
+  /// In en, this message translates to:
+  /// **'Hamstrings severely under-trained - HIGH injury risk. Add RDLs, leg curls'**
+  String get feedbackHamstringSeverelyUndertrained;
+
+  /// No description provided for @feedbackHamstringUndertrained.
+  ///
+  /// In en, this message translates to:
+  /// **'Hamstrings under-trained - increase posterior chain volume'**
+  String get feedbackHamstringUndertrained;
+
+  /// No description provided for @feedbackOptimalQuadHam.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal Quad:Hamstring balance'**
+  String get feedbackOptimalQuadHam;
+
+  /// No description provided for @feedbackHamstringOveremphasized.
+  ///
+  /// In en, this message translates to:
+  /// **'Hamstrings potentially over-emphasized vs quads'**
+  String get feedbackHamstringOveremphasized;
+
+  /// No description provided for @insightDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights are based on your recent training data and scientific research'**
+  String get insightDisclaimer;
+
+  /// No description provided for @mediumPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium Priority'**
+  String get mediumPriority;
+
+  /// No description provided for @lowPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Priority'**
+  String get lowPriority;
+
+  /// No description provided for @whyThisMatters.
+  ///
+  /// In en, this message translates to:
+  /// **'Why This Matters'**
+  String get whyThisMatters;
+
+  /// No description provided for @yourData.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Data'**
+  String get yourData;
+
+  /// No description provided for @evidenceBasedSolutions.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence-Based Solutions'**
+  String get evidenceBasedSolutions;
+
+  /// No description provided for @howToImplement.
+  ///
+  /// In en, this message translates to:
+  /// **'How to implement:'**
+  String get howToImplement;
+
+  /// Subtitle for Analytics screen
+  ///
+  /// In en, this message translates to:
+  /// **'Track your fitness journey'**
+  String get trackYourFitnessJourney;
+
+  /// Description for not authenticated view
+  ///
+  /// In en, this message translates to:
+  /// **'Track your workouts and monitor your progress'**
+  String get trackYourWorkoutsAndMonitorProgress;
+
+  /// Message shown when user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to view analytics'**
+  String get signInToViewAnalytics;
+
+  /// Empty state title for no workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Start your first workout'**
+  String get startYourFirstWorkout;
+
+  /// Empty state description for no workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Start your first workout to see analytics'**
+  String get startYourFirstWorkoutDesc;
+
+  /// Motivational quote for analytics empty state
+  ///
+  /// In en, this message translates to:
+  /// **'The journey of a thousand miles begins with a single rep'**
+  String get fitnessQuoteEmptyState;
+
+  /// Label for pro tip section in empty states
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Pro Tip:'**
+  String get proTip;
+
+  /// Pro tip for first workout in analytics empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Start with compound movements like squats and bench press for maximum gains'**
+  String get proTipFirstWorkout;
+
+  /// Error message when analytics fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading analytics'**
+  String get errorLoadingAnalytics;
+
+  /// Title for account-related errors
+  ///
+  /// In en, this message translates to:
+  /// **'Account Error'**
+  String get accountError;
+
+  /// Error message when user data cannot be loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load user data. Please sign out and sign in again.'**
+  String get unableToLoadUserData;
+
+  /// Year period filter
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// All filter option
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// Title for this week's progress
+  ///
+  /// In en, this message translates to:
+  /// **'This Week Progress'**
+  String get thisWeekProgress;
+
+  /// Title for this month's progress
+  ///
+  /// In en, this message translates to:
+  /// **'This Month Progress'**
+  String get thisMonthProgress;
+
+  /// Title for this year's progress
+  ///
+  /// In en, this message translates to:
+  /// **'This Year Progress'**
+  String get thisYearProgress;
+
+  /// Title for all time progress
+  ///
+  /// In en, this message translates to:
+  /// **'All Time Progress'**
+  String get allTimeProgress;
+
+  /// Subtitle for last 7 days period
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get last7Days;
+
+  /// Subtitle for last 30 days period
+  ///
+  /// In en, this message translates to:
+  /// **'Last 30 days'**
+  String get last30Days;
+
+  /// Subtitle for last 365 days period
+  ///
+  /// In en, this message translates to:
+  /// **'Last 365 days'**
+  String get last365Days;
+
+  /// Subtitle for all time period
+  ///
+  /// In en, this message translates to:
+  /// **'All time'**
+  String get allTime;
+
+  /// Label for day streak stat
+  ///
+  /// In en, this message translates to:
+  /// **'Day Streak'**
+  String get dayStreak;
+
+  /// Encouragement message for active streak
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up!'**
+  String get keepItUp;
+
+  /// Button to view detailed statistics
+  ///
+  /// In en, this message translates to:
+  /// **'View Stats'**
+  String get viewStats;
+
+  /// Description for no recent workouts state
+  ///
+  /// In en, this message translates to:
+  /// **'Start a workout to see your progress'**
+  String get noRecentWorkoutsDesc;
+
+  /// Title for no recent workouts state
+  ///
+  /// In en, this message translates to:
+  /// **'No recent workouts'**
+  String get noRecentWorkouts;
+
+  /// Label showing workout count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workouts'**
+  String workoutsCount(int count);
+
+  /// Label showing reps count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reps'**
+  String repsCount(int count);
+
+  /// Message when no activities in selected period
+  ///
+  /// In en, this message translates to:
+  /// **'No activities in this period'**
+  String get noActivitiesInPeriod;
+
+  /// Message when no activities match muscle group filter
+  ///
+  /// In en, this message translates to:
+  /// **'No activities for selected muscle groups'**
+  String get noActivitiesForSelectedMuscleGroups;
+
+  /// Error message when no completed exercises
+  ///
+  /// In en, this message translates to:
+  /// **'No completed exercises found in your workouts'**
+  String get noCompletedExercises;
+
+  /// Error loading activities
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load exercise activities'**
+  String get unableToLoadActivities;
+
+  /// Title with count of all activities
+  ///
+  /// In en, this message translates to:
+  /// **'All Activities ({count})'**
+  String allActivitiesCount(int count);
+
+  /// Title for muscle group statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Group Statistics'**
+  String get muscleGroupStatistics;
+
+  /// Title for sets details section
+  ///
+  /// In en, this message translates to:
+  /// **'Sets Details'**
+  String get setsDetails;
+
+  /// Volume label with value
+  ///
+  /// In en, this message translates to:
+  /// **'Volume: {value} kg'**
+  String volumeWithValue(String value);
+
+  /// RPE label with value
+  ///
+  /// In en, this message translates to:
+  /// **'RPE: {value}'**
+  String rpeWithValue(String value);
+
+  /// Maximum weight
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kg max'**
+  String kgMax(String value);
+
+  /// Total reps count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reps'**
+  String totalRepsCount(int count);
+
+  /// No description provided for @aiWeightJumpAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight increased by {percentIncrease}% ({absoluteIncrease}kg) in a single session. Research indicates that sudden load increases >15-20% significantly increase injury risk, particularly for connective tissue which adapts slower than muscle. Form breakdown often occurs when neural drive cannot support the new load.'**
+  String aiWeightJumpAnalysis(Object absoluteIncrease, Object percentIncrease);
+
+  /// No description provided for @dataPreviousWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous weight: {weight}kg'**
+  String dataPreviousWeight(Object weight);
+
+  /// No description provided for @dataCurrentWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Current weight: {weight}kg'**
+  String dataCurrentWeight(Object weight);
+
+  /// No description provided for @dataAbsoluteJump.
+  ///
+  /// In en, this message translates to:
+  /// **'Absolute jump: +{weight}kg'**
+  String dataAbsoluteJump(Object weight);
+
+  /// No description provided for @dataPercentageIncrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage increase: {percent}%'**
+  String dataPercentageIncrease(Object percent);
+
+  /// No description provided for @dataSafeThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe threshold: <{threshold}%'**
+  String dataSafeThreshold(Object threshold);
+
+  /// No description provided for @dataRiskFactors.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk: Form breakdown, tendon strain'**
+  String get dataRiskFactors;
+
+  /// No description provided for @strategyUseSmallerIncrementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Smaller Increments'**
+  String get strategyUseSmallerIncrementsTitle;
+
+  /// No description provided for @strategyUseSmallerIncrementsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Gradual load progression allows connective tissue adaptation and maintains proper form'**
+  String get strategyUseSmallerIncrementsDesc;
+
+  /// No description provided for @strategyUseSmallerIncrementsHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase weight by 2.5-5% per session (2.5kg for lower body, 1.25kg for upper body). Use fractional plates or microloading'**
+  String get strategyUseSmallerIncrementsHow;
+
+  /// No description provided for @strategyUseSmallerIncrementsOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Sustained progress with reduced injury risk. Tendons adapt within 6-8 weeks'**
+  String get strategyUseSmallerIncrementsOutcome;
+
+  /// No description provided for @strategyFocusRepQualityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on Rep Quality'**
+  String get strategyFocusRepQualityTitle;
+
+  /// No description provided for @strategyFocusRepQualityDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical proficiency should be maintained across all rep ranges. Speed and control are indicators of appropriate loading'**
+  String get strategyFocusRepQualityDesc;
+
+  /// No description provided for @strategyFocusRepQualityHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Film your sets. If bar speed decreases >20% or form breaks down, reduce weight by 10% and rebuild'**
+  String get strategyFocusRepQualityHow;
+
+  /// No description provided for @strategyFocusRepQualityOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Improved motor patterns and long-term strength gains'**
+  String get strategyFocusRepQualityOutcome;
+
+  /// No description provided for @strategyDeloadWeekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deload Week'**
+  String get strategyDeloadWeekTitle;
+
+  /// No description provided for @strategyDeloadWeekDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'After rapid load increases, connective tissue needs consolidation time'**
+  String get strategyDeloadWeekDesc;
+
+  /// No description provided for @strategyDeloadWeekHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce weight by 20-30% for one week while maintaining volume. Focus on technique and recovery'**
+  String get strategyDeloadWeekHow;
+
+  /// No description provided for @strategyDeloadWeekOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduced injury risk and better long-term adaptation'**
+  String get strategyDeloadWeekOutcome;
+
+  /// No description provided for @insightsAICoach.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach Insights'**
+  String get insightsAICoach;
+
+  /// No description provided for @aiMuscleImbalanceAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'{muscleGroup} is currently at {sets} sets/week, which is below the Minimum Effective Volume (MEV) of 10 sets. Scientific research shows that muscles require at least 10-20 sets per week for optimal hypertrophy.'**
+  String aiMuscleImbalanceAnalysis(Object muscleGroup, Object sets);
+
+  /// No description provided for @dataCurrentVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Current volume: {sets} sets/week'**
+  String dataCurrentVolume(Object sets);
+
+  /// No description provided for @dataMEV.
+  ///
+  /// In en, this message translates to:
+  /// **'MEV (Minimum): 10 sets/week'**
+  String get dataMEV;
+
+  /// No description provided for @dataMAV.
+  ///
+  /// In en, this message translates to:
+  /// **'MAV (Optimal): 15-20 sets/week'**
+  String get dataMAV;
+
+  /// No description provided for @dataDeficit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deficit: {deficit} sets below MEV'**
+  String dataDeficit(Object deficit);
+
+  /// No description provided for @dataExercisesList.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises: {exercises}'**
+  String dataExercisesList(Object exercises);
+
+  /// No description provided for @aiHighVolumeAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'{muscleGroup} is at {sets} sets/week, exceeding the Maximum Recoverable Volume (MRV) of 25 sets. This level of volume can lead to systemic fatigue, impaired recovery, and diminishing returns. Research shows that exceeding MRV increases injury risk without additional muscle growth benefits.'**
+  String aiHighVolumeAnalysis(Object muscleGroup, Object sets);
+
+  /// No description provided for @dataMRV.
+  ///
+  /// In en, this message translates to:
+  /// **'MRV (Maximum): 25 sets/week'**
+  String get dataMRV;
+
+  /// No description provided for @dataExcess.
+  ///
+  /// In en, this message translates to:
+  /// **'Excess: {excess} sets above MRV'**
+  String dataExcess(Object excess);
+
+  /// No description provided for @dataRiskOvertraining.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk: Overtraining syndrome'**
+  String get dataRiskOvertraining;
+
+  /// No description provided for @strategyReduceVolumeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce Volume Gradually'**
+  String get strategyReduceVolumeTitle;
+
+  /// No description provided for @strategyReduceVolumeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sudden volume drops can cause detraining. Gradual reduction maintains adaptations while allowing recovery'**
+  String get strategyReduceVolumeDesc;
+
+  /// No description provided for @strategyReduceVolumeHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce by 20-30% per week until reaching 15-20 sets. Example: 28 sets → 22 sets → 18 sets over 2 weeks'**
+  String get strategyReduceVolumeHow;
+
+  /// No description provided for @strategyReduceVolumeOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored recovery capacity and improved performance within 2-3 weeks'**
+  String get strategyReduceVolumeOutcome;
+
+  /// No description provided for @strategyDeloadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Implement Deload Week'**
+  String get strategyDeloadTitle;
+
+  /// No description provided for @strategyDeloadDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategic recovery week allows supercompensation and fatigue dissipation'**
+  String get strategyDeloadDesc;
+
+  /// No description provided for @strategyDeloadHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce volume by 40-50% for one week. Maintain intensity but cut sets in half'**
+  String get strategyDeloadHow;
+
+  /// No description provided for @strategyDeloadOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh nervous system and enhanced subsequent performance'**
+  String get strategyDeloadOutcome;
+
+  /// No description provided for @strategyReallocateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reallocate Volume'**
+  String get strategyReallocateTitle;
+
+  /// No description provided for @strategyReallocateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Distribute excess volume to underdeveloped muscle groups for balanced development'**
+  String get strategyReallocateDesc;
+
+  /// No description provided for @strategyReallocateHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Identify muscles below MEV. Transfer 1-2 exercises from overtrained muscle to undertrained areas'**
+  String get strategyReallocateHow;
+
+  /// No description provided for @strategyReallocateOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced development and optimized recovery resources'**
+  String get strategyReallocateOutcome;
+
+  /// No description provided for @aiPlateauAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight variation across last 3 sessions is {variation}% (threshold: 5%). This indicates insufficient progressive overload stimulus for adaptation.'**
+  String aiPlateauAnalysis(Object variation);
+
+  /// No description provided for @dataWeightVariation.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight variation: {variation}%'**
+  String dataWeightVariation(Object variation);
+
+  /// No description provided for @dataThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Progression threshold: >5%'**
+  String get dataThreshold;
+
+  /// No description provided for @dataLastWeights.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent weights: {weights}'**
+  String dataLastWeights(Object weights);
+
+  /// No description provided for @dataRecommendedIncrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended increase: {increase}kg'**
+  String dataRecommendedIncrease(Object increase);
+
+  /// No description provided for @aiInsufficientRecoveryAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {days} days since last workout. Research shows that muscles need 24-48 hours for optimal protein synthesis and glycogen replenishment. Training too frequently can impair recovery and increase injury risk.'**
+  String aiInsufficientRecoveryAnalysis(Object days);
+
+  /// No description provided for @dataLastWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Last workout: {days} days ago'**
+  String dataLastWorkout(Object days);
+
+  /// No description provided for @dataMinimumRecovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended minimum: 1.0 days (24 hours)'**
+  String get dataMinimumRecovery;
+
+  /// No description provided for @dataOptimalRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal range: 1-3 days between sessions'**
+  String get dataOptimalRange;
+
+  /// No description provided for @dataCurrentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: Insufficient recovery'**
+  String get dataCurrentStatus;
+
+  /// No description provided for @dataMuscleProteinSynthesis.
+  ///
+  /// In en, this message translates to:
+  /// **'MPS window: Still active'**
+  String get dataMuscleProteinSynthesis;
+
+  /// No description provided for @aiLongRecoveryAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days without training. While recovery is important, gaps longer than 4 days can lead to detraining effects. Muscle protein synthesis returns to baseline after 48-72 hours, and strength adaptations begin to decline.'**
+  String aiLongRecoveryAnalysis(Object days);
+
+  /// No description provided for @dataMaxRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended maximum: 4.0 days'**
+  String get dataMaxRecommended;
+
+  /// No description provided for @dataProteinSynthesisPeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein synthesis peak: 24-48h post-workout'**
+  String get dataProteinSynthesisPeak;
+
+  /// No description provided for @dataDetrainingRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk: Detraining effects'**
+  String get dataDetrainingRisk;
+
+  /// No description provided for @strategyActiveRecoveryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Recovery Sessions'**
+  String get strategyActiveRecoveryTitle;
+
+  /// No description provided for @strategyActiveRecoveryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Light movement maintains adaptations without adding fatigue'**
+  String get strategyActiveRecoveryDesc;
+
+  /// No description provided for @strategyActiveRecoveryHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Perform 20-30 min of light cardio or bodyweight exercises at 40-60% intensity on rest days'**
+  String get strategyActiveRecoveryHow;
+
+  /// No description provided for @strategyActiveRecoveryOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintained adaptations and improved recovery quality'**
+  String get strategyActiveRecoveryOutcome;
+
+  /// No description provided for @strategyScheduleWorkoutsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Next Workout'**
+  String get strategyScheduleWorkoutsTitle;
+
+  /// No description provided for @strategyScheduleWorkoutsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency is key for long-term progress. Plan ahead to avoid extended breaks'**
+  String get strategyScheduleWorkoutsDesc;
+
+  /// No description provided for @strategyScheduleWorkoutsHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Set specific workout days and times. Use calendar reminders. Aim for max 3-day gaps'**
+  String get strategyScheduleWorkoutsHow;
+
+  /// No description provided for @strategyScheduleWorkoutsOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent stimulus for continuous adaptation'**
+  String get strategyScheduleWorkoutsOutcome;
+
+  /// No description provided for @aiLowFrequencyAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Current training frequency of {frequency} sessions/week is below the minimum threshold for meaningful adaptations. Research demonstrates that training a muscle group less than once per week results in minimal hypertrophy and strength gains. Muscle protein synthesis peaks 24-48h post-workout and returns to baseline by 72h.'**
+  String aiLowFrequencyAnalysis(Object frequency);
+
+  /// No description provided for @dataCurrentFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Current frequency: {frequency} workouts/week'**
+  String dataCurrentFrequency(Object frequency);
+
+  /// No description provided for @dataMinimumEffective.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum effective: 1-2 workouts/week'**
+  String get dataMinimumEffective;
+
+  /// No description provided for @dataOptimalFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal range: 3-5 workouts/week'**
+  String get dataOptimalFrequency;
+
+  /// No description provided for @dataAdaptationStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: Suboptimal adaptation stimulus'**
+  String get dataAdaptationStatus;
+
+  /// No description provided for @dataMPSCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'MPS cycle: {hours}h window underutilized'**
+  String dataMPSCycle(Object hours);
+
+  /// No description provided for @strategyIncreaseFrequencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase Training Frequency'**
+  String get strategyIncreaseFrequencyTitle;
+
+  /// No description provided for @strategyIncreaseFrequencyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Higher frequency provides more frequent stimulus for adaptation'**
+  String get strategyIncreaseFrequencyDesc;
+
+  /// No description provided for @strategyIncreaseFrequencyHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 1 session per week initially. Build up to 3-4 sessions. Focus on different muscle groups each session'**
+  String get strategyIncreaseFrequencyHow;
+
+  /// No description provided for @strategyIncreaseFrequencyOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhanced muscle protein synthesis frequency and faster gains'**
+  String get strategyIncreaseFrequencyOutcome;
+
+  /// No description provided for @strategyFullBodyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Adopt Full-Body Workouts'**
+  String get strategyFullBodyTitle;
+
+  /// No description provided for @strategyFullBodyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Full-body sessions allow hitting each muscle 2-3x/week even with lower frequency'**
+  String get strategyFullBodyDesc;
+
+  /// No description provided for @strategyFullBodyHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Design 2-3 workouts hitting all major muscles. Include 1-2 exercises per muscle group'**
+  String get strategyFullBodyHow;
+
+  /// No description provided for @strategyFullBodyOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal stimulus frequency even with limited workout days'**
+  String get strategyFullBodyOutcome;
+
+  /// No description provided for @aiHighFrequencyAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Training {frequency} times per week may exceed optimal frequency for recovery. While high frequency can work for advanced lifters with proper programming, it increases risk of overtraining, CNS fatigue, and diminishing returns. Studies show no additional hypertrophy benefits beyond 5-6 sessions/week when volume is equated.'**
+  String aiHighFrequencyAnalysis(Object frequency);
+
+  /// No description provided for @dataMaxBeneficial.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum beneficial: ~6 workouts/week'**
+  String get dataMaxBeneficial;
+
+  /// No description provided for @dataRecoveryStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: Potential overreaching'**
+  String get dataRecoveryStatus;
+
+  /// No description provided for @dataCNSFatigue.
+  ///
+  /// In en, this message translates to:
+  /// **'CNS fatigue risk: Elevated'**
+  String get dataCNSFatigue;
+
+  /// No description provided for @strategyReduceFrequencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce Training Frequency'**
+  String get strategyReduceFrequencyTitle;
+
+  /// No description provided for @strategyReduceFrequencyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower frequency with maintained volume can improve recovery and results'**
+  String get strategyReduceFrequencyDesc;
+
+  /// No description provided for @strategyReduceFrequencyHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Consolidate workouts into 4-5 quality sessions. Increase volume per session slightly'**
+  String get strategyReduceFrequencyHow;
+
+  /// No description provided for @strategyReduceFrequencyOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Better recovery, reduced injury risk, maintained or improved gains'**
+  String get strategyReduceFrequencyOutcome;
+
+  /// No description provided for @strategyImplementRestDaysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Implement Strategic Rest Days'**
+  String get strategyImplementRestDaysTitle;
+
+  /// No description provided for @strategyImplementRestDaysDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled rest allows adaptation and prevents accumulated fatigue'**
+  String get strategyImplementRestDaysDesc;
+
+  /// No description provided for @strategyImplementRestDaysHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Take at least 1-2 complete rest days per week. Place them after hardest training days'**
+  String get strategyImplementRestDaysHow;
+
+  /// No description provided for @strategyImplementRestDaysOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimized recovery and sustained performance'**
+  String get strategyImplementRestDaysOutcome;
+
+  /// No description provided for @dataSession1.
+  ///
+  /// In en, this message translates to:
+  /// **'Session 1: {weight}kg'**
+  String dataSession1(Object weight);
+
+  /// No description provided for @dataSession2.
+  ///
+  /// In en, this message translates to:
+  /// **'Session 2: {weight}kg'**
+  String dataSession2(Object weight);
+
+  /// No description provided for @dataSession3.
+  ///
+  /// In en, this message translates to:
+  /// **'Session 3: {weight}kg'**
+  String dataSession3(Object weight);
+
+  /// No description provided for @dataAverageWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Average: {weight}kg'**
+  String dataAverageWeight(Object weight);
+
+  /// No description provided for @dataWeightVariation2.
+  ///
+  /// In en, this message translates to:
+  /// **'Variation: {weight}kg ({percent}%)'**
+  String dataWeightVariation2(Object percent, Object weight);
+
+  /// No description provided for @strategyPlateauincreasevolumeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase Training Volume'**
+  String get strategyPlateauincreasevolumeTitle;
+
+  /// No description provided for @strategyPlateauincreasevolumeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive volume increase is one of the primary drivers of hypertrophy adaptation'**
+  String get strategyPlateauincreasevolumeDesc;
+
+  /// No description provided for @strategyPlateauincreasevolumeImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 1-2 sets per week until you reach 15-20 sets per muscle group. Example: if doing 3 sets, increase to 4-5 sets'**
+  String get strategyPlateauincreasevolumeImpl;
+
+  /// No description provided for @strategyPlateauincreasevolumeOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'New growth stimulus within 2-4 weeks. Volume should increase gradually to avoid overtraining'**
+  String get strategyPlateauincreasevolumeOutcome;
+
+  /// No description provided for @strategyPlateauvaryrepsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vary Rep Ranges'**
+  String get strategyPlateauvaryrepsTitle;
+
+  /// No description provided for @strategyPlateauvaryrepsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Different rep ranges recruit different muscle fiber types and create novel mechanical tension'**
+  String get strategyPlateauvaryrepsDesc;
+
+  /// No description provided for @strategyPlateauvaryrepsImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternate between strength (4-6 reps), hypertrophy (8-12 reps), and endurance (15-20 reps) ranges across weeks'**
+  String get strategyPlateauvaryrepsImpl;
+
+  /// No description provided for @strategyPlateauvaryrepsOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhanced overall muscle development and strength gains across all ranges'**
+  String get strategyPlateauvaryrepsOutcome;
+
+  /// No description provided for @strategyPlateauadvancedtechniquesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Implement Advanced Techniques'**
+  String get strategyPlateauadvancedtechniquesTitle;
+
+  /// No description provided for @strategyPlateauadvancedtechniquesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Intensity techniques increase metabolic stress and mechanical tension beyond traditional sets'**
+  String get strategyPlateauadvancedtechniquesDesc;
+
+  /// No description provided for @strategyPlateauadvancedtechniquesImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Use drop sets (reduce weight 20-30% after failure), rest-pause (10-15 sec rest between mini-sets), or forced reps on final set'**
+  String get strategyPlateauadvancedtechniquesImpl;
+
+  /// No description provided for @strategyPlateauadvancedtechniquesOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Immediate increase in muscle fiber recruitment and metabolic stress'**
+  String get strategyPlateauadvancedtechniquesOutcome;
+
+  /// No description provided for @strategyPlateauchangeexercisesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Exercise Variation'**
+  String get strategyPlateauchangeexercisesTitle;
+
+  /// No description provided for @strategyPlateauchangeexercisesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Novel exercises create different force vectors and recruitment patterns'**
+  String get strategyPlateauchangeexercisesDesc;
+
+  /// No description provided for @strategyPlateauchangeexercisesImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitute similar exercises with different angles. Example: flat bench → incline bench, squat → front squat'**
+  String get strategyPlateauchangeexercisesImpl;
+
+  /// No description provided for @strategyPlateauchangeexercisesOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Renewed strength gains and muscle activation in 1-2 weeks'**
+  String get strategyPlateauchangeexercisesOutcome;
+
+  /// No description provided for @strategyPlateaudeloadweekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deload Week'**
+  String get strategyPlateaudeloadweekTitle;
+
+  /// No description provided for @strategyPlateaudeloadweekDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategic recovery allows supercompensation and nervous system recovery'**
+  String get strategyPlateaudeloadweekDesc;
+
+  /// No description provided for @strategyPlateaudeloadweekImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce volume by 40-50% for 1 week (half the sets, same weight). Maintain frequency but reduce total work'**
+  String get strategyPlateaudeloadweekImpl;
+
+  /// No description provided for @strategyPlateaudeloadweekOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Return stronger after deload with reduced fatigue and improved neuromuscular efficiency'**
+  String get strategyPlateaudeloadweekOutcome;
+
+  /// No description provided for @strategyBalanceincreasefrequencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase Training Frequency'**
+  String get strategyBalanceincreasefrequencyTitle;
+
+  /// No description provided for @strategyBalanceincreasefrequencyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Higher frequency provides more opportunities for volume accumulation and skill practice'**
+  String get strategyBalanceincreasefrequencyDesc;
+
+  /// No description provided for @strategyBalanceincreasefrequencyImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Split current volume across 2-3 sessions per week instead of 1. Example: 10 sets → 5 sets × 2 days'**
+  String get strategyBalanceincreasefrequencyImpl;
+
+  /// No description provided for @strategyBalanceincreasefrequencyOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Better recovery between sessions and higher quality sets'**
+  String get strategyBalanceincreasefrequencyOutcome;
+
+  /// No description provided for @strategyBalanceprioritizeweakTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prioritize Weak Muscle Groups'**
+  String get strategyBalanceprioritizeweakTitle;
+
+  /// No description provided for @strategyBalanceprioritizeweakDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Training lagging muscles first when energy is highest maximizes adaptation'**
+  String get strategyBalanceprioritizeweakDesc;
+
+  /// No description provided for @strategyBalanceprioritizeweakImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Perform weak muscle exercises at the beginning of your workout when neurologically fresh'**
+  String get strategyBalanceprioritizeweakImpl;
+
+  /// No description provided for @strategyBalanceprioritizeweakOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Improved performance and progressive overload on weak points'**
+  String get strategyBalanceprioritizeweakOutcome;
+
+  /// No description provided for @strategyBalanceaddisolationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Isolation Work'**
+  String get strategyBalanceaddisolationTitle;
+
+  /// No description provided for @strategyBalanceaddisolationDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct isolation allows targeted volume without systemic fatigue'**
+  String get strategyBalanceaddisolationDesc;
+
+  /// No description provided for @strategyBalanceaddisolationImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 2-3 isolation exercises (12-15 reps) after compound movements for the weak muscle'**
+  String get strategyBalanceaddisolationImpl;
+
+  /// No description provided for @strategyBalanceaddisolationOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Increased local volume and muscle-mind connection'**
+  String get strategyBalanceaddisolationOutcome;
+
+  /// No description provided for @strategyRecoveryoptimizesleepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimize Sleep Duration'**
+  String get strategyRecoveryoptimizesleepTitle;
+
+  /// No description provided for @strategyRecoveryoptimizesleepDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep is the primary recovery mechanism for neuromuscular adaptation'**
+  String get strategyRecoveryoptimizesleepDesc;
+
+  /// No description provided for @strategyRecoveryoptimizesleepImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Aim for 7-9 hours per night. Prioritize consistent sleep schedule (same bedtime/wake time)'**
+  String get strategyRecoveryoptimizesleepImpl;
+
+  /// No description provided for @strategyRecoveryoptimizesleepOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhanced muscle protein synthesis and reduced cortisol levels'**
+  String get strategyRecoveryoptimizesleepOutcome;
+
+  /// No description provided for @strategyRecoveryperiodizeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Periodize Training Stress'**
+  String get strategyRecoveryperiodizeTitle;
+
+  /// No description provided for @strategyRecoveryperiodizeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternating high and low stress weeks prevents chronic fatigue'**
+  String get strategyRecoveryperiodizeDesc;
+
+  /// No description provided for @strategyRecoveryperiodizeImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'3 weeks progressive overload → 1 deload week (50% volume reduction)'**
+  String get strategyRecoveryperiodizeImpl;
+
+  /// No description provided for @strategyRecoveryperiodizeOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Sustained progress without burnout or injury risk'**
+  String get strategyRecoveryperiodizeOutcome;
+
+  /// No description provided for @strategyRecoveryactiverecoveryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Recovery Sessions'**
+  String get strategyRecoveryactiverecoveryTitle;
+
+  /// No description provided for @strategyRecoveryactiverecoveryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Light activity enhances blood flow and waste removal without adding fatigue'**
+  String get strategyRecoveryactiverecoveryDesc;
+
+  /// No description provided for @strategyRecoveryactiverecoveryImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Add 20-30 min low-intensity cardio or mobility work on rest days'**
+  String get strategyRecoveryactiverecoveryImpl;
+
+  /// No description provided for @strategyRecoveryactiverecoveryOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Faster recovery and reduced muscle soreness'**
+  String get strategyRecoveryactiverecoveryOutcome;
+
+  /// No description provided for @strategyLongrecoveryscheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Establish Consistent Schedule'**
+  String get strategyLongrecoveryscheduleTitle;
+
+  /// No description provided for @strategyLongrecoveryscheduleDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Training frequency is more important than individual session quality for long-term progress'**
+  String get strategyLongrecoveryscheduleDesc;
+
+  /// No description provided for @strategyLongrecoveryscheduleImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule 3-5 fixed training days per week. Use calendar reminders. Prepare gym bag the night before'**
+  String get strategyLongrecoveryscheduleImpl;
+
+  /// No description provided for @strategyLongrecoveryscheduleOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Improved habit formation and training adherence within 3-4 weeks'**
+  String get strategyLongrecoveryscheduleOutcome;
+
+  /// No description provided for @strategyLongrecoverymindoseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Minimum Effective Dose'**
+  String get strategyLongrecoverymindoseTitle;
+
+  /// No description provided for @strategyLongrecoverymindoseDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Short, frequent sessions maintain adaptations better than long, infrequent workouts'**
+  String get strategyLongrecoverymindoseDesc;
+
+  /// No description provided for @strategyLongrecoverymindoseImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'If time-constrained, do 20-30 min sessions instead of skipping. Focus on compound movements'**
+  String get strategyLongrecoverymindoseImpl;
+
+  /// No description provided for @strategyLongrecoverymindoseOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintained strength and muscle mass with 60% less volume'**
+  String get strategyLongrecoverymindoseOutcome;
+
+  /// No description provided for @strategyLowfrequencyminviableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with Minimum Viable Frequency'**
+  String get strategyLowfrequencyminviableTitle;
+
+  /// No description provided for @strategyLowfrequencyminviableDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Even 2 weekly sessions produce 80% of the benefits of higher frequencies for beginners'**
+  String get strategyLowfrequencyminviableDesc;
+
+  /// No description provided for @strategyLowfrequencyminviableImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule 2 full-body sessions per week (e.g., Monday/Thursday). 45-60 min each with 4-5 compound exercises'**
+  String get strategyLowfrequencyminviableImpl;
+
+  /// No description provided for @strategyLowfrequencyminviableOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Measurable strength gains within 4-6 weeks. Habit formation in 3-4 weeks'**
+  String get strategyLowfrequencyminviableOutcome;
+
+  /// No description provided for @strategyLowfrequencytimeefficientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Time-Efficient Protocols'**
+  String get strategyLowfrequencytimeefficientTitle;
+
+  /// No description provided for @strategyLowfrequencytimeefficientDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategic exercise selection maximizes results per minute invested'**
+  String get strategyLowfrequencytimeefficientDesc;
+
+  /// No description provided for @strategyLowfrequencytimeefficientImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on compound movements: Squat, Bench, Deadlift, Row, Press. 3 sets of 8-12 reps each. Total: 30-40 min'**
+  String get strategyLowfrequencytimeefficientImpl;
+
+  /// No description provided for @strategyLowfrequencytimeefficientOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Full-body stimulus with minimal time investment'**
+  String get strategyLowfrequencytimeefficientOutcome;
+
+  /// No description provided for @strategyHighfrequencyconsolidateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Consolidate Training Sessions'**
+  String get strategyHighfrequencyconsolidateTitle;
+
+  /// No description provided for @strategyHighfrequencyconsolidateDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer, higher-quality sessions often outperform high-frequency, lower-quality work'**
+  String get strategyHighfrequencyconsolidateDesc;
+
+  /// No description provided for @strategyHighfrequencyconsolidateImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Combine similar muscle groups. Example: Instead of 7 separate sessions, do 4-5 focused sessions with more volume per workout'**
+  String get strategyHighfrequencyconsolidateImpl;
+
+  /// No description provided for @strategyHighfrequencyconsolidateOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Better recovery, maintained volume, reduced fatigue accumulation'**
+  String get strategyHighfrequencyconsolidateOutcome;
+
+  /// No description provided for @strategyHighfrequencyrestdaysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Implement Strategic Rest Days'**
+  String get strategyHighfrequencyrestdaysTitle;
+
+  /// No description provided for @strategyHighfrequencyrestdaysDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete rest or active recovery days are essential for supercompensation'**
+  String get strategyHighfrequencyrestdaysDesc;
+
+  /// No description provided for @strategyHighfrequencyrestdaysImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Take 1-2 full rest days per week. On rest days, do light walking or mobility work only (no resistance training)'**
+  String get strategyHighfrequencyrestdaysImpl;
+
+  /// No description provided for @strategyHighfrequencyrestdaysOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Improved strength rebound and reduced injury risk within 2-3 weeks'**
+  String get strategyHighfrequencyrestdaysOutcome;
+
+  /// No description provided for @strategyHighvolumereducegraduallyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce Volume Gradually'**
+  String get strategyHighvolumereducegraduallyTitle;
+
+  /// No description provided for @strategyHighvolumereducegraduallyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sudden volume drops can cause detraining. Gradual reduction maintains adaptations while allowing recovery'**
+  String get strategyHighvolumereducegraduallyDesc;
+
+  /// No description provided for @strategyHighvolumereducegraduallyImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce by 20-30% per week until reaching 15-20 sets. Example: 28 sets → 22 sets → 18 sets over 2 weeks'**
+  String get strategyHighvolumereducegraduallyImpl;
+
+  /// No description provided for @strategyHighvolumereducegraduallyOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored recovery capacity and improved performance within 2-3 weeks'**
+  String get strategyHighvolumereducegraduallyOutcome;
+
+  /// No description provided for @strategyHighvolumedeloadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Implement Deload Week'**
+  String get strategyHighvolumedeloadTitle;
+
+  /// No description provided for @strategyHighvolumedeloadDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategic recovery week allows supercompensation and fatigue dissipation'**
+  String get strategyHighvolumedeloadDesc;
+
+  /// No description provided for @strategyHighvolumedeloadImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut volume by 50% for one week. Maintain weight but do half the sets. Then resume at optimal volume (15-20 sets)'**
+  String get strategyHighvolumedeloadImpl;
+
+  /// No description provided for @strategyHighvolumedeloadOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Return stronger with reduced accumulated fatigue. Strength rebound in 7-10 days'**
+  String get strategyHighvolumedeloadOutcome;
+
+  /// No description provided for @strategyHighvolumeincreasefreqTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase Training Frequency'**
+  String get strategyHighvolumeincreasefreqTitle;
+
+  /// No description provided for @strategyHighvolumeincreasefreqDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Same volume spread across more sessions reduces per-session fatigue'**
+  String get strategyHighvolumeincreasefreqDesc;
+
+  /// No description provided for @strategyHighvolumeincreasefreqImpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Split current volume across more days. Example: 28 sets/week → 7 sets × 4 days instead of 14 sets × 2 days'**
+  String get strategyHighvolumeincreasefreqImpl;
+
+  /// No description provided for @strategyHighvolumeincreasefreqOutcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Better recovery between sessions and higher quality sets'**
+  String get strategyHighvolumeincreasefreqOutcome;
+
+  /// Filter label for recommendation type filter
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Type'**
+  String get filterByType;
+
+  /// Filter label for recommendation priority filter
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Priority'**
+  String get filterByPriority;
+
+  /// Success type filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// Info type filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// High priority filter option
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get high;
+
+  /// Medium priority filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// Low priority filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get low;
+
+  /// Filter section title for recommendations
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Recommendations'**
+  String get filterRecommendations;
+
+  /// Empty state message when no recommendations match filters
+  ///
+  /// In en, this message translates to:
+  /// **'No recommendations match your filters'**
+  String get noRecommendationsFound;
+
+  /// Tooltip explanation for total volume metric
+  ///
+  /// In en, this message translates to:
+  /// **'Total Volume represents the sum of weight × reps across all exercises. It\'s a key indicator of overall training stress and progression.'**
+  String get totalVolumeTooltip;
+
+  /// Tooltip explanation for workout frequency metric
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Frequency is how often you train per week. Research shows 3-5 sessions per week is optimal for most goals.'**
+  String get workoutFrequencyTooltip;
+
+  /// Tooltip explanation for consistency metric
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency Score measures how regularly you stick to your training schedule. Higher scores (80%+) lead to better long-term results.'**
+  String get consistencyTooltip;
+
+  /// Tooltip explanation for current streak metric
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak tracks consecutive days with at least one workout. Maintaining streaks builds sustainable training habits.'**
+  String get currentStreakTooltip;
+
+  /// Tooltip explanation for muscle balance metric
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Balance shows the distribution of training volume across muscle groups. Aim for balanced development (15-20% per group).'**
+  String get muscleBalanceTooltip;
+
+  /// Tooltip explanation for volume trend metric
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Trend indicates whether your total training volume is increasing (+), stable (=), or decreasing (-) over time.'**
+  String get volumeTrendTooltip;
+
+  /// Title for weekly performance dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Dashboard'**
+  String get weeklyDashboard;
+
+  /// Title for workout consistency heatmap
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency Heatmap'**
+  String get consistencyHeatmap;
+
+  /// Label for admin mode indicator
+  ///
+  /// In en, this message translates to:
+  /// **'ADMIN MODE'**
+  String get adminMode;
+
+  /// Title for premium insights lock screen
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Insights'**
+  String get premiumInsights;
+
+  /// Description for premium insights
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock advanced analytics and insights'**
+  String get unlockAdvancedAnalytics;
+
+  /// Premium feature: weekly dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Performance Dashboard'**
+  String get weeklyPerformanceDashboard;
+
+  /// Premium feature: muscle balance
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Group Balance Analysis'**
+  String get muscleGroupBalanceAnalysis;
+
+  /// Premium feature: consistency tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Consistency Tracking'**
+  String get workoutConsistencyTracking;
+
+  /// Premium feature: recommendations
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Recommendations'**
+  String get personalizedRecommendations;
+
+  /// Title for premium unlock card
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium'**
+  String get unlockPremium;
+
+  /// Dialog title for scientific explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Scientific Basis'**
+  String get scientificBasis;
+
+  /// Section title for exercise list
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Breakdown'**
+  String get exerciseBreakdown;
+
+  /// Label for total volume
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// Label for primary volume
+  ///
+  /// In en, this message translates to:
+  /// **'Primary'**
+  String get primary;
+
+  /// Label for secondary volume
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary'**
+  String get secondary;
+
+  /// Hint to tap for more details
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for scientific explanation'**
+  String get tapForScientificExplanation;
+
+  /// Pectorals muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'PETT (Pectorals)'**
+  String get pectorals;
+
+  /// Deltoids muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'DELT (Deltoids)'**
+  String get deltoids;
+
+  /// Premium tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get premium;
+
+  /// Premium analytics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Analytics'**
+  String get premiumAnalytics;
+
+  /// Premium analytics subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Science-based insights for serious athletes'**
+  String get scienceBasedInsights;
+
+  /// Rep continuum card title
+  ///
+  /// In en, this message translates to:
+  /// **'Rep Continuum'**
+  String get repContinuum;
+
+  /// Rep continuum card subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Training distribution across strength, hypertrophy & endurance zones'**
+  String get repContinuumSubtitle;
+
+  /// Total sets counter
+  ///
+  /// In en, this message translates to:
+  /// **'{count} total sets analyzed'**
+  String totalSetsAnalyzed(int count);
+
+  /// Strength zone label
+  ///
+  /// In en, this message translates to:
+  /// **'Strength (1-5 reps)'**
+  String get strengthZone;
+
+  /// Strength zone description
+  ///
+  /// In en, this message translates to:
+  /// **'Max force, neural adaptations'**
+  String get strengthZoneDesc;
+
+  /// Hypertrophy zone label
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy (6-15 reps)'**
+  String get hypertrophyZone;
+
+  /// Hypertrophy zone description
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle growth, metabolic stress'**
+  String get hypertrophyZoneDesc;
+
+  /// Endurance zone label
+  ///
+  /// In en, this message translates to:
+  /// **'Endurance (15+ reps)'**
+  String get enduranceZone;
+
+  /// Endurance zone description
+  ///
+  /// In en, this message translates to:
+  /// **'Muscular endurance, conditioning'**
+  String get enduranceZoneDesc;
+
+  /// Balanced rep continuum recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Excellent! Your training is well-balanced for hypertrophy. Most sets (60%+) are in the optimal 6-15 rep range.'**
+  String get repContinuumRecommendationBalanced;
+
+  /// Strength-focused recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'🏋️ Strength-focused training detected. Consider adding more hypertrophy work (6-15 reps) for muscle growth.'**
+  String get repContinuumRecommendationStrength;
+
+  /// Endurance-focused recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'🏃 High endurance volume. Add lower rep work (6-15 reps) for strength and hypertrophy gains.'**
+  String get repContinuumRecommendationEndurance;
+
+  /// Mixed training recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Mixed training approach. Ensure each muscle group has adequate volume in target rep ranges.'**
+  String get repContinuumRecommendationMixed;
+
+  /// Scientific explanation title
+  ///
+  /// In en, this message translates to:
+  /// **'The Rep Continuum'**
+  String get repContinuumScientificTitle;
+
+  /// Scientific explanation subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Loading recommendations for muscle strength, hypertrophy, and endurance'**
+  String get repContinuumScientificSubtitle;
+
+  /// Paper summary
+  ///
+  /// In en, this message translates to:
+  /// **'This comprehensive review analyzed 100+ studies to determine optimal loading strategies. Key finding: different rep ranges produce distinct adaptations - strength (1-5), hypertrophy (6-15), endurance (15+).'**
+  String get repContinuumPaperSummary;
+
+  /// Section title for key findings
+  ///
+  /// In en, this message translates to:
+  /// **'Key Findings'**
+  String get keyFindings;
+
+  /// Rep continuum finding 1
+  ///
+  /// In en, this message translates to:
+  /// **'Strength Zone (1-5 reps): Maximizes neural adaptations and absolute strength. Best for powerlifting and max force production.'**
+  String get repContinuumFinding1;
+
+  /// Rep continuum finding 2
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy Zone (6-15 reps): Optimal for muscle growth through mechanical tension and metabolic stress. Industry standard for bodybuilding.'**
+  String get repContinuumFinding2;
+
+  /// Rep continuum finding 3
+  ///
+  /// In en, this message translates to:
+  /// **'Endurance Zone (15+ reps): Develops muscular endurance and work capacity. Important for metabolic conditioning.'**
+  String get repContinuumFinding3;
+
+  /// Section title for practical advice
+  ///
+  /// In en, this message translates to:
+  /// **'Practical Application'**
+  String get practicalApplication;
+
+  /// Practical advice for rep continuum
+  ///
+  /// In en, this message translates to:
+  /// **'For balanced muscle development, aim for 60-70% of your training volume in the hypertrophy zone (6-15 reps). Include 15-20% strength work and 10-15% endurance work for complete adaptation.'**
+  String get repContinuumPracticalAdvice;
+
+  /// Volume landmarks card title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Landmarks'**
+  String get volumeLandmarks;
+
+  /// Volume landmarks subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly set volume per muscle group with optimal zones'**
+  String get volumeLandmarksSubtitle;
+
+  /// Maintenance Volume abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'MV'**
+  String get maintenanceVolume;
+
+  /// Minimum Effective Volume abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'MEV'**
+  String get minEffectiveVolume;
+
+  /// Maximum Adaptive Volume abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'MAV'**
+  String get maxAdaptiveVolume;
+
+  /// Maximum Recoverable Volume abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'MRV'**
+  String get maxRecoverableVolume;
+
+  /// Volume zone indicator
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Below maintenance - add volume'**
+  String get volumeZoneBelowMaintenance;
+
+  /// Volume zone indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance zone'**
+  String get volumeZoneMaintenance;
+
+  /// Volume zone indicator
+  ///
+  /// In en, this message translates to:
+  /// **'↗️ Effective zone - growing'**
+  String get volumeZoneEffective;
+
+  /// Volume zone indicator
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Optimal zone - perfect!'**
+  String get volumeZoneOptimal;
+
+  /// Volume zone indicator
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Excessive - risk of overtraining'**
+  String get volumeZoneExcessive;
+
+  /// Scientific explanation title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Landmarks Explained'**
+  String get volumeLandmarksScientificTitle;
+
+  /// Scientific explanation subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence-based volume recommendations for muscle hypertrophy'**
+  String get volumeLandmarksScientificSubtitle;
+
+  /// Paper summary
+  ///
+  /// In en, this message translates to:
+  /// **'This umbrella review synthesized data from 50+ meta-analyses to establish volume landmarks. Research shows clear dose-response relationship between weekly sets and muscle growth up to MAV.'**
+  String get volumeLandmarksPaperSummary;
+
+  /// Section title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Zones Explained'**
+  String get volumeZonesExplanation;
+
+  /// MV explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum sets per week to maintain muscle mass. Below this, you\'ll lose muscle over time.'**
+  String get mvExplanation;
+
+  /// MEV explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum sets to start seeing growth. This is your baseline for progressive overload.'**
+  String get mevExplanation;
+
+  /// MAV explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Sweet spot for muscle growth. Maximum hypertrophy response with manageable fatigue.'**
+  String get mavExplanation;
+
+  /// MRV explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum recoverable volume. Beyond this, fatigue accumulates faster than you can recover.'**
+  String get mrvExplanation;
+
+  /// Practical advice for volume landmarks
+  ///
+  /// In en, this message translates to:
+  /// **'Start at MEV and progressively increase volume each week until you reach MAV. When you hit MRV or plateau, take a deload week at MV levels, then restart the progression.'**
+  String get volumeLandmarksPracticalAdvice;
+
+  /// Coming soon feature title
+  ///
+  /// In en, this message translates to:
+  /// **'TUT & Velocity Analytics'**
+  String get tutVelocityAnalytics;
+
+  /// Coming soon feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Time under tension and bar velocity metrics for optimal muscle stimulus'**
+  String get tutVelocityDesc;
+
+  /// Coming soon feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Data Confidence Score'**
+  String get dataConfidenceScore;
+
+  /// Coming soon feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Quality assessment of your tracking accuracy and consistency'**
+  String get dataConfidenceDesc;
+
+  /// Coming soon feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Anabolic Signals'**
+  String get anabolicSignals;
+
+  /// Coming soon feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time indicators of muscle growth stimulus and recovery status'**
+  String get anabolicSignalsDesc;
+
+  /// Premium lock CTA title
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium Analytics'**
+  String get unlockPremiumAnalytics;
+
+  /// Premium lock CTA description
+  ///
+  /// In en, this message translates to:
+  /// **'Get science-backed insights based on peer-reviewed research. Make data-driven decisions for optimal muscle growth and performance.'**
+  String get premiumAnalyticsDescription;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Rep Continuum Analysis - optimize training zones'**
+  String get repContinuumFeature;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Landmarks - hit your growth sweet spot'**
+  String get volumeLandmarksFeature;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'TUT & Velocity tracking - maximize stimulus'**
+  String get tutVelocityFeature;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Data Confidence scoring - trust your data'**
+  String get dataConfidenceFeature;
+
+  /// Premium coming soon message
+  ///
+  /// In en, this message translates to:
+  /// **'Premium features coming soon! 🚀'**
+  String get premiumComingSoon;
+
+  /// Preview description
+  ///
+  /// In en, this message translates to:
+  /// **'See how your training is distributed across strength, hypertrophy, and endurance zones'**
+  String get repContinuumPreview;
+
+  /// Preview description
+  ///
+  /// In en, this message translates to:
+  /// **'Track your weekly volume against scientifically-validated landmarks (MV, MEV, MAV, MRV)'**
+  String get volumeLandmarksPreview;
+
+  /// Below maintenance explanation
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing only {current} sets/week. Minimum to maintain muscle is {mv} sets. You\'re at risk of muscle loss.'**
+  String volumeBelowMaintenanceExplanation(int current, int mv);
+
+  /// Below maintenance advice
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least {sets} sets this week to reach maintenance volume and prevent muscle loss.'**
+  String volumeBelowMaintenanceAdvice(int sets);
+
+  /// Maintenance zone explanation
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing {current} sets/week. This maintains muscle ({mv}-{mev} sets) but won\'t trigger growth.'**
+  String volumeMaintenanceExplanation(int current, int mv, int mev);
+
+  /// Maintenance zone advice
+  ///
+  /// In en, this message translates to:
+  /// **'Add {sets} more sets to reach MEV and start seeing muscle growth.'**
+  String volumeMaintenanceAdvice(int sets);
+
+  /// Effective zone explanation
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing {current} sets/week, in the growth zone ({mev}-{mav} sets). Good progress!'**
+  String volumeEffectiveExplanation(int current, int mev, int mav);
+
+  /// Effective zone advice
+  ///
+  /// In en, this message translates to:
+  /// **'You can add up to {sets} more sets to reach optimal MAV zone for maximum gains.'**
+  String volumeEffectiveAdvice(int sets);
+
+  /// Optimal zone explanation
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing {current} sets/week, in the optimal zone ({mav}-{mrv} sets). Maximum hypertrophy stimulus!'**
+  String volumeOptimalExplanation(int current, int mav, int mrv);
+
+  /// Optimal zone advice
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect! Maintain this volume for 2-4 weeks, then consider a deload week.'**
+  String get volumeOptimalAdvice;
+
+  /// Excessive zone explanation
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing {current} sets/week, exceeding recovery limit ({mrv} sets). Risk of overtraining!'**
+  String volumeExcessiveExplanation(int current, int mrv);
+
+  /// Excessive zone advice
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce volume by {sets} sets or take an immediate deload week at 50% volume to recover.'**
+  String volumeExcessiveAdvice(int sets);
+
+  /// Section title for exercises performed this week
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises This Week'**
+  String get exercisesThisWeek;
+
+  /// No description provided for @rpeAndIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE & Intensity'**
+  String get rpeAndIntensity;
+
+  /// No description provided for @rpeIntensityDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Training intensity distribution'**
+  String get rpeIntensityDistribution;
+
+  /// No description provided for @setsWithRPETracked.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets with RPE tracked'**
+  String get setsWithRPETracked;
+
+  /// No description provided for @noRPEDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No RPE data available'**
+  String get noRPEDataAvailable;
+
+  /// No description provided for @noRPEDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking RPE (Rate of Perceived Exertion) during your workouts to see intensity analysis'**
+  String get noRPEDataDescription;
+
+  /// No description provided for @rpeDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE Distribution'**
+  String get rpeDistribution;
+
+  /// No description provided for @rpeRecovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery (5-6)'**
+  String get rpeRecovery;
+
+  /// No description provided for @rpeModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate (7)'**
+  String get rpeModerate;
+
+  /// No description provided for @rpeHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard (8)'**
+  String get rpeHard;
+
+  /// No description provided for @rpeVeryHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Hard (9)'**
+  String get rpeVeryHard;
+
+  /// No description provided for @rpeMaximal.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximal (10)'**
+  String get rpeMaximal;
+
+  /// No description provided for @averageRPEPerMuscleGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Average RPE per Muscle Group'**
+  String get averageRPEPerMuscleGroup;
+
+  /// No description provided for @setsUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'sets'**
+  String get setsUnit;
+
+  /// No description provided for @rangeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Range:'**
+  String get rangeLabel;
+
+  /// No description provided for @helmsEtAl2018.
+  ///
+  /// In en, this message translates to:
+  /// **'Helms et al. (2018) - Strength & Conditioning Journal'**
+  String get helmsEtAl2018;
+
+  /// No description provided for @intensityZoneTooEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Too Easy'**
+  String get intensityZoneTooEasy;
+
+  /// No description provided for @intensityZoneTooEasyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Over 50% of sets are low intensity (RPE 5-6). Risk of lack of progress.'**
+  String get intensityZoneTooEasyDesc;
+
+  /// No description provided for @intensityZoneTooEasyAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase intensity: bring 60-80% of sets to RPE 7-9 to stimulate hypertrophy.'**
+  String get intensityZoneTooEasyAdvice;
+
+  /// No description provided for @intensityZoneOptimalHypertrophy.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal for Hypertrophy'**
+  String get intensityZoneOptimalHypertrophy;
+
+  /// No description provided for @intensityZoneOptimalHypertrophyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'60-80% of sets are at productive intensity (RPE 7-9). Perfect for muscle growth!'**
+  String get intensityZoneOptimalHypertrophyDesc;
+
+  /// No description provided for @intensityZoneOptimalHypertrophyAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up! This distribution is ideal for maximizing hypertrophy.'**
+  String get intensityZoneOptimalHypertrophyAdvice;
+
+  /// No description provided for @intensityZoneOptimalStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal for Strength'**
+  String get intensityZoneOptimalStrength;
+
+  /// No description provided for @intensityZoneOptimalStrengthDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'50-70% of sets are high intensity (RPE 8-10). Perfect for strength gains!'**
+  String get intensityZoneOptimalStrengthDesc;
+
+  /// No description provided for @intensityZoneOptimalStrengthAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent! This distribution maximizes strength gains. Consider deload every 4-6 weeks.'**
+  String get intensityZoneOptimalStrengthAdvice;
+
+  /// No description provided for @intensityZoneBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get intensityZoneBalanced;
+
+  /// No description provided for @intensityZoneBalancedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Good mix of intensities. Suitable for general progress.'**
+  String get intensityZoneBalancedDesc;
+
+  /// No description provided for @intensityZoneBalancedAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced distribution. For hypertrophy, increase RPE 7-9. For strength, increase RPE 8-10.'**
+  String get intensityZoneBalancedAdvice;
+
+  /// No description provided for @intensityZoneTooHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Too Intense'**
+  String get intensityZoneTooHard;
+
+  /// No description provided for @intensityZoneTooHardDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Over 30% of sets are maximal (RPE 10). Risk of overtraining and injury.'**
+  String get intensityZoneTooHardDesc;
+
+  /// No description provided for @intensityZoneTooHardAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce intensity: max 20-30% sets at RPE 10. Add more sets at RPE 7-8 for sustainable volume.'**
+  String get intensityZoneTooHardAdvice;
+
+  /// No description provided for @rpeInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE & Intensity'**
+  String get rpeInfoTitle;
+
+  /// No description provided for @rpeInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE (Rate of Perceived Exertion) is a 5-10 effort scale:'**
+  String get rpeInfoDescription;
+
+  /// No description provided for @rpeScale5_6.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 5-6'**
+  String get rpeScale5_6;
+
+  /// No description provided for @rpeScale5_6Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery - Easy'**
+  String get rpeScale5_6Desc;
+
+  /// No description provided for @rpeScale7.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 7'**
+  String get rpeScale7;
+
+  /// No description provided for @rpeScale7Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate - 3 RIR'**
+  String get rpeScale7Desc;
+
+  /// No description provided for @rpeScale8.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 8'**
+  String get rpeScale8;
+
+  /// No description provided for @rpeScale8Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard - 2 RIR'**
+  String get rpeScale8Desc;
+
+  /// No description provided for @rpeScale9.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 9'**
+  String get rpeScale9;
+
+  /// No description provided for @rpeScale9Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Hard - 1 RIR'**
+  String get rpeScale9Desc;
+
+  /// No description provided for @rpeScale10.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 10'**
+  String get rpeScale10;
+
+  /// No description provided for @rpeScale10Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximal - 0 RIR'**
+  String get rpeScale10Desc;
+
+  /// No description provided for @optimalDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal Distribution (Helms et al. 2018):'**
+  String get optimalDistribution;
+
+  /// No description provided for @hypertrophyDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'• Hypertrophy: 60-80% sets at RPE 7-9'**
+  String get hypertrophyDistribution;
+
+  /// No description provided for @strengthDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'• Strength: 50-70% sets at RPE 8-10'**
+  String get strengthDistribution;
+
+  /// No description provided for @recoveryDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'• Recovery: <50% sets at RPE 5-6'**
+  String get recoveryDistribution;
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeButton;
+
+  /// No description provided for @uncategorizedExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncategorized Exercises'**
+  String get uncategorizedExercises;
+
+  /// No description provided for @uncategorizedExercisesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'These exercises have \'other\' or \'cardio\' category and are not counted in volume. Tap to assign the correct muscle group.'**
+  String get uncategorizedExercisesDesc;
+
+  /// No description provided for @categorizeExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Categorize Exercise'**
+  String get categorizeExercise;
+
+  /// No description provided for @selectCorrectMuscleGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the correct muscle group:'**
+  String get selectCorrectMuscleGroup;
+
+  /// No description provided for @chestMuscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get chestMuscle;
+
+  /// No description provided for @backMuscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backMuscle;
+
+  /// No description provided for @shouldersMuscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get shouldersMuscle;
+
+  /// No description provided for @armsMuscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get armsMuscle;
+
+  /// No description provided for @legsMuscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get legsMuscle;
+
+  /// No description provided for @coreMuscle.
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get coreMuscle;
+
+  /// Cancel button text
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButton;
+
+  /// No description provided for @remappingComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature coming soon: we\'ll save \"{exerciseName}\" as {muscleGroup}'**
+  String remappingComingSoon(String exerciseName, String muscleGroup);
+
+  /// No description provided for @setsPerWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'sets/week'**
+  String get setsPerWeek;
+
+  /// No description provided for @unknownCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get unknownCategory;
+
+  /// Button to watch rewarded ad for premium unlock
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad for 24h Premium'**
+  String get watchAdForPremium;
+
+  /// Success message after watching rewarded ad
+  ///
+  /// In en, this message translates to:
+  /// **'🎉 Premium unlocked for 24 hours!'**
+  String get premiumUnlockedFor24Hours;
+
+  /// Error message when ad is not ready to show
+  ///
+  /// In en, this message translates to:
+  /// **'Ad not ready, try again later'**
+  String get adNotReady;
+
+  /// Shows remaining time for premium access
+  ///
+  /// In en, this message translates to:
+  /// **'Premium active: {time} remaining'**
+  String premiumActiveRemaining(String time);
+
+  /// Button to add a temporary exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Add temporary exercise'**
+  String get addTemporaryExercise;
+
+  /// Button to report a missing exercise to admin
+  ///
+  /// In en, this message translates to:
+  /// **'Report missing exercise'**
+  String get reportMissingExercise;
+
+  /// Confirmation message when temporary exercise is created
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary exercise added! We\'ll review your request.'**
+  String get temporaryExerciseAdded;
+
+  /// Hint for exercise name input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter exercise name'**
+  String get enterExerciseName;
+
+  /// Confirmation yes button
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// Confirmation no button
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// Validation error message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid data'**
+  String get pleaseEnterValidData;
+
+  /// Button to start rest timer after completing exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Start Rest'**
+  String get startRest;
+
+  /// Title for rest timer screen
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Between Sets'**
+  String get restBetweenSets;
+
+  /// Label indicating something is completed
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// Singular form of set (as in workout set)
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get set;
+
+  /// Complete button
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get complete;
+
+  /// Button label to execute an action
+  ///
+  /// In en, this message translates to:
+  /// **'Execute'**
+  String get execute;
+
+  /// Button to skip rest timer
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Rest'**
+  String get skipRest;
+
+  /// Title shown when superset is completed
+  ///
+  /// In en, this message translates to:
+  /// **'Superset Completed'**
+  String get supersetCompleted;
+
+  /// Congratulations message
+  ///
+  /// In en, this message translates to:
+  /// **'Great job!'**
+  String get greatJob;
+
+  /// Dialog title for canceling exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Exercise?'**
+  String get cancelExercise;
+
+  /// Dialog message for canceling exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel? Your progress will not be saved.'**
+  String get cancelExerciseMessage;
+
+  /// Dropset training technique title
+  ///
+  /// In en, this message translates to:
+  /// **'Dropset Training'**
+  String get dropsetTraining;
+
+  /// Dropset technique description
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Set: Perform exercise to failure, then immediately reduce weight and continue.'**
+  String get dropsetDescription;
+
+  /// Label for selected exercise section
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Exercise'**
+  String get selectedExercise;
+
+  /// Title for dropset configuration section
+  ///
+  /// In en, this message translates to:
+  /// **'Dropset Configuration'**
+  String get dropsetConfiguration;
+
+  /// Label for initial weight in dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Initial Weight'**
+  String get initialWeight;
+
+  /// Placeholder for selecting weight
+  ///
+  /// In en, this message translates to:
+  /// **'Select Weight'**
+  String get selectWeight;
+
+  /// Title for weight picker modal
+  ///
+  /// In en, this message translates to:
+  /// **'Select Initial Weight'**
+  String get selectInitialWeight;
+
+  /// Title for reps picker modal
+  ///
+  /// In en, this message translates to:
+  /// **'Select Target Reps'**
+  String get selectTargetReps;
+
+  /// Label for number of weight drops
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Drops'**
+  String get numberOfDrops;
+
+  /// Unit for number of drops (lowercase)
+  ///
+  /// In en, this message translates to:
+  /// **'drops'**
+  String get drops;
+
+  /// Label for weight reduction percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Percentage'**
+  String get dropPercentage;
+
+  /// Title for dropset stages preview
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Stages Preview'**
+  String get dropStagesPreview;
+
+  /// Label for main set in dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Main Set'**
+  String get mainSet;
+
+  /// Label for drop stage
+  ///
+  /// In en, this message translates to:
+  /// **'Drop'**
+  String get drop;
+
+  /// Percentage of maximum weight
+  ///
+  /// In en, this message translates to:
+  /// **'of max'**
+  String get ofMax;
+
+  /// Button to create dropset exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Create Dropset'**
+  String get createDropset;
+
+  /// Error message when creating dropset without required fields
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an exercise and set the initial weight'**
+  String get pleaseSelectExerciseAndWeight;
+
+  /// Rest-pause training technique title
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause Training'**
+  String get restPauseTraining;
+
+  /// Rest-pause technique description
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.'**
+  String get restPauseDescription;
+
+  /// Rest-Pause configuration section title
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause Configuration'**
+  String get restPauseConfiguration;
+
+  /// Label for pause duration between mini-sets
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Duration'**
+  String get pauseDuration;
+
+  /// Instructions for rest-pause technique
+  ///
+  /// In en, this message translates to:
+  /// **'Execute the main set to failure, then take short pauses and continue for additional mini-sets'**
+  String get restPauseInstructions;
+
+  /// Button to create rest-pause exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Create Rest-Pause'**
+  String get createRestPause;
+
+  /// Title for fitness questionnaire
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness Profile Setup'**
+  String get fitnessQuestionnaireTitle;
+
+  /// Welcome screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Get Personalized Weight Suggestions'**
+  String get fitnessQuestionnaireWelcomeTitle;
+
+  /// Welcome screen description
+  ///
+  /// In en, this message translates to:
+  /// **'Answer a few quick questions to receive scientifically-backed starting weight suggestions for your exercises.'**
+  String get fitnessQuestionnaireWelcomeDescription;
+
+  /// Skip questionnaire button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get fitnessQuestionnaireWelcomeSkip;
+
+  /// Start questionnaire button
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s Start'**
+  String get fitnessQuestionnaireWelcomeStart;
+
+  /// Demographics step title
+  ///
+  /// In en, this message translates to:
+  /// **'About You'**
+  String get fitnessQuestionnaireDemographicsTitle;
+
+  /// Bodyweight input label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Bodyweight'**
+  String get fitnessQuestionnaireBodyweightLabel;
+
+  /// Bodyweight unit
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get fitnessQuestionnaireBodyweightUnit;
+
+  /// Age input label
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get fitnessQuestionnaireAgeLabel;
+
+  /// Biological sex label
+  ///
+  /// In en, this message translates to:
+  /// **'Biological Sex'**
+  String get fitnessQuestionnaireSexLabel;
+
+  /// Male option
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get fitnessQuestionnaireSexMale;
+
+  /// Female option
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get fitnessQuestionnaireSexFemale;
+
+  /// Experience step title
+  ///
+  /// In en, this message translates to:
+  /// **'Training Experience'**
+  String get fitnessQuestionnaireExperienceTitle;
+
+  /// Experience level label
+  ///
+  /// In en, this message translates to:
+  /// **'Experience Level'**
+  String get fitnessQuestionnaireExperienceLevelLabel;
+
+  /// Untrained level
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get fitnessQuestionnaireExperienceLevelUntrained;
+
+  /// Novice level (2-6 months)
+  ///
+  /// In en, this message translates to:
+  /// **'Novice'**
+  String get fitnessQuestionnaireExperienceLevelNovice;
+
+  /// Intermediate level (1-2 years)
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get fitnessQuestionnaireExperienceLevelIntermediate;
+
+  /// Advanced level (3-5 years)
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get fitnessQuestionnaireExperienceLevelAdvanced;
+
+  /// Elite level (5+ years)
+  ///
+  /// In en, this message translates to:
+  /// **'Elite'**
+  String get fitnessQuestionnaireExperienceLevelElite;
+
+  /// Months of training label
+  ///
+  /// In en, this message translates to:
+  /// **'Months of consistent training (optional)'**
+  String get fitnessQuestionnaireMonthsTrainingLabel;
+
+  /// Max lifts step title
+  ///
+  /// In en, this message translates to:
+  /// **'Max Lifts (Optional)'**
+  String get fitnessQuestionnaireMaxLiftsTitle;
+
+  /// Max lifts description
+  ///
+  /// In en, this message translates to:
+  /// **'Entering your max lifts improves suggestion accuracy. You can skip this if you don\'t know them.'**
+  String get fitnessQuestionnaireMaxLiftsDescription;
+
+  /// Bench press max label
+  ///
+  /// In en, this message translates to:
+  /// **'Bench Press 1RM'**
+  String get fitnessQuestionnaireBenchPressLabel;
+
+  /// Squat max label
+  ///
+  /// In en, this message translates to:
+  /// **'Squat 1RM'**
+  String get fitnessQuestionnaireSquatLabel;
+
+  /// Deadlift max label
+  ///
+  /// In en, this message translates to:
+  /// **'Deadlift 1RM'**
+  String get fitnessQuestionnaireDeadliftLabel;
+
+  /// OHP max label
+  ///
+  /// In en, this message translates to:
+  /// **'Overhead Press 1RM'**
+  String get fitnessQuestionnaireOhpLabel;
+
+  /// Link to 1RM calculator
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate from reps'**
+  String get fitnessQuestionnaireCalculateFrom;
+
+  /// Goals step title
+  ///
+  /// In en, this message translates to:
+  /// **'Goals & Preferences'**
+  String get fitnessQuestionnaireGoalsTitle;
+
+  /// Training goal label
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Training Goal'**
+  String get fitnessQuestionnaireTrainingGoalLabel;
+
+  /// Strength goal
+  ///
+  /// In en, this message translates to:
+  /// **'Strength (1-5 reps)'**
+  String get fitnessQuestionnaireTrainingGoalStrength;
+
+  /// Hypertrophy goal
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy (8-12 reps)'**
+  String get fitnessQuestionnaireTrainingGoalHypertrophy;
+
+  /// Endurance goal
+  ///
+  /// In en, this message translates to:
+  /// **'Endurance (15+ reps)'**
+  String get fitnessQuestionnaireTrainingGoalEndurance;
+
+  /// Injury history checkbox
+  ///
+  /// In en, this message translates to:
+  /// **'I have a history of training-related injuries'**
+  String get fitnessQuestionnaireInjuryHistoryLabel;
+
+  /// Suggestion style label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion Style'**
+  String get fitnessQuestionnaireSuggestionStyleLabel;
+
+  /// Conservative style
+  ///
+  /// In en, this message translates to:
+  /// **'Conservative (safer)'**
+  String get fitnessQuestionnaireSuggestionStyleConservative;
+
+  /// Balanced style
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced (recommended)'**
+  String get fitnessQuestionnaireSuggestionStyleBalanced;
+
+  /// Aggressive style
+  ///
+  /// In en, this message translates to:
+  /// **'Aggressive (experienced)'**
+  String get fitnessQuestionnaireSuggestionStyleAggressive;
+
+  /// Review step title
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Complete'**
+  String get fitnessQuestionnaireReviewTitle;
+
+  /// Review step description
+  ///
+  /// In en, this message translates to:
+  /// **'Review your information and complete the setup to start getting weight suggestions.'**
+  String get fitnessQuestionnaireReviewDescription;
+
+  /// Complete button
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Setup'**
+  String get fitnessQuestionnaireComplete;
+
+  /// Back button
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get fitnessQuestionnaireBackButton;
+
+  /// Next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get fitnessQuestionnaireNextButton;
+
+  /// Suggested weight label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get weightSuggestionSuggestedWeight;
+
+  /// Use suggestion button
+  ///
+  /// In en, this message translates to:
+  /// **'Use Suggestion'**
+  String get weightSuggestionUse;
+
+  /// Excellent confidence
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent match'**
+  String get weightSuggestionConfidenceExcellent;
+
+  /// Good confidence
+  ///
+  /// In en, this message translates to:
+  /// **'Good match'**
+  String get weightSuggestionConfidenceGood;
+
+  /// Fair confidence
+  ///
+  /// In en, this message translates to:
+  /// **'Fair match'**
+  String get weightSuggestionConfidenceFair;
+
+  /// Low confidence
+  ///
+  /// In en, this message translates to:
+  /// **'Low confidence'**
+  String get weightSuggestionConfidenceLow;
+
+  /// Low confidence warning
+  ///
+  /// In en, this message translates to:
+  /// **'This suggestion has low confidence. Start conservatively.'**
+  String get weightSuggestionWarningLow;
+
+  /// No suggestion message
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestion available for this exercise'**
+  String get weightSuggestionNoData;
+
+  /// Prompt to complete questionnaire
+  ///
+  /// In en, this message translates to:
+  /// **'Complete fitness profile to get weight suggestions'**
+  String get weightSuggestionCompleteQuestionnaire;
+
+  /// Suggestion basis label
+  ///
+  /// In en, this message translates to:
+  /// **'Based on strength standards'**
+  String get weightSuggestionBasedOn;
+
+  /// View suggestion details button
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get weightSuggestionViewDetails;
+
+  /// Details dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Suggestion Details'**
+  String get weightSuggestionDetailsTitle;
+
+  /// Base 1RM label
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated 1RM'**
+  String get weightSuggestionDetailsBaseOneRM;
+
+  /// Intensity factor label
+  ///
+  /// In en, this message translates to:
+  /// **'Training goal intensity'**
+  String get weightSuggestionDetailsIntensityFactor;
+
+  /// Multipliers list label
+  ///
+  /// In en, this message translates to:
+  /// **'Applied adjustments'**
+  String get weightSuggestionDetailsAppliedMultipliers;
+
+  /// Notes label
+  ///
+  /// In en, this message translates to:
+  /// **'Important notes'**
+  String get weightSuggestionDetailsNotes;
+
+  /// 1RM calculator title
+  ///
+  /// In en, this message translates to:
+  /// **'1RM Calculator'**
+  String get oneRMCalculatorTitle;
+
+  /// Weight input label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight lifted'**
+  String get oneRMCalculatorWeight;
+
+  /// Reps input label
+  ///
+  /// In en, this message translates to:
+  /// **'Reps completed'**
+  String get oneRMCalculatorReps;
+
+  /// Estimated 1RM result label
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated 1RM'**
+  String get oneRMCalculatorEstimated;
+
+  /// Formula note
+  ///
+  /// In en, this message translates to:
+  /// **'Using Brzycki formula'**
+  String get oneRMCalculatorFormula;
+
+  /// Use calculated value button
+  ///
+  /// In en, this message translates to:
+  /// **'Use This Value'**
+  String get oneRMCalculatorUse;
+
+  /// Step indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get step;
+
+  /// of (as in step 1 of 5)
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get ofPreposition;
+
+  /// Hero card title when no profile exists
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate Your Level'**
+  String get fitnessBenchmarkCalculate;
+
+  /// Hero card title when profile exists
+  ///
+  /// In en, this message translates to:
+  /// **'Update Benchmark'**
+  String get fitnessBenchmarkUpdate;
+
+  /// Label for experience level in hero card
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get fitnessBenchmarkLevel;
+
+  /// Description in hero card when no profile
+  ///
+  /// In en, this message translates to:
+  /// **'Get personalized weight suggestions'**
+  String get fitnessBenchmarkDescription;
+
+  /// No description provided for @fitnessQuestionnaireFullyRecovered.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully Recovered'**
+  String get fitnessQuestionnaireFullyRecovered;
+
+  /// No description provided for @fitnessQuestionnaireInRehabilitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently in Rehabilitation'**
+  String get fitnessQuestionnaireInRehabilitation;
+
+  /// No description provided for @fitnessQuestionnaireCurrentPainLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Pain Level'**
+  String get fitnessQuestionnaireCurrentPainLevel;
+
+  /// No description provided for @fitnessQuestionnaireMonthsHelperText.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional - helps validate experience level'**
+  String get fitnessQuestionnaireMonthsHelperText;
+
+  /// No description provided for @fitnessQuestionnaireReviewDemographics.
+  ///
+  /// In en, this message translates to:
+  /// **'Demographics'**
+  String get fitnessQuestionnaireReviewDemographics;
+
+  /// No description provided for @fitnessQuestionnaireReviewExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get fitnessQuestionnaireReviewExperience;
+
+  /// No description provided for @fitnessQuestionnaireReviewMaxLifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Lifts'**
+  String get fitnessQuestionnaireReviewMaxLifts;
+
+  /// No description provided for @fitnessQuestionnaireReviewGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get fitnessQuestionnaireReviewGoals;
+
+  /// No description provided for @fitnessQuestionnaireReviewBodyweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight'**
+  String get fitnessQuestionnaireReviewBodyweight;
+
+  /// No description provided for @fitnessQuestionnaireReviewAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get fitnessQuestionnaireReviewAge;
+
+  /// No description provided for @fitnessQuestionnaireReviewSex.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get fitnessQuestionnaireReviewSex;
+
+  /// No description provided for @fitnessQuestionnaireReviewLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get fitnessQuestionnaireReviewLevel;
+
+  /// No description provided for @fitnessQuestionnaireReviewTraining.
+  ///
+  /// In en, this message translates to:
+  /// **'Training'**
+  String get fitnessQuestionnaireReviewTraining;
+
+  /// No description provided for @fitnessQuestionnaireReviewMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'months'**
+  String get fitnessQuestionnaireReviewMonths;
+
+  /// No description provided for @fitnessQuestionnaireReviewBench.
+  ///
+  /// In en, this message translates to:
+  /// **'Bench'**
+  String get fitnessQuestionnaireReviewBench;
+
+  /// No description provided for @fitnessQuestionnaireReviewSquat.
+  ///
+  /// In en, this message translates to:
+  /// **'Squat'**
+  String get fitnessQuestionnaireReviewSquat;
+
+  /// No description provided for @fitnessQuestionnaireReviewDeadlift.
+  ///
+  /// In en, this message translates to:
+  /// **'Deadlift'**
+  String get fitnessQuestionnaireReviewDeadlift;
+
+  /// No description provided for @fitnessQuestionnaireReviewOHP.
+  ///
+  /// In en, this message translates to:
+  /// **'OHP'**
+  String get fitnessQuestionnaireReviewOHP;
+
+  /// No description provided for @fitnessQuestionnaireReviewTrainingGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Training Goal'**
+  String get fitnessQuestionnaireReviewTrainingGoal;
+
+  /// No description provided for @fitnessQuestionnaireReviewSuggestionStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion Style'**
+  String get fitnessQuestionnaireReviewSuggestionStyle;
+
+  /// No description provided for @fitnessQuestionnaireReviewSelfAssessment.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Assessment'**
+  String get fitnessQuestionnaireReviewSelfAssessment;
+
+  /// No description provided for @fitnessQuestionnaireSelfAssessmentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Assessment Calibration'**
+  String get fitnessQuestionnaireSelfAssessmentTitle;
+
+  /// No description provided for @fitnessQuestionnaireSelfAssessmentDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'How accurate are you in assessing your abilities?'**
+  String get fitnessQuestionnaireSelfAssessmentDescription;
+
+  /// No description provided for @fitnessMedicalClearanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Clearance (PAR-Q+)'**
+  String get fitnessMedicalClearanceTitle;
+
+  /// No description provided for @fitnessMedicalClearanceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please answer these health screening questions honestly.'**
+  String get fitnessMedicalClearanceDescription;
+
+  /// No description provided for @fitnessParqHeartCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'Has a doctor ever said you have a heart condition?'**
+  String get fitnessParqHeartCondition;
+
+  /// No description provided for @fitnessParqChestPainActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you feel pain in your chest during physical activity?'**
+  String get fitnessParqChestPainActive;
+
+  /// No description provided for @fitnessParqChestPainRest.
+  ///
+  /// In en, this message translates to:
+  /// **'In the past month, have you had chest pain when NOT doing physical activity?'**
+  String get fitnessParqChestPainRest;
+
+  /// No description provided for @fitnessParqDizziness.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you lose balance because of dizziness or do you ever lose consciousness?'**
+  String get fitnessParqDizziness;
+
+  /// No description provided for @fitnessParqBoneJoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have a bone or joint problem that could be made worse by activity?'**
+  String get fitnessParqBoneJoint;
+
+  /// No description provided for @fitnessParqMedication.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you currently taking medication for blood pressure or a heart condition?'**
+  String get fitnessParqMedication;
+
+  /// No description provided for @fitnessParqOtherReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you know of any other reason you should not do physical activity?'**
+  String get fitnessParqOtherReason;
+
+  /// No description provided for @fitnessAcsmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Risk Factors (ACSM)'**
+  String get fitnessAcsmTitle;
+
+  /// No description provided for @fitnessAcsmAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Age ≥45 (men) or ≥55 (women)'**
+  String get fitnessAcsmAge;
+
+  /// No description provided for @fitnessAcsmFamilyHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Family history of heart disease before age 55'**
+  String get fitnessAcsmFamilyHistory;
+
+  /// No description provided for @fitnessAcsmSmoker.
+  ///
+  /// In en, this message translates to:
+  /// **'Current smoker or quit within 6 months'**
+  String get fitnessAcsmSmoker;
+
+  /// No description provided for @fitnessAcsmObese.
+  ///
+  /// In en, this message translates to:
+  /// **'BMI ≥30 or waist >102cm (men) / >88cm (women)'**
+  String get fitnessAcsmObese;
+
+  /// No description provided for @fitnessAcsmDiabetes.
+  ///
+  /// In en, this message translates to:
+  /// **'Diabetes (Type 1 or 2)'**
+  String get fitnessAcsmDiabetes;
+
+  /// No description provided for @fitnessAcsmHighBP.
+  ///
+  /// In en, this message translates to:
+  /// **'High blood pressure (≥140/90 or on medication)'**
+  String get fitnessAcsmHighBP;
+
+  /// No description provided for @fitnessValidationWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid weight (40-200 kg)'**
+  String get fitnessValidationWeight;
+
+  /// No description provided for @fitnessValidationAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid age (13-100)'**
+  String get fitnessValidationAge;
+
+  /// No description provided for @fitnessInjuryHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Injury History'**
+  String get fitnessInjuryHistoryTitle;
+
+  /// No description provided for @fitnessInjuryType.
+  ///
+  /// In en, this message translates to:
+  /// **'Injury Type'**
+  String get fitnessInjuryType;
+
+  /// No description provided for @fitnessInjuryBodyRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Region'**
+  String get fitnessInjuryBodyRegion;
+
+  /// No description provided for @fitnessInjuryMonthsSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Months Since Injury'**
+  String get fitnessInjuryMonthsSince;
+
+  /// No description provided for @fitnessValidationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get fitnessValidationRequired;
+
+  /// No description provided for @fitnessInjuryTypeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Lower back strain'**
+  String get fitnessInjuryTypeHint;
+
+  /// Label for first dropset stage weight input
+  ///
+  /// In en, this message translates to:
+  /// **'Stage 1 Weight'**
+  String get dropsetStage1Weight;
+
+  /// Label for dropset stage N weight input
+  ///
+  /// In en, this message translates to:
+  /// **'Stage {stageNumber} Weight'**
+  String dropsetStageNWeight(int stageNumber);
+
+  /// Label showing weight from previous dropset stage
+  ///
+  /// In en, this message translates to:
+  /// **'Previous stage'**
+  String get previousStageWeight;
+
+  /// Label for automatically detected equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Detected equipment'**
+  String get detectedEquipmentType;
+
+  /// Barbell equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell'**
+  String get barbell;
+
+  /// Dumbbell equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Dumbbell'**
+  String get dumbbell;
+
+  /// Info about barbell weight rounding
+  ///
+  /// In en, this message translates to:
+  /// **'Rounds to 2.5kg'**
+  String get barbellRoundingInfo;
+
+  /// Info about dumbbell weight rounding
+  ///
+  /// In en, this message translates to:
+  /// **'Custom increments'**
+  String get dumbbellRoundingInfo;
+
+  /// Header for equipment type selector
+  ///
+  /// In en, this message translates to:
+  /// **'Select Equipment Type'**
+  String get selectEquipmentType;
+
+  /// Header for percentage drop selector
+  ///
+  /// In en, this message translates to:
+  /// **'Select Weight Drop'**
+  String get selectWeightDrop;
+
+  /// Label for automatically calculated weight
+  ///
+  /// In en, this message translates to:
+  /// **'Calculated Weight'**
+  String get calculatedWeight;
+
+  /// Question about gym dumbbell increments
+  ///
+  /// In en, this message translates to:
+  /// **'What dumbbell increments does your gym have?'**
+  String get dumbbellIncrementQuestion;
+
+  /// 0.5kg dumbbell increment option
+  ///
+  /// In en, this message translates to:
+  /// **'0.5kg increments (17.5, 18, 18.5...)'**
+  String get dumbbellIncrementHalfKg;
+
+  /// 1kg dumbbell increment option
+  ///
+  /// In en, this message translates to:
+  /// **'1kg increments (17, 18, 19...)'**
+  String get dumbbellIncrementOneKg;
+
+  /// 2kg dumbbell increment option
+  ///
+  /// In en, this message translates to:
+  /// **'2kg increments (16, 18, 20...)'**
+  String get dumbbellIncrementTwoKg;
+
+  /// Instruction to enter first stage weight
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Initial Weight'**
+  String get enterInitialWeight;
+
+  /// Instruction to confirm or manually adjust calculated weight
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm or Adjust Weight'**
+  String get confirmOrAdjustWeight;
+
+  /// Application subtitle on login screen
+  ///
+  /// In en, this message translates to:
+  /// **'Track your fitness journey'**
+  String get appSubtitle;
+
+  /// Email input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailLabel;
+
+  /// Email field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get emailHint;
+
+  /// Password input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// Password field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get passwordHint;
+
+  /// Confirm password input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPasswordLabel;
+
+  /// Confirm password field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your password'**
+  String get confirmPasswordHint;
+
+  /// Full name input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullNameLabel;
+
+  /// Full name field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get fullNameHint;
+
+  /// Sign in button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signInButton;
+
+  /// Sign up button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUpButton;
+
+  /// Create account button text
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccountButton;
+
+  /// Create account screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccountTitle;
+
+  /// Register screen welcome title
+  ///
+  /// In en, this message translates to:
+  /// **'Join FitLog Pro'**
+  String get joinGymBro;
+
+  /// Forgot password link text
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// Google sign in button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get signInWithGoogle;
+
+  /// Google sign up button
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// Apple sign in button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Apple'**
+  String get signInWithApple;
+
+  /// Apple sign up button
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueWithApple;
+
+  /// Email sign in button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Email'**
+  String get signInWithEmail;
+
+  /// Tooltip for back to login button
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Login'**
+  String get backToLogin;
+
+  /// Error message when email is missing for password reset
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email first'**
+  String get pleaseEnterEmailFirst;
+
+  /// Success message after password reset email sent
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent! Check your inbox.'**
+  String get passwordResetEmailSent;
+
+  /// Rest timer label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Timer'**
+  String get restTimer;
+
+  /// Generic error dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorDialogTitle;
+
+  /// Error message when workout fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while loading the workout'**
+  String get workoutLoadError;
+
+  /// Navigate to home button text
+  ///
+  /// In en, this message translates to:
+  /// **'Go Home'**
+  String get goHomeButton;
+
+  /// Create new template button
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Template'**
+  String get createNewTemplate;
+
+  /// Info message about upcoming template save feature
+  ///
+  /// In en, this message translates to:
+  /// **'Save template feature coming soon!'**
+  String get saveTemplateComingSoon;
+
+  /// Save as template subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Save to Firebase for reuse'**
+  String get saveToFirebase;
+
+  /// Instructions to use template import
+  ///
+  /// In en, this message translates to:
+  /// **'Use the import function in the template screen'**
+  String get useTemplateScreenForImport;
+
+  /// Dialog title asking to keep workout active
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Workout Active?'**
+  String get keepWorkoutActiveTitle;
+
+  /// Workout paused snackbar message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout paused - Continue anytime from Home'**
+  String get workoutPausedMessage;
+
+  /// Complete workout dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Workout'**
+  String get completeWorkoutTitle;
+
+  /// Confirmation message for completing workout
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to complete this workout?'**
+  String get completeWorkoutConfirmation;
+
+  /// Complete button text
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get completeButton;
+
+  /// Workout completion success message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout completed! Great job!'**
+  String get workoutCompletedSuccess;
+
+  /// Save as template menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Save as Template'**
+  String get saveAsTemplate;
+
+  /// Sign out button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get signOutButton;
+
+  /// Add exercise modal title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Exercise'**
+  String get addExerciseTitle;
+
+  /// Generic add button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addButton;
+
+  /// Superset tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Superset'**
+  String get supersetTab;
+
+  /// Dropset tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Dropset'**
+  String get dropsetTab;
+
+  /// Rest-pause tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause'**
+  String get restPauseTab;
+
+  /// Exercise category selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Category'**
+  String get exerciseCategoryLabel;
+
+  /// Sets section label
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get setsLabel;
+
+  /// Add set button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add Set'**
+  String get addSetButton;
+
+  /// Remove set button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Set'**
+  String get removeSetTooltip;
+
+  /// Weight input field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter weight'**
+  String get weightHint;
+
+  /// Reps input field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter reps'**
+  String get repsHint;
+
+  /// Notes input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get notesLabel;
+
+  /// Success message when exercise is added
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} to workout'**
+  String exerciseAddedMessage(String exerciseName);
+
+  /// Success message when dropset is added
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} Drop Set to workout'**
+  String dropsetAddedMessage(String exerciseName);
+
+  /// Success message when rest-pause is added
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} Rest-Pause to workout'**
+  String restPauseAddedMessage(String exerciseName);
+
+  /// Success message when superset is added
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} Superset to workout'**
+  String supersetAddedMessage(String exerciseName);
+
+  /// Chest muscle category
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get categoryChest;
+
+  /// Back muscle category
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get categoryBack;
+
+  /// Shoulders muscle category
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get categoryShoulders;
+
+  /// Arms muscle category
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get categoryArms;
+
+  /// Legs muscle category
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get categoryLegs;
+
+  /// Abs muscle category
+  ///
+  /// In en, this message translates to:
+  /// **'Abs'**
+  String get categoryAbs;
+
+  /// Cardio category
+  ///
+  /// In en, this message translates to:
+  /// **'Cardio'**
+  String get categoryCardio;
+
+  /// Other category
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// Exercise editing coming soon message
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise editing coming soon!'**
+  String get exerciseEditingComingSoon;
+
+  /// Exercise replacement coming soon message
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise replacement coming soon!'**
+  String get exerciseReplacementComingSoon;
+
+  /// Error message when user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get errorUserNotAuthenticated;
+
+  /// Error message when entity validation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Validation failed'**
+  String get errorEntityValidationFailed;
+
+  /// Error message when audio file is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Audio file not found'**
+  String get errorAudioFileNotFound;
+
+  /// Error message when achievement is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement not found'**
+  String get errorAchievementNotFound;
+
+  /// Error message when registration fails
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed'**
+  String get errorRegistrationFailed;
+
+  /// Error message when sign in fails
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in failed'**
+  String get errorSignInFailed;
+
+  /// Error message when workout loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading workout: {error}'**
+  String errorLoadingWorkout(String error);
+
+  /// OR text separator between options
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orSeparator;
+
+  /// Text asking if user already has an account
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// Text asking if user doesn't have an account
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get dontHaveAccount;
+
+  /// Back to login options button text
+  ///
+  /// In en, this message translates to:
+  /// **'Back to options'**
+  String get backToOptions;
+
+  /// Validation message for empty email
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get pleaseEnterEmail;
+
+  /// Validation message for invalid email format
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get pleaseEnterValidEmail;
+
+  /// Validation message for empty password
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get pleaseEnterPassword;
+
+  /// Smart timer feature preview label
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Timer'**
+  String get featureSmartTimer;
+
+  /// Live Activities feature preview label
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activities'**
+  String get featureLiveActivities;
+
+  /// Apple Health feature preview label
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health'**
+  String get featureAppleHealth;
+
+  /// Create account button text
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// Register screen subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your fitness journey'**
+  String get startTrackingJourney;
+
+  /// Quick registration section title
+  ///
+  /// In en, this message translates to:
+  /// **'Register Quickly'**
+  String get registerQuickly;
+
+  /// Auto account creation explanation
+  ///
+  /// In en, this message translates to:
+  /// **'The system will automatically create your account\nif it\'s your first time logging in'**
+  String get autoAccountCreation;
+
+  /// OR divider text between sections
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orDivider;
+
+  /// Full name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// Name required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get enterYourName;
+
+  /// Name required validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get nameRequired;
+
+  /// Name minimum length validation
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 2 characters'**
+  String get nameMinLength;
+
+  /// Email required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get emailRequired;
+
+  /// Invalid email validation
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get emailInvalid;
+
+  /// Password required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a password'**
+  String get passwordRequired;
+
+  /// Password minimum length validation
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordMinLength;
+
+  /// Confirm password field label
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// Confirm password required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your password'**
+  String get confirmPasswordRequired;
+
+  /// Passwords mismatch validation
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// Google sign up button alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up with Google'**
+  String get signUpWithGoogle;
+
+  /// Apple sign up button alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up with Apple'**
+  String get signUpWithApple;
+
+  /// Already have account prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get alreadyHaveAccountPrompt;
+
+  /// My workouts screen title
+  ///
+  /// In en, this message translates to:
+  /// **'My Workouts'**
+  String get myWorkouts;
+
+  /// Predefined workouts tab title
+  ///
+  /// In en, this message translates to:
+  /// **'Predefined Workouts'**
+  String get predefinedWorkouts;
+
+  /// Empty state for custom templates
+  ///
+  /// In en, this message translates to:
+  /// **'No custom templates'**
+  String get noCustomTemplates;
+
+  /// Empty state for predefined workouts
+  ///
+  /// In en, this message translates to:
+  /// **'No predefined workouts'**
+  String get noPredefinedWorkouts;
+
+  /// Coming soon message for predefined workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Predefined workouts coming soon!'**
+  String get predefinedWorkoutsComingSoon;
+
+  /// Custom template badge
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get customBadge;
+
+  /// Dialog title for keeping workout active
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Workout Active?'**
+  String get keepWorkoutActive;
+
+  /// Dialog message for keeping workout active
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to go back to Home and keep your workout running in the background?\\n\\nYou can return to continue your workout anytime.'**
+  String get keepWorkoutActiveMessage;
+
+  /// Go to home button
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Home'**
+  String get goToHome;
+
+  /// Snackbar message for paused workout
+  ///
+  /// In en, this message translates to:
+  /// **'Workout paused - Continue anytime from Home'**
+  String get workoutPausedContinue;
+
+  /// Delete template confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"?'**
+  String deleteTemplateConfirm(String name);
+
+  /// Delete warning message
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get deleteTemplateWarning;
+
+  /// Rest timer label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Timer'**
+  String get timerRest;
+
+  /// Customize workout subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'RPE, Timer, and more'**
+  String get rpeTimerMore;
+
+  /// Complete workout confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to complete this workout?'**
+  String get completeWorkoutConfirm;
+
+  /// Error title
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// Go home button
+  ///
+  /// In en, this message translates to:
+  /// **'Go Home'**
+  String get goHome;
+
+  /// Error loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading: {error}'**
+  String errorLoading(String error);
+
+  /// JSON format title
+  ///
+  /// In en, this message translates to:
+  /// **'JSON Format'**
+  String get jsonFormat;
+
+  /// JSON paste instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your workout template JSON here'**
+  String get pasteJsonHere;
+
+  /// JSON placeholder example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: name, description, exercises array'**
+  String get jsonPlaceholder;
+
+  /// Import function redirect message
+  ///
+  /// In en, this message translates to:
+  /// **'Use the import function in the template screen'**
+  String get useImportFunction;
+
+  /// Save as template dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Save as Template'**
+  String get saveAsTemplateTitle;
+
+  /// Template name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Template Name'**
+  String get templateName;
+
+  /// Template name field hint
+  ///
+  /// In en, this message translates to:
+  /// **'E.g. Push Day, Upper Body...'**
+  String get templateNameHint;
+
+  /// Description field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Briefly describe this workout...'**
+  String get descriptionHint;
+
+  /// Template sync information
+  ///
+  /// In en, this message translates to:
+  /// **'The template will be saved to Firebase and available on all your devices'**
+  String get templateSyncInfo;
+
+  /// Template name required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a template name'**
+  String get enterTemplateName;
+
+  /// Saving to Firebase loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Saving to Firebase...'**
+  String get savingToFirebase;
+
+  /// Template saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Template \"{name}\" saved successfully!'**
+  String templateSavedSuccess(String name);
+
+  /// View button
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
+  /// Template limit message
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached the limit of {max} private templates.'**
+  String templateLimitReached(int max);
+
+  /// Delete or upgrade suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete an existing template or upgrade to Premium for more space.'**
+  String get deleteOrUpgrade;
+
+  /// Templates remaining warning
+  ///
+  /// In en, this message translates to:
+  /// **'Only {remaining} templates remaining in Free plan'**
+  String templatesRemaining(int remaining);
+
+  /// Custom template default description
+  ///
+  /// In en, this message translates to:
+  /// **'Custom template'**
+  String get customTemplate;
+
+  /// Error saving message
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving: {error}'**
+  String errorSaving(String error);
+
+  /// Quota exceeded title
+  ///
+  /// In en, this message translates to:
+  /// **'Limit Reached'**
+  String get quotaExceeded;
+
+  /// Delete or upgrade suggestion alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Delete existing templates or upgrade to Premium.'**
+  String get deleteExistingOrUpgrade;
+
+  /// Generating PDF loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Generating PDF...'**
+  String get generatingPdf;
+
+  /// PDF shared success message
+  ///
+  /// In en, this message translates to:
+  /// **'PDF shared successfully!'**
+  String get pdfSharedSuccess;
+
+  /// Sharing error message
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing error: {error}'**
+  String sharingError(String error);
+
+  /// Preparing print loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing print...'**
+  String get preparingPrint;
+
+  /// Print error message
+  ///
+  /// In en, this message translates to:
+  /// **'Print error: {error}'**
+  String printError(String error);
+
+  /// Template function coming soon message
+  ///
+  /// In en, this message translates to:
+  /// **'Use the template screen to create new templates'**
+  String get templateUseFunctionComingSoon;
+
+  /// Save template coming soon message
+  ///
+  /// In en, this message translates to:
+  /// **'Save template function coming soon!'**
+  String get saveTemplateFunctionComingSoon;
+
+  /// Quick workout started message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout started quickly'**
+  String get workoutStartedQuick;
+
+  /// Quick workout default name
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Workout'**
+  String get quickWorkoutName;
+
+  /// Start workout menu item title
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get startWorkoutTitle;
+
+  /// Start now action
+  ///
+  /// In en, this message translates to:
+  /// **'Start Now'**
+  String get startNowAction;
+
+  /// Start exercise action
+  ///
+  /// In en, this message translates to:
+  /// **'Start Exercise'**
+  String get startExercise;
+
+  /// Modify template action
+  ///
+  /// In en, this message translates to:
+  /// **'Modify Template'**
+  String get modifyTemplate;
+
+  /// Add or remove exercises description
+  ///
+  /// In en, this message translates to:
+  /// **'Add or remove exercises'**
+  String get addOrRemoveExercises;
+
+  /// Delete template action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Template'**
+  String get deleteTemplateAction;
+
+  /// Remove permanently description
+  ///
+  /// In en, this message translates to:
+  /// **'Remove permanently'**
+  String get removePermanently;
+
+  /// Number of dropset stages
+  ///
+  /// In en, this message translates to:
+  /// **'{count} stages'**
+  String dropsetStages(int count);
+
+  /// Dropset stage number
+  ///
+  /// In en, this message translates to:
+  /// **'Stage {number}'**
+  String dropsetStage(int number);
+
+  /// Motivational message for first dropset stage
+  ///
+  /// In en, this message translates to:
+  /// **'Get ready to drop the weight!'**
+  String get dropsetGetReady;
+
+  /// Motivational message for intermediate dropset stages
+  ///
+  /// In en, this message translates to:
+  /// **'No rest! Reduce weight and go again!'**
+  String get dropsetNoRest;
+
+  /// Motivational message for last dropset stage
+  ///
+  /// In en, this message translates to:
+  /// **'Last stage! Give it everything!'**
+  String get dropsetLastStage;
+
+  /// Weight change reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce weight to {weight} kg NOW!'**
+  String dropsetReduceWeightNow(String weight);
+
+  /// Success message when dropset is complete
+  ///
+  /// In en, this message translates to:
+  /// **'DropSet completed! 💪'**
+  String get dropsetCompleted;
+
+  /// Button to complete entire dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Complete DropSet'**
+  String get completeDropset;
+
+  /// Button to complete current stage
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Stage {number}'**
+  String completeStage(int number);
+
+  /// Cancel dropset confirmation title
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel DropSet?'**
+  String get cancelDropset;
+
+  /// Cancel dropset confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will not be saved. Are you sure?'**
+  String get cancelDropsetMessage;
+
+  /// Button to start dropset execution
+  ///
+  /// In en, this message translates to:
+  /// **'Execute DropSet'**
+  String get executeDropset;
+
+  /// Keep workout active dialog content
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to go back to Home and keep your workout running in the background?\\n\\nYou can return to continue your workout anytime.'**
+  String get keepWorkoutActiveContent;
+
+  /// Delete template confirmation question
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"?'**
+  String deleteTemplateQuestion(String name);
+
+  /// Cannot undo warning
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get cannotUndo;
+
+  /// Error label with placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String errorLabel(String error);
+
+  /// Template quota limit message
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached the limit of {max} private templates.'**
+  String templateQuotaLimit(int max);
+
+  /// Delete or upgrade suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Delete an existing template or upgrade to Premium for more space.'**
+  String get deleteExistingTemplateOrUpgrade;
+
+  /// Templates remaining warning
+  ///
+  /// In en, this message translates to:
+  /// **'Only {remaining} templates remaining in Free plan'**
+  String templatesRemainingWarning(int remaining);
+
+  /// Custom template default description
+  ///
+  /// In en, this message translates to:
+  /// **'Custom template'**
+  String get customTemplateDescription;
+
+  /// Template saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Template \"{name}\" saved successfully!'**
+  String templateSavedSuccessfully(String name);
+
+  /// Template deleted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Template \"{name}\" deleted'**
+  String templateDeletedSuccessfully(String name);
+
+  /// Error with message placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String errorWithMessage(String error);
+
+  /// PDF shared success message
+  ///
+  /// In en, this message translates to:
+  /// **'PDF shared successfully!'**
+  String get pdfSharedSuccessfully;
+
+  /// Sharing error message
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing error: {error}'**
+  String sharingErrorMessage(String error);
+
+  /// Print error message
+  ///
+  /// In en, this message translates to:
+  /// **'Print error: {error}'**
+  String printErrorMessage(String error);
+
+  /// Saving error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving: {error}'**
+  String savingErrorMessage(String error);
+
+  /// Import function redirect message
+  ///
+  /// In en, this message translates to:
+  /// **'Use the import function in the template screen'**
+  String get useImportFunctionInTemplateScreen;
+
+  /// Delete or upgrade alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Delete existing templates or upgrade to Premium.'**
+  String get deleteExistingOrUpgradeToPremium;
+
+  /// Remove permanently action
+  ///
+  /// In en, this message translates to:
+  /// **'Remove permanently'**
+  String get removePermanentlyAction;
+
+  /// Start workout action
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get startWorkoutAction;
+
+  /// Start workout description
+  ///
+  /// In en, this message translates to:
+  /// **'Start immediately'**
+  String get startWorkoutDescription;
+
+  /// Template sync information
+  ///
+  /// In en, this message translates to:
+  /// **'The template will be saved to Firebase and available on all your devices'**
+  String get templateSyncInformation;
+
+  /// Single exercise tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Single'**
+  String get tabSingle;
+
+  /// Advanced exercises tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get tabAdvanced;
+
+  /// Superset tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Superset'**
+  String get tabSuperset;
+
+  /// DropSet tab label
+  ///
+  /// In en, this message translates to:
+  /// **'DropSet'**
+  String get tabDropSet;
+
+  /// Rest-Pause tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause'**
+  String get tabRestPause;
+
+  /// Drop Set information card description
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Set: Perform exercise to failure, then immediately reduce weight and continue.'**
+  String get dropSetInfoCard;
+
+  /// Rest-Pause information card description
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.'**
+  String get restPauseInfoCard;
+
+  /// Exercise name hint for drop set
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Bicep Curl Drop Set'**
+  String get exerciseNameHintBicepCurl;
+
+  /// Exercise name hint for rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Bench Press Rest-Pause'**
+  String get exerciseNameHintBenchPress;
+
+  /// Drop Set stages section title
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Set Stages'**
+  String get dropSetStagesTitle;
+
+  /// Heavy stage label for drop sets
+  ///
+  /// In en, this message translates to:
+  /// **'Stage 1 (Heavy)'**
+  String get stageHeavy;
+
+  /// Medium stage label for drop sets
+  ///
+  /// In en, this message translates to:
+  /// **'Stage 2 (Medium)'**
+  String get stageMedium;
+
+  /// Light stage label for drop sets
+  ///
+  /// In en, this message translates to:
+  /// **'Stage 3 (Light)'**
+  String get stageLight;
+
+  /// Add stage button for drop sets
+  ///
+  /// In en, this message translates to:
+  /// **'Add Stage'**
+  String get addStageButton;
+
+  /// Notes hint for drop set
+  ///
+  /// In en, this message translates to:
+  /// **'Weight drops, rest between stages, etc.'**
+  String get notesHintWeightDrops;
+
+  /// Notes hint for rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Form cues, progression strategy, etc.'**
+  String get notesHintFormCues;
+
+  /// Weight in kg label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get weightKgLabel;
+
+  /// Target reps label
+  ///
+  /// In en, this message translates to:
+  /// **'Target Reps'**
+  String get targetRepsLabel;
+
+  /// Rest period in seconds label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Period (seconds)'**
+  String get restPeriodSecondsLabel;
+
+  /// Rest period hint text
+  ///
+  /// In en, this message translates to:
+  /// **'10-15 seconds typical'**
+  String get restPeriodSecondsHint;
+
+  /// Max rest-pause sets label
+  ///
+  /// In en, this message translates to:
+  /// **'Max Rest-Pause Sets'**
+  String get maxRestPauseSetsLabel;
+
+  /// Max sets hint text
+  ///
+  /// In en, this message translates to:
+  /// **'3-4 typical'**
+  String get maxRestPauseSetsHint;
+
+  /// Add set button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add Set'**
+  String get addSetLabel;
+
+  /// Weight hint in kg
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get weightHintKg;
+
+  /// Reps hint label
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get repsHintLabel;
+
+  /// Prompt to create custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t find your exercise? Create a custom one'**
+  String get customExercisePrompt;
+
+  /// Custom exercise details instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Enter custom exercise details:'**
+  String get customExerciseDetails;
+
+  /// Exercise focus label
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get focusLabel;
+
+  /// Success message for adding exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} to workout'**
+  String exerciseAddedToWorkout(String exerciseName);
+
+  /// Success message for adding drop set
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} Drop Set to workout'**
+  String exerciseAddedDropSet(String exerciseName);
+
+  /// Success message for adding rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Added {exerciseName} Rest-Pause to workout'**
+  String exerciseAddedRestPause(String exerciseName);
+
+  /// Quick timer options section label
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Timer Options'**
+  String get quickTimerOptions;
+
+  /// Exercise updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise \"{exerciseName}\" updated'**
+  String exerciseUpdated(String exerciseName);
+
+  /// Timer label for snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Timer'**
+  String get timerLabel;
+
+  /// Error loading editor message
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading exercise editor'**
+  String get errorLoadingEditor;
+
+  /// Error opening editor modal message
+  ///
+  /// In en, this message translates to:
+  /// **'Error opening exercise editor. Please try again.'**
+  String get errorOpeningEditor;
+
+  /// Error unable to edit exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Error: Unable to edit this exercise'**
+  String get errorUnableToEdit;
+
+  /// Error updating exercise message
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating exercise. Please try again.'**
+  String get errorUpdatingExercise;
+
+  /// Exercise name validation error
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseName} cannot be empty'**
+  String exerciseNameCannotBeEmpty(String exerciseName);
+
+  /// Invalid rest time validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid rest time (1-3600 seconds)'**
+  String get invalidRestTimeError;
+
+  /// Invalid APRE base weight error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid APRE base weight'**
+  String get invalidApreBaseWeight;
+
+  /// Notes saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Notes saved'**
+  String get notesSavedMessage;
+
+  /// Exercise completed with expand action
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseName} completed! Tap to expand'**
+  String exerciseCompletedTapToExpand(String exerciseName);
+
+  /// Expand action label
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get expandLabel;
+
+  /// User info when not logged in
+  ///
+  /// In en, this message translates to:
+  /// **'Not logged in'**
+  String get settingsNotLoggedIn;
+
+  /// Loading state
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get settingsLoading;
+
+  /// Error state
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading user'**
+  String get settingsErrorLoadingUser;
+
+  /// Default username
+  ///
+  /// In en, this message translates to:
+  /// **'FitLog Pro User'**
+  String get settingsGymBroUser;
+
+  /// No email message
+  ///
+  /// In en, this message translates to:
+  /// **'No email'**
+  String get settingsNoEmail;
+
+  /// Last updated label
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated'**
+  String get settingsLastUpdated;
+
+  /// Update profile button
+  ///
+  /// In en, this message translates to:
+  /// **'Update Profile'**
+  String get settingsUpdateProfile;
+
+  /// Accent color setting
+  ///
+  /// In en, this message translates to:
+  /// **'Accent Color'**
+  String get settingsAccentColor;
+
+  /// Font size label
+  ///
+  /// In en, this message translates to:
+  /// **'Font Size'**
+  String get settingsFontSize;
+
+  /// Small font
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get settingsFontSizeSmall;
+
+  /// Normal font
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get settingsFontSizeNormal;
+
+  /// Large font
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get settingsFontSizeLarge;
+
+  /// Workout section
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get settingsWorkoutTitle;
+
+  /// Auto start timer
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-start Timer'**
+  String get settingsAutoStartTimer;
+
+  /// Auto timer desc
+  ///
+  /// In en, this message translates to:
+  /// **'Start rest timer after completing set'**
+  String get settingsAutoStartTimerDesc;
+
+  /// Default rest time
+  ///
+  /// In en, this message translates to:
+  /// **'Default Rest Time'**
+  String get settingsDefaultRestTime;
+
+  /// Advanced techniques
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Techniques'**
+  String get settingsAdvancedTechniques;
+
+  /// Advanced tech desc
+  ///
+  /// In en, this message translates to:
+  /// **'Show drop sets, supersets, etc.'**
+  String get settingsAdvancedTechniquesDesc;
+
+  /// Units and language
+  ///
+  /// In en, this message translates to:
+  /// **'Units & Language'**
+  String get settingsUnitsLanguage;
+
+  /// Language
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// Weight units
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Units'**
+  String get settingsWeightUnits;
+
+  /// iOS features
+  ///
+  /// In en, this message translates to:
+  /// **'iOS Features'**
+  String get settingsIOSFeatures;
+
+  /// Live activities
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activities'**
+  String get settingsLiveActivities;
+
+  /// Live activities desc
+  ///
+  /// In en, this message translates to:
+  /// **'Show timer on lock screen & Dynamic Island'**
+  String get settingsLiveActivitiesDesc;
+
+  /// Health sync
+  ///
+  /// In en, this message translates to:
+  /// **'Health App Sync'**
+  String get settingsHealthAppSync;
+
+  /// Health sync desc
+  ///
+  /// In en, this message translates to:
+  /// **'Sync workouts to Apple Health'**
+  String get settingsHealthAppSyncDesc;
+
+  /// Audio feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Audio & Feedback'**
+  String get settingsAudioFeedback;
+
+  /// Sound effects
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Effects'**
+  String get settingsSoundEffects;
+
+  /// Sound effects desc
+  ///
+  /// In en, this message translates to:
+  /// **'Play sounds for timer and completion'**
+  String get settingsSoundEffectsDesc;
+
+  /// Vibrations
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrations'**
+  String get settingsVibrations;
+
+  /// Vibrations desc
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic feedback for interactions'**
+  String get settingsVibrationsDesc;
+
+  /// Test sounds tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Test Sounds'**
+  String get settingsTestSounds;
+
+  /// Advanced section
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get settingsAdvancedTitle;
+
+  /// Export settings
+  ///
+  /// In en, this message translates to:
+  /// **'Export Settings'**
+  String get settingsExportSettings;
+
+  /// Import settings
+  ///
+  /// In en, this message translates to:
+  /// **'Import Settings'**
+  String get settingsImportSettings;
+
+  /// Reset timer position
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Timer Position'**
+  String get settingsResetTimerPosition;
+
+  /// Reset timer desc
+  ///
+  /// In en, this message translates to:
+  /// **'Reset draggable timer to default position'**
+  String get settingsResetTimerPositionDesc;
+
+  /// Migration completed
+  ///
+  /// In en, this message translates to:
+  /// **'Migration completed or not needed'**
+  String get settingsDataMigrationCompleted;
+
+  /// Has migration data
+  ///
+  /// In en, this message translates to:
+  /// **'You have data to migrate from previous version'**
+  String get settingsMigrationHasData;
+
+  /// Available label
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get settingsMigrationAvailable;
+
+  /// Beta mode
+  ///
+  /// In en, this message translates to:
+  /// **'Beta Mode'**
+  String get settingsBetaMode;
+
+  /// Beta enabled
+  ///
+  /// In en, this message translates to:
+  /// **'All premium features unlocked for testing'**
+  String get settingsBetaModeEnabled;
+
+  /// Beta disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Enable temporary access to all premium features'**
+  String get settingsBetaModeDisabled;
+
+  /// BETA label
+  ///
+  /// In en, this message translates to:
+  /// **'BETA'**
+  String get settingsBetaModeLabel;
+
+  /// Beta activated
+  ///
+  /// In en, this message translates to:
+  /// **'🧪 Beta Mode activated - All premium features unlocked!'**
+  String get settingsBetaModeActivated;
+
+  /// Beta deactivated
+  ///
+  /// In en, this message translates to:
+  /// **'Beta Mode deactivated'**
+  String get settingsBetaModeDeactivated;
+
+  /// Reset to defaults
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Defaults'**
+  String get settingsResetToDefaults;
+
+  /// Account actions
+  ///
+  /// In en, this message translates to:
+  /// **'Account Actions'**
+  String get settingsAccountActionsTitle;
+
+  /// Sign out
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get settingsSignOut;
+
+  /// Choose language
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get settingsChooseLanguage;
+
+  /// English US
+  ///
+  /// In en, this message translates to:
+  /// **'English (US)'**
+  String get settingsEnglishUS;
+
+  /// Italian IT
+  ///
+  /// In en, this message translates to:
+  /// **'Italian (IT)'**
+  String get settingsItalianIT;
+
+  /// Weight units title
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Units'**
+  String get settingsWeightUnitsTitle;
+
+  /// Kilograms
+  ///
+  /// In en, this message translates to:
+  /// **'Kilograms (kg)'**
+  String get settingsKilogramsKg;
+
+  /// Metric system
+  ///
+  /// In en, this message translates to:
+  /// **'Metric system'**
+  String get settingsMetricSystem;
+
+  /// Pounds
+  ///
+  /// In en, this message translates to:
+  /// **'Pounds (lbs)'**
+  String get settingsPoundsLbs;
+
+  /// Imperial system
+  ///
+  /// In en, this message translates to:
+  /// **'Imperial system'**
+  String get settingsImperialSystem;
+
+  /// Reset timer title
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Timer Position'**
+  String get settingsResetTimerPositionTitle;
+
+  /// Reset timer message
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset the draggable timer to its default position. Useful if the timer is stuck off-screen.'**
+  String get settingsResetTimerPositionMessage;
+
+  /// Reset position
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Position'**
+  String get settingsResetPosition;
+
+  /// Timer reset snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Timer position reset to default'**
+  String get settingsTimerPositionReset;
+
+  /// Reset settings title
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Settings'**
+  String get settingsResetSettingsTitle;
+
+  /// Reset settings message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reset all settings to defaults? This cannot be undone.'**
+  String get settingsResetSettingsMessage;
+
+  /// Reset button
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get settingsResetSettingsButton;
+
+  /// Sign out title
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get settingsSignOutTitle;
+
+  /// Sign out message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get settingsSignOutMessage;
+
+  /// Export coming soon
+  ///
+  /// In en, this message translates to:
+  /// **'Export functionality coming soon'**
+  String get settingsExportComingSoon;
+
+  /// Import coming soon
+  ///
+  /// In en, this message translates to:
+  /// **'Import functionality coming soon'**
+  String get settingsImportComingSoon;
+
+  /// Search placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search templates...'**
+  String get templateSearchPlaceholder;
+
+  /// Debug banner
+  ///
+  /// In en, this message translates to:
+  /// **'❌ WorkoutTemplatesScreen - Not seeing my templates here'**
+  String get templateDebugNotSeeing;
+
+  /// Templates count
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get templateTemplatesCount;
+
+  /// No popular templates
+  ///
+  /// In en, this message translates to:
+  /// **'No popular templates yet'**
+  String get templateNoTemplatesYet;
+
+  /// Most used explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Most used templates will appear here'**
+  String get templateMostUsedTemplatesWillAppear;
+
+  /// No custom templates
+  ///
+  /// In en, this message translates to:
+  /// **'No custom templates'**
+  String get templateNoCustomTemplates;
+
+  /// Create first template
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first custom template'**
+  String get templateCreateFirstTemplate;
+
+  /// No templates found
+  ///
+  /// In en, this message translates to:
+  /// **'No templates found'**
+  String get templateNoTemplatesFound;
+
+  /// Sync status title
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Status'**
+  String get templateSyncStateTitle;
+
+  /// Status label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get templateSyncStatus;
+
+  /// Last sync label
+  ///
+  /// In en, this message translates to:
+  /// **'Last sync'**
+  String get templateLastSync;
+
+  /// Total templates
+  ///
+  /// In en, this message translates to:
+  /// **'Total templates'**
+  String get templateTotalTemplates;
+
+  /// Offline changes
+  ///
+  /// In en, this message translates to:
+  /// **'You have offline changes that will be synced on next connection.'**
+  String get templateOfflineChanges;
+
+  /// Sync now button
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Now'**
+  String get templateSyncNow;
+
+  /// Sync completed
+  ///
+  /// In en, this message translates to:
+  /// **'Sync completed'**
+  String get templateSyncCompleted;
+
+  /// Delete template title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Template'**
+  String get templateDeleteTitle;
+
+  /// Delete message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"?'**
+  String templateDeleteMessage(String name);
+
+  /// Delete button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get templateDeleteButton;
+
+  /// Delete error
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting template'**
+  String get templateDeleteError;
+
+  /// Start error
+  ///
+  /// In en, this message translates to:
+  /// **'Error starting workout'**
+  String get templateStartError;
+
+  /// Day label
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get templateDay;
+
+  /// Button to copy weight and reps from the previous set
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Previous Set'**
+  String get copyPreviousSet;
+
+  /// Weekly routine title
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Routine'**
+  String get routineWeeklyRoutine;
+
+  /// My routine title
+  ///
+  /// In en, this message translates to:
+  /// **'My Routine'**
+  String get routineMyRoutine;
+
+  /// Add template to routine action
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Routine'**
+  String get routineAddToRoutine;
+
+  /// Select day dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Day'**
+  String get routineSelectDay;
+
+  /// Select day dialog subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Choose which day(s) to schedule this workout'**
+  String get routineSelectDaySubtitle;
+
+  /// Monday
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get routineMonday;
+
+  /// Tuesday
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get routineTuesday;
+
+  /// Wednesday
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get routineWednesday;
+
+  /// Thursday
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get routineThursday;
+
+  /// Friday
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get routineFriday;
+
+  /// Saturday
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get routineSaturday;
+
+  /// Sunday
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get routineSunday;
+
+  /// Day already scheduled warning
+  ///
+  /// In en, this message translates to:
+  /// **'This day already has a template'**
+  String get routineDayAlreadyScheduled;
+
+  /// Replace template confirmation title
+  ///
+  /// In en, this message translates to:
+  /// **'Replace template?'**
+  String get routineReplaceTemplate;
+
+  /// Replace template confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} already has \"{currentTemplate}\" scheduled. Replace it with \"{newTemplate}\"?'**
+  String routineReplaceTemplateMessage(
+    String day,
+    String currentTemplate,
+    String newTemplate,
+  );
+
+  /// No template on this day
+  ///
+  /// In en, this message translates to:
+  /// **'No template scheduled'**
+  String get routineNoTemplateScheduled;
+
+  /// Rest day label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Day'**
+  String get routineRestDay;
+
+  /// Quick start workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Start'**
+  String get routineQuickStart;
+
+  /// Template added success message
+  ///
+  /// In en, this message translates to:
+  /// **'Template added to {day}'**
+  String routineTemplateAddedSuccess(String day);
+
+  /// Empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts scheduled yet'**
+  String get routineNoWorkoutsScheduled;
+
+  /// Empty state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Start scheduling your weekly workouts'**
+  String get routineStartScheduling;
+
+  /// Empty state instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a template and select \'Add to Routine\''**
+  String get routineTapToAdd;
+
+  /// Change template button
+  ///
+  /// In en, this message translates to:
+  /// **'Change Template'**
+  String get routineChangeTemplate;
+
+  /// Remove template from day action
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from day'**
+  String get routineRemoveFromDay;
+
+  /// Clear all scheduled templates
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Days'**
+  String get routineClearAllDays;
+
+  /// Clear all confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear all scheduled templates?'**
+  String get routineClearAllDaysConfirm;
+
+  /// Number of workouts scheduled
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{workout} other{workouts}} scheduled'**
+  String routineWorkoutsScheduled(int count);
+
+  /// Number of rest days
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{rest day} other{rest days}}'**
+  String routineRestDays(int count);
+
+  /// Number of exercises in template
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{exercise} other{exercises}}'**
+  String routineExercises(int count);
+
+  /// Save changes button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get routineSaveChanges;
+
+  /// Discard changes button
+  ///
+  /// In en, this message translates to:
+  /// **'Discard Changes'**
+  String get routineDiscardChanges;
+
+  /// Subtitle for routine card on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'View and manage your routine'**
+  String get routineViewAndManage;
+
+  /// Question asking user to provide feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your experience with this step'**
+  String get feedbackQuestion;
+
+  /// Button to mark insight as helpful
+  ///
+  /// In en, this message translates to:
+  /// **'Helpful'**
+  String get feedbackHelpful;
+
+  /// Button to mark insight as not helpful
+  ///
+  /// In en, this message translates to:
+  /// **'Not helpful'**
+  String get feedbackNotHelpful;
+
+  /// Thank you message after user rates a questionnaire step
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for your feedback!'**
+  String get feedbackThankYou;
+
+  /// Confirmation that feedback was saved
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback submitted'**
+  String get feedbackSubmitted;
+
+  /// Message when user tries to rate insight twice
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve already rated this insight'**
+  String get feedbackAlreadyGiven;
+
+  /// Warning shown when insight is based on anomalous data
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Based on questionable data'**
+  String get dataQualityWarning;
+
+  /// Badge for insights with low confidence
+  ///
+  /// In en, this message translates to:
+  /// **'Low data quality'**
+  String get dataQualityLow;
+
+  /// Number of anomalies affecting this insight
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 data issue detected} other{{count} data issues detected}}'**
+  String anomaliesDetected(int count);
+
+  /// Button to view detected anomalies
+  ///
+  /// In en, this message translates to:
+  /// **'View data issues'**
+  String get viewAnomalies;
+
+  /// Anomaly type: weight exceeds realistic limits
+  ///
+  /// In en, this message translates to:
+  /// **'Impossible weight detected'**
+  String get anomalyImpossibleWeight;
+
+  /// Anomaly type: large weight increase between sessions
+  ///
+  /// In en, this message translates to:
+  /// **'Extreme weight jump detected'**
+  String get anomalyExtremeWeightJump;
+
+  /// Anomaly type: negative weight or reps
+  ///
+  /// In en, this message translates to:
+  /// **'Negative values detected'**
+  String get anomalyNegativeValues;
+
+  /// Anomaly type: workout date in the future
+  ///
+  /// In en, this message translates to:
+  /// **'Future date detected'**
+  String get anomalyFutureDate;
+
+  /// Button to correct anomalous data
+  ///
+  /// In en, this message translates to:
+  /// **'Correct data'**
+  String get correctData;
+
+  /// Button to dismiss data anomaly warning
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismissAnomaly;
+
+  /// Title for feedback history screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Feedback'**
+  String get myFeedback;
+
+  /// Header for feedback history list
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback History'**
+  String get feedbackHistory;
+
+  /// Button to open feedback history
+  ///
+  /// In en, this message translates to:
+  /// **'View My Feedback'**
+  String get viewMyFeedback;
+
+  /// Message when user has not given any feedback
+  ///
+  /// In en, this message translates to:
+  /// **'No feedback yet'**
+  String get noFeedbackYet;
+
+  /// Subtitle for empty feedback state
+  ///
+  /// In en, this message translates to:
+  /// **'Start rating insights to help improve AI Coach recommendations'**
+  String get startRatingInsights;
+
+  /// Label for feedback that was marked helpful
+  ///
+  /// In en, this message translates to:
+  /// **'Rated helpful'**
+  String get ratedHelpful;
+
+  /// Label for feedback that was marked not helpful
+  ///
+  /// In en, this message translates to:
+  /// **'Rated not helpful'**
+  String get ratedNotHelpful;
+
+  /// Prefix for insight type in feedback history
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback on'**
+  String get feedbackOn;
+
+  /// Routine editor: routineEditorTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Create Routine'**
+  String get routineEditorTitle;
+
+  /// Routine editor: routineEditorEditTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Routine'**
+  String get routineEditorEditTitle;
+
+  /// Routine editor: routineStepInfo
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get routineStepInfo;
+
+  /// Routine editor: routineStepPattern
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get routineStepPattern;
+
+  /// Routine editor: routineStepReview
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get routineStepReview;
+
+  /// Routine editor: routinePatternChooseTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your Pattern'**
+  String get routinePatternChooseTitle;
+
+  /// Routine editor: routinePatternChooseDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Select a training split that fits your goals'**
+  String get routinePatternChooseDescription;
+
+  /// Routine editor: routinePatternPreset
+  ///
+  /// In en, this message translates to:
+  /// **'Preset'**
+  String get routinePatternPreset;
+
+  /// Routine editor: routinePatternCustom
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get routinePatternCustom;
+
+  /// Routine editor: routinePatternPopular
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Patterns'**
+  String get routinePatternPopular;
+
+  /// Routine editor: routinePatternWorkouts
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 workout} other{{count} workouts}}'**
+  String routinePatternWorkouts(num count);
+
+  /// Routine editor: routinePatternRest
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 rest} other{{count} rest}}'**
+  String routinePatternRest(num count);
+
+  /// Routine editor: customPatternBuilderTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Pattern Builder'**
+  String get customPatternBuilderTitle;
+
+  /// Routine editor: customPatternBuilderDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Build your own workout schedule'**
+  String get customPatternBuilderDescription;
+
+  /// Routine editor: customPatternYourSchedule
+  ///
+  /// In en, this message translates to:
+  /// **'Your Schedule ({count} days)'**
+  String customPatternYourSchedule(int count);
+
+  /// Routine editor: customPatternAddWorkout
+  ///
+  /// In en, this message translates to:
+  /// **'Add Workout'**
+  String get customPatternAddWorkout;
+
+  /// Routine editor: customPatternAddRest
+  ///
+  /// In en, this message translates to:
+  /// **'Add Rest Day'**
+  String get customPatternAddRest;
+
+  /// Routine editor: customPatternEmptyWarning
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one workout day to continue'**
+  String get customPatternEmptyWarning;
+
+  /// Routine editor: customPatternAddWorkoutDialogTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Add Workout Day'**
+  String get customPatternAddWorkoutDialogTitle;
+
+  /// Routine editor: customPatternWorkoutNameLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Name'**
+  String get customPatternWorkoutNameLabel;
+
+  /// Routine editor: customPatternWorkoutNameHint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Push, Pull, Legs, Upper, Lower'**
+  String get customPatternWorkoutNameHint;
+
+  /// Routine editor: customPatternDayNumber
+  ///
+  /// In en, this message translates to:
+  /// **'Day {number}'**
+  String customPatternDayNumber(int number);
+
+  /// Routine editor: customPatternRestDay
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Day'**
+  String get customPatternRestDay;
+
+  /// Routine editor: customPatternRemoveDay
+  ///
+  /// In en, this message translates to:
+  /// **'Remove day'**
+  String get customPatternRemoveDay;
+
+  /// Routine editor: customPatternSelectTemplate
+  ///
+  /// In en, this message translates to:
+  /// **'Select Workout Template'**
+  String get customPatternSelectTemplate;
+
+  /// Routine editor: customPatternNoTemplates
+  ///
+  /// In en, this message translates to:
+  /// **'No workout templates available. Create templates first.'**
+  String get customPatternNoTemplates;
+
+  /// Routine editor: routineButtonBack
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get routineButtonBack;
+
+  /// Routine editor: routineButtonNext
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get routineButtonNext;
+
+  /// Routine editor: routineButtonCreate
+  ///
+  /// In en, this message translates to:
+  /// **'Create Routine'**
+  String get routineButtonCreate;
+
+  /// Routine editor: routineErrorIncomplete
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete all required fields'**
+  String get routineErrorIncomplete;
+
+  /// Routine editor: routineErrorNoPattern
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a pattern'**
+  String get routineErrorNoPattern;
+
+  /// Routine editor: routineSuccessCreated
+  ///
+  /// In en, this message translates to:
+  /// **'Routine \"{name}\" created successfully! 🎉'**
+  String routineSuccessCreated(String name);
+
+  /// Routine editor: routineErrorCreateFailed
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create routine'**
+  String get routineErrorCreateFailed;
+
+  /// Routine editor: routineDiscardTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get routineDiscardTitle;
+
+  /// Routine editor: routineDiscardMessage
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will be lost if you go back now.'**
+  String get routineDiscardMessage;
+
+  /// Error message when exercise GIF/image fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading image'**
+  String get errorLoadingImage;
+
+  /// Hint message in fullscreen view to close by tapping
+  ///
+  /// In en, this message translates to:
+  /// **'Tap anywhere to close'**
+  String get tapAnywhereToClose;
+
+  /// Routine onboarding: Skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get routineOnboardingSkip;
+
+  /// Routine onboarding: Back button
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get routineOnboardingBack;
+
+  /// Routine onboarding: Next button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get routineOnboardingNext;
+
+  /// Routine onboarding: Get started button on last page
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started! 🚀'**
+  String get routineOnboardingGetStarted;
+
+  /// Routine onboarding: Welcome page title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to\nRoutine Center! 🏋️'**
+  String get routineOnboardingWelcomeTitle;
+
+  /// Routine onboarding: Welcome page subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Your personal training plan manager.\nLet\'s learn how to use it!'**
+  String get routineOnboardingWelcomeSubtitle;
+
+  /// Routine onboarding: What is page title
+  ///
+  /// In en, this message translates to:
+  /// **'What is a Routine? 🤔'**
+  String get routineOnboardingWhatIsTitle;
+
+  /// Routine onboarding: What is page description
+  ///
+  /// In en, this message translates to:
+  /// **'A routine is a structured training plan with:'**
+  String get routineOnboardingWhatIsDescription;
+
+  /// Routine onboarding: Feature - scheduled workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Workout Days'**
+  String get routineOnboardingFeatureScheduled;
+
+  /// Routine onboarding: Feature - scheduled workouts description
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your training weeks in advance'**
+  String get routineOnboardingFeatureScheduledDesc;
+
+  /// Routine onboarding: Feature - workout templates
+  ///
+  /// In en, this message translates to:
+  /// **'Specific Workout Templates'**
+  String get routineOnboardingFeatureTemplates;
+
+  /// Routine onboarding: Feature - workout templates description
+  ///
+  /// In en, this message translates to:
+  /// **'Assign exercises to each day'**
+  String get routineOnboardingFeatureTemplatesDesc;
+
+  /// Routine onboarding: Feature - automatic progression
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic Progression'**
+  String get routineOnboardingFeatureProgression;
+
+  /// Routine onboarding: Feature - automatic progression description
+  ///
+  /// In en, this message translates to:
+  /// **'Your plan repeats automatically'**
+  String get routineOnboardingFeatureProgressionDesc;
+
+  /// Routine onboarding: Feature - progress tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Tracking'**
+  String get routineOnboardingFeatureTracking;
+
+  /// Routine onboarding: Feature - progress tracking description
+  ///
+  /// In en, this message translates to:
+  /// **'See your consistency over time'**
+  String get routineOnboardingFeatureTrackingDesc;
+
+  /// Routine onboarding: How it works page title
+  ///
+  /// In en, this message translates to:
+  /// **'How It Works ⚙️'**
+  String get routineOnboardingHowItWorksTitle;
+
+  /// Routine onboarding: Step 1 title
+  ///
+  /// In en, this message translates to:
+  /// **'Create Your Routine'**
+  String get routineOnboardingStep1Title;
+
+  /// Routine onboarding: Step 1 description
+  ///
+  /// In en, this message translates to:
+  /// **'Name it and choose training pattern\n(e.g., Push/Pull/Legs)'**
+  String get routineOnboardingStep1Desc;
+
+  /// Routine onboarding: Step 2 title
+  ///
+  /// In en, this message translates to:
+  /// **'Assign Workouts'**
+  String get routineOnboardingStep2Title;
+
+  /// Routine onboarding: Step 2 description
+  ///
+  /// In en, this message translates to:
+  /// **'Select workout templates for each training day'**
+  String get routineOnboardingStep2Desc;
+
+  /// Routine onboarding: Step 3 title
+  ///
+  /// In en, this message translates to:
+  /// **'Follow & Track'**
+  String get routineOnboardingStep3Title;
+
+  /// Routine onboarding: Step 3 description
+  ///
+  /// In en, this message translates to:
+  /// **'Complete workouts and watch your progress grow!'**
+  String get routineOnboardingStep3Desc;
+
+  /// Routine onboarding: Benefits page title
+  ///
+  /// In en, this message translates to:
+  /// **'Why Use Routines? 💪'**
+  String get routineOnboardingBenefitsTitle;
+
+  /// Routine onboarding: Benefit 1 title
+  ///
+  /// In en, this message translates to:
+  /// **'Stay Consistent'**
+  String get routineOnboardingBenefit1Title;
+
+  /// Routine onboarding: Benefit 1 description
+  ///
+  /// In en, this message translates to:
+  /// **'No more \"what should I train today?\"'**
+  String get routineOnboardingBenefit1Desc;
+
+  /// Routine onboarding: Benefit 2 title
+  ///
+  /// In en, this message translates to:
+  /// **'See Progress'**
+  String get routineOnboardingBenefit2Title;
+
+  /// Routine onboarding: Benefit 2 description
+  ///
+  /// In en, this message translates to:
+  /// **'Track completion rate and streaks'**
+  String get routineOnboardingBenefit2Desc;
+
+  /// Routine onboarding: Benefit 3 title
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Recovery'**
+  String get routineOnboardingBenefit3Title;
+
+  /// Routine onboarding: Benefit 3 description
+  ///
+  /// In en, this message translates to:
+  /// **'Miss a workout? Reschedule it easily'**
+  String get routineOnboardingBenefit3Desc;
+
+  /// Routine onboarding: Ready CTA on benefits page
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to create your first routine?'**
+  String get routineOnboardingReadyCTA;
+
+  /// Routine Center title on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Center'**
+  String get routineCenter;
+
+  /// Routine Center description on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-period routines with smart tracking'**
+  String get routineCenterDescription;
+
+  /// Basic info step title
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Information'**
+  String get routineBasicInfoTitle;
+
+  /// Basic info step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Set up the foundation of your routine'**
+  String get routineBasicInfoSubtitle;
+
+  /// Routine name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Name *'**
+  String get routineNameLabel;
+
+  /// Routine name field hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Summer Shred 2025'**
+  String get routineNameHint;
+
+  /// Routine name required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get routineNameRequired;
+
+  /// Routine name minimum length validation
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 3 characters'**
+  String get routineNameMinLength;
+
+  /// Routine description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Description (Optional)'**
+  String get routineDescriptionLabel;
+
+  /// Routine description field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes about this routine...'**
+  String get routineDescriptionHint;
+
+  /// Routine type section label
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Type'**
+  String get routineTypeLabel;
+
+  /// Weekly routine type
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get routineTypeWeekly;
+
+  /// Weekly routine duration
+  ///
+  /// In en, this message translates to:
+  /// **'7 days'**
+  String get routineTypeWeeklyDuration;
+
+  /// Monthly routine type
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get routineTypeMonthly;
+
+  /// Monthly routine duration
+  ///
+  /// In en, this message translates to:
+  /// **'30 days'**
+  String get routineTypeMonthlyDuration;
+
+  /// Bimonthly routine type
+  ///
+  /// In en, this message translates to:
+  /// **'Bimonthly'**
+  String get routineTypeBimonthly;
+
+  /// Bimonthly routine duration
+  ///
+  /// In en, this message translates to:
+  /// **'60 days'**
+  String get routineTypeBimonthlyDuration;
+
+  /// Semester routine type
+  ///
+  /// In en, this message translates to:
+  /// **'Semester'**
+  String get routineTypeSemester;
+
+  /// Semester routine duration
+  ///
+  /// In en, this message translates to:
+  /// **'6 months'**
+  String get routineTypeSemesterDuration;
+
+  /// Custom routine type
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get routineTypeCustom;
+
+  /// Custom routine duration
+  ///
+  /// In en, this message translates to:
+  /// **'Any duration'**
+  String get routineTypeCustomDuration;
+
+  /// Duration section label
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get routineDurationLabel;
+
+  /// Start date field label
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get routineStartDateLabel;
+
+  /// End date field label
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get routineEndDateLabel;
+
+  /// Duration in weeks
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks, plural, =1{1 week} other{{weeks} weeks}}'**
+  String routineDurationWeeks(int weeks);
+
+  /// Duration in days
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
+  String routineDurationDays(int days);
+
+  /// Duration info label
+  ///
+  /// In en, this message translates to:
+  /// **'Duration: {duration}'**
+  String routineDurationInfo(String duration);
+
+  /// Pattern name: 1 workout 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'1 Workout + 1 Rest'**
+  String get routinePatternOneWorkoutOneRest;
+
+  /// Pattern description: 1 workout 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'1 training day followed by 1 rest day'**
+  String get routinePatternOneWorkoutOneRestDesc;
+
+  /// Pattern name: 2 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'2 Workouts + 1 Rest'**
+  String get routinePatternTwoWorkoutsOneRest;
+
+  /// Pattern description: 2 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'2 training days followed by 1 rest day'**
+  String get routinePatternTwoWorkoutsOneRestDesc;
+
+  /// Pattern name: 3 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'3 Workouts + 1 Rest'**
+  String get routinePatternThreeWorkoutsOneRest;
+
+  /// Pattern description: 3 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'3 training days followed by 1 rest day'**
+  String get routinePatternThreeWorkoutsOneRestDesc;
+
+  /// Pattern name: 3 workouts 2 rest
+  ///
+  /// In en, this message translates to:
+  /// **'3 Workouts + 2 Rest'**
+  String get routinePatternThreeWorkoutsTwoRest;
+
+  /// Pattern description: 3 workouts 2 rest
+  ///
+  /// In en, this message translates to:
+  /// **'3 training days with 2 rest days per week'**
+  String get routinePatternThreeWorkoutsTwoRestDesc;
+
+  /// Pattern name: 4 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'4 Workouts + 1 Rest'**
+  String get routinePatternFourWorkoutsOneRest;
+
+  /// Pattern description: 4 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'4 training days followed by 1 rest day'**
+  String get routinePatternFourWorkoutsOneRestDesc;
+
+  /// Pattern name: 4 workouts 3 rest
+  ///
+  /// In en, this message translates to:
+  /// **'4 Workouts + 3 Rest'**
+  String get routinePatternFourWorkoutsThreeRest;
+
+  /// Pattern description: 4 workouts 3 rest
+  ///
+  /// In en, this message translates to:
+  /// **'4 training days with 3 rest days per week'**
+  String get routinePatternFourWorkoutsThreeRestDesc;
+
+  /// Pattern name: 5 workouts 2 rest
+  ///
+  /// In en, this message translates to:
+  /// **'5 Workouts + 2 Rest'**
+  String get routinePatternFiveWorkoutsTwoRest;
+
+  /// Pattern description: 5 workouts 2 rest
+  ///
+  /// In en, this message translates to:
+  /// **'5 training days followed by 2 rest days'**
+  String get routinePatternFiveWorkoutsTwoRestDesc;
+
+  /// Pattern name: 6 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'6 Workouts + 1 Rest'**
+  String get routinePatternSixWorkoutsOneRest;
+
+  /// Pattern description: 6 workouts 1 rest
+  ///
+  /// In en, this message translates to:
+  /// **'6 training days followed by 1 rest day'**
+  String get routinePatternSixWorkoutsOneRestDesc;
+
+  /// Calendar preview title
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar Preview'**
+  String get routineCalendarPreview;
+
+  /// Calendar preview subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'How your pattern looks on the calendar'**
+  String get routineCalendarPreviewSubtitle;
+
+  /// More days indicator
+  ///
+  /// In en, this message translates to:
+  /// **'... and {count} more {count, plural, =1{day} other{days}}'**
+  String routineAndMoreDays(int count);
+
+  /// Total workouts in period
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {count} {count, plural, =1{workout} other{workouts}}'**
+  String routineTotalWorkouts(int count);
+
+  /// Total rest days in period
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {count} {count, plural, =1{rest day} other{rest days}}'**
+  String routineTotalRestDays(int count);
+
+  /// Workout days label
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Days'**
+  String get routineWorkoutDayLabel;
+
+  /// Rest days label
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Days'**
+  String get routineRestDayLabel;
+
+  /// Total days label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Days'**
+  String get routineTotalDaysLabel;
+
+  /// Monday
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get routineWeekdayMonday;
+
+  /// Tuesday
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get routineWeekdayTuesday;
+
+  /// Wednesday
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get routineWeekdayWednesday;
+
+  /// Thursday
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get routineWeekdayThursday;
+
+  /// Friday
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get routineWeekdayFriday;
+
+  /// Saturday
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get routineWeekdaySaturday;
+
+  /// Sunday
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get routineWeekdaySunday;
+
+  /// Workout count text
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workout{count, plural, =1{} other{s}}'**
+  String routineWorkoutCount(int count);
+
+  /// Rest count text
+  ///
+  /// In en, this message translates to:
+  /// **'{count} rest'**
+  String routineRestCount(int count);
+
+  /// Template rotation step title
+  ///
+  /// In en, this message translates to:
+  /// **'Rotation Order'**
+  String get routineRotationTitle;
+
+  /// Template rotation step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder how templates will rotate across your workout days'**
+  String get routineRotationSubtitle;
+
+  /// Number of templates selected
+  ///
+  /// In en, this message translates to:
+  /// **'{count} template{count, plural, =1{} other{s}} selected'**
+  String routineTemplatesSelected(int count);
+
+  /// Distribution preview title
+  ///
+  /// In en, this message translates to:
+  /// **'Distribution Preview'**
+  String get routineDistributionPreview;
+
+  /// First N days preview label
+  ///
+  /// In en, this message translates to:
+  /// **'First {shown} days (total: {total} days)'**
+  String routineFirstDaysPreview(int shown, int total);
+
+  /// More days indicator
+  ///
+  /// In en, this message translates to:
+  /// **'... and {count} more {count, plural, =1{day} other{days}}'**
+  String routineMoreDays(int count);
+
+  /// No templates selected title
+  ///
+  /// In en, this message translates to:
+  /// **'No Templates Selected'**
+  String get routineNoTemplatesSelected;
+
+  /// No templates selected message
+  ///
+  /// In en, this message translates to:
+  /// **'Go back to the previous step and select at least one workout template'**
+  String get routineNoTemplatesMessage;
+
+  /// No pattern selected error
+  ///
+  /// In en, this message translates to:
+  /// **'No pattern selected'**
+  String get routineNoPatternSelected;
+
+  /// Error loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String routineErrorLoading(String error);
+
+  /// Template selection step title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Workout Templates'**
+  String get routineSelectionTitle;
+
+  /// Template selection step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Choose templates to rotate automatically across workout days'**
+  String get routineSelectionSubtitle;
+
+  /// Available templates label
+  ///
+  /// In en, this message translates to:
+  /// **'Available Templates'**
+  String get routineAvailableTemplates;
+
+  /// Selected count badge
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String routineSelected(int count);
+
+  /// Info about next step
+  ///
+  /// In en, this message translates to:
+  /// **'In the next step, you\'ll arrange the order in which these templates rotate'**
+  String get routineNextStepInfo;
+
+  /// No templates empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'No Workout Templates Yet'**
+  String get routineNoTemplatesYet;
+
+  /// No templates empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'You need workout templates to create a routine.\nChoose one of the options below to continue.'**
+  String get routineNeedTemplatesMessage;
+
+  /// Popular templates option title
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Templates'**
+  String get routinePopularTemplates;
+
+  /// Popular templates option description
+  ///
+  /// In en, this message translates to:
+  /// **'Start with proven workout plans'**
+  String get routinePopularTemplatesDesc;
+
+  /// Import popular templates button
+  ///
+  /// In en, this message translates to:
+  /// **'Import Popular Templates'**
+  String get routineImportPopularTemplates;
+
+  /// Custom template option title
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Template'**
+  String get routineCustomTemplate;
+
+  /// Custom template option description
+  ///
+  /// In en, this message translates to:
+  /// **'Design your own workout plan'**
+  String get routineCustomTemplateDesc;
+
+  /// Create first template button
+  ///
+  /// In en, this message translates to:
+  /// **'Create First Template'**
+  String get routineCreateFirstTemplate;
+
+  /// Navigating to template creator message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigating to template creator... 🏗️'**
+  String get routineNavigatingToCreator;
+
+  /// Select templates dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Select the templates you want to import'**
+  String get routineSelectTemplatesDialog;
+
+  /// Select templates button (disabled state)
+  ///
+  /// In en, this message translates to:
+  /// **'Select templates'**
+  String get routineSelectTemplatesButton;
+
+  /// Import button with count
+  ///
+  /// In en, this message translates to:
+  /// **'Import ({count})'**
+  String routineImportCount(int count);
+
+  /// OR divider text
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get routineOr;
+
+  /// Error loading templates
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading templates'**
+  String get routineErrorLoadingTemplates;
+
+  /// Success message when routine is created as inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Routine \"{name}\" created! Go to Routine Center to activate it.'**
+  String routineSuccessCreatedInactive(String name);
+
+  /// Title when no routine is active in analytics
+  ///
+  /// In en, this message translates to:
+  /// **'No Active Routine'**
+  String get routineAnalyticsNoActiveRoutine;
+
+  /// Description when no routine is active
+  ///
+  /// In en, this message translates to:
+  /// **'Create and activate a routine to see analytics here'**
+  String get routineAnalyticsNoActiveRoutineDesc;
+
+  /// Button to create a routine
+  ///
+  /// In en, this message translates to:
+  /// **'Create Routine'**
+  String get routineAnalyticsCreateRoutine;
+
+  /// Error title for analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Error Loading Analytics'**
+  String get routineAnalyticsErrorLoading;
+
+  /// Subtitle for active routine card
+  ///
+  /// In en, this message translates to:
+  /// **'Active Routine Analytics'**
+  String get routineAnalyticsActiveRoutine;
+
+  /// Section title for KPI metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Metrics'**
+  String get routineAnalyticsPerformanceMetrics;
+
+  /// Adherence metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence'**
+  String get routineAnalyticsAdherence;
+
+  /// Skip rate metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Rate'**
+  String get routineAnalyticsSkipRate;
+
+  /// Recovery metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery'**
+  String get routineAnalyticsRecovery;
+
+  /// Average gap metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Gap'**
+  String get routineAnalyticsAvgGap;
+
+  /// Days unit
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get routineAnalyticsDays;
+
+  /// Skipped label
+  ///
+  /// In en, this message translates to:
+  /// **'skipped'**
+  String get routineAnalyticsSkipped;
+
+  /// Recovered label
+  ///
+  /// In en, this message translates to:
+  /// **'recovered'**
+  String get routineAnalyticsRecovered;
+
+  /// Between workouts label
+  ///
+  /// In en, this message translates to:
+  /// **'between workouts'**
+  String get routineAnalyticsBetweenWorkouts;
+
+  /// Current streak label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak'**
+  String get routineAnalyticsCurrentStreak;
+
+  /// Best streak label
+  ///
+  /// In en, this message translates to:
+  /// **'Best Streak'**
+  String get routineAnalyticsBestStreak;
+
+  /// Insights section title
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get routineAnalyticsInsights;
+
+  /// Template distribution section title
+  ///
+  /// In en, this message translates to:
+  /// **'Template Distribution'**
+  String get routineAnalyticsTemplateDistribution;
+
+  /// Weekly pattern section title
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Pattern'**
+  String get routineAnalyticsWeeklyPattern;
+
+  /// Weekly trend chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Adherence Trend'**
+  String get routineAnalyticsWeeklyTrend;
+
+  /// Placeholder for chart
+  ///
+  /// In en, this message translates to:
+  /// **'Chart visualization coming soon'**
+  String get routineAnalyticsChartComingSoon;
+
+  /// Routine tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Routine'**
+  String get routine;
+
+  /// Prompt asking user to rate questionnaire step
+  ///
+  /// In en, this message translates to:
+  /// **'How was this step?'**
+  String get feedbackPrompt;
+
+  /// Label for 1-star rating (poor)
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get feedbackPoor;
+
+  /// Label for 5-star rating (excellent)
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get feedbackExcellent;
+
+  /// Title for stale profile banner
+  ///
+  /// In en, this message translates to:
+  /// **'Update Your Fitness Profile'**
+  String get staleProfileTitle;
+
+  /// Subtitle when profile is 30-59 days old
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile hasn\'t been updated in {days} days. Update it for more accurate suggestions!'**
+  String staleProfileSubtitle1Month(int days);
+
+  /// Subtitle when profile is 2-5 months old
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is {months} months old. Time to update for better suggestions!'**
+  String staleProfileSubtitleMonths(int months);
+
+  /// Subtitle when profile is 6+ months old
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile hasn\'t been updated in {months} months! Update now for accurate suggestions.'**
+  String staleProfileSubtitleManyMonths(int months);
+
+  /// Button text to update profile
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get staleProfileUpdateButton;
+
+  /// Exercise progress feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Progress'**
+  String get exerciseProgress;
+
+  /// Exercise progress screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Progress'**
+  String get exerciseProgressTitle;
+
+  /// Placeholder for exercise search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search exercises...'**
+  String get searchExercisesPlaceholder;
+
+  /// Weight progression chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Progression'**
+  String get weightProgression;
+
+  /// Reps progression chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Reps Progression'**
+  String get repsProgression;
+
+  /// RPE/Effort progression chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Effort Progression'**
+  String get effortProgression;
+
+  /// Personal record label
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Record'**
+  String get personalRecord;
+
+  /// Average weight label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Weight'**
+  String get averageWeight;
+
+  /// Average RPE label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg RPE'**
+  String get averageRPE;
+
+  /// Total sessions label
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get totalSessions;
+
+  /// Exercise statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Statistics'**
+  String get exerciseStats;
+
+  /// Progression charts section title
+  ///
+  /// In en, this message translates to:
+  /// **'Progression Charts'**
+  String get progressionCharts;
+
+  /// Description for empty exercise list
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a workout to see your exercise progress'**
+  String get noExercisesFoundDesc;
+
+  /// Average reps label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Reps'**
+  String get avgReps;
+
+  /// Last workout date label
+  ///
+  /// In en, this message translates to:
+  /// **'Last Workout'**
+  String get lastWorkout;
+
+  /// Button to view progress details
+  ///
+  /// In en, this message translates to:
+  /// **'View Progress'**
+  String get viewProgress;
+
+  /// Session history section title
+  ///
+  /// In en, this message translates to:
+  /// **'Session History'**
+  String get sessionHistory;
+
+  /// Positive trend indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Improving'**
+  String get improving;
+
+  /// Negative trend indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Declining'**
+  String get declining;
+
+  /// Stable trend indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Stable'**
+  String get stable;
+
+  /// Period selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Time Period'**
+  String get periodSelectorLabel;
+
+  /// Combined chart view option
+  ///
+  /// In en, this message translates to:
+  /// **'Combined'**
+  String get combinedView;
+
+  /// Separated charts view option
+  ///
+  /// In en, this message translates to:
+  /// **'Separated'**
+  String get separatedView;
+
+  /// Combined chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Combined Progress'**
+  String get combinedChart;
+
+  /// Legend tap instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to show/hide'**
+  String get tapToToggle;
+
+  /// Effort (RPE) metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Effort'**
+  String get effort;
+
+  /// Weight settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Weight Settings'**
+  String get weightSettings;
+
+  /// Error message when settings fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error Loading Settings'**
+  String get errorLoadingSettings;
+
+  /// Quick increment chips section title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Increments'**
+  String get quickIncrements;
+
+  /// Quick increments section description
+  ///
+  /// In en, this message translates to:
+  /// **'Select your default weight increment for quick +/- buttons'**
+  String get quickIncrementsDescription;
+
+  /// Custom increment section title
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Increment'**
+  String get customIncrement;
+
+  /// Custom increment section description
+  ///
+  /// In en, this message translates to:
+  /// **'Set a custom weight increment for precise adjustments'**
+  String get customIncrementDescription;
+
+  /// Plate calculator section title
+  ///
+  /// In en, this message translates to:
+  /// **'Plate Calculator'**
+  String get plateCalculator;
+
+  /// Plate calculator section description
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate which plates to load on the bar'**
+  String get plateCalculatorDescription;
+
+  /// Available plates section title
+  ///
+  /// In en, this message translates to:
+  /// **'Available Plates'**
+  String get availablePlates;
+
+  /// Available plates section description
+  ///
+  /// In en, this message translates to:
+  /// **'Plates available in your gym'**
+  String get availablePlatesDescription;
+
+  /// Toggle to use custom increment
+  ///
+  /// In en, this message translates to:
+  /// **'Use Custom Increment'**
+  String get useCustomIncrement;
+
+  /// Message when custom increment is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Custom increment is active'**
+  String get customIncrementActive;
+
+  /// Message when default increment is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Default increment is active'**
+  String get defaultIncrementActive;
+
+  /// TextField label for custom increment value
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Increment Value'**
+  String get customIncrementValue;
+
+  /// Hint text for custom increment input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a value between 0.5 and 100'**
+  String get customIncrementHint;
+
+  /// Validation message for empty value
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a value'**
+  String get pleaseEnterValue;
+
+  /// Validation message for invalid number
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid positive number'**
+  String get pleaseEnterValidNumber;
+
+  /// Validation message for too large increment
+  ///
+  /// In en, this message translates to:
+  /// **'Increment cannot exceed 100'**
+  String get incrementTooLarge;
+
+  /// Button to save custom increment
+  ///
+  /// In en, this message translates to:
+  /// **'Save Custom Increment'**
+  String get saveCustomIncrement;
+
+  /// Success message after saving custom increment
+  ///
+  /// In en, this message translates to:
+  /// **'Custom increment saved successfully'**
+  String get customIncrementSaved;
+
+  /// Plate calculator subsection title
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate Plates Needed'**
+  String get calculatePlatesNeeded;
+
+  /// TextField label for bar weight
+  ///
+  /// In en, this message translates to:
+  /// **'Bar Weight'**
+  String get barWeight;
+
+  /// TextField label for target weight
+  ///
+  /// In en, this message translates to:
+  /// **'Target Weight'**
+  String get targetWeight;
+
+  /// Button to calculate plates
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate'**
+  String get calculate;
+
+  /// Available plates list title
+  ///
+  /// In en, this message translates to:
+  /// **'Plates in Your Gym'**
+  String get platesInYourGym;
+
+  /// Quantity label for plates
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// Button to edit available plates
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Plates'**
+  String get editPlates;
+
+  /// Error when weight values are invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid weights'**
+  String get pleaseEnterValidWeights;
+
+  /// Warning when target weight is less than bar weight
+  ///
+  /// In en, this message translates to:
+  /// **'Target weight must be greater than or equal to bar weight'**
+  String get targetWeightTooLow;
+
+  /// Dialog title for plate calculation result
+  ///
+  /// In en, this message translates to:
+  /// **'Plate Calculation Result'**
+  String get plateCalculationResult;
+
+  /// Label for weight difference
+  ///
+  /// In en, this message translates to:
+  /// **'Difference'**
+  String get difference;
+
+  /// Section title for plates needed per side
+  ///
+  /// In en, this message translates to:
+  /// **'Plates Per Side'**
+  String get platesPerSide;
+
+  /// Message when no plates are needed
+  ///
+  /// In en, this message translates to:
+  /// **'Bar only (no plates needed)'**
+  String get barOnly;
+
+  /// Confirmation message for resetting settings
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reset all settings to default values? This cannot be undone.'**
+  String get resetSettingsConfirmation;
+
+  /// Success message after resetting settings
+  ///
+  /// In en, this message translates to:
+  /// **'Settings reset to defaults'**
+  String get settingsReset;
+
+  /// Haptic feedback settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic Feedback'**
+  String get feedbackSettings;
+
+  /// Haptic feedback section title
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic Feedback'**
+  String get hapticFeedback;
+
+  /// Toggle to enable haptic feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Enable haptic feedback'**
+  String get enableHaptic;
+
+  /// Haptic intensity setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic Intensity'**
+  String get hapticIntensity;
+
+  /// Light haptic intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get intensityLight;
+
+  /// Medium haptic intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get intensityMedium;
+
+  /// Heavy haptic intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Heavy'**
+  String get intensityHeavy;
+
+  /// Description of haptic feedback feature
+  ///
+  /// In en, this message translates to:
+  /// **'Feel subtle vibrations when completing sets, exercises, and workouts'**
+  String get hapticDescription;
+
+  /// Success message after saving feedback settings
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback settings saved'**
+  String get feedbackSettingsSaved;
+
+  /// Title for history view settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'History View Settings'**
+  String get historyViewSettings;
+
+  /// Label for view mode setting
+  ///
+  /// In en, this message translates to:
+  /// **'View Mode'**
+  String get viewMode;
+
+  /// List view mode option
+  ///
+  /// In en, this message translates to:
+  /// **'List View'**
+  String get viewModeList;
+
+  /// Compact view mode option
+  ///
+  /// In en, this message translates to:
+  /// **'Compact View'**
+  String get viewModeCompact;
+
+  /// Calendar view mode option
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar View'**
+  String get viewModeCalendar;
+
+  /// Stats view mode option
+  ///
+  /// In en, this message translates to:
+  /// **'Stats View'**
+  String get viewModeStats;
+
+  /// Section title for display options
+  ///
+  /// In en, this message translates to:
+  /// **'Display Options'**
+  String get historyDisplayOptions;
+
+  /// Toggle to show/hide exercise thumbnails
+  ///
+  /// In en, this message translates to:
+  /// **'Show Thumbnails'**
+  String get showThumbnails;
+
+  /// Toggle to show/hide workout duration
+  ///
+  /// In en, this message translates to:
+  /// **'Show Duration'**
+  String get showDuration;
+
+  /// Toggle to show/hide exercise count
+  ///
+  /// In en, this message translates to:
+  /// **'Show Exercise Count'**
+  String get showExerciseCount;
+
+  /// Description of view settings feature
+  ///
+  /// In en, this message translates to:
+  /// **'Customize how your workout history is displayed'**
+  String get viewSettingsDescription;
+
+  /// Success message after saving view settings
+  ///
+  /// In en, this message translates to:
+  /// **'View settings saved'**
+  String get historyViewSettingsSaved;
 }
 
 class _AppLocalizationsDelegate

@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: shared/domain
- * 🎯 Feature: location
- * 🔧 Type: entity
- * 🌍 Localization: N/A - Entity class
- * 🎨 Theme: N/A - Entity class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: None
- * - Firebase: None
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: shared/domain
+/// 🎯 Feature: location
+/// 🔧 Type: entity
+/// 🌍 Localization: N/A - Entity class
+/// 🎨 Theme: N/A - Entity class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: None
+/// - Firebase: None
+/// - Hive: None
+library;
 
 import 'dart:math' as math;
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -309,6 +308,9 @@ class ItalianCities {
       population: 214198,
     ),
   ];
+
+  /// Alias for majorCities for compatibility
+  static List<ItalianCity> get allCities => majorCities;
 
   static ItalianCity? findByCode(String code) {
     try {

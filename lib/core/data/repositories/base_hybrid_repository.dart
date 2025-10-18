@@ -1,16 +1,15 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: core/data/repositories
- * 🎯 Feature: core
- * 🔧 Type: base repository
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * CRITICAL: ALL new features MUST extend this base repository
- * to ensure automatic local storage and premium sync!
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: core/data/repositories
+/// 🎯 Feature: core
+/// 🔧 Type: base repository
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// CRITICAL: ALL new features MUST extend this base repository
+/// to ensure automatic local storage and premium sync!
+library;
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,6 +21,17 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile_co
 /// Base repository that ALL feature repositories MUST extend
 /// Provides automatic local storage and premium sync
 abstract class BaseHybridRepository<T> {
+  
+  BaseHybridRepository({
+    required this.featureName,
+    required this.collectionName,
+    this.requiresPremiumForCloud = true,
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance {
+    _initialize();
+  }
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   late Box<Map> _localBox;
@@ -39,17 +49,6 @@ abstract class BaseHybridRepository<T> {
   // Sync configuration
   final StreamController<SyncEvent> _syncEventController = StreamController.broadcast();
   Stream<SyncEvent> get syncEvents => _syncEventController.stream;
-  
-  BaseHybridRepository({
-    required this.featureName,
-    required this.collectionName,
-    this.requiresPremiumForCloud = true,
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance {
-    _initialize();
-  }
   
   /// Initialize boxes and load user profile
   Future<void> _initialize() async {
@@ -86,7 +85,7 @@ abstract class BaseHybridRepository<T> {
   /// Start monitoring user profile changes
   void _startProfileMonitoring() {
     _profileRefreshTimer?.cancel();
-    _profileRefreshTimer = Timer.periodic(Duration(minutes: 5), (_) {
+    _profileRefreshTimer = Timer.periodic(const Duration(minutes: 5), (_) {
       _loadUserProfile();
     });
   }
@@ -507,11 +506,6 @@ abstract class BaseHybridRepository<T> {
 
 /// Sync event for monitoring
 class SyncEvent {
-  final SyncEventType type;
-  final String? entityId;
-  final bool isLocal;
-  final bool willSync;
-  final DateTime timestamp;
   
   SyncEvent({
     required this.type,
@@ -519,6 +513,11 @@ class SyncEvent {
     required this.isLocal,
     required this.willSync,
   }) : timestamp = DateTime.now();
+  final SyncEventType type;
+  final String? entityId;
+  final bool isLocal;
+  final bool willSync;
+  final DateTime timestamp;
 }
 
 enum SyncEventType {

@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as TZ;
-import '../../domain/entities/unified_notification.dart';
-import '../../domain/entities/unified_notification_state.dart';
-import 'notification_platform_adapter.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/notification_platform_adapter.dart';
+import 'package:flutter/foundation.dart';
 
 /// iOS-specific implementation of the notification platform adapter
 /// Integrates with iOS native notifications, Live Activities, and APNs
@@ -63,7 +64,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
       await _channel.invokeMethod('dispose');
       _isInitialized = false;
     } catch (error) {
-      print('Error disposing iOS notification adapter: $error');
+      if (kDebugMode) {
+        debugPrint('Error disposing iOS notification adapter: $error');
+      }
     }
   }
 
@@ -126,7 +129,7 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
-        sound: notification.soundName != null ? notification.soundName! : null,
+        sound: notification.soundName,
         badgeNumber: null, // Will be set by badge management
         threadIdentifier: notification.iosConfig?.threadId,
         categoryIdentifier: _getCategoryForType(notification.type),
@@ -142,12 +145,12 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         notification.body,
         TZ.TZDateTime.from(notification.scheduledTime, TZ.local),
         details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: json.encode({
           'notificationId': notification.id,
           'type': notification.type.name,
           'payload': notification.payload,
         }),
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       );
 
       return notification.id;
@@ -165,7 +168,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         final id = await scheduleLocalNotification(notification);
         results.add(id);
       } catch (error) {
-        print('Failed to schedule notification ${notification.id}: $error');
+        if (kDebugMode) {
+          debugPrint('Failed to schedule notification ${notification.id}: $error');
+        }
         // Continue with other notifications
       }
     }
@@ -232,7 +237,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
     try {
       await _channel.invokeMethod('handlePushNotification', payload);
     } catch (error) {
-      print('Error handling push notification: $error');
+      if (kDebugMode) {
+        debugPrint('Error handling push notification: $error');
+      }
     }
   }
 
@@ -359,7 +366,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
       // Fall back to regular notification
       return await scheduleLocalNotification(notification);
     } catch (error) {
-      print('Error showing advanced notification: $error');
+      if (kDebugMode) {
+        debugPrint('Error showing advanced notification: $error');
+      }
       return null;
     }
   }
@@ -403,7 +412,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
       
       return activityId;
     } catch (error) {
-      print('Error starting Live Activity: $error');
+      if (kDebugMode) {
+        debugPrint('Error starting Live Activity: $error');
+      }
       return null;
     }
   }
@@ -561,7 +572,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         );
         break;
       default:
-        print('Unhandled iOS method call: ${call.method}');
+        if (kDebugMode) {
+          debugPrint('Unhandled iOS method call: ${call.method}');
+        }
     }
   }
 
@@ -574,7 +587,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         );
         break;
       default:
-        print('Unhandled Live Activity method call: ${call.method}');
+        if (kDebugMode) {
+          debugPrint('Unhandled Live Activity method call: ${call.method}');
+        }
     }
   }
 
@@ -651,7 +666,7 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         const NotificationDetails(
           iOS: DarwinNotificationDetails(),
         ),
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
       
       // Cancel immediately
@@ -720,7 +735,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
     } catch (error) {
-      print('Error tracking notification delivery: $error');
+      if (kDebugMode) {
+        debugPrint('Error tracking notification delivery: $error');
+      }
     }
   }
 
@@ -733,7 +750,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
     } catch (error) {
-      print('Error tracking notification interaction: $error');
+      if (kDebugMode) {
+        debugPrint('Error tracking notification interaction: $error');
+      }
     }
   }
 
@@ -752,7 +771,9 @@ class IOSNotificationAdapter implements NotificationPlatformAdapter {
     try {
       await _channel.invokeMethod('handleAppStateChange', {'state': state});
     } catch (error) {
-      print('Error handling app state change: $error');
+      if (kDebugMode) {
+        debugPrint('Error handling app state change: $error');
+      }
     }
   }
 }

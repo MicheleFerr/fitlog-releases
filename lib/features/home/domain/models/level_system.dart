@@ -28,7 +28,7 @@ class LevelSystem {
     int xpProgress = totalXp;
     
     while (currentLevel < maxLevel) {
-      int xpNeeded = getXpForLevel(currentLevel + 1);
+      final int xpNeeded = getXpForLevel(currentLevel + 1);
       if (xpProgress >= xpNeeded) {
         xpProgress -= xpNeeded;
         currentLevel++;
@@ -37,8 +37,8 @@ class LevelSystem {
       }
     }
     
-    int xpForNextLevel = currentLevel < maxLevel ? getXpForLevel(currentLevel + 1) : 0;
-    double progressPercentage = xpForNextLevel > 0 ? xpProgress / xpForNextLevel : 1.0;
+    final int xpForNextLevel = currentLevel < maxLevel ? getXpForLevel(currentLevel + 1) : 0;
+    final double progressPercentage = xpForNextLevel > 0 ? xpProgress / xpForNextLevel : 1.0;
     
     return LevelInfo(
       level: currentLevel,
@@ -66,7 +66,7 @@ class LevelSystem {
   }
   
   static List<LevelPerk> _getPerksForLevel(int level) {
-    List<LevelPerk> perks = [];
+    final List<LevelPerk> perks = [];
     
     // Sblocchi ogni 5 livelli
     if (level >= 5) perks.add(LevelPerk.customWorkoutTemplates);
@@ -155,13 +155,6 @@ class LevelSystem {
 }
 
 class LevelInfo {
-  final int level;
-  final int currentXp;
-  final int xpForNextLevel;
-  final int totalXp;
-  final double progressPercentage;
-  final String title;
-  final List<LevelPerk> perks;
   
   const LevelInfo({
     required this.level,
@@ -172,14 +165,16 @@ class LevelInfo {
     required this.title,
     required this.perks,
   });
+  final int level;
+  final int currentXp;
+  final int xpForNextLevel;
+  final int totalXp;
+  final double progressPercentage;
+  final String title;
+  final List<LevelPerk> perks;
 }
 
 class DailyLoginBonusInfo {
-  final int currentDayBonus;
-  final int nextDayBonus;
-  final int consecutiveDays;
-  final String message;
-  final bool isMaxBonus;
   
   const DailyLoginBonusInfo({
     required this.currentDayBonus,
@@ -188,6 +183,11 @@ class DailyLoginBonusInfo {
     required this.message,
     required this.isMaxBonus,
   });
+  final int currentDayBonus;
+  final int nextDayBonus;
+  final int consecutiveDays;
+  final String message;
+  final bool isMaxBonus;
 }
 
 enum LevelPerk {

@@ -1,6 +1,5 @@
 import 'dart:math' as math;
-import '../entities/smart_training_metrics.dart';
-import '../../workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
 
 /// Service for optimizing training volume based on scientific principles
 class VolumeOptimizerService {
@@ -446,12 +445,6 @@ class VolumeOptimizerService {
 
 /// Volume optimization results
 class VolumeOptimization {
-  final String userId;
-  final TrainingGoal goal;
-  final TrainingExperience experience;
-  final Map<String, VolumeRecommendation> recommendations;
-  final int totalWeeklyVolume;
-  final DateTime analysisDate;
 
   VolumeOptimization({
     required this.userId,
@@ -461,17 +454,6 @@ class VolumeOptimization {
     required this.totalWeeklyVolume,
     required this.analysisDate,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'userId': userId,
-      'goal': goal.name,
-      'experience': experience.name,
-      'recommendations': recommendations.map((k, v) => MapEntry(k, v.toJson())),
-      'totalWeeklyVolume': totalWeeklyVolume,
-      'analysisDate': analysisDate.toIso8601String(),
-    };
-  }
 
   factory VolumeOptimization.fromJson(Map<String, dynamic> json) {
     return VolumeOptimization(
@@ -484,17 +466,27 @@ class VolumeOptimization {
       analysisDate: DateTime.parse(json['analysisDate']),
     );
   }
+  final String userId;
+  final TrainingGoal goal;
+  final TrainingExperience experience;
+  final Map<String, VolumeRecommendation> recommendations;
+  final int totalWeeklyVolume;
+  final DateTime analysisDate;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'goal': goal.name,
+      'experience': experience.name,
+      'recommendations': recommendations.map((k, v) => MapEntry(k, v.toJson())),
+      'totalWeeklyVolume': totalWeeklyVolume,
+      'analysisDate': analysisDate.toIso8601String(),
+    };
+  }
 }
 
 /// Volume recommendation for specific muscle group
 class VolumeRecommendation {
-  final String muscleGroup;
-  final double currentVolume;
-  final int optimalVolume;
-  final VolumeRange volumeRange;
-  final List<VolumeAdjustment> adjustments;
-  final String reasoning;
-  final double confidence;
 
   VolumeRecommendation({
     required this.muscleGroup,
@@ -505,18 +497,6 @@ class VolumeRecommendation {
     required this.reasoning,
     required this.confidence,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'muscleGroup': muscleGroup,
-      'currentVolume': currentVolume,
-      'optimalVolume': optimalVolume,
-      'volumeRange': volumeRange.toJson(),
-      'adjustments': adjustments.map((a) => a.toJson()).toList(),
-      'reasoning': reasoning,
-      'confidence': confidence,
-    };
-  }
 
   factory VolumeRecommendation.fromJson(Map<String, dynamic> json) {
     return VolumeRecommendation(
@@ -531,17 +511,31 @@ class VolumeRecommendation {
       confidence: (json['confidence'] as num).toDouble(),
     );
   }
+  final String muscleGroup;
+  final double currentVolume;
+  final int optimalVolume;
+  final VolumeRange volumeRange;
+  final List<VolumeAdjustment> adjustments;
+  final String reasoning;
+  final double confidence;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'muscleGroup': muscleGroup,
+      'currentVolume': currentVolume,
+      'optimalVolume': optimalVolume,
+      'volumeRange': volumeRange.toJson(),
+      'adjustments': adjustments.map((a) => a.toJson()).toList(),
+      'reasoning': reasoning,
+      'confidence': confidence,
+    };
+  }
 }
 
 /// Supporting classes and enums
 class VolumeRange {
-  final int min;
-  final int optimal;
-  final int max;
 
   const VolumeRange({required this.min, required this.optimal, required this.max});
-
-  Map<String, dynamic> toJson() => {'min': min, 'optimal': optimal, 'max': max};
 
   factory VolumeRange.fromJson(Map<String, dynamic> json) {
     return VolumeRange(
@@ -550,23 +544,22 @@ class VolumeRange {
       max: json['max'],
     );
   }
+  final int min;
+  final int optimal;
+  final int max;
+
+  Map<String, dynamic> toJson() => {'min': min, 'optimal': optimal, 'max': max};
 }
 
 class ExperienceMultiplier {
+
+  const ExperienceMultiplier({required this.min, required this.optimal, required this.max});
   final double min;
   final double optimal;
   final double max;
-
-  const ExperienceMultiplier({required this.min, required this.optimal, required this.max});
 }
 
 class VolumePerformanceAnalysis {
-  final double volumeTrend;
-  final double performanceTrend;
-  final double fatigueLevel;
-  final double readinessLevel;
-  final double adaptationRate;
-  final double sustainabilityScore;
 
   VolumePerformanceAnalysis({
     required this.volumeTrend,
@@ -576,14 +569,15 @@ class VolumePerformanceAnalysis {
     required this.adaptationRate,
     required this.sustainabilityScore,
   });
+  final double volumeTrend;
+  final double performanceTrend;
+  final double fatigueLevel;
+  final double readinessLevel;
+  final double adaptationRate;
+  final double sustainabilityScore;
 }
 
 class VolumeAdjustment {
-  final VolumeAdjustmentType type;
-  final String description;
-  final int setChange;
-  final String implementation;
-  final int priority;
 
   VolumeAdjustment({
     required this.type,
@@ -592,16 +586,6 @@ class VolumeAdjustment {
     required this.implementation,
     required this.priority,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type.name,
-      'description': description,
-      'setChange': setChange,
-      'implementation': implementation,
-      'priority': priority,
-    };
-  }
 
   factory VolumeAdjustment.fromJson(Map<String, dynamic> json) {
     return VolumeAdjustment(
@@ -612,18 +596,33 @@ class VolumeAdjustment {
       priority: json['priority'],
     );
   }
+  final VolumeAdjustmentType type;
+  final String description;
+  final int setChange;
+  final String implementation;
+  final int priority;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type.name,
+      'description': description,
+      'setChange': setChange,
+      'implementation': implementation,
+      'priority': priority,
+    };
+  }
 }
 
 class MuscleGroupData {
-  final double weeklyVolume;
-  final int weeksOfData;
-  final double averageIntensity;
 
   MuscleGroupData({
     required this.weeklyVolume,
     required this.weeksOfData,
     required this.averageIntensity,
   });
+  final double weeklyVolume;
+  final int weeksOfData;
+  final double averageIntensity;
 }
 
 enum TrainingGoal { hypertrophy, strength, endurance, maintenance }

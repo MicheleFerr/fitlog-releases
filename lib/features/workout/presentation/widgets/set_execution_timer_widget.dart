@@ -7,18 +7,18 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 
 /// Real-time set execution timer widget with TIER-1 visualization
 class SetExecutionTimerWidget extends ConsumerStatefulWidget {
-  final Exercise exercise;
-  final int setNumber;
-  final bool isTracking;
-  final VoidCallback? onTap;
   
   const SetExecutionTimerWidget({
-    Key? key,
+    super.key,
     required this.exercise,
     required this.setNumber,
     required this.isTracking,
     this.onTap,
-  }) : super(key: key);
+  });
+  final Exercise exercise;
+  final int setNumber;
+  final bool isTracking;
+  final VoidCallback? onTap;
 
   @override
   ConsumerState<SetExecutionTimerWidget> createState() => _SetExecutionTimerWidgetState();
@@ -150,14 +150,14 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
     if (minutes > 0) {
       return '$minutes:${seconds.toString().padLeft(2, '0')}.${milliseconds.toString().padLeft(2, '0')}';
     } else {
-      return '${seconds}.${milliseconds.toString().padLeft(2, '0')}';
+      return '$seconds.${milliseconds.toString().padLeft(2, '0')}';
     }
   }
   
   @override
   Widget build(BuildContext context) {
     final config = ref.watch(appConfigProvider);
-    final showMilliseconds = true; // config.showPreciseTimings ?? true; // TODO: Add showPreciseTimings to AppConfig
+    const showMilliseconds = true; // config.showPreciseTimings ?? true; // TODO: Add showPreciseTimings to AppConfig
     
     return GestureDetector(
       onTap: widget.onTap,
@@ -285,16 +285,16 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
 
 /// Velocity indicator widget for power/speed tracking
 class VelocityIndicatorWidget extends StatelessWidget {
-  final double currentVelocity;
-  final double targetVelocity;
-  final double? personalBestVelocity;
   
   const VelocityIndicatorWidget({
-    Key? key,
+    super.key,
     required this.currentVelocity,
     required this.targetVelocity,
     this.personalBestVelocity,
-  }) : super(key: key);
+  });
+  final double currentVelocity;
+  final double targetVelocity;
+  final double? personalBestVelocity;
   
   Color _getVelocityColor(BuildContext context) {
     final ratio = currentVelocity / targetVelocity;
@@ -380,14 +380,14 @@ class VelocityIndicatorWidget extends StatelessWidget {
 
 /// Mini chart showing set times progression
 class SetTimesChartWidget extends StatelessWidget {
-  final List<double> setTimes; // in seconds
-  final int currentSetIndex;
   
   const SetTimesChartWidget({
-    Key? key,
+    super.key,
     required this.setTimes,
     required this.currentSetIndex,
-  }) : super(key: key);
+  });
+  final List<double> setTimes; // in seconds
+  final int currentSetIndex;
   
   @override
   Widget build(BuildContext context) {
@@ -427,7 +427,7 @@ class SetTimesChartWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    '${time.toStringAsFixed(1)}',
+                    time.toStringAsFixed(1),
                     style: TextStyle(
                       fontSize: 9,
                       color: isCurrentSet 

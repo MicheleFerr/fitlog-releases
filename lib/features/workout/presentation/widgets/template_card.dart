@@ -4,10 +4,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class TemplateCard extends StatelessWidget {
-  final WorkoutTemplate template;
-  final VoidCallback onTap;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
 
   const TemplateCard({
     super.key,
@@ -16,6 +12,10 @@ class TemplateCard extends StatelessWidget {
     this.onEdit,
     this.onDelete,
   });
+  final WorkoutTemplate template;
+  final VoidCallback onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -331,7 +331,7 @@ class TemplateCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Header con info template
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -353,7 +353,7 @@ class TemplateCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${template.exercises.length} ${AppLocalizations.of(context)!.exercises}',
+                        '${template.exercises.length} ${AppLocalizations.of(context).exercises}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
@@ -364,48 +364,50 @@ class TemplateCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Opzioni menu
           ListTile(
             leading: Icon(
               Icons.play_arrow,
               color: Theme.of(context).colorScheme.primary,
             ),
-            title: Text(AppLocalizations.of(context)!.startWorkout),
-            subtitle: Text(AppLocalizations.of(context)!.startFresh),
+            title: Text(AppLocalizations.of(context).startWorkout),
+            subtitle: Text(AppLocalizations.of(context).startFresh),
             onTap: () {
               Navigator.pop(context);
               onTap();
             },
           ),
-          
+
+          // TODO: Add to Routine option - Will be reimplemented with FlexibleRoutine system
+
           if (onEdit != null)
             ListTile(
               leading: const Icon(Icons.edit),
-              title: Text(AppLocalizations.of(context)!.edit),
-              subtitle: Text(AppLocalizations.of(context)!.customizeTemplate),
+              title: Text(AppLocalizations.of(context).edit),
+              subtitle: Text(AppLocalizations.of(context).customizeTemplate),
               onTap: () {
                 Navigator.pop(context);
                 onEdit!();
               },
             ),
-          
+
           if (onDelete != null)
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
               title: Text(
-                AppLocalizations.of(context)!.delete,
+                AppLocalizations.of(context).delete,
                 style: const TextStyle(color: Colors.red),
               ),
-              subtitle: Text(AppLocalizations.of(context)!.deleteTemplatePermanently),
+              subtitle: Text(AppLocalizations.of(context).deleteTemplatePermanently),
               onTap: () {
                 Navigator.pop(context);
                 onDelete!();
               },
             ),
-          
+
           const SizedBox(height: 32),
         ],
       ),

@@ -1,27 +1,26 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/app/navigation
- * 🎯 Feature: navigation
- * 🔧 Type: widget tests for app navigation system
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ Material 3 + responsive themes
- * 📱 Platform: iOS/Android/Universal
- * 
- * Tests navigation flows including:
- * - GoRouter configuration
- * - Deep linking
- * - Authentication redirects
- * - Error handling
- * - Back navigation
- * - Nested routes
- * 
- * Dependencies:
- * - GoRouter: Navigation framework
- * - Firebase: Authentication state
- * - Riverpod: State management
- * - Mocktail: Firebase mocking
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/app/navigation
+/// 🎯 Feature: navigation
+/// 🔧 Type: widget tests for app navigation system
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ Material 3 + responsive themes
+/// 📱 Platform: iOS/Android/Universal
+/// 
+/// Tests navigation flows including:
+/// - GoRouter configuration
+/// - Deep linking
+/// - Authentication redirects
+/// - Error handling
+/// - Back navigation
+/// - Nested routes
+/// 
+/// Dependencies:
+/// - GoRouter: Navigation framework
+/// - Firebase: Authentication state
+/// - Riverpod: State management
+/// - Mocktail: Firebase mocking
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,8 +30,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:mocktail/mocktail.dart';
 import '../../test_helpers/firebase_test_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class MockGoRouter extends Mock implements GoRouter {}
 
@@ -152,7 +149,7 @@ class AppRouter {
     errorBuilder: (context, state) => ErrorScreen(error: state.error),
     redirect: (context, state) {
       // Add auth redirect logic here
-      final isAuthenticated = false; // Check auth state
+      const isAuthenticated = false; // Check auth state
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       
       if (!isAuthenticated && !isAuthRoute) {
@@ -188,8 +185,8 @@ class WorkoutScreen extends StatelessWidget {
 }
 
 class WorkoutDetailScreen extends StatelessWidget {
-  final String workoutId;
   const WorkoutDetailScreen({super.key, required this.workoutId});
+  final String workoutId;
   
   @override
   Widget build(BuildContext context) {
@@ -288,8 +285,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 }
 
 class ErrorScreen extends StatelessWidget {
-  final Exception? error;
   const ErrorScreen({super.key, this.error});
+  final Exception? error;
   
   @override
   Widget build(BuildContext context) {

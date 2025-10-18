@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test
- * 🎯 Feature: buddy_matching  
- * 🔧 Type: unit test
- * 🌍 Localization: N/A - Test file
- * 🎨 Theme: N/A - Test file
- * 📱 Platform: Universal
- * 
- * Testing Italian city system for buddy matching location features
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test
+/// 🎯 Feature: buddy_matching  
+/// 🔧 Type: unit test
+/// 🌍 Localization: N/A - Test file
+/// 🎨 Theme: N/A - Test file
+/// 📱 Platform: Universal
+/// 
+/// Testing Italian city system for buddy matching location features
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';

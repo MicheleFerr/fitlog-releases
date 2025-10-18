@@ -3,11 +3,6 @@ import 'dart:math' as math;
 import 'dart:async';
 
 class AnimatedXPBar extends StatefulWidget {
-  final int currentXP;
-  final int previousXP;
-  final int xpGained;
-  final int currentLevel;
-  final VoidCallback? onAnimationComplete;
   
   const AnimatedXPBar({
     super.key,
@@ -17,6 +12,11 @@ class AnimatedXPBar extends StatefulWidget {
     required this.currentLevel,
     this.onAnimationComplete,
   });
+  final int currentXP;
+  final int previousXP;
+  final int xpGained;
+  final int currentLevel;
+  final VoidCallback? onAnimationComplete;
 
   @override
   State<AnimatedXPBar> createState() => _AnimatedXPBarState();
@@ -36,6 +36,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
   
   final List<_Particle> _particles = [];
   Timer? _particleTimer;
+  Timer? _xpCounterTimer; // MEMORY LEAK FIX: Track XP counter timer
   
   bool _didLevelUp = false;
   int _displayXP = 0;
@@ -145,12 +146,14 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
   }
   
   void _animateXPCounter() {
-    final duration = const Duration(milliseconds: 2000);
+    const duration = Duration(milliseconds: 2000);
     final stepTime = duration.inMilliseconds ~/ widget.xpGained;
     
-    Timer.periodic(Duration(milliseconds: stepTime.clamp(10, 100)), (timer) {
+    // MEMORY LEAK FIX: Store timer reference for proper disposal
+    _xpCounterTimer = Timer.periodic(Duration(milliseconds: stepTime.clamp(10, 100)), (timer) {
       if (_displayXP >= widget.currentXP) {
         timer.cancel();
+        _xpCounterTimer = null; // Clear reference when done
         return;
       }
       
@@ -201,11 +204,25 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
   
   @override
   void dispose() {
-    _progressController.dispose();
-    _glowController.dispose();
-    _particleController.dispose();
-    _levelUpController.dispose();
-    _particleTimer?.cancel();
+    // MEMORY LEAK FIX: Dispose all resources with proper error handling
+    try {
+      _progressController.dispose();
+      _glowController.dispose();
+      _particleController.dispose();
+      _levelUpController.dispose();
+      
+      // Cancel all timers
+      _particleTimer?.cancel();
+      _xpCounterTimer?.cancel(); // MEMORY LEAK FIX: Cancel XP counter timer
+      
+      // Clear references
+      _particleTimer = null;
+      _xpCounterTimer = null;
+    } catch (e) {
+      // Log error but continue disposal to prevent memory leaks
+      debugPrint('Error during AnimatedXPBar disposal: $e');
+    }
+    
     super.dispose();
   }
   
@@ -556,11 +573,6 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
 }
 
 class _Particle {
-  Offset position;
-  Offset velocity;
-  double size;
-  Color color;
-  double lifespan;
   
   _Particle({
     required this.position,
@@ -569,6 +581,11 @@ class _Particle {
     required this.color,
     required this.lifespan,
   });
+  Offset position;
+  Offset velocity;
+  double size;
+  Color color;
+  double lifespan;
   
   void update() {
     position = position + velocity;

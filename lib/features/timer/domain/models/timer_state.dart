@@ -1,15 +1,6 @@
 /// Simple timer state model for audio module compatibility
 /// Acts as an adapter between RestTimer and TimerAudioModule
 class TimerState {
-  final int remainingSeconds;
-  final int totalDurationSeconds;
-  final bool isRunning;
-  final bool isPaused;
-  final String? exerciseName;
-  final int? currentSet;
-  final int? totalSets;
-  final String? workoutId;
-  final DateTime? startTime;
 
   const TimerState({
     required this.remainingSeconds,
@@ -22,6 +13,15 @@ class TimerState {
     this.workoutId,
     this.startTime,
   });
+  final int remainingSeconds;
+  final int totalDurationSeconds;
+  final bool isRunning;
+  final bool isPaused;
+  final String? exerciseName;
+  final int? currentSet;
+  final int? totalSets;
+  final String? workoutId;
+  final DateTime? startTime;
 
   TimerState copyWith({
     int? remainingSeconds,

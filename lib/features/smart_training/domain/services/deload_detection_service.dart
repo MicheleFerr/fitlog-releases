@@ -1,5 +1,4 @@
-import '../entities/smart_training_metrics.dart';
-import '../entities/progressive_overload_analysis.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
 
 /// Service for detecting when deload periods are needed
 class DeloadDetectionService {
@@ -299,12 +298,6 @@ class DeloadDetectionService {
 
 /// Deload analysis results
 class DeloadAnalysis {
-  final bool needsDeload;
-  final double confidence;
-  final List<DeloadIndicator> indicators;
-  final DeloadType recommendedDeloadType;
-  final int estimatedDurationWeeks;
-  final String reasoning;
 
   DeloadAnalysis({
     required this.needsDeload,
@@ -314,17 +307,6 @@ class DeloadAnalysis {
     required this.estimatedDurationWeeks,
     required this.reasoning,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'needsDeload': needsDeload,
-      'confidence': confidence,
-      'indicators': indicators.map((i) => i.toJson()).toList(),
-      'recommendedDeloadType': recommendedDeloadType.name,
-      'estimatedDurationWeeks': estimatedDurationWeeks,
-      'reasoning': reasoning,
-    };
-  }
 
   factory DeloadAnalysis.fromJson(Map<String, dynamic> json) {
     return DeloadAnalysis(
@@ -340,16 +322,27 @@ class DeloadAnalysis {
       reasoning: json['reasoning'],
     );
   }
+  final bool needsDeload;
+  final double confidence;
+  final List<DeloadIndicator> indicators;
+  final DeloadType recommendedDeloadType;
+  final int estimatedDurationWeeks;
+  final String reasoning;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'needsDeload': needsDeload,
+      'confidence': confidence,
+      'indicators': indicators.map((i) => i.toJson()).toList(),
+      'recommendedDeloadType': recommendedDeloadType.name,
+      'estimatedDurationWeeks': estimatedDurationWeeks,
+      'reasoning': reasoning,
+    };
+  }
 }
 
 /// Individual deload indicator
 class DeloadIndicator {
-  final String name;
-  final double value;
-  final double threshold;
-  final double severity; // 0-1 scale
-  final double weight; // Relative importance
-  final String description;
 
   DeloadIndicator({
     required this.name,
@@ -360,17 +353,6 @@ class DeloadIndicator {
     required this.description,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'value': value,
-      'threshold': threshold,
-      'severity': severity,
-      'weight': weight,
-      'description': description,
-    };
-  }
-
   factory DeloadIndicator.fromJson(Map<String, dynamic> json) {
     return DeloadIndicator(
       name: json['name'],
@@ -380,6 +362,23 @@ class DeloadIndicator {
       weight: (json['weight'] as num).toDouble(),
       description: json['description'],
     );
+  }
+  final String name;
+  final double value;
+  final double threshold;
+  final double severity; // 0-1 scale
+  final double weight; // Relative importance
+  final String description;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'value': value,
+      'threshold': threshold,
+      'severity': severity,
+      'weight': weight,
+      'description': description,
+    };
   }
 }
 

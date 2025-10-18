@@ -19,12 +19,6 @@ class GymBroAnimations {
 
 /// Animated scale widget with haptic feedback
 class ScaleButton extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onPressed;
-  final double scaleFactor;
-  final Duration duration;
-  final bool enableHaptic;
-  final HapticFeedback? hapticType;
 
   const ScaleButton({
     super.key,
@@ -35,6 +29,12 @@ class ScaleButton extends StatefulWidget {
     this.enableHaptic = true,
     this.hapticType,
   });
+  final Widget child;
+  final VoidCallback? onPressed;
+  final double scaleFactor;
+  final Duration duration;
+  final bool enableHaptic;
+  final HapticFeedback? hapticType;
 
   @override
   State<ScaleButton> createState() => _ScaleButtonState();
@@ -102,9 +102,6 @@ class _ScaleButtonState extends State<ScaleButton>
 
 /// Slide fade transition for page routes
 class SlideFadeRoute<T> extends PageRouteBuilder<T> {
-  final Widget page;
-  final Duration duration;
-  final Offset begin;
 
   SlideFadeRoute({
     required this.page,
@@ -139,13 +136,13 @@ class SlideFadeRoute<T> extends PageRouteBuilder<T> {
             );
           },
         );
+  final Widget page;
+  final Duration duration;
+  final Offset begin;
 }
 
 /// Hero animation wrapper with automatic tag
 class HeroWrapper extends StatelessWidget {
-  final Widget child;
-  final String tag;
-  final bool enabled;
 
   const HeroWrapper({
     super.key,
@@ -153,6 +150,9 @@ class HeroWrapper extends StatelessWidget {
     required this.tag,
     this.enabled = true,
   });
+  final Widget child;
+  final String tag;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -170,10 +170,6 @@ class HeroWrapper extends StatelessWidget {
 
 /// Staggered animation list
 class StaggeredList extends StatefulWidget {
-  final List<Widget> children;
-  final Duration itemDelay;
-  final Duration animationDuration;
-  final Axis direction;
 
   const StaggeredList({
     super.key,
@@ -182,6 +178,10 @@ class StaggeredList extends StatefulWidget {
     this.animationDuration = GymBroAnimations.normal,
     this.direction = Axis.vertical,
   });
+  final List<Widget> children;
+  final Duration itemDelay;
+  final Duration animationDuration;
+  final Axis direction;
 
   @override
   State<StaggeredList> createState() => _StaggeredListState();
@@ -276,11 +276,6 @@ class _StaggeredListState extends State<StaggeredList>
 
 /// Animated counter for numbers
 class AnimatedCounter extends StatelessWidget {
-  final int value;
-  final Duration duration;
-  final TextStyle? style;
-  final String? prefix;
-  final String? suffix;
 
   const AnimatedCounter({
     super.key,
@@ -290,6 +285,11 @@ class AnimatedCounter extends StatelessWidget {
     this.prefix,
     this.suffix,
   });
+  final int value;
+  final Duration duration;
+  final TextStyle? style;
+  final String? prefix;
+  final String? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -311,11 +311,6 @@ class AnimatedCounter extends StatelessWidget {
 
 /// Pulse animation widget
 class PulseAnimation extends StatefulWidget {
-  final Widget child;
-  final Duration duration;
-  final double minScale;
-  final double maxScale;
-  final bool repeat;
 
   const PulseAnimation({
     super.key,
@@ -325,6 +320,11 @@ class PulseAnimation extends StatefulWidget {
     this.maxScale = 1.05,
     this.repeat = true,
   });
+  final Widget child;
+  final Duration duration;
+  final double minScale;
+  final double maxScale;
+  final bool repeat;
 
   @override
   State<PulseAnimation> createState() => _PulseAnimationState();

@@ -7,15 +7,15 @@ final workoutEditModeProvider = StateNotifierProvider<WorkoutEditModeNotifier, W
 });
 
 class WorkoutEditModeState {
-  final bool isEditMode;
-  final bool showSwipeHint;
-  final DateTime? lastInteraction;
 
   WorkoutEditModeState({
     this.isEditMode = false,
     this.showSwipeHint = true,
     this.lastInteraction,
   });
+  final bool isEditMode;
+  final bool showSwipeHint;
+  final DateTime? lastInteraction;
 
   WorkoutEditModeState copyWith({
     bool? isEditMode,
@@ -31,12 +31,12 @@ class WorkoutEditModeState {
 }
 
 class WorkoutEditModeNotifier extends StateNotifier<WorkoutEditModeState> {
-  Timer? _hintTimer;
-  Timer? _autoExitTimer;
 
   WorkoutEditModeNotifier() : super(WorkoutEditModeState()) {
     _startHintTimer();
   }
+  Timer? _hintTimer;
+  Timer? _autoExitTimer;
 
   @override
   void dispose() {

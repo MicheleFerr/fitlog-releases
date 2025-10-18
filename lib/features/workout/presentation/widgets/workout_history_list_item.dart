@@ -1,17 +1,16 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/widgets
- * 🎯 Feature: workout
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout
- * - shared/presentation/l10n: AppLocalizations
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/widgets
+/// 🎯 Feature: workout
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout
+/// - shared/presentation/l10n: AppLocalizations
+library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -19,11 +18,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:intl/intl.dart';
 
 class WorkoutHistoryListItem extends StatelessWidget {
-  final Workout workout;
-  final VoidCallback onEdit;
-  final VoidCallback onDuplicate;
-  final VoidCallback onDelete;
-  final VoidCallback onView;
 
   const WorkoutHistoryListItem({
     super.key,
@@ -33,11 +27,16 @@ class WorkoutHistoryListItem extends StatelessWidget {
     required this.onDelete,
     required this.onView,
   });
+  final Workout workout;
+  final VoidCallback onEdit;
+  final VoidCallback onDuplicate;
+  final VoidCallback onDelete;
+  final VoidCallback onView;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Card(
       elevation: 2,
@@ -183,7 +182,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceVariant.withValues(alpha: 0.3),
+                        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -324,7 +323,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceVariant.withValues(alpha: 0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(

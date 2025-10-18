@@ -1,25 +1,24 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: workout
- * 🔧 Type: widget
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: iOS/Android/Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: workout
+/// 🔧 Type: widget
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: iOS/Android/Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import '../providers/workout_provider.dart';
-import '../providers/workout_template_provider.dart';
-import '../../domain/entities/workout_template.dart' as wt;
-import '../screens/workout_templates_screen.dart';
-import '../screens/edit_template_screen.dart';
-import '../template_cards/template_quick_start_card.dart';
-import 'quick_start_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_cards/template_quick_start_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/quick_start_card.dart';
 
 class QuickStartList extends ConsumerWidget {
   const QuickStartList({super.key});
@@ -39,8 +38,8 @@ class QuickStartList extends ConsumerWidget {
   Widget _buildQuickWorkoutCard(BuildContext context, WidgetRef ref) {
     return QuickStartCard(
       icon: Icons.schedule,
-      title: AppLocalizations.of(context)!.quickWorkout,
-      subtitle: AppLocalizations.of(context)!.quickWorkoutSubtitle,
+      title: AppLocalizations.of(context).quickWorkout,
+      subtitle: AppLocalizations.of(context).quickWorkoutSubtitle,
       color: Theme.of(context).colorScheme.primary,
       onTap: () => _startNewWorkout(context, ref),
     );
@@ -64,7 +63,7 @@ class QuickStartList extends ConsumerWidget {
                 const SizedBox(height: 4),
                 _buildSectionHeader(
                   context,
-                  AppLocalizations.of(context)!.yourTemplates,
+                  AppLocalizations.of(context).yourTemplates,
                   Icons.person,
                   onSeeAll: () => _navigateToTemplates(context),
                 ),
@@ -95,7 +94,7 @@ class QuickStartList extends ConsumerWidget {
         const SizedBox(height: 4),
         _buildSectionHeader(
           context,
-          AppLocalizations.of(context)!.popularTemplates,
+          AppLocalizations.of(context).popularTemplates,
           null,
           onSeeAll: () => _navigateToTemplates(context),
         ),
@@ -165,7 +164,7 @@ class QuickStartList extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(AppLocalizations.of(context)!.seeAll),
+                Text(AppLocalizations.of(context).seeAll),
                 const SizedBox(width: 4),
                 const Icon(Icons.arrow_forward_ios, size: 12),
               ],
@@ -180,24 +179,24 @@ class QuickStartList extends ConsumerWidget {
       children: [
         QuickStartCard(
           icon: Icons.fitness_center,
-          title: AppLocalizations.of(context)!.upperBody,
-          subtitle: AppLocalizations.of(context)!.upperBodySubtitle,
+          title: AppLocalizations.of(context).upperBody,
+          subtitle: AppLocalizations.of(context).upperBodySubtitle,
           color: Theme.of(context).colorScheme.secondary,
           onTap: () => _startTemplateWorkout(context, ref, 'Upper Body'),
         ),
         const SizedBox(height: 12),
         QuickStartCard(
           icon: Icons.directions_run,
-          title: AppLocalizations.of(context)!.lowerBody,
-          subtitle: AppLocalizations.of(context)!.lowerBodySubtitle,
+          title: AppLocalizations.of(context).lowerBody,
+          subtitle: AppLocalizations.of(context).lowerBodySubtitle,
           color: Theme.of(context).colorScheme.tertiary,
           onTap: () => _startTemplateWorkout(context, ref, 'Lower Body'),
         ),
         const SizedBox(height: 12),
         QuickStartCard(
           icon: Icons.timer,
-          title: AppLocalizations.of(context)!.hiitTraining,
-          subtitle: AppLocalizations.of(context)!.hiitTrainingSubtitle,
+          title: AppLocalizations.of(context).hiitTraining,
+          subtitle: AppLocalizations.of(context).hiitTrainingSubtitle,
           color: Theme.of(context).colorScheme.error,
           onTap: () => _startTemplateWorkout(context, ref, 'HIIT'),
         ),
@@ -236,7 +235,7 @@ class QuickStartList extends ConsumerWidget {
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.workoutStartedFromTemplate(template.name)),
+          content: Text(AppLocalizations.of(context).workoutStartedFromTemplate(template.name)),
           backgroundColor: Theme.of(context).colorScheme.tertiary,
           duration: const Duration(seconds: 2),
         ),
@@ -244,7 +243,7 @@ class QuickStartList extends ConsumerWidget {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.errorStartingWorkout(e.toString())),
+          content: Text(AppLocalizations.of(context).errorStartingWorkout(e.toString())),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -293,12 +292,12 @@ class QuickStartList extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteTemplate),
-        content: Text(AppLocalizations.of(context)!.confirmDeleteTemplate(template.name)),
+        title: Text(AppLocalizations.of(context).deleteTemplate),
+        content: Text(AppLocalizations.of(context).confirmDeleteTemplate(template.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -309,7 +308,7 @@ class QuickStartList extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context)!.templateDeleted(template.name)),
+                      content: Text(AppLocalizations.of(context).templateDeleted(template.name)),
                       backgroundColor: Theme.of(context).colorScheme.tertiary,
                     ),
                   );
@@ -318,7 +317,7 @@ class QuickStartList extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context)!.errorDeleting(e.toString())),
+                      content: Text(AppLocalizations.of(context).errorDeleting(e.toString())),
                       backgroundColor: Theme.of(context).colorScheme.error,
                     ),
                   );
@@ -326,7 +325,7 @@ class QuickStartList extends ConsumerWidget {
               }
             },
             style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
-            child: Text(AppLocalizations.of(context)!.delete),
+            child: Text(AppLocalizations.of(context).delete),
           ),
         ],
       ),

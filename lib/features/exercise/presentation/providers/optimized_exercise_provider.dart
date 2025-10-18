@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/exercise/domain/entities/exercise_data.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Provider ottimizzato per il caricamento lazy degli esercizi
 final optimizedExerciseProviderProvider = StateNotifierProvider<OptimizedExerciseNotifier, AsyncValue<List<ExerciseData>>>((ref) {
-  return OptimizedExerciseNotifier();
+  final config = ref.watch(appConfigProvider);
+  return OptimizedExerciseNotifier(languageCode: config.languageCode);
 });
 
 /// Provider per la ricerca degli esercizi
@@ -42,27 +44,35 @@ final exercisesByCategoryProvider = Provider<Map<String, List<ExerciseData>>>((r
 });
 
 class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseData>>> {
-  OptimizedExerciseNotifier() : super(const AsyncValue.loading()) {
+  OptimizedExerciseNotifier({this.languageCode = 'en'}) : super(const AsyncValue.loading()) {
     _loadExercises();
   }
-  
+
+  final String languageCode;
+
   // Cache statica per evitare ricaricamenti multipli
   static List<ExerciseData>? _cachedExercises;
   static DateTime? _lastLoadTime;
+  static String? _cachedLanguageCode;
   static const Duration _cacheExpiry = Duration(hours: 1);
-  
+
   Future<void> _loadExercises() async {
     try {
-      // Controlla cache
-      if (_cachedExercises != null && 
+      // Controlla cache (invalida se lingua cambiata)
+      if (_cachedExercises != null &&
           _lastLoadTime != null &&
+          _cachedLanguageCode == languageCode &&
           DateTime.now().difference(_lastLoadTime!) < _cacheExpiry) {
         state = AsyncValue.data(_cachedExercises!);
         return;
       }
-      
-      // Carica JSON in modo ottimizzato
-      final jsonString = await rootBundle.loadString('assets/data/exercises.json');
+
+      // Carica JSON localizzato in modo ottimizzato
+      final jsonFile = languageCode == 'it'
+          ? 'assets/data/exercises_it.json'
+          : 'assets/data/exercises.json';
+
+      final jsonString = await rootBundle.loadString(jsonFile);
       
       // Parse JSON in background usando compute se disponibile
       final List<dynamic> jsonList = json.decode(jsonString);
@@ -86,10 +96,11 @@ class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseDa
         }
       }
       
-      // Aggiorna cache
+      // Aggiorna cache con lingua
       _cachedExercises = exercises;
       _lastLoadTime = DateTime.now();
-      
+      _cachedLanguageCode = languageCode;
+
       state = AsyncValue.data(exercises);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

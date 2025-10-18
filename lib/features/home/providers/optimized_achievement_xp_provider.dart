@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
@@ -14,6 +13,12 @@ final optimizedAchievementXPProvider = StateNotifierProvider<OptimizedAchievemen
 });
 
 class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
+  
+  OptimizedAchievementXPNotifier(this._ref) : super(const AsyncValue.loading()) {
+    _initializeWithDefaults();
+    _loadAchievements();
+    _setupOptimizedListeners();
+  }
   final Ref _ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
@@ -32,12 +37,6 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
   // Current data cache
   int _cachedWorkoutCount = 0;
   int _cachedStreak = 0;
-  
-  OptimizedAchievementXPNotifier(this._ref) : super(const AsyncValue.loading()) {
-    _initializeWithDefaults();
-    _loadAchievements();
-    _setupOptimizedListeners();
-  }
   
   void _initializeWithDefaults() {
     // Provide immediate default data to prevent loading states

@@ -19,18 +19,6 @@ enum LoadingPhase {
 
 /// State for lazy loaded analytics
 class LazyAnalyticsState {
-  final List<ExerciseActivity> activities;
-  final List<PersonalRecord> personalRecords;
-  final List<PersonalRecord> recentPRs;
-  final List<TrainingInsight> insights;
-  final VolumeProgression volumeProgression;
-  final Map<String, TrendAnalysis> exerciseTrends;
-  final MuscleGroupBalance muscleBalance;
-  final LoadingPhase currentPhase;
-  final bool isLoadingMore;
-  final bool hasMoreData;
-  final String? error;
-  final DateTime? lastFetchDate;
   
   LazyAnalyticsState({
     this.activities = const [],
@@ -49,7 +37,7 @@ class LazyAnalyticsState {
   
   factory LazyAnalyticsState.initial() {
     return LazyAnalyticsState(
-      volumeProgression: VolumeProgression(
+      volumeProgression: const VolumeProgression(
         weeklyChange: 0,
         monthlyChange: 0,
         currentWeekVolume: 0,
@@ -62,6 +50,18 @@ class LazyAnalyticsState {
       ),
     );
   }
+  final List<ExerciseActivity> activities;
+  final List<PersonalRecord> personalRecords;
+  final List<PersonalRecord> recentPRs;
+  final List<TrainingInsight> insights;
+  final VolumeProgression volumeProgression;
+  final Map<String, TrendAnalysis> exerciseTrends;
+  final MuscleGroupBalance muscleBalance;
+  final LoadingPhase currentPhase;
+  final bool isLoadingMore;
+  final bool hasMoreData;
+  final String? error;
+  final DateTime? lastFetchDate;
   
   LazyAnalyticsState copyWith({
     List<ExerciseActivity>? activities,
@@ -96,17 +96,6 @@ class LazyAnalyticsState {
 
 /// Lazy loading analytics notifier
 class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
-  final HybridExerciseActivityRepository _activityRepository;
-  final PRTracker _prTracker;
-  final String? _userId;
-  
-  // Date ranges for progressive loading
-  static const Map<LoadingPhase, Duration> _phaseRanges = {
-    LoadingPhase.initial: Duration(days: 30),
-    LoadingPhase.extended: Duration(days: 90),
-    LoadingPhase.full: Duration(days: 365),
-    LoadingPhase.complete: Duration(days: 3650), // 10 years
-  };
   
   LazyAnalyticsNotifier({
     required HybridExerciseActivityRepository activityRepository,
@@ -120,6 +109,17 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
       loadInitialData();
     }
   }
+  final HybridExerciseActivityRepository _activityRepository;
+  final PRTracker _prTracker;
+  final String? _userId;
+  
+  // Date ranges for progressive loading
+  static const Map<LoadingPhase, Duration> _phaseRanges = {
+    LoadingPhase.initial: Duration(days: 30),
+    LoadingPhase.extended: Duration(days: 90),
+    LoadingPhase.full: Duration(days: 365),
+    LoadingPhase.complete: Duration(days: 3650), // 10 years
+  };
   
   /// Load initial data (last 30 days)
   Future<void> loadInitialData() async {
@@ -135,7 +135,7 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
       
       // Load only recent activities
       final activities = await _activityRepository.getUserActivitiesInDateRange(
-        userEmail: _userId!,
+        userEmail: _userId,
         startDate: startDate,
         endDate: now,
       );
@@ -143,8 +143,8 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
       debugPrint('📊 LazyAnalytics: Loaded ${activities.length} activities from last 30 days');
       
       // Load personal records (lightweight)
-      final personalRecords = await _prTracker.getUserPRs(_userId!);
-      final recentPRs = await _prTracker.getRecentPRs(_userId!);
+      final personalRecords = await _prTracker.getUserPRs(_userId);
+      final recentPRs = await _prTracker.getRecentPRs(_userId);
       
       // Calculate analytics for loaded data
       final volumeProgression = VolumeCalculator.calculateProgression(activities);
@@ -154,7 +154,7 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
       final insights = InsightsEngine.generateInsights(
         activities: activities,
         recentPRs: recentPRs,
-        userId: _userId!,
+        userId: _userId,
       );
       
       // Calculate trends for top exercises (limit to top 5)
@@ -204,7 +204,7 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
       
       // Load additional activities
       final newActivities = await _activityRepository.getUserActivitiesInDateRange(
-        userEmail: _userId!,
+        userEmail: _userId,
         startDate: startDate,
         endDate: endDate,
       );
@@ -222,7 +222,7 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
       final insights = InsightsEngine.generateInsights(
         activities: allActivities,
         recentPRs: state.recentPRs,
-        userId: _userId!,
+        userId: _userId,
       );
       
       // Update trends (still limited to top exercises)
@@ -283,7 +283,10 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
     // Calculate trends for top exercises only
     final trends = <String, TrendAnalysis>{};
     for (final entry in topExercises) {
-      trends[entry.key] = TrendAnalyzer.analyze(entry.value);
+      trends[entry.key] = TrendAnalyzer.analyzeVolumeTrend(
+        entry.value,
+        AnalysisPeriod.month,
+      );
     }
     
     return trends;
@@ -322,9 +325,10 @@ class LazyAnalyticsNotifier extends StateNotifier<LazyAnalyticsState> {
 final lazyAnalyticsProvider = StateNotifierProvider<LazyAnalyticsNotifier, LazyAnalyticsState>((ref) {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
-  
+  final repository = ref.watch(exerciseActivityRepositoryProvider);
+
   return LazyAnalyticsNotifier(
-    activityRepository: ref.watch(exerciseActivityRepositoryProvider),
+    activityRepository: repository as HybridExerciseActivityRepository,
     prTracker: PRTracker(),
     userId: currentUser?.email,
   );

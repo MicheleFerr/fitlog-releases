@@ -1,38 +1,47 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
-import '../../domain/entities/exercise.dart';
-import '../../domain/entities/exercise_activity.dart';
-import '../../data/repositories/exercise_activity_repository.dart';
-import 'edit_set_modal.dart';
-import 'quick_edit_overlay_v2.dart';
-import 'edit_exercise_modal.dart';
-import 'rpe_selector_bottom_sheet.dart';
-import '../../../../shared/presentation/providers/app_config_provider.dart';
-import '../../../../shared/domain/entities/app_config.dart';
-import '../../../timer/presentation/providers/unified_timer_extensions.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../providers/set_duration_tracker_provider.dart';
-import 'exercise_start_button.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import 'warmup_suggestion_card.dart';
-import '../../../community/presentation/widgets/smart_suggestion_chip.dart';
-import '../../../community/presentation/providers/community_provider.dart';
-import '../../../community/presentation/providers/exercise_data_provider.dart';
-import '../../../community/domain/entities/community_contribution.dart';
-import '../../../community/presentation/widgets/animated_xp_bar.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/edit_set_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/edit_exercise_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/auto_adjustment_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_start_button.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_suggestion_card.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/widgets/smart_suggestion_chip.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/providers/exercise_data_provider.dart';
+import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/dropset_execution_modal.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/widgets/animated_xp_bar.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_gif_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_expansion_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_autocollapse_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_suggestion_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_contribution_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/contribution_success_dialog.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_advice_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 
 class ExerciseListItem extends ConsumerStatefulWidget {
-  final Exercise exercise;
-  final VoidCallback onTap;
-  final VoidCallback onDelete;
-  final VoidCallback? onEdit;
-  final VoidCallback? onReplace;
-  final Function(ExerciseSet)? onSetUpdate;
-  final Function(ExerciseSet)? onSetToggleComplete;
-  final Function(Exercise)? onExerciseUpdate;
 
   const ExerciseListItem({
     super.key,
@@ -44,7 +53,17 @@ class ExerciseListItem extends ConsumerStatefulWidget {
     this.onSetUpdate,
     this.onSetToggleComplete,
     this.onExerciseUpdate,
+    this.isReorderMode = false,
   });
+  final Exercise exercise;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onReplace;
+  final Function(ExerciseSet)? onSetUpdate;
+  final Function(ExerciseSet)? onSetToggleComplete;
+  final Function(Exercise)? onExerciseUpdate;
+  final bool isReorderMode;
 
   @override
   ConsumerState<ExerciseListItem> createState() => _ExerciseListItemState();
@@ -56,15 +75,40 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   bool _loadingHistory = false;
   bool _warmupSuggestionDismissed = false;
   bool _isEditingNotes = false;
+  // REFACTORED: _isExpanded, _hasAutoCollapsed, _userManuallyExpanded → exerciseExpansionProvider
   late TextEditingController _notesController;
   Timer? _saveDebounceTimer;
+  // REFACTORED: _autoCollapseTimer, _countdownTimer, _collapseCountdown → exerciseAutoCollapseProvider
   bool _savingNotes = false;
-  bool _showCommunitySuggestion = false;
-  String? _suggestionText;
-  ContributionType? _suggestionType;
-  String? _contextType;
+  bool _autoCollapseInProgress = false; // Local flag for protection
+  // Cache per performance
+  bool? _cachedCompletionStatus;
+  // REFACTORED: Community suggestions → exerciseSuggestionsProvider
   Map<String, dynamic>? _exerciseData;
-  
+
+  bool get isProMode => ref.read(appConfigProvider).isProMode ?? false;
+
+  // Expansion state from provider
+  ExerciseExpansionState get _expansionState =>
+      ref.watch(exerciseExpansionProvider(widget.exercise.id));
+
+  ExerciseExpansionNotifier get _expansionNotifier =>
+      ref.read(exerciseExpansionProvider(widget.exercise.id).notifier);
+
+  // Auto-collapse state from provider
+  AutoCollapseState get _autoCollapseState =>
+      ref.watch(exerciseAutoCollapseProvider(widget.exercise.id));
+
+  AutoCollapseNotifier get _autoCollapseNotifier =>
+      ref.read(exerciseAutoCollapseProvider(widget.exercise.id).notifier);
+
+  // Smart suggestions from provider
+  List<SmartSuggestion> get _suggestions =>
+      ref.watch(exerciseSuggestionsProvider(widget.exercise.id));
+
+  ExerciseSuggestionsNotifier get _suggestionsNotifier =>
+      ref.read(exerciseSuggestionsProvider(widget.exercise.id).notifier);
+
   @override
   void initState() {
     super.initState();
@@ -85,10 +129,62 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
   
   @override
+  void didUpdateWidget(ExerciseListItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Check if auto-collapse should be triggered after widget update
+    final config = ref.read(appConfigProvider);
+    if (config.autoCollapseCompleted ?? false) {
+      // Calculate completion status for old and new widget
+      final wasCompleted = oldWidget.exercise.sets.isNotEmpty &&
+                          oldWidget.exercise.sets.every((set) => set.isCompleted);
+      final isNowCompleted = widget.exercise.sets.isNotEmpty &&
+                            widget.exercise.sets.every((set) => set.isCompleted);
+
+      if (kDebugMode) {
+        debugPrint('🔄 WIDGET UPDATE - wasCompleted=$wasCompleted, isNowCompleted=$isNowCompleted, isExpanded=${_expansionState.isExpanded}, hasAutoCollapsed=${_expansionState.hasAutoCollapsed}, userManuallyExpanded=${_expansionState.userManuallyExpanded}');
+      }
+
+      // Reset flags if exercise becomes incomplete again (user started working on it)
+      if (wasCompleted && !isNowCompleted) {
+        if (kDebugMode) {
+          debugPrint('🔄 EXERCISE INCOMPLETE AGAIN - Resetting autocollapse flags for ${widget.exercise.name}');
+        }
+        // REFACTORED: Use provider instead of setState
+        _expansionNotifier.resetForIncomplete();
+      }
+
+      // Trigger auto-collapse if:
+      // - Exercise just became complete (!wasCompleted && isNowCompleted)
+      // - Card is currently expanded (_expansionState.isExpanded)
+      // - Not already in progress (!_autoCollapseInProgress)
+      // - Hasn't auto-collapsed before (!_expansionState.hasAutoCollapsed)
+      // - User hasn't manually expanded (!_expansionState.userManuallyExpanded)
+      if (!wasCompleted && isNowCompleted && _expansionState.isExpanded && !_autoCollapseInProgress &&
+          !_expansionState.hasAutoCollapsed && !_expansionState.userManuallyExpanded) {
+        if (kDebugMode) {
+          debugPrint('✅ AUTO-COLLAPSE TRIGGERED via didUpdateWidget for ${widget.exercise.name}');
+        }
+        _autoCollapseIfCompleted();
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _notesController.removeListener(_onNotesChanged);
     _notesController.dispose();
+
+    // Cleanup timer (notes debounce)
     _saveDebounceTimer?.cancel();
+
+    // REFACTORED: autocollapse timers now managed by provider
+
+    // Reset local flags
+    _autoCollapseInProgress = false;
+    // REFACTORED: expansion state and countdown now managed by providers
+    _cachedCompletionStatus = null;
+
     super.dispose();
   }
 
@@ -127,27 +223,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       });
       
       // Show success feedback
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: Colors.white,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text('Note salvate'),
-            ],
-          ),
-          duration: const Duration(seconds: 1),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${context.l10n.notesSavedMessage}',
       );
     }
   }
@@ -156,7 +234,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     setState(() {
       _isEditingNotes = !_isEditingNotes;
     });
-    
+
     if (_isEditingNotes) {
       HapticFeedback.lightImpact();
       // Focus on text field will be handled by autofocus
@@ -168,10 +246,147 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     }
   }
 
+  bool _areAllSetsCompleted() {
+    // Sempre invalida cache per evitare problemi di timing
+    _cachedCompletionStatus = null;
+
+    // Calcola il risultato fresco
+    if (widget.exercise.sets.isEmpty) {
+      _cachedCompletionStatus = false;
+    } else {
+      _cachedCompletionStatus = widget.exercise.sets.every((set) => set.isCompleted);
+    }
+
+    if (kDebugMode) {
+      debugPrint('🔍 _areAllSetsCompleted: ${widget.exercise.name} = $_cachedCompletionStatus (${widget.exercise.sets.length} sets, ${widget.exercise.sets.where((s) => s.isCompleted).length} completed)');
+    }
+    return _cachedCompletionStatus!;
+  }
+
+  void _autoCollapseIfCompleted() {
+    if (kDebugMode) {
+      debugPrint('🔍 AUTO-COLLAPSE CHECK: allCompleted=${_areAllSetsCompleted()}, isExpanded=${_expansionState.isExpanded}, inProgress=$_autoCollapseInProgress, hasAutoCollapsed=${_expansionState.hasAutoCollapsed}, userManuallyExpanded=${_expansionState.userManuallyExpanded}');
+    }
+    try {
+      // Don't autocollapse if:
+      // - Already collapsed
+      // - Already in progress
+      // - Already auto-collapsed before
+      // - User manually expanded
+      if (_areAllSetsCompleted() && _expansionState.isExpanded && !_autoCollapseInProgress &&
+          !_expansionState.hasAutoCollapsed && !_expansionState.userManuallyExpanded) {
+        if (kDebugMode) {
+          debugPrint('✅ AUTO-COLLAPSE TRIGGERED for ${widget.exercise.name}');
+        }
+
+        // Previene chiamate multiple
+        _autoCollapseInProgress = true;
+
+        // Delay ottimizzato - 1.5 secondi per utenti Base, 2.5 per Pro
+        final config = ref.read(appConfigProvider);
+        final delay = (config.simplifiedAnimations ?? false)
+            ? const Duration(milliseconds: 1500)
+            : const Duration(milliseconds: 2500);
+
+        // Countdown duration
+        final countdownDuration = (config.simplifiedAnimations ?? false) ? 2 : 3;
+
+        // Show countdown?
+        final showCountdown = config.showCollapseCountdown ?? (config.isProMode ?? false);
+
+        // REFACTORED: Use provider for autocollapse timer management
+        _autoCollapseNotifier.startAutoCollapse(
+          initialDelay: delay,
+          countdownSeconds: countdownDuration,
+          showCountdown: showCountdown,
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error inizializzazione auto-collasso: $e');
+      }
+      _autoCollapseInProgress = false;
+    }
+  }
+
+  void _performCollapse() {
+    try {
+      if (mounted && _areAllSetsCompleted()) {
+        // REFACTORED: Use provider to mark as auto-collapsed
+        _expansionNotifier.markAutoCollapsed();
+
+        _showCompletionFeedback();
+      }
+    } catch (e) {
+      debugPrint('Error durante collasso: $e');
+    } finally {
+      _autoCollapseInProgress = false; // Reset protezione sempre
+      // hasAutoCollapsed remains true in provider to prevent re-triggering
+    }
+  }
+
+  void _showCompletionFeedback() {
+    try {
+      SnackBarService.showCustom(
+        context,
+        message: '✅ ${context.l10n.exerciseCompletedTapToExpand(widget.exercise.name)}',
+        backgroundColor: Colors.green,
+        actionLabel: context.l10n.expandLabel,
+        onAction: () {
+          // REFACTORED: Use provider to expand
+          _expansionNotifier.expand();
+
+          if (kDebugMode) {
+            debugPrint('👆 USER MANUALLY EXPANDED via Snackbar for ${widget.exercise.name}');
+          }
+        },
+      );
+    } catch (e) {
+      debugPrint('Error mostrando feedback: $e');
+    }
+  }
+
+  void _cancelAutoCollapse() {
+    try {
+      // REFACTORED: Cancel via provider
+      _autoCollapseNotifier.cancel();
+      _autoCollapseInProgress = false; // Reset protezione
+
+      if (mounted) {
+        HapticFeedback.lightImpact();
+      }
+    } catch (e) {
+      debugPrint('Error cancellando auto-collasso: $e');
+    }
+  }
+
   Future<void> _loadLastActivity() async {
+    try {
+      // NEW: Use workouts collection instead of exerciseActivities
+      final service = ref.read(workoutHistoryServiceProvider);
+      final activity = await service.getLastActivityByExercise(
+        exerciseName: widget.exercise.name,
+      );
+
+      if (mounted && activity != null) {
+        setState(() {
+          _lastActivity = activity;
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Errore caricamento ultimo peso: $e');
+      }
+      // Fallback: prova con il vecchio metodo se il nuovo fallisce
+      await _loadLastActivityFallback();
+    }
+  }
+
+  /// Fallback method using old exerciseActivities collection
+  Future<void> _loadLastActivityFallback() async {
     final authService = ref.read(authServiceProvider);
     final currentUser = authService.currentUser;
-    
+
     if (currentUser?.email != null) {
       final repository = ExerciseActivityRepository();
       final activities = await repository.getActivitiesByExercise(
@@ -179,7 +394,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         exerciseName: widget.exercise.name,
         limit: 1,
       );
-      
+
       if (mounted && activities.isNotEmpty) {
         setState(() {
           _lastActivity = activities.first;
@@ -188,71 +403,135 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     }
   }
   
-  void _checkForCommunitySuggestions() {
-    // Check various conditions that might warrant a suggestion
-    
-    // 1. Exercise has no notes but community has popular tips
-    if (widget.exercise.notes?.isEmpty ?? true) {
-      setState(() {
-        _suggestionText = '💡 Tips disponibili dalla community';
-        _suggestionType = ContributionType.tip;
-        _showCommunitySuggestion = true;
-      });
-      return;
-    }
-    
-    // 2. Check if weight jumps are unusual
-    if (widget.exercise.sets.length > 1) {
-      final weights = widget.exercise.sets
-          .map((s) => s.weight)
-          .where((w) => w != null)
-          .cast<double>()
-          .toList();
-      
-      if (weights.isNotEmpty && weights.length > 1) {
-        final maxWeight = weights.reduce((a, b) => a > b ? a : b);
-        final minWeight = weights.reduce((a, b) => a < b ? a : b);
-        
-        if (maxWeight > 0 && minWeight > 0 && maxWeight > minWeight * 2) {
-          setState(() {
-            _suggestionText = '⚠️ Grande differenza di peso tra le serie';
-            _suggestionType = ContributionType.warning;
-            _showCommunitySuggestion = true;
-          });
-          return;
-        }
+  Future<void> _checkForCommunitySuggestions() async {
+    // REFACTORED: Use smart suggestion provider instead of hardcoded setState logic
+
+    // Build suggestion context
+    final weights = widget.exercise.sets
+        .map((s) => s.weight)
+        .whereType<double>()
+        .toList();
+
+    final minWeight = weights.isNotEmpty
+        ? weights.reduce((a, b) => a < b ? a : b)
+        : null;
+    final maxWeight = weights.isNotEmpty
+        ? weights.reduce((a, b) => a > b ? a : b)
+        : null;
+
+    final completedSets = widget.exercise.sets.where((s) => s.isCompleted).length;
+
+    // Calculate total volume (weight × reps for completed sets)
+    double totalVolume = 0;
+    for (final set in widget.exercise.sets) {
+      if (set.isCompleted && set.weight != null && set.reps != null) {
+        totalVolume += (set.weight! * set.reps!);
       }
     }
-    
-    // 3. First time doing this exercise (no history)
-    if (_lastActivity == null && widget.exercise.sets.isNotEmpty) {
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) {
-          setState(() {
-            _suggestionText = '🌟 Prima volta? Vedi consigli community';
-            _suggestionType = ContributionType.tip;
-            _showCommunitySuggestion = true;
-          });
-        }
-      });
+
+    // Get exercise history count
+    int exerciseHistoryCount = 0;
+    try {
+      final historyAsync = ref.read(
+        recentWeightsWithDetailsProvider(widget.exercise.name),
+      );
+      final history = historyAsync.value;
+      exerciseHistoryCount = history?.length ?? 0;
+    } catch (e) {
+      // If error fetching history, default to 0
+      exerciseHistoryCount = 0;
     }
+
+    // Get existing contributions
+    final contributionsAsync = ref.read(exerciseContributionsProvider(widget.exercise.name));
+    final contributions = contributionsAsync.value ?? [];
+
+    // Get user level
+    final userLevel = ref.read(userLevelProvider);
+
+    // Get user stats
+    final userStatsAsync = ref.read(userContributionStatsProvider);
+    final userStats = userStatsAsync.value;
+
+    // Get current workout info for timing
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    final workoutExercises = currentWorkout?.exercises ?? [];
+    final currentIndex = workoutExercises.indexWhere((e) => e.id == widget.exercise.id);
+    final isLastExercise = currentIndex == workoutExercises.length - 1;
+
+    // Get user account info
+    final user = ref.read(firebaseUserProvider).asData?.value;
+    final accountAgeInDays = user?.metadata.creationTime != null
+        ? DateTime.now().difference(user!.metadata.creationTime!).inDays
+        : 0;
+
+    // TODO: Implement proper workout tracking providers:
+    // - WorkoutHistoryProvider for totalWorkoutsCompleted, averageWorkoutVolume
+    // - ExerciseVarietyProvider for uniqueExercisesCount
+    // - WorkoutFrequencyProvider for workoutsPerWeek
+    // For now, use smart placeholder values based on available data
+
+    final totalWorkoutsCompleted = accountAgeInDays ~/ 3; // Rough estimate: 1 workout every 3 days
+    final workoutStartTime = currentWorkout?.startTime;
+
+    // Estimate average volume from current workout (placeholder)
+    // A better implementation would query last 5 workouts from Firestore
+    final averageWorkoutVolume = totalVolume > 0 ? totalVolume : 2000.0;
+
+    // Estimate exercise variety from exercise history count
+    // A better implementation would count distinct exercise names from Firestore
+    final uniqueExercisesCount = exerciseHistoryCount > 0 ? exerciseHistoryCount : 5;
+
+    // Estimate workout frequency from account age and total workouts
+    // A better implementation would query workouts in last 28 days
+    final workoutsPerWeek = accountAgeInDays > 0
+        ? (totalWorkoutsCompleted * 7.0) / accountAgeInDays
+        : 2.0;
+
+    final context = SuggestionContext(
+      exercise: widget.exercise,
+      exerciseData: _exerciseData,
+      hasNotes: widget.exercise.notes?.isNotEmpty ?? false,
+      isFirstTime: _lastActivity == null,
+      completedSets: completedSets,
+      totalSets: widget.exercise.sets.length,
+      minWeight: minWeight,
+      maxWeight: maxWeight,
+      existingContributions: contributions,
+      userLevel: userLevel,
+      userContributionCount: userStats?.totalContributions ?? 0,
+      exerciseHistoryCount: exerciseHistoryCount,
+      totalVolume: totalVolume,
+      totalWorkoutsCompleted: totalWorkoutsCompleted,
+      accountAgeInDays: accountAgeInDays,
+      workoutStartTime: workoutStartTime,
+      isLastExerciseInWorkout: isLastExercise,
+      currentExerciseIndex: currentIndex >= 0 ? currentIndex : 0,
+      totalExercisesInWorkout: workoutExercises.length,
+      averageWorkoutVolume: averageWorkoutVolume,
+      uniqueExercisesCount: uniqueExercisesCount,
+      workoutsPerWeek: workoutsPerWeek,
+    );
+
+    // Generate suggestions using provider
+    await _suggestionsNotifier.generateSuggestions(context);
   }
   
-  void _handleCommunitySuggestionTap() {
-    // Open contribution modal
-    _showContributionModal();
+  void _handleCommunitySuggestionTap(SmartSuggestion suggestion) {
+    // REFACTORED: Pass selected suggestion to modal
+    _showContributionModal(suggestion);
   }
-  
-  void _showContributionModal() {
+
+  void _showContributionModal(SmartSuggestion suggestion) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _CommunityContributionModal(
+      builder: (context) => CommunityContributionModal(
         exercise: widget.exercise,
-        suggestionType: _suggestionType ?? ContributionType.tip,
-        initialSuggestion: _suggestionText,
-        contextType: _contextType,
+        suggestionType: suggestion.type,
+        initialSuggestion: suggestion.text,
+        contextType: suggestion.contextType,
         exerciseData: _exerciseData,
       ),
     );
@@ -260,11 +539,55 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   
   @override
   Widget build(BuildContext context) {
+    // Listen for autocollapse signals from provider
+    ref.listen<AutoCollapseState>(
+      exerciseAutoCollapseProvider(widget.exercise.id),
+      (previous, next) {
+        if (next.shouldExecuteCollapse && (previous == null || !previous.shouldExecuteCollapse)) {
+          // Collapse was signaled by provider
+          _performCollapse();
+          _autoCollapseNotifier.acknowledgeCollapse();
+        }
+      },
+    );
+
     final config = ref.watch(appConfigProvider);
+    final isCompleted = _areAllSetsCompleted();
+    final isProMode = config.isProMode ?? false;
+
     return Card(
       elevation: 2,
+      color: isCompleted && !_expansionState.isExpanded
+          ? Colors.green.withOpacity(0.05)
+          : null,
       child: InkWell(
-        onTap: widget.onTap,
+        onTap: widget.isReorderMode
+            ? null // Disable tap in reorder mode
+            : !_expansionState.isExpanded
+                ? () {
+                    // EXPAND: Card is collapsed, expand it
+                    _cancelAutoCollapse();
+
+                    // REFACTORED: Use provider to expand
+                    _expansionNotifier.expand();
+                    HapticFeedback.lightImpact();
+
+                    if (kDebugMode) {
+                      debugPrint('👆 USER MANUALLY EXPANDED ${widget.exercise.name}');
+                    }
+                  }
+                : (isCompleted
+                    ? () {
+                        // COLLAPSE: Card is expanded and exercise is complete, allow manual collapse
+                        // REFACTORED: Use provider to collapse
+                        _expansionNotifier.collapse();
+                        HapticFeedback.lightImpact();
+
+                        if (kDebugMode) {
+                          debugPrint('👇 USER MANUALLY COLLAPSED ${widget.exercise.name}');
+                        }
+                      }
+                    : widget.onTap), // EDIT: Card is expanded but exercise not complete, allow editing
         onLongPress: () => _showExerciseOptions(context),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -281,85 +604,216 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.exercise.name,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            // Rest timer indicator (tappable)
-                            const SizedBox(width: 8),
-                            InkWell(
-                              onTap: () => _showQuickTimerSettings(context),
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: widget.exercise.restTime != null
-                                      ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5)
-                                      : Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: widget.exercise.restTime != null
-                                        ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
-                                        : Colors.transparent,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      widget.exercise.restTime != null 
-                                          ? Icons.timer_outlined
-                                          : Icons.timer_off_outlined,
-                                      size: 14,
-                                      color: widget.exercise.restTime != null
-                                          ? Theme.of(context).colorScheme.primary
-                                          : Theme.of(context).colorScheme.onSurfaceVariant,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      widget.exercise.restTime != null
-                                          ? _formatRestTime(widget.exercise.restTime!)
-                                          : 'Default',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: widget.exercise.restTime != null 
-                                            ? FontWeight.w600 
-                                            : FontWeight.w500,
-                                        color: widget.exercise.restTime != null
-                                            ? Theme.of(context).colorScheme.primary
-                                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        // Nome esercizio - full width
+                        Text(
+                          widget.exercise.name,
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        // Spacing tra nome e badge
+                        const SizedBox(height: 6),
+                        // Badge row (APRE, Timer, Countdown) - Horizontally scrollable
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // APRE badge indicator (tappable)
+                              if (widget.exercise.autoAdjustmentType == AutoAdjustmentType.apre &&
+                                  (config.enableApre ?? false)) ...[
+                                InkWell(
+                                  onTap: () => _showAutoAdjustmentModal(context),
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepPurple.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: Colors.deepPurple.withOpacity(0.4),
+                                        width: 1,
                                       ),
                                     ),
-                                    const SizedBox(width: 2),
-                                    Icon(
-                                      Icons.edit,
-                                      size: 10,
-                                      color: widget.exercise.restTime != null
-                                          ? Theme.of(context).colorScheme.primary.withOpacity(0.7)
-                                          : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.7),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(
+                                          Icons.auto_awesome,
+                                          size: 14,
+                                          color: Colors.deepPurple,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          'APRE ${widget.exercise.apreProtocol ?? 6}',
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.deepPurple,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
+                                const SizedBox(width: 8),
+                              ],
+                              // Rest timer indicator (tappable) - conditional on showCustomTimers
+                              if (config.showCustomTimers ?? isProMode) ...[
+                                InkWell(
+                                  onTap: () => _showQuickTimerSettings(context),
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: widget.exercise.restTime != null
+                                          ? context.colors.primaryContainer.withOpacity(0.5)
+                                          : context.colors.surfaceContainerHighest.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: widget.exercise.restTime != null
+                                            ? context.colors.primary.withOpacity(0.3)
+                                            : Colors.transparent,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          widget.exercise.restTime != null
+                                              ? Icons.timer_outlined
+                                              : Icons.timer_off_outlined,
+                                          size: 14,
+                                          color: widget.exercise.restTime != null
+                                              ? context.colors.primary
+                                              : context.colors.onSurfaceVariant,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          widget.exercise.restTime != null
+                                              ? _formatRestTime(widget.exercise.restTime!)
+                                              : 'Default',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                            color: widget.exercise.restTime != null
+                                                ? context.colors.primary
+                                                : context.colors.onSurfaceVariant,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 2),
+                                        Icon(
+                                          Icons.edit,
+                                          size: 10,
+                                          color: widget.exercise.restTime != null
+                                              ? context.colors.primary.withOpacity(0.7)
+                                              : context.colors.onSurfaceVariant.withOpacity(0.7),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              // Countdown visuale per auto-collasso - conditional on showCollapseCountdown
+                              // REFACTORED: countdown now from provider
+                              if (_autoCollapseState.countdown > 0 && (config.showCollapseCountdown ?? isProMode)) ...[
+                                InkWell(
+                                  onTap: _cancelAutoCollapse,
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: context.colors.tertiaryContainer,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: context.colors.tertiary.withOpacity(0.4),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.unfold_less,
+                                          size: 14,
+                                          color: context.colors.tertiary,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '${_autoCollapseState.countdown}',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                            color: context.colors.tertiary,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 2),
+                                        Icon(
+                                          Icons.close,
+                                          size: 10,
+                                          color: context.colors.tertiary.withOpacity(0.7),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              // TUT chip - moved here
+                              if (config.showTutInfo ?? isProMode) ...[
+                                _buildTutChip(context),
+                                const SizedBox(width: 8),
+                              ],
+                              // Quick Info icon
+                              if (config.showQuickInfoIcon ?? isProMode) ...[
+                                _buildQuickActionIcon(
+                                  context: context,
+                                  icon: Icons.info_outline,
+                                  color: Colors.blue,
+                                  onTap: () async {
+                                    final data = await _loadExerciseDataFromJson();
+                                    if (data != null && mounted) {
+                                      _showExerciseInfoModal(context, data);
+                                    }
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              // Warmup icon
+                              if (config.showWarmupIcon ?? isProMode) ...[
+                                _buildQuickActionIcon(
+                                  context: context,
+                                  icon: Icons.whatshot,
+                                  color: Colors.orange,
+                                  onTap: () async {
+                                    final data = await _loadExerciseDataFromJson();
+                                    if (data != null && _hasWarmupData(data) && mounted) {
+                                      _showWarmupModal(context, data);
+                                    }
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              // Prevention icon
+                              if (config.showPreventionIcon ?? isProMode) ...[
+                                _buildQuickActionIcon(
+                                  context: context,
+                                  icon: Icons.shield_outlined,
+                                  color: Colors.green,
+                                  onTap: () async {
+                                    final data = await _loadExerciseDataFromJson();
+                                    if (data != null && _hasInjuryPreventionData(data) && mounted) {
+                                      _showInjuryPreventionModal(context, data);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 2),
-                        Row(
-                          children: [
-                            _buildCategoryChip(context),
-                            const SizedBox(width: 8),
-                            _buildTypeChip(context),
-                          ],
-                        ),
-                        if (_lastActivity != null) ...[
+                        // Insight chip - conditional on showExerciseInsights
+                        if (_lastActivity != null && (config.showExerciseInsights ?? isProMode)) ...[
                           const SizedBox(height: 4),
                           _buildInsightChip(context),
                         ],
@@ -369,6 +823,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   PopupMenuButton<String>(
                     onSelected: (value) {
                       switch (value) {
+                        case 'auto_adjustment':
+                          _showAutoAdjustmentModal(context);
+                          break;
                         case 'edit':
                           _showExerciseEditor(context);
                           break;
@@ -381,58 +838,136 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         case 'insight':
                           _showExerciseHistory(context);
                           break;
+                        case 'community_advice':
+                          _showCommunityAdvice(context);
+                          break;
                       }
                     },
-                    itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit, size: 20),
-                            SizedBox(width: 8),
-                            Text('Edit'),
-                          ],
+                    itemBuilder: (context) {
+                      final showAdvanced = config.showAdvancedMenu ?? isProMode;
+                      final showCommunity = config.showCommunitySuggestions ?? isProMode;
+                      final showInsights = config.showExerciseInsights ?? isProMode;
+
+                      return [
+                        // Auto Adjustment - always shown
+                        PopupMenuItem(
+                          value: 'auto_adjustment',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.auto_awesome,
+                                size: 20,
+                                color: widget.exercise.autoAdjustmentType != null
+                                    ? context.colors.primary
+                                    : null,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                context.l10n.autoAdjustment,
+                                style: widget.exercise.autoAdjustmentType != null
+                                    ? TextStyle(
+                                        color: context.colors.primary,
+                                        fontWeight: FontWeight.w600,
+                                      )
+                                    : null,
+                              ),
+                              if (widget.exercise.autoAdjustmentType != null) ...[
+                                const Spacer(),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: context.colors.primaryContainer,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    widget.exercise.autoAdjustmentType == AutoAdjustmentType.apre
+                                        ? 'APRE'
+                                        : 'RPE',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: context.colors.onPrimaryContainer,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const PopupMenuItem(
-                        value: 'duplicate',
-                        child: Row(
-                          children: [
-                            Icon(Icons.copy, size: 20),
-                            SizedBox(width: 8),
-                            Text('Duplicate'),
-                          ],
+                        const PopupMenuDivider(),
+
+                        // Basic items always shown
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Row(
+                            children: [
+                              Icon(Icons.delete, size: 20, color: Colors.red),
+                              SizedBox(width: 8),
+                              Text('Delete', style: TextStyle(color: Colors.red)),
+                            ],
+                          ),
                         ),
-                      ),
-                      const PopupMenuItem(
-                        value: 'insight',
-                        child: Row(
-                          children: [
-                            Icon(Icons.insights, size: 20),
-                            SizedBox(width: 8),
-                            Text('Insight'),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuDivider(),
-                      const PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete, size: 20, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Delete', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
-                      ),
-                    ],
+
+                        // Advanced options - conditional
+                        if (showAdvanced) ...[
+                          const PopupMenuDivider(),
+                          const PopupMenuItem(
+                            value: 'edit',
+                            child: Row(
+                              children: [
+                                Icon(Icons.edit, size: 20),
+                                SizedBox(width: 8),
+                                Text('Edit'),
+                              ],
+                            ),
+                          ),
+                          const PopupMenuItem(
+                            value: 'duplicate',
+                            child: Row(
+                              children: [
+                                Icon(Icons.copy, size: 20),
+                                SizedBox(width: 8),
+                                Text('Duplicate'),
+                              ],
+                            ),
+                          ),
+                        ],
+
+                        // Insights - conditional
+                        if (showInsights && showAdvanced)
+                          const PopupMenuItem(
+                            value: 'insight',
+                            child: Row(
+                              children: [
+                                Icon(Icons.insights, size: 20),
+                                SizedBox(width: 8),
+                                Text('Insight'),
+                              ],
+                            ),
+                          ),
+
+                        // Community advice - conditional
+                        if (showCommunity && showAdvanced)
+                          PopupMenuItem(
+                            value: 'community_advice',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.lightbulb_outline, size: 20),
+                                const SizedBox(width: 8),
+                                Text(context.l10n.communityAdvice),
+                              ],
+                            ),
+                          ),
+                      ];
+                    },
                   ),
                 ],
               ),
               
-              // Notes section - always visible for editing
-              const SizedBox(height: 8),
-              GestureDetector(
+              // Notes section - conditional on showExerciseNotes
+              if (config.showExerciseNotes ?? isProMode) ...[
+                const SizedBox(height: 8),
+                GestureDetector(
                 onTap: _toggleNotesEdit,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
@@ -440,12 +975,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: EdgeInsets.all(_isEditingNotes ? 12 : 8),
                   decoration: BoxDecoration(
                     color: _isEditingNotes 
-                      ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
-                      : Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                      ? context.colors.primaryContainer.withOpacity(0.3)
+                      : context.colors.surfaceContainerHighest.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: _isEditingNotes 
-                        ? Theme.of(context).colorScheme.primary
+                        ? context.colors.primary
                         : Colors.transparent,
                       width: _isEditingNotes ? 2 : 0,
                     ),
@@ -459,8 +994,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           _isEditingNotes ? Icons.edit : Icons.note,
                           size: 16,
                           color: _isEditingNotes 
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                            ? context.colors.primary
+                            : context.colors.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -473,8 +1008,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 controller: _notesController,
                                 autofocus: true,
                                 maxLines: null,
-                                style: Theme.of(context).textTheme.bodySmall,
-                                decoration: InputDecoration(
+                                style: context.textTheme.bodySmall,
+                                decoration: const InputDecoration(
                                   hintText: 'Aggiungi note...',
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.zero,
@@ -487,10 +1022,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 widget.exercise.notes?.isNotEmpty == true 
                                   ? widget.exercise.notes!
                                   : 'Tocca per aggiungere note',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: context.textTheme.bodySmall?.copyWith(
                                   color: widget.exercise.notes?.isNotEmpty == true
-                                    ? Theme.of(context).colorScheme.onSurfaceVariant
-                                    : Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+                                    ? context.colors.onSurfaceVariant
+                                    : context.colors.onSurfaceVariant.withOpacity(0.5),
                                   fontStyle: widget.exercise.notes?.isNotEmpty == true
                                     ? FontStyle.normal
                                     : FontStyle.italic,
@@ -505,7 +1040,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).colorScheme.primary,
+                              context.colors.primary,
                             ),
                           ),
                         ),
@@ -513,11 +1048,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ),
               ),
-              
+              ],
+
               const SizedBox(height: 12),
-              
+
               // Start button for first set duration tracking
-              if (!_exerciseStarted && widget.exercise.sets.isNotEmpty)
+              if ((config.setDurationTracking ?? false) &&
+                  !_exerciseStarted &&
+                  widget.exercise.sets.isNotEmpty &&
+                  widget.exercise.sets.where((s) => s.isCompleted).isEmpty)
                 ExerciseStartButton(
                   exerciseId: widget.exercise.id,
                   exerciseName: widget.exercise.name,
@@ -526,9 +1065,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       _exerciseStarted = true;
                     });
                   },
-                  isFirstSet: widget.exercise.sets.where((s) => s.isCompleted).isEmpty,
+                  isFirstSet: true,
                 ),
-              
+
               // Warmup suggestion (smart display logic)
               if (_shouldShowWarmupSuggestion())
                 WarmupSuggestionCard(
@@ -541,25 +1080,87 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   },
                 ),
               
-              // Community suggestion chip
-              if (_showCommunitySuggestion && _suggestionText != null)
-                Padding(
+              // REFACTORED: Smart suggestion chips from provider (top 3, priority-sorted)
+              if (_suggestions.isNotEmpty &&
+                  (config.showCommunitySuggestions ?? isProMode))
+                ..._suggestions.map((suggestion) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: SmartSuggestionChip(
-                    suggestion: _suggestionText!,
-                    icon: _getSuggestionIcon(),
-                    onTap: _handleCommunitySuggestionTap,
+                    suggestion: suggestion.text,
+                    icon: _getSuggestionIcon(suggestion.type),
+                    onTap: () => _handleCommunitySuggestionTap(suggestion),
                     onDismiss: () {
-                      setState(() {
-                        _showCommunitySuggestion = false;
-                      });
+                      _suggestionsNotifier.dismissSuggestion(suggestion.id);
                     },
-                    displayDuration: const Duration(seconds: 7),
+                    displayDuration: const Duration(seconds: 8), // Increased from 7
+                  ),
+                )),
+
+              // Sets display - hidden when collapsed, completed, or in reorder mode
+              if (widget.isReorderMode)
+                // Reorder mode: Show compact view with set count
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.fitness_center,
+                        color: context.colors.onSurfaceVariant,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${widget.exercise.sets.length} ${widget.exercise.sets.length == 1 ? 'set' : 'sets'}',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (widget.exercise.sets.where((s) => s.isCompleted).isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          '• ${widget.exercise.sets.where((s) => s.isCompleted).length}/${widget.exercise.sets.length} completati',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: Colors.green,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                )
+              else if (_expansionState.isExpanded || !isCompleted)
+                _buildSetsSection(context, config)
+              else
+                // Show compact summary when collapsed
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${widget.exercise.sets.where((s) => s.isCompleted).length} sets completati',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        'Tocca per espandere',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              
-              // Sets display
-              _buildSetsSection(context, config),
             ],
           ),
         ),
@@ -568,25 +1169,70 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   Widget _buildExerciseTypeIcon(BuildContext context) {
+    final colorScheme = context.colors;
+
+    // Per esercizi di tipo single, usa la GIF animata
+    if (widget.exercise.type == ExerciseType.single) {
+      final gifUrlAsync = ref.watch(exerciseGifUrlProvider(widget.exercise.name));
+
+      return gifUrlAsync.when(
+        data: (gifUrl) => ExerciseGifWidget(
+          gifUrl: gifUrl,
+          exerciseName: widget.exercise.name,
+          backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+          iconColor: colorScheme.primary,
+        ),
+        loading: () => Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+              ),
+            ),
+          ),
+        ),
+        error: (_, __) => Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.fitness_center, color: colorScheme.primary, size: 20),
+        ),
+      );
+    }
+
+    // Per altri tipi di esercizio, usa le icone tradizionali
     IconData icon;
     Color color;
 
     switch (widget.exercise.type) {
-      case ExerciseType.single:
-        icon = Icons.fitness_center;
-        color = Theme.of(context).colorScheme.primary;
-        break;
       case ExerciseType.superset:
         icon = Icons.repeat;
-        color = Theme.of(context).colorScheme.secondary;  
+        color = colorScheme.secondary;
         break;
       case ExerciseType.dropset:
         icon = Icons.trending_down;
-        color = Theme.of(context).colorScheme.tertiary;
+        color = colorScheme.tertiary;
         break;
       case ExerciseType.restPause:
         icon = Icons.pause_circle;
-        color = Theme.of(context).colorScheme.error;
+        color = colorScheme.error;
+        break;
+      case ExerciseType.single:
+      default:
+        icon = Icons.fitness_center;
+        color = colorScheme.primary;
         break;
     }
 
@@ -594,15 +1240,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(icon, color: color, size: 20),
     );
   }
 
-  IconData _getSuggestionIcon() {
-    switch (_suggestionType) {
+  IconData _getSuggestionIcon(ContributionType type) {
+    switch (type) {
       case ContributionType.tip:
         return Icons.lightbulb_outline;
       case ContributionType.warning:
@@ -620,15 +1266,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         widget.exercise.category.name.toUpperCase(),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+        style: context.textTheme.labelSmall?.copyWith(
           fontSize: 10,
           fontWeight: FontWeight.w500,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          color: context.colors.onSurfaceVariant,
         ),
       ),
     );
@@ -638,16 +1284,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     Color color;
     switch (widget.exercise.type) {
       case ExerciseType.single:
-        color = Theme.of(context).colorScheme.primary;
+        color = context.colors.primary;
         break;
       case ExerciseType.superset:
-        color = Theme.of(context).colorScheme.secondary;  
+        color = context.colors.secondary;  
         break;
       case ExerciseType.dropset:
-        color = Theme.of(context).colorScheme.tertiary;
+        color = context.colors.tertiary;
         break;
       case ExerciseType.restPause:
-        color = Theme.of(context).colorScheme.error;
+        color = context.colors.error;
         break;
     }
 
@@ -659,7 +1305,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       ),
       child: Text(
         widget.exercise.type.name.toUpperCase(),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+        style: context.textTheme.labelSmall?.copyWith(
           fontSize: 10,
           fontWeight: FontWeight.w500,
           color: color,
@@ -668,15 +1314,149 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     );
   }
 
+  Widget _buildTutChip(BuildContext context) {
+    final tutText = widget.exercise.tut ?? _getDefaultTut();
+    final isDefault = widget.exercise.tut == null;
+
+    return GestureDetector(
+      onTap: () => _showTutExplanationModal(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: isDefault
+            ? context.colors.surfaceContainerHighest.withOpacity(0.3)
+            : context.colors.primaryContainer.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isDefault
+              ? context.colors.outline.withOpacity(0.3)
+              : context.colors.primary.withOpacity(0.4),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.speed,
+              size: 14,
+              color: isDefault
+                  ? context.colors.onSurfaceVariant
+                  : context.colors.primary,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              _formatTutDisplay(tutText),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: isDefault
+                  ? context.colors.onSurfaceVariant
+                  : context.colors.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getDefaultTut() {
+    // Default TUT based on exercise type
+    switch (widget.exercise.type) {
+      case ExerciseType.single:
+        return widget.exercise.category == ExerciseCategory.legs ? '3-0-1-0' : '2-1-2-0';
+      case ExerciseType.superset:
+        return '2-0-1-0';
+      case ExerciseType.dropset:
+        return '2-1-2-0';
+      case ExerciseType.restPause:
+        return '2-1-2-1';
+    }
+  }
+
+  String _formatTutDisplay(String tut) {
+    if (tut == 'ISO') return 'ISO';
+    if (tut == 'EXP') return 'ESP';
+    return tut; // Show as-is for tempo like "3-1-2-0"
+  }
+
+  Widget _buildQuickActionIcon({
+    required BuildContext context,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: color.withOpacity(0.4),
+            width: 1,
+          ),
+        ),
+        child: Icon(icon, size: 14, color: color),
+      ),
+    );
+  }
+
   Widget _buildSetsSection(BuildContext context, AppConfig config) {
     if (widget.exercise.sets.isEmpty) {
+      // For DropSet exercises, show execute button instead of "No sets yet"
+      if (widget.exercise.type == ExerciseType.dropset) {
+        final dropsetExercise = widget.exercise as DropSetExercise;
+        return GestureDetector(
+          onTap: () => _executeDropSet(dropsetExercise),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: context.colors.tertiaryContainer.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: context.colors.tertiary.withOpacity(0.5),
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.play_circle_outline,
+                  size: 20,
+                  color: context.colors.tertiary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    context.l10n.executeDropset,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.tertiary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: context.colors.tertiary,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
       return Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          color: context.colors.surfaceContainerHighest.withOpacity(0.3),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            color: context.colors.outline.withOpacity(0.2),
             style: BorderStyle.solid,
           ),
         ),
@@ -685,13 +1465,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             Icon(
               Icons.add_circle_outline,
               size: 18,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.colors.onSurfaceVariant,
             ),
             const SizedBox(width: 8),
             Text(
               'No sets yet - tap to add',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -707,7 +1487,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           children: [
             Text(
               'Sets (${widget.exercise.sets.where((s) => s.isCompleted).length}/${widget.exercise.sets.length})',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              style: context.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -715,8 +1495,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             if (widget.exercise.sets.isNotEmpty)
               Text(
                 'Weight × Reps',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
           ],
@@ -726,40 +1506,165 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           _buildSetItem(context, entry.key, entry.value, config),
         ),
         const SizedBox(height: 8),
-        // Add set button
-        InkWell(
-          onTap: () => _addNewSet(),
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                style: BorderStyle.solid,
-                width: 1.5,
+        // Add set button (with smooth animated collapse button when completed)
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 400),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            // Combine slide and fade for smooth transition
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.1),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutCubic,
+              )),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
               ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.add_circle_outline,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Add Set',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w600,
+            );
+          },
+          child: _areAllSetsCompleted() && _expansionState.isExpanded
+              ? Row(
+                  key: const ValueKey('buttons_with_collapse'),
+                  children: [
+                    // Add Set button (left) - animates to half width
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => _addNewSet(),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: context.colors.primaryContainer.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: context.colors.primary.withOpacity(0.3),
+                              style: BorderStyle.solid,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_circle_outline,
+                                size: 20,
+                                color: context.colors.primary,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                context.l10n.addSet,
+                                style: context.textTheme.labelLarge?.copyWith(
+                                  color: context.colors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Collapse button (right) - fades in smoothly
+                    Expanded(
+                      child: TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 500),
+                        tween: Tween<double>(begin: 0.0, end: 1.0),
+                        curve: Curves.easeOutBack,
+                        builder: (context, value, child) {
+                          return Transform.scale(
+                            scale: 0.8 + (0.2 * value),
+                            child: Opacity(
+                              opacity: value,
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: InkWell(
+                          onTap: () {
+                            // REFACTORED: Use provider to collapse
+                            _expansionNotifier.collapse();
+                            HapticFeedback.lightImpact();
+
+                            if (kDebugMode) {
+                              debugPrint('👇 USER MANUALLY COLLAPSED via button for ${widget.exercise.name}');
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: context.colors.secondaryContainer.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: context.colors.secondary.withOpacity(0.3),
+                                style: BorderStyle.solid,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.unfold_less,
+                                  size: 20,
+                                  color: context.colors.secondary,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  context.l10n.collapseExercise,
+                                  style: context.textTheme.labelLarge?.copyWith(
+                                    color: context.colors.secondary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : InkWell(
+                  key: const ValueKey('button_add_only'),
+                  onTap: () => _addNewSet(),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: context.colors.primaryContainer.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: context.colors.primary.withOpacity(0.3),
+                        style: BorderStyle.solid,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_circle_outline,
+                          size: 20,
+                          color: context.colors.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          context.l10n.addSet,
+                          style: context.textTheme.labelLarge?.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
         ),
       ],
     );
@@ -786,26 +1691,54 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         ),
       ),
       confirmDismiss: (direction) async {
-        // Show confirmation dialog
-        return await showDialog(
+        // Show smooth animated confirmation dialog
+        final l10n = context.l10n;
+
+        return await showGeneralDialog<bool>(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text(isWarmup ? 'Delete warmup set?' : 'Delete set ${index + 1}?'),
-            content: const Text('This action cannot be undone.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.red,
+          barrierDismissible: true,
+          barrierLabel: 'Dismiss',
+          barrierColor: Colors.black54,
+          transitionDuration: const Duration(milliseconds: 250),
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return Container(); // Not used with transitionBuilder
+          },
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            // Smooth scale and fade animation
+            final curvedAnimation = CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+              reverseCurve: Curves.easeInCubic,
+            );
+
+            return ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
+              child: FadeTransition(
+                opacity: curvedAnimation,
+                child: AlertDialog(
+                  title: Text(
+                    isWarmup
+                      ? l10n.deleteWarmupSetTitle
+                      : l10n.deleteSetTitle(index + 1)
+                  ),
+                  content: Text(l10n.deleteSetMessage),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(l10n.cancel),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
+                      child: Text(l10n.delete),
+                    ),
+                  ],
                 ),
-                child: const Text('Delete'),
               ),
-            ],
-          ),
+            );
+          },
         );
       },
       onDismissed: (direction) {
@@ -828,13 +1761,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           color: isWarmup
               ? Colors.orange.withOpacity(0.05) // Warmup color
               : set.isCompleted 
-                  ? Theme.of(context).colorScheme.tertiary.withOpacity(0.1)
-                  : Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  ? context.colors.tertiary.withOpacity(0.1)
+                  : context.colors.surfaceContainerHighest.withOpacity(0.5),
           borderRadius: BorderRadius.circular(8),
           border: isWarmup
               ? Border.all(color: Colors.orange.withOpacity(0.3))
               : set.isCompleted 
-                  ? Border.all(color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3))
+                  ? Border.all(color: context.colors.tertiary.withOpacity(0.3))
                   : null,
         ),
         child: Row(
@@ -847,8 +1780,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               color: isWarmup
                   ? Colors.orange.withOpacity(0.3)
                   : set.isCompleted 
-                      ? Theme.of(context).colorScheme.tertiary
-                      : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                      ? context.colors.tertiary
+                      : context.colors.outline.withOpacity(0.3),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -856,10 +1789,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ? const Icon(Icons.local_fire_department, size: 14, color: Colors.orange)
                   : Text(
                       '${index + 1}',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      style: context.textTheme.labelSmall?.copyWith(
                         color: set.isCompleted 
-                            ? Theme.of(context).colorScheme.onTertiary
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                            ? context.colors.onTertiary
+                            : context.colors.onSurfaceVariant,
                         fontWeight: FontWeight.bold,
                         fontSize: 11,
                       ),
@@ -895,13 +1828,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 if (set.weight != null) ...[
                   Text(
                     set.weight!.formatWeight(config.measurementUnit),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       decoration: set.isCompleted ? TextDecoration.lineThrough : null,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Text('×', style: Theme.of(context).textTheme.bodySmall),
+                  Text('×', style: context.textTheme.bodySmall),
                   const SizedBox(width: 4),
                 ],
                 if (set.reps != null)
@@ -909,7 +1842,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     set.actualReps != null && set.isCompleted
                         ? '${set.actualReps}/${set.reps} reps'
                         : '${set.reps} reps',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       decoration: set.isCompleted ? TextDecoration.lineThrough : null,
                     ),
@@ -917,7 +1850,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 if (set.seconds != null)
                   Text(
                     '${set.seconds}s',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       decoration: set.isCompleted ? TextDecoration.lineThrough : null,
                     ),
@@ -938,45 +1871,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     child: Text(
                       'RPE ${set.rpe}',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      style: context.textTheme.labelSmall?.copyWith(
                         color: _getRpeIndicatorColor(set.rpe!),
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
-                ],
-                
-                // Duration indicator if completed and tracked
-                if (set.isCompleted && set.setDurationMillis != null) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.timer,
-                          size: 10,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          SetDurationTracker.formatDuration(set.setDurationMillis),
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ],
@@ -986,14 +1884,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                    color: context.colors.outline.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     '✏️',
                     style: TextStyle(
                       fontSize: 10,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.6),
+                      color: context.colors.onSurfaceVariant.withOpacity(0.6),
                     ),
                   ),
                 ),
@@ -1016,13 +1914,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         Icons.check_circle,
                         key: const ValueKey('completed'),
                         size: 20,
-                        color: Theme.of(context).colorScheme.tertiary,
+                        color: context.colors.tertiary,
                       )
                     : Icon(
                         Icons.radio_button_unchecked,
                         key: const ValueKey('uncompleted'),
                         size: 20,
-                        color: Theme.of(context).colorScheme.outline,
+                        color: context.colors.outline,
                       ),
               ),
             ),
@@ -1058,17 +1956,65 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     widget.onExerciseUpdate!(updatedExercise);
     
     // Show feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Set ${newSet.setNumber} added'),
-        duration: const Duration(milliseconds: 1200),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+    SnackBarService.showInfo(
+      context,
+      'Set ${newSet.setNumber} added',
     );
     
     HapticFeedback.lightImpact();
   }
   
+  void _handleAPRESuggestion(ExerciseSet currentSet, double suggestedWeight) {
+    if (widget.onExerciseUpdate == null) return;
+
+    // Find the next set (Set 4 in APRE protocol)
+    final nextSetIndex = currentSet.setNumber; // Set 4 is after Set 3
+    if (nextSetIndex < widget.exercise.sets.length) {
+      final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
+      updatedSets[nextSetIndex] = updatedSets[nextSetIndex].copyWith(
+        weight: suggestedWeight,
+      );
+
+      final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+      widget.onExerciseUpdate!(updatedExercise);
+
+      // Show confirmation
+      SnackBarService.showInfo(
+        context,
+        'APRE: Set ${nextSetIndex + 1} weight adjusted to ${suggestedWeight.toStringAsFixed(1)} kg',
+      );
+    }
+  }
+
+  void _handleRPESuggestion(double suggestedWeight) {
+    if (widget.onExerciseUpdate == null) return;
+
+    // Apply suggested weight to all remaining incomplete sets
+    final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
+    bool hasUpdated = false;
+
+    for (int i = 0; i < updatedSets.length; i++) {
+      if (!updatedSets[i].isCompleted) {
+        updatedSets[i] = updatedSets[i].copyWith(
+          weight: suggestedWeight,
+        );
+        hasUpdated = true;
+      }
+    }
+
+    if (hasUpdated) {
+      final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+      widget.onExerciseUpdate!(updatedExercise);
+
+      // Show confirmation
+      final l10n = AppLocalizations.of(context);
+      SnackBarService.showInfo(
+        context,
+        '${l10n.rpeAutoregulation}: ${l10n.weightAdjustedTo} ${suggestedWeight.toStringAsFixed(1)} kg',
+      );
+    }
+  }
+
   void _deleteSet(ExerciseSet set, int index) {
     if (widget.onExerciseUpdate == null) return;
     
@@ -1085,29 +2031,25 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     widget.onExerciseUpdate!(updatedExercise);
     
     // Show feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(set.isWarmup 
-            ? 'Warmup set deleted' 
-            : 'Set ${index + 1} deleted'),
-        duration: const Duration(seconds: 2),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            // Restore the set
-            final restoredSets = List<ExerciseSet>.from(updatedSets);
-            restoredSets.insert(index, set);
-            
-            // Renumber again
-            for (var i = 0; i < restoredSets.length; i++) {
-              restoredSets[i] = restoredSets[i].copyWith(setNumber: i + 1);
-            }
-            
-            final restoredExercise = widget.exercise.copyWith(sets: restoredSets);
-            widget.onExerciseUpdate!(restoredExercise);
-          },
-        ),
-      ),
+    SnackBarService.showCustom(
+      context,
+      message: set.isWarmup
+          ? '🗑️ Warmup set deleted'
+          : '🗑️ Set ${index + 1} deleted',
+      actionLabel: 'Undo',
+      onAction: () {
+        // Restore the set
+        final restoredSets = List<ExerciseSet>.from(updatedSets);
+        restoredSets.insert(index, set);
+
+        // Renumber again
+        for (var i = 0; i < restoredSets.length; i++) {
+          restoredSets[i] = restoredSets[i].copyWith(setNumber: i + 1);
+        }
+
+        final restoredExercise = widget.exercise.copyWith(sets: restoredSets);
+        widget.onExerciseUpdate!(restoredExercise);
+      },
     );
     
     HapticFeedback.mediumImpact();
@@ -1126,7 +2068,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         maxChildSize: 0.7,
         builder: (context, scrollController) => Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
@@ -1137,7 +2079,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  color: context.colors.onSurface.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1161,10 +2103,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 title: const Text('Info esercizio'),
                 subtitle: const Text('Muscoli coinvolti e tecnica'),
                 onTap: () async {
+                  // Cattura il context prima di chiudere il menu
+                  final scaffoldContext = context;
                   Navigator.pop(context);
                   final exerciseData = await _loadExerciseDataFromJson();
-                  if (exerciseData != null && context.mounted) {
-                    _showExerciseInfoModal(context, exerciseData);
+                  if (exerciseData != null && mounted && scaffoldContext.mounted) {
+                    _showExerciseInfoModal(scaffoldContext, exerciseData);
                   }
                 },
               ),
@@ -1173,10 +2117,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 title: const Text('Info riscaldamento'),
                 subtitle: const Text('Consigli per il warmup'),
                 onTap: () async {
+                  // Cattura il context prima di chiudere il menu
+                  final scaffoldContext = context;
                   Navigator.pop(context);
                   final exerciseData = await _loadExerciseDataFromJson();
-                  if (exerciseData != null && _hasWarmupData(exerciseData) && context.mounted) {
-                    _showWarmupModal(context, exerciseData);
+                  if (exerciseData != null && _hasWarmupData(exerciseData) && mounted && scaffoldContext.mounted) {
+                    _showWarmupModal(scaffoldContext, exerciseData);
                   }
                 },
               ),
@@ -1185,10 +2131,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 title: const Text('Prevenzione infortuni'),
                 subtitle: const Text('Consigli per evitare infortuni'),
                 onTap: () async {
+                  // Cattura il context prima di chiudere il menu
+                  final scaffoldContext = context;
                   Navigator.pop(context);
                   final exerciseData = await _loadExerciseDataFromJson();
-                  if (exerciseData != null && _hasInjuryPreventionData(exerciseData) && context.mounted) {
-                    _showInjuryPreventionModal(context, exerciseData);
+                  if (exerciseData != null && _hasInjuryPreventionData(exerciseData) && mounted && scaffoldContext.mounted) {
+                    _showInjuryPreventionModal(scaffoldContext, exerciseData);
                   }
                 },
               ),
@@ -1213,12 +2161,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ListTile(
                 leading: Icon(
                   Icons.delete,
-                  color: Theme.of(context).colorScheme.error,
+                  color: context.colors.error,
                 ),
                 title: Text(
                   'Elimina esercizio',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
+                    color: context.colors.error,
                   ),
                 ),
                 onTap: () {
@@ -1237,9 +2185,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
   
   void _openContributionModal(ContributionType type, {String? contextType}) {
-    _suggestionType = type;
-    _contextType = contextType;
-    _showContributionModal();
+    final suggestion = SmartSuggestion(
+      id: 'manual_contribution',
+      text: '',
+      type: type,
+      contextType: contextType ?? 'general',
+      priority: 50,
+      createdAt: DateTime.now(),
+      trigger: 'manual_open',
+    );
+    _showContributionModal(suggestion);
   }
   
   void _showExerciseEditor(BuildContext context) {
@@ -1255,7 +2210,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         maxChildSize: 0.9,
         builder: (context, scrollController) => Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
@@ -1266,7 +2221,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  color: context.colors.onSurface.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1278,13 +2233,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   children: [
                     Icon(
                       Icons.edit,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.colors.primary,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Modifica esercizio',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        style: context.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -1348,11 +2303,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     
     // Mostra feedback
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Duplicated "${widget.exercise.name}"'),
-          backgroundColor: Colors.green,
-        ),
+      SnackBarService.showSuccess(
+        context,
+        '✅ Duplicated "${widget.exercise.name}"',
       );
     }
   }
@@ -1366,7 +2319,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -1383,7 +2336,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                    color: context.colors.onSurface.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -1395,12 +2348,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 children: [
                   Icon(
                     Icons.timer,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: context.colors.primary,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     'Rest Timer Settings',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: context.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -1409,8 +2362,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               const SizedBox(height: 8),
               Text(
                 'Set rest time between sets for "${widget.exercise.name}"',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 20),
@@ -1419,8 +2372,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               Card(
                 elevation: 0,
                 color: selectedTime == null 
-                    ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
-                    : Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                    ? context.colors.primaryContainer.withOpacity(0.3)
+                    : context.colors.surfaceContainerHighest.withOpacity(0.3),
                 child: InkWell(
                   onTap: () {
                     setState(() => selectedTime = null);
@@ -1434,8 +2387,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         Icon(
                           Icons.timer_off,
                           color: selectedTime == null
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurfaceVariant,
+                              ? context.colors.primary
+                              : context.colors.onSurfaceVariant,
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -1447,15 +2400,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: selectedTime == null
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.onSurface,
+                                      ? context.colors.primary
+                                      : context.colors.onSurface,
                                 ),
                               ),
                               Text(
                                 'Uses global rest timer (2 minutes)',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  color: context.colors.onSurfaceVariant,
                                 ),
                               ),
                             ],
@@ -1464,7 +2417,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         if (selectedTime == null)
                           Icon(
                             Icons.check_circle,
-                            color: Theme.of(context).colorScheme.primary,
+                            color: context.colors.primary,
                           ),
                       ],
                     ),
@@ -1476,7 +2429,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               // Quick options
               Text(
                 'Quick Options',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1493,8 +2446,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       setState(() => selectedTime = selected ? seconds : null);
                       HapticFeedback.selectionClick();
                     },
-                    selectedColor: Theme.of(context).colorScheme.primaryContainer,
-                    checkmarkColor: Theme.of(context).colorScheme.primary,
+                    selectedColor: context.colors.primaryContainer,
+                    checkmarkColor: context.colors.primary,
                   );
                 }).toList(),
               ),
@@ -1518,17 +2471,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         Navigator.pop(context);
                         
                         // Show feedback
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              selectedTime != null 
-                                  ? 'Rest timer set to ${_formatRestTime(selectedTime!)}'
-                                  : 'Using default rest timer',
-                            ),
-                            duration: const Duration(seconds: 2),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                          ),
+                        SnackBarService.showInfo(
+                          context,
+                          selectedTime != null
+                              ? '⏱️ Rest timer set to ${_formatRestTime(selectedTime!)}'
+                              : '⏱️ Using default rest timer',
                         );
                       } : null,
                       child: const Text('Save'),
@@ -1564,7 +2511,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  color: context.colors.onSurface.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1635,11 +2582,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       Navigator.pop(context);
                       
                       // Show confirmation
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Rest timer set to ${_formatTime(selectedTime!)}'),
-                          duration: const Duration(seconds: 2),
-                        ),
+                      SnackBarService.showInfo(
+                        context,
+                        '⏱️ Rest timer set to ${_formatTime(selectedTime!)}',
                       );
                     } : null,
                     child: const Text('Confirm'),
@@ -1749,7 +2694,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       if (remainingSeconds == 0) {
         return '${minutes}m';
       } else if (remainingSeconds == 30) {
-        return '${minutes}:30';
+        return '$minutes:30';
       } else {
         return '${minutes}m${remainingSeconds}s';
       }
@@ -1817,7 +2762,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       ),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+          bottom: context.mediaQuery.viewInsets.bottom,
         ),
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -1862,6 +2807,17 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     );
   }
 
+  void _showCommunityAdvice(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => CommunityAdviceModal(
+        exercise: widget.exercise,
+      ),
+    );
+  }
+
   void _showDeleteConfirmation(BuildContext context) {
     showDialog(
       context: context,
@@ -1879,7 +2835,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               widget.onDelete();
             },
             style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.colors.error,
             ),
             child: const Text('Delete'),
           ),
@@ -1890,8 +2846,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   void _editSet(BuildContext context, ExerciseSet set) {
     if (widget.onSetUpdate == null) return;
-    
-    context.showEditSetModal(set, widget.onSetUpdate!);
+
+    // Find previous set for APRE calculations
+    ExerciseSet? previousSet;
+    final currentSetIndex = widget.exercise.sets.indexWhere((s) => s.id == set.id);
+    if (currentSetIndex > 0) {
+      previousSet = widget.exercise.sets[currentSetIndex - 1];
+    }
+
+    context.showEditSetModal(
+      set,
+      widget.onSetUpdate!,
+      exercise: widget.exercise,
+      previousSet: previousSet,
+    );
   }
 
   void _quickEditSet(BuildContext context, ExerciseSet set) {
@@ -1964,14 +2932,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       if (!rpeEnabled || isWarmupSet) {
         debugPrint('🔥 Completing set ${set.setNumber} (warmup: $isWarmupSet)');
         double? duration;
-        
+        DateTime? existingStartTime;
+
         // Only track duration for non-warmup sets
         if (!isWarmupSet) {
           final durationTracker = ref.read(setDurationTrackerProvider);
-          
+
           // Check if we have a start time for this set
-          var existingStartTime = durationTracker.getSetStartTime(
-            widget.exercise.id, 
+          existingStartTime = durationTracker.getSetStartTime(
+            widget.exercise.id,
             set.setNumber
           );
           
@@ -2014,14 +2983,18 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         final updatedSet = set.copyWith(
           isCompleted: true,
           completedAt: DateTime.now(),
-          setDurationMillis: duration,
+          setDurationMillis: isWarmupSet ? null : duration, // ✅ Salva durata esecuzione (null per warmup)
+          setStartedAt: isWarmupSet ? null : existingStartTime, // ✅ Salva timestamp inizio (null per warmup)
           isWarmup: set.isWarmup, // Explicitly preserve warmup flag
         );
         
         debugPrint('✅ Set completed: #${set.setNumber}, warmup: ${set.isWarmup}, preserved: ${updatedSet.isWarmup}');
-        
+
         widget.onSetToggleComplete!(updatedSet);
-        
+
+        // Haptic feedback for set completion
+        HapticFeedbackService.setCompletion(ref);
+
         // Start rest timer for next set (if not warmup)
         if (!isWarmupSet) {
           _startRestTimerWithSetInfo(context, updatedSet);
@@ -2029,20 +3002,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         
         // Show feedback
         if (isWarmupSet) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Warmup set ${set.setNumber} completed! 🔥'),
-              duration: const Duration(milliseconds: 1200),
-              backgroundColor: Colors.orange.shade600,
-            ),
+          SnackBarService.showCustom(
+            context,
+            message: '🔥 Warmup set ${set.setNumber} completed!',
+            backgroundColor: Colors.orange.shade600,
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Set ${set.setNumber} completed!'),
-              duration: const Duration(milliseconds: 1200),
-              backgroundColor: Theme.of(context).colorScheme.tertiary,
-            ),
+          SnackBarService.showInfo(
+            context,
+            '✅ Set ${set.setNumber} completed!',
           );
         }
         return;
@@ -2055,6 +3023,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         context: context,
         set: set,
         targetReps: targetReps,
+        exercise: widget.exercise, // Pass exercise for APRE and RPE checking
+        onAPRESuggestion: (suggestedWeight) {
+          // Handle APRE suggestion
+          _handleAPRESuggestion(set, suggestedWeight);
+        },
+        onRPESuggestion: (suggestedWeight) {
+          // Handle RPE autoregulation suggestion
+          _handleRPESuggestion(suggestedWeight);
+        },
         onConfirm: (actualReps, actualWeight, rpe) {
           final durationTracker = ref.read(setDurationTrackerProvider);
           
@@ -2083,86 +3060,94 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               
               // Store this calculated start time
               durationTracker.setStartTime(widget.exercise.id, set.setNumber, existingStartTime);
-              print('⏱️ Set 1: Using calculated start time (30s ago or from last set)');
-            } else {
-              // For subsequent sets, try to use rest timer end time or previous set completion
-              final previousSetIndex = set.setNumber - 2; // -1 for 0-based, -1 for previous
-              if (previousSetIndex >= 0 && previousSetIndex < widget.exercise.sets.length) {
-                final previousSet = widget.exercise.sets[previousSetIndex];
-                if (previousSet.completedAt != null) {
-                  // Use previous set completion time as start of this set
-                  existingStartTime = previousSet.completedAt!;
-                  durationTracker.setStartTime(widget.exercise.id, set.setNumber, existingStartTime);
-                  print('⏱️ Set ${set.setNumber}: Using previous set completion time as start');
-                }
+              if (kDebugMode) {
+                debugPrint('⏱️ Set 1: Using calculated start time (30s ago or from last set)');
               }
-              
-              // If still no start time, use rest timer end or default
-              if (existingStartTime == null) {
-                durationTracker.startSet(widget.exercise.id, set.setNumber);
-                existingStartTime = durationTracker.getSetStartTime(
-                  widget.exercise.id, 
-                  set.setNumber
-                );
+            } else {
+              // For subsequent sets, the timer provider already called startSet when rest ended
+              // Just retrieve the existing timestamp (don't call startSet again!)
+              existingStartTime = durationTracker.getSetStartTime(
+                widget.exercise.id,
+                set.setNumber
+              );
+
+              if (existingStartTime != null) {
+                if (kDebugMode) {
+                  debugPrint('⏱️ Set ${set.setNumber}: Using timer end timestamp: ${existingStartTime.toIso8601String()}');
+                }
+              } else {
+                // Fallback: Timer didn't set it, use completion time of previous set
+                final previousCompletedSet = widget.exercise.sets
+                    .where((s) => s.isCompleted && s.completedAt != null && !s.isWarmup)
+                    .lastOrNull;
+
+                if (previousCompletedSet?.completedAt != null) {
+                  existingStartTime = previousCompletedSet!.completedAt!;
+                  if (kDebugMode) {
+                    debugPrint('⚠️ Set ${set.setNumber}: Timer didn\'t set timestamp, using previous set completion');
+                  }
+                } else {
+                  // Last resort: use 30s ago
+                  existingStartTime = DateTime.now().subtract(const Duration(seconds: 30));
+                  if (kDebugMode) {
+                    debugPrint('⚠️ Set ${set.setNumber}: No timer timestamp, using 30s default');
+                  }
+                }
               }
             }
           }
           
           // Calculate duration from set start to now
           double? duration;
-          if (existingStartTime != null) {
-            // Calculate duration from start time to now
-            duration = DateTime.now().difference(existingStartTime).inMilliseconds.toDouble();
-            
-            // Sanity check - if duration is too long (> 5 minutes), use a default
-            if (duration > 300000) {
-              duration = 30000; // Default to 30 seconds
-              print('⚠️ Duration too long (${(duration/1000).toStringAsFixed(2)}s), using default 30s');
+          // Calculate duration from start time to now
+          duration = DateTime.now().difference(existingStartTime).inMilliseconds.toDouble();
+          
+          // Sanity check - if duration is too long (> 5 minutes), use a default
+          if (duration > 300000) {
+            duration = 30000; // Default to 30 seconds
+            if (kDebugMode) {
+              debugPrint('⚠️ Duration too long (${(duration/1000).toStringAsFixed(2)}s), using default 30s');
             }
-            
-            print('🕐 Set ${set.setNumber} duration: ${(duration/1000).toStringAsFixed(2)}s');
-          } else {
-            // Fallback: use a reasonable default duration
-            duration = 30000; // 30 seconds default
-            print('⚠️ Set ${set.setNumber}: No start time available, using default 30s');
           }
           
+          if (kDebugMode) {
+            debugPrint('🕐 Set ${set.setNumber} duration: ${(duration/1000).toStringAsFixed(2)}s');
+          }
+                  
           // Update set with RPE, actual reps, weight and calculated duration
           final updatedSet = set.copyWith(
             actualReps: actualReps,
             rpe: rpe,
             weight: actualWeight,
             isCompleted: true,
-            setDurationMillis: duration, // Duration of actual set execution
             completedAt: DateTime.now(),
+            setDurationMillis: duration, // ✅ Salva durata esecuzione
+            setStartedAt: existingStartTime, // ✅ Salva timestamp inizio
           );
           
           widget.onSetToggleComplete!(updatedSet);
-          
-          // Haptic feedback
-          HapticFeedback.lightImpact();
-          
+
+          // Haptic feedback for set completion
+          HapticFeedbackService.setCompletion(ref);
+
           // Start rest timer
           _startRestTimerWithSetInfo(context, updatedSet);
           
           // Mark next set as starting when rest timer ends
           final nextSetNumber = set.setNumber + 1;
           if (nextSetNumber <= widget.exercise.sets.length) {
-            // The timer provider will call onRestTimerEnded when it reaches 00:00
-            // We'll use that timestamp for the next set when it starts
-            // The actual tracking happens when the user starts working on the next set
+            // The timer provider will call startSet() when it reaches 00:00
+            // This marks the exact timestamp when rest ends as the start of the next set
+            // Ensuring we measure ONLY execution time, NOT rest time
           }
           
           // Visual feedback with snackbar
           final rpeText = rpe > 0 ? ' (RPE $rpe)' : '';
-          final message = 'Set ${set.setNumber} completed! 💪$rpeText';
-          
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(message),
-              duration: const Duration(milliseconds: 1200),
-              backgroundColor: Theme.of(context).colorScheme.tertiary,
-            ),
+          final message = '💪 Set ${set.setNumber} completed!$rpeText';
+
+          SnackBarService.showInfo(
+            context,
+            message,
           );
         },
       );
@@ -2174,16 +3159,22 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         context: context,
         set: set,
         targetReps: targetReps,
+        exercise: widget.exercise, // Pass exercise for APRE and RPE checking
+        onAPRESuggestion: (suggestedWeight) {
+          // Handle APRE suggestion
+          _handleAPRESuggestion(set, suggestedWeight);
+        },
+        onRPESuggestion: (suggestedWeight) {
+          // Handle RPE autoregulation suggestion
+          _handleRPESuggestion(suggestedWeight);
+        },
         onConfirm: (actualReps, actualWeight, rpe) {
           if (rpe == 0) {
             // User chose to mark as incomplete
             _toggleSetCompletion(set);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Set ${set.setNumber} marked as incomplete'),
-                duration: const Duration(milliseconds: 800),
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-              ),
+            SnackBarService.showInfo(
+              context,
+              '↩️ Set ${set.setNumber} marked as incomplete',
             );
           } else {
             // Update set with new RPE values - preserve existing duration if present
@@ -2192,31 +3183,28 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               weight: actualWeight,
               rpe: rpe,
               isCompleted: true,
-              // Keep existing duration if already tracked
-              setDurationMillis: set.setDurationMillis,
-              setStartedAt: set.setStartedAt,
             );
             
             widget.onSetToggleComplete!(updatedSet);
-            
-            // Haptic feedback
-            HapticFeedback.lightImpact();
-            
+
+            // Haptic feedback for set update
+            HapticFeedbackService.setCompletion(ref);
+
             // Visual feedback with snackbar
             final rpeText = ' (RPE $rpe updated)';
-            final message = 'Set ${set.setNumber} updated! 💪$rpeText';
-            
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(message),
-                duration: const Duration(milliseconds: 1200),
-                backgroundColor: Theme.of(context).colorScheme.tertiary,
-              ),
+            final message = '💪 Set ${set.setNumber} updated!$rpeText';
+
+            SnackBarService.showInfo(
+              context,
+              message,
             );
           }
         },
       );
     }
+
+    // Auto-collapse logic moved to didUpdateWidget for better timing
+    // This ensures the widget has been rebuilt with updated data before checking
   }
 
   void _startRestTimer(BuildContext context) {
@@ -2317,7 +3305,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     if (maxWeight == 0) return const SizedBox.shrink();
     
     final daysAgo = DateTime.now().difference(_lastActivity!.createdAt).inDays;
-    String timeAgo = daysAgo == 0 ? 'Oggi' : 
+    final String timeAgo = daysAgo == 0 ? 'Oggi' : 
                      daysAgo == 1 ? 'Ieri' : 
                      '$daysAgo giorni fa';
     
@@ -2332,10 +3320,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         child: Ink(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+            color: context.colors.primaryContainer.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+              color: context.colors.primary.withValues(alpha: 0.2),
             ),
           ),
           child: Row(
@@ -2351,7 +3339,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     child: Icon(
                       Icons.insights,
                       size: 14,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.colors.primary,
                     ),
                   );
                 },
@@ -2359,8 +3347,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               const SizedBox(width: 4),
               Text(
                 'Ultimo: ${maxWeight.toStringAsFixed(1)}kg x $maxReps ($timeAgo)',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -2368,7 +3356,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               Icon(
                 Icons.chevron_right,
                 size: 14,
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+                color: context.colors.primary.withValues(alpha: 0.7),
               ),
             ],
           ),
@@ -2377,25 +3365,47 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     );
   }
 
+  /// Execute DropSet exercise using the dedicated modal
+  Future<void> _executeDropSet(DropSetExercise exercise) async {
+    await DropSetExecutionModal.show(
+      context: context,
+      exercise: exercise,
+    );
+  }
+
   Future<void> _showExerciseHistory(BuildContext context) async {
     setState(() {
       _loadingHistory = true;
     });
-    
-    final authService = ref.read(authServiceProvider);
-    final currentUser = authService.currentUser;
-    
+
     List<ExerciseActivity> activities = [];
-    
-    if (currentUser?.email != null) {
-      final repository = ExerciseActivityRepository();
-      activities = await repository.getActivitiesByExercise(
-        userEmail: currentUser!.email!,
+
+    try {
+      // NEW: Use workouts collection instead of exerciseActivities
+      final service = ref.read(workoutHistoryServiceProvider);
+      activities = await service.getActivitiesByExercise(
+        userEmail: '', // Non più necessario con il nuovo sistema
         exerciseName: widget.exercise.name,
         limit: 10,
       );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Errore caricamento storico: $e');
+      }
+      // Fallback: prova con il vecchio metodo se il nuovo fallisce
+      final authService = ref.read(authServiceProvider);
+      final currentUser = authService.currentUser;
+
+      if (currentUser?.email != null) {
+        final repository = ExerciseActivityRepository();
+        activities = await repository.getActivitiesByExercise(
+          userEmail: currentUser!.email!,
+          exerciseName: widget.exercise.name,
+          limit: 10,
+        );
+      }
     }
-    
+
     setState(() {
       _loadingHistory = false;
     });
@@ -2414,7 +3424,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         maxChildSize: 0.95,
         builder: (context, scrollController) => Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
@@ -2425,7 +3435,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 height: 4,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -2437,7 +3447,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   children: [
                     Icon(
                       Icons.history,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.colors.primary,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -2446,14 +3456,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         children: [
                           Text(
                             'Storico: ${widget.exercise.name}',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            style: context.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             'Ultimi ${activities.length} allenamenti',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: context.colors.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -2475,12 +3485,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             Icon(
                               Icons.fitness_center,
                               size: 48,
-                              color: Theme.of(context).colorScheme.outline,
+                              color: context.colors.outline,
                             ),
                             const SizedBox(height: 16),
                             Text(
                               'Nessun allenamento precedente',
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: context.textTheme.titleMedium,
                             ),
                           ],
                         ),
@@ -2537,20 +3547,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               children: [
                 Text(
                   formattedDate,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                if (activity.schedaName != null && activity.schedaName!.isNotEmpty)
+                if (activity.schedaName.isNotEmpty)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.5),
+                      color: context.colors.secondaryContainer.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      activity.schedaName!,
-                      style: Theme.of(context).textTheme.labelSmall,
+                      activity.schedaName,
+                      style: context.textTheme.labelSmall,
                     ),
                   ),
               ],
@@ -2575,7 +3585,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             ExpansionTile(
               title: Text(
                 'Dettaglio serie',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: context.textTheme.bodyMedium,
               ),
               children: activity.sets.where((s) => s.done).map((set) {
                 final weight = double.tryParse(set.weight.toString()) ?? 0;
@@ -2590,12 +3600,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         height: 24,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: context.colors.primaryContainer,
                         ),
                         child: Center(
                           child: Text(
                             '${activity.sets.indexOf(set) + 1}',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            style: context.textTheme.labelSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -2604,31 +3614,22 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       const SizedBox(width: 12),
                       Text(
                         '${weight.toStringAsFixed(1)}kg x $reps',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: context.textTheme.bodyMedium,
                       ),
-                      if (set.effort != null && set.effort! > 0) ...[
+                      if (set.effort > 0) ...[
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _getEffortColorByNumber(set.effort!).withValues(alpha: 0.2),
+                            color: _getEffortColorByNumber(set.effort).withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             'RPE ${set.effort}',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: _getEffortColorByNumber(set.effort!),
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: _getEffortColorByNumber(set.effort),
                               fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ),
-                      ],
-                      if (set.setDurationMillis != null) ...[
-                        const Spacer(),
-                        Text(
-                          SetDurationTracker.formatDuration(set.setDurationMillis),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -2648,14 +3649,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          style: context.textTheme.labelSmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 2),
         Text(
           value,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          style: context.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -2688,10 +3689,34 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   void _editExercise(BuildContext context) {
     if (widget.onExerciseUpdate == null) return;
-    
+
     context.showEditExerciseModal(
       widget.exercise,
       widget.onExerciseUpdate!,
+    );
+  }
+
+  void _showAutoAdjustmentModal(BuildContext context) async {
+    if (widget.onExerciseUpdate == null) return;
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: context.mediaQuery.viewInsets.bottom,
+          ),
+          child: AutoAdjustmentModal(
+            exercise: widget.exercise,
+            onSave: widget.onExerciseUpdate!,
+          ),
+        ),
+      ),
     );
   }
 
@@ -2706,17 +3731,35 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       if (mergedData.isNotEmpty) {
         // Se ci sono correzioni community, mostra un indicatore
         if (mergedData['hasCommunityCorrections'] == true) {
-          print('✅ Using community-corrected data for ${widget.exercise.name}');
+          if (kDebugMode) {
+            debugPrint('✅ Using community-corrected data for ${widget.exercise.name}');
+          }
         }
         return mergedData;
       }
     } catch (e) {
-      print('Could not load merged data, falling back to JSON: $e');
+      if (kDebugMode) {
+        debugPrint('Could not load merged data, falling back to JSON: $e');
+      }
     }
     
     // Fallback: carica solo dal JSON se il provider fallisce
+    // Safety check dopo operazioni async
+    if (!mounted) return null;
+
     try {
-      final String jsonString = await rootBundle.loadString('assets/data/exercises.json');
+      // ✅ USA REF invece di context per evitare problemi con async gap
+      final config = ref.read(appConfigProvider);
+      final isItalian = config.languageCode == 'it';
+      final jsonFile = isItalian
+        ? 'assets/data/exercises_it.json'
+        : 'assets/data/exercises.json';
+
+      if (kDebugMode) {
+        debugPrint('📚 Loading exercise data from: $jsonFile (locale: ${config.languageCode})');
+      }
+
+      final String jsonString = await rootBundle.loadString(jsonFile);
       final List<dynamic> exercises = json.decode(jsonString);
       
       // Search for exercise by name (case insensitive)
@@ -2822,21 +3865,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final preparationItems = <_ModalItem>[];
     if (data['mobilitaPre'] != null) {
       preparationItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.preWorkoutMobility,
+        label: context.l10n.preWorkoutMobility,
         value: data['mobilitaPre'],
         icon: Icons.accessibility_new,
       ));
     }
     if (data['attivazionePre'] != null) {
       preparationItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.muscleActivation,
+        label: context.l10n.muscleActivation,
         value: data['attivazionePre'],
         icon: Icons.flash_on,
       ));
     }
     if (preparationItems.isNotEmpty) {
       groups.add(_GroupedModalSection(
-        groupTitle: AppLocalizations.of(context)!.preparation,
+        groupTitle: context.l10n.preparation,
         groupIcon: Icons.accessibility_new,
         items: preparationItems,
         accentColor: Colors.orange,
@@ -2847,21 +3890,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final warmupItems = <_ModalItem>[];
     if (data['warmupSets'] != null) {
       warmupItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.warmupSets,
+        label: context.l10n.warmupSets,
         value: data['warmupSets'].toString(),
         icon: Icons.fitness_center,
       ));
     }
     if (data['tempoWarmup'] != null) {
       warmupItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.warmupDuration,
+        label: context.l10n.warmupDuration,
         value: data['tempoWarmup'],
         icon: Icons.timer,
       ));
     }
     if (warmupItems.isNotEmpty) {
       groups.add(_GroupedModalSection(
-        groupTitle: AppLocalizations.of(context)!.specificWarmup,
+        groupTitle: context.l10n.specificWarmup,
         groupIcon: Icons.whatshot,
         items: warmupItems,
         accentColor: Colors.deepOrange,
@@ -2874,7 +3917,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       backgroundColor: Colors.transparent,
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
-        title: AppLocalizations.of(context)!.warmupAndMobility,
+        title: context.l10n.warmupAndMobility,
         icon: Icons.whatshot,
         color: Colors.orange,
         groups: groups,
@@ -2898,24 +3941,24 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final muscleItems = <_ModalItem>[];
     if (data['focus'] != null) {
       muscleItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.primaryMuscles,
+        label: context.l10n.primaryMuscles,
         value: data['focus'],
         icon: Icons.fitness_center,
       ));
     }
     if (data['muscoliSecondari'] != null) {
       muscleItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.secondaryMuscles,
+        label: context.l10n.secondaryMuscles,
         value: data['muscoliSecondari'],
         icon: Icons.sports_gymnastics,
       ));
     }
     if (muscleItems.isNotEmpty) {
       groups.add(_GroupedModalSection(
-        groupTitle: AppLocalizations.of(context)!.targetMuscles,
+        groupTitle: context.l10n.targetMuscles,
         groupIcon: Icons.fitness_center,
         items: muscleItems,
-        accentColor: Theme.of(context).colorScheme.primary,
+        accentColor: context.colors.primary,
       ));
     }
     
@@ -2923,35 +3966,35 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final detailItems = <_ModalItem>[];
     if (data['difficolta'] != null) {
       detailItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.difficultyLevel,
+        label: context.l10n.difficultyLevel,
         value: data['difficolta'],
         icon: Icons.trending_up,
       ));
     }
     if (data['tipoEsercizio'] != null) {
       detailItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.exerciseType,
+        label: context.l10n.exerciseType,
         value: data['tipoEsercizio'],
         icon: Icons.category,
       ));
     }
     if (data['attrezzatura'] != null) {
       detailItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.equipment,
+        label: context.l10n.equipment,
         value: data['attrezzatura'],
         icon: Icons.build,
       ));
     }
     if (data['patternMovimento'] != null) {
       detailItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.movementPattern,
+        label: context.l10n.movementPattern,
         value: data['patternMovimento'],
         icon: Icons.repeat,
       ));
     }
     if (detailItems.isNotEmpty) {
       groups.add(_GroupedModalSection(
-        groupTitle: AppLocalizations.of(context)!.exerciseDetails,
+        groupTitle: context.l10n.exerciseDetails,
         groupIcon: Icons.info_outline,
         items: detailItems,
         accentColor: Colors.blue.shade600,
@@ -2961,7 +4004,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     // Group 3: Rep Range (standalone)
     if (data['rangeRipetizioni'] != null) {
       groups.add(_GroupedModalSection(
-        groupTitle: AppLocalizations.of(context)!.repRange,
+        groupTitle: context.l10n.repRange,
         groupIcon: Icons.format_list_numbered,
         items: [
           _ModalItem(
@@ -2979,9 +4022,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       backgroundColor: Colors.transparent,
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
-        title: AppLocalizations.of(context)!.exerciseInformation,
+        title: context.l10n.exerciseInformation,
         icon: Icons.info,
-        color: Theme.of(context).colorScheme.primary,
+        color: context.colors.primary,
         groups: groups,
         onCorrection: () {
           Navigator.pop(context);
@@ -3003,28 +4046,28 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final safetyItems = <_ModalItem>[];
     if (data['prevenzioneInfortuni'] != null) {
       safetyItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.injuryPrevention,
+        label: context.l10n.injuryPrevention,
         value: data['prevenzioneInfortuni'],
         icon: Icons.shield,
       ));
     }
     if (data['noteTecniche'] != null) {
       safetyItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.technicalNotes,
+        label: context.l10n.technicalNotes,
         value: data['noteTecniche'],
         icon: Icons.note,
       ));
     }
     if (data['drillTecnico'] != null) {
       safetyItems.add(_ModalItem(
-        label: AppLocalizations.of(context)!.technicalDrills,
+        label: context.l10n.technicalDrills,
         value: data['drillTecnico'],
         icon: Icons.sports,
       ));
     }
     if (safetyItems.isNotEmpty) {
       groups.add(_GroupedModalSection(
-        groupTitle: AppLocalizations.of(context)!.safetyAndTechnique,
+        groupTitle: context.l10n.safetyAndTechnique,
         groupIcon: Icons.health_and_safety,
         items: safetyItems,
         accentColor: Colors.red.shade600,
@@ -3034,11 +4077,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     // Group 2: Recovery (Cooldown standalone)
     if (data['cooldownConsigliato'] != null) {
       groups.add(_GroupedModalSection(
-        groupTitle: AppLocalizations.of(context)!.recovery,
+        groupTitle: context.l10n.recovery,
         groupIcon: Icons.ac_unit,
         items: [
           _ModalItem(
-            label: AppLocalizations.of(context)!.recommendedCooldown,
+            label: context.l10n.recommendedCooldown,
             value: data['cooldownConsigliato'],
             icon: Icons.ac_unit,
           ),
@@ -3053,7 +4096,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       backgroundColor: Colors.transparent,
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
-        title: AppLocalizations.of(context)!.safetyAndPrevention,
+        title: context.l10n.safetyAndPrevention,
         icon: Icons.health_and_safety,
         color: Colors.red.shade600,
         groups: groups,
@@ -3067,6 +4110,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         },
       ),
     );
+  }
+
+  // Helper to format step text for better readability
+  String _formatStepText(String text) {
+    // Se il testo contiene " | ", lo dividiamo per gli step
+    if (text.contains(' | ')) {
+      return text.split(' | ').join('\n\n');
+    }
+    return text;
   }
 
   // Build grouped premium modal
@@ -3089,8 +4141,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).colorScheme.surface,
-              Theme.of(context).colorScheme.surface.withOpacity(0.98),
+              context.colors.surface,
+              context.colors.surface.withOpacity(0.98),
             ],
           ),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -3110,7 +4162,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               width: 48,
               height: 5,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                color: context.colors.onSurface.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(3),
               ),
             ),
@@ -3140,15 +4192,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       children: [
                         Text(
                           title,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          style: context.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           widget.exercise.name,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -3159,7 +4211,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     icon: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                        color: context.colors.surfaceContainerHighest.withOpacity(0.5),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.close, size: 20),
@@ -3180,13 +4232,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-                          Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.1),
+                          context.colors.surfaceContainerHighest.withOpacity(0.3),
+                          context.colors.surfaceContainerHighest.withOpacity(0.1),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                        color: context.colors.outline.withOpacity(0.1),
                       ),
                     ),
                     child: Column(
@@ -3196,7 +4248,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
-                            color: (group.accentColor ?? Theme.of(context).colorScheme.primary).withOpacity(0.08),
+                            color: (group.accentColor ?? context.colors.primary).withOpacity(0.08),
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
                           ),
                           child: Row(
@@ -3204,14 +4256,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               Icon(
                                 group.groupIcon,
                                 size: 20,
-                                color: group.accentColor ?? Theme.of(context).colorScheme.primary,
+                                color: group.accentColor ?? context.colors.primary,
                               ),
                               const SizedBox(width: 10),
                               Text(
                                 group.groupTitle,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                style: context.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: group.accentColor ?? Theme.of(context).colorScheme.primary,
+                                  color: group.accentColor ?? context.colors.primary,
                                 ),
                               ),
                             ],
@@ -3233,7 +4285,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8),
                                       child: Divider(
-                                        color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                                        color: context.colors.outline.withOpacity(0.1),
                                         height: 1,
                                       ),
                                     ),
@@ -3244,7 +4296,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                         Icon(
                                           item.icon,
                                           size: 16,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                          color: context.colors.onSurfaceVariant,
                                         ),
                                         const SizedBox(width: 8),
                                       ],
@@ -3254,15 +4306,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                           children: [
                                             Text(
                                               item.label,
-                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                              style: context.textTheme.bodySmall?.copyWith(
+                                                color: context.colors.onSurfaceVariant,
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
-                                              item.value,
-                                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                              _formatStepText(item.value),
+                                              style: context.textTheme.bodyLarge?.copyWith(
                                                 height: 1.4,
                                               ),
                                             ),
@@ -3288,10 +4340,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: context.colors.surface,
                   border: Border(
                     top: BorderSide(
-                      color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                      color: context.colors.outline.withOpacity(0.2),
                       width: 1,
                     ),
                   ),
@@ -3319,7 +4371,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           label: const Text('Aggiungi tip'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(0, 40),
-                            foregroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: context.colors.primary,
                           ),
                         ),
                       ),
@@ -3350,8 +4402,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).colorScheme.surface,
-              Theme.of(context).colorScheme.surface.withOpacity(0.98),
+              context.colors.surface,
+              context.colors.surface.withOpacity(0.98),
             ],
           ),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -3371,7 +4423,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               width: 48,
               height: 5,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                color: context.colors.onSurface.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(3),
               ),
             ),
@@ -3401,15 +4453,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       children: [
                         Text(
                           title,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          style: context.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           widget.exercise.name,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -3420,7 +4472,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     icon: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                        color: context.colors.surfaceContainerHighest.withOpacity(0.5),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.close, size: 20),
@@ -3441,13 +4493,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-                          Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.1),
+                          context.colors.surfaceContainerHighest.withOpacity(0.3),
+                          context.colors.surfaceContainerHighest.withOpacity(0.1),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                        color: context.colors.outline.withOpacity(0.1),
                       ),
                     ),
                     child: Padding(
@@ -3460,12 +4512,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               Icon(
                                 section.icon,
                                 size: 20,
-                                color: Theme.of(context).colorScheme.primary,
+                                color: context.colors.primary,
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 section.title,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                style: context.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -3474,7 +4526,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           const SizedBox(height: 12),
                           Text(
                             section.content,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            style: context.textTheme.bodyLarge?.copyWith(
                               height: 1.5,
                             ),
                           ),
@@ -3491,27 +4543,28 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       ),
     );
   }
+
+  void _showTutExplanationModal(BuildContext context) {
+    final tutText = widget.exercise.tut ?? _getDefaultTut();
+    showTutInfoBottomSheet(context, tutText);
+  }
 }
 
 // Helper class for modal sections
 class _ModalSection {
-  final String title;
-  final String content;
-  final IconData icon;
 
   const _ModalSection({
     required this.title,
     required this.content,
     required this.icon,
   });
+  final String title;
+  final String content;
+  final IconData icon;
 }
 
 // Helper class for grouped modal sections
 class _GroupedModalSection {
-  final String groupTitle;
-  final IconData groupIcon;
-  final List<_ModalItem> items;
-  final Color? accentColor;
 
   const _GroupedModalSection({
     required this.groupTitle,
@@ -3519,28 +4572,35 @@ class _GroupedModalSection {
     required this.items,
     this.accentColor,
   });
+  final String groupTitle;
+  final IconData groupIcon;
+  final List<_ModalItem> items;
+  final Color? accentColor;
 }
 
 // Individual item within a grouped section
 class _ModalItem {
-  final String label;
-  final String value;
-  final IconData? icon;
   
   const _ModalItem({
     required this.label,
     required this.value,
     this.icon,
   });
+  final String label;
+  final String value;
+  final IconData? icon;
 }
 
 // Extension methods for ExerciseListItem
 extension _ExerciseListItemHelpers on _ExerciseListItemState {
   bool _shouldShowWarmupSuggestion() {
-    final config = ref.watch(appConfigProvider);
-    
+    // Use .select() to watch only warmupSuggestions, not entire config
+    final warmupSuggestionsEnabled = ref.watch(
+      appConfigProvider.select((config) => config.warmupSuggestions ?? true),
+    );
+
     // Check if warmup suggestions are enabled
-    if (config.warmupSuggestions == false) return false;
+    if (!warmupSuggestionsEnabled) return false;
     
     // Don't show if already dismissed
     if (_warmupSuggestionDismissed) return false;
@@ -3625,964 +4685,4 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
   }
 }
 
-// Community Contribution Modal
-class _CommunityContributionModal extends ConsumerStatefulWidget {
-  final Exercise exercise;
-  final ContributionType suggestionType;
-  final String? initialSuggestion;
-  final String? contextType;
-  final Map<String, dynamic>? exerciseData;
-  
-  const _CommunityContributionModal({
-    required this.exercise,
-    required this.suggestionType,
-    this.initialSuggestion,
-    this.contextType,
-    this.exerciseData,
-  });
-  
-  @override
-  ConsumerState<_CommunityContributionModal> createState() => 
-      _CommunityContributionModalState();
-}
-
-class _CommunityContributionModalState 
-    extends ConsumerState<_CommunityContributionModal> {
-  late TextEditingController _titleController;
-  late TextEditingController _descriptionController;
-  ContributionType _selectedType = ContributionType.tip;
-  String? _selectedSection;
-  bool _isSubmitting = false;
-  
-  @override
-  void initState() {
-    super.initState();
-    _selectedType = widget.suggestionType;
-    _titleController = TextEditingController(
-      text: _getContextualTitle(),
-    );
-    _descriptionController = TextEditingController(
-      text: widget.initialSuggestion ?? '',
-    );
-  }
-  
-  String _getContextualTitle() {
-    if (widget.contextType == null) return '';
-    
-    switch (widget.contextType) {
-      case 'exercise_info':
-        return _selectedType == ContributionType.correction
-            ? 'Correzione info muscoli/tecnica'
-            : 'Nuovo tip per ${widget.exercise.name}';
-      case 'warmup':
-        return _selectedType == ContributionType.correction
-            ? 'Correzione info riscaldamento'
-            : 'Consiglio warmup per ${widget.exercise.name}';
-      case 'injury_prevention':
-        return _selectedType == ContributionType.correction
-            ? 'Correzione info sicurezza'
-            : 'Avviso sicurezza per ${widget.exercise.name}';
-      default:
-        return '';
-    }
-  }
-  
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
-  }
-  
-  Future<void> _submitContribution() async {
-    if (_titleController.text.isEmpty || _descriptionController.text.isEmpty) {
-      HapticFeedback.heavyImpact();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.warning, color: Colors.white),
-              const SizedBox(width: 8),
-              const Text('Compila tutti i campi obbligatori'),
-            ],
-          ),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      );
-      return;
-    }
-    
-    setState(() {
-      _isSubmitting = true;
-    });
-    
-    try {
-      // Per le correzioni, salva anche il campo specifico e i valori
-      String? originalValue;
-      String? suggestedValue;
-      
-      if (_selectedType == ContributionType.correction && _selectedSection != null) {
-        originalValue = _getCurrentSectionValue(_selectedSection!);
-        suggestedValue = _descriptionController.text;
-      }
-      
-      await ref.read(contributionSubmissionProvider.notifier).submitContribution(
-        exerciseId: widget.exercise.id,
-        exerciseName: widget.exercise.name,
-        type: _selectedType,
-        title: _titleController.text,
-        description: _descriptionController.text,
-        originalValue: originalValue,
-        suggestedValue: suggestedValue,
-        metadata: _selectedType == ContributionType.correction && _selectedSection != null
-          ? {'field': _selectedSection}
-          : null,
-      );
-      
-      if (mounted) {
-        // Haptic feedback di successo
-        HapticFeedback.mediumImpact();
-        await Future.delayed(const Duration(milliseconds: 100));
-        HapticFeedback.lightImpact();
-        
-        // Chiudi modal
-        Navigator.of(context).pop();
-        
-        // Mostra dialogo di successo premium
-        _showSuccessDialog();
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
-        HapticFeedback.heavyImpact();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.error_outline, color: Colors.white),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text('Errore: ${e.toString()}'),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-    }
-  }
-  
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => _ContributionSuccessDialog(
-        contributionType: _selectedType,
-        onViewContribution: () {
-          Navigator.of(context).pop();
-          // Naviga alla tab "I Miei" nel Community Hub
-          Navigator.pushNamed(context, '/community_hub');
-        },
-        onClose: () {
-          Navigator.of(context).pop();
-        },
-      ),
-    );
-    
-    // Auto-dismiss dopo 5 secondi
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted && Navigator.canPop(context)) {
-        Navigator.of(context).pop();
-      }
-    });
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: 12),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.outline.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.primary.withOpacity(0.7),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.people_outline,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Contribuisci alla Community',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Aiuta altri utenti con ${widget.exercise.name}',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          const Divider(),
-          
-          // Content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Type selector
-                  Text(
-                    'Tipo di contributo',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      _buildTypeChip(
-                        ContributionType.tip, 
-                        '💡 Consiglio', 
-                        theme
-                      ),
-                      _buildTypeChip(
-                        ContributionType.warning, 
-                        '⚠️ Avviso', 
-                        theme
-                      ),
-                      _buildTypeChip(
-                        ContributionType.correction, 
-                        '✏️ Correzione', 
-                        theme
-                      ),
-                      _buildTypeChip(
-                        ContributionType.technique, 
-                        '🎯 Tecnica', 
-                        theme
-                      ),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Section selector for corrections
-                  if (_selectedType == ContributionType.correction && widget.contextType != null)
-                    ...[
-                      Text(
-                        'Sezione da correggere',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: _getSectionOptions().map((section) {
-                          final isSelected = _selectedSection == section;
-                          return ChoiceChip(
-                            label: Text(section),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              setState(() {
-                                _selectedSection = selected ? section : null;
-                                // Update title based on section
-                                if (selected) {
-                                  _titleController.text = 'Correzione: $section';
-                                  // Pre-populate with current value
-                                  _populateCurrentValue(section);
-                                }
-                              });
-                            },
-                            selectedColor: theme.colorScheme.primaryContainer,
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 16),
-                      // Show current value
-                      if (_selectedSection != null && _getCurrentSectionValue(_selectedSection!) != null)
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.errorContainer.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: theme.colorScheme.error.withOpacity(0.3),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.info_outline,
-                                    size: 16,
-                                    color: theme.colorScheme.error,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Valore attuale da correggere:',
-                                    style: theme.textTheme.labelMedium?.copyWith(
-                                      color: theme.colorScheme.error,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                _getCurrentSectionValue(_selectedSection!) ?? '',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(height: 24),
-                    ],
-                  
-                  // Title input
-                  Text(
-                    'Titolo',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _titleController,
-                    decoration: InputDecoration(
-                      hintText: 'Es: Posizione corretta della schiena',
-                      filled: true,
-                      fillColor: theme.colorScheme.surfaceContainerHighest,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Description input
-                  Text(
-                    'Descrizione',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _descriptionController,
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      hintText: _getDescriptionPlaceholder(),
-                      filled: true,
-                      fillColor: theme.colorScheme.surfaceContainerHighest,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Info box
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          color: theme.colorScheme.primary,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Il tuo contributo sarà revisionato dalla community prima di essere approvato',
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          
-          // Submit button
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, -2),
-                ),
-              ],
-            ),
-            child: SafeArea(
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _isSubmitting ? null : _submitContribution,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Text(
-                          'Invia Contributo',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  
-  List<String> _getSectionOptions() {
-    switch (widget.contextType) {
-      case 'exercise_info':
-        return [
-          'Muscoli primari',
-          'Muscoli secondari',
-          'Tipo esercizio',
-          'Attrezzatura',
-          'Range ripetizioni',
-          'Pattern movimento',
-        ];
-      case 'warmup':
-        return [
-          'Serie riscaldamento',
-          'Durata riscaldamento',
-          'Mobilità articolare',
-          'Attivazione muscolare',
-          'Progressione carico',
-        ];
-      case 'injury_prevention':
-        return [
-          'Prevenzione infortuni',
-          'Note tecniche',
-          'Drill tecnico',
-          'Cooldown consigliato',
-          'Errori comuni',
-        ];
-      default:
-        return [];
-    }
-  }
-  
-  String _getDescriptionPlaceholder() {
-    switch (_selectedType) {
-      case ContributionType.tip:
-        return 'Condividi un consiglio utile che hai scoperto per questo esercizio...';
-      case ContributionType.warning:
-        return 'Segnala un rischio o errore comune da evitare...';
-      case ContributionType.correction:
-        if (_selectedSection != null) {
-          return 'Spiega cosa correggere in "$_selectedSection"...';
-        }
-        return 'Descrivi cosa deve essere corretto e perché...';
-      case ContributionType.technique:
-        return 'Descrivi la tecnica corretta per eseguire questo esercizio...';
-      default:
-        return 'Scrivi qui il tuo contributo...';
-    }
-  }
-  
-  String? _getCurrentSectionValue(String section) {
-    // Get the current value from loaded exercise data
-    if (widget.exerciseData == null) return null;
-    
-    switch (section) {
-      case 'Nome':
-        return widget.exercise.name;
-      case 'Serie riscaldamento':
-        return widget.exerciseData?['warmupSets'];
-      case 'Durata riscaldamento':
-        return widget.exerciseData?['tempoWarmup'];
-      case 'Tipo riscaldamento':
-        return widget.exerciseData?['attivazionePre'];
-      case 'Muscoli target':
-        return widget.exerciseData?['focus'];
-      case 'Muscoli secondari':
-        return widget.exerciseData?['muscoliSecondari'];
-      case 'Attrezzatura':
-        return widget.exerciseData?['attrezzatura'];
-      case 'Descrizione':
-        return widget.exerciseData?['noteTecniche'];
-      case 'Mobilità articolare':
-        return widget.exerciseData?['mobilitaPre'];
-      case 'Attivazione muscolare':
-        return widget.exerciseData?['attivazionePre'];
-      case 'Progressione carico':
-        return widget.exerciseData?['warmupSets'];
-      case 'Prevenzione infortuni':
-        return widget.exerciseData?['prevenzioneInfortuni'];
-      case 'Note tecniche':
-        return widget.exerciseData?['noteTecniche'];
-      case 'Drill tecnico':
-        return widget.exerciseData?['drillTecnico'];
-      case 'Cooldown consigliato':
-        return widget.exerciseData?['cooldownConsigliato'];
-      case 'Errori comuni':
-        return widget.exerciseData?['erroriComuni'];
-      case 'Difficoltà':
-        return widget.exerciseData?['difficolta'];
-      case 'Tipo esercizio':
-        return widget.exerciseData?['tipoEsercizio'];
-      case 'Range ripetizioni':
-        return widget.exerciseData?['rangeRipetizioni'];
-      case 'Pattern movimento':
-        return widget.exerciseData?['patternMovimento'];
-      default:
-        return null;
-    }
-  }
-  
-  void _populateCurrentValue(String section) {
-    final currentValue = _getCurrentSectionValue(section);
-    if (currentValue != null) {
-      // Pre-fill the description with current value for easy editing
-      _descriptionController.text = 'Valore attuale: "$currentValue"\n\nValore corretto: ';
-    }
-  }
-  
-  Widget _buildTypeChip(ContributionType type, String label, ThemeData theme) {
-    final isSelected = _selectedType == type;
-    
-    return FilterChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (selected) {
-        if (selected) {
-          HapticFeedback.selectionClick();
-          setState(() {
-            _selectedType = type;
-          });
-        }
-      },
-      backgroundColor: theme.colorScheme.surfaceContainerHighest,
-      selectedColor: theme.colorScheme.primaryContainer,
-      checkmarkColor: theme.colorScheme.primary,
-    );
-  }
-}
-
 // Premium Success Dialog Widget
-class _ContributionSuccessDialog extends ConsumerStatefulWidget {
-  final ContributionType contributionType;
-  final VoidCallback onViewContribution;
-  final VoidCallback onClose;
-  
-  const _ContributionSuccessDialog({
-    required this.contributionType,
-    required this.onViewContribution,
-    required this.onClose,
-  });
-
-  @override
-  ConsumerState<_ContributionSuccessDialog> createState() => _ContributionSuccessDialogState();
-}
-
-class _ContributionSuccessDialogState extends ConsumerState<_ContributionSuccessDialog>
-    with TickerProviderStateMixin {
-  late AnimationController _scaleController;
-  late AnimationController _checkController;
-  late AnimationController _xpController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _checkAnimation;
-  late Animation<double> _xpAnimation;
-  
-  @override
-  void initState() {
-    super.initState();
-    
-    _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    
-    _checkController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    
-    _xpController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-    
-    _scaleAnimation = CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.elasticOut,
-    );
-    
-    _checkAnimation = CurvedAnimation(
-      parent: _checkController,
-      curve: Curves.easeInOutCubic,
-    );
-    
-    _xpAnimation = CurvedAnimation(
-      parent: _xpController,
-      curve: Curves.bounceOut,
-    );
-    
-    // Start animations in sequence
-    _scaleController.forward();
-    Future.delayed(const Duration(milliseconds: 300), () {
-      _checkController.forward();
-    });
-    Future.delayed(const Duration(milliseconds: 600), () {
-      _xpController.forward();
-      HapticFeedback.lightImpact();
-    });
-  }
-  
-  @override
-  void dispose() {
-    _scaleController.dispose();
-    _checkController.dispose();
-    _xpController.dispose();
-    super.dispose();
-  }
-  
-  String _getContributionText() {
-    switch (widget.contributionType) {
-      case ContributionType.correction:
-        return 'Correzione Inviata!';
-      case ContributionType.tip:
-        return 'Consiglio Inviato!';
-      case ContributionType.warning:
-        return 'Avviso Inviato!';
-      case ContributionType.variant:
-        return 'Variante Inviata!';
-      case ContributionType.translation:
-        return 'Traduzione Inviata!';
-      case ContributionType.technique:
-        return 'Tecnica Inviata!';
-    }
-  }
-  
-  int _getXPValue() {
-    // Con auto-approvazione ottieni submitContribution (10) + contributionApproved (50) = 60 XP
-    // Mostriamo il totale che l'utente riceverà
-    return 60; // Total XP con auto-approvazione
-  }
-  
-  String _getXPAmount() {
-    return '+${_getXPValue()} XP';
-  }
-  
-  IconData _getIcon() {
-    switch (widget.contributionType) {
-      case ContributionType.correction:
-        return Icons.edit;
-      case ContributionType.tip:
-        return Icons.lightbulb;
-      case ContributionType.warning:
-        return Icons.warning;
-      case ContributionType.variant:
-        return Icons.tune;
-      case ContributionType.translation:
-        return Icons.translate;
-      case ContributionType.technique:
-        return Icons.sports_gymnastics;
-    }
-  }
-  
-  Color _getColor() {
-    switch (widget.contributionType) {
-      case ContributionType.correction:
-        return Colors.blue;
-      case ContributionType.tip:
-        return Colors.green;
-      case ContributionType.warning:
-        return Colors.orange;
-      case ContributionType.variant:
-        return Colors.purple;
-      case ContributionType.translation:
-        return Colors.teal;
-      case ContributionType.technique:
-        return Colors.indigo;
-    }
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = _getColor();
-    
-    // Get user stats for XP calculation
-    final userStatsAsync = ref.watch(userContributionStatsProvider);
-    final previousXP = userStatsAsync.valueOrNull?.totalPoints ?? 0;
-    final xpGained = _getXPValue();
-    final currentXP = previousXP + xpGained;
-    final currentLevel = (currentXP / 500).floor() + 1;
-    
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.9,
-          ),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: color.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Header with success animation
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        color.withOpacity(0.1),
-                        color.withOpacity(0.05),
-                      ],
-                    ),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                  ),
-                  child: Column(
-                    children: [
-                      // Success Icon with Animation
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  color.withOpacity(0.2),
-                                  color.withOpacity(0.1),
-                                ],
-                              ),
-                            ),
-                          ),
-                          AnimatedBuilder(
-                            animation: _checkAnimation,
-                            builder: (context, child) {
-                              return Transform.scale(
-                                scale: _checkAnimation.value,
-                                child: Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [color, color.withOpacity(0.8)],
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                    size: 40,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      
-                      const SizedBox(height: 24),
-                      
-                      // Title
-                      Text(
-                        _getContributionText(),
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 8),
-                      
-                      // Subtitle
-                      Text(
-                        'La community ti ringrazia! 🙏',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.7),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                
-                // Animated XP Bar
-                AnimatedBuilder(
-                  animation: _xpAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: 0.8 + (0.2 * _xpAnimation.value),
-                      child: Opacity(
-                        opacity: _xpAnimation.value,
-                        child: AnimatedXPBar(
-                          currentXP: currentXP,
-                          previousXP: previousXP,
-                          xpGained: xpGained,
-                          currentLevel: currentLevel,
-                          onAnimationComplete: () {
-                            // Auto close after animation completes
-                            Future.delayed(const Duration(seconds: 2), () {
-                              if (mounted) {
-                                widget.onClose();
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                
-                // Action Buttons
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: widget.onViewContribution,
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text('I Miei Contributi'),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton(
-                          onPressed: widget.onClose,
-                          style: FilledButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            backgroundColor: color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text('Fantastico!'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

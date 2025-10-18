@@ -65,7 +65,7 @@ void main() {
           ExerciseSet(setNumber: 1, weight: 80, reps: 8, isCompleted: true),
           ExerciseSet(setNumber: 2, weight: 90, reps: 6, isCompleted: true),
         ];
-        final oneRM = 100.0;
+        const oneRM = 100.0;
 
         final avgIntensity = ProgressiveOverloadEngine.calculateAverageIntensity(sets, oneRM);
         expect(avgIntensity, equals(85.0)); // (80% + 90%) / 2 = 85%
@@ -85,7 +85,7 @@ void main() {
           ExerciseSet(setNumber: 1, weight: 50, reps: 10, isWarmup: true, isCompleted: true),
           ExerciseSet(setNumber: 2, weight: 80, reps: 8, isCompleted: true),
         ];
-        final oneRM = 100.0;
+        const oneRM = 100.0;
 
         final avgIntensity = ProgressiveOverloadEngine.calculateAverageIntensity(sets, oneRM);
         expect(avgIntensity, equals(80.0)); // Only 80% from working set

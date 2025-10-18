@@ -1,13 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
-import '../domain/models/level_system.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 
 class DailyLoginState {
-  final DateTime? lastLoginDate;
-  final int consecutiveDays;
-  final int totalXpEarned;
-  final bool bonusClaimedToday;
   
   DailyLoginState({
     this.lastLoginDate,
@@ -15,6 +11,10 @@ class DailyLoginState {
     this.totalXpEarned = 0,
     this.bonusClaimedToday = false,
   });
+  final DateTime? lastLoginDate;
+  final int consecutiveDays;
+  final int totalXpEarned;
+  final bool bonusClaimedToday;
   
   DailyLoginState copyWith({
     DateTime? lastLoginDate,
@@ -32,16 +32,16 @@ class DailyLoginState {
 }
 
 class DailyLoginNotifier extends StateNotifier<DailyLoginState> {
+  
+  DailyLoginNotifier(this._prefs) : super(DailyLoginState()) {
+    _loadState();
+  }
   final SharedPreferences _prefs;
   
   static const String _lastLoginKey = 'last_login_date';
   static const String _consecutiveDaysKey = 'consecutive_login_days';
   static const String _totalXpKey = 'total_login_xp';
   static const String _lastBonusDateKey = 'last_bonus_claim_date';
-  
-  DailyLoginNotifier(this._prefs) : super(DailyLoginState()) {
-    _loadState();
-  }
   
   void _loadState() {
     final lastLoginStr = _prefs.getString(_lastLoginKey);

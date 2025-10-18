@@ -1,21 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 /// Optimized list view with lazy loading and performance improvements
 class LazyLoadingList<T> extends StatefulWidget {
-  final List<T> items;
-  final Widget Function(BuildContext, T, int) itemBuilder;
-  final Widget Function()? loadingBuilder;
-  final Widget Function()? emptyBuilder;
-  final Future<void> Function()? onLoadMore;
-  final bool hasMore;
-  final EdgeInsetsGeometry? padding;
-  final ScrollController? controller;
-  final bool shrinkWrap;
-  final ScrollPhysics? physics;
-  final int cacheExtent;
-  final int itemsPerBatch;
 
   const LazyLoadingList({
     super.key,
@@ -32,6 +19,18 @@ class LazyLoadingList<T> extends StatefulWidget {
     this.cacheExtent = 250,
     this.itemsPerBatch = 20,
   });
+  final List<T> items;
+  final Widget Function(BuildContext, T, int) itemBuilder;
+  final Widget Function()? loadingBuilder;
+  final Widget Function()? emptyBuilder;
+  final Future<void> Function()? onLoadMore;
+  final bool hasMore;
+  final EdgeInsetsGeometry? padding;
+  final ScrollController? controller;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+  final int cacheExtent;
+  final int itemsPerBatch;
 
   @override
   State<LazyLoadingList<T>> createState() => _LazyLoadingListState<T>();
@@ -164,16 +163,6 @@ class _LazyLoadingListState<T> extends State<LazyLoadingList<T>> {
 
 /// Optimized grid view with lazy loading
 class LazyLoadingGrid<T> extends StatefulWidget {
-  final List<T> items;
-  final Widget Function(BuildContext, T, int) itemBuilder;
-  final int crossAxisCount;
-  final double childAspectRatio;
-  final double crossAxisSpacing;
-  final double mainAxisSpacing;
-  final EdgeInsetsGeometry? padding;
-  final ScrollController? controller;
-  final Future<void> Function()? onLoadMore;
-  final bool hasMore;
 
   const LazyLoadingGrid({
     super.key,
@@ -188,6 +177,16 @@ class LazyLoadingGrid<T> extends StatefulWidget {
     this.onLoadMore,
     this.hasMore = false,
   });
+  final List<T> items;
+  final Widget Function(BuildContext, T, int) itemBuilder;
+  final int crossAxisCount;
+  final double childAspectRatio;
+  final double crossAxisSpacing;
+  final double mainAxisSpacing;
+  final EdgeInsetsGeometry? padding;
+  final ScrollController? controller;
+  final Future<void> Function()? onLoadMore;
+  final bool hasMore;
 
   @override
   State<LazyLoadingGrid<T>> createState() => _LazyLoadingGridState<T>();

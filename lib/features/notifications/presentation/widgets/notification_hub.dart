@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../providers/notification_provider.dart';
-import '../../domain/entities/notification.dart';
-import '../../../progress/presentation/providers/progress_provider.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+// MIGRATION: Using bridge provider for backward compatibility while migrating to unified system
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 
 class NotificationHub extends ConsumerWidget {
   const NotificationHub({super.key});
@@ -79,7 +80,7 @@ class NotificationHub extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => NotificationPanel(),
+      builder: (context) => const NotificationPanel(),
     );
   }
 }
@@ -123,7 +124,7 @@ class NotificationPanel extends ConsumerWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  AppLocalizations.of(context)!.notifications ?? 'Notifiche',
+                  AppLocalizations.of(context).notifications ?? 'Notifiche',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -135,7 +136,7 @@ class NotificationPanel extends ConsumerWidget {
                       ref.read(notificationProvider.notifier).markAllAsRead();
                     },
                     child: Text(
-                      AppLocalizations.of(context)!.markAllAsRead ?? 'Segna tutte lette',
+                      AppLocalizations.of(context).markAllAsRead ?? 'Segna tutte lette',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w600,
@@ -214,13 +215,13 @@ class NotificationPanel extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Text(
+              const Text(
                 '📊',
-                style: const TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20),
               ),
               const SizedBox(width: 8),
               Text(
-                AppLocalizations.of(context)!.quickStats ?? 'I tuoi progressi',
+                AppLocalizations.of(context).quickStats ?? 'I tuoi progressi',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -247,7 +248,7 @@ class NotificationPanel extends ConsumerWidget {
                     context, 
                     '🔥', 
                     streak.toString(), 
-                    AppLocalizations.of(context)!.streak ?? 'Streak'
+                    AppLocalizations.of(context).streak ?? 'Streak'
                   ),
                 ),
                 Expanded(
@@ -255,7 +256,7 @@ class NotificationPanel extends ConsumerWidget {
                     context, 
                     '💪', 
                     weeklyWorkouts.toString(), 
-                    AppLocalizations.of(context)!.thisWeek ?? 'Settimana'
+                    AppLocalizations.of(context).thisWeek ?? 'Settimana'
                   ),
                 ),
                 Expanded(
@@ -263,7 +264,7 @@ class NotificationPanel extends ConsumerWidget {
                     context, 
                     '🏆', 
                     achievements.toString(), 
-                    AppLocalizations.of(context)!.achievements ?? 'Obiettivi'
+                    AppLocalizations.of(context).achievements ?? 'Obiettivi'
                   ),
                 ),
               ],
@@ -341,14 +342,14 @@ class NotificationPanel extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.noNotifications ?? 'Nessuna notifica',
+            AppLocalizations.of(context).noNotifications ?? 'Nessuna notifica',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context)!.notificationsDescription ?? 'Ti terremo aggiornato sui tuoi progressi!',
+            AppLocalizations.of(context).notificationsDescription ?? 'Ti terremo aggiornato sui tuoi progressi!',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -374,9 +375,6 @@ class NotificationPanel extends ConsumerWidget {
 }
 
 class NotificationTile extends StatelessWidget {
-  final AppNotification notification;
-  final VoidCallback onTap;
-  final VoidCallback onDismiss;
 
   const NotificationTile({
     super.key,
@@ -384,6 +382,9 @@ class NotificationTile extends StatelessWidget {
     required this.onTap,
     required this.onDismiss,
   });
+  final AppNotification notification;
+  final VoidCallback onTap;
+  final VoidCallback onDismiss;
 
   @override
   Widget build(BuildContext context) {

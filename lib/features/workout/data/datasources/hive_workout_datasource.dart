@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/datasources
- * 🎯 Feature: workout
- * 🔧 Type: datasource
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Hive (local storage)
- * - Data models
- * - Domain entities
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/datasources
+/// 🎯 Feature: workout
+/// 🔧 Type: datasource
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Hive (local storage)
+/// - Data models
+/// - Domain entities
+library;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,36 +29,106 @@ class HiveWorkoutDataSource {
   
   /// Initialize Hive boxes
   static Future<void> initialize() async {
-    await Hive.openBox<Map>(_workoutsBoxName);
-    await Hive.openBox<Map>(_workoutSummariesBoxName);
-    await Hive.openBox<Map>(_exerciseActivitiesBoxName);
-    await Hive.openBox<Map>(_syncQueueBoxName);
+    try {
+      // Only open boxes that aren't already open
+      if (!Hive.isBoxOpen(_workoutsBoxName)) {
+        await Hive.openBox<Map>(_workoutsBoxName);
+        debugPrint('✅ Opened workouts box');
+      } else {
+        debugPrint('ℹ️ Workouts box already open');
+      }
+
+      if (!Hive.isBoxOpen(_workoutSummariesBoxName)) {
+        await Hive.openBox<Map>(_workoutSummariesBoxName);
+        debugPrint('✅ Opened workout_summaries box');
+      } else {
+        debugPrint('ℹ️ Workout summaries box already open');
+      }
+
+      if (!Hive.isBoxOpen(_exerciseActivitiesBoxName)) {
+        await Hive.openBox<Map>(_exerciseActivitiesBoxName);
+        debugPrint('✅ Opened exercise_activities box');
+      } else {
+        debugPrint('ℹ️ Exercise activities box already open');
+      }
+
+      if (!Hive.isBoxOpen(_syncQueueBoxName)) {
+        await Hive.openBox<Map>(_syncQueueBoxName);
+        debugPrint('✅ Opened sync_queue box');
+      } else {
+        debugPrint('ℹ️ Sync queue box already open');
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ Error initializing Hive boxes: $e');
+      debugPrint('Stack trace: $stackTrace');
+      rethrow;
+    }
+  }
+
+  /// Get workouts box (open if needed)
+  Future<Box<Map>> _getWorkoutsBox() async {
+    return Hive.isBoxOpen(_workoutsBoxName)
+        ? Hive.box<Map>(_workoutsBoxName)
+        : await Hive.openBox<Map>(_workoutsBoxName);
+  }
+
+  /// Get summaries box (open if needed)
+  Future<Box<Map>> _getSummariesBox() async {
+    return Hive.isBoxOpen(_workoutSummariesBoxName)
+        ? Hive.box<Map>(_workoutSummariesBoxName)
+        : await Hive.openBox<Map>(_workoutSummariesBoxName);
+  }
+
+  /// Get sync queue box (open if needed)
+  Future<Box<Map>> _getSyncQueueBox() async {
+    return Hive.isBoxOpen(_syncQueueBoxName)
+        ? Hive.box<Map>(_syncQueueBoxName)
+        : await Hive.openBox<Map>(_syncQueueBoxName);
   }
 
   /// Save workout locally
   Future<String> saveWorkout(WorkoutModel workout, String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+    final box = await _getWorkoutsBox();
     final key = '${userId}_${workout.id}';
-    
+
     // Ensure data is properly typed as Map<String, dynamic>
     final Map<String, dynamic> data = workout.toJson();
     data['userId'] = userId;
     data['localLastModified'] = DateTime.now().toIso8601String();
     data['syncStatus'] = 'pending'; // pending, synced, conflict
-    
+
+    // DEBUG: Log first set's isCompleted value before saving
+    if (workout.exercises.isNotEmpty && workout.exercises[0].sets.isNotEmpty) {
+      final firstSet = workout.exercises[0].sets[0];
+      if (kDebugMode) {
+        debugPrint('💾 [Hive] Saving workout "${workout.name}" - First set isCompleted: ${firstSet.isCompleted}');
+      }
+      final exercisesJson = data['exercises'] as List?;
+      if (exercisesJson != null && exercisesJson.isNotEmpty) {
+        final firstExerciseJson = exercisesJson[0] as Map;
+        final setsJson = firstExerciseJson['sets'] as List?;
+        if (setsJson != null && setsJson.isNotEmpty) {
+          final firstSetJson = setsJson[0] as Map;
+          if (kDebugMode) {
+            debugPrint('💾 [Hive] First set JSON isCompleted: ${firstSetJson['isCompleted']}');
+          }
+        }
+      }
+    }
+
     // Force conversion to ensure Hive saves as Map<String, dynamic>
     final Map<String, dynamic> dataToSave = Map<String, dynamic>.from(data);
     await box.put(key, dataToSave);
-    
+
     // Add to sync queue for premium users
     await _addToSyncQueue(key, 'create', userId);
-    
+
     return workout.id;
   }
 
   /// Update existing workout locally
   Future<void> updateWorkout(WorkoutModel workout, String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+    final box = await _getWorkoutsBox();
     final key = '${userId}_${workout.id}';
     
     final data = workout.toJson();
@@ -75,7 +144,7 @@ class HiveWorkoutDataSource {
 
   /// Get single workout by ID
   Future<WorkoutModel?> getWorkout(String workoutId, String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+    final box = await _getWorkoutsBox();
     final key = '${userId}_$workoutId';
     
     final data = box.get(key);
@@ -91,7 +160,7 @@ class HiveWorkoutDataSource {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+    final box = await _getWorkoutsBox();
     
     debugPrint('📦 Reading workouts from Hive for user: $userId');
     debugPrint('📦 Total keys in box: ${box.keys.length}');
@@ -107,14 +176,13 @@ class HiveWorkoutDataSource {
             final Map<String, dynamic> jsonData;
             if (data is Map<String, dynamic>) {
               jsonData = data;
-            } else if (data is Map) {
-              // Cast keys to String and preserve values
-              jsonData = Map<String, dynamic>.from(
-                data.map((key, value) => MapEntry(key.toString(), value))
-              );
             } else {
-              throw Exception('Invalid data type: ${data.runtimeType}');
+              // Cast keys to String and preserve values
+            jsonData = Map<String, dynamic>.from(
+              data.map((key, value) => MapEntry(key.toString(), value))
+            );
             }
+          
             return WorkoutModel.fromJson(jsonData);
           } catch (e) {
             debugPrint('❌ Error parsing workout with key $key: $e');
@@ -151,7 +219,7 @@ class HiveWorkoutDataSource {
 
   /// Delete workout locally
   Future<void> deleteWorkout(String workoutId, String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+    final box = await _getWorkoutsBox();
     final key = '${userId}_$workoutId';
     
     await box.delete(key);
@@ -166,7 +234,7 @@ class HiveWorkoutDataSource {
     String userEmail,
   ) async {
     final activitiesBox = await Hive.openBox<Map>(_exerciseActivitiesBoxName);
-    final summariesBox = await Hive.openBox<Map>(_workoutSummariesBoxName);
+    final summariesBox = await _getSummariesBox();
     final activityIds = <String>[];
     
     // Create exercise activities for each completed exercise
@@ -337,7 +405,7 @@ class HiveWorkoutDataSource {
 
   /// Add operation to sync queue for later processing
   Future<void> _addToSyncQueue(String key, String operation, String userId) async {
-    final box = await Hive.openBox<Map>(_syncQueueBoxName);
+    final box = await _getSyncQueueBox();
     
     final queueItem = {
       'key': key,
@@ -353,7 +421,7 @@ class HiveWorkoutDataSource {
 
   /// Get pending sync items for a user
   Future<List<Map<String, dynamic>>> getPendingSyncItems(String userId) async {
-    final box = await Hive.openBox<Map>(_syncQueueBoxName);
+    final box = await _getSyncQueueBox();
     
     return box.values
         .where((item) => item['userId'] == userId && item['status'] == 'pending')
@@ -363,7 +431,7 @@ class HiveWorkoutDataSource {
 
   /// Mark sync item as completed
   Future<void> markSyncCompleted(int syncQueueIndex) async {
-    final box = await Hive.openBox<Map>(_syncQueueBoxName);
+    final box = await _getSyncQueueBox();
     
     final item = box.getAt(syncQueueIndex);
     if (item != null) {
@@ -375,7 +443,7 @@ class HiveWorkoutDataSource {
 
   /// Clean old sync queue items
   Future<void> cleanSyncQueue() async {
-    final box = await Hive.openBox<Map>(_syncQueueBoxName);
+    final box = await _getSyncQueueBox();
     final now = DateTime.now();
     final keysToDelete = <dynamic>[];
     
@@ -396,7 +464,7 @@ class HiveWorkoutDataSource {
   Future<Map<String, dynamic>> exportAllData(String userId) async {
     final workouts = await getWorkouts(userId);
     final activitiesBox = await Hive.openBox<Map>(_exerciseActivitiesBoxName);
-    final summariesBox = await Hive.openBox<Map>(_workoutSummariesBoxName);
+    final summariesBox = await _getSummariesBox();
     
     final activities = activitiesBox.values
         .where((item) => item['userEmail']?.toString().contains(userId) ?? false)
@@ -418,7 +486,7 @@ class HiveWorkoutDataSource {
 
   /// Import data from backup
   Future<void> importData(Map<String, dynamic> data, String userId) async {
-    final workoutsBox = await Hive.openBox<Map>(_workoutsBoxName);
+    final workoutsBox = await _getWorkoutsBox();
     
     // Import workouts
     if (data['workouts'] != null) {
@@ -439,7 +507,7 @@ class HiveWorkoutDataSource {
     
     // Import summaries if present
     if (data['summaries'] != null) {
-      final summariesBox = await Hive.openBox<Map>(_workoutSummariesBoxName);
+      final summariesBox = await _getSummariesBox();
       for (final summary in data['summaries']) {
         await summariesBox.put(summary['id'], summary);
       }
@@ -448,7 +516,7 @@ class HiveWorkoutDataSource {
 
   /// Get unsynced workouts for premium sync
   Future<List<WorkoutModel>> getUnsyncedWorkouts(String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+    final box = await _getWorkoutsBox();
     
     final unsyncedWorkouts = box.keys
         .where((key) => key.toString().startsWith('${userId}_'))
@@ -462,7 +530,7 @@ class HiveWorkoutDataSource {
   
   /// Mark workout as synced
   Future<void> markWorkoutAsSynced(String workoutId, String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+    final box = await _getWorkoutsBox();
     final key = '${userId}_$workoutId';
     
     final data = box.get(key);
@@ -475,24 +543,58 @@ class HiveWorkoutDataSource {
   
   /// Clear all local data for a user (for logout/account deletion)
   Future<void> clearUserData(String userId) async {
-    final workoutsBox = await Hive.openBox<Map>(_workoutsBoxName);
+    final workoutsBox = await _getWorkoutsBox();
     final keysToDelete = workoutsBox.keys
         .where((key) => key.toString().startsWith('${userId}_'))
         .toList();
-    
+
     await workoutsBox.deleteAll(keysToDelete);
-    
+
     // Also clear sync queue for this user
     final syncBox = await Hive.openBox<Map>(_syncQueueBoxName);
     final syncKeysToDelete = <dynamic>[];
-    
+
     for (var i = 0; i < syncBox.length; i++) {
       final item = syncBox.getAt(i);
       if (item != null && item['userId'] == userId) {
         syncKeysToDelete.add(syncBox.keyAt(i));
       }
     }
-    
+
     await syncBox.deleteAll(syncKeysToDelete);
+  }
+
+  /// Get workouts for analytics (domain entities for direct use by analytics repository)
+  /// This ensures consistent data access across the application
+  Future<List<WorkoutModel>> getWorkoutsForAnalytics(
+    String userId, {
+    int? limit,
+    DateTime? since,
+  }) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('📊 [HiveWorkoutDataSource] Getting workouts for analytics - User: $userId');
+      }
+
+      // Use the same method as regular getWorkouts
+      final workouts = await getWorkouts(
+        userId,
+        limit: limit,
+        startDate: since,
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [HiveWorkoutDataSource] Retrieved ${workouts.length} workouts for analytics');
+      }
+      return workouts;
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [HiveWorkoutDataSource] Error getting workouts for analytics: $e');
+      }
+      if (kDebugMode) {
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+      return [];
+    }
   }
 }

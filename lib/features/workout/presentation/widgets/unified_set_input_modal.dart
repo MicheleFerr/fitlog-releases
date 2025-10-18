@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-import '../providers/exercise_history_provider.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 // Extension for easy modal showing
 extension UnifiedSetInputModalExtension on BuildContext {
@@ -15,6 +17,7 @@ extension UnifiedSetInputModalExtension on BuildContext {
     ExerciseSet? previousSet,
     String? exerciseName,
     bool isInWorkout = true,
+    Exercise? exercise,
   }) async {
     // Validate inputs
     if (exerciseSet == null) {
@@ -38,6 +41,7 @@ extension UnifiedSetInputModalExtension on BuildContext {
       previousSet: previousSet,
       exerciseName: exerciseName ?? 'Exercise',
       isInWorkout: isInWorkout,
+      exercise: exercise,
     );
   }
 }
@@ -45,18 +49,6 @@ extension UnifiedSetInputModalExtension on BuildContext {
 /// Unified modal for weight, reps, and RPE input with improved UX
 /// Based on QuickEditSetOverlay design patterns
 class UnifiedSetInputModal extends ConsumerStatefulWidget {
-  final ExerciseSet exerciseSet;
-  final Function(ExerciseSet) onSave;
-  final VoidCallback? onCancel;
-  final ExerciseSet? previousSet;
-  final String exerciseName;
-  final bool isInWorkout; // True if editing during workout, false if editing history
-  
-  // Superset support
-  final bool isSuperset;
-  final List<String>? supersetExerciseNames;
-  final Map<String, ExerciseSet>? supersetExerciseSets;
-  final Function(Map<String, ExerciseSet>)? onSupersetSave;
   
   const UnifiedSetInputModal({
     super.key,
@@ -66,11 +58,27 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
     this.previousSet,
     required this.exerciseName,
     this.isInWorkout = true,
+    this.exercise,
     this.isSuperset = false,
     this.supersetExerciseNames,
     this.supersetExerciseSets,
     this.onSupersetSave,
+    this.initialExerciseIndex = 0,
   });
+  final ExerciseSet exerciseSet;
+  final Function(ExerciseSet) onSave;
+  final VoidCallback? onCancel;
+  final ExerciseSet? previousSet;
+  final String exerciseName;
+  final bool isInWorkout; // True if editing during workout, false if editing history
+  final Exercise? exercise; // Full exercise entity for APRE suggestions
+
+  // Superset support
+  final bool isSuperset;
+  final List<String>? supersetExerciseNames;
+  final Map<String, ExerciseSet>? supersetExerciseSets;
+  final Function(Map<String, ExerciseSet>)? onSupersetSave;
+  final int initialExerciseIndex;
 
   static Future<void> show({
     required BuildContext context,
@@ -79,6 +87,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
     ExerciseSet? previousSet,
     required String exerciseName,
     bool isInWorkout = true,
+    Exercise? exercise,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -94,6 +103,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
         previousSet: previousSet,
         exerciseName: exerciseName,
         isInWorkout: isInWorkout,
+        exercise: exercise,
       ),
     );
   }
@@ -103,8 +113,13 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
     required List<String> exerciseNames,
     required Map<String, ExerciseSet> exerciseSets,
     required Function(Map<String, ExerciseSet>) onSave,
+    int initialExerciseIndex = 0,
     bool isInWorkout = true,
   }) {
+    // Ensure initial index is valid
+    final safeIndex = initialExerciseIndex.clamp(0, exerciseNames.length - 1);
+    final initialExerciseName = exerciseNames[safeIndex];
+    
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -114,14 +129,15 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
       builder: (context) => UnifiedSetInputModal(
-        exerciseSet: exerciseSets[exerciseNames.first]!,
+        exerciseSet: exerciseSets[initialExerciseName]!,
         onSave: (set) {}, // Not used for superset
-        exerciseName: exerciseNames.first,
+        exerciseName: initialExerciseName,
         isInWorkout: isInWorkout,
         isSuperset: true,
         supersetExerciseNames: exerciseNames,
         supersetExerciseSets: exerciseSets,
         onSupersetSave: onSave,
+        initialExerciseIndex: safeIndex,
       ),
     );
   }
@@ -150,6 +166,10 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   int? _selectedRpe;
   int? _calculatedRir;
   bool _isCompleted = false;
+
+  // Rest time suggestion state
+  RestTimeSuggestion? _restTimeSuggestion;
+  bool _showSuggestionBanner = false;
   
   // Superset state - maps exercise name to its values
   final Map<String, double> _supersetWeights = {};
@@ -166,13 +186,15 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   void initState() {
     super.initState();
     
-    // Initialize Tab Controller for superset
+    // Initialize Tab Controller for superset with initial index
     if (widget.isSuperset && widget.supersetExerciseNames != null) {
       _tabController = TabController(
         length: widget.supersetExerciseNames!.length,
+        initialIndex: widget.initialExerciseIndex,
         vsync: this,
       );
       _tabController!.addListener(_onTabChanged);
+      _currentTabIndex = widget.initialExerciseIndex;
       
       // Initialize superset states
       for (final exerciseName in widget.supersetExerciseNames!) {
@@ -378,9 +400,41 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
       rpe: _selectedRpe,
       isCompleted: _isCompleted,
       completedAt: _isCompleted ? DateTime.now() : null,
-      volume: _selectedWeight * _selectedReps,
     );
-    
+
+    // Check for rest time suggestion (only if set is completed and exercise data is available)
+    debugPrint('[APRE-DEBUG] Rest Time Check: _isCompleted=$_isCompleted, exercise=${widget.exercise?.name}, previousSet=${widget.previousSet?.weight}');
+
+    if (_isCompleted && widget.exercise != null && widget.previousSet != null) {
+      final config = ref.read(appConfigProvider);
+      final autoAdjustEnabled = config.autoAdjustRestTime ?? false;
+
+      debugPrint('[APRE-DEBUG] AutoAdjustRestTime config: $autoAdjustEnabled');
+      debugPrint('[APRE-DEBUG] Exercise autoAdjustmentType: ${widget.exercise!.autoAdjustmentType}');
+      debugPrint('[APRE-DEBUG] Weight comparison: prev=${widget.previousSet!.weight}, new=$_selectedWeight');
+
+      final suggestion = RestTimeSuggestionService.checkRestTimeSuggestion(
+        exercise: widget.exercise!,
+        newWeight: _selectedWeight,
+        lastWeight: widget.previousSet!.weight ?? _selectedWeight,
+        currentRestTime: widget.exercise!.restTime ?? 90,
+        autoAdjustEnabled: autoAdjustEnabled,
+      );
+
+      debugPrint('[APRE-DEBUG] Suggestion result: ${suggestion != null ? suggestion.message : "null"}');
+
+      if (suggestion != null) {
+        // Show suggestion banner instead of closing immediately
+        setState(() {
+          _restTimeSuggestion = suggestion;
+          _showSuggestionBanner = true;
+        });
+        HapticFeedback.mediumImpact();
+        widget.onSave(updatedSet);
+        return; // Don't close modal yet
+      }
+    }
+
     HapticFeedback.mediumImpact();
     widget.onSave(updatedSet);
     Navigator.of(context).pop();
@@ -410,7 +464,6 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
         rpe: _supersetRpes[exerciseName],
         isCompleted: isCompleted,
         completedAt: isCompleted ? DateTime.now() : null,
-        volume: (_supersetWeights[exerciseName] ?? 0.0) * reps,
       ) ?? ExerciseSet(
         setNumber: originalSet?.setNumber ?? 1,
         weight: _supersetWeights[exerciseName] ?? 0.0,
@@ -419,7 +472,6 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
         rpe: _supersetRpes[exerciseName],
         isCompleted: isCompleted,
         completedAt: isCompleted ? DateTime.now() : null,
-        volume: (_supersetWeights[exerciseName] ?? 0.0) * reps,
       );
     }
     
@@ -432,7 +484,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final config = ref.watch(appConfigProvider);
     final recentWeightsAsync = ref.watch(recentWeightsProvider(widget.exerciseName));
     
@@ -794,7 +846,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         ),
                                       ),
                                       child: Text(
-                                        '${_selectedWeight.toStringAsFixed(_selectedWeight % 1 == 0 ? 0 : 1)}',
+                                        _selectedWeight.toStringAsFixed(_selectedWeight % 1 == 0 ? 0 : 1),
                                         style: theme.textTheme.headlineMedium?.copyWith(
                                           fontWeight: FontWeight.bold,
                                           color: colorScheme.primary,
@@ -1211,7 +1263,135 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                             ],
                           ),
                         ),
-                        
+
+                        // Rest time suggestion banner
+                        if (_showSuggestionBanner && _restTimeSuggestion != null)
+                          Container(
+                            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  _restTimeSuggestion!.type == RestTimeSuggestionType.increase
+                                    ? Colors.orange.withValues(alpha: 0.15)
+                                    : Colors.green.withValues(alpha: 0.15),
+                                  _restTimeSuggestion!.type == RestTimeSuggestionType.increase
+                                    ? Colors.deepOrange.withValues(alpha: 0.1)
+                                    : Colors.lightGreen.withValues(alpha: 0.1),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
+                                  ? Colors.orange.withValues(alpha: 0.5)
+                                  : Colors.green.withValues(alpha: 0.5),
+                                width: 2,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      _restTimeSuggestion!.type == RestTimeSuggestionType.increase
+                                        ? Icons.trending_up
+                                        : Icons.trending_down,
+                                      color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
+                                        ? Colors.orange
+                                        : Colors.green,
+                                      size: 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            l10n.restTimeSuggestion,
+                                            style: theme.textTheme.titleSmall?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
+                                                ? Colors.orange
+                                                : Colors.green,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            _restTimeSuggestion!.reason,
+                                            style: theme.textTheme.bodySmall?.copyWith(
+                                              color: colorScheme.onSurface,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Recupero attuale: ${RestTimeSuggestionService.formatTime(_restTimeSuggestion!.currentRestTime)}',
+                                        style: theme.textTheme.bodySmall,
+                                      ),
+                                    ),
+                                    Icon(Icons.arrow_forward, size: 16, color: colorScheme.onSurfaceVariant),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Suggerito: ${RestTimeSuggestionService.formatTime(_restTimeSuggestion!.suggestedRestTime)}',
+                                        style: theme.textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _showSuggestionBanner = false;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(l10n.dismiss),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    FilledButton.icon(
+                                      onPressed: () {
+                                        // Accept suggestion and update exercise rest time
+                                        if (widget.exercise != null) {
+                                          final updatedExercise = widget.exercise!.copyWith(
+                                            restTime: _restTimeSuggestion!.suggestedRestTime,
+                                          );
+                                          ref.read(currentWorkoutProvider.notifier).updateExercise(
+                                            widget.exercise!.name,
+                                            updatedExercise,
+                                          );
+                                        }
+                                        HapticFeedback.mediumImpact();
+                                        Navigator.of(context).pop();
+                                      },
+                                      icon: const Icon(Icons.check, size: 18),
+                                      label: Text(l10n.accept),
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
+                                          ? Colors.orange
+                                          : Colors.green,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
                         // Action buttons
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),

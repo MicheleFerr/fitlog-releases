@@ -3,12 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('🔐 Basic Auth Logic Tests', () {
     test('✅ Password validation - valid password', () {
-      final password = 'Test123!@#';
+      const password = 'Test123!@#';
       final hasUppercase = RegExp(r'[A-Z]').hasMatch(password);
       final hasLowercase = RegExp(r'[a-z]').hasMatch(password);
       final hasNumber = RegExp(r'[0-9]').hasMatch(password);
       final hasSpecialChar = RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
-      final isLongEnough = password.length >= 8;
+      const isLongEnough = password.length >= 8;
       
       expect(hasUppercase, true, reason: 'Password should have uppercase');
       expect(hasLowercase, true, reason: 'Password should have lowercase');
@@ -18,19 +18,19 @@ void main() {
     });
     
     test('❌ Password validation - too short', () {
-      final password = 'Test1!';
-      final isLongEnough = password.length >= 8;
+      const password = 'Test1!';
+      const isLongEnough = password.length >= 8;
       expect(isLongEnough, false);
     });
     
     test('✅ Email validation - valid format', () {
-      final email = 'user@example.com';
+      const email = 'user@example.com';
       final isValid = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
       expect(isValid, true);
     });
     
     test('❌ Email validation - invalid format', () {
-      final email = 'userexample.com';
+      const email = 'userexample.com';
       final isValid = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
       expect(isValid, false);
     });
@@ -39,8 +39,8 @@ void main() {
   group('⏱️ Basic Timer Logic Tests', () {
     test('✅ Timer duration calculation', () {
       const totalSeconds = 125;
-      final minutes = totalSeconds ~/ 60;
-      final seconds = totalSeconds % 60;
+      const minutes = totalSeconds ~/ 60;
+      const seconds = totalSeconds % 60;
       final formatted = '$minutes:${seconds.toString().padLeft(2, '0')}';
       
       expect(minutes, 2);
@@ -51,7 +51,7 @@ void main() {
     test('✅ Timer progress calculation', () {
       const total = 100;
       const remaining = 25;
-      final progress = 1 - (remaining / total);
+      const progress = 1 - (remaining / total);
       
       expect(progress, 0.75);
     });
@@ -90,7 +90,7 @@ void main() {
       const setNumber = 3;
       
       // Progressive rest time (more rest for later sets)
-      final adjustedRestTime = baseRestTime + ((setNumber - 1) * 15);
+      const adjustedRestTime = baseRestTime + ((setNumber - 1) * 15);
       
       expect(adjustedRestTime, 90);
     });

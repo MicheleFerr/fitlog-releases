@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../../workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class RecentWorkoutsCard extends StatelessWidget {
-  final List<ExerciseActivity> activities;
 
   const RecentWorkoutsCard({
     super.key,
-    required this.activities,
+    required this.workouts,
   });
+  final List<Workout> workouts;
 
   @override
   Widget build(BuildContext context) {
-    // Group activities by workout (schedaName + date)
-    final Map<String, List<ExerciseActivity>> workouts = {};
-    for (final activity in activities) {
-      final key = '${activity.schedaName}_${_formatDateKey(activity.createdAt)}';
-      workouts.putIfAbsent(key, () => []).add(activity);
-    }
-
-    final recentWorkouts = workouts.entries.take(5).toList();
+    final recentWorkouts = workouts.take(5).toList();
 
     return Card(
       elevation: 2,
@@ -34,12 +29,12 @@ class RecentWorkoutsCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.history,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: context.colors.secondary,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Recent Workouts',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: context.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -69,23 +64,28 @@ class RecentWorkoutsCard extends StatelessWidget {
                 ),
               )
             else
-              ...recentWorkouts.map((entry) {
-                final workoutActivities = entry.value;
-                final firstActivity = workoutActivities.first;
-                
+              ...recentWorkouts.map((workout) {
                 return _buildWorkoutItem(
                   context,
-                  firstActivity.schedaName,
-                  firstActivity.createdAt,
-                  workoutActivities.length,
-                  _calculateWorkoutVolume(workoutActivities),
-                  workoutActivities,
+                  workout,
                 );
               }),
           ],
         ),
       ),
     );
+  }
+
+  // Helper to convert a Workout to a List<ExerciseActivity> for the details view
+  List<ExerciseActivity> _convertWorkoutToActivities(Workout workout) {
+    return workout.exercises.where((e) => e.sets.any((s) => s.isCompleted)).map((exercise) {
+      return ExerciseActivity.fromExercise(
+        exercise: exercise,
+        userEmail: '', // email is not available here, but might not be needed by the details view
+        workoutName: workout.name,
+        workoutDate: workout.endTime ?? workout.createdAt,
+      );
+    }).toList();
   }
 
   Widget _buildWorkoutItem(
@@ -100,10 +100,10 @@ class RecentWorkoutsCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+          color: context.colors.outline.withValues(alpha: 0.2),
         ),
       ),
       child: InkWell(
@@ -115,12 +115,12 @@ class RecentWorkoutsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                color: context.colors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.fitness_center,
-                color: Theme.of(context).colorScheme.primary,
+                color: context.colors.primary,
                 size: 20,
               ),
             ),
@@ -133,15 +133,15 @@ class RecentWorkoutsCard extends StatelessWidget {
                 children: [
                   Text(
                     workoutName,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '${_formatDate(date)} • $exerciseCount exercises',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -154,15 +154,15 @@ class RecentWorkoutsCard extends StatelessWidget {
               children: [
                 Text(
                   '${totalVolume.toStringAsFixed(0)} kg',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  style: context.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: context.colors.primary,
                   ),
                 ),
                 Text(
                   'volume',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -173,11 +173,11 @@ class RecentWorkoutsCard extends StatelessWidget {
     );
   }
 
-  void _showWorkoutDetails(BuildContext context, List<ExerciseActivity> activities) {
+  void _showWorkoutDetails(BuildContext context, List<ExerciseActivity> syntheticActivities) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -190,7 +190,7 @@ class RecentWorkoutsCard extends StatelessWidget {
           builder: (context, scrollController) {
             return Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: context.colors.surface,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
               ),
               child: Column(
@@ -205,7 +205,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                           width: 48,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.4),
+                            color: context.colors.outline.withOpacity(0.4),
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -220,16 +220,16 @@ class RecentWorkoutsCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    activities.first.schedaName,
-                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                    syntheticActivities.first.schedaName,
+                                    style: context.textTheme.headlineSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    _formatDate(activities.first.createdAt),
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                    _formatDate(syntheticActivities.first.createdAt),
+                                    style: context.textTheme.bodyMedium?.copyWith(
+                                      color: context.colors.onSurface.withOpacity(0.6),
                                     ),
                                   ),
                                 ],
@@ -238,7 +238,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
                                   Icons.close,
-                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                  color: context.colors.onSurface.withOpacity(0.6),
                                 ),
                               ),
                             ],
@@ -253,21 +253,21 @@ class RecentWorkoutsCard extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      color: context.colors.primaryContainer.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildSummaryItem(context, '${activities.length}', 'Esercizi'),
+                        _buildSummaryItem(context, '${syntheticActivities.length}', 'Esercizi'),
                         _buildSummaryItem(
                           context, 
-                          '${activities.fold<int>(0, (sum, a) => sum + a.sets.length)}', 
+                          '${syntheticActivities.fold<int>(0, (sum, a) => sum + a.sets.length)}', 
                           'Serie totali'
                         ),
                         _buildSummaryItem(
                           context,
-                          '${_calculateWorkoutVolume(activities).toStringAsFixed(0)} kg',
+                          '${_calculateWorkoutVolumeFromActivities(syntheticActivities).toStringAsFixed(0)} kg',
                           'Volume totale'
                         ),
                       ],
@@ -281,9 +281,9 @@ class RecentWorkoutsCard extends StatelessWidget {
                     child: ListView.builder(
                       controller: scrollController,
                       padding: const EdgeInsets.all(20),
-                      itemCount: activities.length,
+                      itemCount: syntheticActivities.length,
                       itemBuilder: (context, index) {
-                        final activity = activities[index];
+                        final activity = syntheticActivities[index];
                         return _buildExerciseDetailCard(context, activity);
                       },
                     ),
@@ -297,21 +297,31 @@ class RecentWorkoutsCard extends StatelessWidget {
     );
   }
 
+  double _calculateWorkoutVolumeFromActivities(List<ExerciseActivity> activities) {
+    return activities.fold(0.0, (sum, activity) {
+      return sum + activity.sets.fold(0.0, (setSum, set) {
+        final weight = double.tryParse(set.weight) ?? 0.0;
+        final reps = int.tryParse(set.reps) ?? 0;
+        return setSum + (weight * reps);
+      });
+    });
+  }
+
   Widget _buildSummaryItem(BuildContext context, String value, String label) {
     return Column(
       children: [
         Text(
           value,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
+            color: context.colors.primary,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ],
@@ -323,7 +333,7 @@ class RecentWorkoutsCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 1,
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        data: context.theme.copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           childrenPadding: const EdgeInsets.all(16),
@@ -331,7 +341,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+              color: context.colors.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(24),
             ),
             child: ClipRRect(
@@ -342,18 +352,18 @@ class RecentWorkoutsCard extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Icon(
                         Icons.fitness_center,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: context.colors.primary,
                       ),
                     )
                   : Icon(
                       Icons.fitness_center,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.colors.primary,
                     ),
             ),
           ),
           title: Text(
             activity.exerciseName,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            style: context.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -361,13 +371,13 @@ class RecentWorkoutsCard extends StatelessWidget {
             children: [
               Text(
                 '${activity.sets.length} serie',
-                style: Theme.of(context).textTheme.bodySmall,
+                style: context.textTheme.bodySmall,
               ),
               const SizedBox(width: 12),
               Text(
                 '${_calculateExerciseVolume(activity).toStringAsFixed(0)} kg volume',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -377,7 +387,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             // Set details table
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -386,7 +396,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2),
+                      color: context.colors.primaryContainer.withValues(alpha: 0.2),
                       borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                     ),
                     child: Row(
@@ -395,9 +405,9 @@ class RecentWorkoutsCard extends StatelessWidget {
                           width: 40,
                           child: Text(
                             'Set',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
                           ),
                         ),
@@ -405,9 +415,9 @@ class RecentWorkoutsCard extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             'Peso (kg)',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -416,9 +426,9 @@ class RecentWorkoutsCard extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             'Reps',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -427,9 +437,9 @@ class RecentWorkoutsCard extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             'Effort',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -438,9 +448,9 @@ class RecentWorkoutsCard extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             'Tempo',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -454,7 +464,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
+                          color: context.colors.outline.withValues(alpha: 0.1),
                         ),
                       ),
                     ),
@@ -467,18 +477,18 @@ class RecentWorkoutsCard extends StatelessWidget {
                             height: 24,
                             decoration: BoxDecoration(
                               color: set.done 
-                                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
-                                  : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                                  ? context.colors.primary.withValues(alpha: 0.2)
+                                  : context.colors.outline.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Text(
                                 '${set.set}',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: context.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: set.done 
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                      ? context.colors.primary
+                                      : context.colors.onSurface.withValues(alpha: 0.5),
                                 ),
                               ),
                             ),
@@ -488,7 +498,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             set.weight,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            style: context.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
@@ -498,7 +508,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                           flex: 2,
                           child: Text(
                             set.actualReps ?? set.reps,
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            style: context.textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -512,8 +522,8 @@ class RecentWorkoutsCard extends StatelessWidget {
                             set.setDurationMillis != null 
                                 ? '${(set.setDurationMillis! / 1000).toStringAsFixed(0)}s'
                                 : '-',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: context.colors.onSurface.withValues(alpha: 0.6),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -530,7 +540,7 @@ class RecentWorkoutsCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.tertiaryContainer.withValues(alpha: 0.2),
+                  color: context.colors.tertiaryContainer.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -540,13 +550,13 @@ class RecentWorkoutsCard extends StatelessWidget {
                       _buildAdditionalStat(
                         context,
                         'RPE medio',
-                        '${(activity.sets.where((s) => s.rpe != null).fold<int>(0, (sum, s) => sum + s.rpe!) / activity.sets.where((s) => s.rpe != null).length).toStringAsFixed(1)}',
+                        (activity.sets.where((s) => s.rpe != null).fold<int>(0, (sum, s) => sum + s.rpe!) / activity.sets.where((s) => s.rpe != null).length).toStringAsFixed(1),
                       ),
                     if (activity.sets.any((s) => s.rir != null))
                       _buildAdditionalStat(
                         context,
                         'RIR medio',
-                        '${(activity.sets.where((s) => s.rir != null).fold<int>(0, (sum, s) => sum + s.rir!) / activity.sets.where((s) => s.rir != null).length).toStringAsFixed(1)}',
+                        (activity.sets.where((s) => s.rir != null).fold<int>(0, (sum, s) => sum + s.rir!) / activity.sets.where((s) => s.rir != null).length).toStringAsFixed(1),
                       ),
                   ],
                 ),
@@ -577,7 +587,7 @@ class RecentWorkoutsCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: index < effort 
                 ? colors[effort - 1]
-                : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                : context.colors.outline.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(2),
           ),
         );
@@ -590,16 +600,16 @@ class RecentWorkoutsCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          style: context.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.tertiary,
+            color: context.colors.tertiary,
           ),
         ),
       ],

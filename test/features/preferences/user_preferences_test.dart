@@ -281,10 +281,6 @@ class UserPreferencesService {
 }
 
 class PreferenceChangeEvent {
-  final String key;
-  final dynamic oldValue;
-  final dynamic newValue;
-  final DateTime timestamp;
   
   PreferenceChangeEvent({
     required this.key,
@@ -292,6 +288,10 @@ class PreferenceChangeEvent {
     required this.newValue,
     required this.timestamp,
   });
+  final String key;
+  final dynamic oldValue;
+  final dynamic newValue;
+  final DateTime timestamp;
 }
 
 void main() {

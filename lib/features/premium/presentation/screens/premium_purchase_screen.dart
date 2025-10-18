@@ -1,15 +1,14 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/screens
- * 🎯 Feature: premium
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: iOS & Android IAP
- * 
- * Complete In-App Purchase screen with Apple/Google payments
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/screens
+/// 🎯 Feature: premium
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: iOS & Android IAP
+/// 
+/// Complete In-App Purchase screen with Apple/Google payments
+library;
 
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -76,7 +75,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -486,7 +485,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   Widget _buildPurchaseButton(BuildContext context, PremiumUpgradeState state) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       padding: const EdgeInsets.all(16),

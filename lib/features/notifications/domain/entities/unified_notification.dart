@@ -3,6 +3,67 @@ import 'package:uuid/uuid.dart';
 /// Core notification entity that consolidates all notification types
 /// This replaces the fragmented notification system with a single, unified model
 class UnifiedNotification {
+
+  UnifiedNotification({
+    String? id,
+    required this.type,
+    required this.title,
+    required this.body,
+    DateTime? scheduledTime,
+    this.priority = NotificationPriority.normal,
+    this.deliveryMethod = NotificationDeliveryMethod.local,
+    this.payload,
+    this.imageUrl,
+    this.soundName,
+    this.actions,
+    this.userId,
+    this.workoutId,
+    this.exerciseId,
+    this.tags,
+    this.status = NotificationDeliveryStatus.pending,
+    DateTime? createdAt,
+    this.deliveredAt,
+    this.readAt,
+    this.errorMessage,
+    this.retryCount = 0,
+    this.localization,
+    this.personalization,
+    this.iosConfig,
+    this.androidConfig,
+  }) : 
+    id = id ?? const Uuid().v4(),
+    scheduledTime = scheduledTime ?? DateTime.now(),
+    createdAt = createdAt ?? DateTime.now();
+  
+  factory UnifiedNotification.fromJson(Map<String, dynamic> json) {
+    return UnifiedNotification(
+      id: json['id'] as String,
+      type: NotificationType.values.byName(json['type'] as String),
+      title: json['title'] as String,
+      body: json['body'] as String,
+      scheduledTime: DateTime.parse(json['scheduledTime'] as String),
+      priority: NotificationPriority.values.byName(json['priority'] as String),
+      deliveryMethod: NotificationDeliveryMethod.values.byName(json['deliveryMethod'] as String),
+      payload: json['payload'] as Map<String, dynamic>?,
+      imageUrl: json['imageUrl'] as String?,
+      soundName: json['soundName'] as String?,
+      actions: (json['actions'] as List<dynamic>?)?.map((a) => NotificationAction.fromJson(a as Map<String, dynamic>)).toList(),
+      userId: json['userId'] as String?,
+      workoutId: json['workoutId'] as String?,
+      exerciseId: json['exerciseId'] as String?,
+      tags: (json['tags'] as List<dynamic>?)?.cast<String>(),
+      status: NotificationDeliveryStatus.values.byName(json['status'] as String),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      deliveredAt: json['deliveredAt'] != null ? DateTime.parse(json['deliveredAt'] as String) : null,
+      readAt: json['readAt'] != null ? DateTime.parse(json['readAt'] as String) : null,
+      errorMessage: json['errorMessage'] as String?,
+      retryCount: json['retryCount'] as int,
+      localization: (json['localization'] as Map<String, dynamic>?)?.cast<String, String>(),
+      personalization: json['personalization'] != null ? NotificationPersonalization.fromJson(json['personalization'] as Map<String, dynamic>) : null,
+      iosConfig: json['iosConfig'] != null ? IOSNotificationConfig.fromJson(json['iosConfig'] as Map<String, dynamic>) : null,
+      androidConfig: json['androidConfig'] != null ? AndroidNotificationConfig.fromJson(json['androidConfig'] as Map<String, dynamic>) : null,
+    );
+  }
   final String id;
   final NotificationType type;
   final String title;
@@ -38,37 +99,6 @@ class UnifiedNotification {
   // Platform-specific
   final IOSNotificationConfig? iosConfig;
   final AndroidNotificationConfig? androidConfig;
-
-  UnifiedNotification({
-    String? id,
-    required this.type,
-    required this.title,
-    required this.body,
-    DateTime? scheduledTime,
-    this.priority = NotificationPriority.normal,
-    this.deliveryMethod = NotificationDeliveryMethod.local,
-    this.payload,
-    this.imageUrl,
-    this.soundName,
-    this.actions,
-    this.userId,
-    this.workoutId,
-    this.exerciseId,
-    this.tags,
-    this.status = NotificationDeliveryStatus.pending,
-    DateTime? createdAt,
-    this.deliveredAt,
-    this.readAt,
-    this.errorMessage,
-    this.retryCount = 0,
-    this.localization,
-    this.personalization,
-    this.iosConfig,
-    this.androidConfig,
-  }) : 
-    id = id ?? const Uuid().v4(),
-    scheduledTime = scheduledTime ?? DateTime.now(),
-    createdAt = createdAt ?? DateTime.now();
 
   // Computed properties
   bool get isPending => status == NotificationDeliveryStatus.pending;
@@ -194,36 +224,6 @@ class UnifiedNotification {
       'androidConfig': androidConfig?.toJson(),
     };
   }
-  
-  factory UnifiedNotification.fromJson(Map<String, dynamic> json) {
-    return UnifiedNotification(
-      id: json['id'] as String,
-      type: NotificationType.values.byName(json['type'] as String),
-      title: json['title'] as String,
-      body: json['body'] as String,
-      scheduledTime: DateTime.parse(json['scheduledTime'] as String),
-      priority: NotificationPriority.values.byName(json['priority'] as String),
-      deliveryMethod: NotificationDeliveryMethod.values.byName(json['deliveryMethod'] as String),
-      payload: json['payload'] as Map<String, dynamic>?,
-      imageUrl: json['imageUrl'] as String?,
-      soundName: json['soundName'] as String?,
-      actions: (json['actions'] as List<dynamic>?)?.map((a) => NotificationAction.fromJson(a as Map<String, dynamic>)).toList(),
-      userId: json['userId'] as String?,
-      workoutId: json['workoutId'] as String?,
-      exerciseId: json['exerciseId'] as String?,
-      tags: (json['tags'] as List<dynamic>?)?.cast<String>(),
-      status: NotificationDeliveryStatus.values.byName(json['status'] as String),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      deliveredAt: json['deliveredAt'] != null ? DateTime.parse(json['deliveredAt'] as String) : null,
-      readAt: json['readAt'] != null ? DateTime.parse(json['readAt'] as String) : null,
-      errorMessage: json['errorMessage'] as String?,
-      retryCount: json['retryCount'] as int,
-      localization: (json['localization'] as Map<String, dynamic>?)?.cast<String, String>(),
-      personalization: json['personalization'] != null ? NotificationPersonalization.fromJson(json['personalization'] as Map<String, dynamic>) : null,
-      iosConfig: json['iosConfig'] != null ? IOSNotificationConfig.fromJson(json['iosConfig'] as Map<String, dynamic>) : null,
-      androidConfig: json['androidConfig'] != null ? AndroidNotificationConfig.fromJson(json['androidConfig'] as Map<String, dynamic>) : null,
-    );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -278,11 +278,6 @@ enum NotificationDeliveryStatus {
 }
 
 class NotificationAction {
-  final String id;
-  final String title;
-  final String? icon;
-  final Map<String, dynamic>? payload;
-  final bool destructive;
 
   NotificationAction({
     required this.id,
@@ -291,16 +286,6 @@ class NotificationAction {
     this.payload,
     this.destructive = false,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'icon': icon,
-      'payload': payload,
-      'destructive': destructive,
-    };
-  }
 
   factory NotificationAction.fromJson(Map<String, dynamic> json) {
     return NotificationAction(
@@ -311,13 +296,24 @@ class NotificationAction {
       destructive: json['destructive'] as bool,
     );
   }
+  final String id;
+  final String title;
+  final String? icon;
+  final Map<String, dynamic>? payload;
+  final bool destructive;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'icon': icon,
+      'payload': payload,
+      'destructive': destructive,
+    };
+  }
 }
 
 class NotificationPersonalization {
-  final String? userName;
-  final String? preferredLanguage;
-  final String? timezone;
-  final Map<String, dynamic>? userData;
 
   NotificationPersonalization({
     this.userName,
@@ -325,15 +321,6 @@ class NotificationPersonalization {
     this.timezone,
     this.userData,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'userName': userName,
-      'preferredLanguage': preferredLanguage,
-      'timezone': timezone,
-      'userData': userData,
-    };
-  }
 
   factory NotificationPersonalization.fromJson(Map<String, dynamic> json) {
     return NotificationPersonalization(
@@ -343,16 +330,22 @@ class NotificationPersonalization {
       userData: json['userData'] as Map<String, dynamic>?,
     );
   }
+  final String? userName;
+  final String? preferredLanguage;
+  final String? timezone;
+  final Map<String, dynamic>? userData;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userName': userName,
+      'preferredLanguage': preferredLanguage,
+      'timezone': timezone,
+      'userData': userData,
+    };
+  }
 }
 
 class IOSNotificationConfig {
-  final bool critical;
-  final double? volume;
-  final String? categoryId;
-  final String? threadId;
-  final String? targetContentId;
-  final int? badge;
-  final bool? mutable;
 
   IOSNotificationConfig({
     this.critical = false,
@@ -363,18 +356,6 @@ class IOSNotificationConfig {
     this.badge,
     this.mutable,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'critical': critical,
-      'volume': volume,
-      'categoryId': categoryId,
-      'threadId': threadId,
-      'targetContentId': targetContentId,
-      'badge': badge,
-      'mutable': mutable,
-    };
-  }
 
   factory IOSNotificationConfig.fromJson(Map<String, dynamic> json) {
     return IOSNotificationConfig(
@@ -387,19 +368,28 @@ class IOSNotificationConfig {
       mutable: json['mutable'] as bool?,
     );
   }
+  final bool critical;
+  final double? volume;
+  final String? categoryId;
+  final String? threadId;
+  final String? targetContentId;
+  final int? badge;
+  final bool? mutable;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'critical': critical,
+      'volume': volume,
+      'categoryId': categoryId,
+      'threadId': threadId,
+      'targetContentId': targetContentId,
+      'badge': badge,
+      'mutable': mutable,
+    };
+  }
 }
 
 class AndroidNotificationConfig {
-  final String? channelId;
-  final String? channelName;
-  final String? channelDescription;
-  final int? color;
-  final String? smallIcon;
-  final String? largeIcon;
-  final bool? autoCancel;
-  final bool? ongoing;
-  final String? group;
-  final bool? groupSummary;
 
   AndroidNotificationConfig({
     this.channelId,
@@ -414,21 +404,6 @@ class AndroidNotificationConfig {
     this.groupSummary,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'channelId': channelId,
-      'channelName': channelName,
-      'channelDescription': channelDescription,
-      'color': color,
-      'smallIcon': smallIcon,
-      'largeIcon': largeIcon,
-      'autoCancel': autoCancel,
-      'ongoing': ongoing,
-      'group': group,
-      'groupSummary': groupSummary,
-    };
-  }
-
   factory AndroidNotificationConfig.fromJson(Map<String, dynamic> json) {
     return AndroidNotificationConfig(
       channelId: json['channelId'] as String?,
@@ -442,5 +417,30 @@ class AndroidNotificationConfig {
       group: json['group'] as String?,
       groupSummary: json['groupSummary'] as bool?,
     );
+  }
+  final String? channelId;
+  final String? channelName;
+  final String? channelDescription;
+  final int? color;
+  final String? smallIcon;
+  final String? largeIcon;
+  final bool? autoCancel;
+  final bool? ongoing;
+  final String? group;
+  final bool? groupSummary;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'channelId': channelId,
+      'channelName': channelName,
+      'channelDescription': channelDescription,
+      'color': color,
+      'smallIcon': smallIcon,
+      'largeIcon': largeIcon,
+      'autoCancel': autoCancel,
+      'ongoing': ongoing,
+      'group': group,
+      'groupSummary': groupSummary,
+    };
   }
 }

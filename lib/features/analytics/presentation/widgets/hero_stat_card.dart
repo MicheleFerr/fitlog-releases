@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Large hero card for displaying primary metrics
 class HeroStatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final String subtitle;
-  final Widget? chart;
-  final List<Color> gradientColors;
-  final VoidCallback? onTap;
-  final IconData? icon;
   
   const HeroStatCard({
     super.key,
@@ -20,6 +13,13 @@ class HeroStatCard extends StatelessWidget {
     this.onTap,
     this.icon,
   });
+  final String title;
+  final String value;
+  final String subtitle;
+  final Widget? chart;
+  final List<Color> gradientColors;
+  final VoidCallback? onTap;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {

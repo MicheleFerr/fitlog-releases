@@ -1,46 +1,41 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: data/repositories
- * 🎯 Feature: community
- * 🔧 Type: repository
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - BaseHybridRepository (local + premium sync)
- * - Hive (local storage)
- * - Firebase (premium cloud sync)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: data/repositories
+/// 🎯 Feature: community
+/// 🔧 Type: repository
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - BaseHybridRepository (local + premium sync)
+/// - Hive (local storage)
+/// - Firebase (premium cloud sync)
+library;
 
 import 'package:gymbro_flutter_new/core/data/repositories/base_hybrid_repository.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rxdart/rxdart.dart';
 
 /// Hybrid repository for community contributions
 /// - FREE users: Local contributions only (can contribute locally)
 /// - PREMIUM users: Local + Cloud sync + Access to global community
 class HybridCommunityRepository extends BaseHybridRepository<CommunityContribution> {
-  late Box<Map> _votesBox;
-  late Box<Map> _statsBox;
   
   HybridCommunityRepository({
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
+    super.firestore,
+    super.auth,
   }) : super(
     featureName: 'community',
     collectionName: 'community_contributions',
-    requiresPremiumForCloud: true, // Community features require premium
-    firestore: firestore,
-    auth: auth,
+    requiresPremiumForCloud: true,
   ) {
     _initializeAdditionalBoxes();
   }
+  late Box<Map> _votesBox;
+  late Box<Map> _statsBox;
 
   Future<void> _initializeAdditionalBoxes() async {
     _votesBox = await Hive.openBox<Map>('community_votes');

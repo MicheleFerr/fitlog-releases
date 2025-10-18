@@ -400,7 +400,7 @@ class MockFirebaseService {
   
   void dispose() {
     for (final controller in _streamControllers.values) {
-      (controller as StreamController).close();
+      (controller).close();
     }
     _streamControllers.clear();
   }
@@ -408,10 +408,6 @@ class MockFirebaseService {
 
 // Models
 class AuthResult {
-  final bool success;
-  final String? userId;
-  final String? email;
-  final String? error;
   
   AuthResult({
     required this.success,
@@ -419,15 +415,13 @@ class AuthResult {
     this.email,
     this.error,
   });
+  final bool success;
+  final String? userId;
+  final String? email;
+  final String? error;
 }
 
 class FirebaseOperation {
-  final OperationType type;
-  final DateTime timestamp;
-  final String? collection;
-  final String? documentId;
-  final String? userId;
-  final Map<String, dynamic>? data;
   
   FirebaseOperation({
     required this.type,
@@ -437,6 +431,12 @@ class FirebaseOperation {
     this.userId,
     this.data,
   });
+  final OperationType type;
+  final DateTime timestamp;
+  final String? collection;
+  final String? documentId;
+  final String? userId;
+  final Map<String, dynamic>? data;
 }
 
 enum OperationType {
@@ -454,10 +454,6 @@ enum OperationType {
 }
 
 class BatchOperation {
-  final BatchOperationType type;
-  final String collection;
-  final String? documentId;
-  final Map<String, dynamic>? data;
   
   BatchOperation({
     required this.type,
@@ -465,6 +461,10 @@ class BatchOperation {
     this.documentId,
     this.data,
   });
+  final BatchOperationType type;
+  final String collection;
+  final String? documentId;
+  final Map<String, dynamic>? data;
 }
 
 enum BatchOperationType {

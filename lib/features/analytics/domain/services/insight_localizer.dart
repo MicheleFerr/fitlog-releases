@@ -8,7 +8,7 @@ class InsightLocalizer {
     BuildContext context,
     TrainingInsight insight,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final metadata = insight.metadata;
     
     String localizedTitle = '';
@@ -149,7 +149,90 @@ class InsightLocalizer {
         localizedMessage = l10n.insightConsistencyBonusMessage;
         localizedRecommendation = l10n.insightConsistencyBonusRecommendation;
         break;
-        
+
+      // Scientific metrics insights
+      case 'insightProgressiveOverloadRegressionTitle':
+        localizedTitle = l10n.insightProgressiveOverloadRegressionTitle;
+        localizedMessage = l10n.insightProgressiveOverloadRegressionMessage(
+          metadata['overloadPercent'] ?? '',
+          metadata['exerciseName'] ?? '',
+        );
+        localizedRecommendation = l10n.insightProgressiveOverloadRegressionRec;
+        break;
+
+      case 'insightProgressiveOverloadExcessiveTitle':
+        localizedTitle = l10n.insightProgressiveOverloadExcessiveTitle;
+        localizedMessage = l10n.insightProgressiveOverloadExcessiveMessage(
+          metadata['overloadPercent'] ?? '',
+          metadata['exerciseName'] ?? '',
+        );
+        localizedRecommendation = l10n.insightProgressiveOverloadExcessiveRec;
+        break;
+
+      case 'insightProgressiveOverloadOptimalTitle':
+        localizedTitle = l10n.insightProgressiveOverloadOptimalTitle;
+        localizedMessage = l10n.insightProgressiveOverloadOptimalMessage(
+          metadata['overloadPercent'] ?? '',
+          metadata['exerciseName'] ?? '',
+        );
+        localizedRecommendation = l10n.insightProgressiveOverloadOptimalRec;
+        break;
+
+      case 'insightVolumeLowTitle':
+        localizedTitle = l10n.insightVolumeLowTitle;
+        localizedMessage = l10n.insightVolumeLowMessage(
+          metadata['muscleGroup'] ?? '',
+          metadata['currentSets'] ?? '',
+          metadata['targetMin'] ?? '',
+        );
+        localizedRecommendation = l10n.insightVolumeLowRec;
+        break;
+
+      case 'insightVolumeExcessiveTitle':
+        localizedTitle = l10n.insightVolumeExcessiveTitle;
+        localizedMessage = l10n.insightVolumeExcessiveMessage(
+          metadata['muscleGroup'] ?? '',
+          metadata['currentSets'] ?? '',
+          metadata['maxRecommended'] ?? '',
+        );
+        localizedRecommendation = l10n.insightVolumeExcessiveRec;
+        break;
+
+      case 'insightIntensityLowTitle':
+        localizedTitle = l10n.insightIntensityLowTitle;
+        localizedMessage = l10n.insightIntensityLowMessage(
+          metadata['exerciseName'] ?? '',
+          metadata['percentOf1RM'] ?? '',
+          metadata['weight'] ?? '',
+          metadata['reps'] ?? '',
+        );
+        localizedRecommendation = l10n.insightIntensityLowRec;
+        break;
+
+      case 'insightPushPullImbalanceTitle':
+        localizedTitle = l10n.insightPushPullImbalanceTitle;
+        localizedMessage = l10n.insightPushPullImbalanceMessage(
+          metadata['ratio'] ?? '',
+          metadata['pushSets'] ?? '',
+          metadata['pullSets'] ?? '',
+        );
+        localizedRecommendation = l10n.insightPushPullImbalanceRec(
+          _translateFeedback(context, metadata['feedback'] ?? ''),
+        );
+        break;
+
+      case 'insightQuadHamHighRiskTitle':
+        localizedTitle = l10n.insightQuadHamHighRiskTitle;
+        localizedMessage = l10n.insightQuadHamHighRiskMessage(
+          metadata['ratio'] ?? '',
+          metadata['quadSets'] ?? '',
+          metadata['hamSets'] ?? '',
+        );
+        localizedRecommendation = l10n.insightQuadHamHighRiskRec(
+          metadata['riskMultiplier'] ?? '',
+        );
+        break;
+
       // Fallback to original if not found
       default:
         return insight;
@@ -174,5 +257,33 @@ class InsightLocalizer {
     List<TrainingInsight> insights,
   ) {
     return insights.map((insight) => localizeInsight(context, insight)).toList();
+  }
+
+  /// Translate feedback key to localized string
+  static String _translateFeedback(BuildContext context, String feedbackKey) {
+    final l10n = AppLocalizations.of(context);
+
+    switch (feedbackKey) {
+      case 'feedbackTooMuchPull':
+        return l10n.feedbackTooMuchPull;
+      case 'feedbackTooMuchPush':
+        return l10n.feedbackTooMuchPush;
+      case 'feedbackSlightPushExcess':
+        return l10n.feedbackSlightPushExcess;
+      case 'feedbackOptimalPushPull':
+        return l10n.feedbackOptimalPushPull;
+      case 'feedbackGoodPullEmphasis':
+        return l10n.feedbackGoodPullEmphasis;
+      case 'feedbackHamstringSeverelyUndertrained':
+        return l10n.feedbackHamstringSeverelyUndertrained;
+      case 'feedbackHamstringUndertrained':
+        return l10n.feedbackHamstringUndertrained;
+      case 'feedbackOptimalQuadHam':
+        return l10n.feedbackOptimalQuadHam;
+      case 'feedbackHamstringOveremphasized':
+        return l10n.feedbackHamstringOveremphasized;
+      default:
+        return feedbackKey; // Fallback to key if not found
+    }
   }
 }

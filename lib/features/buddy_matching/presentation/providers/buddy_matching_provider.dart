@@ -1,28 +1,27 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation
- * 🎯 Feature: buddy_matching
- * 🔧 Type: provider
- * 🌍 Localization: N/A - Provider class
- * 🎨 Theme: N/A - Provider class
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - Riverpod: StateNotifierProvider, FutureProvider
- * - Firebase: Via repository
- * - Hive: None
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation
+/// 🎯 Feature: buddy_matching
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A - Provider class
+/// 🎨 Theme: N/A - Provider class
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - Riverpod: StateNotifierProvider, FutureProvider
+/// - Firebase: Via repository
+/// - Hive: None
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../domain/entities/buddy_profile.dart';
-import '../../domain/entities/buddy_match.dart';
-import '../../domain/entities/buddy_preferences.dart';
-import '../../domain/repositories/buddy_matching_repository.dart';
-import '../../data/repositories/firebase_buddy_matching_repository.dart';
-import '../../data/services/demo_profiles_loader.dart';
-import '../../data/services/location_service.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_match.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/repositories/buddy_matching_repository.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/data/repositories/firebase_buddy_matching_repository.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/data/services/demo_profiles_loader.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/data/services/location_service.dart';
 
 // Repository Provider
 final buddyMatchingRepositoryProvider = Provider<BuddyMatchingRepository>((ref) {
@@ -50,11 +49,6 @@ final currentUserBuddyProfileProvider = FutureProvider<BuddyProfile?>((ref) asyn
 
 // Matching State
 class MatchingState {
-  final List<BuddyProfile> potentialMatches;
-  final bool isLoading;
-  final String? error;
-  final BuddyProfile? currentProfile;
-  final int currentIndex;
 
   const MatchingState({
     this.potentialMatches = const [],
@@ -63,6 +57,11 @@ class MatchingState {
     this.currentProfile,
     this.currentIndex = 0,
   });
+  final List<BuddyProfile> potentialMatches;
+  final bool isLoading;
+  final String? error;
+  final BuddyProfile? currentProfile;
+  final int currentIndex;
 
   MatchingState copyWith({
     List<BuddyProfile>? potentialMatches,
@@ -92,14 +91,14 @@ class MatchingState {
 }
 
 class MatchingNotifier extends StateNotifier<MatchingState> {
-  final BuddyMatchingRepository _repository;
-  final String? _userId;
 
   MatchingNotifier(this._repository, this._userId) : super(const MatchingState()) {
     if (_userId != null) {
       loadPotentialMatches();
     }
   }
+  final BuddyMatchingRepository _repository;
+  final String? _userId;
 
   Future<void> loadPotentialMatches() async {
     if (_userId == null) return;
@@ -107,7 +106,7 @@ class MatchingNotifier extends StateNotifier<MatchingState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final userProfile = await _repository.getUserProfile(_userId!);
+      final userProfile = await _repository.getUserProfile(_userId);
       if (userProfile == null) {
         state = state.copyWith(
           isLoading: false,
@@ -117,7 +116,7 @@ class MatchingNotifier extends StateNotifier<MatchingState> {
       }
 
       // Start listening to potential matches stream
-      _repository.getPotentialMatches(_userId!, limit: 50).listen(
+      _repository.getPotentialMatches(_userId, limit: 50).listen(
         (matches) {
           state = state.copyWith(
             potentialMatches: matches,
@@ -146,7 +145,7 @@ class MatchingNotifier extends StateNotifier<MatchingState> {
     if (_userId == null || state.currentMatch == null) return null;
 
     try {
-      final match = await _repository.likeProfile(_userId!, state.currentMatch!.uid);
+      final match = await _repository.likeProfile(_userId, state.currentMatch!.uid);
       _goToNextProfile();
       return match;
     } catch (e) {
@@ -159,7 +158,7 @@ class MatchingNotifier extends StateNotifier<MatchingState> {
     if (_userId == null || state.currentMatch == null) return;
 
     try {
-      await _repository.dislikeProfile(_userId!, state.currentMatch!.uid);
+      await _repository.dislikeProfile(_userId, state.currentMatch!.uid);
       _goToNextProfile();
     } catch (e) {
       state = state.copyWith(error: 'Errore nel dislike: $e');
@@ -227,14 +226,14 @@ final pendingMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
 
 // Preferences Management
 class PreferencesNotifier extends StateNotifier<AsyncValue<BuddyPreferences?>> {
-  final BuddyMatchingRepository _repository;
-  final String? _userId;
 
   PreferencesNotifier(this._repository, this._userId) : super(const AsyncValue.loading()) {
     if (_userId != null) {
       _loadPreferences();
     }
   }
+  final BuddyMatchingRepository _repository;
+  final String? _userId;
 
   Future<void> _loadPreferences() async {
     try {
@@ -251,7 +250,7 @@ class PreferencesNotifier extends StateNotifier<AsyncValue<BuddyPreferences?>> {
     state = const AsyncValue.loading();
     
     try {
-      await _repository.updateUserPreferences(_userId!, preferences);
+      await _repository.updateUserPreferences(_userId, preferences);
       state = AsyncValue.data(preferences);
       
       // Refresh matches after preferences change
@@ -265,7 +264,7 @@ class PreferencesNotifier extends StateNotifier<AsyncValue<BuddyPreferences?>> {
     if (_userId == null) return;
 
     try {
-      await _repository.setLookingForBuddy(_userId!, isLooking);
+      await _repository.setLookingForBuddy(_userId, isLooking);
       final currentPrefs = state.value;
       if (currentPrefs != null) {
         state = AsyncValue.data(currentPrefs.copyWith(isLookingForBuddy: isLooking));
@@ -279,7 +278,7 @@ class PreferencesNotifier extends StateNotifier<AsyncValue<BuddyPreferences?>> {
     if (_userId == null) return;
 
     try {
-      await _repository.updateUserLocation(_userId!, latitude, longitude, locationName);
+      await _repository.updateUserLocation(_userId, latitude, longitude, locationName);
       final currentPrefs = state.value;
       if (currentPrefs != null) {
         state = AsyncValue.data(currentPrefs.copyWith(
@@ -303,11 +302,6 @@ final buddyPreferencesProvider = StateNotifierProvider<PreferencesNotifier, Asyn
 
 // Search Provider
 class SearchState {
-  final List<BuddyProfile> results;
-  final bool isLoading;
-  final String? error;
-  final String? lastQuery;
-  final Map<String, dynamic> filters;
 
   const SearchState({
     this.results = const [],
@@ -316,6 +310,11 @@ class SearchState {
     this.lastQuery,
     this.filters = const {},
   });
+  final List<BuddyProfile> results;
+  final bool isLoading;
+  final String? error;
+  final String? lastQuery;
+  final Map<String, dynamic> filters;
 
   SearchState copyWith({
     List<BuddyProfile>? results,
@@ -335,10 +334,10 @@ class SearchState {
 }
 
 class SearchNotifier extends StateNotifier<SearchState> {
-  final BuddyMatchingRepository _repository;
-  final String? _userId;
 
   SearchNotifier(this._repository, this._userId) : super(const SearchState());
+  final BuddyMatchingRepository _repository;
+  final String? _userId;
 
   Future<void> searchProfiles({
     String? query,
@@ -350,7 +349,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
     try {
       final results = await _repository.searchProfiles(
-        userId: _userId!,
+        userId: _userId,
         query: query,
         maxDistance: filters['maxDistance']?.toDouble(),
         fitnessLevel: filters['fitnessLevel'] as FitnessLevel?,
@@ -408,9 +407,9 @@ final locationServiceProvider = Provider<LocationService>((ref) {
 });
 
 class MatchActions {
-  final BuddyMatchingRepository _repository;
 
   MatchActions(this._repository);
+  final BuddyMatchingRepository _repository;
 
   Future<BuddyMatch?> confirmMatch(String matchId, String userId) async {
     return _repository.confirmMatch(matchId, userId);

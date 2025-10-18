@@ -48,12 +48,8 @@ mixin _$CommunityContribution {
       throw _privateConstructorUsedError; // 0-100 basato su track record utente
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
-  /// Serializes this CommunityContribution to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CommunityContribution
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CommunityContributionCopyWith<CommunityContribution> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -103,8 +99,6 @@ class _$CommunityContributionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CommunityContribution
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -285,8 +279,6 @@ class __$$CommunityContributionImplCopyWithImpl<$Res>
       $Res Function(_$CommunityContributionImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CommunityContribution
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -597,7 +589,7 @@ class _$CommunityContributionImpl implements _CommunityContribution {
             const DeepCollectionEquality().equals(other._metadata, _metadata));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -628,9 +620,7 @@ class _$CommunityContributionImpl implements _CommunityContribution {
         const DeepCollectionEquality().hash(_metadata)
       ]);
 
-  /// Create a copy of CommunityContribution
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CommunityContributionImplCopyWith<_$CommunityContributionImpl>
@@ -723,14 +713,11 @@ abstract class _CommunityContribution implements CommunityContribution {
   @override
   bool get isFeatured;
   @override
-  int get trustScore; // 0-100 basato su track record utente
-  @override
+  int get trustScore;
+  @override // 0-100 basato su track record utente
   Map<String, dynamic>? get metadata;
-
-  /// Create a copy of CommunityContribution
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CommunityContributionImplCopyWith<_$CommunityContributionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -750,12 +737,8 @@ mixin _$ContributionComment {
   int get likes => throw _privateConstructorUsedError;
   List<String> get likedBy => throw _privateConstructorUsedError;
 
-  /// Serializes this ContributionComment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ContributionComment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ContributionCommentCopyWith<ContributionComment> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -787,8 +770,6 @@ class _$ContributionCommentCopyWithImpl<$Res, $Val extends ContributionComment>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ContributionComment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -865,8 +846,6 @@ class __$$ContributionCommentImplCopyWithImpl<$Res>
       $Res Function(_$ContributionCommentImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContributionComment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -980,14 +959,12 @@ class _$ContributionCommentImpl implements _ContributionComment {
             const DeepCollectionEquality().equals(other._likedBy, _likedBy));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, userId, userName, userAvatar,
       text, createdAt, likes, const DeepCollectionEquality().hash(_likedBy));
 
-  /// Create a copy of ContributionComment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ContributionCommentImplCopyWith<_$ContributionCommentImpl> get copyWith =>
@@ -1032,11 +1009,8 @@ abstract class _ContributionComment implements ContributionComment {
   int get likes;
   @override
   List<String> get likedBy;
-
-  /// Create a copy of ContributionComment
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ContributionCommentImplCopyWith<_$ContributionCommentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1067,12 +1041,8 @@ mixin _$UserContributionStats {
   int get monthlyRank => throw _privateConstructorUsedError;
   int get allTimeRank => throw _privateConstructorUsedError;
 
-  /// Serializes this UserContributionStats to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of UserContributionStats
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $UserContributionStatsCopyWith<UserContributionStats> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1114,8 +1084,6 @@ class _$UserContributionStatsCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of UserContributionStats
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1248,8 +1216,6 @@ class __$$UserContributionStatsImplCopyWithImpl<$Res>
       $Res Function(_$UserContributionStatsImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of UserContributionStats
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1477,7 +1443,7 @@ class _$UserContributionStatsImpl implements _UserContributionStats {
                 other.allTimeRank == allTimeRank));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1499,9 +1465,7 @@ class _$UserContributionStatsImpl implements _UserContributionStats {
       monthlyRank,
       allTimeRank);
 
-  /// Create a copy of UserContributionStats
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$UserContributionStatsImplCopyWith<_$UserContributionStatsImpl>
@@ -1573,11 +1537,8 @@ abstract class _UserContributionStats implements UserContributionStats {
   int get monthlyRank;
   @override
   int get allTimeRank;
-
-  /// Create a copy of UserContributionStats
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$UserContributionStatsImplCopyWith<_$UserContributionStatsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1596,12 +1557,8 @@ mixin _$ContributorBadge {
   bool get isRare => throw _privateConstructorUsedError;
   String? get category => throw _privateConstructorUsedError;
 
-  /// Serializes this ContributorBadge to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ContributorBadge
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ContributorBadgeCopyWith<ContributorBadge> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1632,8 +1589,6 @@ class _$ContributorBadgeCopyWithImpl<$Res, $Val extends ContributorBadge>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ContributorBadge
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1704,8 +1659,6 @@ class __$$ContributorBadgeImplCopyWithImpl<$Res>
       $Res Function(_$ContributorBadgeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContributorBadge
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1803,14 +1756,12 @@ class _$ContributorBadgeImpl implements _ContributorBadge {
                 other.category == category));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, id, name, description, icon, earnedAt, isRare, category);
 
-  /// Create a copy of ContributorBadge
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ContributorBadgeImplCopyWith<_$ContributorBadgeImpl> get copyWith =>
@@ -1852,11 +1803,8 @@ abstract class _ContributorBadge implements ContributorBadge {
   bool get isRare;
   @override
   String? get category;
-
-  /// Create a copy of ContributorBadge
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ContributorBadgeImplCopyWith<_$ContributorBadgeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

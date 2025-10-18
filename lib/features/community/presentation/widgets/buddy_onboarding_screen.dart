@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/buddy_preferences.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class BuddyOnboardingScreen extends ConsumerStatefulWidget {
   const BuddyOnboardingScreen({super.key});
@@ -80,9 +80,9 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen> {
             // Progress indicator
             LinearProgressIndicator(
               value: (_currentPage + 1) / 7,
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+              backgroundColor: context.colors.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation(
-                Theme.of(context).colorScheme.primary,
+                context.colors.primary,
               ),
             ),
             
@@ -187,7 +187,7 @@ class _WelcomePage extends StatelessWidget {
           const SizedBox(height: 24),
           Text(
             'Trova il tuo Workout Buddy',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            style: context.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
@@ -195,14 +195,14 @@ class _WelcomePage extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Rispondi a queste domande per trovare il partner di allenamento perfetto per te',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: context.textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 48),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+              color: context.colors.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -225,7 +225,7 @@ class _WelcomePage extends StatelessWidget {
   Widget _buildFeature(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+        Icon(icon, size: 20, color: context.colors.primary),
         const SizedBox(width: 12),
         Text(text),
       ],
@@ -235,13 +235,13 @@ class _WelcomePage extends StatelessWidget {
 
 // Page 2: Schedule
 class _SchedulePage extends StatelessWidget {
-  final List<WorkoutTime> schedule;
-  final Function(List<WorkoutTime>) onChanged;
 
   const _SchedulePage({
     required this.schedule,
     required this.onChanged,
   });
+  final List<WorkoutTime> schedule;
+  final Function(List<WorkoutTime>) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -253,14 +253,14 @@ class _SchedulePage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'Quando ti alleni di solito? ⏰',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Seleziona tutti gli orari in cui sei disponibile',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: context.textTheme.bodyLarge,
           ),
           const SizedBox(height: 32),
           Expanded(
@@ -333,8 +333,8 @@ class _SchedulePage extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             color: isSelected 
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
+              ? context.colors.primary
+              : context.colors.surfaceContainerHighest,
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -361,10 +361,6 @@ class _SchedulePage extends StatelessWidget {
 
 // Page 3: Level and Goals
 class _LevelAndGoalsPage extends StatelessWidget {
-  final FitnessLevel level;
-  final List<FitnessGoal> goals;
-  final Function(FitnessLevel) onLevelChanged;
-  final Function(List<FitnessGoal>) onGoalsChanged;
 
   const _LevelAndGoalsPage({
     required this.level,
@@ -372,6 +368,10 @@ class _LevelAndGoalsPage extends StatelessWidget {
     required this.onLevelChanged,
     required this.onGoalsChanged,
   });
+  final FitnessLevel level;
+  final List<FitnessGoal> goals;
+  final Function(FitnessLevel) onLevelChanged;
+  final Function(List<FitnessGoal>) onGoalsChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -383,7 +383,7 @@ class _LevelAndGoalsPage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'Il tuo livello fitness 💪',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -392,14 +392,14 @@ class _LevelAndGoalsPage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'I tuoi obiettivi 🎯',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Seleziona fino a 3 obiettivi principali',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: context.textTheme.bodyLarge,
           ),
           const SizedBox(height: 24),
           Expanded(
@@ -447,7 +447,7 @@ class _LevelAndGoalsPage extends StatelessWidget {
       elevation: isSelected ? 4 : 1,
       margin: const EdgeInsets.only(bottom: 12),
       color: isSelected 
-        ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3)
+        ? context.colors.primaryContainer.withValues(alpha: 0.3)
         : null,
       child: ListTile(
         title: Text(title),
@@ -499,13 +499,13 @@ class _LevelAndGoalsPage extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: isSelected 
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.surfaceContainerHighest,
+                ? context.colors.primary
+                : context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                  ? context.colors.primary
+                  : context.colors.outline.withValues(alpha: 0.3),
                 width: isSelected ? 2 : 1,
               ),
             ),
@@ -527,10 +527,6 @@ class _LevelAndGoalsPage extends StatelessWidget {
 
 // Page 4: Location
 class _LocationPage extends StatelessWidget {
-  final String? location;
-  final double maxDistance;
-  final Function(String) onLocationChanged;
-  final Function(double) onDistanceChanged;
 
   const _LocationPage({
     required this.location,
@@ -538,6 +534,10 @@ class _LocationPage extends StatelessWidget {
     required this.onLocationChanged,
     required this.onDistanceChanged,
   });
+  final String? location;
+  final double maxDistance;
+  final Function(String) onLocationChanged;
+  final Function(double) onDistanceChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -549,14 +549,14 @@ class _LocationPage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'Dove ti alleni? 📍',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Inserisci la tua zona o quartiere',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: context.textTheme.bodyLarge,
           ),
           const SizedBox(height: 24),
           TextField(
@@ -573,7 +573,7 @@ class _LocationPage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'Distanza massima: ${maxDistance.toInt()} km',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: context.textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           Slider(
@@ -588,20 +588,20 @@ class _LocationPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2),
+              color: context.colors.primaryContainer.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.info_outline,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Useremo questa informazione per trovare buddy nella tua zona',
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: context.textTheme.bodySmall,
                   ),
                 ),
               ],
@@ -615,13 +615,13 @@ class _LocationPage extends StatelessWidget {
 
 // Page 5: Personality
 class _PersonalityPage extends StatelessWidget {
-  final PersonalityType personality;
-  final Function(PersonalityType) onChanged;
 
   const _PersonalityPage({
     required this.personality,
     required this.onChanged,
   });
+  final PersonalityType personality;
+  final Function(PersonalityType) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -633,7 +633,7 @@ class _PersonalityPage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'Che tipo di partner cerchi? 🤔',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -682,13 +682,13 @@ class _PersonalityPage extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isSelected 
-            ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3)
-            : Theme.of(context).colorScheme.surfaceContainerHighest,
+            ? context.colors.primaryContainer.withValues(alpha: 0.3)
+            : context.colors.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+              ? context.colors.primary
+              : context.colors.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -699,7 +699,7 @@ class _PersonalityPage extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -711,13 +711,13 @@ class _PersonalityPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               subtitle,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: context.textTheme.bodyMedium,
             ),
             const SizedBox(height: 4),
             Text(
               description,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -729,10 +729,6 @@ class _PersonalityPage extends StatelessWidget {
 
 // Page 6: Social
 class _SocialPage extends StatelessWidget {
-  final String? instagramHandle;
-  final String? bio;
-  final Function(String) onInstagramChanged;
-  final Function(String) onBioChanged;
 
   const _SocialPage({
     required this.instagramHandle,
@@ -740,6 +736,10 @@ class _SocialPage extends StatelessWidget {
     required this.onInstagramChanged,
     required this.onBioChanged,
   });
+  final String? instagramHandle;
+  final String? bio;
+  final Function(String) onInstagramChanged;
+  final Function(String) onBioChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -751,14 +751,14 @@ class _SocialPage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'Connetti i tuoi social 📱',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Opzionale - aiuta i buddy a conoscerti meglio',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: context.textTheme.bodyLarge,
           ),
           const SizedBox(height: 32),
           
@@ -799,7 +799,7 @@ class _SocialPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2),
+              color: context.colors.primaryContainer.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -807,7 +807,7 @@ class _SocialPage extends StatelessWidget {
               children: [
                 Icon(
                   Icons.lock_outline,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
@@ -817,12 +817,12 @@ class _SocialPage extends StatelessWidget {
                     children: [
                       Text(
                         'Privacy garantita',
-                        style: Theme.of(context).textTheme.titleSmall,
+                        style: context.textTheme.titleSmall,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Il tuo Instagram sarà visibile solo ai match confermati. Non salviamo mai le tue foto.',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: context.textTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -838,10 +838,6 @@ class _SocialPage extends StatelessWidget {
 
 // Page 7: Review
 class _ReviewPage extends StatelessWidget {
-  final BuddyPreferences preferences;
-  final String? instagramHandle;
-  final String? location;
-  final String? bio;
 
   const _ReviewPage({
     required this.preferences,
@@ -849,6 +845,10 @@ class _ReviewPage extends StatelessWidget {
     required this.location,
     required this.bio,
   });
+  final BuddyPreferences preferences;
+  final String? instagramHandle;
+  final String? location;
+  final String? bio;
 
   @override
   Widget build(BuildContext context) {
@@ -860,14 +860,14 @@ class _ReviewPage extends StatelessWidget {
           const SizedBox(height: 40),
           Text(
             'Riepilogo ✅',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Controlla le tue preferenze',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: context.textTheme.bodyLarge,
           ),
           const SizedBox(height: 32),
           Expanded(
@@ -919,12 +919,12 @@ class _ReviewPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2),
+              color: context.colors.primaryContainer.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
               '🎉 Tutto pronto! Clicca "Completa" per iniziare a trovare il tuo workout buddy perfetto.',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: context.textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
           ),
@@ -943,15 +943,15 @@ class _ReviewPage extends StatelessWidget {
             width: 100,
             child: Text(
               label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),

@@ -1,13 +1,12 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/features/home
- * 🎯 Feature: home widget factory tests
- * 🔧 Type: widget test
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ ColorScheme tested
- * 📱 Platform: Universal
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/features/home
+/// 🎯 Feature: home widget factory tests
+/// 🔧 Type: widget test
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ ColorScheme tested
+/// 📱 Platform: Universal
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,7 +57,7 @@ void main() {
     }
 
     testWidgets('creates small widget correctly', (tester) async {
-      final config = HomeWidgetConfig(
+      const config = HomeWidgetConfig(
         id: 'test-small',
         type: HomeWidgetType.statsCard,
         title: 'Test Small Widget',
@@ -81,7 +80,7 @@ void main() {
     });
 
     testWidgets('creates medium widget correctly', (tester) async {
-      final config = HomeWidgetConfig(
+      const config = HomeWidgetConfig(
         id: 'test-medium',
         type: HomeWidgetType.progressDashboard,
         title: 'Test Medium Widget',
@@ -104,7 +103,7 @@ void main() {
     });
 
     testWidgets('creates large widget correctly', (tester) async {
-      final config = HomeWidgetConfig(
+      const config = HomeWidgetConfig(
         id: 'test-large',
         type: HomeWidgetType.weeklyGoals,
         title: 'Test Large Widget',
@@ -163,7 +162,7 @@ void main() {
     });
 
     testWidgets('creates widget in preview mode', (tester) async {
-      final config = HomeWidgetConfig(
+      const config = HomeWidgetConfig(
         id: 'test-preview',
         type: HomeWidgetType.statsCard,
         title: 'Test Preview Widget',
@@ -186,7 +185,7 @@ void main() {
     });
 
     testWidgets('handles widget with custom settings', (tester) async {
-      final config = HomeWidgetConfig(
+      const config = HomeWidgetConfig(
         id: 'test-settings',
         type: HomeWidgetType.progressDashboard,
         title: 'Test Settings Widget',
@@ -214,7 +213,7 @@ void main() {
 
     group('Widget Configuration Tests', () {
       test('creates valid config with all required fields', () {
-        final config = HomeWidgetConfig(
+        const config = HomeWidgetConfig(
           id: 'test-config',
           type: HomeWidgetType.statsCard,
           title: 'Test Widget',
@@ -232,7 +231,7 @@ void main() {
       });
 
       test('copyWith preserves unchanged values', () {
-        final original = HomeWidgetConfig(
+        const original = HomeWidgetConfig(
           id: 'original',
           type: HomeWidgetType.statsCard,
           title: 'Original Title',
@@ -266,7 +265,7 @@ void main() {
 
     group('Widget Factory Logic Tests', () {
       test('handles unknown widget type gracefully', () {
-        final config = HomeWidgetConfig(
+        const config = HomeWidgetConfig(
           id: 'test-unknown',
           type: 'unknown_type',
           title: 'Unknown Widget',
@@ -280,7 +279,7 @@ void main() {
 
       test('widget configuration validation', () {
         // Test required fields
-        expect(() => HomeWidgetConfig(
+        expect(() => const HomeWidgetConfig(
           id: '',
           type: HomeWidgetType.statsCard,
           title: 'Test',
@@ -289,7 +288,7 @@ void main() {
         ), returnsNormally);
 
         // Empty ID should still create valid config
-        final config = HomeWidgetConfig(
+        const config = HomeWidgetConfig(
           id: '',
           type: HomeWidgetType.statsCard,
           title: 'Test',
@@ -301,7 +300,7 @@ void main() {
 
       test('widget ordering logic', () {
         final configs = [
-          HomeWidgetConfig(
+          const HomeWidgetConfig(
             id: 'first',
             type: HomeWidgetType.statsCard,
             title: 'First',
@@ -315,7 +314,7 @@ void main() {
             icon: Icons.second_page,
             order: 1,
           ),
-          HomeWidgetConfig(
+          const HomeWidgetConfig(
             id: 'third',
             type: HomeWidgetType.recentWorkouts,
             title: 'Third',
@@ -358,7 +357,7 @@ void main() {
       });
 
       test('handles widget without settings', () {
-        final config = HomeWidgetConfig(
+        const config = HomeWidgetConfig(
           id: 'no-settings',
           type: HomeWidgetType.statsCard,
           title: 'No Settings',

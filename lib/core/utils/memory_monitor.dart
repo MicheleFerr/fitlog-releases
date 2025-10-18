@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 /// Memory Monitor for GymBro
 /// Tracks memory usage and helps identify memory leaks
 class MemoryMonitor {
-  static final MemoryMonitor _instance = MemoryMonitor._internal();
   factory MemoryMonitor() => _instance;
   MemoryMonitor._internal();
+  static final MemoryMonitor _instance = MemoryMonitor._internal();
 
   Timer? _monitoringTimer;
   int _lastMemoryUsage = 0;
@@ -143,7 +143,7 @@ class MemoryMonitor {
 
 /// Mixin to add memory tracking to widgets
 mixin MemoryTrackingMixin<T extends StatefulWidget> on State<T> {
-  String get resourceId => '${widget.runtimeType}_${hashCode}';
+  String get resourceId => '${widget.runtimeType}_$hashCode';
   
   @override
   void initState() {

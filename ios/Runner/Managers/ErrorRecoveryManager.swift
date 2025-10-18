@@ -199,9 +199,9 @@ final class ErrorRecoveryManager {
                     "Retry attempt \(currentAttempts + 1)/\(maxAttempts) for \(context.displayName)"
                 )
                 
-                DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
+                DispatchQueue.global().asyncAfter(deadline: .now() + delay) { [weak self] in
                     // Trigger retry based on context
-                    self.triggerRetry(for: context)
+                    self?.triggerRetry(for: context)
                 }
             } else {
                 Logger.shared.log(
@@ -212,12 +212,27 @@ final class ErrorRecoveryManager {
                 // Clear retry counter
                 self.retryAttempts[retryKey] = nil
                 
-                // Show user alert if critical
-                if context == .audioSession || context == .backgroundTask {
+                // Show user alert only for truly critical errors that block functionality
+                // Audio session errors in foreground are not critical - user can still use the app
+                if context == .backgroundTask {
                     self.executeAlertStrategy(
                         message: "Unable to configure \(context.displayName). Please restart the app.",
                         context: context
                     )
+                } else if context == .audioSession {
+                    // CRITICAL FIX: Don't show audio session error dialog in foreground
+                    // Audio session errors are common and usually recover automatically
+                    // Only log the error instead of interrupting the user
+                    let appState = UIApplication.shared.applicationState
+                    if appState != .active {
+                        // Only show alert if app is in background and audio is critical
+                        self.executeAlertStrategy(
+                            message: "Audio system unavailable in background. Timer will use notifications only.",
+                            context: context
+                        )
+                    } else {
+                        Logger.shared.log(.warning, "Audio session error in foreground - silently recovered", category: .audioSession)
+                    }
                 }
             }
         }

@@ -1,0 +1,124 @@
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+///
+/// 📁 Layer: features/analytics/presentation/providers
+/// 🎯 Feature: analytics
+/// 🔧 Type: provider
+///
+/// Providers per chart data
+library;
+
+import 'dart:ui' show Color;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/chart_data.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/chart_data_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+
+/// Provider per volume chart (ultimi 12 settimane)
+final volumeChartProvider = FutureProvider.autoDispose<ChartSeries>((ref) async {
+  final repository = ref.watch(hybridExerciseActivityRepositoryProvider);
+  final authService = ref.watch(authServiceProvider);
+  final currentUser = authService.currentUser;
+
+  if (currentUser?.email == null) {
+    return const ChartSeries(
+      name: 'Volume Settimanale',
+      dataPoints: [],
+      color: Color(0xFF2196F3),
+    );
+  }
+
+  final activities = await repository.getUserActivities(
+    userEmail: currentUser!.email!,
+  );
+
+  // Filtra ultimi 3 mesi
+  final threeMonthsAgo = DateTime.now().subtract(const Duration(days: 90));
+  final recentActivities =
+      activities.where((a) => a.createdAt.isAfter(threeMonthsAgo)).toList();
+
+  return ChartDataService.generateWeeklyVolumeChart(recentActivities);
+});
+
+/// Provider per peso specifico esercizio
+final weightProgressionProvider =
+    FutureProvider.autoDispose.family<ChartSeries, String>(
+  (ref, exerciseName) async {
+    final repository = ref.watch(hybridExerciseActivityRepositoryProvider);
+    final authService = ref.watch(authServiceProvider);
+    final currentUser = authService.currentUser;
+
+    if (currentUser?.email == null) {
+      return ChartSeries(
+        name: exerciseName,
+        dataPoints: const [],
+        color: const Color(0xFF4CAF50),
+      );
+    }
+
+    final activities = await repository.getUserActivities(
+      userEmail: currentUser!.email!,
+    );
+
+    return ChartDataService.generateWeightProgressionChart(
+      activities,
+      exerciseName,
+    );
+  },
+);
+
+/// Provider per frequency heatmap
+final frequencyHeatmapProvider =
+    FutureProvider.autoDispose<List<FrequencyHeatmapData>>((ref) async {
+  final repository = ref.watch(hybridExerciseActivityRepositoryProvider);
+  final authService = ref.watch(authServiceProvider);
+  final currentUser = authService.currentUser;
+
+  if (currentUser?.email == null) {
+    return [];
+  }
+
+  final activities = await repository.getUserActivities(
+    userEmail: currentUser!.email!,
+  );
+
+  final now = DateTime.now();
+  final startDate = DateTime(now.year, now.month - 3, 1); // Ultimi 3 mesi
+  final endDate = DateTime(now.year, now.month + 1, 0);
+
+  return ChartDataService.generateFrequencyHeatmap(
+    activities,
+    startDate,
+    endDate,
+  );
+});
+
+/// Provider per muscle distribution
+final muscleDistributionProvider =
+    FutureProvider.autoDispose<List<MuscleVolumeDistribution>>((ref) async {
+  final repository = ref.watch(hybridExerciseActivityRepositoryProvider);
+  final exerciseDb = await ref.watch(allExercisesProvider.future);
+  final authService = ref.watch(authServiceProvider);
+  final currentUser = authService.currentUser;
+
+  if (currentUser?.email == null) {
+    return [];
+  }
+
+  final activities = await repository.getUserActivities(
+    userEmail: currentUser!.email!,
+  );
+
+  // Ultimi 7 giorni
+  final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+  final weeklyActivities =
+      activities.where((a) => a.createdAt.isAfter(weekAgo)).toList();
+
+  final exerciseMap = {for (var e in exerciseDb) e.nome: e};
+
+  return ChartDataService.calculateMuscleDistribution(
+    weeklyActivities,
+    exerciseMap,
+  );
+});

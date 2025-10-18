@@ -9,13 +9,13 @@ enum ProgressWidgetLayout {
 }
 
 class ProgressWidgetPreferences {
-  final ProgressWidgetLayout layout;
-  final Set<String> visibleMetrics;
   
   ProgressWidgetPreferences({
     this.layout = ProgressWidgetLayout.full,
     Set<String>? visibleMetrics,
   }) : visibleMetrics = visibleMetrics ?? defaultMetrics;
+  final ProgressWidgetLayout layout;
+  final Set<String> visibleMetrics;
   
   static const Set<String> defaultMetrics = {
     'totalWorkouts',
@@ -37,13 +37,13 @@ class ProgressWidgetPreferences {
 }
 
 class ProgressWidgetPreferencesNotifier extends StateNotifier<ProgressWidgetPreferences> {
-  final SharedPreferences _prefs;
-  static const String _layoutKey = 'progress_widget_layout';
-  static const String _metricsKey = 'progress_widget_metrics';
   
   ProgressWidgetPreferencesNotifier(this._prefs) : super(ProgressWidgetPreferences()) {
     _loadPreferences();
   }
+  final SharedPreferences _prefs;
+  static const String _layoutKey = 'progress_widget_layout';
+  static const String _metricsKey = 'progress_widget_metrics';
   
   void _loadPreferences() {
     final layoutIndex = _prefs.getInt(_layoutKey) ?? 0;

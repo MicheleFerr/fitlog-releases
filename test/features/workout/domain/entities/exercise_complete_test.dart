@@ -348,7 +348,7 @@ void main() {
 
     group('ExerciseType enum coverage', () {
       test('all enum values are unique', () {
-        final types = ExerciseType.values;
+        const types = ExerciseType.values;
         final uniqueTypes = types.toSet();
         expect(uniqueTypes.length, types.length);
       });
@@ -363,7 +363,7 @@ void main() {
 
     group('ExerciseCategory enum coverage', () {
       test('all enum values are unique', () {
-        final categories = ExerciseCategory.values;
+        const categories = ExerciseCategory.values;
         final uniqueCategories = categories.toSet();
         expect(uniqueCategories.length, categories.length);
       });

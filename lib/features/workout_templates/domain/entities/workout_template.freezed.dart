@@ -49,12 +49,8 @@ mixin _$WorkoutTemplate {
       throw _privateConstructorUsedError; // Muscoli target
   List<String> get targetMuscles => throw _privateConstructorUsedError;
 
-  /// Serializes this WorkoutTemplate to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of WorkoutTemplate
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $WorkoutTemplateCopyWith<WorkoutTemplate> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -98,8 +94,6 @@ class _$WorkoutTemplateCopyWithImpl<$Res, $Val extends WorkoutTemplate>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of WorkoutTemplate
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -248,8 +242,6 @@ class __$$WorkoutTemplateImplCopyWithImpl<$Res>
       _$WorkoutTemplateImpl _value, $Res Function(_$WorkoutTemplateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of WorkoutTemplate
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -525,7 +517,7 @@ class _$WorkoutTemplateImpl implements _WorkoutTemplate {
                 .equals(other._targetMuscles, _targetMuscles));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -551,9 +543,7 @@ class _$WorkoutTemplateImpl implements _WorkoutTemplate {
         const DeepCollectionEquality().hash(_targetMuscles)
       ]);
 
-  /// Create a copy of WorkoutTemplate
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$WorkoutTemplateImplCopyWith<_$WorkoutTemplateImpl> get copyWith =>
@@ -607,39 +597,36 @@ abstract class _WorkoutTemplate implements WorkoutTemplate {
   @override
   TemplateCategory get category;
   @override
-  TemplateVisibility get visibility; // Metadata
-  @override
+  TemplateVisibility get visibility;
+  @override // Metadata
   DateTime get createdAt;
   @override
-  DateTime? get updatedAt; // Stats pubbliche
-  @override
+  DateTime? get updatedAt;
+  @override // Stats pubbliche
   int get downloadCount;
   @override
   int get likeCount;
   @override
   int get reviewCount;
   @override
-  double get averageRating; // Info autore
-  @override
+  double get averageRating;
+  @override // Info autore
   String? get authorName;
   @override
-  String? get authorPhotoUrl; // Tags per ricerca
-  @override
-  List<String> get tags; // Durata stimata in minuti
-  @override
-  int? get estimatedDurationMinutes; // Livello difficoltà
-  @override
-  String? get difficultyLevel; // beginner, intermediate, advanced, expert
+  String? get authorPhotoUrl;
+  @override // Tags per ricerca
+  List<String> get tags;
+  @override // Durata stimata in minuti
+  int? get estimatedDurationMinutes;
+  @override // Livello difficoltà
+  String? get difficultyLevel;
+  @override // beginner, intermediate, advanced, expert
 // Equipment necessario
-  @override
-  List<String> get requiredEquipment; // Muscoli target
-  @override
+  List<String> get requiredEquipment;
+  @override // Muscoli target
   List<String> get targetMuscles;
-
-  /// Create a copy of WorkoutTemplate
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$WorkoutTemplateImplCopyWith<_$WorkoutTemplateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -661,12 +648,8 @@ mixin _$TemplateReview {
   int get helpfulCount => throw _privateConstructorUsedError;
   List<String> get helpfulVoters => throw _privateConstructorUsedError;
 
-  /// Serializes this TemplateReview to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of TemplateReview
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $TemplateReviewCopyWith<TemplateReview> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -700,8 +683,6 @@ class _$TemplateReviewCopyWithImpl<$Res, $Val extends TemplateReview>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TemplateReview
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -790,8 +771,6 @@ class __$$TemplateReviewImplCopyWithImpl<$Res>
       _$TemplateReviewImpl _value, $Res Function(_$TemplateReviewImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of TemplateReview
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -927,7 +906,7 @@ class _$TemplateReviewImpl implements _TemplateReview {
                 .equals(other._helpfulVoters, _helpfulVoters));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -942,9 +921,7 @@ class _$TemplateReviewImpl implements _TemplateReview {
       helpfulCount,
       const DeepCollectionEquality().hash(_helpfulVoters));
 
-  /// Create a copy of TemplateReview
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$TemplateReviewImplCopyWith<_$TemplateReviewImpl> get copyWith =>
@@ -986,8 +963,8 @@ abstract class _TemplateReview implements TemplateReview {
   @override
   String? get userPhotoUrl;
   @override
-  double get rating; // 1-5 stelle
-  @override
+  double get rating;
+  @override // 1-5 stelle
   String get comment;
   @override
   DateTime get createdAt;
@@ -995,11 +972,8 @@ abstract class _TemplateReview implements TemplateReview {
   int get helpfulCount;
   @override
   List<String> get helpfulVoters;
-
-  /// Create a copy of TemplateReview
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$TemplateReviewImplCopyWith<_$TemplateReviewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1021,12 +995,8 @@ mixin _$TemplateComment {
   List<String> get likedBy => throw _privateConstructorUsedError;
   String? get replyToId => throw _privateConstructorUsedError;
 
-  /// Serializes this TemplateComment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of TemplateComment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $TemplateCommentCopyWith<TemplateComment> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1060,8 +1030,6 @@ class _$TemplateCommentCopyWithImpl<$Res, $Val extends TemplateComment>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TemplateComment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1150,8 +1118,6 @@ class __$$TemplateCommentImplCopyWithImpl<$Res>
       _$TemplateCommentImpl _value, $Res Function(_$TemplateCommentImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of TemplateComment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1287,7 +1253,7 @@ class _$TemplateCommentImpl implements _TemplateComment {
                 other.replyToId == replyToId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1302,9 +1268,7 @@ class _$TemplateCommentImpl implements _TemplateComment {
       const DeepCollectionEquality().hash(_likedBy),
       replyToId);
 
-  /// Create a copy of TemplateComment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$TemplateCommentImplCopyWith<_$TemplateCommentImpl> get copyWith =>
@@ -1355,11 +1319,8 @@ abstract class _TemplateComment implements TemplateComment {
   List<String> get likedBy;
   @override
   String? get replyToId;
-
-  /// Create a copy of TemplateComment
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$TemplateCommentImplCopyWith<_$TemplateCommentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

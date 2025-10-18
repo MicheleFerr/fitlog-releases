@@ -1,18 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// Modello per salvare le attività degli esercizi completati in Firestore
 /// Corrisponde alla struttura /exerciseActivities della vecchia app
 class ExerciseActivity {
-  final String id;
-  final String email;
-  final String exerciseId;
-  final String exerciseName;
-  final String? exerciseImage;
-  final String schedaName; // Nome del workout/scheda
-  final List<ExerciseActivitySet> sets;
-  final DateTime createdAt;
-  final DateTime lastModified;
 
   ExerciseActivity({
     required this.id,
@@ -32,6 +23,7 @@ class ExerciseActivity {
     required String userEmail,
     required String workoutName,
     String? exerciseImageUrl,
+    DateTime? workoutDate,
   }) {
     // Filtra solo i set completati
     final completedSets = exercise.sets
@@ -52,8 +44,8 @@ class ExerciseActivity {
       
       return ExerciseActivitySet(
         set: index + 1, // Numerazione da 1
-        weight: set.weight?.toString() ?? "0",
-        reps: set.reps?.toString() ?? "0",
+        weight: set.weight?.toString() ?? '0',
+        reps: set.reps?.toString() ?? '0',
         actualReps: set.actualReps?.toString(),
         rpe: set.rpe,
         rir: rir,
@@ -65,19 +57,50 @@ class ExerciseActivity {
     }).toList();
 
     final now = DateTime.now();
+    final activityDate = workoutDate ?? now;
     
     return ExerciseActivity(
-      id: '${exercise.id}-${now.millisecondsSinceEpoch}',
+      id: '${exercise.id}-${activityDate.millisecondsSinceEpoch}',
       email: userEmail,
       exerciseId: exercise.id,
       exerciseName: exercise.name,
       exerciseImage: exerciseImageUrl ?? _getDefaultExerciseImage(exercise.category),
       schedaName: workoutName,
       sets: activitySets,
-      createdAt: now,
+      createdAt: activityDate,
       lastModified: now,
     );
   }
+
+  /// Crea da documento Firestore
+  factory ExerciseActivity.fromFirestore(
+    DocumentSnapshot doc,
+  ) {
+    final data = doc.data() as Map<String, dynamic>;
+    
+    return ExerciseActivity(
+      id: doc.id,
+      email: data['email'] ?? '',
+      exerciseId: data['exerciseId'] ?? '',
+      exerciseName: data['exerciseName'] ?? '',
+      exerciseImage: data['exerciseImage'],
+      schedaName: data['schedaName'] ?? '',
+      sets: (data['sets'] as List?)
+          ?.map((setData) => ExerciseActivitySet.fromFirestore(setData))
+          .toList() ?? [],
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastModified: (data['lastModified'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+  final String id;
+  final String email;
+  final String exerciseId;
+  final String exerciseName;
+  final String? exerciseImage;
+  final String schedaName; // Nome del workout/scheda
+  final List<ExerciseActivitySet> sets;
+  final DateTime createdAt;
+  final DateTime lastModified;
 
   /// Calcola l'effort basato su reps e peso (1-5 scale)
   static int _calculateEffort(ExerciseSet set) {
@@ -109,21 +132,21 @@ class ExerciseActivity {
   static String _getDefaultExerciseImage(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return "https://static.strengthlevel.com/images/illustrations/bench-press-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/bench-press-1000x1000.jpg';
       case ExerciseCategory.back:
-        return "https://static.strengthlevel.com/images/illustrations/pull-ups-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/pull-ups-1000x1000.jpg';
       case ExerciseCategory.shoulders:
-        return "https://static.strengthlevel.com/images/illustrations/overhead-press-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/overhead-press-1000x1000.jpg';
       case ExerciseCategory.arms:
-        return "https://static.strengthlevel.com/images/illustrations/hammer-curl-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/hammer-curl-1000x1000.jpg';
       case ExerciseCategory.legs:
-        return "https://static.strengthlevel.com/images/illustrations/squat-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/squat-1000x1000.jpg';
       case ExerciseCategory.abs:
-        return "https://static.strengthlevel.com/images/illustrations/plank-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/plank-1000x1000.jpg';
       case ExerciseCategory.cardio:
-        return "https://static.strengthlevel.com/images/illustrations/running-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/running-1000x1000.jpg';
       case ExerciseCategory.other:
-        return "https://static.strengthlevel.com/images/illustrations/dumbbell-1000x1000.jpg";
+        return 'https://static.strengthlevel.com/images/illustrations/dumbbell-1000x1000.jpg';
     }
   }
 
@@ -139,27 +162,6 @@ class ExerciseActivity {
       'createdAt': Timestamp.fromDate(createdAt),
       'lastModified': Timestamp.fromDate(lastModified),
     };
-  }
-
-  /// Crea da documento Firestore
-  factory ExerciseActivity.fromFirestore(
-    DocumentSnapshot doc,
-  ) {
-    final data = doc.data() as Map<String, dynamic>;
-    
-    return ExerciseActivity(
-      id: doc.id,
-      email: data['email'] ?? '',
-      exerciseId: data['exerciseId'] ?? '',
-      exerciseName: data['exerciseName'] ?? '',
-      exerciseImage: data['exerciseImage'],
-      schedaName: data['schedaName'] ?? '',
-      sets: (data['sets'] as List?)
-          ?.map((setData) => ExerciseActivitySet.fromFirestore(setData))
-          .toList() ?? [],
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      lastModified: (data['lastModified'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    );
   }
 
   ExerciseActivity copyWith({
@@ -187,17 +189,7 @@ class ExerciseActivity {
 }
 
 /// Singolo set dell'attività esercizio per Firestore
-class ExerciseActivitySet {
-  final int set;
-  final String weight;
-  final String reps;
-  final String? actualReps; // Actual reps completed
-  final int? rpe; // Rate of Perceived Exertion (6-10)
-  final int? rir; // Reps in Reserve
-  final bool done;
-  final int effort; // 1-5 scale di intensità
-  final double? setDurationMillis; // Duration in milliseconds from rest end to set completion
-  final bool isWarmup; // Indicates if this is a warmup set
+class ExerciseActivitySet { // Indicates if this is a warmup set
 
   ExerciseActivitySet({
     required this.set,
@@ -212,21 +204,6 @@ class ExerciseActivitySet {
     this.isWarmup = false,
   });
 
-  Map<String, dynamic> toFirestore() {
-    return {
-      'set': set,
-      'weight': weight,
-      'reps': reps,
-      'actualReps': actualReps,
-      'rpe': rpe,
-      'rir': rir,
-      'done': done,
-      'effort': effort,
-      'setDurationMillis': setDurationMillis,
-      'isWarmup': isWarmup,
-    };
-  }
-
   factory ExerciseActivitySet.fromFirestore(Map<String, dynamic> data) {
     return ExerciseActivitySet(
       set: _parseInt(data['set']) ?? 0,
@@ -240,6 +217,31 @@ class ExerciseActivitySet {
       setDurationMillis: _parseDouble(data['setDurationMillis']),
       isWarmup: data['isWarmup'] ?? false,
     );
+  }
+  final int set;
+  final String weight;
+  final String reps;
+  final String? actualReps; // Actual reps completed
+  final int? rpe; // Rate of Perceived Exertion (6-10)
+  final int? rir; // Reps in Reserve
+  final bool done;
+  final int effort; // 1-5 scale di intensità
+  final double? setDurationMillis; // Duration in milliseconds from rest end to set completion
+  final bool isWarmup;
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      'set': set,
+      'weight': weight,
+      'reps': reps,
+      'actualReps': actualReps,
+      'rpe': rpe,
+      'rir': rir,
+      'done': done,
+      'effort': effort,
+      'setDurationMillis': setDurationMillis,
+      'isWarmup': isWarmup,
+    };
   }
   
   // Helper method to safely parse int from any type

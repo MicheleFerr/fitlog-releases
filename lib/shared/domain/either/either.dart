@@ -1,16 +1,15 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: shared/domain
- * 🎯 Feature: functional_programming
- * 🔧 Type: either
- * 🌍 Localization: N/A
- * 🎨 Theme: N/A
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - None (pure domain)
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: shared/domain
+/// 🎯 Feature: functional_programming
+/// 🔧 Type: either
+/// 🌍 Localization: N/A
+/// 🎨 Theme: N/A
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - None (pure domain)
+library;
 
 import 'package:equatable/equatable.dart';
 
@@ -51,9 +50,9 @@ abstract class Either<L, R> extends Equatable {
 }
 
 class Left<L, R> extends Either<L, R> {
-  final L value;
   
   const Left(this.value);
+  final L value;
   
   @override
   Either<L, T> map<T>(T Function(R) mapper) => Left(value);
@@ -93,9 +92,9 @@ class Left<L, R> extends Either<L, R> {
 }
 
 class Right<L, R> extends Either<L, R> {
-  final R value;
   
   const Right(this.value);
+  final R value;
   
   @override
   Either<L, T> map<T>(T Function(R) mapper) => Right(mapper(value));

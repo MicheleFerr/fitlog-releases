@@ -72,7 +72,7 @@ final class Logger {
         #if DEBUG
         return .debug
         #else
-        return .info
+        return .warning  // Changed from .info to .warning for production
         #endif
     }()
     

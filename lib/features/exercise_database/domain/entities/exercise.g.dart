@@ -36,13 +36,15 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
       prevenzioneInfortuni: fields[16] as String?,
       cooldownConsigliato: fields[17] as String?,
       spiegazioneTermini: fields[18] as String?,
+      tempoEsecuzione: fields[19] as String?,
+      tempoNote: fields[20] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Exercise obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(21)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -80,7 +82,11 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
       ..writeByte(17)
       ..write(obj.cooldownConsigliato)
       ..writeByte(18)
-      ..write(obj.spiegazioneTermini);
+      ..write(obj.spiegazioneTermini)
+      ..writeByte(19)
+      ..write(obj.tempoEsecuzione)
+      ..writeByte(20)
+      ..write(obj.tempoNote);
   }
 
   @override

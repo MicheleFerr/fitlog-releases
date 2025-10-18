@@ -1,31 +1,25 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/providers
- * 🎯 Feature: analytics
- * 🔧 Type: provider
- * 🌍 Localization: N/A (data analytics)
- * 🎨 Theme: N/A (data analytics)
- * 📱 Platform: iOS/Android/Universal
- * 
- * Dependencies:
- * - Riverpod: State management
- * - Firestore: Cloud storage
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/providers
+/// 🎯 Feature: analytics
+/// 🔧 Type: provider
+/// 🌍 Localization: N/A (data analytics)
+/// 🎨 Theme: N/A (data analytics)
+/// 📱 Platform: iOS/Android/Universal
+/// 
+/// Dependencies:
+/// - Riverpod: State management
+/// - Firestore: Cloud storage
+library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../data/repositories/skip_analytics_local_repository.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/data/repositories/skip_analytics_local_repository.dart';
+import 'package:flutter/foundation.dart';
 
 // Skip analytics data model
 class SkipAnalytics {
-  final Map<String, int> skipReasonCounts;
-  final Map<String, int> exerciseSkipCounts;
-  final Map<String, List<String>> exerciseSkipReasons;
-  final Map<String, Map<String, int>> timeBasedSkips; // hour -> reason -> count
-  final int totalSkips;
-  final DateTime? lastSkipDate;
 
   SkipAnalytics({
     required this.skipReasonCounts,
@@ -44,6 +38,12 @@ class SkipAnalytics {
     totalSkips: 0,
     lastSkipDate: null,
   );
+  final Map<String, int> skipReasonCounts;
+  final Map<String, int> exerciseSkipCounts;
+  final Map<String, List<String>> exerciseSkipReasons;
+  final Map<String, Map<String, int>> timeBasedSkips; // hour -> reason -> count
+  final int totalSkips;
+  final DateTime? lastSkipDate;
 }
 
 // Provider for skip analytics
@@ -52,13 +52,13 @@ final skipAnalyticsProvider = StateNotifierProvider<SkipAnalyticsNotifier, SkipA
 });
 
 class SkipAnalyticsNotifier extends StateNotifier<SkipAnalytics> {
-  final Ref ref;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final SkipAnalyticsLocalRepository _localRepository = SkipAnalyticsLocalRepository();
   
   SkipAnalyticsNotifier(this.ref) : super(SkipAnalytics.empty()) {
     _initRepository();
   }
+  final Ref ref;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final SkipAnalyticsLocalRepository _localRepository = SkipAnalyticsLocalRepository();
   
   Future<void> _initRepository() async {
     await _localRepository.init();
@@ -113,7 +113,9 @@ class SkipAnalyticsNotifier extends StateNotifier<SkipAnalytics> {
         }
       }
     } catch (e) {
-      print('Error loading skip analytics: $e');
+      if (kDebugMode) {
+        debugPrint('Error loading skip analytics: $e');
+      }
     }
   }
   
@@ -178,11 +180,17 @@ class SkipAnalyticsNotifier extends StateNotifier<SkipAnalytics> {
       
       // Get insights for logging
       final insights = _localRepository.getLocalInsights();
-      print('💾 Skip saved locally. Pending sync: ${insights['pendingSync']} skips');
-      print('📊 Will sync to Firebase after ${10 - insights['pendingSync']} more skips or next scheduled sync');
+      if (kDebugMode) {
+        debugPrint('💾 Skip saved locally. Pending sync: ${insights['pendingSync']} skips');
+      }
+      if (kDebugMode) {
+        debugPrint('📊 Will sync to Firebase after ${10 - insights['pendingSync']} more skips or next scheduled sync');
+      }
       
     } catch (e) {
-      print('Error logging skipped exercise: $e');
+      if (kDebugMode) {
+        debugPrint('Error logging skipped exercise: $e');
+      }
     }
   }
   

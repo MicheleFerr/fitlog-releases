@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../analytics_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
 
 class AnalyticsOverviewCard extends StatelessWidget {
-  final OverallStats stats;
 
   const AnalyticsOverviewCard({
     super.key,
     required this.stats,
   });
+  final OverallStats stats;
 
   @override
   Widget build(BuildContext context) {

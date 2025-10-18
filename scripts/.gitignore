@@ -1,0 +1,12 @@
+# Directory con dati scaricati da wger API
+data/
+
+# Directory con backup Firestore
+backups/
+
+# File temporanei Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python

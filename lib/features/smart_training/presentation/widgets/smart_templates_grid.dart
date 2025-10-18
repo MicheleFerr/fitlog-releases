@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../shared/presentation/l10n/generated/app_localizations.dart';
-import '../../domain/entities/smart_workout_template.dart';
-import '../providers/smart_training_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_workout_template.dart';
+import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
 
 /// Grid widget that displays smart workout templates
 class SmartTemplatesGrid extends ConsumerWidget {
-  final bool showFilters;
   
   const SmartTemplatesGrid({
     super.key,
     this.showFilters = true,
   });
+  final bool showFilters;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filter = ref.watch(templateFilterProvider);
     final templates = ref.watch(filteredTemplatesProvider(filter));
     final searchQuery = ref.watch(templateSearchProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Column(
       children: [
@@ -210,16 +210,16 @@ class SmartTemplatesGrid extends ConsumerWidget {
 
 /// Individual template card
 class SmartTemplateCard extends ConsumerWidget {
-  final SmartWorkoutTemplate template;
   
   const SmartTemplateCard({
     super.key,
     required this.template,
   });
+  final SmartWorkoutTemplate template;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Card(
       elevation: 2,
@@ -353,7 +353,7 @@ class SmartTemplateCard extends ConsumerWidget {
                         const Spacer(),
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.star,
                               size: 16,
                               color: Colors.amber,

@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
 // Widgets not yet implemented - commenting out for now
 // import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 // import 'package:gymbro_flutter_new/shared/presentation/widgets/error_widget.dart';
@@ -9,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 // import 'package:gymbro_flutter_new/shared/presentation/widgets/custom_text_field.dart';
 // import 'package:gymbro_flutter_new/shared/presentation/widgets/bottom_sheet.dart';
 // import 'package:gymbro_flutter_new/shared/presentation/widgets/confirmation_dialog.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 void main() {
   // Tests disabled until widgets are implemented

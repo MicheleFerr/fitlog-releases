@@ -43,3 +43,22 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Security - Secrets and Credentials
+# IMPORTANT: Never commit sensitive files!
+**/serviceAccountKey*.json
+**/service-account-key*.json
+**/*-key.json
+**/*-key.pem
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+secrets.yaml
+credentials.json
+google-services-*.json
+!google-services.json  # Allow the default one
+GoogleService-Info-*.plist
+!GoogleService-Info.plist  # Allow the default one

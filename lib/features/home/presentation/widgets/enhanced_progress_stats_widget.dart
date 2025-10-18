@@ -3,24 +3,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../../../analytics/presentation/providers/analytics_provider.dart';
-import '../../domain/models/home_widget_config.dart';
-import '../../domain/models/level_system.dart';
-import '../../providers/progress_widget_preferences_provider.dart';
-import '../../providers/volume_settings_provider.dart';
-import 'volume_display_widget.dart';
-import 'level_info_modal.dart';
-import 'weekly_distribution_modal.dart';
-import 'volume_details_modal.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
+import 'package:gymbro_flutter_new/features/home/providers/progress_widget_preferences_provider.dart';
+import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_display_widget.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/level_info_modal.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_distribution_modal.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:intl/intl.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
-  final WidgetSize size;
   
   const EnhancedProgressStatsWidget({
     super.key,
     required this.size,
   });
+  final WidgetSize size;
 
   @override
   ConsumerState<EnhancedProgressStatsWidget> createState() => _EnhancedProgressStatsWidgetState();
@@ -93,7 +93,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildMinimalView(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     // TODO: Replace with actual user XP from provider
     final levelInfo = LevelSystem.getLevelInfo(2450); 
@@ -215,7 +215,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildCompactView(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final analyticsState = ref.watch(analyticsProvider);
     final frequencyStats = ref.read(analyticsProvider.notifier).getFrequencyStats();
     final preferences = ref.watch(progressWidgetPreferencesProvider);
@@ -293,7 +293,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildFullView(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final analyticsState = ref.watch(analyticsProvider);
     final frequencyStats = ref.read(analyticsProvider.notifier).getFrequencyStats();
     final volumeData = ref.watch(volumeChartDataProvider);
@@ -447,7 +447,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildMetricsGrid(BuildContext context, Map<String, dynamic> stats, Set<String> visibleMetrics) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final metrics = <Widget>[];
     
     if (visibleMetrics.contains('monthlyWorkouts')) {
@@ -518,7 +518,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildMainStats(BuildContext context, dynamic analyticsState, Map<String, dynamic> frequencyStats) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final preferences = ref.watch(progressWidgetPreferencesProvider);
     final stats = <Widget>[];
     
@@ -645,7 +645,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildVolumeChart(BuildContext context, Map<DateTime, double> volumeData) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Container(
       height: 200,
@@ -779,7 +779,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildWeekdayDistribution(BuildContext context, Map<int, int> distribution) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final days = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
     final maxCount = distribution.values.fold(0, (a, b) => a > b ? a : b);
     
@@ -865,7 +865,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return Center(
       child: Column(
@@ -896,7 +896,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   }
   
   void _showOptionsMenu(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     showModalBottomSheet(
       context: context,
@@ -953,7 +953,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   }
   
   void _showLayoutOptions(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final currentLayout = ref.read(progressWidgetPreferencesProvider).layout;
     
     showModalBottomSheet(
@@ -980,7 +980,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               const SizedBox(height: 16),
               RadioListTile<ProgressWidgetLayout>(
                 title: Text(l10n.fullView),
-                subtitle: Text(AppLocalizations.of(context)!.completeStatistics),
+                subtitle: Text(AppLocalizations.of(context).completeStatistics),
                 value: ProgressWidgetLayout.full,
                 groupValue: currentLayout,
                 onChanged: (value) {
@@ -992,7 +992,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               ),
               RadioListTile<ProgressWidgetLayout>(
                 title: Text(l10n.compactView),
-                subtitle: Text(AppLocalizations.of(context)!.essentialStatistics),
+                subtitle: Text(AppLocalizations.of(context).essentialStatistics),
                 value: ProgressWidgetLayout.compact,
                 groupValue: currentLayout,
                 onChanged: (value) {
@@ -1004,7 +1004,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               ),
               RadioListTile<ProgressWidgetLayout>(
                 title: Text(l10n.minimalView),
-                subtitle: Text(AppLocalizations.of(context)!.levelAndXpOnly),
+                subtitle: Text(AppLocalizations.of(context).levelAndXpOnly),
                 value: ProgressWidgetLayout.minimal,
                 groupValue: currentLayout,
                 onChanged: (value) {
@@ -1023,7 +1023,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   }
   
   void _showMetricsSelection(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     final metrics = {
       'totalWorkouts': l10n.totalWorkouts,
@@ -1148,7 +1148,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildUpcomingPerks(BuildContext context, int currentLevel) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final upcomingPerks = <int, LevelPerk>{
       5: LevelPerk.customWorkoutTemplates,
       10: LevelPerk.advancedAnalytics,
@@ -1222,13 +1222,13 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
 
 // Widget stateful per la selezione delle metriche con aggiornamento in tempo reale
 class _MetricsSelectionSheet extends ConsumerStatefulWidget {
-  final Map<String, String> metrics;
-  final WidgetRef ref;
   
   const _MetricsSelectionSheet({
     required this.metrics,
     required this.ref,
   });
+  final Map<String, String> metrics;
+  final WidgetRef ref;
   
   @override
   ConsumerState<_MetricsSelectionSheet> createState() => _MetricsSelectionSheetState();
@@ -1262,7 +1262,7 @@ class _MetricsSelectionSheetState extends ConsumerState<_MetricsSelectionSheet> 
   
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     
     return Container(

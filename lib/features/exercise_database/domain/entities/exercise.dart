@@ -4,7 +4,58 @@ import 'package:hive/hive.dart';
 part 'exercise.g.dart';
 
 @HiveType(typeId: 2)
-class Exercise extends Equatable {
+class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
+
+  const Exercise({
+    required this.id,
+    required this.nome,
+    required this.focus,
+    this.imageUrl,
+    required this.muscoliSecondari,
+    required this.difficolta,
+    required this.tipoEsercizio,
+    required this.attrezzatura,
+    required this.patternMovimento,
+    required this.rangeRipetizioni,
+    this.noteTecniche,
+    this.mobilitaPre,
+    this.attivazionePre,
+    this.warmupSets,
+    this.tempoWarmup,
+    this.drillTecnico,
+    this.prevenzioneInfortuni,
+    this.cooldownConsigliato,
+    this.spiegazioneTermini,
+    this.tempoEsecuzione,
+    this.tempoNote,
+  });
+
+  // Factory constructor per creare da JSON
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise(
+      id: json['id'] ?? '',
+      nome: json['nome'] ?? '',
+      focus: _parseCommaSeparated(json['focus']),
+      imageUrl: json['imageUrl']?.isEmpty == true ? null : json['imageUrl'],
+      muscoliSecondari: _parseCommaSeparated(json['muscoliSecondari']),
+      difficolta: json['difficolta'] ?? '',
+      tipoEsercizio: json['tipoEsercizio'] ?? '',
+      attrezzatura: json['attrezzatura'] ?? '',
+      patternMovimento: json['patternMovimento'] ?? '',
+      rangeRipetizioni: json['rangeRipetizioni'] ?? '',
+      noteTecniche: json['noteTecniche']?.isEmpty == true ? null : json['noteTecniche'],
+      mobilitaPre: json['mobilitaPre']?.isEmpty == true ? null : json['mobilitaPre'],
+      attivazionePre: json['attivazionePre']?.isEmpty == true ? null : json['attivazionePre'],
+      warmupSets: json['warmupSets']?.isEmpty == true ? null : json['warmupSets'],
+      tempoWarmup: json['tempoWarmup']?.isEmpty == true ? null : json['tempoWarmup'],
+      drillTecnico: json['drillTecnico']?.isEmpty == true ? null : json['drillTecnico'],
+      prevenzioneInfortuni: json['prevenzioneInfortuni']?.isEmpty == true ? null : json['prevenzioneInfortuni'],
+      cooldownConsigliato: json['cooldownConsigliato']?.isEmpty == true ? null : json['cooldownConsigliato'],
+      spiegazioneTermini: json['spiegazioneTermini']?.isEmpty == true ? null : json['spiegazioneTermini'],
+      tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true ? null : json['tempoEsecuzione'],
+      tempoNote: json['tempoNote']?.isEmpty == true ? null : json['tempoNote'],
+    );
+  }
   @HiveField(0)
   final String id;
   
@@ -62,52 +113,11 @@ class Exercise extends Equatable {
   @HiveField(18)
   final String? spiegazioneTermini;
 
-  const Exercise({
-    required this.id,
-    required this.nome,
-    required this.focus,
-    this.imageUrl,
-    required this.muscoliSecondari,
-    required this.difficolta,
-    required this.tipoEsercizio,
-    required this.attrezzatura,
-    required this.patternMovimento,
-    required this.rangeRipetizioni,
-    this.noteTecniche,
-    this.mobilitaPre,
-    this.attivazionePre,
-    this.warmupSets,
-    this.tempoWarmup,
-    this.drillTecnico,
-    this.prevenzioneInfortuni,
-    this.cooldownConsigliato,
-    this.spiegazioneTermini,
-  });
+  @HiveField(19)
+  final String? tempoEsecuzione; // Time Under Tension (e.g., "3-1-2-0")
 
-  // Factory constructor per creare da JSON
-  factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
-      id: json['id'] ?? '',
-      nome: json['nome'] ?? '',
-      focus: _parseCommaSeparated(json['focus']),
-      imageUrl: json['imageUrl']?.isEmpty == true ? null : json['imageUrl'],
-      muscoliSecondari: _parseCommaSeparated(json['muscoliSecondari']),
-      difficolta: json['difficolta'] ?? '',
-      tipoEsercizio: json['tipoEsercizio'] ?? '',
-      attrezzatura: json['attrezzatura'] ?? '',
-      patternMovimento: json['patternMovimento'] ?? '',
-      rangeRipetizioni: json['rangeRipetizioni'] ?? '',
-      noteTecniche: json['noteTecniche']?.isEmpty == true ? null : json['noteTecniche'],
-      mobilitaPre: json['mobilitaPre']?.isEmpty == true ? null : json['mobilitaPre'],
-      attivazionePre: json['attivazionePre']?.isEmpty == true ? null : json['attivazionePre'],
-      warmupSets: json['warmupSets']?.isEmpty == true ? null : json['warmupSets'],
-      tempoWarmup: json['tempoWarmup']?.isEmpty == true ? null : json['tempoWarmup'],
-      drillTecnico: json['drillTecnico']?.isEmpty == true ? null : json['drillTecnico'],
-      prevenzioneInfortuni: json['prevenzioneInfortuni']?.isEmpty == true ? null : json['prevenzioneInfortuni'],
-      cooldownConsigliato: json['cooldownConsigliato']?.isEmpty == true ? null : json['cooldownConsigliato'],
-      spiegazioneTermini: json['spiegazioneTermini']?.isEmpty == true ? null : json['spiegazioneTermini'],
-    );
-  }
+  @HiveField(20)
+  final String? tempoNote;
 
   // Metodo helper per parsare stringhe separate da virgole
   static List<String> _parseCommaSeparated(String? value) {
@@ -177,6 +187,8 @@ class Exercise extends Equatable {
       'prevenzioneInfortuni': prevenzioneInfortuni,
       'cooldownConsigliato': cooldownConsigliato,
       'spiegazioneTermini': spiegazioneTermini,
+      'tempoEsecuzione': tempoEsecuzione,
+      'tempoNote': tempoNote,
     };
   }
 
@@ -201,5 +213,7 @@ class Exercise extends Equatable {
         prevenzioneInfortuni,
         cooldownConsigliato,
         spiegazioneTermini,
+        tempoEsecuzione,
+        tempoNote,
       ];
 }

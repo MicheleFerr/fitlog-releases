@@ -120,7 +120,7 @@ class AuthService {
       );
 
       // Create OAuth credential
-      final oauthCredential = OAuthProvider("apple.com").credential(
+      final oauthCredential = OAuthProvider('apple.com').credential(
         idToken: appleCredential.identityToken,
         accessToken: appleCredential.authorizationCode, // CRUCIALE!
         rawNonce: rawNonce,
@@ -218,7 +218,7 @@ class AuthService {
       }, SetOptions(merge: true));
     } catch (e) {
       // Don't throw - user creation is more important than document creation
-      print('Warning: Failed to create user document: $e');
+      // print('Warning: Failed to create user document: $e');
     }
   }
 

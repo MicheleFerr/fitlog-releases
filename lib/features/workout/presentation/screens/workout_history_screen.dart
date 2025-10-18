@@ -1,18 +1,17 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: presentation/screens
- * 🎯 Feature: workout
- * 🔧 Type: screen
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout
- * - workout/presentation/providers: WorkoutHistoryProvider
- * - shared/presentation/l10n: AppLocalizations
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: presentation/screens
+/// 🎯 Feature: workout
+/// 🔧 Type: screen
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout
+/// - workout/presentation/providers: WorkoutHistoryProvider
+/// - shared/presentation/l10n: AppLocalizations
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,7 +67,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(workoutHistoryProvider);
 
     return Scaffold(
@@ -167,7 +166,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: theme.colorScheme.surfaceVariant.withValues(alpha: 0.3),
+          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         ),
         onChanged: _updateSearch,
       ),
@@ -415,7 +414,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.workoutDuplicated),
+        content: Text(AppLocalizations.of(context).workoutDuplicated),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
@@ -425,12 +424,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteWorkout),
-        content: Text(AppLocalizations.of(context)!.deleteWorkoutConfirmation(workout.name)),
+        title: Text(AppLocalizations.of(context).deleteWorkout),
+        content: Text(AppLocalizations.of(context).deleteWorkoutConfirmation(workout.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -439,7 +438,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
               
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.workoutDeleted),
+                  content: Text(AppLocalizations.of(context).workoutDeleted),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
               );
@@ -447,7 +446,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: Text(AppLocalizations.of(context)!.delete),
+            child: Text(AppLocalizations.of(context).delete),
           ),
         ],
       ),
@@ -465,10 +464,6 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
 }
 
 class _FilterDialog extends StatefulWidget {
-  final String currentFilter;
-  final DateTimeRange? currentDateRange;
-  final Function(String) onFilterChanged;
-  final Function(DateTimeRange?) onDateRangeChanged;
 
   const _FilterDialog({
     required this.currentFilter,
@@ -476,6 +471,10 @@ class _FilterDialog extends StatefulWidget {
     required this.onFilterChanged,
     required this.onDateRangeChanged,
   });
+  final String currentFilter;
+  final DateTimeRange? currentDateRange;
+  final Function(String) onFilterChanged;
+  final Function(DateTimeRange?) onDateRangeChanged;
 
   @override
   State<_FilterDialog> createState() => _FilterDialogState();
@@ -495,7 +494,7 @@ class _FilterDialogState extends State<_FilterDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return AlertDialog(
       title: Text(l10n.filterWorkouts),

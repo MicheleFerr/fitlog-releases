@@ -1,17 +1,16 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: analytics
- * 🔧 Type: repository interface
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: Universal
- * 
- * Dependencies:
- * - workout/domain/entities: Workout
- * - analytics/domain/entities: WorkoutMetrics, PersonalRecordAchieved
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: analytics
+/// 🔧 Type: repository interface
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities: Workout
+/// - analytics/domain/entities: WorkoutMetrics, PersonalRecordAchieved
+library;
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
@@ -65,19 +64,18 @@ abstract class WorkoutAnalyticsRepository {
 
   /// Stream of real-time workout updates for analytics
   Stream<WorkoutAnalyticsUpdate> watchWorkoutUpdates(String workoutId);
+
+  /// Sync workouts from Firebase to local Hive storage
+  /// Useful for first-time sync or manual refresh
+  /// Optional [onProgress] callback to track sync progress
+  Future<void> syncWorkoutsFromFirebase(
+    String userId, {
+    Function(int current, int total)? onProgress,
+  });
 }
 
 /// Analytics statistics summary
 class WorkoutAnalyticsStats {
-  final int totalWorkouts;
-  final int totalPRs;
-  final double averageWorkoutVolume;
-  final double averageWorkoutDuration; // in minutes
-  final double totalVolumeLifted;
-  final Map<String, int> exerciseFrequency;
-  final Map<String, double> exerciseVolumeDistribution;
-  final DateTime? lastWorkoutDate;
-  final DateTime? firstWorkoutDate;
 
   const WorkoutAnalyticsStats({
     required this.totalWorkouts,
@@ -90,6 +88,15 @@ class WorkoutAnalyticsStats {
     this.lastWorkoutDate,
     this.firstWorkoutDate,
   });
+  final int totalWorkouts;
+  final int totalPRs;
+  final double averageWorkoutVolume;
+  final double averageWorkoutDuration; // in minutes
+  final double totalVolumeLifted;
+  final Map<String, int> exerciseFrequency;
+  final Map<String, double> exerciseVolumeDistribution;
+  final DateTime? lastWorkoutDate;
+  final DateTime? firstWorkoutDate;
 
   /// Get training consistency (workouts per week average)
   double get trainingConsistency {
@@ -123,10 +130,6 @@ class WorkoutAnalyticsStats {
 
 /// Real-time workout analytics update
 class WorkoutAnalyticsUpdate {
-  final String workoutId;
-  final WorkoutMetrics metrics;
-  final List<PersonalRecordAchieved> newPRs;
-  final DateTime timestamp;
 
   const WorkoutAnalyticsUpdate({
     required this.workoutId,
@@ -134,6 +137,10 @@ class WorkoutAnalyticsUpdate {
     required this.newPRs,
     required this.timestamp,
   });
+  final String workoutId;
+  final WorkoutMetrics metrics;
+  final List<PersonalRecordAchieved> newPRs;
+  final DateTime timestamp;
 
   bool get hasPRs => newPRs.isNotEmpty;
   int get prCount => newPRs.length;

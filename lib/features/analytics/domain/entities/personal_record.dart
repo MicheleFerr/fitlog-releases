@@ -1,16 +1,15 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: domain
- * 🎯 Feature: analytics
- * 🔧 Type: entity
- * 🌍 Localization: ✅ AppLocalizations used
- * 🎨 Theme: ✅ ColorScheme responsive
- * 📱 Platform: iOS/Android/Universal
- * 
- * Dependencies:
- * - workout/domain/entities
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: domain
+/// 🎯 Feature: analytics
+/// 🔧 Type: entity
+/// 🌍 Localization: ✅ AppLocalizations used
+/// 🎨 Theme: ✅ ColorScheme responsive
+/// 📱 Platform: iOS/Android/Universal
+/// 
+/// Dependencies:
+/// - workout/domain/entities
+library;
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
@@ -21,6 +20,7 @@ enum PRType {
   reps,       // Most reps at a specific weight
   oneRM,      // Calculated 1RM estimate
   totalVolume, // Total volume for an exercise in a workout
+  totalSets,  // Total sets completed for an exercise
   time,       // Fastest time for time-based exercises
 }
 
@@ -34,16 +34,6 @@ enum PRStatus {
 
 /// Personal Record entity for tracking exercise achievements
 class PersonalRecord {
-  final String id;
-  final String exerciseName;
-  final String exerciseId;
-  final PRType type;
-  final double value;
-  final int? reps;
-  final double? weight;
-  final DateTime achievedAt;
-  final String workoutId;
-  final Map<String, dynamic> metadata;
 
   const PersonalRecord({
     required this.id,
@@ -58,40 +48,6 @@ class PersonalRecord {
     this.metadata = const {},
   });
 
-  /// Get formatted value based on PR type
-  String get formattedValue {
-    switch (type) {
-      case PRType.weight:
-        return '${value.toStringAsFixed(1)} kg';
-      case PRType.volume:
-        return '${value.toStringAsFixed(0)} kg';
-      case PRType.reps:
-        return '${value.toInt()} reps';
-      case PRType.oneRM:
-        return '${value.toStringAsFixed(1)} kg (1RM)';
-      case PRType.totalVolume:
-        return '${value.toStringAsFixed(0)} kg total';
-      case PRType.time:
-        return '${(value / 60).toStringAsFixed(1)} min';
-    }
-  }
-
-  /// Get description for the PR
-  String get description {
-    switch (type) {
-      case PRType.weight:
-        return reps != null ? '$formattedValue × $reps reps' : formattedValue;
-      case PRType.reps:
-        return weight != null ? '${value.toInt()} reps @ ${weight!.toStringAsFixed(1)} kg' : formattedValue;
-      case PRType.volume:
-        return weight != null && reps != null 
-            ? '${weight!.toStringAsFixed(1)} kg × $reps = $formattedValue'
-            : formattedValue;
-      default:
-        return formattedValue;
-    }
-  }
-
   /// Create from an exercise set
   factory PersonalRecord.fromSet({
     required String exerciseName,
@@ -104,24 +60,28 @@ class PersonalRecord {
     
     switch (type) {
       case PRType.weight:
-        value = set.weight;
+        value = set.weight ?? 0.0;
         break;
       case PRType.volume:
         value = set.volume;
         break;
       case PRType.reps:
-        value = set.actualReps?.toDouble() ?? set.reps.toDouble();
+        value = set.actualReps?.toDouble() ?? set.reps?.toDouble() ?? 0.0;
         break;
       case PRType.oneRM:
         // Epley formula: 1RM = weight × (1 + reps/30)
-        final actualReps = set.actualReps ?? set.reps;
-        value = set.weight * (1 + actualReps / 30.0);
+        final actualReps = set.actualReps ?? set.reps ?? 0;
+        final weight = set.weight ?? 0.0;
+        value = weight * (1 + actualReps / 30.0);
         break;
       case PRType.time:
         value = set.seconds?.toDouble() ?? 0;
         break;
       case PRType.totalVolume:
         value = set.volume;
+        break;
+      case PRType.totalSets:
+        value = 1.0;  // Each set counts as 1
         break;
     }
 
@@ -141,6 +101,67 @@ class PersonalRecord {
         'rpe': set.rpe,
       },
     );
+  }
+
+  factory PersonalRecord.fromJson(Map<String, dynamic> json) {
+    return PersonalRecord(
+      id: json['id'],
+      exerciseName: json['exerciseName'],
+      exerciseId: json['exerciseId'],
+      type: PRType.values.firstWhere((e) => e.name == json['type']),
+      value: (json['value'] as num).toDouble(),
+      reps: json['reps'],
+      weight: (json['weight'] as num?)?.toDouble(),
+      achievedAt: DateTime.parse(json['achievedAt']),
+      workoutId: json['workoutId'],
+      metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
+    );
+  }
+  final String id;
+  final String exerciseName;
+  final String exerciseId;
+  final PRType type;
+  final double value;
+  final int? reps;
+  final double? weight;
+  final DateTime achievedAt;
+  final String workoutId;
+  final Map<String, dynamic> metadata;
+
+  /// Get formatted value based on PR type
+  String get formattedValue {
+    switch (type) {
+      case PRType.weight:
+        return '${value.toStringAsFixed(1)} kg';
+      case PRType.volume:
+        return '${value.toStringAsFixed(0)} kg';
+      case PRType.reps:
+        return '${value.toInt()} reps';
+      case PRType.oneRM:
+        return '${value.toStringAsFixed(1)} kg (1RM)';
+      case PRType.totalVolume:
+        return '${value.toStringAsFixed(0)} kg total';
+      case PRType.totalSets:
+        return '${value.toInt()} sets';
+      case PRType.time:
+        return '${(value / 60).toStringAsFixed(1)} min';
+    }
+  }
+
+  /// Get description for the PR
+  String get description {
+    switch (type) {
+      case PRType.weight:
+        return reps != null ? '$formattedValue × $reps reps' : formattedValue;
+      case PRType.reps:
+        return weight != null ? '${value.toInt()} reps @ ${weight!.toStringAsFixed(1)} kg' : formattedValue;
+      case PRType.volume:
+        return weight != null && reps != null 
+            ? '${weight!.toStringAsFixed(1)} kg × $reps = $formattedValue'
+            : formattedValue;
+      default:
+        return formattedValue;
+    }
   }
 
   PersonalRecord copyWith({
@@ -181,32 +202,10 @@ class PersonalRecord {
       'metadata': metadata,
     };
   }
-
-  factory PersonalRecord.fromJson(Map<String, dynamic> json) {
-    return PersonalRecord(
-      id: json['id'],
-      exerciseName: json['exerciseName'],
-      exerciseId: json['exerciseId'],
-      type: PRType.values.firstWhere((e) => e.name == json['type']),
-      value: (json['value'] as num).toDouble(),
-      reps: json['reps'],
-      weight: (json['weight'] as num?)?.toDouble(),
-      achievedAt: DateTime.parse(json['achievedAt']),
-      workoutId: json['workoutId'],
-      metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
-    );
-  }
 }
 
 /// PR Detection result for an exercise
 class PRDetectionResult {
-  final String exerciseId;
-  final String exerciseName;
-  final List<PersonalRecord> newPRs;
-  final PRStatus status;
-  final double? proximityPercentage; // How close to PR (0-100%)
-  final PersonalRecord? currentPR;
-  final Map<PRType, PersonalRecord> prsByType;
 
   const PRDetectionResult({
     required this.exerciseId,
@@ -217,6 +216,13 @@ class PRDetectionResult {
     this.currentPR,
     this.prsByType = const {},
   });
+  final String exerciseId;
+  final String exerciseName;
+  final List<PersonalRecord> newPRs;
+  final PRStatus status;
+  final double? proximityPercentage; // How close to PR (0-100%)
+  final PersonalRecord? currentPR;
+  final Map<PRType, PersonalRecord> prsByType;
 
   bool get hasNewPR => newPRs.isNotEmpty;
   
@@ -239,11 +245,11 @@ class PRDetectionResult {
 
 /// Service for detecting PRs in real-time
 class PRDetector {
-  final Map<String, List<PersonalRecord>> historicalPRs;
 
   const PRDetector({
     required this.historicalPRs,
   });
+  final Map<String, List<PersonalRecord>> historicalPRs;
 
   /// Detect PRs for a single exercise
   PRDetectionResult detectForExercise(Exercise exercise, String workoutId) {
@@ -266,7 +272,7 @@ class PRDetector {
     for (final set in exercise.sets.where((s) => s.isCompleted && !s.isWarmup)) {
       // Check weight PR
       final weightPR = prsByType[PRType.weight];
-      if (weightPR == null || set.weight > weightPR.value) {
+      if (weightPR == null || (set.weight != null && set.weight! > weightPR.value)) {
         newPRs.add(PersonalRecord.fromSet(
           exerciseName: exercise.name,
           exerciseId: exercise.id,
@@ -274,8 +280,8 @@ class PRDetector {
           type: PRType.weight,
           workoutId: workoutId,
         ));
-      } else {
-        final proximity = (set.weight / weightPR.value) * 100;
+      } else if (set.weight != null) {
+        final proximity = (set.weight! / weightPR.value) * 100;
         if (proximity > maxProximity) {
           maxProximity = proximity;
           closestPR = weightPR;
@@ -296,13 +302,14 @@ class PRDetector {
 
       // Check reps PR at this weight
       final actualReps = set.actualReps ?? set.reps;
-      final repsPRs = exercisePRs.where((pr) => 
-        pr.type == PRType.reps && 
+      final repsPRs = exercisePRs.where((pr) =>
+        pr.type == PRType.reps &&
         pr.weight != null &&
-        (pr.weight! - set.weight).abs() < 2.5 // Within 2.5kg
+        set.weight != null &&
+        (pr.weight! - set.weight!).abs() < 2.5 // Within 2.5kg
       ).toList();
       
-      if (repsPRs.isEmpty || actualReps > repsPRs.first.value) {
+      if (repsPRs.isEmpty || (actualReps ?? 0) > repsPRs.first.value) {
         newPRs.add(PersonalRecord.fromSet(
           exerciseName: exercise.name,
           exerciseId: exercise.id,
@@ -313,10 +320,11 @@ class PRDetector {
       }
 
       // Check 1RM estimate
-      final oneRM = set.weight * (1 + actualReps / 30.0);
-      final oneRMPR = prsByType[PRType.oneRM];
-      if (oneRMPR == null || oneRM > oneRMPR.value) {
-        newPRs.add(PersonalRecord(
+      if (set.weight != null && actualReps != null) {
+        final oneRM = set.weight! * (1 + actualReps / 30.0);
+        final oneRMPR = prsByType[PRType.oneRM];
+        if (oneRMPR == null || oneRM > oneRMPR.value) {
+          newPRs.add(PersonalRecord(
           id: '${exercise.id}_oneRM_${DateTime.now().millisecondsSinceEpoch}',
           exerciseName: exercise.name,
           exerciseId: exercise.id,
@@ -328,6 +336,7 @@ class PRDetector {
           workoutId: workoutId,
           metadata: {'setNumber': set.setNumber},
         ));
+        }
       }
     }
 

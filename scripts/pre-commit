@@ -1,0 +1,109 @@
+#!/bin/bash
+# GymBro Pre-Commit Hook - Code Quality Enforcement
+# Auto-generated - Do not edit manually
+
+set -e
+
+echo "🛡️  GymBro Code Quality Checks"
+echo "=============================="
+echo ""
+
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+ERRORS=0
+WARNINGS=0
+
+# Check 1: Flutter Analyze (BLOCKING)
+echo "1️⃣  Checking compilation (flutter analyze)..."
+ANALYZE_OUTPUT=$(flutter analyze 2>&1)
+ERROR_COUNT=$(echo "$ANALYZE_OUTPUT" | grep -c "error •" || true)
+
+if [ "$ERROR_COUNT" -gt 0 ]; then
+  echo -e "${RED}❌ COMMIT BLOCKED: Found $ERROR_COUNT compilation errors${NC}"
+  echo ""
+  echo "First 10 errors:"
+  echo "$ANALYZE_OUTPUT" | grep "error •" | head -10
+  echo ""
+  echo "Run 'flutter analyze' to see all errors"
+  exit 1
+fi
+echo -e "${GREEN}✅ No compilation errors${NC}"
+
+# Check 2: Relative Imports (BLOCKING)
+echo ""
+echo "2️⃣  Checking import paths..."
+RELATIVE_IMPORTS=$(find lib -name "*.dart" -type f -exec grep -l "import '\.\." {} \; 2>/dev/null || true)
+
+if [ -n "$RELATIVE_IMPORTS" ]; then
+  echo -e "${RED}❌ COMMIT BLOCKED: Relative imports found${NC}"
+  echo ""
+  echo "Files with relative imports:"
+  echo "$RELATIVE_IMPORTS" | head -5
+  echo ""
+  echo "Use absolute imports: import 'package:gymbro_flutter_new/...'"
+  exit 1
+fi
+echo -e "${GREEN}✅ All imports are absolute${NC}"
+
+# Check 3: Hardcoded Strings (WARNING)
+echo ""
+echo "3️⃣  Checking hardcoded strings..."
+if [ -f "./scripts/find_hardcoded_strings.sh" ]; then
+  HARDCODED_COUNT=$(./scripts/find_hardcoded_strings.sh 2>&1 | grep -c "Hardcoded string found" || true)
+
+  if [ "$HARDCODED_COUNT" -gt 0 ]; then
+    echo -e "${YELLOW}⚠️  WARNING: Found $HARDCODED_COUNT hardcoded strings (non-blocking)${NC}"
+    WARNINGS=$((WARNINGS + 1))
+  else
+    echo -e "${GREEN}✅ No hardcoded strings${NC}"
+  fi
+else
+  echo -e "${YELLOW}⚠️  Hardcoded strings check skipped (script not found)${NC}"
+fi
+
+# Check 4: Hardcoded Colors (WARNING)
+echo ""
+echo "4️⃣  Checking hardcoded colors..."
+COLORS_COUNT=$(grep -r "Colors\." lib/features --include="*.dart" 2>/dev/null | \
+               grep -v "Colors.transparent" | \
+               grep -v "// OK" | \
+               wc -l | tr -d ' ')
+
+if [ "$COLORS_COUNT" -gt 0 ]; then
+  echo -e "${YELLOW}⚠️  WARNING: Found $COLORS_COUNT hardcoded Colors.* (non-blocking)${NC}"
+  echo "   Use context.colors.* instead"
+  WARNINGS=$((WARNINGS + 1))
+else
+  echo -e "${GREEN}✅ No hardcoded colors${NC}"
+fi
+
+# Check 5: Component Duplication (INFO)
+echo ""
+echo "5️⃣  Checking component usage..."
+CIRCULAR_COUNT=$(grep -r "CircularProgressIndicator()" lib/features --include="*.dart" 2>/dev/null | wc -l | tr -d ' ')
+SNACKBAR_COUNT=$(grep -r "ScaffoldMessenger.of(context)" lib/features --include="*.dart" 2>/dev/null | wc -l | tr -d ' ')
+
+if [ "$CIRCULAR_COUNT" -gt 0 ] || [ "$SNACKBAR_COUNT" -gt 0 ]; then
+  echo -e "${YELLOW}ℹ️  INFO: Found duplicated components (non-blocking)${NC}"
+  [ "$CIRCULAR_COUNT" -gt 0 ] && echo "   - $CIRCULAR_COUNT raw CircularProgressIndicator (use LoadingIndicator)"
+  [ "$SNACKBAR_COUNT" -gt 0 ] && echo "   - $SNACKBAR_COUNT raw ScaffoldMessenger (use SnackBarService)"
+else
+  echo -e "${GREEN}✅ Using unified components${NC}"
+fi
+
+# Summary
+echo ""
+echo "=============================="
+if [ "$WARNINGS" -gt 0 ]; then
+  echo -e "${YELLOW}⚠️  Commit allowed with $WARNINGS warnings${NC}"
+  echo "Please address warnings in future commits"
+else
+  echo -e "${GREEN}✨ All checks passed!${NC}"
+fi
+echo ""
+
+exit 0

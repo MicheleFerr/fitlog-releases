@@ -1,7 +1,7 @@
 import 'dart:async';
-import '../../domain/entities/unified_notification.dart';
-import '../../domain/entities/unified_notification_state.dart';
-import '../../domain/repositories/notification_repository.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
 
 /// Simple in-memory implementation of NotificationRepository
 /// Used for basic functionality until full Firebase implementation is needed
@@ -354,5 +354,56 @@ class SimpleNotificationRepository implements NotificationRepository {
       'totalNotifications': _notifications.length,
       'memoryUsageBytes': _notifications.length * 1000, // Rough estimate
     };
+  }
+
+  // === Additional Methods from Interface ===
+
+  @override
+  Future<void> cancelAllNotifications() async {
+    final pendingIds = await getPendingNotificationIds();
+    await cancelMultipleNotifications(pendingIds);
+  }
+
+  @override
+  Future<List<UnifiedNotification>> getPendingNotifications() async {
+    return getAllNotifications();
+  }
+
+  @override
+  Future<List<UnifiedNotification>> getPendingNotificationsByType(
+    NotificationType type,
+  ) async {
+    return getAllNotifications(types: [type]);
+  }
+
+  @override
+  Future<List<UnifiedNotification>> getPendingNotificationsForRoutine(
+    String routineId,
+  ) async {
+    final all = await getAllNotifications();
+    return all.where((n) => n.workoutId == routineId).toList();
+  }
+
+  @override
+  Future<void> initialize() async {
+    // No initialization needed for simple in-memory implementation
+  }
+
+  @override
+  Future<void> showImmediateNotification({
+    required String id,
+    required String title,
+    required String body,
+    Map<String, dynamic>? payload,
+  }) async {
+    final notification = UnifiedNotification(
+      id: id,
+      title: title,
+      body: body,
+      type: NotificationType.systemUpdate,
+      scheduledTime: DateTime.now(),
+      payload: payload ?? {},
+    );
+    await scheduleNotification(notification);
   }
 }

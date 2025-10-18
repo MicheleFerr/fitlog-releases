@@ -8,23 +8,6 @@ part 'workout_draft.g.dart';
 /// Entity for storing workout drafts locally to prevent data loss
 @HiveType(typeId: 10)
 class WorkoutDraft {
-  @HiveField(0)
-  final String id;
-  
-  @HiveField(1)
-  final String workoutJson;
-  
-  @HiveField(2)
-  final DateTime lastSaved;
-  
-  @HiveField(3)
-  final String? deviceId;
-  
-  @HiveField(4)
-  final Map<String, dynamic>? metadata;
-  
-  @HiveField(5)
-  final bool isRecovered;
 
   WorkoutDraft({
     required this.id,
@@ -48,6 +31,23 @@ class WorkoutDraft {
       },
     );
   }
+  @HiveField(0)
+  final String id;
+  
+  @HiveField(1)
+  final String workoutJson;
+  
+  @HiveField(2)
+  final DateTime lastSaved;
+  
+  @HiveField(3)
+  final String? deviceId;
+  
+  @HiveField(4)
+  final Map<String, dynamic>? metadata;
+  
+  @HiveField(5)
+  final bool isRecovered;
 
   /// Convert draft back to Workout
   Workout toWorkout() {

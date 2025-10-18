@@ -1,21 +1,19 @@
-/**
- * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
- * 📁 Layer: test/widget
- * 🎯 Feature: auth migration simple
- * 🔧 Type: widget test
- * 🌍 Localization: ✅ AppLocalizations tested
- * 🎨 Theme: ✅ Both light and dark themes tested
- * 📱 Platform: Universal
- * 
- * SIMPLIFIED MIGRATION TESTS for Settings Screen
- * Tests UI behavior with new UserProfile system without complex dependencies
- */
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 
+/// 📁 Layer: test/widget
+/// 🎯 Feature: auth migration simple
+/// 🔧 Type: widget test
+/// 🌍 Localization: ✅ AppLocalizations tested
+/// 🎨 Theme: ✅ Both light and dark themes tested
+/// 📱 Platform: Universal
+/// 
+/// SIMPLIFIED MIGRATION TESTS for Settings Screen
+/// Tests UI behavior with new UserProfile system without complex dependencies
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile_consolidated.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class UserProfileFactory {
@@ -66,7 +64,7 @@ void main() {
         locale: Locale(locale),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: child ?? Scaffold(body: Text('Test Widget')),
+        home: child ?? const Scaffold(body: Text('Test Widget')),
       );
     }
 
@@ -84,11 +82,11 @@ void main() {
             body: Card(
               child: Column(
                 children: [
-                  Text('Account'),
+                  const Text('Account'),
                   Text(freeUser.displayName ?? 'No Name'),
                   Text(freeUser.email ?? 'No Email'),
                   if (freeUser.accountTier == AccountTier.free)
-                    Text('FREE'),
+                    const Text('FREE'),
                 ],
               ),
             ),
@@ -116,12 +114,12 @@ void main() {
             body: Card(
               child: Column(
                 children: [
-                  Text('Account'),
+                  const Text('Account'),
                   Text(premiumUser.displayName ?? 'No Name'),
                   Text(premiumUser.email ?? 'No Email'),
                   if (premiumUser.accountTier == AccountTier.premium) ...[
-                    Text('PREMIUM'),
-                    Icon(Icons.cloud_sync),
+                    const Text('PREMIUM'),
+                    const Icon(Icons.cloud_sync),
                   ],
                 ],
               ),
@@ -144,7 +142,7 @@ void main() {
           displayName: 'Michele (Admin)',
         );
         
-        final isAdmin = adminUser.email?.contains('michele.cozzolino93@gmail.com') ?? false;
+        final isAdmin = adminUser.email.contains('michele.cozzolino93@gmail.com') ?? false;
 
         // Act
         await tester.pumpWidget(createTestWidget(
@@ -154,8 +152,8 @@ void main() {
                 children: [
                   Text(adminUser.displayName ?? 'No Name'),
                   if (isAdmin) ...[
-                    Text('ADMIN'),
-                    Text('🔧 Admin Tools'),
+                    const Text('ADMIN'),
+                    const Text('🔧 Admin Tools'),
                   ],
                 ],
               ),
@@ -200,7 +198,7 @@ void main() {
       testWidgets('shows loading state correctly', (tester) async {
         // Act
         await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
+          child: const Scaffold(
             body: Column(
               children: [
                 SizedBox(
@@ -223,7 +221,7 @@ void main() {
       testWidgets('shows unauthenticated state correctly', (tester) async {
         // Act
         await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
+          child: const Scaffold(
             body: Text('Not logged in'),
           ),
         ));
@@ -236,7 +234,7 @@ void main() {
       testWidgets('shows error state correctly', (tester) async {
         // Act
         await tester.pumpWidget(createTestWidget(
-          child: Scaffold(
+          child: const Scaffold(
             body: Column(
               children: [
                 Icon(Icons.error),
@@ -259,8 +257,8 @@ void main() {
         await tester.pumpWidget(createTestWidget(
           locale: 'en',
           child: Scaffold(
-            appBar: AppBar(title: Text('Settings')),
-            body: Column(
+            appBar: AppBar(title: const Text('Settings')),
+            body: const Column(
               children: [
                 Text('Account'),
                 Text('Appearance'),
@@ -283,8 +281,8 @@ void main() {
         await tester.pumpWidget(createTestWidget(
           locale: 'it',
           child: Scaffold(
-            appBar: AppBar(title: Text('Impostazioni')),
-            body: Column(
+            appBar: AppBar(title: const Text('Impostazioni')),
+            body: const Column(
               children: [
                 Text('Account'),
                 Text('Aspetto'),
@@ -309,8 +307,8 @@ void main() {
         await tester.pumpWidget(MaterialApp(
           theme: ThemeData.light(),
           home: Scaffold(
-            appBar: AppBar(title: Text('Settings')),
-            body: Card(
+            appBar: AppBar(title: const Text('Settings')),
+            body: const Card(
               child: Text('Content'),
             ),
           ),
@@ -329,8 +327,8 @@ void main() {
         await tester.pumpWidget(MaterialApp(
           theme: ThemeData.dark(),
           home: Scaffold(
-            appBar: AppBar(title: Text('Settings')),
-            body: Card(
+            appBar: AppBar(title: const Text('Settings')),
+            body: const Card(
               child: Text('Content'),
             ),
           ),
@@ -356,8 +354,8 @@ void main() {
               children: [
                 Text(freeUser.displayName ?? 'No Name'),
                 if (canSync) ...[
-                  Text('Cloud Sync'),
-                  Icon(Icons.cloud_sync),
+                  const Text('Cloud Sync'),
+                  const Icon(Icons.cloud_sync),
                 ],
               ],
             ),
@@ -382,9 +380,9 @@ void main() {
               children: [
                 Text(premiumUser.displayName ?? 'No Name'),
                 if (canSync) ...[
-                  Text('Cloud Sync'),
-                  Icon(Icons.cloud_sync),
-                  Text('Sync from Cloud'),
+                  const Text('Cloud Sync'),
+                  const Icon(Icons.cloud_sync),
+                  const Text('Sync from Cloud'),
                 ],
               ],
             ),
@@ -448,7 +446,7 @@ void main() {
             body: Column(
               children: [
                 Text(minimalUser.displayName ?? 'No Name'),
-                Text(minimalUser.email?.isNotEmpty == true ? minimalUser.email! : 'No Email'),
+                Text(minimalUser.email.isNotEmpty == true ? minimalUser.email : 'No Email'),
               ],
             ),
           ),

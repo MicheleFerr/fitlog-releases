@@ -21,7 +21,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
@@ -203,7 +203,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
 
   Widget _buildCSVTypeDropdown(BuildContext context) {
     return DropdownButtonFormField<ExportCSVType>(
-      value: _selectedCSVType,
+      initialValue: _selectedCSVType,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -317,7 +317,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
   String _getFavoriteExercise(List<dynamic> activities) {
     if (activities.isEmpty) return 'N/A';
     
-    Map<String, int> exerciseCount = {};
+    final Map<String, int> exerciseCount = {};
     for (final activity in activities) {
       exerciseCount[activity.exerciseName] = 
         (exerciseCount[activity.exerciseName] ?? 0) + 1;
@@ -333,7 +333,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
   }
 
   void _showSuccessSnackbar() {
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

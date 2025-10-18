@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import '../../providers/volume_settings_provider.dart';
+import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
 
 class VolumeDetailsModal extends ConsumerWidget {
-  final double currentVolume;
-  final Map<DateTime, double> dailyVolumeData;
   
   const VolumeDetailsModal({
     super.key,
     required this.currentVolume,
     required this.dailyVolumeData,
   });
+  final double currentVolume;
+  final Map<DateTime, double> dailyVolumeData;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final settings = ref.watch(volumeSettingsProvider);
     
@@ -482,11 +482,6 @@ class VolumeDetailsModal extends ConsumerWidget {
 }
 
 class _QuickStatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final String unit;
-  final IconData icon;
-  final Color color;
   
   const _QuickStatCard({
     required this.label,
@@ -495,6 +490,11 @@ class _QuickStatCard extends StatelessWidget {
     required this.icon,
     required this.color,
   });
+  final String label;
+  final String value;
+  final String unit;
+  final IconData icon;
+  final Color color;
   
   @override
   Widget build(BuildContext context) {

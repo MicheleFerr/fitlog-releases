@@ -35,7 +35,7 @@ class MockFirebasePlatform extends FirebasePlatform {
 }
 
 class MockFirebaseAppPlatform extends FirebaseAppPlatform {
-  MockFirebaseAppPlatform(String name, FirebaseOptions options) : super(name, options);
+  MockFirebaseAppPlatform(super.name, super.options);
   
   @override
   bool get isAutomaticDataCollectionEnabled => false;
