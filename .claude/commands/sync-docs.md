@@ -3,12 +3,15 @@ allowed-tools: Glob(*), Grep(*), Read(*), Write(*), Edit(*), Bash(git:*)
 description: "[PROJECT-SPECIFIC] Project documentation sync - for universal version see ~/.claude/commands/sync-docs.md"
 ---
 
-# `/sync-docs` - Project-Specific Documentation Sync
+# `/sync-docs` - Documentation Organizer + Synchronizer
 
 > ⚠️ **NOTE**: A global version exists at `~/.claude/commands/sync-docs.md` that works across ALL projects.
 > This file is kept as project-specific reference and fallback.
 
-# Auto-Update All Documentation
+## Features
+
+- **Phase 1**: 📦 Organize scattered files in docs/ root → proper folders
+- **Phase 2**: 🔄 Sync all docs with current code (UPDATE/DELETE/CREATE/ARCHIVE)
 
 > **Slash Command**: Automatically sync all documentation with current codebase
 
