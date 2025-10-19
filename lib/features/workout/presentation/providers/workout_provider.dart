@@ -42,6 +42,9 @@ import 'package:gymbro_flutter_new/shared/data/services/snapshot_sync_service.da
 import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast.dart';
 // 🔄 Routine Auto-Completion Service for automatic day completion
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
+// 📊 Analytics Tracking for workout events
+import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
+import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -148,6 +151,18 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       // Imposta il workout e lo avvia automaticamente
       state = workout.startWorkout();
 
+      // 📊 Track workout started from template
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackWorkoutStarted(
+        workoutId: workout.id,
+        workoutType: 'strength', // Default type
+        workoutName: workout.name,
+        source: 'template',
+        templateId: workoutTemplate.id,
+      );
+
       // Pre-calculate APRE weights for all exercises with APRE enabled
       if (isApreEnabled) {
         if (kDebugMode) {
@@ -174,6 +189,17 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void startWorkout() {
     if (state != null) {
+      // 📊 Track workout started
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackWorkoutStarted(
+        workoutId: state!.id,
+        workoutType: 'strength', // Default type
+        workoutName: state!.name,
+        source: 'manual_start',
+      );
+
       state = state!.startWorkout();
 
       // Pre-calculate APRE weights for all exercises with APRE enabled
@@ -190,6 +216,47 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   /// If [context] is null, saves silently without UI feedback.
   void completeWorkout([BuildContext? context]) {
     if (state != null) {
+      final workout = state!;
+
+      // 📊 Track workout completed with full stats
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      // Calculate stats
+      final totalExercises = workout.exercises.length;
+      final totalSetsCount = workout.exercises.fold<int>(
+        0,
+        (total, ex) => total + ex.sets.length,
+      );
+      final completedSets = workout.exercises.fold<int>(
+        0,
+        (total, ex) => total + ex.sets.where((s) => s.isCompleted).length,
+      );
+      final totalWeight = workout.exercises.fold<double>(
+        0.0,
+        (total, ex) => total + ex.sets.fold<double>(
+          0.0,
+          (exTotal, set) {
+            if (!set.isCompleted) return exTotal;
+            final weight = set.weight ?? 0;
+            final reps = set.reps ?? 0;
+            return exTotal + (weight.toDouble() * reps.toDouble());
+          },
+        ),
+      );
+
+      tracker.trackWorkoutCompleted(
+        workoutId: workout.id,
+        workoutType: 'strength',
+        exerciseCount: totalExercises,
+        totalSets: totalSetsCount,
+        totalWeight: totalWeight,
+        duration: workout.duration?.inSeconds ?? 0,
+        completionRate: totalSetsCount > 0
+            ? ((completedSets / totalSetsCount) * 100).round()
+            : 0,
+      );
+
       state = state!.completeWorkout();
 
       // Haptic feedback for workout completion
@@ -633,12 +700,30 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void pauseWorkout() {
     if (state != null) {
+      // 📊 Track workout paused
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackWorkoutPaused(
+        workoutId: state!.id,
+        elapsedSeconds: state!.duration?.inSeconds ?? 0,
+      );
+
       state = state!.pauseWorkout();
     }
   }
 
   void resumeWorkout() {
     if (state != null) {
+      // 📊 Track workout resumed
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackWorkoutResumed(
+        workoutId: state!.id,
+        pausedSeconds: state!.duration?.inSeconds ?? 0,
+      );
+
       state = state!.resumeWorkout();
     }
   }
@@ -684,6 +769,19 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       }
 
       state = state!.addExercise(exerciseToAdd);
+
+      // 📊 Track exercise added
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackExerciseAdded(
+        workoutId: state!.id,
+        exerciseId: exerciseToAdd.id,
+        exerciseName: exerciseToAdd.name,
+        exerciseCategory: exerciseToAdd.category.name ?? 'other',
+        sets: exerciseToAdd.sets.length,
+        source: 'add_exercise_modal',
+      );
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [WorkoutProvider] Error adding exercise: $e');
@@ -695,7 +793,28 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void removeExercise(String exerciseId) {
     if (state != null) {
+      // Find exercise before removing for analytics
+      final exercise = state!.exercises.firstWhere(
+        (ex) => ex.id == exerciseId,
+        orElse: () => Exercise(
+          name: 'Unknown',
+          type: ExerciseType.single,
+          category: ExerciseCategory.other,
+          sets: [],
+        ),
+      );
+
       state = state!.removeExercise(exerciseId);
+
+      // 📊 Track exercise removed
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackExerciseRemoved(
+        workoutId: state!.id,
+        exerciseId: exerciseId,
+        exerciseName: exercise.name,
+      );
     }
   }
 
@@ -736,6 +855,18 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
     try {
       state = state!.updateExercise(exerciseId, updatedExercise);
+
+      // 📊 Track exercise customized
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackExerciseCustomized(
+        workoutId: state!.id,
+        exerciseId: updatedExercise.id,
+        fieldChanged: 'exercise_data',
+        oldValue: 'previous_state',
+        newValue: 'updated_state',
+      );
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [WorkoutProvider] Error updating exercise: $e');
@@ -781,6 +912,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       Exercise? targetExercise;
       int completedSetNumber = 0;
       int totalSets = 0;
+      ExerciseSet? completedSet;
 
       final updatedExercises = state!.exercises.map((exercise) {
         if (exercise.id == exerciseId) {
@@ -790,6 +922,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           final updatedSets = exercise.sets.map((set) {
             if (set.id == setId) {
               completedSetNumber = set.setNumber;
+              completedSet = set;
               return set.copyWith(isCompleted: true);
             }
             return set;
@@ -800,6 +933,21 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // 📊 Track set completed
+      if (targetExercise != null && completedSet != null) {
+        final analytics = ref.read(analyticsServiceProvider);
+        final tracker = WorkoutEventTracker(analytics);
+
+        tracker.trackSetCompleted(
+          workoutId: state!.id,
+          exerciseId: targetExercise!.id,
+          setNumber: completedSetNumber,
+          reps: completedSet!.reps ?? 0,
+          weight: completedSet!.weight?.toDouble(),
+          rpe: completedSet!.rpe,
+        );
+      }
 
       // ✅ BUG #2 FIX: Auto-start rest timer after completing a set
       if (targetExercise != null && completedSetNumber > 0) {
@@ -1059,6 +1207,18 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void clearWorkout() {
     try {
+      // 📊 Track workout cancelled if there was an active workout
+      if (state != null) {
+        final analytics = ref.read(analyticsServiceProvider);
+        final tracker = WorkoutEventTracker(analytics);
+
+        tracker.trackWorkoutCancelled(
+          workoutId: state!.id,
+          elapsedSeconds: state!.duration?.inSeconds ?? 0,
+          exerciseCount: state!.exercises.length,
+        );
+      }
+
       state = null;
 
       // Disattiva wakelock quando si cancella il workout

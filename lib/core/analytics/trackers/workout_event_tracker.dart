@@ -482,7 +482,7 @@ class WorkoutEventTracker {
     required Future<T> Function() operation,
     int? exerciseCount,
   }) async {
-    final traceId = await startSaveTrace(workoutId);
+    await startSaveTrace(workoutId);
     try {
       final result = await operation();
       await stopSaveTrace(

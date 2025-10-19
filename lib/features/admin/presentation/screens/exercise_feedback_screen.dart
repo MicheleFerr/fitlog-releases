@@ -18,16 +18,11 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statsAsync = ref.watch(feedbackStatsProvider);
+    final stats = ref.watch(feedbackStatsProvider);
+    final allFeedbackAsync = ref.watch(allFeedbackProvider);
     final l10n = context.l10n;
 
-    debugPrint('🔧 ExerciseFeedbackScreen: Building with statsAsync state: ${statsAsync.runtimeType}');
-
-    statsAsync.when(
-      data: (stats) => debugPrint('🔧 ExerciseFeedbackScreen: Data loaded - ${stats.totalFeedback} total feedback'),
-      loading: () => debugPrint('🔧 ExerciseFeedbackScreen: Loading...'),
-      error: (error, stack) => debugPrint('🔧 ExerciseFeedbackScreen: Error - $error'),
-    );
+    debugPrint('🔧 ExerciseFeedbackScreen: Building with stats: ${stats.totalFeedback} total feedback');
 
     return Scaffold(
       appBar: AppBar(
@@ -43,14 +38,14 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => ref.refresh(feedbackStatsProvider),
+            onPressed: () => ref.refresh(allFeedbackProvider),
             icon: const Icon(Icons.refresh),
             tooltip: l10n.feedbackRefresh,
           ),
         ],
       ),
-      body: statsAsync.when(
-        data: (stats) => _buildContent(context, ref, stats, l10n),
+      body: allFeedbackAsync.when(
+        data: (_) => _buildContent(context, ref, stats, l10n),
         loading: () => _buildLoadingState(context, l10n),
         error: (error, _) => _buildErrorState(context, l10n, error.toString()),
       ),
@@ -282,7 +277,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final criticalAsync = ref.watch(criticalFeedbackProvider);
+    final critical = ref.watch(criticalFeedbackProvider);
     final l10n = context.l10n;
 
     return Column(
@@ -296,10 +291,8 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        criticalAsync.when(
-          data: (feedbacks) {
-            if (feedbacks.isEmpty) {
-              return Card(
+        critical.isEmpty
+            ? Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Center(
@@ -311,21 +304,13 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-              );
-            }
-
-            return Column(
-              children: feedbacks
-                  .take(5)
-                  .map((feedback) => _buildFeedbackCard(context, feedback))
-                  .toList(),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Center(
-            child: Text(l10n.feedbackErrorLoadingCritical),
-          ),
-        ),
+              )
+            : Column(
+                children: critical
+                    .take(5)
+                    .map((feedback) => _buildFeedbackCard(context, feedback))
+                    .toList(),
+              ),
         const SizedBox(height: 24),
       ],
     );
@@ -335,7 +320,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final openAsync = ref.watch(feedbackByStatusProvider('OPEN'));
+    final open = ref.watch(feedbackByStatusProvider('OPEN'));
     final l10n = context.l10n;
 
     return Column(
@@ -348,10 +333,8 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        openAsync.when(
-          data: (feedbacks) {
-            if (feedbacks.isEmpty) {
-              return Card(
+        open.isEmpty
+            ? Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Center(
@@ -363,21 +346,13 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-              );
-            }
-
-            return Column(
-              children: feedbacks
-                  .take(10)
-                  .map((feedback) => _buildFeedbackCard(context, feedback))
-                  .toList(),
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Center(
-            child: Text(l10n.feedbackErrorLoading),
-          ),
-        ),
+              )
+            : Column(
+                children: open
+                    .take(10)
+                    .map((feedback) => _buildFeedbackCard(context, feedback))
+                    .toList(),
+              ),
       ],
     );
   }

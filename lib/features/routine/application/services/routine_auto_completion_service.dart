@@ -131,7 +131,7 @@ class RoutineAutoCompletionService {
       final candidateDays = _findCandidateDays(
         routine: activeRoutine,
         templateId: workoutTemplateId,
-        completedAt: completedWorkout.completedAt,
+        completedAt: completedWorkout.endTime ?? DateTime.now(),
       );
 
       if (candidateDays.isEmpty) {
@@ -245,7 +245,7 @@ class RoutineAutoCompletionService {
     final candidates = <DateTime>[];
 
     // Check all scheduled days in the routine
-    for (final scheduledDay in routine.scheduledDays) {
+    for (final scheduledDay in routine.schedule.values) {
       // Must match template
       if (scheduledDay.templateId != templateId) continue;
 

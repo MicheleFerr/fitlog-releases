@@ -3752,6 +3752,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get adminDashboard => 'Dashboard Admin';
 
   @override
+  String get analyticsAdmin => 'Dashboard Analytics';
+
+  @override
   String get manageExercises => 'Gestisci Esercizi';
 
   @override

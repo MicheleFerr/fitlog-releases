@@ -4884,6 +4884,10 @@
   "@adminDashboard": {
     "description": "Admin dashboard title"
   },
+  "analyticsAdmin": "Analytics Dashboard",
+  "@analyticsAdmin": {
+    "description": "Analytics admin dashboard title"
+  },
   "manageExercises": "Manage Exercises",
   "@manageExercises": {
     "description": "Manage exercises action title"

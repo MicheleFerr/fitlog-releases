@@ -1262,6 +1262,7 @@
   "versionOptional": "Versione (Opzionale)",
   "initialize": "Inizializza",
   "adminDashboard": "Dashboard Admin",
+  "analyticsAdmin": "Dashboard Analytics",
   "manageExercises": "Gestisci Esercizi",
   "manageExercisesDescription": "Aggiungi, modifica, rimuovi esercizi",
   "reviewCorrections": "Rivedi Correzioni",

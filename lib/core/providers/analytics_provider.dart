@@ -9,15 +9,18 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/core/services/analytics/firebase_analytics_service.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
-import 'package:gymbro_flutter_new/core/services/analytics/mock_analytics_service.dart';
+import 'package:gymbro_flutter_new/core/services/analytics/hybrid_analytics_service.dart';
 
 /// Analytics service provider
 ///
-/// Provides the appropriate analytics service based on build mode:
-/// - **Release mode**: FirebaseAnalyticsService (sends data to Firebase)
-/// - **Debug mode**: MockAnalyticsService (logs to console only)
+/// Provides HybridAnalyticsService which:
+/// - **Sends data to Firebase Analytics** (production analytics)
+/// - **Stores events locally** (for admin dashboard visualization)
+/// - **Works in both debug and production** modes
+///
+/// This allows admins to view analytics in-app without opening Firebase Console,
+/// while still sending all data to Firebase for advanced analytics features.
 ///
 /// The service is automatically initialized in the background.
 ///
@@ -41,10 +44,9 @@ import 'package:gymbro_flutter_new/core/services/analytics/mock_analytics_servic
 /// }
 /// ```
 final analyticsServiceProvider = Provider<IAnalyticsService>((ref) {
-  // Create appropriate service based on build mode
-  final service = kDebugMode
-      ? MockAnalyticsService()
-      : FirebaseAnalyticsService();
+  // Use HybridAnalyticsService for both debug and production
+  // This sends events to Firebase AND stores them locally for in-app dashboard
+  final service = HybridAnalyticsService();
 
   // Initialize in background
   service.initialize().catchError((error) {

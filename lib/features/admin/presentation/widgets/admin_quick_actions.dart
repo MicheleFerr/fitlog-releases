@@ -353,11 +353,11 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
   final String subtitle;
   final Color color;
   final VoidCallback onTap;
-  final StreamProvider<int> badgeProvider;
+  final Provider<int> badgeProvider;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final badgeCountAsync = ref.watch(badgeProvider);
+    final badgeCount = ref.watch(badgeProvider);
 
     return Card(
       elevation: 2,
@@ -386,40 +386,34 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                     ),
                   ),
                   // Badge count
-                  badgeCountAsync.when(
-                    data: (count) {
-                      if (count == 0) return const SizedBox.shrink();
-                      return Positioned(
-                        right: -4,
-                        top: -4,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 20,
-                            minHeight: 20,
-                          ),
-                          child: Text(
-                            count > 99 ? '99+' : count.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
+                  if (badgeCount > 0)
+                    Positioned(
+                      right: -4,
+                      top: -4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
                         ),
-                      );
-                    },
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                  ),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 20,
+                          minHeight: 20,
+                        ),
+                        child: Text(
+                          badgeCount > 99 ? '99+' : badgeCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                 ],
               ),
               const SizedBox(height: 12),

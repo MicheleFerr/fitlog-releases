@@ -6941,6 +6941,12 @@ abstract class AppLocalizations {
   /// **'Admin Dashboard'**
   String get adminDashboard;
 
+  /// Analytics admin dashboard title
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics Dashboard'**
+  String get analyticsAdmin;
+
   /// Manage exercises action title
   ///
   /// In en, this message translates to:

@@ -51,9 +51,9 @@ class HapticFeedbackService {
   /// Trigger haptic feedback for workout completion (from providers)
   /// Uses heavy impact by default
   static void workoutCompletion(dynamic ref) {
-    // Use valueOrNull to safely handle AsyncLoading state
+    // Use asData?.value to safely handle AsyncLoading state
     final asyncValue = ref.read(feedbackSettingsProvider);
-    final settings = asyncValue.valueOrNull;
+    final settings = asyncValue.asData?.value;
 
     if (settings == null || !settings.hapticEnabled) {
       return;

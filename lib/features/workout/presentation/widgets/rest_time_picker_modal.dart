@@ -4,16 +4,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/data/providers/preset_service_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
+import 'package:gymbro_flutter_new/core/analytics/trackers/preset_selection_tracker.dart';
+import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 
 class RestTimePickerModal extends ConsumerStatefulWidget {
   const RestTimePickerModal({
     super.key,
     this.initialRestTime,
     required this.onRestTimeSelected,
+    this.source = 'rest_time_picker_modal',
+    this.exerciseId,
   });
 
   final int? initialRestTime; // in seconds
   final Function(int?) onRestTimeSelected;
+
+  /// Source screen/modal for analytics tracking
+  final String source;
+
+  /// Optional exercise ID for per-exercise tracking
+  final String? exerciseId;
 
   @override
   ConsumerState<RestTimePickerModal> createState() => _RestTimePickerModalState();
@@ -54,6 +64,9 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
 
   @override
   Widget build(BuildContext context) {
+    final analytics = ref.read(analyticsServiceProvider);
+    final tracker = PresetSelectionTracker(analytics);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
       minChildSize: 0.5,
@@ -151,8 +164,16 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                             ],
                           ),
                           selected: isSelected,
-                          onSelected: (selected) {
+                          onSelected: (selected) async {
                             if (selected && preset.seconds != null) {
+                              // Track preset selection
+                              await tracker.trackRestTimePresetSelected(
+                                presetId: preset.id,
+                                seconds: preset.seconds,
+                                source: widget.source,
+                                exerciseId: widget.exerciseId,
+                              );
+
                               setState(() {
                                 _selectedMinutes = preset.seconds! ~/ 60;
                                 _selectedSeconds = preset.seconds! % 60;
@@ -313,10 +334,37 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: FilledButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final restTime = _hasRestTime
                                 ? (_selectedMinutes * 60 + _selectedSeconds)
                                 : null;
+
+                            // Track timer selection
+                            if (restTime == null) {
+                              // No timer selected
+                              await tracker.trackRestTimePresetSelected(
+                                presetId: 'no_timer',
+                                seconds: null,
+                                source: widget.source,
+                                exerciseId: widget.exerciseId,
+                              );
+                            } else {
+                              // Check if custom timer (not matching any preset)
+                              final matchesPreset = _presets?.any(
+                                (p) => p.seconds == restTime,
+                              ) ?? false;
+
+                              if (!matchesPreset) {
+                                // Custom timer
+                                await tracker.trackCustomTimerSet(
+                                  seconds: restTime,
+                                  source: widget.source,
+                                  exerciseId: widget.exerciseId,
+                                );
+                              }
+                              // Note: Preset selections already tracked in FilterChip callback
+                            }
+
                             widget.onRestTimeSelected(restTime);
                             Navigator.of(context).pop();
                           },

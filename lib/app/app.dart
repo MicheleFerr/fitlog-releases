@@ -19,12 +19,13 @@ import 'package:gymbro_flutter_new/features/settings/presentation/settings_scree
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_center_screen.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/screens/workout_history_screen.dart';
-import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
+import 'package:gymbro_flutter_new/core/providers/analytics_initialization_provider.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -39,6 +40,10 @@ class FitLogApp extends ConsumerWidget {
     // 🔥 CRITICAL: Load fitness questionnaire at app startup
     // This ensures weight suggestions work immediately without needing to visit settings first
     ref.watch(fitnessProfileAutoLoadProvider);
+
+    // 📊 ANALYTICS: Initialize analytics and set user properties
+    // This runs once at app startup and whenever user settings change
+    ref.watch(analyticsInitializationProvider);
 
     return MaterialApp.router(
       title: 'FitLog Pro',
@@ -247,7 +252,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/admin',
         name: 'admin',
-        builder: (context, state) => const AdminDashboardScreen(),
+        builder: (context, state) => const AdminAnalyticsDashboardScreen(),
       ),
       // ✅ REMOVED: Dead route '/fitness-profile-debug' (0 usage, debug-only screen)
       GoRoute(
