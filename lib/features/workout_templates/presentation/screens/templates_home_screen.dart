@@ -14,6 +14,7 @@
 library;
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,6 +29,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/widge
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_quota_indicator.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/exercise_selection_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/domain/utils/import_error_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
@@ -900,10 +902,25 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       }
 
     } catch (e) {
+      // Map technical error to user-friendly message
+      final userMessage = ImportErrorMapper.mapToUserMessage(e, l10n);
+
       SnackBarService.showError(
         context,
-        l10n.errorImportingJSON(e.toString()),
+        userMessage,
       );
+
+      // Optional: Show suggestions if error is recoverable
+      if (ImportErrorMapper.isRecoverable(e)) {
+        final suggestions = ImportErrorMapper.getSuggestions(e, l10n);
+        if (suggestions.isNotEmpty) {
+          // Could show suggestions in a dialog or additional snackbar
+          // For now, just log them for future implementation
+          if (kDebugMode) {
+            debugPrint('Import suggestions: ${suggestions.join(", ")}');
+          }
+        }
+      }
     }
   }
 

@@ -4231,5 +4231,275 @@
   "swapDaysButtonLabel": "Scambia i Giorni",
   "@swapDaysButtonLabel": {
     "description": "Etichetta pulsante - scambia i due giorni (consigliato)"
+  },
+  "routineRecoverSkippedDays": "Recupera Giorni Saltati",
+  "@routineRecoverSkippedDays": {
+    "description": "Titolo del dialog di recupero giorni saltati"
+  },
+  "routineRecoverSkippedDaysSubtitle": "Seleziona un giorno saltato, poi scegli un giorno di riposo per recuperarlo",
+  "@routineRecoverSkippedDaysSubtitle": {
+    "description": "Sottotitolo che spiega come funziona il recupero"
+  },
+  "routineSkippedDaysCount": "Giorni Saltati ({count})",
+  "@routineSkippedDaysCount": {
+    "description": "Intestazione lista giorni saltati",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di giorni saltati"
+      }
+    }
+  },
+  "routineAvailableDaysCount": "Giorni Disponibili ({count})",
+  "@routineAvailableDaysCount": {
+    "description": "Intestazione lista giorni disponibili per recupero",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di giorni disponibili"
+      }
+    }
+  },
+  "routineSelectSkippedDayFirst": "← Seleziona prima un giorno saltato",
+  "@routineSelectSkippedDayFirst": {
+    "description": "Suggerimento quando nessun giorno saltato è selezionato"
+  },
+  "routineNoSkippedDays": "Nessun giorno saltato!",
+  "@routineNoSkippedDays": {
+    "description": "Stato vuoto quando non ci sono giorni saltati"
+  },
+  "routineOnTrack": "Sei in linea con la tua routine 💪",
+  "@routineOnTrack": {
+    "description": "Messaggio di incoraggiamento quando non ci sono giorni saltati"
+  },
+  "routineNoRestDaysAvailable": "Nessun giorno di riposo disponibile nei prossimi 30 giorni",
+  "@routineNoRestDaysAvailable": {
+    "description": "Stato vuoto quando non ci sono giorni di recupero disponibili"
+  },
+  "routineWorkoutRecovered": "Allenamento recuperato al {date}",
+  "@routineWorkoutRecovered": {
+    "description": "Messaggio di successo dopo aver recuperato un allenamento",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "description": "Data in cui è stato recuperato l'allenamento"
+      }
+    }
+  },
+  "routineRecoveryFailed": "Impossibile recuperare l'allenamento",
+  "@routineRecoveryFailed": {
+    "description": "Messaggio di errore quando il recupero fallisce"
+  },
+  "routineRecoveryError": "Errore nel recupero dell'allenamento: {error}",
+  "@routineRecoveryError": {
+    "description": "Messaggio di errore con dettagli",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Descrizione dell'errore"
+      }
+    }
+  },
+  "routineNoActiveRoutine": "Nessuna routine attiva trovata",
+  "@routineNoActiveRoutine": {
+    "description": "Errore quando non esiste una routine attiva"
+  },
+  "routineSkipRecovery": "Recupero Giorni",
+  "@routineSkipRecovery": {
+    "description": "Etichetta pulsante per aprire il dialog di recupero"
+  },
+  "notificationSkippedDaysSingle": "{count} giorno saltato in {routine}",
+  "@notificationSkippedDaysSingle": {
+    "description": "Titolo notifica per singolo giorno saltato",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di giorni saltati (sempre 1)"
+      },
+      "routine": {
+        "type": "String",
+        "description": "Nome della routine"
+      }
+    }
+  },
+  "notificationSkippedDaysMultiple": "{count} giorni saltati in {routine}",
+  "@notificationSkippedDaysMultiple": {
+    "description": "Titolo notifica per più giorni saltati",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di giorni saltati"
+      },
+      "routine": {
+        "type": "String",
+        "description": "Nome della routine"
+      }
+    }
+  },
+  "notificationSkippedDaysBody": "Tocca per vedere le opzioni di recupero e tornare in pista!",
+  "@notificationSkippedDaysBody": {
+    "description": "Corpo notifica per promemoria giorni saltati"
+  },
+  "notificationRoutineDayCompleted": "Giorno di {routine} completato!",
+  "@notificationRoutineDayCompleted": {
+    "description": "Titolo notifica per completamento giorno routine",
+    "placeholders": {
+      "routine": {
+        "type": "String",
+        "description": "Nome della routine"
+      }
+    }
+  },
+  "notificationGreatJob": "Ottimo lavoro completando {workout}!",
+  "@notificationGreatJob": {
+    "description": "Corpo notifica per completamento allenamento",
+    "placeholders": {
+      "workout": {
+        "type": "String",
+        "description": "Nome dell'allenamento"
+      }
+    }
+  },
+  "notificationRecoverySingle": "{count} giorno saltato può essere recuperato",
+  "@notificationRecoverySingle": {
+    "description": "Titolo notifica per singola opportunità di recupero",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di giorni recuperabili (sempre 1)"
+      }
+    }
+  },
+  "notificationRecoveryMultiple": "{count} giorni saltati possono essere recuperati",
+  "@notificationRecoveryMultiple": {
+    "description": "Titolo notifica per più opportunità di recupero",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di giorni recuperabili"
+      }
+    }
+  },
+  "notificationRecoveryBody": "Tocca per programmare gli allenamenti di recupero in {routine}",
+  "@notificationRecoveryBody": {
+    "description": "Corpo notifica per opportunità di recupero",
+    "placeholders": {
+      "routine": {
+        "type": "String",
+        "description": "Nome della routine"
+      }
+    }
+  },
+  "errorJsonMalformed": "Formato JSON non valido. Controlla parentesi e virgole.",
+  "@errorJsonMalformed": {
+    "description": "Errore mostrato quando il JSON è malformato"
+  },
+  "errorJsonUnexpectedCharacter": "Carattere imprevisto nel JSON. Controlla la sintassi.",
+  "@errorJsonUnexpectedCharacter": {
+    "description": "Errore per carattere imprevisto nel JSON"
+  },
+  "errorJsonMissingFields": "Campi obbligatori mancanti nel JSON.",
+  "@errorJsonMissingFields": {
+    "description": "Errore per campi obbligatori mancanti"
+  },
+  "errorFileNotFound": "File non trovato. Seleziona un file valido.",
+  "@errorFileNotFound": {
+    "description": "Errore quando il file non esiste"
+  },
+  "errorFilePermission": "Permesso negato. Impossibile accedere al file.",
+  "@errorFilePermission": {
+    "description": "Errore quando mancano i permessi"
+  },
+  "errorFileAccess": "Impossibile accedere al file. Riprova.",
+  "@errorFileAccess": {
+    "description": "Errore generico di accesso al file"
+  },
+  "errorFileTooLarge": "File troppo grande (max 5MB).",
+  "@errorFileTooLarge": {
+    "description": "Errore quando il file supera il limite"
+  },
+  "errorFileEmpty": "Il file è vuoto. Fornisci del contenuto.",
+  "@errorFileEmpty": {
+    "description": "Errore quando il file è vuoto"
+  },
+  "errorFileAlreadyExists": "Il file esiste già.",
+  "@errorFileAlreadyExists": {
+    "description": "Errore quando il file esiste già"
+  },
+  "errorDiskFull": "Disco pieno. Libera spazio e riprova.",
+  "@errorDiskFull": {
+    "description": "Errore quando il disco è pieno"
+  },
+  "errorTemplateNameMissing": "Il nome del template è obbligatorio.",
+  "@errorTemplateNameMissing": {
+    "description": "Errore quando il template non ha nome"
+  },
+  "errorNoExercises": "Aggiungi almeno un esercizio al template.",
+  "@errorNoExercises": {
+    "description": "Errore quando il template non ha esercizi"
+  },
+  "errorExercisesInvalid": "Dati esercizio non validi. Controlla il formato.",
+  "@errorExercisesInvalid": {
+    "description": "Errore quando i dati dell'esercizio sono malformati"
+  },
+  "errorSetsRequired": "Ogni esercizio ha bisogno di almeno una serie.",
+  "@errorSetsRequired": {
+    "description": "Errore quando l'esercizio non ha serie"
+  },
+  "errorInvalidNumbers": "Peso e ripetizioni devono essere numeri validi.",
+  "@errorInvalidNumbers": {
+    "description": "Errore quando peso/ripetizioni non sono numeri"
+  },
+  "errorDuplicateTemplate": "Esiste già un template con questo nome.",
+  "@errorDuplicateTemplate": {
+    "description": "Errore quando il nome template è duplicato"
+  },
+  "errorNetworkConnection": "Errore di rete. Controlla la connessione.",
+  "@errorNetworkConnection": {
+    "description": "Errore per problemi di rete"
+  },
+  "errorImportFailed": "Importazione fallita. Controlla il formato e riprova.",
+  "@errorImportFailed": {
+    "description": "Errore generico di importazione"
+  },
+  "suggestionCheckJsonFormat": "Controlla il formato JSON (parentesi, virgole, virgolette)",
+  "@suggestionCheckJsonFormat": {
+    "description": "Suggerimento per controllare la sintassi JSON"
+  },
+  "suggestionUseJsonValidator": "Usa un validatore JSON online per controllare il formato",
+  "@suggestionUseJsonValidator": {
+    "description": "Suggerimento per usare un validatore online"
+  },
+  "suggestionCopyExample": "Copia il template di esempio e modificalo",
+  "@suggestionCopyExample": {
+    "description": "Suggerimento per usare il template di esempio"
+  },
+  "suggestionCheckFilePath": "Verifica che il file esista nel percorso specificato",
+  "@suggestionCheckFilePath": {
+    "description": "Suggerimento per controllare il percorso del file"
+  },
+  "suggestionReduceFileSize": "Riduci le dimensioni del file o dividilo in più file",
+  "@suggestionReduceFileSize": {
+    "description": "Suggerimento per ridurre le dimensioni"
+  },
+  "suggestionCheckPermissions": "Controlla i permessi dell'app nelle impostazioni",
+  "@suggestionCheckPermissions": {
+    "description": "Suggerimento per controllare i permessi"
+  },
+  "suggestionAddTemplateName": "Aggiungi un campo nome al tuo template",
+  "@suggestionAddTemplateName": {
+    "description": "Suggerimento per aggiungere il nome"
+  },
+  "suggestionAddExercises": "Aggiungi almeno un esercizio con le serie",
+  "@suggestionAddExercises": {
+    "description": "Suggerimento per aggiungere esercizi"
+  },
+  "suggestionAddSets": "Aggiungi informazioni serie (ripetizioni e peso)",
+  "@suggestionAddSets": {
+    "description": "Suggerimento per aggiungere le serie"
+  },
+  "suggestionCheckFormat": "Verifica che il formato del template corrisponda all'esempio",
+  "@suggestionCheckFormat": {
+    "description": "Suggerimento generico per controllare il formato"
   }
 }

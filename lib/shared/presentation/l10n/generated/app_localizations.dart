@@ -9371,10 +9371,10 @@ abstract class AppLocalizations {
   /// **'Cannot modify this template. You can only edit your own templates.'**
   String get errorCannotModifyTemplate;
 
-  /// Error for network/connection issues
+  /// Error for network/connectivity issues
   ///
   /// In en, this message translates to:
-  /// **'Network connection error. Please check your internet and try again.'**
+  /// **'Network error. Check your connection.'**
   String get errorNetworkConnection;
 
   /// Generic error message for unexpected errors
@@ -17504,6 +17504,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Swap Days'**
   String get swapDaysButtonLabel;
+
+  /// Title of skip recovery dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Recover Skipped Days'**
+  String get routineRecoverSkippedDays;
+
+  /// Subtitle explaining how skip recovery works
+  ///
+  /// In en, this message translates to:
+  /// **'Select a skipped day, then choose a rest day to recover it'**
+  String get routineRecoverSkippedDaysSubtitle;
+
+  /// Header for skipped days list
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped Days ({count})'**
+  String routineSkippedDaysCount(int count);
+
+  /// Header for available recovery days list
+  ///
+  /// In en, this message translates to:
+  /// **'Available Days ({count})'**
+  String routineAvailableDaysCount(int count);
+
+  /// Hint when no skipped day is selected
+  ///
+  /// In en, this message translates to:
+  /// **'← Select a skipped day first'**
+  String get routineSelectSkippedDayFirst;
+
+  /// Empty state when no days are skipped
+  ///
+  /// In en, this message translates to:
+  /// **'No skipped days!'**
+  String get routineNoSkippedDays;
+
+  /// Encouragement message when no skipped days
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re on track with your routine 💪'**
+  String get routineOnTrack;
+
+  /// Empty state when no recovery days available
+  ///
+  /// In en, this message translates to:
+  /// **'No rest days available in the next 30 days'**
+  String get routineNoRestDaysAvailable;
+
+  /// Success message after recovering a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Workout recovered to {date}'**
+  String routineWorkoutRecovered(String date);
+
+  /// Error message when recovery fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to recover workout'**
+  String get routineRecoveryFailed;
+
+  /// Error message with details
+  ///
+  /// In en, this message translates to:
+  /// **'Error recovering workout: {error}'**
+  String routineRecoveryError(String error);
+
+  /// Error when no active routine exists
+  ///
+  /// In en, this message translates to:
+  /// **'No active routine found'**
+  String get routineNoActiveRoutine;
+
+  /// Button label to open skip recovery dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Recovery'**
+  String get routineSkipRecovery;
+
+  /// Notification title for single skipped day
+  ///
+  /// In en, this message translates to:
+  /// **'{count} day skipped in {routine}'**
+  String notificationSkippedDaysSingle(int count, String routine);
+
+  /// Notification title for multiple skipped days
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days skipped in {routine}'**
+  String notificationSkippedDaysMultiple(int count, String routine);
+
+  /// Notification body for skipped days reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view recovery options and get back on track!'**
+  String get notificationSkippedDaysBody;
+
+  /// Notification title for routine day completion
+  ///
+  /// In en, this message translates to:
+  /// **'{routine} day completed!'**
+  String notificationRoutineDayCompleted(String routine);
+
+  /// Notification body for workout completion
+  ///
+  /// In en, this message translates to:
+  /// **'Great job completing {workout}!'**
+  String notificationGreatJob(String workout);
+
+  /// Notification title for single recovery opportunity
+  ///
+  /// In en, this message translates to:
+  /// **'{count} skipped day can be recovered'**
+  String notificationRecoverySingle(int count);
+
+  /// Notification title for multiple recovery opportunities
+  ///
+  /// In en, this message translates to:
+  /// **'{count} skipped days can be recovered'**
+  String notificationRecoveryMultiple(int count);
+
+  /// Notification body for recovery opportunity
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to schedule recovery workouts in {routine}'**
+  String notificationRecoveryBody(String routine);
+
+  /// Error shown when JSON is malformed
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid JSON format. Check brackets and commas.'**
+  String get errorJsonMalformed;
+
+  /// Error for unexpected character in JSON
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected character in JSON. Check syntax.'**
+  String get errorJsonUnexpectedCharacter;
+
+  /// Error for missing required fields
+  ///
+  /// In en, this message translates to:
+  /// **'Missing required fields in JSON.'**
+  String get errorJsonMissingFields;
+
+  /// Error when file doesn't exist
+  ///
+  /// In en, this message translates to:
+  /// **'File not found. Please select a valid file.'**
+  String get errorFileNotFound;
+
+  /// Error when lacking file permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied. Cannot access file.'**
+  String get errorFilePermission;
+
+  /// Generic file access error
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to access file. Try again.'**
+  String get errorFileAccess;
+
+  /// Error when file exceeds size limit
+  ///
+  /// In en, this message translates to:
+  /// **'File too large (max 5MB).'**
+  String get errorFileTooLarge;
+
+  /// Error when file has no content
+  ///
+  /// In en, this message translates to:
+  /// **'File is empty. Please provide content.'**
+  String get errorFileEmpty;
+
+  /// Error when file already exists
+  ///
+  /// In en, this message translates to:
+  /// **'File already exists.'**
+  String get errorFileAlreadyExists;
+
+  /// Error when disk has no space
+  ///
+  /// In en, this message translates to:
+  /// **'Disk is full. Free up space and try again.'**
+  String get errorDiskFull;
+
+  /// Error when template has no name
+  ///
+  /// In en, this message translates to:
+  /// **'Template name is required.'**
+  String get errorTemplateNameMissing;
+
+  /// Error when template has no exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one exercise to the template.'**
+  String get errorNoExercises;
+
+  /// Error when exercise data is malformed
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise data is invalid. Check format.'**
+  String get errorExercisesInvalid;
+
+  /// Error when exercise has no sets
+  ///
+  /// In en, this message translates to:
+  /// **'Each exercise needs at least one set.'**
+  String get errorSetsRequired;
+
+  /// Error when weight/reps are not numbers
+  ///
+  /// In en, this message translates to:
+  /// **'Weight and reps must be valid numbers.'**
+  String get errorInvalidNumbers;
+
+  /// Error when template name is duplicate
+  ///
+  /// In en, this message translates to:
+  /// **'A template with this name already exists.'**
+  String get errorDuplicateTemplate;
+
+  /// Generic import error fallback
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed. Check format and try again.'**
+  String get errorImportFailed;
+
+  /// Suggestion to check JSON syntax
+  ///
+  /// In en, this message translates to:
+  /// **'Check JSON format (brackets, commas, quotes)'**
+  String get suggestionCheckJsonFormat;
+
+  /// Suggestion to use online JSON validator
+  ///
+  /// In en, this message translates to:
+  /// **'Use a JSON validator online to check format'**
+  String get suggestionUseJsonValidator;
+
+  /// Suggestion to use example template
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the example template and modify it'**
+  String get suggestionCopyExample;
+
+  /// Suggestion to check file location
+  ///
+  /// In en, this message translates to:
+  /// **'Verify the file exists at the specified path'**
+  String get suggestionCheckFilePath;
+
+  /// Suggestion to make file smaller
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce file size or split into multiple files'**
+  String get suggestionReduceFileSize;
+
+  /// Suggestion to check file permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Check app permissions in device settings'**
+  String get suggestionCheckPermissions;
+
+  /// Suggestion to add template name
+  ///
+  /// In en, this message translates to:
+  /// **'Add a name field to your template'**
+  String get suggestionAddTemplateName;
+
+  /// Suggestion to add exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one exercise with sets'**
+  String get suggestionAddExercises;
+
+  /// Suggestion to add sets to exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Add set information (reps and weight)'**
+  String get suggestionAddSets;
+
+  /// Generic suggestion to check format
+  ///
+  /// In en, this message translates to:
+  /// **'Check the template format matches the example'**
+  String get suggestionCheckFormat;
 }
 
 class _AppLocalizationsDelegate

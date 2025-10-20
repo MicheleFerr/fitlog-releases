@@ -5182,7 +5182,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get errorNetworkConnection =>
-      'Errore di connessione. Controlla la connessione internet e riprova.';
+      'Errore di rete. Controlla la connessione.';
 
   @override
   String get errorUnexpected =>
@@ -9947,4 +9947,192 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get swapDaysButtonLabel => 'Scambia i Giorni';
+
+  @override
+  String get routineRecoverSkippedDays => 'Recupera Giorni Saltati';
+
+  @override
+  String get routineRecoverSkippedDaysSubtitle =>
+      'Seleziona un giorno saltato, poi scegli un giorno di riposo per recuperarlo';
+
+  @override
+  String routineSkippedDaysCount(int count) {
+    return 'Giorni Saltati ($count)';
+  }
+
+  @override
+  String routineAvailableDaysCount(int count) {
+    return 'Giorni Disponibili ($count)';
+  }
+
+  @override
+  String get routineSelectSkippedDayFirst =>
+      '← Seleziona prima un giorno saltato';
+
+  @override
+  String get routineNoSkippedDays => 'Nessun giorno saltato!';
+
+  @override
+  String get routineOnTrack => 'Sei in linea con la tua routine 💪';
+
+  @override
+  String get routineNoRestDaysAvailable =>
+      'Nessun giorno di riposo disponibile nei prossimi 30 giorni';
+
+  @override
+  String routineWorkoutRecovered(String date) {
+    return 'Allenamento recuperato al $date';
+  }
+
+  @override
+  String get routineRecoveryFailed => 'Impossibile recuperare l\'allenamento';
+
+  @override
+  String routineRecoveryError(String error) {
+    return 'Errore nel recupero dell\'allenamento: $error';
+  }
+
+  @override
+  String get routineNoActiveRoutine => 'Nessuna routine attiva trovata';
+
+  @override
+  String get routineSkipRecovery => 'Recupero Giorni';
+
+  @override
+  String notificationSkippedDaysSingle(int count, String routine) {
+    return '$count giorno saltato in $routine';
+  }
+
+  @override
+  String notificationSkippedDaysMultiple(int count, String routine) {
+    return '$count giorni saltati in $routine';
+  }
+
+  @override
+  String get notificationSkippedDaysBody =>
+      'Tocca per vedere le opzioni di recupero e tornare in pista!';
+
+  @override
+  String notificationRoutineDayCompleted(String routine) {
+    return 'Giorno di $routine completato!';
+  }
+
+  @override
+  String notificationGreatJob(String workout) {
+    return 'Ottimo lavoro completando $workout!';
+  }
+
+  @override
+  String notificationRecoverySingle(int count) {
+    return '$count giorno saltato può essere recuperato';
+  }
+
+  @override
+  String notificationRecoveryMultiple(int count) {
+    return '$count giorni saltati possono essere recuperati';
+  }
+
+  @override
+  String notificationRecoveryBody(String routine) {
+    return 'Tocca per programmare gli allenamenti di recupero in $routine';
+  }
+
+  @override
+  String get errorJsonMalformed =>
+      'Formato JSON non valido. Controlla parentesi e virgole.';
+
+  @override
+  String get errorJsonUnexpectedCharacter =>
+      'Carattere imprevisto nel JSON. Controlla la sintassi.';
+
+  @override
+  String get errorJsonMissingFields => 'Campi obbligatori mancanti nel JSON.';
+
+  @override
+  String get errorFileNotFound => 'File non trovato. Seleziona un file valido.';
+
+  @override
+  String get errorFilePermission =>
+      'Permesso negato. Impossibile accedere al file.';
+
+  @override
+  String get errorFileAccess => 'Impossibile accedere al file. Riprova.';
+
+  @override
+  String get errorFileTooLarge => 'File troppo grande (max 5MB).';
+
+  @override
+  String get errorFileEmpty => 'Il file è vuoto. Fornisci del contenuto.';
+
+  @override
+  String get errorFileAlreadyExists => 'Il file esiste già.';
+
+  @override
+  String get errorDiskFull => 'Disco pieno. Libera spazio e riprova.';
+
+  @override
+  String get errorTemplateNameMissing => 'Il nome del template è obbligatorio.';
+
+  @override
+  String get errorNoExercises => 'Aggiungi almeno un esercizio al template.';
+
+  @override
+  String get errorExercisesInvalid =>
+      'Dati esercizio non validi. Controlla il formato.';
+
+  @override
+  String get errorSetsRequired =>
+      'Ogni esercizio ha bisogno di almeno una serie.';
+
+  @override
+  String get errorInvalidNumbers =>
+      'Peso e ripetizioni devono essere numeri validi.';
+
+  @override
+  String get errorDuplicateTemplate =>
+      'Esiste già un template con questo nome.';
+
+  @override
+  String get errorImportFailed =>
+      'Importazione fallita. Controlla il formato e riprova.';
+
+  @override
+  String get suggestionCheckJsonFormat =>
+      'Controlla il formato JSON (parentesi, virgole, virgolette)';
+
+  @override
+  String get suggestionUseJsonValidator =>
+      'Usa un validatore JSON online per controllare il formato';
+
+  @override
+  String get suggestionCopyExample =>
+      'Copia il template di esempio e modificalo';
+
+  @override
+  String get suggestionCheckFilePath =>
+      'Verifica che il file esista nel percorso specificato';
+
+  @override
+  String get suggestionReduceFileSize =>
+      'Riduci le dimensioni del file o dividilo in più file';
+
+  @override
+  String get suggestionCheckPermissions =>
+      'Controlla i permessi dell\'app nelle impostazioni';
+
+  @override
+  String get suggestionAddTemplateName =>
+      'Aggiungi un campo nome al tuo template';
+
+  @override
+  String get suggestionAddExercises =>
+      'Aggiungi almeno un esercizio con le serie';
+
+  @override
+  String get suggestionAddSets =>
+      'Aggiungi informazioni serie (ripetizioni e peso)';
+
+  @override
+  String get suggestionCheckFormat =>
+      'Verifica che il formato del template corrisponda all\'esempio';
 }

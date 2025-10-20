@@ -11686,5 +11686,275 @@
   "swapDaysButtonLabel": "Swap Days",
   "@swapDaysButtonLabel": {
     "description": "Button label - swap the two days (recommended)"
+  },
+  "routineRecoverSkippedDays": "Recover Skipped Days",
+  "@routineRecoverSkippedDays": {
+    "description": "Title of skip recovery dialog"
+  },
+  "routineRecoverSkippedDaysSubtitle": "Select a skipped day, then choose a rest day to recover it",
+  "@routineRecoverSkippedDaysSubtitle": {
+    "description": "Subtitle explaining how skip recovery works"
+  },
+  "routineSkippedDaysCount": "Skipped Days ({count})",
+  "@routineSkippedDaysCount": {
+    "description": "Header for skipped days list",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of skipped days"
+      }
+    }
+  },
+  "routineAvailableDaysCount": "Available Days ({count})",
+  "@routineAvailableDaysCount": {
+    "description": "Header for available recovery days list",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of available days"
+      }
+    }
+  },
+  "routineSelectSkippedDayFirst": "← Select a skipped day first",
+  "@routineSelectSkippedDayFirst": {
+    "description": "Hint when no skipped day is selected"
+  },
+  "routineNoSkippedDays": "No skipped days!",
+  "@routineNoSkippedDays": {
+    "description": "Empty state when no days are skipped"
+  },
+  "routineOnTrack": "You're on track with your routine 💪",
+  "@routineOnTrack": {
+    "description": "Encouragement message when no skipped days"
+  },
+  "routineNoRestDaysAvailable": "No rest days available in the next 30 days",
+  "@routineNoRestDaysAvailable": {
+    "description": "Empty state when no recovery days available"
+  },
+  "routineWorkoutRecovered": "Workout recovered to {date}",
+  "@routineWorkoutRecovered": {
+    "description": "Success message after recovering a workout",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "description": "Date when workout was recovered"
+      }
+    }
+  },
+  "routineRecoveryFailed": "Failed to recover workout",
+  "@routineRecoveryFailed": {
+    "description": "Error message when recovery fails"
+  },
+  "routineRecoveryError": "Error recovering workout: {error}",
+  "@routineRecoveryError": {
+    "description": "Error message with details",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Error description"
+      }
+    }
+  },
+  "routineNoActiveRoutine": "No active routine found",
+  "@routineNoActiveRoutine": {
+    "description": "Error when no active routine exists"
+  },
+  "routineSkipRecovery": "Skip Recovery",
+  "@routineSkipRecovery": {
+    "description": "Button label to open skip recovery dialog"
+  },
+  "notificationSkippedDaysSingle": "{count} day skipped in {routine}",
+  "@notificationSkippedDaysSingle": {
+    "description": "Notification title for single skipped day",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of skipped days (always 1)"
+      },
+      "routine": {
+        "type": "String",
+        "description": "Routine name"
+      }
+    }
+  },
+  "notificationSkippedDaysMultiple": "{count} days skipped in {routine}",
+  "@notificationSkippedDaysMultiple": {
+    "description": "Notification title for multiple skipped days",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of skipped days"
+      },
+      "routine": {
+        "type": "String",
+        "description": "Routine name"
+      }
+    }
+  },
+  "notificationSkippedDaysBody": "Tap to view recovery options and get back on track!",
+  "@notificationSkippedDaysBody": {
+    "description": "Notification body for skipped days reminder"
+  },
+  "notificationRoutineDayCompleted": "{routine} day completed!",
+  "@notificationRoutineDayCompleted": {
+    "description": "Notification title for routine day completion",
+    "placeholders": {
+      "routine": {
+        "type": "String",
+        "description": "Routine name"
+      }
+    }
+  },
+  "notificationGreatJob": "Great job completing {workout}!",
+  "@notificationGreatJob": {
+    "description": "Notification body for workout completion",
+    "placeholders": {
+      "workout": {
+        "type": "String",
+        "description": "Workout name"
+      }
+    }
+  },
+  "notificationRecoverySingle": "{count} skipped day can be recovered",
+  "@notificationRecoverySingle": {
+    "description": "Notification title for single recovery opportunity",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of recoverable days (always 1)"
+      }
+    }
+  },
+  "notificationRecoveryMultiple": "{count} skipped days can be recovered",
+  "@notificationRecoveryMultiple": {
+    "description": "Notification title for multiple recovery opportunities",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of recoverable days"
+      }
+    }
+  },
+  "notificationRecoveryBody": "Tap to schedule recovery workouts in {routine}",
+  "@notificationRecoveryBody": {
+    "description": "Notification body for recovery opportunity",
+    "placeholders": {
+      "routine": {
+        "type": "String",
+        "description": "Routine name"
+      }
+    }
+  },
+  "errorJsonMalformed": "Invalid JSON format. Check brackets and commas.",
+  "@errorJsonMalformed": {
+    "description": "Error shown when JSON is malformed"
+  },
+  "errorJsonUnexpectedCharacter": "Unexpected character in JSON. Check syntax.",
+  "@errorJsonUnexpectedCharacter": {
+    "description": "Error for unexpected character in JSON"
+  },
+  "errorJsonMissingFields": "Missing required fields in JSON.",
+  "@errorJsonMissingFields": {
+    "description": "Error for missing required fields"
+  },
+  "errorFileNotFound": "File not found. Please select a valid file.",
+  "@errorFileNotFound": {
+    "description": "Error when file doesn't exist"
+  },
+  "errorFilePermission": "Permission denied. Cannot access file.",
+  "@errorFilePermission": {
+    "description": "Error when lacking file permissions"
+  },
+  "errorFileAccess": "Unable to access file. Try again.",
+  "@errorFileAccess": {
+    "description": "Generic file access error"
+  },
+  "errorFileTooLarge": "File too large (max 5MB).",
+  "@errorFileTooLarge": {
+    "description": "Error when file exceeds size limit"
+  },
+  "errorFileEmpty": "File is empty. Please provide content.",
+  "@errorFileEmpty": {
+    "description": "Error when file has no content"
+  },
+  "errorFileAlreadyExists": "File already exists.",
+  "@errorFileAlreadyExists": {
+    "description": "Error when file already exists"
+  },
+  "errorDiskFull": "Disk is full. Free up space and try again.",
+  "@errorDiskFull": {
+    "description": "Error when disk has no space"
+  },
+  "errorTemplateNameMissing": "Template name is required.",
+  "@errorTemplateNameMissing": {
+    "description": "Error when template has no name"
+  },
+  "errorNoExercises": "Add at least one exercise to the template.",
+  "@errorNoExercises": {
+    "description": "Error when template has no exercises"
+  },
+  "errorExercisesInvalid": "Exercise data is invalid. Check format.",
+  "@errorExercisesInvalid": {
+    "description": "Error when exercise data is malformed"
+  },
+  "errorSetsRequired": "Each exercise needs at least one set.",
+  "@errorSetsRequired": {
+    "description": "Error when exercise has no sets"
+  },
+  "errorInvalidNumbers": "Weight and reps must be valid numbers.",
+  "@errorInvalidNumbers": {
+    "description": "Error when weight/reps are not numbers"
+  },
+  "errorDuplicateTemplate": "A template with this name already exists.",
+  "@errorDuplicateTemplate": {
+    "description": "Error when template name is duplicate"
+  },
+  "errorNetworkConnection": "Network error. Check your connection.",
+  "@errorNetworkConnection": {
+    "description": "Error for network/connectivity issues"
+  },
+  "errorImportFailed": "Import failed. Check format and try again.",
+  "@errorImportFailed": {
+    "description": "Generic import error fallback"
+  },
+  "suggestionCheckJsonFormat": "Check JSON format (brackets, commas, quotes)",
+  "@suggestionCheckJsonFormat": {
+    "description": "Suggestion to check JSON syntax"
+  },
+  "suggestionUseJsonValidator": "Use a JSON validator online to check format",
+  "@suggestionUseJsonValidator": {
+    "description": "Suggestion to use online JSON validator"
+  },
+  "suggestionCopyExample": "Copy the example template and modify it",
+  "@suggestionCopyExample": {
+    "description": "Suggestion to use example template"
+  },
+  "suggestionCheckFilePath": "Verify the file exists at the specified path",
+  "@suggestionCheckFilePath": {
+    "description": "Suggestion to check file location"
+  },
+  "suggestionReduceFileSize": "Reduce file size or split into multiple files",
+  "@suggestionReduceFileSize": {
+    "description": "Suggestion to make file smaller"
+  },
+  "suggestionCheckPermissions": "Check app permissions in device settings",
+  "@suggestionCheckPermissions": {
+    "description": "Suggestion to check file permissions"
+  },
+  "suggestionAddTemplateName": "Add a name field to your template",
+  "@suggestionAddTemplateName": {
+    "description": "Suggestion to add template name"
+  },
+  "suggestionAddExercises": "Add at least one exercise with sets",
+  "@suggestionAddExercises": {
+    "description": "Suggestion to add exercises"
+  },
+  "suggestionAddSets": "Add set information (reps and weight)",
+  "@suggestionAddSets": {
+    "description": "Suggestion to add sets to exercise"
+  },
+  "suggestionCheckFormat": "Check the template format matches the example",
+  "@suggestionCheckFormat": {
+    "description": "Generic suggestion to check format"
   }
 }

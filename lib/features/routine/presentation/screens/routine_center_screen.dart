@@ -19,6 +19,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -31,8 +32,10 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/routine_card.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/onboarding/routine_onboarding_screen.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_recovery_dialog.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_reminder_service_provider.dart';
 
 /// Main screen for managing all flexible routines
 class RoutineCenterScreen extends ConsumerStatefulWidget {
@@ -191,6 +194,10 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                     _archiveRoutine(context, ref, activeRoutine.id),
                 onDelete: () => _deleteRoutine(context, ref, activeRoutine.id),
               ),
+            ),
+            // Skip Recovery Card
+            SliverToBoxAdapter(
+              child: _buildSkipRecoveryCard(context, ref, activeRoutine),
             ),
           ],
 
@@ -579,5 +586,128 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
         }
       }
     }
+  }
+
+  // === SKIP RECOVERY ===
+
+  Widget _buildSkipRecoveryCard(
+    BuildContext context,
+    WidgetRef ref,
+    FlexibleRoutine activeRoutine,
+  ) {
+    return FutureBuilder<int>(
+      future: _countSkippedDays(ref, activeRoutine.id),
+      builder: (context, snapshot) {
+        final skippedCount = snapshot.data ?? 0;
+
+        // Don't show if no skipped days
+        if (skippedCount == 0) {
+          return const SizedBox.shrink();
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Card(
+            color: context.colors.secondaryContainer,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(
+                color: context.colors.secondary.withValues(alpha: 0.3),
+                width: 1,
+              ),
+            ),
+            child: InkWell(
+              onTap: () => _showSkipRecoveryDialog(context),
+              borderRadius: BorderRadius.circular(16),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: context.colors.secondary.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.restore,
+                        color: context.colors.secondary,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            context.l10n.routineSkipRecovery,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.colors.onSecondaryContainer,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            skippedCount == 1
+                                ? '$skippedCount day to recover'
+                                : '$skippedCount days to recover',
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.colors.onSecondaryContainer
+                                  .withValues(alpha: 0.8),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                      color: context.colors.onSecondaryContainer
+                          .withValues(alpha: 0.5),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<int> _countSkippedDays(WidgetRef ref, String routineId) async {
+    final reminderService = ref.read(routineReminderServiceProvider);
+    try {
+      // Get active routine to pass to service
+      final activeRoutineAsync = ref.read(activeFlexibleRoutineProvider);
+      final activeRoutine = activeRoutineAsync.when(
+        data: (routine) => routine,
+        loading: () => null,
+        error: (_, __) => null,
+      );
+
+      if (activeRoutine == null || activeRoutine.id != routineId) {
+        return 0;
+      }
+
+      final skippedDays = await reminderService.getRecoverableSkippedDays(
+        routine: activeRoutine,
+      );
+      return skippedDays.length;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  void _showSkipRecoveryDialog(BuildContext context) {
+    // Light haptic feedback when opening dialog
+    HapticFeedback.selectionClick();
+
+    showDialog(
+      context: context,
+      builder: (context) => const SkipRecoveryDialog(),
+    );
   }
 }

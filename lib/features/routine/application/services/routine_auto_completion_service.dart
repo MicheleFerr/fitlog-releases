@@ -35,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_matching_service.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_swap_flow.dart';
+import 'package:gymbro_flutter_new/features/routine/application/services/routine_notification_service.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
@@ -88,6 +89,9 @@ class RoutineAutoCompletionService {
   /// Repository for routine operations
   FlexibleRoutineRepository get _repository =>
       _ref.read(flexibleRoutineRepositoryProvider);
+
+  /// Notification service for routine completions
+  final RoutineNotificationService _notificationService = RoutineNotificationService();
 
   /// Try to auto-complete routine day when workout is completed
   ///
@@ -164,6 +168,12 @@ class RoutineAutoCompletionService {
             routineId: activeRoutine.id,
             date: matchedDate,
             workoutId: completedWorkout.id,
+          );
+
+          // Send completion notification
+          await _notificationService.sendRoutineDayCompletedNotification(
+            routineName: activeRoutine.name,
+            workoutName: completedWorkout.name,
           );
 
           // Show success toast if context available
@@ -272,6 +282,12 @@ class RoutineAutoCompletionService {
             workoutId: completedWorkout.id,
           );
 
+          // Send completion notification
+          await _notificationService.sendRoutineDayCompletedNotification(
+            routineName: activeRoutine.name,
+            workoutName: completedWorkout.name,
+          );
+
           if (kDebugMode) {
             debugPrint(
               '✅ [RoutineAutoCompletion] Routine day completed after swap: $dayToComplete',
@@ -298,6 +314,8 @@ class RoutineAutoCompletionService {
     required String routineId,
     required DateTime selectedDate,
     required String workoutId,
+    required String workoutName,
+    required String routineName,
     BuildContext? context,
   }) async {
     try {
@@ -305,6 +323,12 @@ class RoutineAutoCompletionService {
         routineId: routineId,
         date: selectedDate,
         workoutId: workoutId,
+      );
+
+      // Send completion notification
+      await _notificationService.sendRoutineDayCompletedNotification(
+        routineName: routineName,
+        workoutName: workoutName,
       );
 
       if (kDebugMode) {
@@ -336,45 +360,6 @@ class RoutineAutoCompletionService {
 
       rethrow;
     }
-  }
-
-  /// Find scheduled days that match the template and are candidates for completion
-  ///
-  /// Returns only days that:
-  /// - Have matching templateId
-  /// - Are in "scheduled" or "skipped" status (actionable)
-  /// - Are within ±7 days of workout completion (to avoid distant matches)
-  List<DateTime> _findCandidateDays({
-    required FlexibleRoutine routine,
-    required String templateId,
-    DateTime? completedAt,
-  }) {
-    final targetDate = completedAt ?? DateTime.now();
-    final candidates = <DateTime>[];
-
-    // Check all scheduled days in the routine
-    for (final scheduledDay in routine.schedule.values) {
-      // Must match template
-      if (scheduledDay.templateId != templateId) continue;
-
-      // Must be actionable (not already completed or rest day)
-      if (!scheduledDay.status.isActionable) continue;
-
-      // Must be within ±7 days of workout completion (configurable window)
-      final daysDifference = scheduledDay.date.difference(targetDate).inDays.abs();
-      if (daysDifference > 7) continue;
-
-      candidates.add(scheduledDay.date);
-    }
-
-    // Sort by proximity to target date
-    candidates.sort((a, b) {
-      final diffA = a.difference(targetDate).inDays.abs();
-      final diffB = b.difference(targetDate).inDays.abs();
-      return diffA.compareTo(diffB);
-    });
-
-    return candidates;
   }
 
   /// Format date for UI display
