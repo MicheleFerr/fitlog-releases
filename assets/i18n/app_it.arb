@@ -4507,5 +4507,13 @@
   "suggestionCheckFormat": "Verifica che il formato del template corrisponda all'esempio",
   "@suggestionCheckFormat": {
     "description": "Suggerimento generico per controllare il formato"
-  }
+  },
+  "listView": "Vista Lista",
+  "gridView": "Vista Griglia",
+  "parsing": "Analisi in corso...",
+  "matchingExercises": "Abbinamento esercizi...",
+  "convertingWeights": "Conversione pesi...",
+  "finalizing": "Finalizzazione...",
+  "importFailed": "Importazione fallita",
+  "noDescription": "Nessuna descrizione"
 }

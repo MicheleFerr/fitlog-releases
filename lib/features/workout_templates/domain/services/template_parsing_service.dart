@@ -14,6 +14,44 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/template_import_export.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/import_parsing_result.dart';
+
+/// AI parsing instructions
+class AIParsingInstructions {
+  const AIParsingInstructions({
+    this.language,
+    this.units,
+    this.customExercises,
+  });
+
+  final String? language;
+  final String? units;
+  final List<String>? customExercises;
+}
+
+/// Import error
+class ImportError {
+  const ImportError({
+    required this.message,
+    required this.field,
+    this.isBlocking = false,
+  });
+
+  final String message;
+  final String field;
+  final bool isBlocking;
+}
+
+/// Import warning
+class ImportWarning {
+  const ImportWarning({
+    required this.message,
+    required this.field,
+  });
+
+  final String message;
+  final String field;
+}
 
 /// Service for parsing workout templates from natural language descriptions
 class TemplateParsingService {

@@ -11986,5 +11986,37 @@
   "suggestionCheckFormat": "Check the template format matches the example",
   "@suggestionCheckFormat": {
     "description": "Generic suggestion to check format"
+  },
+  "listView": "List View",
+  "@listView": {
+    "description": "List view mode"
+  },
+  "gridView": "Grid View",
+  "@gridView": {
+    "description": "Grid view mode"
+  },
+  "parsing": "Parsing...",
+  "@parsing": {
+    "description": "Import phase: parsing JSON"
+  },
+  "matchingExercises": "Matching exercises...",
+  "@matchingExercises": {
+    "description": "Import phase: matching exercises with database"
+  },
+  "convertingWeights": "Converting weights...",
+  "@convertingWeights": {
+    "description": "Import phase: converting percentage weights"
+  },
+  "finalizing": "Finalizing...",
+  "@finalizing": {
+    "description": "Import phase: finalizing import"
+  },
+  "importFailed": "Import failed",
+  "@importFailed": {
+    "description": "Import failed error message"
+  },
+  "noDescription": "No description",
+  "@noDescription": {
+    "description": "Placeholder for missing description"
   }
 }
