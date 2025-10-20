@@ -519,6 +519,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importSuccessful => 'Importazione completata con successo!';
 
   @override
+  String get importing => 'Importazione in corso...';
+
+  @override
+  String get importCompleted => 'Importazione Completata';
+
+  @override
+  String templatesImportedSuccessfully(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count schede importate con successo!',
+      one: '1 scheda importata con successo!',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get exportingTemplates => 'Esportazione Schede';
 
   @override

@@ -854,7 +854,7 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear;
 
-  /// Done button
+  /// Done button text
   ///
   /// In en, this message translates to:
   /// **'Done'**
@@ -1033,6 +1033,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import completed successfully!'**
   String get importSuccessful;
+
+  /// Import in progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Importing...'**
+  String get importing;
+
+  /// Import completed title
+  ///
+  /// In en, this message translates to:
+  /// **'Import Completed'**
+  String get importCompleted;
+
+  /// Success message showing number of templates imported
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 template imported successfully!} other{{count} templates imported successfully!}}'**
+  String templatesImportedSuccessfully(int count);
 
   /// Exporting progress text
   ///

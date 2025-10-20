@@ -32,6 +32,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/widge
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/exercise_selection_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/utils/import_error_mapper.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/import_progress_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
@@ -802,15 +803,25 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
   Future<void> _importFromJson(BuildContext context, String jsonText) async {
     final l10n = AppLocalizations.of(context);
+
+    // Show progress dialog
+    showImportProgressDialog(
+      context: context,
+      currentPhase: l10n.importing,
+      currentStep: '',
+    );
+
     try {
       // Parse JSON
       final json = jsonDecode(jsonText) as Map<String, dynamic>;
-      
+
       // Validate required fields
       if (!json.containsKey('name') || !json.containsKey('exercises')) {
+        // Close progress dialog
+        if (context.mounted) Navigator.of(context).pop();
         throw Exception('Invalid JSON format. Required fields: name, exercises');
       }
-      
+
       // Create exercises from JSON with intelligent matching
       final exercisesJson = json['exercises'] as List;
       final exercises = <Exercise>[];
@@ -903,17 +914,32 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       
       // Save template using provider
       final templateId = await ref.read(templateProvider.notifier).createTemplate(template);
-      
+
       if (templateId != null) {
-        SnackBarService.showSuccess(
-          context,
-          '✅ ${l10n.templateImportedSuccessfully(template.name)}',
-        );
+        // Close loading dialog and show success
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Close progress dialog
+
+          // Show completion dialog
+          await showImportProgressDialog(
+            context: context,
+            isCompleted: true,
+            totalTemplates: 1,
+            processedTemplates: 1,
+          );
+
+          SnackBarService.showSuccess(
+            context,
+            '✅ ${l10n.templateImportedSuccessfully(template.name)}',
+          );
+        }
       } else {
         throw Exception('Failed to save template');
       }
-
     } catch (e) {
+      // Close progress dialog if open
+      if (context.mounted) Navigator.of(context).pop();
+
       // Map technical error to user-friendly message
       final userMessage = ImportErrorMapper.mapToUserMessage(e, l10n);
 

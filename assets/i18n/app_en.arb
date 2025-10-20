@@ -647,6 +647,28 @@
   "@importSuccessful": {
     "description": "Import success message"
   },
+  "importing": "Importing...",
+  "@importing": {
+    "description": "Import in progress message"
+  },
+  "importCompleted": "Import Completed",
+  "@importCompleted": {
+    "description": "Import completed title"
+  },
+  "templatesImportedSuccessfully": "{count, plural, =1{1 template imported successfully!} other{{count} templates imported successfully!}}",
+  "@templatesImportedSuccessfully": {
+    "description": "Success message showing number of templates imported",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of templates imported"
+      }
+    }
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Done button text"
+  },
   "exportingTemplates": "Exporting Templates",
   "@exportingTemplates": {
     "description": "Exporting progress text"
