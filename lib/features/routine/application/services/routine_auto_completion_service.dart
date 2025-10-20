@@ -33,6 +33,8 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/routine/application/services/routine_matching_service.dart';
+import 'package:gymbro_flutter_new/features/routine/application/services/routine_swap_flow.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
@@ -96,6 +98,7 @@ class RoutineAutoCompletionService {
   /// - If no active routine → skip silently (return skipped)
   /// - If workout template doesn't match any scheduled day → skip silently
   /// - If single match → auto-complete and show success toast
+  /// - If swap opportunity detected → show swap dialog
   /// - If multiple matches → return candidates for UI selection
   Future<RoutineAutoCompletionResult> tryAutoCompleteRoutineDay({
     required Workout completedWorkout,
@@ -113,66 +116,171 @@ class RoutineAutoCompletionService {
 
       if (activeRoutine == null) {
         if (kDebugMode) {
-          debugPrint('ℹ️ [RoutineAutoCompletion] No active routine found, skipping auto-completion');
+          debugPrint(
+            '🔍 [RoutineAutoCompletion] No active routine found, skipping auto-completion',
+          );
         }
         return RoutineAutoCompletionResult.skipped('No active routine');
       }
 
-      // 2. Check if workout has a templateId
-      final workoutTemplateId = completedWorkout.templateId;
-      if (workoutTemplateId == null || workoutTemplateId.isEmpty) {
-        if (kDebugMode) {
-          debugPrint('ℹ️ [RoutineAutoCompletion] Workout has no templateId, skipping');
-        }
-        return RoutineAutoCompletionResult.skipped('No workout template');
-      }
-
-      // 3. Find scheduled days that match the template
-      final candidateDays = _findCandidateDays(
-        routine: activeRoutine,
-        templateId: workoutTemplateId,
-        completedAt: completedWorkout.endTime ?? DateTime.now(),
+      // 2. Analyze workout against routine using RoutineMatchingService
+      final matchingService = RoutineMatchingService();
+      final matchResult = await matchingService.analyzeWorkoutForRoutine(
+        completedWorkout: completedWorkout,
+        activeRoutine: activeRoutine,
+        completionTime: completedWorkout.endTime ?? DateTime.now(),
       );
 
-      if (candidateDays.isEmpty) {
-        if (kDebugMode) {
-          debugPrint('ℹ️ [RoutineAutoCompletion] No matching scheduled days found for template $workoutTemplateId');
-        }
-        return RoutineAutoCompletionResult.skipped('No matching scheduled days');
-      }
-
-      // 4. Single match → auto-complete immediately
-      if (candidateDays.length == 1) {
-        final dayToComplete = candidateDays.first;
-
-        await _repository.completeDayWorkout(
-          routineId: activeRoutine.id,
-          date: dayToComplete,
-          workoutId: completedWorkout.id,
-        );
-
-        if (kDebugMode) {
-          debugPrint('✅ [RoutineAutoCompletion] Routine day auto-completed: $dayToComplete');
-        }
-
-        // Show success toast if context available
-        if (context != null && context.mounted) {
-          SnackBarService.showSuccess(
-            context,
-            '${context.l10n.routineDayCompleted} ${_formatDate(dayToComplete)}',
-            duration: const Duration(seconds: 3),
+      // 3. Handle different matching results
+      return await matchResult.when(
+        noTemplate: () {
+          if (kDebugMode) {
+            debugPrint(
+              '🔍 [RoutineAutoCompletion] Workout has no templateId, skipping',
+            );
+          }
+          return Future.value(
+            RoutineAutoCompletionResult.skipped('No workout template'),
           );
-        }
+        },
+        noMatch: () {
+          if (kDebugMode) {
+            debugPrint(
+              '🔍 [RoutineAutoCompletion] No matching scheduled days found',
+            );
+          }
+          return Future.value(
+            RoutineAutoCompletionResult.skipped('No matching scheduled days'),
+          );
+        },
+        simpleMatch: (matchedDate) async {
+          if (kDebugMode) {
+            debugPrint(
+              '✅ [RoutineAutoCompletion] Simple match found, auto-completing: $matchedDate',
+            );
+          }
 
-        return RoutineAutoCompletionResult.success(dayToComplete);
-      }
+          await _repository.completeDayWorkout(
+            routineId: activeRoutine.id,
+            date: matchedDate,
+            workoutId: completedWorkout.id,
+          );
 
-      // 5. Multiple matches → return for UI selection
-      if (kDebugMode) {
-        debugPrint('ℹ️ [RoutineAutoCompletion] Multiple candidate days found: $candidateDays');
-      }
+          // Show success toast if context available
+          if (context != null && context.mounted) {
+            SnackBarService.showSuccess(
+              context,
+              '${context.l10n.routineDayCompleted} ${_formatDate(matchedDate)}',
+              duration: const Duration(seconds: 3),
+            );
+          }
 
-      return RoutineAutoCompletionResult.needsUserSelection(candidateDays);
+          return RoutineAutoCompletionResult.success(matchedDate);
+        },
+        multipleMatches: (candidates) {
+          if (kDebugMode) {
+            debugPrint(
+              '🔍 [RoutineAutoCompletion] Multiple candidates found: $candidates',
+            );
+          }
+          return Future.value(
+            RoutineAutoCompletionResult.needsUserSelection(candidates),
+          );
+        },
+        swapOpportunity: (opportunity) async {
+          if (kDebugMode) {
+            debugPrint(
+              '🔄 [RoutineAutoCompletion] Swap opportunity detected',
+            );
+          }
+
+          // Se non abbiamo un context, non possiamo mostrare il dialog
+          if (context == null || !context.mounted) {
+            if (kDebugMode) {
+              debugPrint(
+                '⚠️ [RoutineAutoCompletion] No context for swap dialog, auto-completing with closest match',
+              );
+            }
+            // Auto-complete il giorno futuro come fallback
+            await _repository.completeDayWorkout(
+              routineId: activeRoutine.id,
+              date: opportunity.futureScheduledDay.date,
+              workoutId: completedWorkout.id,
+            );
+            return RoutineAutoCompletionResult.success(
+              opportunity.futureScheduledDay.date,
+            );
+          }
+
+          // Mostra il dialog e ottieni la decisione dell'utente
+          final swapFlow = RoutineSwapFlow(repository: _repository);
+          final decision = await swapFlow.showAndHandleSwapDialog(
+            context: context,
+            swapOpportunity: opportunity,
+            activeRoutine: activeRoutine,
+          );
+
+          // In base alla decisione dell'utente, auto-completa il giorno appropriato
+          DateTime dayToComplete;
+          switch (decision) {
+            case SwapDecision.continueNormal:
+              // L'utente ha scelto di non aggiornare la routine
+              // Non completiamo nulla
+              if (kDebugMode) {
+                debugPrint(
+                  '🔄 [RoutineAutoCompletion] User chose: Continue Normal',
+                );
+              }
+              return RoutineAutoCompletionResult.skipped(
+                'User chose to continue without routine update',
+              );
+
+            case SwapDecision.swapDays:
+              // L'utente ha scelto di scambiare i giorni
+              // Completa il giorno di oggi (che ora ha il template corretto)
+              dayToComplete = opportunity.todayScheduledDay.date;
+              if (kDebugMode) {
+                debugPrint(
+                  '🔄 [RoutineAutoCompletion] User chose: Swap Days, completing $dayToComplete',
+                );
+              }
+
+            case SwapDecision.skipToday:
+              // L'utente ha scelto di saltare il giorno di oggi
+              // Completa il giorno futuro
+              dayToComplete = opportunity.futureScheduledDay.date;
+              if (kDebugMode) {
+                debugPrint(
+                  '🔄 [RoutineAutoCompletion] User chose: Skip Today, completing $dayToComplete',
+                );
+              }
+
+            case null:
+              // L'utente ha annullato il dialog
+              if (kDebugMode) {
+                debugPrint('🔄 [RoutineAutoCompletion] User cancelled swap dialog');
+              }
+              return RoutineAutoCompletionResult.skipped(
+                'User cancelled swap dialog',
+              );
+          }
+
+          // Completa il giorno selezionato
+          await _repository.completeDayWorkout(
+            routineId: activeRoutine.id,
+            date: dayToComplete,
+            workoutId: completedWorkout.id,
+          );
+
+          if (kDebugMode) {
+            debugPrint(
+              '✅ [RoutineAutoCompletion] Routine day completed after swap: $dayToComplete',
+            );
+          }
+
+          return RoutineAutoCompletionResult.success(dayToComplete);
+        },
+      );
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [RoutineAutoCompletion] Error during auto-completion: $e');

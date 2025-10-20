@@ -521,7 +521,7 @@
   },
   "cancel": "Cancel",
   "@cancel": {
-    "description": "Cancel button text"
+    "description": "Cancel button"
   },
   "clear": "Clear",
   "@clear": {
@@ -709,7 +709,7 @@
   },
   "close": "Close",
   "@close": {
-    "description": "Close button text"
+    "description": "Close button"
   },
   "limitReached": "Limit Reached",
   "@limitReached": {
@@ -895,9 +895,9 @@
   "@exerciseCategory": {
     "description": "Label for exercise category selection"
   },
-  "sets": "Sets",
+  "sets": "sets",
   "@sets": {
-    "description": "Label for sets section"
+    "description": "Sets unit label"
   },
   "addSet": "Add Set",
   "@addSet": {
@@ -905,11 +905,11 @@
   },
   "weight": "Weight",
   "@weight": {
-    "description": "Weight label"
+    "description": "Weight metric label"
   },
   "reps": "Reps",
   "@reps": {
-    "description": "Repetitions label"
+    "description": "Reps metric label"
   },
   "notes": "Notes (optional)",
   "@notes": {
@@ -1427,7 +1427,7 @@
   },
   "resetToDefaults": "Reset to Defaults",
   "@resetToDefaults": {
-    "description": "Reset to defaults option"
+    "description": "Reset settings to default values"
   },
   "resetToDefaultsDesc": "Restore all settings to default",
   "@resetToDefaultsDesc": {
@@ -1479,7 +1479,7 @@
   },
   "reset": "Reset",
   "@reset": {
-    "description": "Button to reset the migration state"
+    "description": "Reset button"
   },
   "settingsResetSuccess": "Settings reset to defaults",
   "@settingsResetSuccess": {
@@ -2303,7 +2303,7 @@
   },
   "exerciseDetails": "Exercise Details",
   "@exerciseDetails": {
-    "description": "Exercise details group title"
+    "description": "Exercise details screen title"
   },
   "preparation": "Preparation",
   "@preparation": {
@@ -2383,7 +2383,7 @@
   },
   "volume": "Volume",
   "@volume": {
-    "description": "Volume tab label"
+    "description": "Volume metric label"
   },
   "startWorkoutQuick": "START WORKOUT",
   "@startWorkoutQuick": {
@@ -2963,7 +2963,7 @@
   },
   "noExercisesFound": "No exercises found",
   "@noExercisesFound": {
-    "description": "No exercises found message"
+    "description": "Empty state when no exercises match search"
   },
   "tryModifyingFilters": "Try modifying the search filters",
   "@tryModifyingFilters": {
@@ -3085,9 +3085,9 @@
   "@yourMostFrequentWorkout": {
     "description": "Most frequent workout suggestion message"
   },
-  "selectExercise": "Select Exercise",
+  "selectExercise": "Select an exercise to view progress",
   "@selectExercise": {
-    "description": "Title for exercise selection dialog"
+    "description": "Hint to select an exercise"
   },
   "originalExercise": "Original exercise",
   "@originalExercise": {
@@ -3550,7 +3550,7 @@
   },
   "recommendations": "Recommendations",
   "@recommendations": {
-    "description": "Recommendations section title"
+    "description": "Recommendations section header"
   },
   "exerciseTrends": "Exercise Trends",
   "@exerciseTrends": {
@@ -3570,7 +3570,7 @@
   },
   "maxWeight": "Max Weight",
   "@maxWeight": {
-    "description": "Maximum weight statistic"
+    "description": "Maximum weight label"
   },
   "maxReps": "Max Reps",
   "@maxReps": {
@@ -3582,7 +3582,7 @@
   },
   "volumeProgression": "Volume Progression",
   "@volumeProgression": {
-    "description": "Volume progression section title"
+    "description": "Volume progression chart title"
   },
   "weekly": "Weekly",
   "@weekly": {
@@ -4052,7 +4052,7 @@
   },
   "actualWeight": "Actual Weight",
   "@actualWeight": {
-    "description": "Actual weight used in exercise"
+    "description": "Label for actual achievable weight"
   },
   "trendLine": "Trend Line",
   "@trendLine": {
@@ -4562,7 +4562,7 @@
   },
   "statistics": "Statistics",
   "@statistics": {
-    "description": "Statistics section title"
+    "description": "Statistics section header"
   },
   "avgWeight": "Avg Weight",
   "@avgWeight": {
@@ -4928,9 +4928,9 @@
   "@pushNotificationsDescription": {
     "description": "Push notifications action description"
   },
-  "featureComingSoon": "This feature will be available in a future update.",
+  "featureComingSoon": "This feature is coming soon",
   "@featureComingSoon": {
-    "description": "Coming soon dialog message"
+    "description": "Message for features not yet implemented"
   },
   "loadingActivity": "Loading activity...",
   "@loadingActivity": {
@@ -4977,27 +4977,29 @@
       }
     }
   },
-  "hoursAgo": "{count}h ago",
+  "hoursAgo": "{hours}h ago",
   "@hoursAgo": {
-    "description": "Hours ago time format",
+    "description": "Timestamp showing hours elapsed",
     "placeholders": {
-      "count": {
-        "type": "int"
+      "hours": {
+        "type": "int",
+        "description": "Number of hours"
       }
     }
   },
-  "minutesAgo": "{count}m ago",
+  "minutesAgo": "{minutes}m ago",
   "@minutesAgo": {
-    "description": "Minutes ago time format",
+    "description": "Timestamp showing minutes elapsed",
     "placeholders": {
-      "count": {
-        "type": "int"
+      "minutes": {
+        "type": "int",
+        "description": "Number of minutes"
       }
     }
   },
   "justNow": "Just now",
   "@justNow": {
-    "description": "Time indicator for very recent activities"
+    "description": "Timestamp indicating action just happened"
   },
   "viewAll": "View All",
   "@viewAll": {
@@ -5570,7 +5572,7 @@
   },
   "workoutSaved": "Workout saved!",
   "@workoutSaved": {
-    "description": "Success message after saving workout"
+    "description": "Success message after workout is saved"
   },
   "errorSavingWorkout": "Error saving workout",
   "@errorSavingWorkout": {
@@ -10843,10 +10845,6 @@
   "@weightProgression": {
     "description": "Weight progression chart title"
   },
-  "volumeProgression": "Volume Progression",
-  "@volumeProgression": {
-    "description": "Volume progression chart title"
-  },
   "repsProgression": "Reps Progression",
   "@repsProgression": {
     "description": "Reps progression chart title"
@@ -10879,21 +10877,9 @@
   "@progressionCharts": {
     "description": "Progression charts section title"
   },
-  "noExercisesFound": "No exercises found",
-  "@noExercisesFound": {
-    "description": "Empty state when no exercises match search"
-  },
   "noExercisesFoundDesc": "Complete a workout to see your exercise progress",
   "@noExercisesFoundDesc": {
     "description": "Description for empty exercise list"
-  },
-  "selectExercise": "Select an exercise to view progress",
-  "@selectExercise": {
-    "description": "Hint to select an exercise"
-  },
-  "maxWeight": "Max Weight",
-  "@maxWeight": {
-    "description": "Maximum weight label"
   },
   "avgReps": "Avg Reps",
   "@avgReps": {
@@ -10911,10 +10897,6 @@
   "@sessionHistory": {
     "description": "Session history section title"
   },
-  "trend": "Trend",
-  "@trend": {
-    "description": "Trend label"
-  },
   "improving": "Improving",
   "@improving": {
     "description": "Positive trend indicator"
@@ -10926,10 +10908,6 @@
   "stable": "Stable",
   "@stable": {
     "description": "Stable trend indicator"
-  },
-  "exerciseDetails": "Exercise Details",
-  "@exerciseDetails": {
-    "description": "Exercise details screen title"
   },
   "periodSelectorLabel": "Time Period",
   "@periodSelectorLabel": {
@@ -10951,18 +10929,6 @@
   "@tapToToggle": {
     "description": "Legend tap instruction"
   },
-  "weight": "Weight",
-  "@weight": {
-    "description": "Weight metric label"
-  },
-  "reps": "Reps",
-  "@reps": {
-    "description": "Reps metric label"
-  },
-  "volume": "Volume",
-  "@volume": {
-    "description": "Volume metric label"
-  },
   "effort": "Effort",
   "@effort": {
     "description": "Effort (RPE) metric label"
@@ -10970,10 +10936,6 @@
   "weightSettings": "Weight Settings",
   "@weightSettings": {
     "description": "Weight settings screen title"
-  },
-  "resetToDefaults": "Reset to Defaults",
-  "@resetToDefaults": {
-    "description": "Reset settings to default values"
   },
   "errorLoadingSettings": "Error Loading Settings",
   "@errorLoadingSettings": {
@@ -11079,10 +11041,6 @@
   "@editPlates": {
     "description": "Button to edit available plates"
   },
-  "featureComingSoon": "This feature is coming soon",
-  "@featureComingSoon": {
-    "description": "Message for features not yet implemented"
-  },
   "pleaseEnterValidWeights": "Please enter valid weights",
   "@pleaseEnterValidWeights": {
     "description": "Error when weight values are invalid"
@@ -11094,10 +11052,6 @@
   "plateCalculationResult": "Plate Calculation Result",
   "@plateCalculationResult": {
     "description": "Dialog title for plate calculation result"
-  },
-  "actualWeight": "Actual Weight",
-  "@actualWeight": {
-    "description": "Label for actual achievable weight"
   },
   "difference": "Difference",
   "@difference": {
@@ -11111,21 +11065,9 @@
   "@barOnly": {
     "description": "Message when no plates are needed"
   },
-  "close": "Close",
-  "@close": {
-    "description": "Close button"
-  },
   "resetSettingsConfirmation": "Are you sure you want to reset all settings to default values? This cannot be undone.",
   "@resetSettingsConfirmation": {
     "description": "Confirmation message for resetting settings"
-  },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel button"
-  },
-  "reset": "Reset",
-  "@reset": {
-    "description": "Reset button"
   },
   "settingsReset": "Settings reset to defaults",
   "@settingsReset": {
@@ -11278,14 +11220,6 @@
   "flaggedExercises": "Flagged Exercises",
   "@flaggedExercises": {
     "description": "Flagged exercises section header"
-  },
-  "statistics": "Statistics",
-  "@statistics": {
-    "description": "Statistics section header"
-  },
-  "recommendations": "Recommendations",
-  "@recommendations": {
-    "description": "Recommendations section header"
   },
   "exercisesObsolete": "Stale Exercises",
   "@exercisesObsolete": {
@@ -11561,10 +11495,6 @@
   "@savingWorkout": {
     "description": "Message shown while saving workout"
   },
-  "workoutSaved": "Workout saved!",
-  "@workoutSaved": {
-    "description": "Success message after workout is saved"
-  },
   "syncingToCloud": "Syncing to cloud...",
   "@syncingToCloud": {
     "description": "Message shown while syncing workout to cloud"
@@ -11609,30 +11539,6 @@
   "@averageRpe": {
     "description": "Average Rate of Perceived Exertion label in workout summary"
   },
-  "justNow": "Just now",
-  "@justNow": {
-    "description": "Timestamp indicating action just happened"
-  },
-  "minutesAgo": "{minutes}m ago",
-  "@minutesAgo": {
-    "description": "Timestamp showing minutes elapsed",
-    "placeholders": {
-      "minutes": {
-        "type": "int",
-        "description": "Number of minutes"
-      }
-    }
-  },
-  "hoursAgo": "{hours}h ago",
-  "@hoursAgo": {
-    "description": "Timestamp showing hours elapsed",
-    "placeholders": {
-      "hours": {
-        "type": "int",
-        "description": "Number of hours"
-      }
-    }
-  },
   "routineDayCompleted": "Routine day completed:",
   "@routineDayCompleted": {
     "description": "Success message when a routine day is auto-completed"
@@ -11640,10 +11546,6 @@
   "routineDayCompletionFailed": "Failed to complete routine day",
   "@routineDayCompletionFailed": {
     "description": "Error message when routine day completion fails"
-  },
-  "sets": "sets",
-  "@sets": {
-    "description": "Sets unit label"
   },
   "repPresetStrengthLabel": "1-3",
   "@repPreset.strength.label": {
@@ -11748,5 +11650,41 @@
   "timerSet": "Timer set: ",
   "@timerSet": {
     "description": "Preview label for selected time"
+  },
+  "swapDaysTitle": "Swap Workout Days?",
+  "@swapDaysTitle": {
+    "description": "Title of swap confirmation dialog"
+  },
+  "swapDaysDescription": "Your routine scheduled differently. Do you want to swap these days?",
+  "@swapDaysDescription": {
+    "description": "Explanation of swap feature"
+  },
+  "daysSwappedSuccessfully": "Days swapped successfully! Continuing with",
+  "@daysSwappedSuccessfully": {
+    "description": "Success message after swap"
+  },
+  "errorSwappingDays": "Error swapping days. Please try again.",
+  "@errorSwappingDays": {
+    "description": "Error message when swap fails"
+  },
+  "errorMarkingDayAsSkipped": "Error marking day as skipped",
+  "@errorMarkingDayAsSkipped": {
+    "description": "Error message for skip action"
+  },
+  "workoutCompletedButRoutineNotUpdated": "Workout completed. Routine not updated.",
+  "@workoutCompletedButRoutineNotUpdated": {
+    "description": "Info message when user chose 'Continue Normal'"
+  },
+  "continueNormal": "Continue Normal",
+  "@continueNormal": {
+    "description": "Button label - do workout without routine update"
+  },
+  "skipToday": "Skip Today",
+  "@skipToday": {
+    "description": "Button label - mark today's workout as skipped"
+  },
+  "swapDaysButtonLabel": "Swap Days",
+  "@swapDaysButtonLabel": {
+    "description": "Button label - swap the two days (recommended)"
   }
 }

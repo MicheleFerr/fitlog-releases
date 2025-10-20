@@ -218,10 +218,10 @@
   "errorOpeningUrl": "Errore nell'apertura URL",
   "pleaseEnterWorkoutText": "Inserisci il testo dell'allenamento da convertire",
   "exerciseCategory": "Categoria Esercizio",
-  "sets": "Serie",
+  "sets": "serie",
   "addSet": "Aggiungi Serie",
   "weight": "Peso",
-  "reps": "Reps",
+  "reps": "Ripetizioni",
   "notes": "Note (opzionale)",
   "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
   "exerciseTypeSingle": "Singolo",
@@ -353,7 +353,7 @@
   "exportSettingsDesc": "Salva le impostazioni come file JSON",
   "importSettings": "Importa Impostazioni",
   "importSettingsDesc": "Carica le impostazioni da file JSON",
-  "resetToDefaults": "Ripristina Predefinite",
+  "resetToDefaults": "Ripristina Predefiniti",
   "resetToDefaultsDesc": "Ripristina tutte le impostazioni predefinite",
   "accountActions": "Azioni Account",
   "signOutDesc": "Disconnetti dal tuo account",
@@ -366,7 +366,7 @@
   "accept": "Accetta",
   "dismiss": "Ignora",
   "restTimeSuggestion": "Suggerimento Recupero",
-  "reset": "Reset",
+  "reset": "Ripristina",
   "settingsResetSuccess": "Impostazioni ripristinate ai valori predefiniti",
   "exportFunctioningComingSoon": "Funzionalità di esportazione in arrivo",
   "importFunctioningComingSoon": "Funzionalità di importazione in arrivo",
@@ -721,7 +721,7 @@
   "restartCycleAfterDays": "Ricomincia il ciclo dopo {days} {days, plural, =1{giorno} other{giorni}}",
   "nextInRotation": "Prossimo nella rotazione",
   "yourMostFrequentWorkout": "Il tuo allenamento più frequente",
-  "selectExercise": "Seleziona Esercizio",
+  "selectExercise": "Seleziona un esercizio per vedere i progressi",
   "originalExercise": "Esercizio originale",
   "suggestedMatches": "Corrispondenze suggerite",
   "match": "corrispondenza",
@@ -801,7 +801,7 @@
   "avgVolumePerWorkout": "Volume Medio Per Allenamento",
   "average": "Media",
   "record": "Record",
-  "trend": "Tendenza",
+  "trend": "Trend",
   "chest": "Petto",
   "back": "DORSO (Schiena)",
   "shoulders": "Spalle",
@@ -825,7 +825,7 @@
   "currentStreak": "Serie Attuale",
   "totalPRs": "PR Totali",
   "volumeChange": "Cambio Volume",
-  "maxWeight": "Peso Massimo",
+  "maxWeight": "Peso Max",
   "maxReps": "Ripetizioni Massime",
   "estimated1RM": "1RM Stimato",
   "volumeProgression": "Progressione Volume",
@@ -1087,7 +1087,7 @@
   "remainingSets": "Serie Rimanenti",
   "addAnotherSet": "Aggiungi Serie",
   "removeLastSet": "Rimuovi Ultima Serie",
-  "targetWeight": "Peso Target",
+  "targetWeight": "Peso Obiettivo",
   "previousWeight": "Peso Precedente",
   "increaseWeight": "Aumenta Peso",
   "decreaseWeight": "Diminuisci Peso",
@@ -1273,7 +1273,7 @@
   "databaseBackupDescription": "Esporta e fa il backup dei dati degli esercizi",
   "pushNotifications": "Notifiche Push",
   "pushNotificationsDescription": "Invia aggiornamenti a tutti gli utenti",
-  "featureComingSoon": "Questa funzionalità sarà disponibile in un aggiornamento futuro.",
+  "featureComingSoon": "Questa funzionalità sarà presto disponibile",
   "loadingActivity": "Caricamento attività recenti...",
   "errorLoadingActivity": "Errore nel caricamento attività",
   "noRecentActivity": "Nessuna Attività Recente",
@@ -1284,8 +1284,8 @@
   "rejectedCorrection": "Correzione rifiutata",
   "activityFor": "Attività per",
   "daysAgo": "{count}g fa",
-  "hoursAgo": "{count}h fa",
-  "minutesAgo": "{count}m fa",
+  "hoursAgo": "{hours}h fa",
+  "minutesAgo": "{minutes}m fa",
   "justNow": "Proprio ora",
   "viewAll": "Visualizza Tutto",
   "adminInfo": "Informazioni Admin",
@@ -1493,10 +1493,10 @@
     "description": "Label for sets section"
   },
   "@weight": {
-    "description": "Weight label"
+    "description": "Weight metric label"
   },
   "@reps": {
-    "description": "Repetitions label"
+    "description": "Reps metric label"
   },
   "@removeSet": {
     "description": "Tooltip for removing a set"
@@ -3639,7 +3639,6 @@
   "@weightProgression": {
     "description": "Weight progression chart title"
   },
-  "volumeProgression": "Progressione Volume",
   "@volumeProgression": {
     "description": "Volume progression chart title"
   },
@@ -3651,7 +3650,6 @@
   "@effortProgression": {
     "description": "RPE/Effort progression chart title"
   },
-  "personalRecord": "Record Personale",
   "@personalRecord": {
     "description": "Personal record label"
   },
@@ -3675,7 +3673,6 @@
   "@progressionCharts": {
     "description": "Progression charts section title"
   },
-  "noExercisesFound": "Nessun esercizio trovato",
   "@noExercisesFound": {
     "description": "Empty state when no exercises match search"
   },
@@ -3683,11 +3680,9 @@
   "@noExercisesFoundDesc": {
     "description": "Description for empty exercise list"
   },
-  "selectExercise": "Seleziona un esercizio per vedere i progressi",
   "@selectExercise": {
     "description": "Hint to select an exercise"
   },
-  "maxWeight": "Peso Max",
   "@maxWeight": {
     "description": "Maximum weight label"
   },
@@ -3707,7 +3702,6 @@
   "@sessionHistory": {
     "description": "Session history section title"
   },
-  "trend": "Trend",
   "@trend": {
     "description": "Trend label"
   },
@@ -3723,7 +3717,6 @@
   "@stable": {
     "description": "Stable trend indicator"
   },
-  "exerciseDetails": "Dettagli Esercizio",
   "@exerciseDetails": {
     "description": "Exercise details screen title"
   },
@@ -3747,15 +3740,6 @@
   "@tapToToggle": {
     "description": "Legend tap instruction"
   },
-  "weight": "Peso",
-  "@weight": {
-    "description": "Weight metric label"
-  },
-  "reps": "Ripetizioni",
-  "@reps": {
-    "description": "Reps metric label"
-  },
-  "volume": "Volume",
   "@volume": {
     "description": "Volume metric label"
   },
@@ -3767,7 +3751,6 @@
   "@weightSettings": {
     "description": "Weight settings screen title"
   },
-  "resetToDefaults": "Ripristina Predefiniti",
   "@resetToDefaults": {
     "description": "Reset settings to default values"
   },
@@ -3791,7 +3774,6 @@
   "@customIncrementDescription": {
     "description": "Custom increment section description"
   },
-  "plateCalculator": "Calcolatore Dischi",
   "@plateCalculator": {
     "description": "Plate calculator section title"
   },
@@ -3855,7 +3837,6 @@
   "@barWeight": {
     "description": "TextField label for bar weight"
   },
-  "targetWeight": "Peso Obiettivo",
   "@targetWeight": {
     "description": "TextField label for target weight"
   },
@@ -3875,7 +3856,6 @@
   "@editPlates": {
     "description": "Button to edit available plates"
   },
-  "featureComingSoon": "Questa funzionalità sarà presto disponibile",
   "@featureComingSoon": {
     "description": "Message for features not yet implemented"
   },
@@ -3891,7 +3871,6 @@
   "@plateCalculationResult": {
     "description": "Dialog title for plate calculation result"
   },
-  "actualWeight": "Peso Effettivo",
   "@actualWeight": {
     "description": "Label for actual achievable weight"
   },
@@ -3907,7 +3886,6 @@
   "@barOnly": {
     "description": "Message when no plates are needed"
   },
-  "close": "Chiudi",
   "@close": {
     "description": "Close button"
   },
@@ -3915,11 +3893,9 @@
   "@resetSettingsConfirmation": {
     "description": "Confirmation message for resetting settings"
   },
-  "cancel": "Annulla",
   "@cancel": {
     "description": "Cancel button"
   },
-  "reset": "Ripristina",
   "@reset": {
     "description": "Reset button"
   },
@@ -4012,11 +3988,9 @@
   "@flaggedExercises": {
     "description": "Flagged exercises section header"
   },
-  "statistics": "Statistiche",
   "@statistics": {
     "description": "Statistics section header"
   },
-  "recommendations": "Raccomandazioni",
   "@recommendations": {
     "description": "Recommendations section header"
   },
@@ -4120,7 +4094,6 @@
   "@savingWorkout": {
     "description": "Message shown while saving workout"
   },
-  "workoutSaved": "Allenamento salvato!",
   "@workoutSaved": {
     "description": "Success message after workout is saved"
   },
@@ -4168,11 +4141,9 @@
   "@averageRpe": {
     "description": "Average Rate of Perceived Exertion label in workout summary"
   },
-  "justNow": "Proprio ora",
   "@justNow": {
     "description": "Timestamp indicating action just happened"
   },
-  "minutesAgo": "{minutes}m fa",
   "@minutesAgo": {
     "description": "Timestamp showing minutes elapsed",
     "placeholders": {
@@ -4182,7 +4153,6 @@
       }
     }
   },
-  "hoursAgo": "{hours}h fa",
   "@hoursAgo": {
     "description": "Timestamp showing hours elapsed",
     "placeholders": {
@@ -4200,7 +4170,6 @@
   "@routineDayCompletionFailed": {
     "description": "Error message when routine day completion fails"
   },
-  "sets": "serie",
   "repPresetStrengthLabel": "1-3",
   "repPresetStrengthDescription": "Forza Massimale",
   "repPresetPowerLabel": "4-6",
@@ -4226,5 +4195,41 @@
   "noSpecificTimer": "Nessun timer specifico",
   "quickPresets": "Preset Rapidi",
   "customTimer": "Timer Personalizzato",
-  "timerSet": "Timer impostato: "
+  "timerSet": "Timer impostato: ",
+  "swapDaysTitle": "Scambiare i Giorni di Allenamento?",
+  "@swapDaysTitle": {
+    "description": "Titolo del dialog di conferma swap"
+  },
+  "swapDaysDescription": "La tua routine è programmata diversamente. Vuoi scambiare questi giorni?",
+  "@swapDaysDescription": {
+    "description": "Spiegazione della funzionalità di swap"
+  },
+  "daysSwappedSuccessfully": "Giorni scambiati con successo! Continuando con",
+  "@daysSwappedSuccessfully": {
+    "description": "Messaggio di successo dopo lo swap"
+  },
+  "errorSwappingDays": "Errore nello scambio dei giorni. Riprova.",
+  "@errorSwappingDays": {
+    "description": "Messaggio di errore quando lo swap fallisce"
+  },
+  "errorMarkingDayAsSkipped": "Errore nel marcare il giorno come saltato",
+  "@errorMarkingDayAsSkipped": {
+    "description": "Messaggio di errore per l'azione di skip"
+  },
+  "workoutCompletedButRoutineNotUpdated": "Allenamento completato. Routine non aggiornata.",
+  "@workoutCompletedButRoutineNotUpdated": {
+    "description": "Messaggio info quando l'utente ha scelto 'Continua Normale'"
+  },
+  "continueNormal": "Continua Normale",
+  "@continueNormal": {
+    "description": "Etichetta pulsante - fai l'allenamento senza aggiornare la routine"
+  },
+  "skipToday": "Salta Oggi",
+  "@skipToday": {
+    "description": "Etichetta pulsante - marca il workout di oggi come saltato"
+  },
+  "swapDaysButtonLabel": "Scambia i Giorni",
+  "@swapDaysButtonLabel": {
+    "description": "Etichetta pulsante - scambia i due giorni (consigliato)"
+  }
 }
