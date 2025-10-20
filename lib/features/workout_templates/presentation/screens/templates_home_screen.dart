@@ -539,7 +539,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 context.push('/templates/create');
               },
             ),
-            const Divider(),
+            // TODO: TEMPORARILY DISABLED - JSON import feature
+            // Waiting for finalization of import policy and UI/UX review
+            // Uncomment when ready to enable: import from JSON and file picker features
+            /* const Divider(),
             ListTile(
               leading: Icon(Icons.upload_file, color: colorScheme.secondary),
               title: Text(l10n.importFromJSON),
@@ -558,7 +561,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 Navigator.pop(context);
                 _showFilePickerImportDialog(context);
               },
-            ),
+            ), */
           ],
         ),
       ),
