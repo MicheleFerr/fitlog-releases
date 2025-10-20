@@ -2,10 +2,13 @@ rules_version = '2';
   service cloud.firestore {
     match /databases/{database}/documents {
 
-      // ============= ESERCIZI - LETTURA PUBBLICA, SCRITTURA AUTENTICATA =============
+      // ============= ESERCIZI - LETTURA PUBBLICA, SCRITTURA SOLO ADMIN =============
       match /exercises/{exerciseId} {
-        allow read: if true; // Tutti possono leggere gli esercizi
-        allow write: if request.auth != null; // Solo utenti autenticati possono scrivere
+        allow read: if true; // Tutti possono leggere gli esercizi (database pubblico)
+
+        // 🔐 SECURITY: Solo admin possono modificare il database esercizi
+        // Previene spam, vandalismo e modifiche non autorizzate
+        allow write: if request.auth != null && isAdmin();
       }
 
       // ============= WORKOUT TEMPLATES =============
@@ -795,8 +798,10 @@ rules_version = '2';
         isAdmin()
       );
 
-      // List (query): Permetti query filtrate per userId o status approved
-      allow list: if request.auth != null;
+      // List (query): Permetti query filtrate con limite dimensione
+      // 🔐 SECURITY: Previene large queries che potrebbero causare DoS
+      allow list: if request.auth != null &&
+        request.query.limit <= 100;
 
       // Create: Utenti autenticati possono creare contributi (sempre pending)
       // 🔒 SECURITY: Validazione lunghezza per prevenire DoS

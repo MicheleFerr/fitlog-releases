@@ -37,7 +37,7 @@ dependencies:
   
   # Background & Timer
   flutter_background_service: ^5.0.5
-  audioplayers: ^5.2.1
+  audioplayers: ^6.5.1  # 🔐 SECURITY: Updated from 5.2.1 (fixed memory leaks)
   flutter_local_notifications: ^19.4.2
   timezone: ^0.10.1  # For scheduled notifications
   
@@ -86,7 +86,7 @@ dependencies:
 
   # Data Visualization & Animations (Analytics Feature)
   lottie: ^3.1.0
-  animate_do: ^3.3.4
+  animate_do: ^4.2.0  # 🔐 SECURITY: Updated from 3.3.4
   percent_indicator: ^4.2.3
 
   path_provider: any

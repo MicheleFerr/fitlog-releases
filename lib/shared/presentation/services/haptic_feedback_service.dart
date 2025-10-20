@@ -21,9 +21,9 @@ class HapticFeedbackService {
   /// Trigger haptic feedback for set completion (from widgets)
   /// Uses light impact by default
   static void setCompletion(dynamic ref) {
-    // Use asData?.value to safely handle AsyncLoading state
+    // Check if AsyncValue contains data
     final asyncValue = ref.read(feedbackSettingsProvider);
-    final settings = asyncValue.asData?.value;
+    final settings = asyncValue is AsyncData<FeedbackSettings> ? asyncValue.value : null;
 
     if (settings == null || !settings.hapticEnabled) {
       return;
@@ -36,9 +36,9 @@ class HapticFeedbackService {
   /// Trigger haptic feedback for exercise completion (from widgets)
   /// Uses medium impact by default
   static void exerciseCompletion(dynamic ref) {
-    // Use asData?.value to safely handle AsyncLoading state
+    // Check if AsyncValue contains data
     final asyncValue = ref.read(feedbackSettingsProvider);
-    final settings = asyncValue.asData?.value;
+    final settings = asyncValue is AsyncData<FeedbackSettings> ? asyncValue.value : null;
 
     if (settings == null || !settings.hapticEnabled) {
       return;
@@ -51,9 +51,10 @@ class HapticFeedbackService {
   /// Trigger haptic feedback for workout completion (from providers)
   /// Uses heavy impact by default
   static void workoutCompletion(dynamic ref) {
-    // Use asData?.value to safely handle AsyncLoading state
+    // Check if AsyncValue contains data
     final asyncValue = ref.read(feedbackSettingsProvider);
-    final settings = asyncValue.asData?.value;
+    // AsyncData IS the data wrapper, access .value directly
+    final settings = asyncValue is AsyncData<FeedbackSettings> ? asyncValue.value : null;
 
     if (settings == null || !settings.hapticEnabled) {
       return;
@@ -82,9 +83,9 @@ class HapticFeedbackService {
   /// This respects user settings but uses a lighter feedback
   /// Accepts both WidgetRef (from widgets) and Ref (from providers)
   static void selection(Ref ref) {
-    // Use asData?.value to safely handle AsyncLoading state
+    // Check if AsyncValue contains data
     final asyncValue = ref.read(feedbackSettingsProvider);
-    final settings = asyncValue.asData?.value;
+    final settings = asyncValue is AsyncData<FeedbackSettings> ? asyncValue.value : null;
 
     if (settings == null || !settings.hapticEnabled) {
       return;

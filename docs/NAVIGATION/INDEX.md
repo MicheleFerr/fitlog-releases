@@ -7,6 +7,15 @@
 
 ## 🚀 START HERE
 
+### For AI Assistants (Claude, Copilot, etc.)
+**⚠️ MANDATORY**: Read [`CLAUDE.md`](../../CLAUDE.md) (30 min) before making ANY code changes
+- Multilingua rules (context.l10n)
+- Theme rules (context.colors)
+- Architecture patterns (Riverpod, Clean Architecture)
+- iOS-specific features (Live Activities, Apple Sign-In)
+- Security rules (Firebase, input validation)
+- Pre-commit checklist
+
 ### For New Developers
 1. **Read First**: [`QUICK_REFERENCE.md`](./QUICK_REFERENCE.md) (15 min)
    - Where to find everything in this codebase
@@ -35,6 +44,37 @@ open docs/QUICK_REFERENCE.md
 ---
 
 ## 📂 Documentation Structure
+
+### 🤖 AI ASSISTANT RULES
+**⚠️ MANDATORY READ FOR ALL AI ASSISTANTS (Claude, Copilot, etc.)**
+
+| Document | Purpose | Location | Audience |
+|----------|---------|----------|----------|
+| [`CLAUDE.md`](../../CLAUDE.md) | **OBBLIGATORIO**: Regole, linee guida e best practices per AI che lavorano su questo progetto | Root project | AI Assistants, All Developers |
+
+**Key Topics in CLAUDE.md**:
+- Multilingua obbligatorio (context.l10n)
+- Tema scuro/chiaro (context.colors)
+- Architettura Riverpod patterns
+- iOS-specific features (Live Activities, Sign in with Apple)
+- Firebase & sicurezza
+- Performance & memoria
+- Testing & debugging
+- BuildContext Extensions (regole FASE 1)
+- Componenti unificati (LoadingIndicator, SnackBarService, ModalService)
+- Documentazione feature-specific (Workout, Exercise Card, Exercise Insertion)
+- Git & versioning rules
+
+### 🔒 SECURITY & AUDITS
+
+| Document | Purpose | Audience | Last Audit |
+|----------|---------|----------|------------|
+| [`SECURITY_AUDIT_2025-10-20.md`](../audit/SECURITY_AUDIT_2025-10-20.md) | Security audit report with findings and remediation roadmap | All developers, DevOps | Oct 20, 2025 |
+
+**Security Score**: 78/100 (B+)
+- 2 HIGH priority issues (debug logging, Firebase API keys)
+- 4 MEDIUM priority issues (rate limiting, input validation, Firestore rules, dependencies)
+- 3 LOW priority issues
 
 ### 🏗️ ARCHITECTURE & FUNDAMENTALS
 | Document | Purpose | Audience | Read Time |
@@ -142,13 +182,24 @@ These cover initial setup and configuration:
 
 ### "I'm setting up the project..."
 
-1. Start: [`QUICK_REFERENCE.md`](./QUICK_REFERENCE.md)
-2. Check: [`FIREBASE_APP_CHECK_SETUP.md`](./FIREBASE_APP_CHECK_SETUP.md)
-3. Setup logging: [`PRODUCTION_LOGGING_GUIDE.md`](./PRODUCTION_LOGGING_GUIDE.md)
+1. **AI Assistants**: Read [`CLAUDE.md`](../../CLAUDE.md) (MANDATORY)
+2. Start: [`QUICK_REFERENCE.md`](./QUICK_REFERENCE.md)
+3. Check: [`FIREBASE_APP_CHECK_SETUP.md`](./FIREBASE_APP_CHECK_SETUP.md)
+4. Setup logging: [`PRODUCTION_LOGGING_GUIDE.md`](./PRODUCTION_LOGGING_GUIDE.md)
+
+### "I need to review security..."
+
+1. Read: [`SECURITY_AUDIT_2025-10-20.md`](../audit/SECURITY_AUDIT_2025-10-20.md)
+2. Check remediation roadmap (Sprint 1-3 priorities)
+3. Review Firestore security rules: `firestore.rules`
 
 ---
 
 ## 📋 Complete File List (by category)
+
+### AI Assistant Rules & Security (Critical)
+- `../../CLAUDE.md` 🤖 ⭐ **MANDATORY for all AI assistants**
+- `../audit/SECURITY_AUDIT_2025-10-20.md` 🔒
 
 ### Getting Started (Read These First)
 - `QUICK_REFERENCE.md` ⭐
@@ -219,11 +270,13 @@ These cover initial setup and configuration:
 
 ## 📊 Documentation Statistics
 
-- **Total active docs**: 26 files
+- **Total active docs**: 28 files
 - **Obsolete docs deleted**: 132 files
 - **Documentation reduced**: 91% cleanup
-- **Maintained categories**: 6 (Architecture, Implementation, KB, Setup, Platform, Tracking)
+- **Maintained categories**: 8 (AI Rules, Security, Architecture, Implementation, KB, Setup, Platform, Tracking)
 - **Latest Additions**:
+  - Security Audit Report (Oct 20, 2025) 🔒
+  - AI Assistant Rules linked (Oct 20, 2025) 🤖
   - Exercise Feedback System Architecture (Oct 18, 2025)
   - Exercise Feedback Dev Guide (Oct 18, 2025)
 
@@ -238,14 +291,18 @@ These cover initial setup and configuration:
 - Implementing new system → Create new KB file
 - Changing setup steps → Update QUICK_REFERENCE.md
 - Modifying feedback system → Update EXERCISE_FEEDBACK_SYSTEM_ARCHITECTURE.md
+- Adding AI rules/patterns → Update CLAUDE.md
+- Security changes → Run new security audit, update docs/audit/
 
 ### Review Quarterly
+- Security audit (run `/audit` command, update docs/audit/)
 - Performance optimizations (real metrics)
 - Error patterns (new common errors)
 - Setup procedures (new tools/steps)
+- Dependency updates (security patches)
 
 ---
 
-**Last Audit**: October 18, 2025
-**Next Audit**: January 18, 2026
-**Last Updated**: October 18, 2025 (Added EXERCISE_FEEDBACK_SYSTEM_ARCHITECTURE.md)
+**Last Audit**: October 20, 2025
+**Next Audit**: January 20, 2026
+**Last Updated**: October 20, 2025 (Added Security Audit Report & linked CLAUDE.md)

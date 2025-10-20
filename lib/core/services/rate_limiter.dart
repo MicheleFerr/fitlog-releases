@@ -25,13 +25,24 @@ class RateLimiter {
 
   // Configurazione cooldown per tipo di operazione
   static final Map<String, Duration> _cooldowns = {
-    'password_reset': const Duration(seconds: 60),
+    // 🔐 Auth operations - SECURITY: Prevent brute force attacks
+    'login': const Duration(seconds: 3), // Max 20 tentativi/minuto
+    'registration': const Duration(seconds: 5), // Max 12 registrazioni/minuto
+    'password_reset': const Duration(seconds: 60), // Max 1/minuto
+    'email_verification': const Duration(seconds: 120), // Max 1/2 minuti
+
+    // 👥 Community operations
     'community_contribution': const Duration(seconds: 30),
     'exercise_report': const Duration(seconds: 30),
     'feedback_submission': const Duration(seconds: 30),
-    'email_verification': const Duration(seconds: 120),
+
+    // 👤 Profile operations
     'profile_update': const Duration(seconds: 10),
+
+    // 💪 Workout operations
     'workout_save': const Duration(seconds: 3),
+
+    // 🔍 Search operations
     'exercise_search': const Duration(seconds: 1),
   };
 

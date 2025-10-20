@@ -45,6 +45,8 @@ import 'package:gymbro_flutter_new/features/routine/application/services/routine
 // 📊 Analytics Tracking for workout events
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
+// 💾 Template Cache Service for auto-saving modifications
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -80,23 +82,54 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   // CRITICAL FIX: Atomic flag to prevent concurrent APRE calculations
   bool _apreCalculationInProgress = false;
 
-  void createWorkout(String name) {
-    state = Workout(name: name);
+  // 💾 Track current template ID for auto-save
+  String? _currentTemplateId;
+
+  // 💾 Helper method to auto-save modifications
+  void _autoSaveIfNeeded() {
+    if (_currentTemplateId != null && state != null) {
+      final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+      cacheService.saveWorkoutModifications(
+        templateId: _currentTemplateId!,
+        workout: state!,
+      );
+    }
   }
 
-  void startFromTemplate(wt.WorkoutTemplate workoutTemplate) {
+  void createWorkout(String name) {
+    state = Workout(name: name);
+    _currentTemplateId = null; // Reset template ID for manual workouts
+  }
+
+  void startFromTemplate(wt.WorkoutTemplate workoutTemplate) async {
     try {
+      // 💾 Store template ID for auto-save
+      _currentTemplateId = workoutTemplate.id;
+
       // Check if APRE is enabled globally
       final config = ref.read(appConfigProvider);
       final isApreEnabled = config.enableApre ?? false;
 
-      if (kDebugMode) {
-        debugPrint('[APRE] Starting workout from template: ${workoutTemplate.name}');
-        debugPrint('[APRE] APRE system enabled: $isApreEnabled');
-      }
+      // 💾 Check if there's a cached version of this template
+      final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+      final cachedWorkout = await cacheService.getCachedWorkout(workoutTemplate.id);
 
-      // Crea un nuovo workout dal template
-      final workout = Workout(
+      Workout workout;
+
+      if (cachedWorkout != null) {
+        // Use cached version with modifications
+        if (kDebugMode) {
+          debugPrint('💾 [WorkoutProvider] Loading cached workout for template: ${workoutTemplate.name}');
+        }
+        workout = cachedWorkout;
+      } else {
+        if (kDebugMode) {
+          debugPrint('[APRE] Starting workout from template: ${workoutTemplate.name}');
+          debugPrint('[APRE] APRE system enabled: $isApreEnabled');
+        }
+
+        // Crea un nuovo workout dal template
+        workout = Workout(
         name: workoutTemplate.name,
         templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
         exercises: workoutTemplate.exercises.map((templateExercise) {
@@ -147,6 +180,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           return exercise;
         }).toList(),
       );
+      }
 
       // Imposta il workout e lo avvia automaticamente
       state = workout.startWorkout();
@@ -261,6 +295,13 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
       // Haptic feedback for workout completion
       HapticFeedbackService.workoutCompletion(ref);
+
+      // 💾 Clear cache after workout completion (start fresh next time)
+      if (_currentTemplateId != null) {
+        final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+        cacheService.clearCache(_currentTemplateId!);
+        _currentTemplateId = null;
+      }
 
       // Salva automaticamente il workout completato in Firestore
       _saveCompletedWorkoutToFirestore(context);
@@ -770,6 +811,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
       state = state!.addExercise(exerciseToAdd);
 
+      // 💾 Auto-save modifications
+      _autoSaveIfNeeded();
+
       // 📊 Track exercise added
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
@@ -805,6 +849,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       );
 
       state = state!.removeExercise(exerciseId);
+
+      // 💾 Auto-save modifications
+      _autoSaveIfNeeded();
 
       // 📊 Track exercise removed
       final analytics = ref.read(analyticsServiceProvider);
@@ -856,6 +903,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     try {
       state = state!.updateExercise(exerciseId, updatedExercise);
 
+      // 💾 Auto-save modifications
+      _autoSaveIfNeeded();
+
       // 📊 Track exercise customized
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
@@ -878,7 +928,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void updateExerciseOnly(Exercise updatedExercise) {
     // print('🔄 updateExerciseOnly called with exercise: ${updatedExercise.name}');
-    
+
     if (state == null) {
       // print('⚠️ State is null, cannot update exercise');
       return;
@@ -897,6 +947,10 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
       // print('🔄 Updated exercises count: ${updatedExercises.length}');
       state = state!.copyWith(exercises: updatedExercises);
+
+      // 💾 Auto-save modifications
+      _autoSaveIfNeeded();
+
       // print('✅ State updated successfully');
     } catch (e) {
       // print('❌ Error updating exercise: $e');
@@ -1005,6 +1059,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // 💾 Auto-save modifications
+      _autoSaveIfNeeded();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [WorkoutProvider] Error updating exercise set: $e');

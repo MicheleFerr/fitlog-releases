@@ -132,6 +132,9 @@ class AnalyticsEvents {
   /// Workout template created
   static const String templateCreated = 'template_created';
 
+  /// Workout template loaded (started from template)
+  static const String templateLoaded = 'template_loaded';
+
   /// Workout template used/loaded
   static const String templateUsed = 'template_used';
 

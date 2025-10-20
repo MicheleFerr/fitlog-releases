@@ -15,7 +15,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_l
 import 'package:gymbro_flutter_new/features/workout/services/pdf_template_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_options_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_header.dart';
@@ -42,7 +44,7 @@ class WorkoutScreen extends ConsumerStatefulWidget {
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
-class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
+class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindingObserver {
   bool _isReorderMode = false;
   final _interstitialAdService = InterstitialAdService();
 
@@ -51,6 +53,55 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     super.initState();
     // Pre-load interstitial ad for workout completion
     _interstitialAdService.preloadWorkoutCompleteAd();
+
+    // 💾 Add lifecycle observer for force-saving when app goes to background
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    // 💾 Remove lifecycle observer
+    WidgetsBinding.instance.removeObserver(this);
+
+    // 💾 Force save any pending modifications before disposing
+    final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+    cacheService.forceSave();
+
+    // 💾 Emergency save current workout if active
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    if (currentWorkout != null && currentWorkout.isActive) {
+      final autoSave = ref.read(workoutAutoSaveProvider.notifier);
+      autoSave.emergencySave(currentWorkout);
+    }
+
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    // 💾 Force save when app goes to background
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      // Save template cache
+      final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+      cacheService.forceSave();
+
+      // 💾 Emergency save current workout if active
+      final currentWorkout = ref.read(currentWorkoutProvider);
+      if (currentWorkout != null && currentWorkout.isActive) {
+        final autoSave = ref.read(workoutAutoSaveProvider.notifier);
+        autoSave.emergencySave(currentWorkout);
+
+        if (kDebugMode) {
+          debugPrint('💾 [WorkoutScreen] Emergency saved active workout due to app lifecycle: $state');
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('💾 [WorkoutScreen] Force saved template cache due to app lifecycle: $state');
+      }
+    }
   }
 
   @override
@@ -778,7 +829,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
               child: Text(context.l10n.cancel),
             ),
             FilledButton.tonal(
-              onPressed: () {
+              onPressed: () async {
+                // 💾 Force save any pending modifications before pausing
+                final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+                await cacheService.forceSave();
+
                 // Pause workout and go to home
                 ref.read(currentWorkoutProvider.notifier).pauseWorkout();
                 Navigator.pop(context);

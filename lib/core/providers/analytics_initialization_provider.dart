@@ -32,7 +32,9 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_pro
 /// - `app_version`: Current app version
 /// - `font_size`: Font size multiplier
 ///
-/// Also logs the initial app_open event.
+/// Also:
+/// - Sets the user ID for analytics tracking
+/// - Logs the initial app_open event
 final analyticsInitializationProvider = FutureProvider<void>((ref) async {
   // Watch all relevant providers
   final analytics = ref.watch(analyticsServiceProvider);
@@ -42,11 +44,30 @@ final analyticsInitializationProvider = FutureProvider<void>((ref) async {
   final authState = ref.watch(authStateProvider);
   final userProfileAsync = ref.watch(userProfileProvider);
 
-  // Extract premium status from async user profile
-  final isPremium = userProfileAsync.maybeWhen(
-    data: (profile) => profile?.isPremium ?? false,
-    orElse: () => false,
-  );
+  // Extract user ID and premium status from async user profile
+  String? userId;
+  bool isPremium = false;
+
+  userProfileAsync.whenData((profile) {
+    userId = profile?.uid;
+    isPremium = profile?.isPremium ?? false;
+  });
+
+  // Set user ID for analytics tracking (CRITICAL FOR USER TRACKING!)
+  if (userId != null) {
+    await analytics.setUserId(userId);
+
+    if (kDebugMode) {
+      debugPrint('📊 Analytics user ID set: $userId');
+    }
+  } else {
+    // Clear user ID if user logged out
+    await analytics.setUserId(null);
+
+    if (kDebugMode) {
+      debugPrint('📊 Analytics user ID cleared (user logged out)');
+    }
+  }
 
   // Set user properties based on current configuration
   await _setUserProperties(

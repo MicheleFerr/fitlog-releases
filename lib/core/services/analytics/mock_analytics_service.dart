@@ -98,6 +98,8 @@ class MockAnalyticsService implements IAnalyticsService {
       'name': name,
       'parameters': parameters ?? {},
       'timestamp': DateTime.now().toIso8601String(),
+      // Include user ID with each event for tracking
+      'user_id': _userId,
     };
 
     loggedEvents.add(event);

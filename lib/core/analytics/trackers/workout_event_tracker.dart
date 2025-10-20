@@ -358,6 +358,47 @@ class WorkoutEventTracker {
     }
   }
 
+  // ===== TEMPLATE EVENTS =====
+
+  /// Track template loaded
+  ///
+  /// Logs when user starts a workout from a template.
+  /// This is different from individual exercise_added events.
+  ///
+  /// Parameters:
+  /// - [workoutId] - Workout identifier
+  /// - [templateId] - Template identifier
+  /// - [templateName] - Template name
+  /// - [exerciseCount] - Number of exercises in template
+  Future<void> trackTemplateLoaded({
+    required String workoutId,
+    required String templateId,
+    required String templateName,
+    required int exerciseCount,
+  }) async {
+    try {
+      await analytics.logEvent(
+        name: AnalyticsEvents.templateLoaded,
+        parameters: {
+          AnalyticsParameters.workoutId: workoutId,
+          AnalyticsParameters.templateId: templateId,
+          AnalyticsParameters.templateName: templateName,
+          AnalyticsParameters.exerciseCount: exerciseCount,
+        },
+      );
+
+      if (kDebugMode) {
+        debugPrint('📊 Template loaded: $templateName ($exerciseCount exercises) for workout $workoutId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error tracking template loaded: $e');
+      }
+    }
+  }
+
+  // ===== SET TRACKING =====
+
   /// Track set completed
   ///
   /// Logs when user completes a set.

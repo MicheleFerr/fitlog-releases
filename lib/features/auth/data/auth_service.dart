@@ -5,8 +5,9 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'dart:math';
+import 'package:gymbro_flutter_new/core/services/rate_limiter.dart';
 
-class AuthService {
+class AuthService with RateLimiterMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -25,6 +26,13 @@ class AuthService {
     required String password,
     required String displayName,
   }) async {
+    // 🔐 SECURITY: Rate limiting to prevent spam registrations
+    if (!checkRateLimit('registration', userId: email)) {
+      throw Exception(
+        'Too many registration attempts. ${getCooldownMessage('registration', userId: email)}',
+      );
+    }
+
     try {
       // Create user account
       final credential = await _auth.createUserWithEmailAndPassword(
@@ -53,6 +61,13 @@ class AuthService {
     required String email,
     required String password,
   }) async {
+    // 🔐 SECURITY: Rate limiting to prevent brute force attacks
+    if (!checkRateLimit('login', userId: email)) {
+      throw Exception(
+        'Too many login attempts. ${getCooldownMessage('login', userId: email)}',
+      );
+    }
+
     try {
       return await _auth.signInWithEmailAndPassword(
         email: email,
@@ -176,6 +191,13 @@ class AuthService {
 
   // Password Reset
   Future<void> sendPasswordResetEmail(String email) async {
+    // 🔐 SECURITY: Rate limiting to prevent password reset spam
+    if (!checkRateLimit('password_reset', userId: email)) {
+      throw Exception(
+        'Too many password reset attempts. ${getCooldownMessage('password_reset', userId: email)}',
+      );
+    }
+
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {

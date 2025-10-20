@@ -57,7 +57,7 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   
   // CPU OPTIMIZATION: Increased intervals to reduce background activity
   static const Duration _autoSaveInterval = Duration(minutes: 10);  // Reduced from 5 to 10 minutes
-  static const Duration _debounceDelay = Duration(seconds: 5);
+  static const Duration _debounceDelay = Duration(seconds: 1);      // Optimized for responsive UX
 
   void _init() {
     // Add lifecycle observer to save on app pause

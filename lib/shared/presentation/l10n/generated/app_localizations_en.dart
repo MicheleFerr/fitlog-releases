@@ -9813,4 +9813,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timerSet => 'Timer set: ';
+
+  @override
+  String get swapDaysTitle => 'Swap Workout Days?';
+
+  @override
+  String get swapDaysDescription =>
+      'Your routine scheduled differently. Do you want to swap these days?';
+
+  @override
+  String get daysSwappedSuccessfully =>
+      'Days swapped successfully! Continuing with';
+
+  @override
+  String get errorSwappingDays => 'Error swapping days. Please try again.';
+
+  @override
+  String get errorMarkingDayAsSkipped => 'Error marking day as skipped';
+
+  @override
+  String get workoutCompletedButRoutineNotUpdated =>
+      'Workout completed. Routine not updated.';
+
+  @override
+  String get continueNormal => 'Continue Normal';
+
+  @override
+  String get skipToday => 'Skip Today';
+
+  @override
+  String get swapDaysButtonLabel => 'Swap Days';
 }

@@ -702,6 +702,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
     final name = event['name'] as String;
     final timestamp = DateTime.parse(event['timestamp'] as String);
     final parameters = event['parameters'] as Map<String, dynamic>?;
+    final userId = event['user_id'] as String?;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -716,11 +717,24 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        subtitle: Text(
-          _formatTimestamp(timestamp),
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colors.onSurfaceVariant,
-          ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _formatTimestamp(timestamp),
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            if (userId != null)
+              Text(
+                'User: $userId',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.secondary,
+                  fontSize: 11,
+                ),
+              ),
+          ],
         ),
         children: [
           if (parameters != null && parameters.isNotEmpty)

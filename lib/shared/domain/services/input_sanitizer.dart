@@ -39,8 +39,10 @@ class InputSanitizer {
     String sanitized = sanitizeText(input, maxLength: maxLength);
 
     // Permetti solo caratteri alfanumerici, spazi, e alcuni simboli
+    // In character class [], non serve escape per: ()/.&,
+    // Solo - deve essere escaped o messo all'inizio/fine
     sanitized = sanitized.replaceAll(
-      RegExp(r'[^\w\s\-\(\)\/\&\.,]', unicode: true),
+      RegExp(r'[^\w\s\-()/&.,]', unicode: true),
       '',
     );
 

@@ -17450,6 +17450,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Timer set: '**
   String get timerSet;
+
+  /// Title of swap confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Swap Workout Days?'**
+  String get swapDaysTitle;
+
+  /// Explanation of swap feature
+  ///
+  /// In en, this message translates to:
+  /// **'Your routine scheduled differently. Do you want to swap these days?'**
+  String get swapDaysDescription;
+
+  /// Success message after swap
+  ///
+  /// In en, this message translates to:
+  /// **'Days swapped successfully! Continuing with'**
+  String get daysSwappedSuccessfully;
+
+  /// Error message when swap fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error swapping days. Please try again.'**
+  String get errorSwappingDays;
+
+  /// Error message for skip action
+  ///
+  /// In en, this message translates to:
+  /// **'Error marking day as skipped'**
+  String get errorMarkingDayAsSkipped;
+
+  /// Info message when user chose 'Continue Normal'
+  ///
+  /// In en, this message translates to:
+  /// **'Workout completed. Routine not updated.'**
+  String get workoutCompletedButRoutineNotUpdated;
+
+  /// Button label - do workout without routine update
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Normal'**
+  String get continueNormal;
+
+  /// Button label - mark today's workout as skipped
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Today'**
+  String get skipToday;
+
+  /// Button label - swap the two days (recommended)
+  ///
+  /// In en, this message translates to:
+  /// **'Swap Days'**
+  String get swapDaysButtonLabel;
 }
 
 class _AppLocalizationsDelegate

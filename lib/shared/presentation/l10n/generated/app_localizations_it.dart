@@ -9916,4 +9916,35 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get timerSet => 'Timer impostato: ';
+
+  @override
+  String get swapDaysTitle => 'Scambiare i Giorni di Allenamento?';
+
+  @override
+  String get swapDaysDescription =>
+      'La tua routine è programmata diversamente. Vuoi scambiare questi giorni?';
+
+  @override
+  String get daysSwappedSuccessfully =>
+      'Giorni scambiati con successo! Continuando con';
+
+  @override
+  String get errorSwappingDays => 'Errore nello scambio dei giorni. Riprova.';
+
+  @override
+  String get errorMarkingDayAsSkipped =>
+      'Errore nel marcare il giorno come saltato';
+
+  @override
+  String get workoutCompletedButRoutineNotUpdated =>
+      'Allenamento completato. Routine non aggiornata.';
+
+  @override
+  String get continueNormal => 'Continua Normale';
+
+  @override
+  String get skipToday => 'Salta Oggi';
+
+  @override
+  String get swapDaysButtonLabel => 'Scambia i Giorni';
 }
