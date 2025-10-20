@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
 
 class ExerciseSelectionDialog extends StatefulWidget {
@@ -73,9 +74,9 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-    
+    final l10n = context.l10n;
+    final colorScheme = context.colors;
+
     return AlertDialog(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +85,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
           const SizedBox(height: 8),
           Text(
             '${l10n.originalExercise}: "${widget.originalExerciseName}"',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontStyle: FontStyle.italic,
             ),
@@ -93,7 +94,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
       ),
       content: SizedBox(
         width: double.maxFinite,
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: context.screenHeight * 0.6,
         child: Column(
           children: [
             // Search field
@@ -113,14 +114,14 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   l10n.suggestedMatches,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  style: context.textTheme.titleSmall?.copyWith(
                     color: colorScheme.primary,
                   ),
                 ),
               ),
               const SizedBox(height: 8),
             ],
-            
+
             // Exercise list
             Expanded(
               child: _filteredMatches.isEmpty
@@ -136,7 +137,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                           const SizedBox(height: 16),
                           Text(
                             l10n.noExercisesFound,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            style: context.textTheme.bodyLarge?.copyWith(
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),
@@ -171,7 +172,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                       ),
                                       child: Text(
                                         '${(match.similarity * 100).round()}% ${l10n.match}',
-                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        style: context.textTheme.labelSmall?.copyWith(
                                           color: colorScheme.primary,
                                         ),
                                       ),
@@ -188,7 +189,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                       ),
                                       child: Text(
                                         match.matchReason,
-                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        style: context.textTheme.labelSmall?.copyWith(
                                           color: colorScheme.secondary,
                                         ),
                                       ),
