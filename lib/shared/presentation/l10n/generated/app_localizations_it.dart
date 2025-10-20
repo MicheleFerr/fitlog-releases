@@ -2442,6 +2442,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importJSONDescription => 'Importa una scheda dal formato JSON';
 
   @override
+  String get importFromFile => 'Importa da File';
+
+  @override
+  String get importFileDescription =>
+      'Seleziona un file JSON dal tuo dispositivo';
+
+  @override
   String get jsonFormatGuide => 'Guida Formato JSON';
 
   @override

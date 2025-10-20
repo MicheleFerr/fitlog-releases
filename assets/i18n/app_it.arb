@@ -741,6 +741,8 @@
   "buildFromScratch": "Costruisci la tua scheda da zero",
   "importFromJSON": "Importa da JSON",
   "importJSONDescription": "Importa una scheda dal formato JSON",
+  "importFromFile": "Importa da File",
+  "importFileDescription": "Seleziona un file JSON dal tuo dispositivo",
   "jsonFormatGuide": "Guida Formato JSON",
   "jsonFormatDescription": "📝 Come convertire la tua scheda:\n1. Copia la tua scheda (testo o foto)\n2. Vai su ChatGPT (gratis su chat.openai.com)\n3. Chiedi: \"Converti questa scheda in formato JSON come questo esempio\"\n4. Copia e incolla il risultato qui sotto\n\n⚙️ Campi richiesti: name, description, exercises array. Ogni esercizio deve avere: exerciseName, sets con targetReps/targetWeight. I superset devono avere type:\"superset\" e exercises array.",
   "copyExample": "Copia esempio",

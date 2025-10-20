@@ -11,6 +11,7 @@
 library;
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/template_import_export.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_parsing_service.dart';
@@ -375,11 +376,35 @@ class BatchImportService {
     return errors;
   }
   
-  /// Read file content (platform-specific implementation needed)
+  /// Read file content from file path
   Future<String> _readFileContent(String filePath) async {
-    // This would need platform-specific implementation
-    // For now, returning placeholder
-    throw UnimplementedError('File reading not implemented for this platform');
+    try {
+      final file = File(filePath);
+
+      // Check if file exists
+      if (!await file.exists()) {
+        throw FileSystemException('File not found', filePath);
+      }
+
+      // Check file size (max 5MB)
+      final fileSize = await file.length();
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (fileSize > maxSize) {
+        throw Exception('File too large (max 5MB)');
+      }
+
+      // Read file content
+      final content = await file.readAsString();
+
+      // Check if file is empty
+      if (content.trim().isEmpty) {
+        throw Exception('File is empty');
+      }
+
+      return content;
+    } catch (e) {
+      rethrow;
+    }
   }
   
   /// Extract filename from path

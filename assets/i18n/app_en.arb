@@ -3165,6 +3165,14 @@
   "@importJSONDescription": {
     "description": "Description for JSON import option"
   },
+  "importFromFile": "Import from File",
+  "@importFromFile": {
+    "description": "Option to import template from a JSON file"
+  },
+  "importFileDescription": "Select a JSON file from your device",
+  "@importFileDescription": {
+    "description": "Description for file import option"
+  },
   "jsonFormatGuide": "JSON Format Guide",
   "@jsonFormatGuide": {
     "description": "Title for JSON format guidelines"

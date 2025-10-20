@@ -14,12 +14,14 @@
 library;
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -545,6 +547,16 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 _showJsonImportDialog(context);
               },
             ),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.file_upload, color: colorScheme.tertiary),
+              title: Text(l10n.importFromFile),
+              subtitle: Text(l10n.importFileDescription),
+              onTap: () {
+                Navigator.pop(context);
+                _showFilePickerImportDialog(context);
+              },
+            ),
           ],
         ),
       ),
@@ -921,6 +933,82 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           }
         }
       }
+    }
+  }
+
+  /// Show file picker and import JSON from selected file
+  Future<void> _showFilePickerImportDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+
+    try {
+      // Show file picker for JSON files
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+        allowMultiple: false,
+        withData: false, // Don't load bytes, we'll read the file ourselves
+        withReadStream: false,
+      );
+
+      if (result == null || result.files.isEmpty) {
+        // User cancelled the picker
+        return;
+      }
+
+      final file = result.files.first;
+
+      // Check if we have a path (required for reading file)
+      if (file.path == null) {
+        SnackBarService.showError(
+          context,
+          l10n.errorFileAccess,
+        );
+        return;
+      }
+
+      // Show loading indicator while reading file
+      if (!context.mounted) return;
+
+      // Read file content
+      final content = await _readFileFromPath(file.path!);
+
+      // Import the JSON content
+      if (!context.mounted) return;
+      await _importFromJson(context, content);
+
+    } catch (e) {
+      if (!context.mounted) return;
+
+      // Map technical error to user-friendly message
+      final userMessage = ImportErrorMapper.mapToUserMessage(e, l10n);
+
+      SnackBarService.showError(
+        context,
+        userMessage,
+      );
+
+      // Show suggestions if error is recoverable
+      if (ImportErrorMapper.isRecoverable(e)) {
+        final suggestions = ImportErrorMapper.getSuggestions(e, l10n);
+        if (suggestions.isNotEmpty && kDebugMode) {
+          debugPrint('File import suggestions: ${suggestions.join(", ")}');
+        }
+      }
+    }
+  }
+
+  /// Read file content from file path
+  Future<String> _readFileFromPath(String filePath) async {
+    try {
+      final file = await File(filePath).readAsString();
+
+      if (file.trim().isEmpty) {
+        throw Exception('File is empty');
+      }
+
+      return file;
+    } catch (e) {
+      rethrow;
     }
   }
 

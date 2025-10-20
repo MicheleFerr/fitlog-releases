@@ -137,13 +137,144 @@ git add . && git commit -m "fix: remove sensitive data from debug logs"
 
 ---
 
+---
+
+## 🔥 NUOVE PRIORITÀ - Architectural Audit (20 Ottobre 2025)
+
+### 📊 Sprint 3 - CRITICAL Memory Leaks (40 min totali)
+
+**Problema rilevato**: Audit architetturale ha trovato **memory leak CRITICAL** in Hive + Riverpod
+**Severità**: 🔴 **VERY HIGH (85/100)**
+**Report completo**: `docs/audit/ARCHITECTURAL_AUDIT_HIVE_RIVERPOD_2025-10-20.md`
+
+#### Task 3.1: ⚠️ Fix BaseHybridRepository.dispose() (5 min)
+
+**File**: `lib/core/data/repositories/base_hybrid_repository.dart` (linea 501)
+
+**Problema**:
+- dispose() NON chiude i box Hive (_localBox, _syncQueueBox)
+- Memory leak permanente per 3 repository (6 box)
+- Bug ereditato da TUTTI i repository hybrid
+
+**Fix richiesto**:
+```dart
+void dispose() {
+  _profileRefreshTimer?.cancel();
+  _syncEventController.close();
+
+  // ✅ FIX: Chiudere i box Hive
+  _localBox.close();
+  _syncQueueBox.close();
+}
+```
+
+**Repository affetti**:
+1. HybridAppConfigRepository
+2. HybridCommunityRepository
+3. HybridAchievementRepository
+
+---
+
+#### Task 3.2: ⚠️ Fix HybridWorkoutRepository.dispose() (5 min)
+
+**File**: `lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart`
+
+**Problema**:
+- Nessun metodo dispose()
+- Stream subscription a authStateChanges() mai cancellato
+- Memory leak ogni istanza
+
+**Fix richiesto**:
+```dart
+void dispose() {
+  _userProfileSubscription?.cancel();
+  _userProfileSubscription = null;
+}
+```
+
+---
+
+#### Task 3.3: ⚠️ Fix Feature Workout Hive Boxes (30 min)
+
+**Problema**: 7 file aprono box Hive, 0 chiusure
+
+**File da modificare**:
+1. `lib/features/workout/data/datasources/hive_workout_datasource.dart`
+2. `lib/features/workout/data/repositories/workout_draft_repository.dart`
+3. `lib/features/workout/data/services/exercise_history_service.dart`
+4. `lib/features/workout/presentation/providers/recovery_provider.dart`
+5. `lib/features/workout/presentation/providers/debug_local_data_provider.dart`
+6. `lib/features/workout/domain/services/workout_template_cache_service.dart`
+7. `lib/features/workout/data/datasources/fix_sync_status.dart`
+
+**Pattern da applicare a tutti**:
+```dart
+class MyDataSource {
+  Box? _box;
+
+  Future<void> init() async {
+    _box = await Hive.openBox('my_box');
+  }
+
+  // ✅ FIX: Aggiungere dispose()
+  void dispose() {
+    _box?.close();
+    _box = null;
+  }
+}
+```
+
+---
+
+### 📊 Memory Leak Statistics
+
+**Prima del fix**:
+```
+Hive boxes aperti:         96
+Hive boxes chiusi:         10
+Memory leak ratio:         89.6%
+Estimated memory growth:   ~5MB/ora uso normale
+                          ~20MB/ora uso intenso
+```
+
+**Dopo Sprint 3** (target):
+```
+Hive boxes chiusi:         23/96 (24%)
+Memory leak ratio:         76%
+Critical leaks fixed:      3/3 (100%) ✅
+Estimated memory growth:   ~2MB/ora uso normale
+                          ~8MB/ora uso intenso
+```
+
+---
+
+### 🟡 Sprint 4 - MEDIUM Priority (Opzionale)
+
+**Quando hai tempo** - Fix rimanenti Hive boxes in altre feature:
+- Exercise feature (12 file)
+- Analytics feature (8 file)
+- Altri 34 file sparsi
+
+**Effort totale**: 2-4 ore
+**Benefit**: Riduzione ulteriore memory leak a 6%
+
+---
+
 ## 📚 Documentazione Riferimento
 
+### Security Audit
 - **Security Audit Report**: `docs/audit/SECURITY_AUDIT_2025-10-20.md`
 - **Firebase API Guide**: `docs/audit/FIREBASE_API_RESTRICTIONS_GUIDE.md`
 - **Logging Audit Report**: `docs/audit/SENSITIVE_LOGGING_AUDIT_REPORT.md`
 - **Fix Script**: `scripts/fix_sensitive_logging.sh`
 
+### Architectural Audit (NUOVO!)
+- **Architectural Audit Report**: `docs/audit/ARCHITECTURAL_AUDIT_HIVE_RIVERPOD_2025-10-20.md`
+- **Problemi trovati**: Hive memory leaks (CRITICAL), Riverpod autoDispose (MEDIUM)
+- **Sprint plan**: Sprint 3 (40 min CRITICAL), Sprint 4 (2-4h opzionale)
+
 ---
 
-**⏰ REMINDER: Fare #1 (Firebase API restrictions) appena a casa!**
+**⏰ REMINDER**:
+1. 🔥 Fare #1 (Firebase API restrictions) appena a casa!
+2. 🔥 Sprint 3 - Memory leak fixes (40 min) quando hai tempo

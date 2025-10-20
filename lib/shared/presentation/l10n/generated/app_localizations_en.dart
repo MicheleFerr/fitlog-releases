@@ -2427,6 +2427,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importJSONDescription => 'Import a template from JSON format';
 
   @override
+  String get importFromFile => 'Import from File';
+
+  @override
+  String get importFileDescription => 'Select a JSON file from your device';
+
+  @override
   String get jsonFormatGuide => 'JSON Format Guide';
 
   @override

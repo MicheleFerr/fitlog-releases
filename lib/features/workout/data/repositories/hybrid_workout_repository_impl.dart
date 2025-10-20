@@ -50,10 +50,16 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   // Cache user profile to avoid frequent reads
   UserProfile? _cachedUserProfile;
   StreamSubscription? _userProfileSubscription;
+
+  // MEMORY LEAK FIX: Disposal flag to prevent operations after dispose
+  bool _isDisposed = false;
   
   /// Initialize listener for user profile changes
   void _initUserProfileListener() {
-    _auth.authStateChanges().listen((user) async {
+    // MEMORY LEAK FIX: Assign subscription to variable for proper cleanup
+    _userProfileSubscription = _auth.authStateChanges().listen((user) async {
+      if (_isDisposed) return; // Guard against operations after dispose
+
       if (user != null) {
         await _loadUserProfile(user.uid);
       } else {
@@ -739,7 +745,21 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   }
 
   /// Dispose of resources
+  /// MEMORY LEAK FIX: Properly cancel stream subscription
   void dispose() {
+    // 1. CRITICAL: Set disposed flag first to prevent operations after dispose
+    _isDisposed = true;
+
+    // 2. Cancel auth state changes subscription
     _userProfileSubscription?.cancel();
+    _userProfileSubscription = null;
+
+    // 3. Clear cached user profile
+    _cachedUserProfile = null;
+
+    if (kDebugMode) {
+      debugPrint('✅ HybridWorkoutRepositoryImpl disposed');
+      debugPrint('   - Auth state subscription cancelled');
+    }
   }
 }

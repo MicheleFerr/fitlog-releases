@@ -49,6 +49,9 @@ abstract class BaseHybridRepository<T> {
   // Sync configuration
   final StreamController<SyncEvent> _syncEventController = StreamController.broadcast();
   Stream<SyncEvent> get syncEvents => _syncEventController.stream;
+
+  // MEMORY LEAK FIX: Disposal flag to prevent operations after dispose
+  bool _isDisposed = false;
   
   /// Initialize boxes and load user profile
   Future<void> _initialize() async {
@@ -498,9 +501,33 @@ abstract class BaseHybridRepository<T> {
   }
   
   /// Dispose resources
+  /// MEMORY LEAK FIX: Properly close Hive boxes to prevent memory leaks
   void dispose() {
+    // 1. CRITICAL: Set disposed flag first to prevent operations after dispose
+    _isDisposed = true;
+
+    // 2. Cancel timer
     _profileRefreshTimer?.cancel();
+    _profileRefreshTimer = null;
+
+    // 3. Close stream controller
     _syncEventController.close();
+
+    // 4. ✅ FIX: Close Hive boxes (CRITICAL - was missing!)
+    // This fixes memory leak affecting 3 repositories:
+    // - HybridAppConfigRepository
+    // - HybridCommunityRepository
+    // - HybridAchievementRepository
+    _localBox.close();
+    _syncQueueBox.close();
+
+    // 5. Clear user profile cache
+    _userProfile = null;
+
+    if (kDebugMode) {
+      debugPrint('✅ BaseHybridRepository disposed for: $featureName');
+      debugPrint('   - Hive boxes closed: ${featureName}_data, ${featureName}_sync_queue');
+    }
   }
 }
 

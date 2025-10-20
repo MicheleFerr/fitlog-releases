@@ -4571,6 +4571,18 @@ abstract class AppLocalizations {
   /// **'Import a template from JSON format'**
   String get importJSONDescription;
 
+  /// Option to import template from a JSON file
+  ///
+  /// In en, this message translates to:
+  /// **'Import from File'**
+  String get importFromFile;
+
+  /// Description for file import option
+  ///
+  /// In en, this message translates to:
+  /// **'Select a JSON file from your device'**
+  String get importFileDescription;
+
   /// Title for JSON format guidelines
   ///
   /// In en, this message translates to:

@@ -228,3 +228,4 @@ Una volta completato:
 **Ultima Modifica**: 20 Ottobre 2025
 **Status**: In Attesa Configurazione Utente
 **Riferimento Audit**: docs/audit/SECURITY_AUDIT_2025-10-20.md, Problema #1.2
+
