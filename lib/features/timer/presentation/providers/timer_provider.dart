@@ -9,6 +9,7 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
 
 /// Stub timer controller with startTimer method
 class TimerController extends StateNotifier<TimerState?> {

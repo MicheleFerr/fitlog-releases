@@ -712,29 +712,12 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichText(
-              text: TextSpan(
-                style: theme.textTheme.bodyLarge,
-                children: [
-                  TextSpan(text: l10n.replaceExerciseConfirmation),
-                  const TextSpan(text: '\n\n'),
-                  TextSpan(
-                    text: widget.currentExercise.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.error,
-                    ),
-                  ),
-                  const TextSpan(text: '\n↓\n'),
-                  TextSpan(
-                    text: newExercise.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ],
+            Text(
+              l10n.replaceExerciseConfirmation(
+                widget.currentExercise.name,
+                newExercise.name,
               ),
+              style: theme.textTheme.bodyLarge,
             ),
             const SizedBox(height: 16),
             Container(

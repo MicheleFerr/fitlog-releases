@@ -9,7 +9,9 @@ void main() {
 
   setUp(() {
     container = ProviderContainer();
-    service = APRECalculationService(container);
+    // Create a minimal Ref implementation for testing
+    final ref = _TestRef(container);
+    service = APRECalculationService(ref);
   });
 
   tearDown(() {
@@ -228,4 +230,64 @@ void main() {
       expect(result.first.sets.first.weight, equals(originalWeight));
     });
   });
+}
+
+/// Minimal Ref implementation for testing
+class _TestRef implements Ref {
+  _TestRef(this.container);
+
+  final ProviderContainer container;
+
+  @override
+  T read<T>(ProviderListenable<T> provider) {
+    return container.read(provider);
+  }
+
+  @override
+  void Function() listen<T>(
+    ProviderListenable<T> provider,
+    void Function(T? previous, T next) listener, {
+    void Function(Object error, StackTrace stackTrace)? onError,
+  }) {
+    return container.listen(provider, listener, onError: onError);
+  }
+
+  @override
+  T watch<T>(ProviderListenable<T> provider) {
+    return container.read(provider);
+  }
+
+  @override
+  void invalidate(ProviderOrFamily provider) {
+    container.invalidate(provider);
+  }
+
+  @override
+  void refresh<T>(Refreshable<T> provider) {
+    container.refresh(provider);
+  }
+
+  @override
+  bool exists(ProviderBase<Object?> provider) {
+    return true;
+  }
+
+  @override
+  ProviderSubscription<T> listenManual<T>(
+    ProviderListenable<T> provider,
+    void Function(T? previous, T next) listener, {
+    void Function(Object error, StackTrace stackTrace)? onError,
+    bool fireImmediately = false,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void onDispose(void Function() cb) {}
+
+  @override
+  State get context => throw UnimplementedError();
+
+  @override
+  ProviderContainer get container => throw UnimplementedError();
 }

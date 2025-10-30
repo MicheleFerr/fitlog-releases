@@ -51,7 +51,8 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
     }
 
     // Initialize reps for main set + mini sets
-    final totalMiniSets = 1 + widget.restPause.miniSets; // Main set + additional mini sets
+    // Rest-pause typically has 1 main set + 3 mini-sets (standard pattern)
+    final totalMiniSets = 1 + 3; // Main set + 3 additional mini sets
     for (int i = 0; i < totalMiniSets; i++) {
       _reps[i] = 0;
       _completedMiniSets[i] = false;

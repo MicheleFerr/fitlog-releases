@@ -29,4 +29,20 @@ class AchievementNotificationService {
   Future<void> checkAchievements() async {
     // Stub implementation
   }
+
+  /// Notify multiple PRs with batching
+  Future<int> notifyMultiplePRs(List<dynamic> prs, {required String workoutId}) async {
+    // Stub implementation - return count of PRs
+    return prs.length;
+  }
+
+  /// Queue streak achievement notification
+  Future<void> queueStreakAchievement(dynamic streakAsync, {required String workoutId}) async {
+    // Stub implementation
+  }
+
+  /// Queue volume achievement notification
+  Future<void> queueVolumeAchievement(double totalVolume, {required String workoutId}) async {
+    // Stub implementation
+  }
 }
