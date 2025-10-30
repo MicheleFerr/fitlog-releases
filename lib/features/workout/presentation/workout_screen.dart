@@ -1709,6 +1709,8 @@ class _TemplateQuickStartCard extends StatelessWidget {
   const _TemplateQuickStartCard({
     required this.template,
     required this.onTap,
+    this.onEdit,
+    this.onDelete,
   });
   final wt.WorkoutTemplate template;
   final VoidCallback onTap;

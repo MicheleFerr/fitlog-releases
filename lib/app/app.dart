@@ -74,14 +74,8 @@ class FitLogApp extends ConsumerWidget {
 
     // ⏱️ TIMER FIX: Pre-initialize timer provider at app startup
     // This prevents the 10+ second delay on first timer use
-    // ✅ FIX: Don't block UI if timer initialization fails
-    ref.watch(unifiedTimerV2Provider).whenOrNull(
-      error: (error, stack) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [APP] Timer pre-initialization failed: $error');
-        }
-      },
-    );
+    // ✅ FIX: Watch the provider to ensure it's initialized
+    ref.watch(unifiedTimerV2Provider);
 
     // 🔒 SECURITY: Listen for session timeout events
     ref.listen(sessionTimeoutEventsProvider, (previous, next) {

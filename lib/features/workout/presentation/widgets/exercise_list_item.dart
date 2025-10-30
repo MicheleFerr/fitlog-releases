@@ -3907,24 +3907,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         setIndex: 0,
         onComplete: (weight, reps, rpe) {
           // Create updated RestPauseExercise with completed data
-          // Create mini-sets for each rep count from the execution
-          final completedSet = RestPauseSetV2(
-            weight: weight,
-            targetReps: exercise.targetReps,
-            miniSets: [
-              for (int repCount in reps)
-                MiniSet(
-                  reps: repCount,
-                  weight: weight,
-                  completed: true,
-                  timestamp: DateTime.now(),
-                  rpe: rpe,
-                ),
-            ],
-            startTime: DateTime.now(),
-            endTime: DateTime.now(),
-            rpe: rpe,
-          );
+          // For each rep count, create a RestPauseSet entry
+          final completedSets = <RestPauseSet>[
+            for (int repCount in reps)
+              RestPauseSet(
+                reps: repCount,
+                restSeconds: 15, // Default rest-pause rest time
+                isCompleted: true,
+              ),
+          ];
 
           final updatedExercise = RestPauseExercise(
             id: exercise.id,
@@ -3932,15 +3923,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             category: exercise.category,
             weight: weight,
             targetReps: exercise.targetReps,
-            restPauseSetsV2: [
-              if (exercise.restPauseSetsV2.isNotEmpty)
-                completedSet
-              else
-                completedSet,
+            restPauseSets: [
+              ...exercise.restPauseSets,
+              ...completedSets,
             ],
             notes: exercise.notes,
-            pauseDuration: exercise.pauseDuration,
-            miniSetsCount: exercise.miniSetsCount,
           );
 
           // Update workout provider with the completed exercise

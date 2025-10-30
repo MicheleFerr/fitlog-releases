@@ -47,7 +47,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
     // Initialize with target weight from first set if available
     if (widget.restPause.sets.isNotEmpty && widget.setIndex < widget.restPause.sets.length) {
       final set = widget.restPause.sets[widget.setIndex];
-      _weight = set.weight; // Already in kg
+      _weight = set.weight ?? 0.0; // Already in kg, default to 0 if null
     }
 
     // Initialize reps for main set + mini sets

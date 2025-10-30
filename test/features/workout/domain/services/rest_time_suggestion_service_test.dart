@@ -8,10 +8,11 @@ void main() {
 
     setUp(() {
       apreExercise = Exercise(
-        exerciseId: 'test1',
+        id: 'test1',
         name: 'Bench Press',
         autoAdjustmentType: AutoAdjustmentType.apre,
         type: ExerciseType.single,
+        category: ExerciseCategory.chest,
         sets: [],
       );
     });
@@ -34,10 +35,11 @@ void main() {
       test('should return null when exercise is not APRE', () {
         // Arrange
         final nonApreExercise = Exercise(
-          exerciseId: 'test2',
+          id: 'test2',
           name: 'Squats',
-          autoAdjustmentType: AutoAdjustmentType.off,
+          autoAdjustmentType: null, // Not APRE
           type: ExerciseType.single,
+          category: ExerciseCategory.legs,
           sets: [],
         );
 
@@ -219,6 +221,7 @@ void main() {
           currentRestTime: 120,
           suggestedRestTime: 150,
           reason: 'Performance dropped',
+          weightDrop: 10.0,
         );
 
         // Assert
@@ -235,6 +238,7 @@ void main() {
           currentRestTime: 120,
           suggestedRestTime: 90,
           reason: 'Performance improved',
+          weightDrop: 0.0,
         );
 
         // Assert

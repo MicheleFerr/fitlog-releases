@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_card.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_calculation_service.dart';
 
 void main() {
@@ -22,12 +21,13 @@ void main() {
       // Arrange
       final exercises = [
         Exercise(
-          exerciseId: 'test1',
+          id: 'test1',
           name: 'Regular Exercise',
           useAPRE: false,
           type: ExerciseType.single,
+          category: ExerciseCategory.chest,
           sets: [
-            ExerciseCard(reps: 10, weight: '50', isCompleted: false),
+            ExerciseSet(setNumber: 1, weight: 50.0, reps: 10),
           ],
         ),
       ];
@@ -44,21 +44,23 @@ void main() {
       // Arrange
       final exercises = [
         Exercise(
-          exerciseId: 'apre1',
+          id: 'apre1',
           name: 'APRE Exercise',
           useAPRE: true,
           type: ExerciseType.single,
+          category: ExerciseCategory.chest,
           sets: [
-            ExerciseCard(reps: 10, weight: '100', isCompleted: false),
+            ExerciseSet(setNumber: 1, weight: 100.0, reps: 10),
           ],
         ),
         Exercise(
-          exerciseId: 'regular1',
+          id: 'regular1',
           name: 'Regular Exercise',
           useAPRE: false,
           type: ExerciseType.single,
+          category: ExerciseCategory.back,
           sets: [
-            ExerciseCard(reps: 10, weight: '50', isCompleted: false),
+            ExerciseSet(setNumber: 1, weight: 50.0, reps: 10),
           ],
         ),
       ];
@@ -66,37 +68,9 @@ void main() {
       // Act
       final result = await service.preCalculateAllAPREWeights(exercises);
 
-      // Assert
+      // Assert - Regular exercise should remain unchanged
       expect(result.length, equals(2));
-      expect(result.any((ex) => ex.useAPRE), isTrue);
-    });
-
-    test('should not calculate when calculation is in progress', () async {
-      // Arrange
-      final exercises = [
-        Exercise(
-          exerciseId: 'apre1',
-          name: 'APRE Exercise',
-          useAPRE: true,
-          type: ExerciseType.single,
-          sets: [
-            ExerciseCard(reps: 10, weight: '100', isCompleted: false),
-          ],
-        ),
-      ];
-
-      // Act - Start first calculation (don't await)
-      final future1 = service.preCalculateAllAPREWeights(exercises);
-
-      // Try to start second calculation immediately
-      final future2 = service.preCalculateAllAPREWeights(exercises);
-
-      // Wait for both
-      final result1 = await future1;
-      final result2 = await future2;
-
-      // Assert - Second call should return original exercises unchanged
-      expect(result2, equals(exercises));
+      expect(result.any((e) => e.name == 'Regular Exercise'), isTrue);
     });
 
     test('should handle empty exercise list', () async {
@@ -107,28 +81,31 @@ void main() {
       final result = await service.preCalculateAllAPREWeights(exercises);
 
       // Assert
-      expect(result, isEmpty);
+      expect(result, equals(exercises));
+      expect(result.isEmpty, isTrue);
     });
 
-    test('should only process single-type exercises', () async {
+    test('should handle exercises with different types', () async {
       // Arrange
       final exercises = [
         Exercise(
-          exerciseId: 'apre_superset',
+          id: 'apre_superset',
           name: 'APRE Superset',
           useAPRE: true,
           type: ExerciseType.superset,
+          category: ExerciseCategory.chest,
           sets: [
-            ExerciseCard(reps: 10, weight: '100', isCompleted: false),
+            ExerciseSet(setNumber: 1, weight: 100.0, reps: 10),
           ],
         ),
         Exercise(
-          exerciseId: 'apre_single',
-          name: 'APRE Single',
+          id: 'apre_dropset',
+          name: 'APRE Dropset',
           useAPRE: true,
-          type: ExerciseType.single,
+          type: ExerciseType.dropset,
+          category: ExerciseCategory.legs,
           sets: [
-            ExerciseCard(reps: 10, weight: '100', isCompleted: false),
+            ExerciseSet(setNumber: 1, weight: 100.0, reps: 10),
           ],
         ),
       ];
@@ -138,21 +115,85 @@ void main() {
 
       // Assert
       expect(result.length, equals(2));
-      // Only single-type should be processed
+    });
+
+    test('should handle concurrent calculation requests', () async {
+      // Arrange
+      final exercises = [
+        Exercise(
+          id: 'apre1',
+          name: 'APRE Exercise',
+          useAPRE: true,
+          type: ExerciseType.single,
+          category: ExerciseCategory.chest,
+          sets: [
+            ExerciseSet(setNumber: 1, weight: 100.0, reps: 10),
+          ],
+        ),
+      ];
+
+      // Act - Start two calculations concurrently
+      final future1 = service.preCalculateAllAPREWeights(exercises);
+      final future2 = service.preCalculateAllAPREWeights(exercises);
+
+      final result1 = await future1;
+      final result2 = await future2;
+
+      // Assert - Second calculation should return exercises unchanged
+      expect(result2, equals(exercises));
+    });
+
+    test('should preserve exercise order', () async {
+      // Arrange
+      final exercises = [
+        Exercise(
+          id: 'ex1',
+          name: 'First',
+          useAPRE: false,
+          type: ExerciseType.single,
+          category: ExerciseCategory.chest,
+          sets: [],
+        ),
+        Exercise(
+          id: 'ex2',
+          name: 'Second',
+          useAPRE: true,
+          type: ExerciseType.single,
+          category: ExerciseCategory.back,
+          sets: [ExerciseSet(setNumber: 1, weight: 50.0, reps: 10)],
+        ),
+        Exercise(
+          id: 'ex3',
+          name: 'Third',
+          useAPRE: false,
+          type: ExerciseType.single,
+          category: ExerciseCategory.legs,
+          sets: [],
+        ),
+      ];
+
+      // Act
+      final result = await service.preCalculateAllAPREWeights(exercises);
+
+      // Assert - Order should be maintained
+      expect(result[0].name, equals('First'));
+      expect(result[1].name, equals('Second'));
+      expect(result[2].name, equals('Third'));
     });
 
     test('should handle exercises with multiple sets', () async {
       // Arrange
       final exercises = [
         Exercise(
-          exerciseId: 'apre1',
+          id: 'apre1',
           name: 'APRE Exercise',
           useAPRE: true,
           type: ExerciseType.single,
+          category: ExerciseCategory.chest,
           sets: [
-            ExerciseCard(reps: 10, weight: '100', isCompleted: false),
-            ExerciseCard(reps: 8, weight: '110', isCompleted: false),
-            ExerciseCard(reps: 6, weight: '120', isCompleted: false),
+            ExerciseSet(setNumber: 1, weight: 100.0, reps: 10),
+            ExerciseSet(setNumber: 2, weight: 100.0, reps: 9),
+            ExerciseSet(setNumber: 3, weight: 100.0, reps: 8),
           ],
         ),
       ];
@@ -161,44 +202,30 @@ void main() {
       final result = await service.preCalculateAllAPREWeights(exercises);
 
       // Assert
-      expect(result.length, equals(1));
       expect(result.first.sets.length, equals(3));
     });
 
-    test('should maintain exercise order', () async {
+    test('should not modify non-APRE exercises', () async {
       // Arrange
+      const originalWeight = 75.0;
       final exercises = [
         Exercise(
-          exerciseId: 'ex1',
-          name: 'Exercise 1',
-          useAPRE: true,
-          type: ExerciseType.single,
-          sets: [ExerciseCard(reps: 10, weight: '100', isCompleted: false)],
-        ),
-        Exercise(
-          exerciseId: 'ex2',
-          name: 'Exercise 2',
+          id: 'regular1',
+          name: 'Regular Exercise',
           useAPRE: false,
           type: ExerciseType.single,
-          sets: [ExerciseCard(reps: 10, weight: '50', isCompleted: false)],
-        ),
-        Exercise(
-          exerciseId: 'ex3',
-          name: 'Exercise 3',
-          useAPRE: true,
-          type: ExerciseType.single,
-          sets: [ExerciseCard(reps: 10, weight: '80', isCompleted: false)],
+          category: ExerciseCategory.arms,
+          sets: [
+            ExerciseSet(setNumber: 1, weight: originalWeight, reps: 12),
+          ],
         ),
       ];
 
       // Act
       final result = await service.preCalculateAllAPREWeights(exercises);
 
-      // Assert
-      expect(result.length, equals(3));
-      expect(result[0].exerciseId, equals('ex1'));
-      expect(result[1].exerciseId, equals('ex2'));
-      expect(result[2].exerciseId, equals('ex3'));
+      // Assert - Weight should remain unchanged
+      expect(result.first.sets.first.weight, equals(originalWeight));
     });
   });
 }

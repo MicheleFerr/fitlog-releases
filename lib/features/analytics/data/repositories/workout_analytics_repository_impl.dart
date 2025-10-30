@@ -140,7 +140,7 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
         await _cacheService.set(
           cacheKey,
           workoutMaps,
-          userId,
+          const Duration(hours: 1), // Cache for 1 hour
           (data) => {'workouts': data},
         );
 
@@ -628,7 +628,7 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       await _cacheService.set(
         cacheKey,
         stats.toJson(),
-        userId,
+        const Duration(hours: 1), // Cache for 1 hour
         (data) => data,
       );
 

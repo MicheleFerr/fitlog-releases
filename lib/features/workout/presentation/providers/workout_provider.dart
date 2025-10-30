@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider
 import 'package:gymbro_flutter_new/features/notifications/domain/services/intelligent_notification_service.dart';
 // Achievement notification service for PR, streak, and volume notifications
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_providers.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/achievement_notification_provider.dart';
 // MIGRATION: Using bridge provider for backward compatibility while migrating to unified system
 // import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart'; // REMOVED: cleanup
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';

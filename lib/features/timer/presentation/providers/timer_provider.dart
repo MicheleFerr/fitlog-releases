@@ -10,10 +10,47 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Stub timer provider - timer functionality temporarily disabled
-final unifiedTimerProvider = StateProvider<TimerState?>((ref) => null);
+/// Stub timer controller with startTimer method
+class TimerController extends StateNotifier<TimerState?> {
+  TimerController() : super(null);
 
-/// Stub timer v2 provider
+  /// Start timer with given duration
+  void startTimer({
+    required int durationSeconds,
+    String? exerciseName,
+    int? currentSet,
+    int? totalSets,
+    String? exerciseId,
+  }) {
+    // Stub implementation - just set a basic state
+    state = TimerState(
+      remainingSeconds: durationSeconds,
+      isRunning: true,
+    );
+  }
+
+  /// Stop timer
+  void stopTimer() {
+    state = null;
+  }
+
+  /// Pause timer
+  void pauseTimer() {
+    if (state != null) {
+      state = TimerState(
+        remainingSeconds: state!.remainingSeconds,
+        isRunning: false,
+      );
+    }
+  }
+}
+
+/// Stub timer provider - timer functionality temporarily disabled
+final unifiedTimerProvider = StateNotifierProvider<TimerController, TimerState?>((ref) {
+  return TimerController();
+});
+
+/// Stub timer v2 provider (for compatibility)
 final unifiedTimerV2Provider = StateProvider<TimerState?>((ref) => null);
 
 /// Stub session timeout service provider
@@ -48,6 +85,7 @@ class TimerState {
 }
 
 /// Stub session timeout service
+/// Real implementation is in shared/domain/auth/session_timeout_service.dart
 class SessionTimeoutService {
   void recordActivity() {}
   void pause() {}
@@ -58,48 +96,4 @@ class SessionTimeoutService {
 
   /// Handle app coming to foreground
   void handleAppForeground() {}
-}
-
-/// Stub session timeout event base class
-abstract class SessionTimeoutEvent {
-  const SessionTimeoutEvent();
-
-  T when<T>({
-    required T Function() warning,
-    required T Function() timeout,
-  });
-}
-
-/// Session warning event (session expiring soon)
-class SessionWarningEvent extends SessionTimeoutEvent {
-  const SessionWarningEvent({
-    required this.remainingSeconds,
-  });
-
-  final int remainingSeconds;
-
-  @override
-  T when<T>({
-    required T Function() warning,
-    required T Function() timeout,
-  }) {
-    return warning();
-  }
-}
-
-/// Session expired event
-class SessionExpiredEvent extends SessionTimeoutEvent {
-  const SessionExpiredEvent({
-    required this.reason,
-  });
-
-  final String reason;
-
-  @override
-  T when<T>({
-    required T Function() warning,
-    required T Function() timeout,
-  }) {
-    return timeout();
-  }
 }

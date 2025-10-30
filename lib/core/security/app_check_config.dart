@@ -91,11 +91,11 @@ class AppCheckConfig {
           // iOS: Use Apple's App Attest API (iOS 14+, more secure than DeviceCheck)
           // ✅ SECURITY: Verifies app is running on genuine Apple device with hardware attestation
           // Falls back to DeviceCheck on iOS 11-13
-          providerApple: AppleProvider.appAttest,
+          appleProvider: AppleProvider.appAttestWithDeviceCheckFallback,
 
           // Android: Use Google Play Integrity API
           // ✅ SECURITY: Verifies app is from Google Play and not tampered
-          providerAndroid: AndroidProvider.playIntegrity,
+          androidProvider: AndroidProvider.playIntegrity,
 
           // Web: Use reCAPTCHA v3 (for web deployment)
           // ⚠️ TODO: Replace with your actual reCAPTCHA site key from Firebase Console
