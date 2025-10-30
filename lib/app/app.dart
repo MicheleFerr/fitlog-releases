@@ -32,9 +32,10 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_initialization_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_providers.dart';
+import 'package:gymbro_flutter_new/shared/domain/auth/providers/session_timeout_providers.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_screen.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -75,7 +76,7 @@ class FitLogApp extends ConsumerWidget {
     // ⏱️ TIMER FIX: Pre-initialize timer provider at app startup
     // This prevents the 10+ second delay on first timer use
     // ✅ FIX: Watch the provider to ensure it's initialized
-    ref.watch(unifiedTimerV2Provider);
+    ref.watch(unifiedTimerProvider);
 
     // 🔒 SECURITY: Listen for session timeout events
     ref.listen(sessionTimeoutEventsProvider, (previous, next) {
@@ -312,23 +313,24 @@ class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
     super.didChangeAppLifecycleState(state);
 
     try {
-      final sessionService = ref.read(sessionTimeoutServiceProvider);
+      // SessionTimeoutService is monitored automatically via Timer.periodic
+      // No need to explicitly handle lifecycle changes
 
       switch (state) {
         case AppLifecycleState.paused:
         case AppLifecycleState.inactive:
           // App going to background
-          sessionService.handleAppBackground();
+          // SessionTimeoutService handles background automatically with Timer.periodic
           if (kDebugMode) {
-            debugPrint('🌙 [FIX-3] App lifecycle: $state → handleAppBackground()');
+            debugPrint('🌙 [FIX-3] App lifecycle: $state (session timeout continues)');
           }
           break;
 
         case AppLifecycleState.resumed:
           // App returning to foreground
-          sessionService.handleAppForeground();
+          // SessionTimeoutService is already running
           if (kDebugMode) {
-            debugPrint('☀️ [FIX-3] App lifecycle: $state → handleAppForeground()');
+            debugPrint('☀️ [FIX-3] App lifecycle: $state (session timeout active)');
           }
           break;
 

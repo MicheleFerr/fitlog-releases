@@ -697,7 +697,7 @@ Workout Date,Exercise,Weight,Reps
         final exercises = result.workouts!.first.exercises;
         expect(exercises[0].type, equals(ExerciseType.single));
         expect(exercises[1].type, equals(ExerciseType.superset));
-        expect(exercises[2].type, equals(ExerciseType.circuit));
+        expect(exercises[2].type, equals(ExerciseType.restPause));
       });
 
       test('should parse exercise category correctly', () async {

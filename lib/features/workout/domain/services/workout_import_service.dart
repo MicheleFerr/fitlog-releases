@@ -349,9 +349,8 @@ class WorkoutImportService {
           sets: _parseSets(exerciseJson['sets'] ?? []),
           notes: exerciseJson['notes'],
           restTime: exerciseJson['restTimeSeconds'],
-          isCompleted: exerciseJson['isCompleted'] ?? false,
-          isSkipped: exerciseJson['isSkipped'] ?? false,
-          skipReason: exerciseJson['skipReason'],
+          // Note: isCompleted is a computed getter based on sets completion
+          // isSkipped and skipReason are not part of Exercise entity
         );
         exercises.add(exercise);
       } catch (e) {

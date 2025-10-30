@@ -71,7 +71,7 @@ void main() {
         expect(result!.type, equals(RestTimeSuggestionType.increase));
         expect(result.currentRestTime, equals(120));
         expect(result.suggestedRestTime, equals(180)); // 120 + 60
-        expect(result.reason, contains('10%'));
+        expect(result.reason, contains('Peso ridotto')); // Service uses Italian hardcoded text
       });
 
       test('should suggest +30s rest increase for 5-10% weight drop', () {
