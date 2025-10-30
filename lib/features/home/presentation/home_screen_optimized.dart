@@ -16,10 +16,9 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/secondary_
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/dynamic_greeting.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_update_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/stale_profile_banner.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
 /// while ensuring full compliance with localization and theming standards
@@ -70,7 +69,9 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
     final currentWorkout = ref.watch(currentWorkoutProvider);
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return DebugScreenNameOverlay(
+      screenName: 'HomeScreenOptimized',
+      child: Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
@@ -114,8 +115,10 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                   const SizedBox(height: 24),
                 ],
 
-                // Stale profile banner (if profile is 30+ days old)
-                const StaleProfileBanner(),
+                // DISABLED: Stale profile banner
+                // Reason: GDPR compliance - medical questionnaire data
+                // Date: 2025-01-21
+                // const StaleProfileBanner(),
 
                 // Removed gamification features for MVP
 
@@ -261,7 +264,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                         color: Theme.of(context).colorScheme.errorContainer,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+                          color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Column(
@@ -333,7 +336,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                                           Text(
                                             'Segnalazioni e bug utenti',
                                             style: TextStyle(
-                                              color: Colors.white.withOpacity(0.8),
+                                              color: Colors.white.withValues(alpha: 0.8),
                                               fontSize: 12,
                                             ),
                                           ),
@@ -389,6 +392,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
           icon: Icons.add,
           label: l10n.quickStart,
         ),
+      ),
       ),
     );
   }

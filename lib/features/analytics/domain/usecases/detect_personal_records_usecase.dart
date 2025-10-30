@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 
 /// Use case for detecting personal records in real-time during workout
@@ -245,7 +246,7 @@ class DetectPersonalRecordsUseCase {
     final completedSets = exercise.sets.where((s) => s.isCompleted && !s.isWarmup).toList();
     if (completedSets.isEmpty) return null;
 
-    final totalVolume = completedSets.fold(0.0, (sum, set) => sum + (set.volume ?? 0));
+    final totalVolume = completedSets.fold(0.0, (sum, set) => sum + set.volume);
     final currentRecord = existingPRs[PRType.volume];
     
     if (currentRecord != null && totalVolume <= currentRecord.value) return null;
@@ -283,7 +284,7 @@ class DetectPersonalRecordsUseCase {
       previousValue: currentRecord?.value,
       achievedAt: DateTime.now(),
       context: {
-        'totalVolume': exercise.sets.where((s) => s.isCompleted).fold(0.0, (sum, s) => sum + (s.volume ?? 0)),
+        'totalVolume': exercise.sets.where((s) => s.isCompleted).fold(0.0, (sum, s) => sum + s.volume),
       },
     );
   }

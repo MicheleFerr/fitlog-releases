@@ -12,6 +12,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - backup_storage_system_20250924_230518/**
+    - gymbro_flutter_new_buildconiosrotto/**
     - build/**
     - "**/*.g.dart"
     - "**/*.freezed.dart"

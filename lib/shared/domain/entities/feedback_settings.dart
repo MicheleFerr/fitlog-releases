@@ -14,9 +14,6 @@ class FeedbackSettings {
     required this.hapticIntensity,
   });
 
-  final bool hapticEnabled;
-  final HapticIntensity hapticIntensity;
-
   /// Default settings (enabled with light intensity)
   factory FeedbackSettings.defaults() {
     return const FeedbackSettings(
@@ -24,6 +21,9 @@ class FeedbackSettings {
       hapticIntensity: HapticIntensity.light,
     );
   }
+
+  final bool hapticEnabled;
+  final HapticIntensity hapticIntensity;
 
   /// Copy with modifications
   FeedbackSettings copyWith({

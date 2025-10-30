@@ -12,13 +12,15 @@ library;
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class SyncStatusFixer {
   static const String _workoutsBoxName = 'workouts';
-  
+
   /// Fix all workouts to have proper sync status
-  static Future<int> fixAllWorkoutsSyncStatus(String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+  static Future<int> fixAllWorkoutsSyncStatus(String userId, {HiveBoxManagerEnhanced? boxManager}) async {
+    final manager = boxManager ?? HiveBoxManagerEnhanced();
+    final box = await manager.openBox<Map>(_workoutsBoxName);
     
     final userKeys = box.keys
         .where((key) => key.toString().startsWith('${userId}_'))
@@ -58,8 +60,9 @@ class SyncStatusFixer {
   }
   
   /// Get stats about current sync status
-  static Future<Map<String, int>> getSyncStats(String userId) async {
-    final box = await Hive.openBox<Map>(_workoutsBoxName);
+  static Future<Map<String, int>> getSyncStats(String userId, {HiveBoxManagerEnhanced? boxManager}) async {
+    final manager = boxManager ?? HiveBoxManagerEnhanced();
+    final box = await manager.openBox<Map>(_workoutsBoxName);
     
     final userKeys = box.keys
         .where((key) => key.toString().startsWith('${userId}_'))
@@ -91,5 +94,23 @@ class SyncStatusFixer {
       'noStatus': noStatus,
       'localOnly': localOnly,
     };
+  }
+
+  /// MEMORY LEAK FIX: Close workouts box to free memory
+  /// Note: This utility opens boxes in static methods.
+  /// Call this when utility is no longer needed (e.g., app shutdown)
+  static Future<void> dispose() async {
+    try {
+      if (Hive.isBoxOpen(_workoutsBoxName)) {
+        await Hive.box<Map>(_workoutsBoxName).close();
+        if (kDebugMode) {
+          debugPrint('✅ SyncStatusFixer: Closed workouts box');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error disposing SyncStatusFixer: $e');
+      }
+    }
   }
 }

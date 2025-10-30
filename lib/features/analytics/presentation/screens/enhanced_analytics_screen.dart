@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/strength_progression_chart.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_heatmap.dart';
+// TODO: Re-enable when VolumeHeatmap is implemented
+// import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_heatmap.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_stats_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_timeline_widget.dart';
@@ -12,6 +12,10 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/scien
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/export_dialog.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Enhanced analytics screen with advanced features
@@ -42,8 +46,18 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+
+    // ⚡ OPTIMIZATION: Use .select() for granular rebuilds
     final authState = ref.watch(authStateProvider);
-    final analyticsState = ref.watch(analyticsProvider);
+    final isLoading = ref.watch(
+      analyticsProvider.select((state) => state.isLoading),
+    );
+    final error = ref.watch(
+      analyticsProvider.select((state) => state.error),
+    );
+    final hasActivities = ref.watch(
+      analyticsProvider.select((state) => state.activities.isNotEmpty),
+    );
 
     if (authState != AuthState.authenticated) {
       return _buildNotAuthenticatedView(context, localizations);
@@ -108,11 +122,11 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           ],
         ),
       ),
-      body: analyticsState.isLoading
+      body: isLoading
           ? _buildLoadingView(context, localizations)
-          : analyticsState.error != null
-              ? _buildErrorView(context, localizations, analyticsState.error!)
-              : analyticsState.activities.isEmpty
+          : error != null
+              ? _buildErrorView(context, localizations, error)
+              : !hasActivities
                   ? _buildEmptyView(context, localizations)
                   : TabBarView(
                       controller: _tabController,
@@ -127,8 +141,27 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   }
 
   Widget _buildOverviewTab(BuildContext context, AppLocalizations localizations) {
-    final analyticsState = ref.watch(analyticsProvider);
+    // ⚡ OPTIMIZATION: Watch only needed data with .select()
+    final recentPRs = ref.watch(
+      analyticsProvider.select((state) => state.recentPRs),
+    );
+    final activities = ref.watch(
+      analyticsProvider.select((state) => state.activities),
+    );
+    final volumeProgression = ref.watch(
+      analyticsProvider.select((state) => state.volumeProgression),
+    );
+    final personalRecords = ref.watch(
+      analyticsProvider.select((state) => state.personalRecords),
+    );
     final frequencyStats = ref.read(analyticsProvider.notifier).getFrequencyStats();
+
+    // ✅ FIX: Load actual Workout sessions for frequency chart
+    final workoutsAsync = ref.watch(historicalWorkoutsProvider);
+    final workouts = workoutsAsync.maybeWhen(
+      data: (workouts) => workouts,
+      orElse: () => <Workout>[],
+    );
 
     return RefreshIndicator(
       onRefresh: () => ref.read(analyticsProvider.notifier).refresh(),
@@ -138,14 +171,14 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Quick Stats
-            _buildQuickStats(context, localizations, analyticsState, frequencyStats),
+            _buildQuickStats(context, localizations, activities, volumeProgression, personalRecords, frequencyStats),
             const SizedBox(height: 16),
 
             // Recent PRs
-            if (analyticsState.recentPRs.isNotEmpty) ...[
+            if (recentPRs.isNotEmpty) ...[
               _buildSectionTitle(context, localizations.personalRecords),
               const SizedBox(height: 8),
-              PRTimelineWidget(personalRecords: analyticsState.recentPRs),
+              PRTimelineWidget(personalRecords: recentPRs),
               const SizedBox(height: 16),
             ],
 
@@ -153,7 +186,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
             _buildSectionTitle(context, localizations.muscleBalance),
             const SizedBox(height: 8),
             ScientificMuscleBalanceWidget(
-              activities: analyticsState.activities,
+              activities: activities,
               showRatios: true,
             ),
             const SizedBox(height: 16),
@@ -161,14 +194,14 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
             // Workout Frequency
             _buildSectionTitle(context, localizations.workoutFrequency),
             const SizedBox(height: 8),
-            WorkoutFrequencyChart(activities: analyticsState.activities),
+            WorkoutFrequencyChart(workouts: workouts),
             const SizedBox(height: 16),
 
             // Top Exercises
             _buildSectionTitle(context, localizations.topExercises),
             const SizedBox(height: 8),
             ExerciseStatsCard(
-              activities: analyticsState.activities,
+              workouts: workouts,
             ),
           ],
         ),
@@ -177,7 +210,6 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   }
 
   Widget _buildStrengthTab(BuildContext context, AppLocalizations localizations) {
-    final analyticsState = ref.watch(analyticsProvider);
     final exerciseList = ref.watch(exerciseListProvider);
 
     return SingleChildScrollView(
@@ -185,7 +217,9 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // TODO: Re-enable when StrengthProgressionChart is implemented
           // Strength Progression Chart
+          /*
           StrengthProgressionChart(
             activities: analyticsState.activities,
             selectedExerciseId: _selectedExerciseId,
@@ -196,6 +230,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
             },
           ),
           const SizedBox(height: 16),
+          */
 
           // Exercise-specific stats
           if (_selectedExerciseId != null) ...[
@@ -228,7 +263,9 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // TODO: Re-enable when VolumeHeatmap is implemented
           // Volume Heatmap
+          /*
           VolumeHeatmap(
             activities: analyticsState.activities,
             onDayTapped: (date) {
@@ -236,6 +273,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
               _showDayDetails(context, date);
             },
           ),
+          */
           const SizedBox(height: 16),
 
           // Volume Progression
@@ -286,7 +324,9 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   Widget _buildQuickStats(
     BuildContext context,
     AppLocalizations localizations,
-    AnalyticsState state,
+    List<ExerciseActivity> activities,
+    VolumeProgression volumeProgression,
+    List<PersonalRecord> personalRecords,
     Map<String, dynamic> frequencyStats,
   ) {
     return Container(
@@ -310,7 +350,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
               _buildStatItem(
                 context,
                 localizations.totalWorkouts,
-                state.activities.length.toString(),
+                activities.length.toString(),
                 Icons.fitness_center,
               ),
               _buildStatItem(
@@ -335,19 +375,19 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
               _buildStatItem(
                 context,
                 localizations.totalPRs,
-                state.personalRecords.length.toString(),
+                personalRecords.length.toString(),
                 Icons.emoji_events,
                 color: Colors.amber,
               ),
               _buildStatItem(
                 context,
                 localizations.volumeChange,
-                '${state.volumeProgression.weeklyChange > 0 ? '+' : ''}${state.volumeProgression.weeklyChange.toStringAsFixed(0)}%',
-                state.volumeProgression.weeklyChange > 0 
-                    ? Icons.trending_up 
+                '${volumeProgression.weeklyChange > 0 ? '+' : ''}${volumeProgression.weeklyChange.toStringAsFixed(0)}%',
+                volumeProgression.weeklyChange > 0
+                    ? Icons.trending_up
                     : Icons.trending_down,
-                color: state.volumeProgression.weeklyChange > 0 
-                    ? Colors.green 
+                color: volumeProgression.weeklyChange > 0
+                    ? Colors.green
                     : Colors.red,
               ),
             ],

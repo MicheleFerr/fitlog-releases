@@ -18,6 +18,8 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_state.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'firebase_test_helper.dart';
 
 /// Universal test wrapper that provides proper Material app setup
@@ -41,8 +43,11 @@ class TestAppWrapper extends StatelessWidget {
     return ProviderScope(
       overrides: [
         // Default mock providers - can be overridden
+        // Mock HiveBoxManager for tests
+        hiveBoxManagerProvider.overrideWithValue(HiveBoxManagerEnhanced()),
         appConfigProvider.overrideWith((ref) {
-          final notifier = AppConfigNotifier();
+          final boxManager = ref.watch(hiveBoxManagerProvider);
+          final notifier = AppConfigNotifier(boxManager);
           notifier.state = AppConfig(
             themeMode: themeMode,
             languageCode: locale.languageCode,

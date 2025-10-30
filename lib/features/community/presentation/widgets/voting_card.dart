@@ -144,24 +144,24 @@ class _VotingCardState extends State<VotingCard>
                 end: Alignment.bottomRight,
                 colors: [
                   theme.colorScheme.surface,
-                  theme.colorScheme.surface.withOpacity(0.95),
+                  theme.colorScheme.surface.withValues(alpha: 0.95),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: typeColor.withOpacity(0.1),
+                  color: typeColor.withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
               ],
               border: Border.all(
-                color: theme.colorScheme.outline.withOpacity(0.1),
+                color: theme.colorScheme.outline.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -176,8 +176,8 @@ class _VotingCardState extends State<VotingCard>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        typeColor.withOpacity(0.1),
-                        typeColor.withOpacity(0.05),
+                        typeColor.withValues(alpha: 0.1),
+                        typeColor.withValues(alpha: 0.05),
                       ],
                     ),
                   ),
@@ -194,7 +194,7 @@ class _VotingCardState extends State<VotingCard>
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: typeColor.withOpacity(0.2),
+                                color: typeColor.withValues(alpha: 0.2),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -219,7 +219,7 @@ class _VotingCardState extends State<VotingCard>
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: typeColor.withOpacity(0.2),
+                                    color: typeColor.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -525,13 +525,13 @@ class _VoteButtonState extends State<_VoteButton>
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: widget.isActive
-              ? widget.color.withOpacity(0.1)
+              ? widget.color.withValues(alpha: 0.1)
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: widget.isActive
-                ? widget.color.withOpacity(0.3)
-                : theme.colorScheme.outline.withOpacity(0.1),
+                ? widget.color.withValues(alpha: 0.3)
+                : theme.colorScheme.outline.withValues(alpha: 0.1),
           ),
         ),
         child: Row(
@@ -588,7 +588,7 @@ class _DiffDisplay extends StatelessWidget {
         color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -618,7 +618,7 @@ class _DiffDisplay extends StatelessWidget {
             original,
             style: theme.textTheme.bodySmall?.copyWith(
               decoration: TextDecoration.lineThrough,
-              color: theme.colorScheme.error.withOpacity(0.7),
+              color: theme.colorScheme.error.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 12),
@@ -671,7 +671,7 @@ class _TrustScoreIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 3,
         ),
       ),

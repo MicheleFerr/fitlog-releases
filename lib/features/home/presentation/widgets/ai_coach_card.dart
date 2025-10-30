@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,6 +78,11 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    if (kDebugMode) {
+      debugPrint('🏠 AI Coach Card building... isDark: ${theme.brightness == Brightness.dark}');
+      debugPrint('🎨 Primary: ${colorScheme.primary}, Surface: ${colorScheme.surface}');
+    }
+
     // Ottimizzato: usa select per evitare rebuild inutili
     final quickStatsAsync = ref.watch(quickStatsProvider);
     final streakAsync = ref.watch(currentStreakProvider);
@@ -91,9 +96,9 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
           center: const Alignment(-0.3, -0.4),
           radius: 1.5,
           colors: [
-            colorScheme.primaryContainer.withValues(alpha: 0.9),
-            colorScheme.secondaryContainer.withValues(alpha: 0.7),
-            colorScheme.tertiaryContainer.withValues(alpha: 0.5),
+            colorScheme.primaryContainer.withValues(alpha: 1.0),
+            colorScheme.secondaryContainer.withValues(alpha: 0.9),
+            colorScheme.tertiaryContainer.withValues(alpha: 0.8),
           ],
           stops: const [0.0, 0.6, 1.0],
         ),
@@ -113,17 +118,16 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
-                width: 1,
-              ),
+        // 🔧 TEMPORANEAMENTE RIMOSSO BackdropFilter per debug
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.2),
+              width: 1,
             ),
-            child: Material(
+          ),
+          child: Material(
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(24),
@@ -155,8 +159,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildHeader(AppLocalizations l10n, ThemeData theme, ColorScheme colorScheme) {
@@ -348,17 +351,29 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
   Future<void> _showAIInsightsModal(BuildContext context, WidgetRef ref) async {
     HapticFeedback.lightImpact();
 
-    // 📱 Mostra Interstitial Ad prima di aprire il modal
+    if (kDebugMode) {
+      debugPrint('🔍 About to show AI Insights Modal...');
+    }
+
+    // 📱 Show Ad (now disabled in service for debug)
     final adService = InterstitialAdService();
     await adService.showAdIfReady();
 
     // Controlla se il widget è ancora montato dopo l'ad
     if (!context.mounted) return;
 
+    if (kDebugMode) {
+      debugPrint('🔍 Opening AI Insights Modal...');
+    }
+
     await ModalService.showBottomSheet(
       context,
       child: const AIInsightsModal(),
     );
+
+    if (kDebugMode) {
+      debugPrint('🔍 AI Insights Modal closed');
+    }
   }
 }
 
@@ -501,66 +516,76 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     final l10n = AppLocalizations.of(context);
     final insightsAsync = ref.watch(aiCoachInsightsProvider);
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+    // DEBUG: Log async state and colors (these WILL appear in console)
+    debugPrint('🔍 [AI COACH MODAL] Building... Theme brightness: ${theme.brightness}');
+    debugPrint('🔍 [AI COACH MODAL] Surface color: ${colorScheme.surface}, OnSurface: ${colorScheme.onSurface}');
+    debugPrint('🔍 [AI COACH MODAL] AsyncValue state: ${insightsAsync.runtimeType}');
+    insightsAsync.whenOrNull(
+      data: (insights) => debugPrint('🔍 [AI COACH MODAL] Data received: ${insights.length} insights'),
+      loading: () => debugPrint('🔍 [AI COACH MODAL] Loading state...'),
+      error: (e, s) => debugPrint('🔍 [AI COACH MODAL] Error: $e'),
+    );
+
+    // ✅ FIX: Don't wrap in Container - ModalService already provides background and drag handle
+    // Just return the content directly
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.only(top: 12),
-            decoration: BoxDecoration(
-              color: colorScheme.outline.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.psychology,
+          const SizedBox(height: 16),
+          // Header
+          Row(
+            children: [
+              Icon(
+                Icons.psychology,
+                color: colorScheme.primary,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.aiCoachDetailed,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ),
+              // Button to view feedback history
+              IconButton(
+                onPressed: () async {
+                  HapticFeedback.lightImpact();
+                  await ModalService.showBottomSheet(
+                    context,
+                    child: const FeedbackHistoryModal(),
+                  );
+                },
+                icon: Icon(
+                  Icons.history,
                   color: colorScheme.primary,
-                  size: 28,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.aiCoachDetailed,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                // Button to view feedback history
-                IconButton(
-                  onPressed: () async {
-                    HapticFeedback.lightImpact();
-                    await ModalService.showBottomSheet(
-                      context,
-                      child: const FeedbackHistoryModal(),
-                    );
-                  },
-                  icon: Icon(
-                    Icons.history,
-                    color: colorScheme.primary,
-                  ),
-                  tooltip: l10n.viewMyFeedback,
-                ),
-              ],
-            ),
+                tooltip: l10n.viewMyFeedback,
+              ),
+            ],
           ),
+          const SizedBox(height: 16),
+          // Content
           Expanded(
             child: insightsAsync.when(
-              data: (insights) => insights.isEmpty
-                  ? _buildEmptyState(l10n, theme, colorScheme)
-                  : _buildInsightsList(context, ref, insights, l10n, theme, colorScheme),
-              loading: () => const LoadingIndicator(),
-              error: (_, __) => _buildEmptyState(l10n, theme, colorScheme),
+              data: (insights) {
+                debugPrint('🔍 [AI COACH MODAL] Rendering ${insights.isEmpty ? "EMPTY STATE" : "${insights.length} insights"}');
+                return insights.isEmpty
+                    ? _buildEmptyState(l10n, theme, colorScheme)
+                    : _buildInsightsList(context, ref, insights, l10n, theme, colorScheme);
+              },
+              loading: () {
+                debugPrint('🔍 [AI COACH MODAL] Rendering LOADING indicator');
+                return const LoadingIndicator();
+              },
+              error: (e, s) {
+                debugPrint('🔍 [AI COACH MODAL] Rendering ERROR state: $e');
+                return _buildEmptyState(l10n, theme, colorScheme);
+              },
             ),
           ),
         ],
@@ -569,6 +594,9 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
   }
 
   Widget _buildEmptyState(AppLocalizations l10n, ThemeData theme, ColorScheme colorScheme) {
+    // 🔧 DEBUG: Log when empty state is shown
+    debugPrint('🔍 [AI COACH MODAL] Showing EMPTY STATE');
+
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -577,25 +605,68 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
           Icon(
             Icons.analytics_outlined,
             size: 64,
-            color: colorScheme.outline.withValues(alpha: 0.6),
+            color: colorScheme.primary.withValues(alpha: 0.8),
           ),
           const SizedBox(height: 16),
           Text(
             l10n.aiCoachModalPlaceholder,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurface.withValues(alpha: 0.7),
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 16),
+          // DEBUG INFO (remove after testing)
+          if (kDebugMode) ...[
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                border: Border.all(color: Colors.red),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'DEBUG: Empty State\nBrightness: ${theme.brightness}\nSurface: ${colorScheme.surface}\nOnSurface: ${colorScheme.onSurface}',
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 10,
+                  fontFamily: 'monospace',
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildInsightsList(BuildContext context, WidgetRef ref, List<dynamic> insights, AppLocalizations l10n, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildInsightsList(BuildContext context, WidgetRef ref, List<AIInsight> insights, AppLocalizations l10n, ThemeData theme, ColorScheme colorScheme) {
+    debugPrint('🔍 [AI COACH MODAL] Building insights list with ${insights.length} items');
+
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.zero, // ✅ FIX: Remove horizontal padding (already applied at parent level)
       children: [
+        // DEBUG INFO (remove after testing)
+        if (kDebugMode) ...[
+          Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.green.withValues(alpha: 0.1),
+              border: Border.all(color: Colors.green),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              'DEBUG: Insights List\n${insights.length} insights loaded\nBrightness: ${theme.brightness}',
+              style: const TextStyle(
+                color: Colors.green,
+                fontSize: 10,
+                fontFamily: 'monospace',
+              ),
+            ),
+          ),
+        ],
         // Dismissible disclaimer at the top
         if (_showDisclaimer)
           Container(
@@ -637,60 +708,47 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             ),
           ),
         // Then show insights (all as expandable)
-        ...insights.map((insight) => _buildCompactInsightCard(context, ref, insight, theme, colorScheme)),
+        ...insights.map((insight) {
+          debugPrint('🔍 [AI COACH MODAL] Building insight card: ${insight.title}');
+          return _buildCompactInsightCard(context, ref, insight, theme, colorScheme);
+        }),
       ],
     );
   }
 
-  /// NEW: Unified compact insight card with progressive disclosure
-  /// Shows ONLY icon + title + badges collapsed, everything else expandable
-  Widget _buildCompactInsightCard(BuildContext context, WidgetRef ref, dynamic insight, ThemeData theme, ColorScheme colorScheme) {
+  /// NEW: Unified compact insight card with progressive disclosure (HIG-compliant)
+  /// Shows ONLY icon + title + badge + key metric + progress bar collapsed
+  Widget _buildCompactInsightCard(BuildContext context, WidgetRef ref, AIInsight insight, ThemeData theme, ColorScheme colorScheme) {
     final l10n = AppLocalizations.of(context);
 
     // Get severity-based color and icon
     final severity = insight.effectiveSeverity;
     final cardColor = _getSeverityColor(severity, colorScheme);
-    final severityIcon = _getSeverityIcon(severity);
 
-    // Type-specific icon (fallback to severity icon if not specified)
-    IconData icon;
-    switch (insight.type.toString()) {
-      case 'InsightType.muscleGroupBalance':
-        icon = Icons.balance;
-        break;
-      case 'InsightType.progressOverload':
-        icon = Icons.trending_up;
-        break;
-      case 'InsightType.recoveryPattern':
-        icon = Icons.bedtime;
-        break;
-      case 'InsightType.volumeOptimization':
-        icon = Icons.tune;
-        break;
-      case 'InsightType.frequencyRecommendation':
-        icon = Icons.schedule;
-        break;
-      case 'InsightType.plateauBreaker':
-        icon = Icons.trending_flat;
-        break;
-      case 'InsightType.formWarning':
-        icon = Icons.warning;
-        break;
-      case 'InsightType.motivational':
-        icon = Icons.celebration;
-        break;
-      default:
-        icon = severityIcon; // Fallback to severity icon
-    }
+    // Type-specific icon based on insight type
+    final IconData icon = switch (insight.type) {
+      InsightType.muscleGroupBalance => Icons.balance,
+      InsightType.progressOverload => Icons.trending_up,
+      InsightType.recoveryPattern => Icons.bedtime,
+      InsightType.volumeOptimization => Icons.tune,
+      InsightType.frequencyRecommendation => Icons.schedule,
+      InsightType.plateauBreaker => Icons.trending_flat,
+      InsightType.formWarning => Icons.warning,
+      InsightType.motivational => Icons.celebration,
+    };
+
+    // Extract key metric from data (if available)
+    final keyMetric = _extractKeyMetric(insight, l10n);
+    final progressData = _extractProgressData(insight);
 
     // Progressive disclosure: ALL content inside expansion
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: cardColor.withValues(alpha: 0.1),
+        color: cardColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cardColor.withValues(alpha: 0.2),
+          color: cardColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -703,57 +761,89 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: cardColor.withValues(alpha: 0.2),
+              color: cardColor.withValues(alpha: 0.25),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(icon, color: cardColor, size: 20),
           ),
-          title: Row(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  insight.title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
+              // Row 1: Title + Badge
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      insight.title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Severity badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  _getSeverityBadgeLabel(severity, l10n),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                  ),
-                ),
-              ),
-              // Data quality badge (if low confidence)
-              if (insight.hasDataQualityIssues) ...[
-                const SizedBox(width: 4),
-                Tooltip(
-                  message: l10n.dataQualityWarning,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  const SizedBox(width: 8),
+                  // Severity badge (more prominent)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: cardColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(
-                      Icons.warning_amber,
-                      size: 12,
-                      color: Colors.black87,
+                    child: Text(
+                      _getSeverityBadgeLabel(severity, l10n),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
                     ),
                   ),
+                  // Data quality badge (if low confidence)
+                  if (insight.hasDataQualityIssues) ...[
+                    const SizedBox(width: 4),
+                    Tooltip(
+                      message: l10n.dataQualityWarning,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.warning_amber,
+                          size: 12,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+
+              // Row 2: Key Metric (LARGE - HIG guideline)
+              if (keyMetric != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  keyMetric.value,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: cardColor,
+                    fontSize: 28,
+                  ),
                 ),
+                const SizedBox(height: 4),
+                Text(
+                  keyMetric.label,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+
+              // Row 3: Progress Bar (for volume/training metrics)
+              if (progressData != null) ...[
+                const SizedBox(height: 12),
+                _buildMEVProgressBar(context, progressData, cardColor, theme, colorScheme),
               ],
             ],
           ),
@@ -807,7 +897,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     theme: theme,
                     colorScheme: colorScheme,
                     child: Text(
-                      insight.detailedAnalysis,
+                      insight.detailedAnalysis!,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurface.withValues(alpha: 0.8),
                         height: 1.5,
@@ -817,7 +907,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ],
 
                 // Data Points subsection (if exists)
-                if (insight.dataPoints != null && insight.dataPoints.isNotEmpty) ...[
+                if (insight.dataPoints != null && insight.dataPoints!.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   _ExpandableSubsection(
                     title: l10n.yourData,
@@ -829,7 +919,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     borderColor: cardColor.withValues(alpha: 0.2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: insight.dataPoints.map<Widget>((point) => Padding(
+                      children: insight.dataPoints!.map<Widget>((point) => Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Row(
                           children: [
@@ -852,7 +942,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ],
 
                 // Strategies subsection (if exists)
-                if (insight.strategies != null && insight.strategies.isNotEmpty) ...[
+                if (insight.strategies != null && insight.strategies!.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   _ExpandableSubsection(
                     title: '🎯 ${l10n.evidenceBasedSolutions}',
@@ -862,7 +952,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     colorScheme: colorScheme,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: insight.strategies.map<Widget>((strategy) => Padding(
+                      children: insight.strategies!.map<Widget>((strategy) => Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: _buildStrategyCard(
                           context,
@@ -891,97 +981,106 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
                 // 🔼 EXPANDABLE SUBSECTIONS END 🔼
 
-                // Scientific Reference (always visible if exists)
+                // Scientific Reference (collapsible footer - HIG guideline)
                 if (insight.scientificReference != null) ...[
-                  const SizedBox(height: 16),
-                  InkWell(
-                    onTap: () async {
-                      final refText = insight.scientificReference!;
-                      Uri? uri;
+                  const SizedBox(height: 12),
+                  _ExpandableSubsection(
+                    title: '📚 ${l10n.aiCoachScientificReferences}',
+                    icon: Icons.menu_book,
+                    iconColor: colorScheme.primary,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                    backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.1),
+                    borderColor: colorScheme.primary.withValues(alpha: 0.2),
+                    child: InkWell(
+                      onTap: () async {
+                        final refText = insight.scientificReference!;
+                        Uri? uri;
 
-                      // Extract DOI/PubMed/generic URL
-                      if (refText.contains('doi.org/')) {
-                        final doiMatch = RegExp(r'https?://doi\.org/[^\s]+').firstMatch(refText);
-                        if (doiMatch != null) {
-                          try {
-                            uri = Uri.parse(doiMatch.group(0)!.trim());
-                          } catch (e) {
-                            // Invalid URI
+                        // Extract DOI/PubMed/generic URL
+                        if (refText.contains('doi.org/')) {
+                          final doiMatch = RegExp(r'https?://doi\.org/[^\s]+').firstMatch(refText);
+                          if (doiMatch != null) {
+                            try {
+                              uri = Uri.parse(doiMatch.group(0)!.trim());
+                            } catch (e) {
+                              // Invalid URI
+                            }
                           }
                         }
-                      }
-                      if (uri == null && refText.contains('pubmed')) {
-                        final pubmedMatch = RegExp(r'https?://pubmed\.ncbi\.nlm\.nih\.gov/[^\s]+').firstMatch(refText);
-                        if (pubmedMatch != null) {
-                          try {
-                            uri = Uri.parse(pubmedMatch.group(0)!.trim());
-                          } catch (e) {
-                            // Invalid URI
+                        if (uri == null && refText.contains('pubmed')) {
+                          final pubmedMatch = RegExp(r'https?://pubmed\.ncbi\.nlm\.nih\.gov/[^\s]+').firstMatch(refText);
+                          if (pubmedMatch != null) {
+                            try {
+                              uri = Uri.parse(pubmedMatch.group(0)!.trim());
+                            } catch (e) {
+                              // Invalid URI
+                            }
                           }
                         }
-                      }
-                      if (uri == null && refText.contains('http')) {
-                        final urlMatch = RegExp(r'https?://[^\s]+').firstMatch(refText);
-                        if (urlMatch != null) {
-                          try {
-                            uri = Uri.parse(urlMatch.group(0)!.trim());
-                          } catch (e) {
-                            // Invalid URI
+                        if (uri == null && refText.contains('http')) {
+                          final urlMatch = RegExp(r'https?://[^\s]+').firstMatch(refText);
+                          if (urlMatch != null) {
+                            try {
+                              uri = Uri.parse(urlMatch.group(0)!.trim());
+                            } catch (e) {
+                              // Invalid URI
+                            }
                           }
                         }
-                      }
 
-                      // Launch URL
-                      if (uri != null) {
-                        try {
-                          final canLaunch = await canLaunchUrl(uri);
-                          if (canLaunch) {
-                            await launchUrl(uri, mode: LaunchMode.externalApplication);
-                          } else {
+                        // Launch URL
+                        if (uri != null) {
+                          try {
+                            final canLaunch = await canLaunchUrl(uri);
+                            if (canLaunch) {
+                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                            } else {
+                              if (context.mounted) {
+                                SnackBarService.showError(
+                                  context,
+                                  'Cannot open link: ${uri.toString()}',
+                                );
+                              }
+                            }
+                          } catch (e) {
                             if (context.mounted) {
                               SnackBarService.showError(
                                 context,
-                                'Cannot open link: ${uri.toString()}',
+                                'Error opening link: $e',
                               );
                             }
                           }
-                        } catch (e) {
-                          if (context.mounted) {
-                            SnackBarService.showError(
-                              context,
-                              'Error opening link: $e',
-                            );
-                          }
                         }
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surface.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: colorScheme.primary.withValues(alpha: 0.3),
-                          width: 1,
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: colorScheme.primary.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.science, size: 16, color: colorScheme.primary),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              '📚 ${insight.scientificReference}',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: colorScheme.primary,
-                                fontStyle: FontStyle.italic,
-                                decoration: TextDecoration.underline,
+                        child: Row(
+                          children: [
+                            Icon(Icons.science, size: 16, color: colorScheme.primary),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                insight.scientificReference!,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.primary,
+                                  fontStyle: FontStyle.italic,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
-                          ),
-                          Icon(Icons.open_in_new, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
-                        ],
+                            Icon(Icons.open_in_new, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -1005,48 +1104,28 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
   }
 
   /// DEPRECATED: Old method kept for reference, not called anymore
-  Widget _buildInsightCard(BuildContext context, WidgetRef ref, dynamic insight, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildInsightCard(BuildContext context, WidgetRef ref, AIInsight insight, ThemeData theme, ColorScheme colorScheme) {
     final l10n = AppLocalizations.of(context);
 
     // Get severity-based color and icon
     final severity = insight.effectiveSeverity;
     final cardColor = _getSeverityColor(severity, colorScheme);
-    final severityIcon = _getSeverityIcon(severity);
 
-    // Type-specific icon (fallback to severity icon if not specified)
-    IconData icon;
-    switch (insight.type.toString()) {
-      case 'InsightType.muscleGroupBalance':
-        icon = Icons.balance;
-        break;
-      case 'InsightType.progressOverload':
-        icon = Icons.trending_up;
-        break;
-      case 'InsightType.recoveryPattern':
-        icon = Icons.bedtime;
-        break;
-      case 'InsightType.volumeOptimization':
-        icon = Icons.tune;
-        break;
-      case 'InsightType.frequencyRecommendation':
-        icon = Icons.schedule;
-        break;
-      case 'InsightType.plateauBreaker':
-        icon = Icons.trending_flat;
-        break;
-      case 'InsightType.formWarning':
-        icon = Icons.warning;
-        break;
-      case 'InsightType.motivational':
-        icon = Icons.celebration;
-        break;
-      default:
-        icon = severityIcon; // Fallback to severity icon
-    }
+    // Type-specific icon based on insight type
+    final IconData icon = switch (insight.type) {
+      InsightType.muscleGroupBalance => Icons.balance,
+      InsightType.progressOverload => Icons.trending_up,
+      InsightType.recoveryPattern => Icons.bedtime,
+      InsightType.volumeOptimization => Icons.tune,
+      InsightType.frequencyRecommendation => Icons.schedule,
+      InsightType.plateauBreaker => Icons.trending_flat,
+      InsightType.formWarning => Icons.warning,
+      InsightType.motivational => Icons.celebration,
+    };
 
     // Check if insight has detailed analysis
     final hasDetails = insight.detailedAnalysis != null ||
-                      (insight.strategies != null && insight.strategies.isNotEmpty);
+                      (insight.strategies != null && insight.strategies!.isNotEmpty);
 
     if (!hasDetails) {
       // Simple card without expansion
@@ -1057,10 +1136,10 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: cardColor.withValues(alpha: 0.1),
+        color: cardColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cardColor.withValues(alpha: 0.2),
+          color: cardColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -1073,7 +1152,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: cardColor.withValues(alpha: 0.2),
+              color: cardColor.withValues(alpha: 0.25),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(icon, color: cardColor, size: 20),
@@ -1145,7 +1224,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
   }
 
   Widget _buildSimpleInsightCard(
-    dynamic insight,
+    AIInsight insight,
     ThemeData theme,
     ColorScheme colorScheme,
     IconData icon,
@@ -1157,10 +1236,10 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: cardColor.withValues(alpha: 0.1),
+        color: cardColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cardColor.withValues(alpha: 0.2),
+          color: cardColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -1173,7 +1252,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: cardColor.withValues(alpha: 0.2),
+                  color: cardColor.withValues(alpha: 0.25),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(icon, color: cardColor, size: 20),
@@ -1264,7 +1343,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     );
   }
 
-  Widget _buildDetailedAnalysis(BuildContext context, WidgetRef ref, dynamic insight, ThemeData theme, ColorScheme colorScheme, Color cardColor) {
+  Widget _buildDetailedAnalysis(BuildContext context, WidgetRef ref, AIInsight insight, ThemeData theme, ColorScheme colorScheme, Color cardColor) {
     final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1296,7 +1375,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  insight.detailedAnalysis,
+                  insight.detailedAnalysis!,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurface.withValues(alpha: 0.8),
                     height: 1.5,
@@ -1308,15 +1387,15 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         ],
 
         // Data Points Section
-        if (insight.dataPoints != null && insight.dataPoints.isNotEmpty) ...[
+        if (insight.dataPoints != null && insight.dataPoints!.isNotEmpty) ...[
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: cardColor.withValues(alpha: 0.05),
+              color: cardColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: cardColor.withValues(alpha: 0.2),
+                color: cardColor.withValues(alpha: 0.3),
               ),
             ),
             child: Column(
@@ -1336,7 +1415,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                ...insight.dataPoints.map((point) => Padding(
+                ...insight.dataPoints!.map((point) => Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Row(
                     children: [
@@ -1353,14 +1432,14 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       ),
                     ],
                   ),
-                )).toList(),
+                )),
               ],
             ),
           ),
         ],
 
         // Scientific Strategies Section
-        if (insight.strategies != null && insight.strategies.isNotEmpty) ...[
+        if (insight.strategies != null && insight.strategies!.isNotEmpty) ...[
           const SizedBox(height: 16),
           Text(
             '🎯 ${l10n.evidenceBasedSolutions}',
@@ -1370,13 +1449,13 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             ),
           ),
           const SizedBox(height: 12),
-          ...insight.strategies.map((strategy) => _buildStrategyCard(
+          ...insight.strategies!.map((strategy) => _buildStrategyCard(
             context,
             strategy,
             theme,
             colorScheme,
             cardColor,
-          )).toList(),
+          )),
         ],
 
         // Scientific Reference (clickable if contains DOI/URL)
@@ -1495,7 +1574,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     );
   }
 
-  Widget _buildStrategyCard(BuildContext context, dynamic strategy, ThemeData theme, ColorScheme colorScheme, Color cardColor) {
+  Widget _buildStrategyCard(BuildContext context, ScientificStrategy strategy, ThemeData theme, ColorScheme colorScheme, Color cardColor) {
     final l10n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -2064,6 +2143,174 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       ],
     );
   }
+
+  /// Extract key metric from insight data for card preview (HIG-compliant)
+  _KeyMetric? _extractKeyMetric(AIInsight insight, AppLocalizations l10n) {
+    final data = insight.data;
+
+    // Try to extract most relevant metric based on insight type
+    return switch (insight.type) {
+      InsightType.muscleGroupBalance => () {
+        final muscleGroup = data['muscleGroup'] as String?;
+        final currentSets = data['currentSets'] as String?;
+        if (muscleGroup != null && currentSets != null) {
+          return _KeyMetric(
+            value: '$currentSets ${l10n.aiCoachSeriesPerWeek}',
+            label: muscleGroup,
+          );
+        }
+        return null;
+      }(),
+
+      InsightType.volumeOptimization => () {
+        final currentVolume = data['currentVolume'] as String?;
+        if (currentVolume != null) {
+          return _KeyMetric(
+            value: '$currentVolume ${l10n.aiCoachTons}',
+            label: l10n.aiCoachCurrentVolume,
+          );
+        }
+        return null;
+      }(),
+
+      InsightType.progressOverload => () {
+        final overloadPercent = data['overloadPercent'] as String?;
+        if (overloadPercent != null) {
+          return _KeyMetric(
+            value: '+$overloadPercent%',
+            label: l10n.aiCoachProgressiveLoad,
+          );
+        }
+        return null;
+      }(),
+
+      InsightType.frequencyRecommendation => () {
+        final avgPerWeek = data['avgPerWeek'] as String?;
+        if (avgPerWeek != null) {
+          return _KeyMetric(
+            value: '$avgPerWeek ${l10n.aiCoachTimesPerWeek}',
+            label: l10n.aiCoachCurrentFrequency,
+          );
+        }
+        return null;
+      }(),
+
+      _ => null,
+    };
+  }
+
+  /// Extract progress data for MEV/MAV/MRV visualization
+  _ProgressData? _extractProgressData(AIInsight insight) {
+    final data = insight.data;
+
+    // Only show progress for muscle balance insights with set data
+    if (insight.type == InsightType.muscleGroupBalance) {
+      final currentSets = data['currentSets'] as String?;
+      final targetMin = data['targetMin'] as String?;
+
+      if (currentSets != null && targetMin != null) {
+        try {
+          final current = int.parse(currentSets);
+          final minSets = int.parse(targetMin.split('-').first);
+          final maxSets = targetMin.contains('-') ? int.parse(targetMin.split('-').last) : minSets + 10;
+
+          // Calculate progress (0.0 - 1.0)
+          final progress = (current / maxSets).clamp(0.0, 1.0);
+
+          return _ProgressData(
+            current: current.toDouble(),
+            min: minSets.toDouble(),
+            max: maxSets.toDouble(),
+            progress: progress,
+            label: '', // Will be filled in the widget with localized string
+          );
+        } catch (e) {
+          // Parsing failed, return null
+          return null;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /// Build MEV progress bar widget (HIG-compliant with visual hierarchy)
+  Widget _buildMEVProgressBar(
+    BuildContext context,
+    _ProgressData data,
+    Color color,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    final l10n = AppLocalizations.of(context);
+    final mevLabel = l10n.aiCoachMEVRange(
+      data.min.toInt().toString(),
+      data.max.toInt().toString(),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              mevLabel,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              '${(data.progress * 100).toStringAsFixed(0)}%',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: data.progress,
+            backgroundColor: colorScheme.surfaceContainerHighest,
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 8,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Helper class for key metric display
+class _KeyMetric {
+  const _KeyMetric({
+    required this.value,
+    required this.label,
+  });
+
+  final String value;
+  final String label;
+}
+
+/// Helper class for progress data
+class _ProgressData {
+  const _ProgressData({
+    required this.current,
+    required this.min,
+    required this.max,
+    required this.progress,
+    required this.label,
+  });
+
+  final double current;
+  final double min;
+  final double max;
+  final double progress;
+  final String label;
 }
 
 /// Expandable subsection widget for AI insights

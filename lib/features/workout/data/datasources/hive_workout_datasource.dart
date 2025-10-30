@@ -18,72 +18,45 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 
 /// Local Hive data source for workout operations
 /// Provides fast, offline-first storage for all users
+///
+/// ✅ MIGRATED to HiveBoxManagerEnhanced pattern (Oct 2025)
+/// - No direct Hive.openBox() calls
+/// - Centralized box lifecycle management
+/// - Memory leak prevention
 class HiveWorkoutDataSource {
-  static const String _workoutsBoxName = 'workouts';
-  static const String _workoutSummariesBoxName = 'workout_summaries';
-  static const String _exerciseActivitiesBoxName = 'exercise_activities';
-  static const String _syncQueueBoxName = 'sync_queue';
-  
-  /// Initialize Hive boxes
-  static Future<void> initialize() async {
-    try {
-      // Only open boxes that aren't already open
-      if (!Hive.isBoxOpen(_workoutsBoxName)) {
-        await Hive.openBox<Map>(_workoutsBoxName);
-        debugPrint('✅ Opened workouts box');
-      } else {
-        debugPrint('ℹ️ Workouts box already open');
-      }
 
-      if (!Hive.isBoxOpen(_workoutSummariesBoxName)) {
-        await Hive.openBox<Map>(_workoutSummariesBoxName);
-        debugPrint('✅ Opened workout_summaries box');
-      } else {
-        debugPrint('ℹ️ Workout summaries box already open');
-      }
+  /// Constructor with dependency injection
+  ///
+  /// Usage:
+  /// ```dart
+  /// final dataSource = HiveWorkoutDataSource(ref.watch(hiveBoxManagerProvider));
+  /// ```
+  HiveWorkoutDataSource(this._boxManager);
+  final HiveBoxManagerEnhanced _boxManager;
 
-      if (!Hive.isBoxOpen(_exerciseActivitiesBoxName)) {
-        await Hive.openBox<Map>(_exerciseActivitiesBoxName);
-        debugPrint('✅ Opened exercise_activities box');
-      } else {
-        debugPrint('ℹ️ Exercise activities box already open');
-      }
-
-      if (!Hive.isBoxOpen(_syncQueueBoxName)) {
-        await Hive.openBox<Map>(_syncQueueBoxName);
-        debugPrint('✅ Opened sync_queue box');
-      } else {
-        debugPrint('ℹ️ Sync queue box already open');
-      }
-    } catch (e, stackTrace) {
-      debugPrint('❌ Error initializing Hive boxes: $e');
-      debugPrint('Stack trace: $stackTrace');
-      rethrow;
-    }
-  }
-
-  /// Get workouts box (open if needed)
+  /// Get workouts box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getWorkoutsBox() async {
-    return Hive.isBoxOpen(_workoutsBoxName)
-        ? Hive.box<Map>(_workoutsBoxName)
-        : await Hive.openBox<Map>(_workoutsBoxName);
+    return await _boxManager.openBox<Map>(HiveBoxNames.workouts);
   }
 
-  /// Get summaries box (open if needed)
+  /// Get summaries box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getSummariesBox() async {
-    return Hive.isBoxOpen(_workoutSummariesBoxName)
-        ? Hive.box<Map>(_workoutSummariesBoxName)
-        : await Hive.openBox<Map>(_workoutSummariesBoxName);
+    return await _boxManager.openBox<Map>(HiveBoxNames.workoutSummaries);
   }
 
-  /// Get sync queue box (open if needed)
+  /// Get exercise activities box via HiveBoxManagerEnhanced
+  Future<Box<Map>> _getActivitiesBox() async {
+    return await _boxManager.openBox<Map>(HiveBoxNames.exerciseActivities);
+  }
+
+  /// Get sync queue box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getSyncQueueBox() async {
-    return Hive.isBoxOpen(_syncQueueBoxName)
-        ? Hive.box<Map>(_syncQueueBoxName)
-        : await Hive.openBox<Map>(_syncQueueBoxName);
+    return await _boxManager.openBox<Map>(HiveBoxNames.getSyncQueueName('workouts'));
   }
 
   /// Save workout locally
@@ -233,7 +206,7 @@ class HiveWorkoutDataSource {
     WorkoutModel workout,
     String userEmail,
   ) async {
-    final activitiesBox = await Hive.openBox<Map>(_exerciseActivitiesBoxName);
+    final activitiesBox = await _getActivitiesBox();
     final summariesBox = await _getSummariesBox();
     final activityIds = <String>[];
     
@@ -463,7 +436,7 @@ class HiveWorkoutDataSource {
   /// Export all local data for backup
   Future<Map<String, dynamic>> exportAllData(String userId) async {
     final workouts = await getWorkouts(userId);
-    final activitiesBox = await Hive.openBox<Map>(_exerciseActivitiesBoxName);
+    final activitiesBox = await _getActivitiesBox();
     final summariesBox = await _getSummariesBox();
     
     final activities = activitiesBox.values
@@ -499,7 +472,7 @@ class HiveWorkoutDataSource {
     
     // Import activities if present
     if (data['activities'] != null) {
-      final activitiesBox = await Hive.openBox<Map>(_exerciseActivitiesBoxName);
+      final activitiesBox = await _getActivitiesBox();
       for (final activity in data['activities']) {
         await activitiesBox.put(activity['id'], activity);
       }
@@ -551,7 +524,7 @@ class HiveWorkoutDataSource {
     await workoutsBox.deleteAll(keysToDelete);
 
     // Also clear sync queue for this user
-    final syncBox = await Hive.openBox<Map>(_syncQueueBoxName);
+    final syncBox = await _getSyncQueueBox();
     final syncKeysToDelete = <dynamic>[];
 
     for (var i = 0; i < syncBox.length; i++) {
@@ -597,4 +570,11 @@ class HiveWorkoutDataSource {
       return [];
     }
   }
+
+  /// ✅ DISPOSAL: No longer needed
+  /// HiveBoxManagerEnhanced handles all box lifecycle management via ref.onDispose()
+  /// Boxes are automatically closed when:
+  /// - App terminates
+  /// - User logs out
+  /// - ProviderScope is replaced
 }

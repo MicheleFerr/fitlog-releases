@@ -119,7 +119,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withOpacity(0.2),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -164,7 +164,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
             _buildModeToggleSection(theme, l10n),
 
             Divider(
-              color: theme.colorScheme.outline.withOpacity(0.2),
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
               height: 24,
             ),
 
@@ -427,10 +427,10 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: theme.colorScheme.primary.withOpacity(0.2),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -541,7 +541,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
           border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
-                : theme.colorScheme.outline.withOpacity(0.3),
+                : theme.colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -617,13 +617,13 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
     return Container(
       decoration: BoxDecoration(
         color: value
-            ? theme.colorScheme.primaryContainer.withOpacity(0.1)
+            ? theme.colorScheme.primaryContainer.withValues(alpha: 0.1)
             : theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: value
-              ? theme.colorScheme.primary.withOpacity(0.3)
-              : theme.colorScheme.outline.withOpacity(0.2),
+              ? theme.colorScheme.primary.withValues(alpha: 0.3)
+              : theme.colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: ListTile(
@@ -631,7 +631,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
+            color: iconColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -700,10 +700,10 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.secondaryContainer.withOpacity(0.3),
+              color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.deepPurple.withOpacity(0.2),
+                color: Colors.deepPurple.withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -750,7 +750,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   ),
                 ),
                 const SizedBox(height: 16),
-                Divider(color: Colors.deepPurple.withOpacity(0.2)),
+                Divider(color: Colors.deepPurple.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -829,10 +829,10 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.05),
+              color: Colors.orange.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.orange.withOpacity(0.2),
+                color: Colors.orange.withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -885,7 +885,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   ],
                 ),
                 const SizedBox(height: 12),
-                Divider(color: Colors.orange.withOpacity(0.2)),
+                Divider(color: Colors.orange.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
                   children: [

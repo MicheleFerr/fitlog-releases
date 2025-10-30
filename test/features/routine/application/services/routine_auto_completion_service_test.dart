@@ -33,7 +33,7 @@ void main() {
     });
 
     test('constructor with explicit values', () {
-      final result = RoutineAutoCompletionResult(
+      const result = RoutineAutoCompletionResult(
         completed: true,
         reason: 'Custom reason',
         candidateDates: [],

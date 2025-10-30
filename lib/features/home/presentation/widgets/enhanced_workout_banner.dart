@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
 
 /// Enhanced workout banner that shows active workout status
 class EnhancedWorkoutBanner extends ConsumerWidget {
@@ -247,8 +249,26 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
           ),
           // Discard
           TextButton.icon(
-            onPressed: () {
+            onPressed: () async {
+              if (kDebugMode) {
+                debugPrint('🗑️ [DISCARD BUTTON] Pressed - Starting discard workflow');
+              }
+
               Navigator.pop(dialogContext);
+
+              // 💾 CRITICAL FIX: Force save template modifications before discarding
+              // This ensures any changes (notes, weights, reps) are preserved in the template
+              if (kDebugMode) {
+                debugPrint('💾 [DISCARD] Calling forceSave() before clearing workout...');
+              }
+
+              final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+              await cacheService.forceSave();
+
+              if (kDebugMode) {
+                debugPrint('✅ [DISCARD] forceSave() completed, now clearing workout');
+              }
+
               ref.read(currentWorkoutProvider.notifier).clearWorkout();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -346,7 +366,7 @@ class _WorkoutStat extends StatelessWidget {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimary.withOpacity(0.15),
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(6), // Apple HIG corner radius
           ),
           child: Icon(
@@ -369,7 +389,7 @@ class _WorkoutStat extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: theme.colorScheme.onPrimary.withOpacity(0.8),
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
             fontSize: 11, // Apple HIG caption size
             fontWeight: FontWeight.w500,
             letterSpacing: 0.06,

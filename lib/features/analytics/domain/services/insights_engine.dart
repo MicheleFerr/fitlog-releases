@@ -3,6 +3,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/scientific_metrics_service.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_analyzer.dart';
 
@@ -383,24 +384,6 @@ class InsightsEngine {
           'currentVolume': (thisWeekVolume / 1000).toStringAsFixed(1),
           'previousVolume': (lastWeekVolume / 1000).toStringAsFixed(1),
           'volumeDiff': (volumeDiff.abs() / 1000).toStringAsFixed(1),
-        },
-      ));
-    } else if (false) { // Disabled dangerous suggestions
-      // Calculate suggested additional sets
-      final avgSetVolume = thisWeekVolume / math.max(1, activities.take(7).expand((a) => a.sets).length);
-      final setsNeeded = (volumeDiff.abs() / avgSetVolume).ceil();
-      
-      insights.add(TrainingInsight(
-        type: InsightType.warning,
-        priority: InsightPriority.medium,
-        title: 'insightVolumeDropTitle',
-        message: 'insightVolumeDropMessage',
-        recommendation: 'insightVolumeDropRecommendation',
-        metadata: {
-          'weeklyChange': volumeProgression.weeklyChange.abs().toStringAsFixed(0),
-          'currentVolume': (thisWeekVolume / 1000).toStringAsFixed(1),
-          'volumeDecrease': (volumeDiff.abs() / 1000).toStringAsFixed(1),
-          'suggestedSets': setsNeeded.toString(),
         },
       ));
     }

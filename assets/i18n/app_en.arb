@@ -529,7 +529,7 @@
   },
   "done": "Done",
   "@done": {
-    "description": "Done button"
+    "description": "Generic done/complete button label"
   },
   "hiitTraining": "HIIT Training",
   "@hiitTraining": {
@@ -664,10 +664,6 @@
         "description": "Number of templates imported"
       }
     }
-  },
-  "done": "Done",
-  "@done": {
-    "description": "Done button text"
   },
   "exportingTemplates": "Exporting Templates",
   "@exportingTemplates": {
@@ -919,7 +915,7 @@
   },
   "sets": "sets",
   "@sets": {
-    "description": "Sets unit label"
+    "description": "Label for sets (lowercase)"
   },
   "addSet": "Add Set",
   "@addSet": {
@@ -929,9 +925,9 @@
   "@weight": {
     "description": "Weight metric label"
   },
-  "reps": "Reps",
+  "reps": "reps",
   "@reps": {
-    "description": "Reps metric label"
+    "description": "Label for repetitions (lowercase)"
   },
   "notes": "Notes (optional)",
   "@notes": {
@@ -1469,7 +1465,7 @@
   },
   "chooseLanguage": "Choose Language",
   "@chooseLanguage": {
-    "description": "Choose language dialog title"
+    "description": "Language selection dialog title"
   },
   "resetSettings": "Reset Settings",
   "@resetSettings": {
@@ -1705,9 +1701,9 @@
   "@thisWeek": {
     "description": "This week label for workout count"
   },
-  "totalVolume": "Total Volume",
+  "totalVolume": "total",
   "@totalVolume": {
-    "description": "Total volume label"
+    "description": "Label for total volume"
   },
   "consistency": "Consistency",
   "@consistency": {
@@ -1735,7 +1731,7 @@
   },
   "personalRecords": "Personal Records",
   "@personalRecords": {
-    "description": "Personal records statistic"
+    "description": "Section title for personal records"
   },
   "newPRs": "New PRs",
   "@newPRs": {
@@ -2154,6 +2150,154 @@
   "@notificationsDescription": {
     "description": "Description for empty notifications state"
   },
+  "workoutReminderTitle": "Workout Reminder",
+  "@workoutReminderTitle": {
+    "description": "Title for workout reminder notification"
+  },
+  "workoutReminderBody": "Time for your {workoutName} workout! 💪",
+  "@workoutReminderBody": {
+    "description": "Body for workout reminder notification",
+    "placeholders": {
+      "workoutName": {
+        "type": "String"
+      }
+    }
+  },
+  "recoveryAlertTitle": "Recovery Needed",
+  "@recoveryAlertTitle": {
+    "description": "Title for recovery alert notification"
+  },
+  "recoveryAlertBodySingle": "You have {days} skipped day to recover! 🔄",
+  "@recoveryAlertBodySingle": {
+    "description": "Body for recovery alert notification (singular)",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "recoveryAlertBodyMultiple": "You have {days} skipped days to recover! 🔄",
+  "@recoveryAlertBodyMultiple": {
+    "description": "Body for recovery alert notification (plural)",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "streakMotivationTitle": "Keep Your Streak Going!",
+  "@streakMotivationTitle": {
+    "description": "Title for streak motivation notification"
+  },
+  "streakMotivationBody": "{streak} days streak! Don't break it now! 🔥",
+  "@streakMotivationBody": {
+    "description": "Body for streak motivation notification",
+    "placeholders": {
+      "streak": {
+        "type": "int"
+      }
+    }
+  },
+  "restDayTitle": "Rest Day",
+  "@restDayTitle": {
+    "description": "Title for rest day reminder notification"
+  },
+  "restDayBody": "Today is your rest day. Recovery is just as important! 😴",
+  "@restDayBody": {
+    "description": "Body for rest day reminder notification"
+  },
+  "enableWorkoutReminders": "Enable Workout Reminders",
+  "@enableWorkoutReminders": {
+    "description": "Toggle for enabling workout reminders"
+  },
+  "enableRecoveryAlerts": "Enable Recovery Alerts",
+  "@enableRecoveryAlerts": {
+    "description": "Toggle for enabling recovery alerts"
+  },
+  "enableStreakMotivation": "Enable Streak Motivation",
+  "@enableStreakMotivation": {
+    "description": "Toggle for enabling streak motivation notifications"
+  },
+  "enableRestDayReminders": "Enable Rest Day Reminders",
+  "@enableRestDayReminders": {
+    "description": "Toggle for enabling rest day reminders"
+  },
+  "preferredNotificationTime": "Preferred Time",
+  "@preferredNotificationTime": {
+    "description": "Label for preferred notification time setting"
+  },
+  "doNotDisturb": "Do Not Disturb",
+  "@doNotDisturb": {
+    "description": "Label for Do Not Disturb setting"
+  },
+  "morningTime": "Morning (8:00 AM)",
+  "@morningTime": {
+    "description": "Morning time option for notifications"
+  },
+  "middayTime": "Midday (12:30 PM)",
+  "@middayTime": {
+    "description": "Midday time option for notifications"
+  },
+  "afternoonTime": "Afternoon (4:00 PM)",
+  "@afternoonTime": {
+    "description": "Afternoon time option for notifications"
+  },
+  "eveningTime": "Evening (7:00 PM)",
+  "@eveningTime": {
+    "description": "Evening time option for notifications"
+  },
+  "customTime": "Custom Time",
+  "@customTime": {
+    "description": "Custom time option for notifications"
+  },
+  "newWeightPR": "New Weight PR!",
+  "@newWeightPR": {
+    "description": "Title for new weight personal record notification"
+  },
+  "newRepsPR": "New Reps PR!",
+  "@newRepsPR": {
+    "description": "Title for new reps personal record notification"
+  },
+  "newOneRMPR": "New 1RM PR!",
+  "@newOneRMPR": {
+    "description": "Title for new 1RM personal record notification"
+  },
+  "newVolumePR": "New Volume PR!",
+  "@newVolumePR": {
+    "description": "Title for new volume personal record notification"
+  },
+  "buildingMomentum": "Building Momentum!",
+  "@buildingMomentum": {
+    "description": "Title for 3-day streak achievement"
+  },
+  "oneWeekStrong": "One Week Strong!",
+  "@oneWeekStrong": {
+    "description": "Title for 7-day streak achievement"
+  },
+  "twoWeeksStreak": "Two Weeks Streak!",
+  "@twoWeeksStreak": {
+    "description": "Title for 14-day streak achievement"
+  },
+  "oneMonthStreak": "ONE MONTH STREAK!",
+  "@oneMonthStreak": {
+    "description": "Title for 30-day streak achievement"
+  },
+  "legendaryStreak": "LEGENDARY STREAK!",
+  "@legendaryStreak": {
+    "description": "Title for 50+ day streak achievement"
+  },
+  "volumeMilestone": "Volume Milestone!",
+  "@volumeMilestone": {
+    "description": "Title for volume milestone achievement"
+  },
+  "massiveVolume": "MASSIVE VOLUME!",
+  "@massiveVolume": {
+    "description": "Title for 50k+ kg volume achievement"
+  },
+  "legendaryVolume": "LEGENDARY VOLUME!",
+  "@legendaryVolume": {
+    "description": "Title for 100k+ kg volume achievement"
+  },
   "quickStats": "Your Progress",
   "@quickStats": {
     "description": "Quick stats section title"
@@ -2281,7 +2425,7 @@
   },
   "secondaryMuscles": "Secondary Muscles",
   "@secondaryMuscles": {
-    "description": "Secondary muscles label"
+    "description": "Label for secondary muscles"
   },
   "difficultyLevel": "Difficulty Level",
   "@difficultyLevel": {
@@ -2469,7 +2613,7 @@
   },
   "createTemplate": "Create Template",
   "@createTemplate": {
-    "description": "Button and dialog title for creating template"
+    "description": "Create template button label"
   },
   "otherTools": "Other tools",
   "@otherTools": {
@@ -2610,6 +2754,48 @@
   "aiInsightStartJourneyRec": "Complete your first workout to get started",
   "@aiInsightStartJourneyRec": {
     "description": "AI insight recommendation for first workout"
+  },
+  "aiCoachSeriesPerWeek": "series/week",
+  "@aiCoachSeriesPerWeek": {
+    "description": "Unit for sets per week in AI Coach insights"
+  },
+  "aiCoachTons": "tons",
+  "@aiCoachTons": {
+    "description": "Unit for volume in tons (metric) in AI Coach insights"
+  },
+  "aiCoachCurrentVolume": "Current volume",
+  "@aiCoachCurrentVolume": {
+    "description": "Label for current training volume metric"
+  },
+  "aiCoachProgressiveLoad": "Progressive overload",
+  "@aiCoachProgressiveLoad": {
+    "description": "Label for progressive overload percentage"
+  },
+  "aiCoachTimesPerWeek": "times/week",
+  "@aiCoachTimesPerWeek": {
+    "description": "Unit for training frequency per week"
+  },
+  "aiCoachCurrentFrequency": "Current frequency",
+  "@aiCoachCurrentFrequency": {
+    "description": "Label for current training frequency"
+  },
+  "aiCoachMEVRange": "MEV: {min}-{max} sets",
+  "@aiCoachMEVRange": {
+    "description": "MEV (Minimum Effective Volume) range display",
+    "placeholders": {
+      "min": {
+        "type": "String",
+        "description": "Minimum sets"
+      },
+      "max": {
+        "type": "String",
+        "description": "Maximum sets"
+      }
+    }
+  },
+  "aiCoachScientificReferences": "Scientific References",
+  "@aiCoachScientificReferences": {
+    "description": "Title for collapsible scientific references section"
   },
   "aiInsightNewUser": "Great Start!",
   "@aiInsightNewUser": {
@@ -2871,7 +3057,7 @@
   "@day": {
     "description": "Generic day label"
   },
-  "errorLoadingData": "Unable to load data",
+  "errorLoadingData": "Error loading data",
   "@errorLoadingData": {
     "description": "Error message when data fails to load"
   },
@@ -3039,9 +3225,9 @@
   "@unknownError": {
     "description": "Generic unknown error message"
   },
-  "userNotFound": "User Not Found",
+  "userNotFound": "User not found",
   "@userNotFound": {
-    "description": "User not found error message"
+    "description": "Error message when user is not found"
   },
   "wrongPassword": "Wrong Password",
   "@wrongPassword": {
@@ -3510,9 +3696,9 @@
   "@chest": {
     "description": "Chest muscle group"
   },
-  "back": "DORSO (Back)",
+  "back": "Back",
   "@back": {
-    "description": "Back muscle group"
+    "description": "Back button accessibility label"
   },
   "shoulders": "Shoulders",
   "@shoulders": {
@@ -3525,6 +3711,30 @@
   "legs": "GAMBE (Legs)",
   "@legs": {
     "description": "Legs muscle group"
+  },
+  "abs": "Abs",
+  "@abs": {
+    "description": "Abdominals muscle group"
+  },
+  "cardio": "Cardio",
+  "@cardio": {
+    "description": "Cardio exercise category"
+  },
+  "other": "Other",
+  "@other": {
+    "description": "Other exercise category"
+  },
+  "personal": "Personal",
+  "@personal": {
+    "description": "Personal/custom template badge"
+  },
+  "usages": "usages",
+  "@usages": {
+    "description": "Number of times a template has been used"
+  },
+  "muscleDistribution": "Muscle Distribution",
+  "@muscleDistribution": {
+    "description": "Title for muscle group breakdown section"
   },
   "core": "CORE (Abs/Lower Back)",
   "@core": {
@@ -3600,7 +3810,7 @@
   },
   "maxWeight": "Max Weight",
   "@maxWeight": {
-    "description": "Maximum weight label"
+    "description": "Label for maximum weight lifted"
   },
   "maxReps": "Max Reps",
   "@maxReps": {
@@ -4612,7 +4822,7 @@
   },
   "today": "Today",
   "@today": {
-    "description": "Today date label"
+    "description": "Today label"
   },
   "yesterday": "Yesterday",
   "@yesterday": {
@@ -4997,15 +5207,6 @@
   "activityFor": "Activity for",
   "@activityFor": {
     "description": "Generic activity type prefix"
-  },
-  "daysAgo": "{count}d ago",
-  "@daysAgo": {
-    "description": "Days ago time format",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "hoursAgo": "{hours}h ago",
   "@hoursAgo": {
@@ -6058,31 +6259,31 @@
   },
   "warmupProtocol": "Warmup Protocol",
   "@warmupProtocol": {
-    "description": "Warmup protocol section title"
+    "description": "Section title for warmup protocol"
   },
   "warmupPhaseInfo": "Understanding Warmup Phases",
   "@warmupPhaseInfo": {
     "description": "Title for warmup phases info dialog"
   },
-  "warmupPhase1Title": "🔄 Phase 1: Mobility (3-5 min)",
+  "warmupPhase1Title": "Mobility",
   "@warmupPhase1Title": {
-    "description": "Title for mobility phase"
+    "description": "Title for warmup phase 1"
   },
   "warmupPhase1Desc": "Prepares joints and range of motion with dynamic stretches. Examples: hip circles, arm swings, leg swings.",
   "@warmupPhase1Desc": {
     "description": "Description for mobility phase"
   },
-  "warmupPhase2Title": "⚡ Phase 2: Activation (3-4 min)",
+  "warmupPhase2Title": "Activation",
   "@warmupPhase2Title": {
-    "description": "Title for activation phase"
+    "description": "Title for warmup phase 2"
   },
   "warmupPhase2Desc": "Activates target muscles and stabilizers with light contractions. Examples: glute bridges, band work, light sets.",
   "@warmupPhase2Desc": {
     "description": "Description for activation phase"
   },
-  "warmupPhase3Title": "🏋️ Phase 3: Warmup Sets (5-10 min)",
+  "warmupPhase3Title": "Specific Warmup",
   "@warmupPhase3Title": {
-    "description": "Title for warmup sets phase"
+    "description": "Title for warmup phase 3"
   },
   "warmupPhase3Desc": "Gradual progression towards working weight with the actual exercise. Examples: Bar×10, 40%×8, 60%×5, 80%×3.",
   "@warmupPhase3Desc": {
@@ -6730,9 +6931,9 @@
   "@errorCannotModifyTemplate": {
     "description": "Error when user tries to modify someone else's template"
   },
-  "errorNetworkConnection": "Network connection error. Please check your internet and try again.",
+  "errorNetworkConnection": "Network error. Check your connection.",
   "@errorNetworkConnection": {
-    "description": "Error for network/connection issues"
+    "description": "Error for network/connectivity issues"
   },
   "errorUnexpected": "An unexpected error occurred. Please try again.",
   "@errorUnexpected": {
@@ -7767,7 +7968,7 @@
   },
   "skipRest": "Skip Rest",
   "@skipRest": {
-    "description": "Button to skip rest timer"
+    "description": "Button to skip rest period"
   },
   "supersetCompleted": "Superset Completed",
   "@supersetCompleted": {
@@ -7876,6 +8077,46 @@
   "createRestPause": "Create Rest-Pause",
   "@createRestPause": {
     "description": "Button to create rest-pause exercise"
+  },
+  "restPauseLabel": "REST-PAUSE",
+  "@restPauseLabel": {
+    "description": "Label for rest-pause execution header"
+  },
+  "restPauseMainSet": "Main Set",
+  "@restPauseMainSet": {
+    "description": "Label for main set in rest-pause execution"
+  },
+  "restPauseMiniSet": "Mini-Set {index}",
+  "@restPauseMiniSet": {
+    "description": "Label for individual mini-set in rest-pause",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "description": "Mini-set number (1-based)"
+      }
+    }
+  },
+  "miniSetProgress": "Mini-Set Progress",
+  "@miniSetProgress": {
+    "description": "Label for mini-set progress indicator"
+  },
+  "microPause": "MICRO-PAUSE",
+  "@microPause": {
+    "description": "Label for rest timer during rest-pause"
+  },
+  "afterPauseDuration": "After {duration}s pause",
+  "@afterPauseDuration": {
+    "description": "Text showing pause duration",
+    "placeholders": {
+      "duration": {
+        "type": "int",
+        "description": "Rest pause duration in seconds"
+      }
+    }
+  },
+  "rpeLabel": "Overall RPE (Perceived Exertion)",
+  "@rpeLabel": {
+    "description": "Label for RPE selector in rest-pause execution"
   },
   "fitnessQuestionnaireTitle": "Fitness Profile Setup",
   "@fitnessQuestionnaireTitle": {
@@ -8429,6 +8670,10 @@
   "@workoutCompletedSuccess": {
     "description": "Workout completion success message"
   },
+  "workoutResumed": "Workout restored - you can continue training",
+  "@workoutResumed": {
+    "description": "Message shown when workout completion is undone"
+  },
   "saveAsTemplate": "Save as Template",
   "@saveAsTemplate": {
     "description": "Save as template menu item"
@@ -8552,6 +8797,26 @@
   "categoryOther": "Other",
   "@categoryOther": {
     "description": "Other category"
+  },
+  "exerciseCategorizedSuccess": "\"{exerciseName}\" categorized as {muscleGroupName}",
+  "@exerciseCategorizedSuccess": {
+    "description": "Success message when exercise is manually categorized",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      },
+      "muscleGroupName": {
+        "type": "String"
+      }
+    }
+  },
+  "undo": "Undo",
+  "@undo": {
+    "description": "Undo button label"
+  },
+  "categorizationUndone": "Categorization removed",
+  "@categorizationUndone": {
+    "description": "Message shown when categorization is undone"
   },
   "exerciseEditingComingSoon": "Exercise editing coming soon!",
   "@exerciseEditingComingSoon": {
@@ -9033,6 +9298,10 @@
   "executeDropset": "Execute DropSet",
   "@executeDropset": {
     "description": "Button to start dropset execution"
+  },
+  "executeRestPause": "Execute Rest-Pause",
+  "@executeRestPause": {
+    "description": "Button to start rest-pause execution"
   },
   "keepWorkoutActiveContent": "Do you want to go back to Home and keep your workout running in the background?\\n\\nYou can return to continue your workout anytime.",
   "@keepWorkoutActiveContent": {
@@ -10662,6 +10931,26 @@
   "@routineNeedTemplatesMessage": {
     "description": "No templates empty state message"
   },
+  "routineCreateTemplatesFirst": "Before creating a routine, you need to create workout templates with exercises first.",
+  "@routineCreateTemplatesFirst": {
+    "description": "Message explaining users need to create templates first"
+  },
+  "routineWorkflowTitle": "How it works",
+  "@routineWorkflowTitle": {
+    "description": "Workflow section title"
+  },
+  "routineWorkflowStep1": "Go to 'My Templates' and create workout templates with exercises",
+  "@routineWorkflowStep1": {
+    "description": "First step in routine workflow"
+  },
+  "routineWorkflowStep2": "Return here and select your templates for the routine",
+  "@routineWorkflowStep2": {
+    "description": "Second step in routine workflow"
+  },
+  "routineWorkflowStep3": "Configure rotation and complete your routine setup",
+  "@routineWorkflowStep3": {
+    "description": "Third step in routine workflow"
+  },
   "routinePopularTemplates": "Popular Templates",
   "@routinePopularTemplates": {
     "description": "Popular templates option title"
@@ -11939,10 +12228,6 @@
   "@errorDuplicateTemplate": {
     "description": "Error when template name is duplicate"
   },
-  "errorNetworkConnection": "Network error. Check your connection.",
-  "@errorNetworkConnection": {
-    "description": "Error for network/connectivity issues"
-  },
   "errorImportFailed": "Import failed. Check format and try again.",
   "@errorImportFailed": {
     "description": "Generic import error fallback"
@@ -12018,5 +12303,1188 @@
   "noDescription": "No description",
   "@noDescription": {
     "description": "Placeholder for missing description"
+  },
+  "exerciseDetailSummary": "Summary",
+  "@exerciseDetailSummary": {
+    "description": "Exercise detail tab: Summary"
+  },
+  "exerciseDetailHistory": "History",
+  "@exerciseDetailHistory": {
+    "description": "Exercise detail tab: History"
+  },
+  "exerciseDetailInstructions": "Instructions",
+  "@exerciseDetailInstructions": {
+    "description": "Exercise detail tab: Instructions"
+  },
+  "primaryMuscle": "Primary Muscle",
+  "@primaryMuscle": {
+    "description": "Label for primary muscle"
+  },
+  "last3MonthsChart": "Last 3 Months",
+  "@last3MonthsChart": {
+    "description": "Chart title for last 3 months data"
+  },
+  "best1RM": "Best 1RM",
+  "@best1RM": {
+    "description": "Label for best one rep max"
+  },
+  "bestSetVolume": "Best Set Volume",
+  "@bestSetVolume": {
+    "description": "Label for best volume in a single set"
+  },
+  "bestSessionVolume": "Best Session Volume",
+  "@bestSessionVolume": {
+    "description": "Label for best total session volume"
+  },
+  "strengthLevel": "Strength Level",
+  "@strengthLevel": {
+    "description": "Label for user's strength level"
+  },
+  "strengthLevelComingSoon": "Strength level benchmarks coming soon!",
+  "@strengthLevelComingSoon": {
+    "description": "Placeholder message for strength level feature"
+  },
+  "noHistoryYet": "No history yet",
+  "@noHistoryYet": {
+    "description": "Message when exercise has no history"
+  },
+  "startWorkoutToSeeHistory": "Start a workout to see your exercise history",
+  "@startWorkoutToSeeHistory": {
+    "description": "Hint to start workout to see history"
+  },
+  "unknownWorkout": "Unknown Workout",
+  "@unknownWorkout": {
+    "description": "Placeholder for workout with no name"
+  },
+  "videoTutorial": "Video Tutorial",
+  "@videoTutorial": {
+    "description": "Section title for video tutorial"
+  },
+  "formCues": "Form Cues",
+  "@formCues": {
+    "description": "Section title for form cues"
+  },
+  "warmupPhase1Description": "Joint mobilization and dynamic stretching (5-10 min)",
+  "@warmupPhase1Description": {
+    "description": "Description for warmup phase 1"
+  },
+  "warmupPhase2Description": "Muscle activation with bodyweight exercises",
+  "@warmupPhase2Description": {
+    "description": "Description for warmup phase 2"
+  },
+  "warmupPhase3Description": "2-3 warmup sets with progressive weight",
+  "@warmupPhase3Description": {
+    "description": "Description for warmup phase 3"
+  },
+  "warmupPhase4Title": "Rest & Recovery",
+  "@warmupPhase4Title": {
+    "description": "Title for warmup phase 4"
+  },
+  "warmupPhase4Description": "1-2 minutes rest before starting working sets",
+  "@warmupPhase4Description": {
+    "description": "Description for warmup phase 4"
+  },
+  "tips": "Tips",
+  "@tips": {
+    "description": "Section title for tips"
+  },
+  "backHint": "Navigate to previous screen",
+  "@backHint": {
+    "description": "Back button accessibility hint"
+  },
+  "createTemplateHint": "Open form to create a new workout template",
+  "@createTemplateHint": {
+    "description": "Create template button accessibility hint"
+  },
+  "syncStatus": "Sync Status",
+  "@syncStatus": {
+    "description": "Sync status button label"
+  },
+  "syncStatusHint": "View cloud synchronization status and offline changes",
+  "@syncStatusHint": {
+    "description": "Sync status button accessibility hint"
+  },
+  "pageNotFound": "Page Not Found",
+  "@pageNotFound": {
+    "description": "Error message for 404 page"
+  },
+  "modalTestSuccess": "✅ {modalName} - WORKING",
+  "@modalTestSuccess": {
+    "description": "Success message for modal test",
+    "placeholders": {
+      "modalName": {
+        "type": "String"
+      }
+    }
+  },
+  "modalTestOpened": "✅ {modalName} - OPENED (check functionality)",
+  "@modalTestOpened": {
+    "description": "Modal opened message for testing",
+    "placeholders": {
+      "modalName": {
+        "type": "String"
+      }
+    }
+  },
+  "modalTestError": "❌ {modalName} - ERROR: {error}",
+  "@modalTestError": {
+    "description": "Error message for modal test",
+    "placeholders": {
+      "modalName": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "modalTestRpeSuccess": "✅ RpeSelectorBottomSheet - WORKING: RPE {rpe}",
+  "@modalTestRpeSuccess": {
+    "description": "RPE selector test success message",
+    "placeholders": {
+      "rpe": {
+        "type": "String"
+      }
+    }
+  },
+  "historyButtonTapped": "📊 History button tapped",
+  "@historyButtonTapped": {
+    "description": "Message when history button is tapped"
+  },
+  "editButtonTapped": "✏️ Edit button tapped",
+  "@editButtonTapped": {
+    "description": "Message when edit button is tapped"
+  },
+  "exerciseSelectVariation": "Select Variation",
+  "@exerciseSelectVariation": {
+    "description": "Title for variation selector dialog"
+  },
+  "exerciseFilterByEquipment": "Filter by available equipment",
+  "@exerciseFilterByEquipment": {
+    "description": "Label for equipment filter toggle"
+  },
+  "exerciseVariationStandard": "Standard",
+  "@exerciseVariationStandard": {
+    "description": "Label for standard variation type"
+  },
+  "exerciseVariationEquipment": "Equipment",
+  "@exerciseVariationEquipment": {
+    "description": "Label for equipment variation type"
+  },
+  "exerciseVariationGrip": "Grip",
+  "@exerciseVariationGrip": {
+    "description": "Label for grip variation type"
+  },
+  "exerciseVariationAngle": "Angle",
+  "@exerciseVariationAngle": {
+    "description": "Label for angle variation type"
+  },
+  "exerciseVariationTempo": "Tempo",
+  "@exerciseVariationTempo": {
+    "description": "Label for tempo variation type"
+  },
+  "exerciseVariationROM": "Range of Motion",
+  "@exerciseVariationROM": {
+    "description": "Label for range of motion variation type"
+  },
+  "exerciseEquipmentNone": "Bodyweight",
+  "@exerciseEquipmentNone": {
+    "description": "Label when no equipment is required"
+  },
+  "exerciseVariationsFiltered": "Showing {filtered} of {total} variations",
+  "@exerciseVariationsFiltered": {
+    "description": "Info text showing filtered variation count",
+    "placeholders": {
+      "filtered": {
+        "type": "int",
+        "description": "Number of filtered variations"
+      },
+      "total": {
+        "type": "int",
+        "description": "Total number of variations"
+      }
+    }
+  },
+  "exerciseVariationsTotal": "{total} variations available",
+  "@exerciseVariationsTotal": {
+    "description": "Info text showing total variation count",
+    "placeholders": {
+      "total": {
+        "type": "int",
+        "description": "Total number of variations"
+      }
+    }
+  },
+  "exerciseNoVariationsWithEquipment": "No variations available with your current equipment",
+  "@exerciseNoVariationsWithEquipment": {
+    "description": "Empty state message when no variations match equipment"
+  },
+  "exerciseNoVariationsAvailable": "No variations available for this exercise",
+  "@exerciseNoVariationsAvailable": {
+    "description": "Empty state message when no variations exist"
+  },
+  "exerciseShowAllVariations": "Show All Variations",
+  "@exerciseShowAllVariations": {
+    "description": "Button to disable equipment filter"
+  },
+  "equipmentProfile": "Equipment Profile",
+  "@equipmentProfile": {
+    "description": "Equipment profile label"
+  },
+  "equipmentProfileCreate": "New",
+  "@equipmentProfileCreate": {
+    "description": "Button to create new equipment profile"
+  },
+  "equipmentProfileItemsCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@equipmentProfileItemsCount": {
+    "description": "Equipment count in profile",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of equipment items"
+      }
+    }
+  },
+  "equipmentProfileSelectOne": "Select an equipment profile",
+  "@equipmentProfileSelectOne": {
+    "description": "Placeholder when no profile selected"
+  },
+  "equipmentProfileSelect": "Select Equipment Profile",
+  "@equipmentProfileSelect": {
+    "description": "Title for profile selection sheet"
+  },
+  "equipmentProfileCreateError": "Failed to create equipment profile",
+  "@equipmentProfileCreateError": {
+    "description": "Error message when profile creation fails"
+  },
+  "equipmentProfileLoadError": "Failed to load equipment profiles",
+  "@equipmentProfileLoadError": {
+    "description": "Error message when profiles fail to load"
+  },
+  "equipmentProfileEmpty": "No equipment profiles yet",
+  "@equipmentProfileEmpty": {
+    "description": "Message when no profiles exist"
+  },
+  "equipmentProfileCreateFirst": "Create First Profile",
+  "@equipmentProfileCreateFirst": {
+    "description": "Button to create first profile"
+  },
+  "equipmentProfileCreateNew": "Create Equipment Profile",
+  "@equipmentProfileCreateNew": {
+    "description": "Dialog title for creating new profile"
+  },
+  "equipmentProfileSelectTemplate": "Select Starting Template",
+  "@equipmentProfileSelectTemplate": {
+    "description": "Instructions for template selection"
+  },
+  "equipmentProfileCommercial": "Commercial Gym",
+  "@equipmentProfileCommercial": {
+    "description": "Commercial gym profile name"
+  },
+  "equipmentProfileCommercialDesc": "Full equipment - barbell, dumbbells, machines, cables",
+  "@equipmentProfileCommercialDesc": {
+    "description": "Commercial gym profile description"
+  },
+  "equipmentProfileHomeBasic": "Home Gym (Basic)",
+  "@equipmentProfileHomeBasic": {
+    "description": "Home basic profile name"
+  },
+  "equipmentProfileHomeBasicDesc": "Barbell, dumbbells, bench, resistance bands",
+  "@equipmentProfileHomeBasicDesc": {
+    "description": "Home basic profile description"
+  },
+  "equipmentProfileHomeComplete": "Home Gym (Complete)",
+  "@equipmentProfileHomeComplete": {
+    "description": "Home complete profile name"
+  },
+  "equipmentProfileHomeCompleteDesc": "Advanced home setup - kettlebells, TRX, pull-up bar",
+  "@equipmentProfileHomeCompleteDesc": {
+    "description": "Home complete profile description"
+  },
+  "equipmentProfileTravel": "Travel / Hotel",
+  "@equipmentProfileTravel": {
+    "description": "Travel profile name"
+  },
+  "equipmentProfileTravelDesc": "Minimal - dumbbells and bodyweight exercises",
+  "@equipmentProfileTravelDesc": {
+    "description": "Travel profile description"
+  },
+  "equipmentProfileBodyweight": "Bodyweight Only",
+  "@equipmentProfileBodyweight": {
+    "description": "Bodyweight profile name"
+  },
+  "equipmentProfileBodyweightDesc": "No equipment - calisthenics and bodyweight movements",
+  "@equipmentProfileBodyweightDesc": {
+    "description": "Bodyweight profile description"
+  },
+  "equipment_barbell": "Barbell",
+  "@equipment_barbell": {
+    "description": "Barbell equipment type"
+  },
+  "equipment_dumbbell": "Dumbbell",
+  "@equipment_dumbbell": {
+    "description": "Dumbbell equipment type"
+  },
+  "equipment_machine": "Machine",
+  "@equipment_machine": {
+    "description": "Weight machine equipment type"
+  },
+  "equipment_cables": "Cables",
+  "@equipment_cables": {
+    "description": "Cable machine equipment type"
+  },
+  "equipment_smith_machine": "Smith Machine",
+  "@equipment_smith_machine": {
+    "description": "Smith machine equipment type"
+  },
+  "equipment_ez_bar": "EZ Bar",
+  "@equipment_ez_bar": {
+    "description": "EZ curl bar equipment type"
+  },
+  "equipment_kettlebell": "Kettlebell",
+  "@equipment_kettlebell": {
+    "description": "Kettlebell equipment type"
+  },
+  "equipment_bodyweight": "Bodyweight",
+  "@equipment_bodyweight": {
+    "description": "Bodyweight/calisthenics equipment type"
+  },
+  "equipment_trx": "TRX",
+  "@equipment_trx": {
+    "description": "TRX/suspension training equipment type"
+  },
+  "equipment_bands": "Resistance Bands",
+  "@equipment_bands": {
+    "description": "Resistance bands equipment type"
+  },
+  "equipment_pullup_bar": "Pull-up Bar",
+  "@equipment_pullup_bar": {
+    "description": "Pull-up bar equipment type"
+  },
+  "equipment_parallel_bars": "Parallel Bars",
+  "@equipment_parallel_bars": {
+    "description": "Parallel bars/dip station equipment type"
+  },
+  "equipment_rack": "Rack",
+  "@equipment_rack": {
+    "description": "Power rack/squat rack equipment type"
+  },
+  "equipment_bench": "Bench",
+  "@equipment_bench": {
+    "description": "Weight bench equipment type"
+  },
+  "rotationConfigTitle": "Rotation Settings",
+  "@rotationConfigTitle": {
+    "description": "Title for rotation config dialog"
+  },
+  "rotationEnabled": "Enable Rotation",
+  "@rotationEnabled": {
+    "description": "Enable rotation toggle label"
+  },
+  "rotationEnabledDesc": "Automatically rotate exercise variations",
+  "@rotationEnabledDesc": {
+    "description": "Description for rotation enable toggle"
+  },
+  "rotationFrequency": "Rotation Frequency",
+  "@rotationFrequency": {
+    "description": "Label for rotation frequency section"
+  },
+  "rotationNotifications": "Notifications",
+  "@rotationNotifications": {
+    "description": "Label for notifications toggle"
+  },
+  "rotationNotificationsDesc": "Notify before variation changes",
+  "@rotationNotificationsDesc": {
+    "description": "Description for notifications toggle"
+  },
+  "rotationNotifyDaysBefore": "Notify days before",
+  "@rotationNotifyDaysBefore": {
+    "description": "Label for notification days selector"
+  },
+  "rotationFrequencyWeeks": "{weeks, plural, =1{Every week} other{Every {weeks} weeks}}",
+  "@rotationFrequencyWeeks": {
+    "description": "Rotation frequency in weeks",
+    "placeholders": {
+      "weeks": {
+        "type": "int",
+        "description": "Number of weeks"
+      }
+    }
+  },
+  "rotationNotifyDaysCount": "{days, plural, =1{1 day} other{{days} days}}",
+  "@rotationNotifyDaysCount": {
+    "description": "Notification days count",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Number of days"
+      }
+    }
+  },
+  "rotationPreview": "Preview",
+  "@rotationPreview": {
+    "description": "Label for rotation preview section"
+  },
+  "rotationNextDate": "Next rotation",
+  "@rotationNextDate": {
+    "description": "Label for next rotation date"
+  },
+  "rotationInDays": "In {days} days",
+  "@rotationInDays": {
+    "description": "Next rotation in N days",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Number of days until rotation"
+      }
+    }
+  },
+  "tomorrow": "Tomorrow",
+  "@tomorrow": {
+    "description": "Tomorrow label"
+  },
+  "accessDenied": "Access Denied",
+  "@accessDenied": {
+    "description": "Access denied title for unauthorized screen"
+  },
+  "noPermissionMessage": "You don't have permission to access this feature. Please upgrade your account or contact support.",
+  "@noPermissionMessage": {
+    "description": "Message shown when user lacks required permission"
+  },
+  "sessionExpiringSoon": "Your session will expire in {seconds} seconds. Tap to extend.",
+  "@sessionExpiringSoon": {
+    "description": "Warning message shown before session timeout",
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "description": "Remaining seconds before session expires"
+      }
+    }
+  },
+  "sessionExpired": "Your session has expired. Please log in again.",
+  "@sessionExpired": {
+    "description": "Message shown when session has timed out"
+  },
+  "extendSession": "Extend Session",
+  "@extendSession": {
+    "description": "Button to extend user session"
+  },
+  "equipmentProfileName": "Profile Name",
+  "equipmentProfileNameHint": "e.g., Home Gym, Travel Kit",
+  "equipmentProfileBadge": "Type",
+  "equipmentProfileSelectEquipment": "Select Available Equipment",
+  "selectAll": "Select All",
+  "equipmentProfileEdit": "Edit Equipment Profile",
+  "equipmentProfileTemplateHint": "Choose a template to customize or start from scratch",
+  "equipmentProfilesTitle": "Equipment Profiles",
+  "equipmentProfilesSubtitle": "Manage your equipment availability for exercise recommendations",
+  "equipmentProfilesHelp": "Equipment Profiles Help",
+  "equipmentProfilesHelpText": "Equipment profiles help the app suggest exercises that match your available equipment. Create different profiles for different locations (gym, home, travel).",
+  "equipmentProfileBadgeFull": "Full gym with 6+ equipment types",
+  "equipmentProfileBadgeHome": "Home setup with 3-5 equipment types",
+  "equipmentProfileBadgeMinimal": "Minimal setup with 1-2 equipment types",
+  "equipmentProfilesEmpty": "No Equipment Profiles Yet",
+  "equipmentProfilesEmptyDescription": "Create your first equipment profile to get exercise recommendations based on what you have available.",
+  "equipmentProfileUpdated": "Profile updated successfully",
+  "equipmentProfileCreated": "Profile created successfully",
+  "equipmentProfileSaveError": "Failed to save profile",
+  "equipmentProfileDeleteConfirmTitle": "Delete Equipment Profile?",
+  "equipmentProfileDeleteConfirmMessage": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+  "@equipmentProfileDeleteConfirmMessage": {
+    "description": "Confirmation message for deleting equipment profile",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "equipmentProfileDeleted": "Profile deleted successfully",
+  "equipmentProfileDeleteError": "Failed to delete profile",
+  "equipmentProfileSetDefault": "Default profile updated",
+  "equipmentProfileDefaultError": "Failed to set default profile",
+  "equipmentProfileDefault": "Default",
+  "equipmentProfileMakeDefault": "Set Default",
+  "equipmentProfileStepTitle": "Available Equipment",
+  "equipmentProfileStepDescription": "Select which equipment you have available for this routine. This will help filter exercises to match your setup.",
+  "equipmentProfileStepDescriptionOptional": "Select which equipment you have available. You can skip this and set it up later.",
+  "equipmentProfileOptional": "(Optional)",
+  "equipmentProfileSkipForNow": "Skip for now",
+  "equipmentProfileSkipConfirmTitle": "Skip Equipment Profile?",
+  "equipmentProfileSkipConfirmMessage": "You can add an equipment profile later from Settings. Without it, all exercises will be available.",
+  "equipmentProfileStepInfoTitle": "Why is this important?",
+  "equipmentProfileStepInfoMessage": "The app will only suggest exercises that match your selected equipment, ensuring you can actually perform the recommended workouts.",
+  "equipmentProfileManageInSettings": "Manage Profiles in Settings",
+  "migrationWizardTitle": "Equipment Profile Change",
+  "migrationWizardImpactAnalysisTitle": "Analyzing Impact",
+  "migrationWizardImpactSummary": "Impact Summary",
+  "migrationWizardFromProfile": "From",
+  "migrationWizardToProfile": "To",
+  "migrationWizardAffectedExercises": "{count, plural, =1{1 exercise affected} other{{count} exercises affected}}",
+  "@migrationWizardAffectedExercises": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardWithAlternatives": "with alternatives",
+  "migrationWizardWithoutAlternatives": "without alternatives",
+  "migrationWizardAffectedRoutines": "{count, plural, =1{1 routine} other{{count} routines}}",
+  "@migrationWizardAffectedRoutines": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardAffectedTemplates": "{count, plural, =1{1 template} other{{count} templates}}",
+  "@migrationWizardAffectedTemplates": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardReviewChanges": "Review Changes",
+  "migrationWizardNoImpact": "No exercises are affected by this change.",
+  "migrationWizardNoImpactMessage": "All your exercises are compatible with the new equipment profile.",
+  "migrationWizardExerciseReviewTitle": "Review Exercise",
+  "migrationWizardExerciseProgress": "Exercise {current} of {total}",
+  "@migrationWizardExerciseProgress": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "migrationWizardRequiredEquipment": "Required",
+  "migrationWizardUsedIn": "Used in",
+  "migrationWizardSuggestedAlternatives": "Suggested Alternatives",
+  "migrationWizardNoAlternatives": "No compatible alternatives found",
+  "migrationWizardNoAlternativesMessage": "Consider keeping this exercise if you plan to get the equipment, or remove it.",
+  "migrationWizardSimilarityScore": "Match",
+  "migrationWizardReplaceWith": "Replace with",
+  "migrationWizardKeepExercise": "Keep anyway",
+  "migrationWizardKeepExerciseHint": "I'll get this equipment",
+  "migrationWizardRemoveExercise": "Remove exercise",
+  "migrationWizardConfirmationTitle": "Confirm Changes",
+  "migrationWizardConfirmationMessage": "Review your decisions before applying",
+  "migrationWizardSummaryReplaced": "Replaced",
+  "migrationWizardSummaryKept": "Kept",
+  "migrationWizardSummaryRemoved": "Removed",
+  "migrationWizardWillUpdate": "This will update",
+  "migrationWizardApplyChanges": "Apply Changes",
+  "migrationWizardApplying": "Applying changes...",
+  "migrationWizardSuccessTitle": "Migration Complete!",
+  "migrationWizardSuccessMessage": "Your equipment profile has been updated.",
+  "migrationWizardChangesApplied": "Changes applied",
+  "migrationWizardExercisesReplaced": "{count, plural, =1{1 exercise replaced} other{{count} exercises replaced}}",
+  "@migrationWizardExercisesReplaced": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardExercisesKept": "{count, plural, =1{1 exercise kept} other{{count} exercises kept}}",
+  "@migrationWizardExercisesKept": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardExercisesRemoved": "{count, plural, =1{1 exercise removed} other{{count} exercises removed}}",
+  "@migrationWizardExercisesRemoved": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardUpdated": "Updated",
+  "migrationWizardAnalyzing": "Analyzing impact...",
+  "migrationWizardScanningRoutines": "Scanning active routines",
+  "migrationWizardScanningTemplates": "Scanning workout templates",
+  "migrationWizardFindingAffected": "Finding affected exercises",
+  "migrationWizardGeneratingAlternatives": "Generating alternatives",
+  "migrationWizardImpactSummaryTitle": "Migration Impact Summary",
+  "migrationWizardTotalAffected": "Total Affected:",
+  "migrationWizardExercisesWithAlternatives": "{count, plural, =1{1 with alternatives} other{{count} with alternatives}}",
+  "@migrationWizardExercisesWithAlternatives": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardExercisesWithoutAlternatives": "{count, plural, =1{1 without alternatives} other{{count} without alternatives}}",
+  "@migrationWizardExercisesWithoutAlternatives": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardImpactLabel": "Impact:",
+  "migrationWizardNoImpactTitle": "No Impact",
+  "migrationWizardContinueToReview": "Continue to Review",
+  "migrationWizardSkipToConfirmation": "Skip to Confirmation",
+  "migrationWizardExerciseXOfY": "Exercise {current} of {total}",
+  "@migrationWizardExerciseXOfY": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "migrationWizardNoAlternativesFound": "No compatible alternatives found",
+  "migrationWizardPreviousExercise": "Previous Exercise",
+  "migrationWizardNextExercise": "Next Exercise",
+  "migrationWizardDecisionsSummary": "Decisions Summary:",
+  "migrationWizardReplaceAction": "Replace: {original} → {replacement}",
+  "@migrationWizardReplaceAction": {
+    "placeholders": {
+      "original": {"type": "String"},
+      "replacement": {"type": "String"}
+    }
+  },
+  "migrationWizardKeepAction": "Keep: {exercise}",
+  "@migrationWizardKeepAction": {
+    "placeholders": {
+      "exercise": {"type": "String"}
+    }
+  },
+  "migrationWizardRemoveAction": "Remove: {exercise}",
+  "@migrationWizardRemoveAction": {
+    "placeholders": {
+      "exercise": {"type": "String"}
+    }
+  },
+  "migrationWizardBackToReview": "Back to Review",
+  "migrationWizardApplyingChanges": "Applying changes...",
+  "migrationWizardRoutinesUpdated": "{count, plural, =1{1 routine updated} other{{count} routines updated}}",
+  "@migrationWizardRoutinesUpdated": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardTemplatesUpdated": "{count, plural, =1{1 template updated} other{{count} templates updated}}",
+  "@migrationWizardTemplatesUpdated": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "migrationWizardProfileSwitched": "Profile switched to: {profileName}",
+  "@migrationWizardProfileSwitched": {
+    "placeholders": {
+      "profileName": {"type": "String"}
+    }
+  },
+  "migrationWizardDone": "Done",
+  "migrationWizardCancel": "Cancel Migration",
+  "migrationWizardCancelConfirmTitle": "Cancel Migration?",
+  "migrationWizardCancelConfirmMessage": "Your decisions will not be saved and the equipment profile will not be changed.",
+  "migrationWizardProgress": "Progress: {percent}%",
+  "@migrationWizardProgress": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "migrationWizardError": "Error during migration: {error}",
+  "@migrationWizardError": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "migrationWizardRetry": "Retry",
+  "routineShiftTitle": "Routine Auto-Shifted",
+  "@routineShiftTitle": {
+    "description": "Title for auto-shift confirmation banner"
+  },
+  "routineShiftMessage": "We shifted '{workoutName}' to {date}. Confirm or skip permanently?",
+  "@routineShiftMessage": {
+    "description": "Message explaining the auto-shift",
+    "placeholders": {
+      "workoutName": {"type": "String"},
+      "date": {"type": "String"}
+    }
+  },
+  "routineShiftConfirm": "OK, keep shift",
+  "@routineShiftConfirm": {
+    "description": "Button to confirm the auto-shift (recommended)"
+  },
+  "routineShiftRevert": "Skip permanently",
+  "@routineShiftRevert": {
+    "description": "Button to revert shift and skip permanently (not recommended)"
+  },
+  "routineShiftConfirmed": "Shift confirmed successfully",
+  "@routineShiftConfirmed": {
+    "description": "Success message after confirming shift"
+  },
+  "routineShiftConfirmFailed": "Failed to confirm shift",
+  "@routineShiftConfirmFailed": {
+    "description": "Error message when confirm fails"
+  },
+  "routineShiftReverted": "Shift reverted, workout skipped",
+  "@routineShiftReverted": {
+    "description": "Success message after reverting shift"
+  },
+  "routineShiftRevertFailed": "Failed to revert shift",
+  "@routineShiftRevertFailed": {
+    "description": "Error message when revert fails"
+  },
+  "routineShiftRevertConfirmTitle": "Skip Permanently?",
+  "@routineShiftRevertConfirmTitle": {
+    "description": "Dialog title for confirming permanent skip"
+  },
+  "routineShiftRevertConfirmMessage": "This will undo the shift and mark the workout as skipped. This is not recommended. Are you sure?",
+  "@routineShiftRevertConfirmMessage": {
+    "description": "Dialog message warning about permanent skip"
+  },
+  "routineDateFormat": "{month}/{day}/{year}",
+  "@routineDateFormat": {
+    "description": "Date format for routine shift banner",
+    "placeholders": {
+      "day": {"type": "int"},
+      "month": {"type": "int"},
+      "year": {"type": "int"}
+    }
+  },
+  "exerciseRotationTitle": "Exercise Variation Rotation",
+  "@exerciseRotationTitle": {
+    "description": "Title for exercise rotation config step in wizard"
+  },
+  "exerciseRotationSubtitle": "Automatically rotate exercise variations every few weeks to keep your workouts fresh and prevent adaptation",
+  "@exerciseRotationSubtitle": {
+    "description": "Subtitle explaining exercise rotation benefits"
+  },
+  "exerciseChangeVariation": "Change Exercise",
+  "@exerciseChangeVariation": {
+    "description": "Menu option to change/replace exercise with a variation or different exercise"
+  },
+  "exerciseChangeVariationSuccess": "Exercise changed successfully",
+  "@exerciseChangeVariationSuccess": {
+    "description": "Success message after changing exercise"
+  },
+  "rotationDueNow": "Rotation Due Now!",
+  "@rotationDueNow": {
+    "description": "Banner title when rotation is ready to apply"
+  },
+  "rotationNextScheduled": "Next Rotation Scheduled",
+  "@rotationNextScheduled": {
+    "description": "Banner title showing when next rotation will occur"
+  },
+  "rotationReadyToApply": "Ready to apply new exercise variations",
+  "@rotationReadyToApply": {
+    "description": "Text shown when rotation is due"
+  },
+  "rotationApplyNow": "Apply Rotation Now",
+  "@rotationApplyNow": {
+    "description": "Button to apply rotation immediately when due"
+  },
+  "rotationApplyEarly": "Apply Early",
+  "@rotationApplyEarly": {
+    "description": "Button to apply rotation before scheduled date"
+  },
+  "rotationInWeeks": "{weeks, plural, =1{In 1 week} other{In {weeks} weeks}}",
+  "@rotationInWeeks": {
+    "description": "Shows weeks until rotation",
+    "placeholders": {
+      "weeks": {"type": "int"}
+    }
+  },
+  "rotationApplyConfirmMessage": "This will change all exercise variations in your routine. This action cannot be undone. Continue?",
+  "@rotationApplyConfirmMessage": {
+    "description": "Confirmation message before applying rotation"
+  },
+  "rotationAppliedSuccess": "Rotation applied successfully! All exercise variations have been updated.",
+  "@rotationAppliedSuccess": {
+    "description": "Success message after rotation is applied"
+  },
+  "rotationAppliedError": "Failed to apply rotation. Please try again.",
+  "@rotationAppliedError": {
+    "description": "Error message when rotation fails"
+  },
+  "settingsSaved": "Settings saved",
+  "@settingsSaved": {
+    "description": "Message shown when settings are successfully saved"
+  },
+  "noSimilarExercisesFound": "No similar exercises found",
+  "@noSimilarExercisesFound": {
+    "description": "Message shown when no similar exercises are available for replacement"
+  },
+  "sameMuscleGroup": "Same muscle group",
+  "@sameMuscleGroup": {
+    "description": "Filter label for exercises targeting the same muscle group"
+  },
+  "sameEquipment": "Same equipment",
+  "@sameEquipment": {
+    "description": "Filter label for exercises using the same equipment"
+  },
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Label for favorite exercises filter"
+  },
+  "allCategories": "All categories",
+  "@allCategories": {
+    "description": "Label for showing all exercise categories"
+  },
+  "allEquipment": "All equipment",
+  "@allEquipment": {
+    "description": "Label for showing all equipment types"
+  },
+  "replaceExerciseWith": "Replace this exercise with:",
+  "@replaceExerciseWith": {
+    "description": "Header text for exercise replacement dialog"
+  },
+  "skipWorkoutTitle": "Skip Workout",
+  "@skipWorkoutTitle": {
+    "description": "Title for skip workout dialog"
+  },
+  "skipConsecutiveWarning": "You have {count} consecutive skip(s). Consider recovering them to maintain consistency.",
+  "@skipConsecutiveWarning": {
+    "description": "Warning message for consecutive skips",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "skipWhyQuestion": "Why are you skipping?",
+  "@skipWhyQuestion": {
+    "description": "Question asking reason for skip"
+  },
+  "skipWhatToDo": "What would you like to do?",
+  "@skipWhatToDo": {
+    "description": "Question asking user choice for skip action"
+  },
+  "skipRecoverTitle": "Recover (+1 day)",
+  "@skipRecoverTitle": {
+    "description": "Title for recover option"
+  },
+  "skipRecoverSubtitle": "Shift entire routine by 1 day to recover this workout",
+  "@skipRecoverSubtitle": {
+    "description": "Subtitle explaining recover option"
+  },
+  "skipPermanentlyTitle": "Skip permanently",
+  "@skipPermanentlyTitle": {
+    "description": "Title for skip permanently option"
+  },
+  "skipPermanentlySubtitle": "Skip this workout completely (cannot be recovered)",
+  "@skipPermanentlySubtitle": {
+    "description": "Subtitle explaining skip permanently option"
+  },
+  "skipAdditionalNotes": "Additional notes (optional)",
+  "@skipAdditionalNotes": {
+    "description": "Label for optional notes field"
+  },
+  "skipNotesHint": "e.g., Feeling under the weather...",
+  "@skipNotesHint": {
+    "description": "Hint text for notes field"
+  },
+  "skipImpactTitle": "Impact on your progress",
+  "@skipImpactTitle": {
+    "description": "Title for impact preview section"
+  },
+  "skipCurrentStreak": "Current Streak",
+  "@skipCurrentStreak": {
+    "description": "Label for current streak"
+  },
+  "skipWillBeLost": "Will be lost",
+  "@skipWillBeLost": {
+    "description": "Message indicating streak will be lost"
+  },
+  "skipAdherenceRate": "Adherence Rate",
+  "@skipAdherenceRate": {
+    "description": "Label for adherence rate"
+  },
+  "skipDaysLabel": "{count} days",
+  "@skipDaysLabel": {
+    "description": "Label for days count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "skipReasonSick": "Sick",
+  "@skipReasonSick": {
+    "description": "Skip reason: sick"
+  },
+  "skipReasonInjury": "Injury",
+  "@skipReasonInjury": {
+    "description": "Skip reason: injury"
+  },
+  "skipReasonBusy": "Busy",
+  "@skipReasonBusy": {
+    "description": "Skip reason: busy"
+  },
+  "skipReasonTired": "Tired",
+  "@skipReasonTired": {
+    "description": "Skip reason: tired"
+  },
+  "skipReasonTravel": "Travel",
+  "@skipReasonTravel": {
+    "description": "Skip reason: travel"
+  },
+  "skipReasonWeather": "Weather",
+  "@skipReasonWeather": {
+    "description": "Skip reason: weather"
+  },
+  "skipReasonOther": "Other",
+  "@skipReasonOther": {
+    "description": "Skip reason: other"
+  },
+  "rotationPreviewTitle": "Preview Rotation Changes",
+  "@rotationPreviewTitle": {
+    "description": "Title for rotation preview dialog"
+  },
+  "rotationSelectAll": "Select All",
+  "@rotationSelectAll": {
+    "description": "Button to select all exercises for rotation"
+  },
+  "rotationDeselectAll": "Deselect All",
+  "@rotationDeselectAll": {
+    "description": "Button to deselect all exercises for rotation"
+  },
+  "rotationSelectedCount": "{selected} of {total} selected",
+  "@rotationSelectedCount": {
+    "description": "Label showing number of selected exercises",
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "rotationCurrentLabel": "Current",
+  "@rotationCurrentLabel": {
+    "description": "Label for current variation"
+  },
+  "rotationNewLabel": "New",
+  "@rotationNewLabel": {
+    "description": "Label for new variation"
+  },
+  "rotationApplyChanges": "Apply Changes",
+  "@rotationApplyChanges": {
+    "description": "Button to confirm and apply rotation changes"
+  },
+  "newRecordBadge": "NEW RECORD!",
+  "@newRecordBadge": {
+    "description": "Badge text for new personal records"
+  },
+  "progressTrend": "Progress Trend",
+  "@progressTrend": {
+    "description": "Title for progress trend chart section"
+  },
+  "statsBreakdown": "Stats Breakdown",
+  "@statsBreakdown": {
+    "description": "Title for statistics breakdown section"
+  },
+  "comparisonAndContext": "Comparison & Context",
+  "@comparisonAndContext": {
+    "description": "Title for comparison and context section"
+  },
+  "notesAndMedia": "Notes & Media",
+  "@notesAndMedia": {
+    "description": "Title for notes and media section"
+  },
+  "relatedSessions": "Related Sessions",
+  "@relatedSessions": {
+    "description": "Title for related workout sessions section"
+  },
+  "shareFunctionalityComingSoon": "Share functionality coming soon",
+  "@shareFunctionalityComingSoon": {
+    "description": "Placeholder message for share feature"
+  },
+  "editFunctionalityComingSoon": "Edit functionality coming soon",
+  "@editFunctionalityComingSoon": {
+    "description": "Placeholder message for edit feature"
+  },
+  "deleteRecordTitle": "Delete Record",
+  "@deleteRecordTitle": {
+    "description": "Title for delete record confirmation dialog"
+  },
+  "deleteRecordConfirmation": "Are you sure you want to delete this personal record?",
+  "@deleteRecordConfirmation": {
+    "description": "Confirmation message for deleting a personal record"
+  },
+  "totalSessions": "Total Sessions",
+  "@totalSessions": {
+    "description": "Label for total number of workout sessions"
+  },
+  "totalSets": "Total Sets",
+  "@totalSets": {
+    "description": "Label for total number of sets"
+  },
+  "avgWeight": "Avg Weight",
+  "@avgWeight": {
+    "description": "Label for average weight lifted"
+  },
+  "totalVolume": "Total Volume",
+  "@totalVolume": {
+    "description": "Label for total training volume"
+  },
+  "bodyweightMultiplier": "Bodyweight Multiplier",
+  "@bodyweightMultiplier": {
+    "description": "Label for weight relative to bodyweight"
+  },
+  "estimatedOneRM": "Estimated 1RM",
+  "@estimatedOneRM": {
+    "description": "Label for estimated one-rep max"
+  },
+  "volume": "Volume",
+  "@volume": {
+    "description": "Label for volume calculation"
+  },
+  "relativeToBodyweight": "Relative to {weight} kg bodyweight",
+  "@relativeToBodyweight": {
+    "description": "Subtitle explaining bodyweight multiplier",
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      }
+    }
+  },
+  "usingBrzyckiFormula": "Using Brzycki formula",
+  "@usingBrzyckiFormula": {
+    "description": "Subtitle explaining 1RM calculation method"
+  },
+  "totalWeightReps": "Total weight × reps",
+  "@totalWeightReps": {
+    "description": "Subtitle explaining volume calculation"
+  },
+  "noTrendDataAvailable": "No trend data available",
+  "@noTrendDataAvailable": {
+    "description": "Message shown when no trend data exists"
+  },
+  "timeRangeLabel30D": "30D",
+  "@timeRangeLabel30D": {
+    "description": "Label for 30 days time range"
+  },
+  "timeRangeLabel90D": "90D",
+  "@timeRangeLabel90D": {
+    "description": "Label for 90 days time range"
+  },
+  "timeRangeLabelAll": "All",
+  "@timeRangeLabelAll": {
+    "description": "Label for all time range"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Label for today's date"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Label for yesterday's date"
+  },
+  "daysAgo": "{days} days ago",
+  "@daysAgo": {
+    "description": "Format for days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "weeksAgo": "{weeks} weeks ago",
+  "@weeksAgo": {
+    "description": "Format for weeks ago",
+    "placeholders": {
+      "weeks": {
+        "type": "String"
+      }
+    }
+  },
+  "monthsAgo": "{months} months ago",
+  "@monthsAgo": {
+    "description": "Format for months ago",
+    "placeholders": {
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "dAgo": "{days}d ago",
+  "@dAgo": {
+    "description": "Short format for days ago",
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "setsCountShort": "{count} sets",
+  "@setsCountShort": {
+    "description": "Short format for number of sets",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "volumeInTons": "{value}t volume",
+  "@volumeInTons": {
+    "description": "Format for volume in tons",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "repsLabel": "reps",
+  "@repsLabel": {
+    "description": "Short label for repetitions"
+  },
+  "kgLabel": "kg",
+  "@kgLabel": {
+    "description": "Label for kilograms unit"
+  },
+  "debugLogsTitle": "Debug Logs",
+  "@debugLogsTitle": {
+    "description": "Debug logs settings screen title"
+  },
+  "debugLogsSubtitle": "Configure logging categories",
+  "@debugLogsSubtitle": {
+    "description": "Debug logs settings subtitle"
+  },
+  "debugLogsDescription": "Enable or disable specific log categories to reduce console noise during debugging. All categories are disabled by default.",
+  "@debugLogsDescription": {
+    "description": "Debug logs settings description"
+  },
+  "debugLogsEnableAll": "Enable All",
+  "@debugLogsEnableAll": {
+    "description": "Button to enable all log categories"
+  },
+  "debugLogsDisableAll": "Disable All",
+  "@debugLogsDisableAll": {
+    "description": "Button to disable all log categories"
+  },
+  "debugLogsEnabledCount": "{count} enabled",
+  "@debugLogsEnabledCount": {
+    "description": "Shows count of enabled log categories",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of enabled categories"
+      }
+    }
+  },
+  "debugLogsCategoriesTitle": "Log Categories",
+  "@debugLogsCategoriesTitle": {
+    "description": "Section title for log categories list"
+  },
+  "debugLogsAllEnabled": "All logs enabled successfully",
+  "@debugLogsAllEnabled": {
+    "description": "Snackbar message when all logs enabled"
+  },
+  "debugLogsAllDisabled": "All logs disabled successfully",
+  "@debugLogsAllDisabled": {
+    "description": "Snackbar message when all logs disabled"
+  },
+  "debugLogsCategoryEnabled": "{category} enabled",
+  "@debugLogsCategoryEnabled": {
+    "description": "Snackbar message when a category is enabled",
+    "placeholders": {
+      "category": {
+        "type": "String",
+        "description": "Category name"
+      }
+    }
+  },
+  "debugLogsCategoryDisabled": "{category} disabled",
+  "@debugLogsCategoryDisabled": {
+    "description": "Snackbar message when a category is disabled",
+    "placeholders": {
+      "category": {
+        "type": "String",
+        "description": "Category name"
+      }
+    }
   }
 }

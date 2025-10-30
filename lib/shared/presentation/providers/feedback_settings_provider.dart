@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/feedback_settings.dart';
 import 'package:gymbro_flutter_new/shared/data/datasources/feedback_settings_datasource.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// DataSource Provider
 final feedbackSettingsDataSourceProvider = Provider<FeedbackSettingsDataSource>((ref) {
-  return FeedbackSettingsDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return FeedbackSettingsDataSource(boxManager);
 });
 
 /// Feedback Settings Provider (StateNotifier)

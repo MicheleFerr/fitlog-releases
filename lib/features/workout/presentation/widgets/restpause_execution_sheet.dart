@@ -103,7 +103,9 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
   void _startRestTimer() {
     setState(() {
       _isResting = true;
-      _restSeconds = widget.restPause.pauseDuration;
+      _restSeconds = widget.restPause.restPauseSets.isNotEmpty
+        ? widget.restPause.restPauseSets[_currentMiniSet].restSeconds
+        : 15; // Default 15s if no sets defined
     });
     
     _restTimer?.cancel();
@@ -169,7 +171,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -177,7 +179,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiaryContainer.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.tertiaryContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -213,7 +215,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.tertiary
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         );
@@ -271,7 +273,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -279,7 +281,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiaryContainer.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.tertiaryContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -315,7 +317,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.tertiary
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         );
@@ -366,7 +368,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -387,10 +389,10 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.tertiary.withOpacity(0.1),
+                                  color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(6),
                                   border: Border.all(
-                                    color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
+                                    color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.3),
                                   ),
                                 ),
                                 child: Text(
@@ -469,7 +471,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   color: Theme.of(context).colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -523,10 +525,10 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                      color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     ),
                     borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   ),
                   child: Row(
                     children: [
@@ -590,9 +592,9 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     color: isCompleted 
-                        ? Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.3)
+                        ? Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.3)
                         : isCurrent 
-                            ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2)
+                            ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2)
                             : null,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -638,9 +640,9 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    if (index > 0)
+                                    if (index > 0 && index < widget.restPause.restPauseSets.length)
                                       Text(
-                                        'Dopo ${widget.restPause.pauseDuration}s di pausa',
+                                        'Dopo ${widget.restPause.restPauseSets[index].restSeconds}s di pausa',
                                         style: Theme.of(context).textTheme.bodySmall,
                                       ),
                                   ],
@@ -666,11 +668,11 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                                 ),
                                 borderRadius: BorderRadius.circular(8),
                                 color: (isCompleted || isLocked || _isResting)
-                                    ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                                    ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
                                     : null,
                               ),
                               child: Row(
@@ -719,7 +721,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(

@@ -10,6 +10,7 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Servizio per tracciare e gestire l'utilizzo degli esercizi da parte dell'utente
 ///
@@ -19,29 +20,34 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/models/exerci
 /// - Persistenza con Hive (locale)
 /// - Auto-sync con Firebase (future)
 class ExerciseUsageTracker {
+
+  factory ExerciseUsageTracker() => _instance;
+
+  ExerciseUsageTracker._internal();
   /// Box Hive per storage locale
   static const String _boxName = 'exercise_usage';
 
   /// Lazy-loaded box reference
   Box<ExerciseUsageModel>? _box;
 
+  /// HiveBoxManagerEnhanced instance
+  HiveBoxManagerEnhanced? _boxManager;
+
   /// Singleton instance
   static final ExerciseUsageTracker _instance = ExerciseUsageTracker._internal();
 
-  factory ExerciseUsageTracker() => _instance;
-
-  ExerciseUsageTracker._internal();
-
   /// Inizializza Hive box (chiamare all'avvio app)
-  Future<void> initialize() async {
+  Future<void> initialize({HiveBoxManagerEnhanced? boxManager}) async {
     try {
+      _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+
       // Registra adapter se non già fatto
       if (!Hive.isAdapterRegistered(30)) {
         Hive.registerAdapter(ExerciseUsageModelAdapter());
       }
 
       // Apri box
-      _box = await Hive.openBox<ExerciseUsageModel>(_boxName);
+      _box = await _boxManager!.openBox<ExerciseUsageModel>(_boxName);
 
       if (kDebugMode) {
         debugPrint('✅ ExerciseUsageTracker initialized: ${_box!.length} entries');

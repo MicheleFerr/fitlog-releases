@@ -17,6 +17,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_workout_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
@@ -25,7 +26,8 @@ import 'package:gymbro_flutter_new/features/workout/data/services/workout_sync_s
 
 /// Provider for Hive workout data source
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
-  return HiveWorkoutDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return HiveWorkoutDataSource(boxManager);
 });
 
 /// Provider for Firebase workout data source

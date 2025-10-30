@@ -111,7 +111,7 @@ class VerificationBadges extends ConsumerWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -129,9 +129,9 @@ class VerificationBadges extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -217,9 +217,9 @@ class TrustScoreIndicator extends ConsumerWidget {
             ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
             : const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -278,7 +278,7 @@ class ConnectionTypeBadges extends ConsumerWidget {
         context,
         emoji: '🤝',
         text: compact ? '' : l10n.openToFriendship,
-        color: const Color(0xFF4CAF50).withOpacity(0.1),
+        color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
         textColor: const Color(0xFF4CAF50),
       ));
     }
@@ -288,7 +288,7 @@ class ConnectionTypeBadges extends ConsumerWidget {
         context,
         emoji: '❤️',
         text: compact ? '' : l10n.openToDating,
-        color: const Color(0xFFF44336).withOpacity(0.1),
+        color: const Color(0xFFF44336).withValues(alpha: 0.1),
         textColor: const Color(0xFFF44336),
       ));
     }

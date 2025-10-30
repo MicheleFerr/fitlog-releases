@@ -17,49 +17,28 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/questionnaire_analytics.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/suggestion_accuracy.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 
 /// Local Hive datasource for analytics storage
+///
+/// ✅ MIGRATED to HiveBoxManagerEnhanced pattern (Oct 2025)
+/// - No direct Hive.openBox() calls
+/// - Centralized box lifecycle management
 class QuestionnaireAnalyticsDataSource {
-  static const String _analyticsBoxName = 'questionnaire_analytics';
-  static const String _accuracyBoxName = 'suggestion_accuracy';
 
-  /// Initialize Hive boxes
-  static Future<void> initialize() async {
-    try {
-      // Open analytics box
-      if (!Hive.isBoxOpen(_analyticsBoxName)) {
-        await Hive.openBox<Map>(_analyticsBoxName);
-        if (kDebugMode) {
-          debugPrint('✅ Opened questionnaire_analytics box');
-        }
-      }
+  /// Constructor with dependency injection
+  QuestionnaireAnalyticsDataSource(this._boxManager);
+  final HiveBoxManagerEnhanced _boxManager;
 
-      // Open accuracy box
-      if (!Hive.isBoxOpen(_accuracyBoxName)) {
-        await Hive.openBox<Map>(_accuracyBoxName);
-        if (kDebugMode) {
-          debugPrint('✅ Opened suggestion_accuracy box');
-        }
-      }
-    } catch (e, stackTrace) {
-      debugPrint('❌ Error initializing analytics Hive boxes: $e');
-      debugPrint('Stack trace: $stackTrace');
-      rethrow;
-    }
-  }
-
-  /// Get analytics box
+  /// Get analytics box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getAnalyticsBox() async {
-    return Hive.isBoxOpen(_analyticsBoxName)
-        ? Hive.box<Map>(_analyticsBoxName)
-        : await Hive.openBox<Map>(_analyticsBoxName);
+    return await _boxManager.openBox<Map>(HiveBoxNames.questionnaireAnalytics);
   }
 
-  /// Get accuracy box
+  /// Get accuracy box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getAccuracyBox() async {
-    return Hive.isBoxOpen(_accuracyBoxName)
-        ? Hive.box<Map>(_accuracyBoxName)
-        : await Hive.openBox<Map>(_accuracyBoxName);
+    return await _boxManager.openBox<Map>(HiveBoxNames.suggestionAccuracy);
   }
 
   // ============================================================================

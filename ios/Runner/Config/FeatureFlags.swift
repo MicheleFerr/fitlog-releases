@@ -17,9 +17,9 @@ final class FeatureFlags {
             switch self {
             case .useNewAudioManager:
                 #if DEBUG
-                return false  // TEMP: Disabled while fixing audio session bug
+                return false  // ⚠️ DISABLED: OSStatus -50 errors persist, using legacy audio manager
                 #else
-                return false // Use legacy implementation in production
+                return false  // ⚠️ DISABLED: CoreAudio SessionCore failures, reverting to legacy
                 #endif
                 
             case .useNewBackgroundTaskManager:

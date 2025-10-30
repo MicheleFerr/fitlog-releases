@@ -13,7 +13,8 @@ library;
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 // Dashboard data model
 class SyncDashboardData {
@@ -155,15 +156,17 @@ class SystemHealth {
 
 // Provider for sync monitoring
 final syncMonitorProvider = StateNotifierProvider<SyncMonitorNotifier, AsyncValue<SyncDashboardData>>((ref) {
-  return SyncMonitorNotifier(ref);
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return SyncMonitorNotifier(ref, boxManager);
 });
 
 class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
-  
-  SyncMonitorNotifier(this._ref) : super(const AsyncValue.loading()) {
+
+  SyncMonitorNotifier(this._ref, this._boxManager) : super(const AsyncValue.loading()) {
     _loadDashboardData();
   }
   final Ref _ref;
+  final HiveBoxManagerEnhanced _boxManager;
   Timer? _refreshTimer;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
@@ -305,7 +308,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
       final features = ['workouts', 'templates', 'achievements', 'community'];
       for (final feature in features) {
         try {
-          final syncBox = await Hive.openBox<Map>('${feature}_sync_queue');
+          final syncBox = await _boxManager.openBox<Map>('${feature}_sync_queue');
           for (final item in syncBox.values) {
             if (item['status'] == 'pending') {
               pendingTotal++;
@@ -352,7 +355,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
       final features = ['workouts', 'templates', 'achievements', 'community'];
       for (final feature in features) {
         try {
-          final dataBox = await Hive.openBox<Map>('${feature}_data');
+          final dataBox = await _boxManager.openBox<Map>('${feature}_data');
           localEntities += dataBox.length;
           
           // Estimate size (rough calculation)
@@ -396,8 +399,8 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
     
     for (final entry in features.entries) {
       try {
-        final dataBox = await Hive.openBox<Map>('${entry.value}_data');
-        final syncBox = await Hive.openBox<Map>('${entry.value}_sync_queue');
+        final dataBox = await _boxManager.openBox<Map>('${entry.value}_data');
+        final syncBox = await _boxManager.openBox<Map>('${entry.value}_sync_queue');
         
         int pending = 0;
         for (final item in syncBox.values) {
@@ -493,7 +496,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
       final features = ['workouts', 'templates', 'achievements', 'community'];
       for (final feature in features) {
         try {
-          final syncBox = await Hive.openBox<Map>('${feature}_sync_queue');
+          final syncBox = await _boxManager.openBox<Map>('${feature}_sync_queue');
           final pending = syncBox.values.where((v) => v['status'] == 'pending').length;
           totalPending += pending;
           

@@ -17,10 +17,12 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:gymbro_flutter_new/features/history/data/repositories/workout_history_repository_enhanced.dart';
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// Provider for the enhanced workout history repository
 final workoutHistoryRepositoryProvider = Provider<WorkoutHistoryRepositoryEnhanced>((ref) {
-  return WorkoutHistoryRepositoryEnhanced();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return WorkoutHistoryRepositoryEnhanced(boxManager: boxManager);
 });
 
 /// Provider for workout history list with real-time updates

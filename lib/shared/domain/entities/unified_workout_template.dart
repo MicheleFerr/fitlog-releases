@@ -189,7 +189,7 @@ class UnifiedWorkoutTemplate with _$UnifiedWorkoutTemplate {
 
       // Safety defaults
       version: 1,
-      lastModifiedBy: legacyTemplate.userId ?? 'legacy_system',
+      lastModifiedBy: legacyTemplate.userId,
     );
   }
 
@@ -228,7 +228,7 @@ class UnifiedWorkoutTemplate with _$UnifiedWorkoutTemplate {
 
       // Safety defaults
       version: 1,
-      lastModifiedBy: modernTemplate.userId ?? 'modern_system',
+      lastModifiedBy: modernTemplate.userId,
     );
   }
 }

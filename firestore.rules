@@ -17,15 +17,18 @@ rules_version = '2';
       }
 
       match /workoutTemplates/{templateId} {
+        // 🔒 SECURITY: Query limit
+        allow list: if request.auth != null && isQueryLimitValid();
         allow read: if request.auth != null &&
           request.auth.uid == resource.data.userId;
         allow write: if request.auth != null &&
           request.auth.uid == resource.data.userId;
 
-        // 🔒 SECURITY: Validazione lunghezza campi template
+        // 🔒 SECURITY: Validazione lunghezza campi template + dimensione
         allow create: if request.auth != null
           && request.auth.uid == request.resource.data.userId
-          && validateStringField(request.resource.data, 'name', 1, 100, false);
+          && validateStringField(request.resource.data, 'name', 1, 100, false)
+          && isDocumentSizeValid();
       }
 
       // ============= USERS - RIMOSSO DUPLICATO (vedi linea 391) =============
@@ -33,22 +36,31 @@ rules_version = '2';
 
       // ============= WORKOUTS (regola unificata più in basso) =============
       match /workouts/{workoutId} {
-        allow list: if request.auth != null;
+        // 🔒 SECURITY: Query limit per prevenire letture massive
+        allow list: if request.auth != null && isQueryLimitValid();
         allow read: if request.auth != null && request.auth.uid == resource.data.userId;
 
-        // 🔒 SECURITY: Validazione lunghezza campi per prevenire DoS attacks
+        // 🔒 SECURITY: Validazione lunghezza campi + dimensione documento per prevenire DoS attacks
         allow create: if request.auth != null
           && request.auth.uid == request.resource.data.userId
-          && validateWorkoutData(request.resource.data);
+          && validateWorkoutData(request.resource.data)
+          && isDocumentSizeValid();
 
-        allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+        // 🔒 SECURITY: Validazione dimensione anche su update
+        allow update: if request.auth != null
+          && request.auth.uid == resource.data.userId
+          && isDocumentSizeValid();
+
+        allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
       }
 
       // ============= COMMUNITY REPORTS SYSTEM ================
       match /exercise_reports/{reportId} {
+        // 🔒 SECURITY: Query limit su list operations
+        allow list: if request.auth != null && isQueryLimitValid();
         allow read: if request.auth != null;
 
-        // 🔒 SECURITY: Validazione lunghezza campi per prevenire DoS
+        // 🔒 SECURITY: Validazione lunghezza campi + dimensione per prevenire DoS
         allow create: if request.auth != null
           && request.auth.uid == request.resource.data.userId
           && request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'imageUrl', 'reportType', 'userId', 'timestamp',
@@ -56,7 +68,8 @@ rules_version = '2';
           && request.resource.data.status == 'pending'
           && request.resource.data.reportType in ['wrong_image', 'missing_image', 'wrong_name']
           && validateStringField(request.resource.data, 'exerciseName', 1, 100, false)
-          && validateStringField(request.resource.data, 'imageUrl', 0, 500, true);
+          && validateStringField(request.resource.data, 'imageUrl', 0, 500, true)
+          && isDocumentSizeValid();
 
         allow update: if request.auth != null
           && request.auth.uid != null
@@ -857,6 +870,17 @@ rules_version = '2';
         || (data[field] is string
             && data[field].size() >= minLen
             && data[field].size() <= maxLen);
+    }
+
+    // 🔒 SECURITY: Helper per validare dimensione documento (previene DoS)
+    // Firestore ha limite 1MB per documento, ma per sicurezza limitiamo a 500KB
+    function isDocumentSizeValid() {
+      return request.resource.size() < 500000;  // 500KB limit
+    }
+
+    // 🔒 SECURITY: Helper per validare limiti query (previene query massive)
+    function isQueryLimitValid() {
+      return !request.query.limit.exists() || request.query.limit <= 100;
     }
 
     // ============= COMMUNITY CONTRIBUTION STATS =============

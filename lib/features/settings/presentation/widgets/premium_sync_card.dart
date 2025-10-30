@@ -14,7 +14,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
@@ -100,8 +100,9 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
       if (userId == null) {
         throw Exception('User not authenticated');
       }
-      
-      final dataSource = HiveWorkoutDataSource();
+
+      final boxManager = ref.read(hiveBoxManagerProvider);
+      final dataSource = HiveWorkoutDataSource(boxManager);
       
       // PRIMA: Fix sync status per workout esistenti
       debugPrint('🔧 Checking and fixing sync status for existing workouts...');
@@ -174,7 +175,8 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
   Future<void> _fixSyncStatusForExistingWorkouts(String userId) async {
     try {
       // Import the fixer utility
-      final box = await Hive.openBox<Map>('workouts');
+      final boxManager = ref.read(hiveBoxManagerProvider);
+      final box = await boxManager.openBox<Map>('workouts');
       
       final userKeys = box.keys
           .where((key) => key.toString().startsWith('${userId}_'))
@@ -251,7 +253,7 @@ class PremiumSyncCard extends ConsumerWidget {
       // Free user - show upgrade prompt
       return Card(
         elevation: 0,
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         child: InkWell(
           onTap: () {
             // Navigate to premium upgrade
@@ -470,10 +472,10 @@ class PremiumSyncCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                  color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: theme.colorScheme.primary.withOpacity(0.3),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -534,8 +536,9 @@ class PremiumSyncCard extends ConsumerWidget {
       final userProfileAsync = ref.read(unifiedUserProfileProvider);
       final userId = userProfileAsync.value?.uid;
       if (userId == null) return false;
-      
-      final dataSource = HiveWorkoutDataSource();
+
+      final boxManager = ref.read(hiveBoxManagerProvider);
+      final dataSource = HiveWorkoutDataSource(boxManager);
       final unsyncedWorkouts = await dataSource.getUnsyncedWorkouts(userId);
       return unsyncedWorkouts.isNotEmpty;
     } catch (e) {

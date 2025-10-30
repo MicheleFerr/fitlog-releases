@@ -15,6 +15,7 @@ library;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 /// Abstract repository for workout analytics data access
 abstract class WorkoutAnalyticsRepository {
@@ -121,10 +122,48 @@ class WorkoutAnalyticsStats {
   /// Get exercise with highest volume
   String? get highestVolumeExercise {
     if (exerciseVolumeDistribution.isEmpty) return null;
-    
+
     return exerciseVolumeDistribution.entries
         .reduce((a, b) => a.value > b.value ? a : b)
         .key;
+  }
+
+  /// Create from JSON
+  factory WorkoutAnalyticsStats.fromJson(Map<String, dynamic> json) {
+    return WorkoutAnalyticsStats(
+      totalWorkouts: json['totalWorkouts'] as int,
+      totalPRs: json['totalPRs'] as int,
+      averageWorkoutVolume: (json['averageWorkoutVolume'] as num).toDouble(),
+      averageWorkoutDuration: (json['averageWorkoutDuration'] as num).toDouble(),
+      totalVolumeLifted: (json['totalVolumeLifted'] as num).toDouble(),
+      exerciseFrequency: (json['exerciseFrequency'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, value as int),
+      ),
+      exerciseVolumeDistribution: (json['exerciseVolumeDistribution'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, (value as num).toDouble()),
+      ),
+      lastWorkoutDate: json['lastWorkoutDate'] != null
+        ? DateTime.parse(json['lastWorkoutDate'] as String)
+        : null,
+      firstWorkoutDate: json['firstWorkoutDate'] != null
+        ? DateTime.parse(json['firstWorkoutDate'] as String)
+        : null,
+    );
+  }
+
+  /// Convert to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'totalWorkouts': totalWorkouts,
+      'totalPRs': totalPRs,
+      'averageWorkoutVolume': averageWorkoutVolume,
+      'averageWorkoutDuration': averageWorkoutDuration,
+      'totalVolumeLifted': totalVolumeLifted,
+      'exerciseFrequency': exerciseFrequency,
+      'exerciseVolumeDistribution': exerciseVolumeDistribution,
+      'lastWorkoutDate': lastWorkoutDate?.toIso8601String(),
+      'firstWorkoutDate': firstWorkoutDate?.toIso8601String(),
+    };
   }
 }
 

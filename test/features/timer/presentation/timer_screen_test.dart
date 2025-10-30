@@ -316,7 +316,7 @@ void main() {
         remainingSeconds: 25,
       );
 
-      final progress = (state.duration - state.remainingSeconds) / state.duration;
+      const progress = (state.duration - state.remainingSeconds) / state.duration;
       expect(progress, 0.75);
     });
 
@@ -333,7 +333,7 @@ void main() {
         duration: 60,
         remainingSeconds: 0,
       );
-      final completedProgress = 
+      const completedProgress = 
           (completed.duration - completed.remainingSeconds) / completed.duration;
       expect(completedProgress, 1.0);
 
@@ -342,7 +342,7 @@ void main() {
         duration: 60,
         remainingSeconds: 60,
       );
-      final justStartedProgress = 
+      const justStartedProgress = 
           (justStarted.duration - justStarted.remainingSeconds) / justStarted.duration;
       expect(justStartedProgress, 0.0);
     });

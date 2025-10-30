@@ -203,10 +203,10 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: theme.colorScheme.outline.withOpacity(0.3),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -258,7 +258,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -268,7 +268,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                       borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                     ),
                     child: Row(
@@ -309,7 +309,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -318,7 +318,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                                 width: 32,
                                 height: 32,
                                 decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withOpacity(0.1),
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(

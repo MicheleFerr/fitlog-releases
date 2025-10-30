@@ -58,7 +58,7 @@ class TemplateCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     _getCategoryColor(template.category),
-                    _getCategoryColor(template.category).withOpacity(0.7),
+                    _getCategoryColor(template.category).withValues(alpha: 0.7),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -91,7 +91,7 @@ class TemplateCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -179,7 +179,7 @@ class TemplateCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(16),
                 ),

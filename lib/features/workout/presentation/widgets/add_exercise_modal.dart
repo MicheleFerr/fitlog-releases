@@ -114,7 +114,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
+              color: Colors.grey.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -308,7 +308,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           // Show selected exercise
           if (_selectedDropSetExercise != null)
             Card(
-              color: context.colors.primaryContainer.withOpacity(0.3),
+              color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
                 leading: Icon(Icons.check_circle, color: context.colors.primary),
                 title: Text(_selectedDropSetExercise!.nome),
@@ -440,7 +440,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           // Show selected exercise
           if (_selectedRestPauseExercise != null)
             Card(
-              color: context.colors.primaryContainer.withOpacity(0.3),
+              color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
                 leading: Icon(Icons.check_circle, color: context.colors.primary),
                 title: Text(_selectedRestPauseExercise!.nome),
@@ -611,13 +611,13 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             tilePadding: const EdgeInsets.symmetric(horizontal: 16),
             leading: Icon(
               Icons.add_circle_outline,
-              color: context.colors.onSurfaceVariant.withOpacity(0.7),
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
             ),
             title: Text(
               'Non trovi l\'esercizio? Creane uno personalizzato',
               style: TextStyle(
                 fontSize: 14,
-                color: context.colors.onSurfaceVariant.withOpacity(0.8),
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.8),
               ),
             ),
             children: [
@@ -680,7 +680,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
     return Card(
       color: _useAPRE
-        ? context.colors.primaryContainer.withOpacity(0.1)
+        ? context.colors.primaryContainer.withValues(alpha: 0.1)
         : context.colors.surfaceContainerHighest,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -773,7 +773,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.tertiaryContainer.withOpacity(0.3),
+                  color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -1089,7 +1089,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                         : '${stageData.weightController.text} kg',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: stageData.weightController.text.isEmpty
-                          ? context.colors.onSurfaceVariant.withOpacity(0.5)
+                          ? context.colors.onSurfaceVariant.withValues(alpha: 0.5)
                           : context.colors.onSurface,
                     ),
                   ),

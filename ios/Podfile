@@ -41,9 +41,14 @@ target 'Runner' do
   pod 'GoogleSignIn', '~> 8.0'
   
   # Firebase BoM compatibility enforcement - stable versions
-  pod 'Firebase/Core', '~> 11.15'
-  pod 'Firebase/Auth', '~> 11.15'
-  pod 'Firebase/Firestore', '~> 11.15'
+  pod 'Firebase/Core', '~> 12.4.0'
+  pod 'Firebase/Auth', '~> 12.4.0'
+  pod 'Firebase/Firestore', '~> 12.4.0'
+  pod 'Firebase/AppCheck', '~> 12.4.0'
+  pod 'Firebase/Analytics', '~> 12.4.0'
+  pod 'Firebase/Performance', '~> 12.4.0'
+  pod 'Firebase/Messaging', '~> 12.4.0'
+  pod 'Firebase/Functions', '~> 12.4.0'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
@@ -65,6 +70,10 @@ post_install do |installer|
 
     # Fix for Firebase/Google Sign In version conflicts 2025
     target.build_configurations.each do |config|
+      # Abilita compilazione parallela
+      config.build_settings['COMPILER_INDEX_STORE_ENABLE'] = 'NO'
+      config.build_settings['SWIFT_COMPILATION_MODE'] = 'wholemodule'
+      
       # CRITICAL: Disable Explicit Modules for Xcode 16 compatibility with CocoaPods
       config.build_settings['SWIFT_ENABLE_EXPLICIT_MODULES'] = 'NO'
       config.build_settings['CLANG_ENABLE_EXPLICIT_MODULES'] = 'NO'

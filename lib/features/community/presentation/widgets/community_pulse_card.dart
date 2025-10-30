@@ -112,13 +112,13 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
             end: Alignment.bottomRight,
             colors: [
               theme.colorScheme.primaryContainer,
-              theme.colorScheme.primaryContainer.withOpacity(0.7),
+              theme.colorScheme.primaryContainer.withValues(alpha: 0.7),
             ],
           ),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.primary.withOpacity(0.2),
+              color: theme.colorScheme.primary.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, 4),
             ),
@@ -159,7 +159,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                               _getGreeting(),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onPrimaryContainer
-                                    .withOpacity(0.8),
+                                    .withValues(alpha: 0.8),
                               ),
                             ),
                           ],
@@ -282,7 +282,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           width: 60,
           height: 60,
           decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.1),
+            color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
@@ -317,7 +317,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           onPressed: widget.onViewAll,
           icon: const Icon(Icons.arrow_forward),
           style: IconButton.styleFrom(
-            backgroundColor: theme.colorScheme.primary.withOpacity(0.2),
+            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
             foregroundColor: theme.colorScheme.primary,
           ),
         ),
@@ -335,7 +335,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimaryContainer,
           side: BorderSide(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.3),
+            color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -399,7 +399,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
               decoration: BoxDecoration(
                 color: index == _currentIndex
                     ? theme.colorScheme.primary
-                    : theme.colorScheme.onPrimaryContainer.withOpacity(0.3),
+                    : theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -413,7 +413,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.onPrimaryContainer.withOpacity(0.1),
+        color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -435,7 +435,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           Text(
             'Ottimo lavoro, hai reviewato tutti i contributi',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer.withOpacity(0.7),
+              color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -537,7 +537,7 @@ class _StatItem extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.6),
+            color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
           ),
         ),
       ],
@@ -564,7 +564,7 @@ class _MiniContributionCard extends StatelessWidget {
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -615,7 +615,7 @@ class _MiniContributionCard extends StatelessWidget {
                 },
                 icon: const Icon(Icons.close),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.red.withOpacity(0.1),
+                  backgroundColor: Colors.red.withValues(alpha: 0.1),
                   foregroundColor: Colors.red,
                 ),
               ),
@@ -626,7 +626,7 @@ class _MiniContributionCard extends StatelessWidget {
                 },
                 icon: const Icon(Icons.check),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.green.withOpacity(0.1),
+                  backgroundColor: Colors.green.withValues(alpha: 0.1),
                   foregroundColor: Colors.green,
                 ),
               ),
@@ -667,7 +667,7 @@ class _MiniContributionCard extends StatelessWidget {
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(

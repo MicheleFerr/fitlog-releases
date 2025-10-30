@@ -16,29 +16,6 @@ part 'exercise_usage_model.g.dart';
 /// Usato per boost personalizzato nel fuzzy matching ML-enhanced
 @HiveType(typeId: 30) // Unique ID, non in conflitto con altri models
 class ExerciseUsageModel extends HiveObject {
-  /// ID esercizio (chiave univoca)
-  @HiveField(0)
-  final String exerciseId;
-
-  /// Nome esercizio (per debug/logging)
-  @HiveField(1)
-  final String exerciseName;
-
-  /// Contatore utilizzi (incrementato ogni volta che l'utente seleziona l'esercizio)
-  @HiveField(2)
-  int usageCount;
-
-  /// Timestamp ultimo utilizzo (per sorting e analytics)
-  @HiveField(3)
-  DateTime lastUsedAt;
-
-  /// Timestamp primo utilizzo (per analytics)
-  @HiveField(4)
-  final DateTime firstUsedAt;
-
-  /// User ID proprietario (per filtering multi-user se necessario)
-  @HiveField(5)
-  final String userId;
 
   ExerciseUsageModel({
     required this.exerciseId,
@@ -65,6 +42,29 @@ class ExerciseUsageModel extends HiveObject {
       userId: userId,
     );
   }
+  /// ID esercizio (chiave univoca)
+  @HiveField(0)
+  final String exerciseId;
+
+  /// Nome esercizio (per debug/logging)
+  @HiveField(1)
+  final String exerciseName;
+
+  /// Contatore utilizzi (incrementato ogni volta che l'utente seleziona l'esercizio)
+  @HiveField(2)
+  int usageCount;
+
+  /// Timestamp ultimo utilizzo (per sorting e analytics)
+  @HiveField(3)
+  DateTime lastUsedAt;
+
+  /// Timestamp primo utilizzo (per analytics)
+  @HiveField(4)
+  final DateTime firstUsedAt;
+
+  /// User ID proprietario (per filtering multi-user se necessario)
+  @HiveField(5)
+  final String userId;
 
   /// Incrementa contatore utilizzo
   void increment() {

@@ -274,8 +274,8 @@ class _SwipeBackground extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: direction == SwipeDirection.left
-              ? theme.colorScheme.error.withOpacity(opacity)
-              : theme.colorScheme.primary.withOpacity(opacity),
+              ? theme.colorScheme.error.withValues(alpha: opacity)
+              : theme.colorScheme.primary.withValues(alpha: opacity),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Icon(
@@ -427,7 +427,7 @@ class _DraggableExerciseItem extends ConsumerWidget {
                   right: Radius.circular(12),
                 ),
                 border: Border.all(
-                  color: theme.colorScheme.outline.withOpacity(0.2),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
                 ),
               ),
               child: Text('Exercise ${index + 1}'),

@@ -14,7 +14,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
 
@@ -167,7 +166,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                         vertical: 2,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: colorScheme.primary.withOpacity(0.1),
+                                        color: colorScheme.primary.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
@@ -184,7 +183,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                         vertical: 2,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: colorScheme.secondary.withOpacity(0.1),
+                                        color: colorScheme.secondary.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(

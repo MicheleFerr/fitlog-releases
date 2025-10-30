@@ -12,18 +12,6 @@ import 'package:flutter/foundation.dart';
 
 /// Modello per un singolo feedback su esercizio
 class ExerciseFeedback {
-  final String id;
-  final String userId;
-  final String userEmail;
-  final String exerciseId;
-  final String exerciseName;
-  final String version;
-  final String feedbackType; // BUG, SUGGESTION, TYPO, OTHER
-  final String message;
-  final int severity; // 1-5
-  final DateTime createdAt;
-  final String status; // OPEN, REVIEWING, RESOLVED, DISMISSED
-  final String? adminNotes;
 
   ExerciseFeedback({
     required this.id,
@@ -58,6 +46,18 @@ class ExerciseFeedback {
       adminNotes: data['adminNotes'],
     );
   }
+  final String id;
+  final String userId;
+  final String userEmail;
+  final String exerciseId;
+  final String exerciseName;
+  final String version;
+  final String feedbackType; // BUG, SUGGESTION, TYPO, OTHER
+  final String message;
+  final int severity; // 1-5
+  final DateTime createdAt;
+  final String status; // OPEN, REVIEWING, RESOLVED, DISMISSED
+  final String? adminNotes;
 
   /// Convert to Firestore document map
   Map<String, dynamic> toFirestore() {
@@ -178,12 +178,12 @@ abstract class FeedbackRepository {
 /// 🔐 Inherits security from Firestore rules
 /// 💾 Single Firebase instance for efficiency
 class FirestoreFeedbackRepository implements FeedbackRepository {
-  static const String _collection = 'exercise_feedback';
-
-  final FirebaseFirestore _firestore;
 
   FirestoreFeedbackRepository({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
+  static const String _collection = 'exercise_feedback';
+
+  final FirebaseFirestore _firestore;
 
   @override
   Stream<List<ExerciseFeedback>> watchAllFeedback() {

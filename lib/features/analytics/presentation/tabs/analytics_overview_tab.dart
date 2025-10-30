@@ -273,7 +273,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final l10n = AppLocalizations.of(context);
     final timeAgo = _getTimeAgo(context, workout.endTime ?? workout.createdAt);
     final volume = workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume);
-    final workoutName = workout.name ?? 'Unnamed Workout';
+    final workoutName = workout.name;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -527,7 +527,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         final activity = ExerciseActivity.fromExercise(
           exercise: e,
           userEmail: '',
-          workoutName: w.name ?? 'Unnamed Workout',
+          workoutName: w.name,
           workoutDate: w.endTime,
         );
         if (kDebugMode) {
@@ -1250,7 +1250,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(

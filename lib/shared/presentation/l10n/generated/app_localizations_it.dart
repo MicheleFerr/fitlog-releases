@@ -744,7 +744,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get weight => 'Peso';
 
   @override
-  String get reps => 'Ripetizioni';
+  String get reps => 'rip';
 
   @override
   String get notes => 'Note (opzionale)';
@@ -1680,6 +1680,111 @@ class AppLocalizationsIt extends AppLocalizations {
       'Ti terremo aggiornato sui tuoi progressi!';
 
   @override
+  String get workoutReminderTitle => 'Promemoria Allenamento';
+
+  @override
+  String workoutReminderBody(String workoutName) {
+    return 'È ora del tuo allenamento $workoutName! 💪';
+  }
+
+  @override
+  String get recoveryAlertTitle => 'Recupero Necessario';
+
+  @override
+  String recoveryAlertBodySingle(int days) {
+    return 'Hai $days giorno saltato da recuperare! 🔄';
+  }
+
+  @override
+  String recoveryAlertBodyMultiple(int days) {
+    return 'Hai $days giorni saltati da recuperare! 🔄';
+  }
+
+  @override
+  String get streakMotivationTitle => 'Mantieni la Serie!';
+
+  @override
+  String streakMotivationBody(int streak) {
+    return '$streak giorni di serie! Non romperla ora! 🔥';
+  }
+
+  @override
+  String get restDayTitle => 'Giorno di Riposo';
+
+  @override
+  String get restDayBody =>
+      'Oggi è il tuo giorno di riposo. Il recupero è altrettanto importante! 😴';
+
+  @override
+  String get enableWorkoutReminders => 'Abilita Promemoria Allenamento';
+
+  @override
+  String get enableRecoveryAlerts => 'Abilita Avvisi Recupero';
+
+  @override
+  String get enableStreakMotivation => 'Abilita Motivazione Serie';
+
+  @override
+  String get enableRestDayReminders => 'Abilita Promemoria Riposo';
+
+  @override
+  String get preferredNotificationTime => 'Orario Preferito';
+
+  @override
+  String get doNotDisturb => 'Non Disturbare';
+
+  @override
+  String get morningTime => 'Mattina (8:00)';
+
+  @override
+  String get middayTime => 'Mezzogiorno (12:30)';
+
+  @override
+  String get afternoonTime => 'Pomeriggio (16:00)';
+
+  @override
+  String get eveningTime => 'Sera (19:00)';
+
+  @override
+  String get customTime => 'Orario Personalizzato';
+
+  @override
+  String get newWeightPR => 'Nuovo Record di Peso!';
+
+  @override
+  String get newRepsPR => 'Nuovo Record di Ripetizioni!';
+
+  @override
+  String get newOneRMPR => 'Nuovo Record 1RM!';
+
+  @override
+  String get newVolumePR => 'Nuovo Record di Volume!';
+
+  @override
+  String get buildingMomentum => 'Stai Prendendo Slancio!';
+
+  @override
+  String get oneWeekStrong => 'Una Settimana Forte!';
+
+  @override
+  String get twoWeeksStreak => 'Due Settimane di Serie!';
+
+  @override
+  String get oneMonthStreak => 'UN MESE DI SERIE!';
+
+  @override
+  String get legendaryStreak => 'SERIE LEGGENDARIA!';
+
+  @override
+  String get volumeMilestone => 'Traguardo Volume!';
+
+  @override
+  String get massiveVolume => 'VOLUME MASSICCIO!';
+
+  @override
+  String get legendaryVolume => 'VOLUME LEGGENDARIO!';
+
+  @override
   String get quickStats => 'I tuoi progressi';
 
   @override
@@ -1911,7 +2016,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get createFirstTemplate => 'Crea il tuo primo template!';
 
   @override
-  String get createTemplate => 'Crea Scheda';
+  String get createTemplate => 'Crea Template';
 
   @override
   String get otherTools => 'Altri strumenti';
@@ -2012,6 +2117,32 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get aiInsightStartJourneyRec =>
       'Completa il tuo primo allenamento per iniziare';
+
+  @override
+  String get aiCoachSeriesPerWeek => 'serie/sett';
+
+  @override
+  String get aiCoachTons => 'tonnellate';
+
+  @override
+  String get aiCoachCurrentVolume => 'Volume attuale';
+
+  @override
+  String get aiCoachProgressiveLoad => 'Carico progressivo';
+
+  @override
+  String get aiCoachTimesPerWeek => 'volte/sett';
+
+  @override
+  String get aiCoachCurrentFrequency => 'Frequenza attuale';
+
+  @override
+  String aiCoachMEVRange(String min, String max) {
+    return 'MEV: $min-$max serie';
+  }
+
+  @override
+  String get aiCoachScientificReferences => 'Riferimenti Scientifici';
 
   @override
   String get aiInsightNewUser => 'Ottimo Inizio!';
@@ -2208,7 +2339,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get day => 'Giorno';
 
   @override
-  String get errorLoadingData => 'Impossibile caricare i dati';
+  String get errorLoadingData => 'Errore nel caricamento dei dati';
 
   @override
   String get pullToRefresh => 'Trascina per aggiornare';
@@ -2341,7 +2472,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unknownError => 'Errore Sconosciuto';
 
   @override
-  String get userNotFound => 'Utente Non Trovato';
+  String get userNotFound => 'Utente non trovato';
 
   @override
   String get wrongPassword => 'Password Errata';
@@ -2680,7 +2811,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get chest => 'Petto';
 
   @override
-  String get back => 'DORSO (Schiena)';
+  String get back => 'Indietro';
 
   @override
   String get shoulders => 'Spalle';
@@ -2690,6 +2821,24 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get legs => 'GAMBE';
+
+  @override
+  String get abs => 'Addominali';
+
+  @override
+  String get cardio => 'Cardio';
+
+  @override
+  String get other => 'Altro';
+
+  @override
+  String get personal => 'Personale';
+
+  @override
+  String get usages => 'utilizzi';
+
+  @override
+  String get muscleDistribution => 'Distribuzione Muscolare';
 
   @override
   String get core => 'CORE (Addominali/Lombare)';
@@ -2746,7 +2895,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get volumeChange => 'Cambio Volume';
 
   @override
-  String get maxWeight => 'Peso Max';
+  String get maxWeight => 'Peso Massimo';
 
   @override
   String get maxReps => 'Ripetizioni Massime';
@@ -3239,7 +3388,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get weightLabel => 'Peso (kg)';
 
   @override
-  String get repsLabel => 'Ripetizioni';
+  String get repsLabel => 'rip';
 
   @override
   String get effortLabel => 'Sforzo';
@@ -3445,7 +3594,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get setCompleted => 'Serie completata!';
 
   @override
-  String get next => 'Successivo';
+  String get next => 'Avanti';
 
   @override
   String get single => 'Singolo';
@@ -3478,7 +3627,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectExerciseForRestPause => 'Seleziona esercizio per rest-pause';
 
   @override
-  String get clearAll => 'Pulisci Tutto';
+  String get clearAll => 'Deseleziona Tutto';
 
   @override
   String get stages => 'Stadi';
@@ -3529,7 +3678,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exerciseHistory => 'Storico Esercizio';
 
   @override
-  String get errorLoadingHistory => 'Errore nel caricamento dello storico';
+  String get errorLoadingHistory => 'Errore nel caricamento della cronologia';
 
   @override
   String get statistics => 'Statistiche';
@@ -3843,11 +3992,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get activityFor => 'Attività per';
-
-  @override
-  String daysAgo(int count) {
-    return '${count}g fa';
-  }
 
   @override
   String hoursAgo(int hours) {
@@ -4661,22 +4805,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get warmupPhaseInfo => 'Comprendere le Fasi del Riscaldamento';
 
   @override
-  String get warmupPhase1Title => '🔄 Fase 1: Mobilità (3-5 min)';
+  String get warmupPhase1Title => 'Mobilità';
 
   @override
   String get warmupPhase1Desc =>
       'Prepara articolazioni e ampiezza di movimento con stretching dinamico. Esempi: cerchi anche, oscillazioni braccia, leg swings.';
 
   @override
-  String get warmupPhase2Title => '⚡ Fase 2: Attivazione (3-4 min)';
+  String get warmupPhase2Title => 'Attivazione';
 
   @override
   String get warmupPhase2Desc =>
       'Attiva muscoli target e stabilizzatori con contrazioni leggere. Esempi: glute bridge, lavoro con elastici, serie leggere.';
 
   @override
-  String get warmupPhase3Title =>
-      '🏋️ Fase 3: Serie di Riscaldamento (5-10 min)';
+  String get warmupPhase3Title => 'Riscaldamento Specifico';
 
   @override
   String get warmupPhase3Desc =>
@@ -6775,7 +6918,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get execute => 'Esegui';
 
   @override
-  String get skipRest => 'Salta Riposo';
+  String get skipRest => 'Salta pausa';
 
   @override
   String get supersetCompleted => 'Superset Completato';
@@ -6862,6 +7005,31 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get createRestPause => 'Crea Rest-Pause';
+
+  @override
+  String get restPauseLabel => 'REST-PAUSE';
+
+  @override
+  String get restPauseMainSet => 'Serie Principale';
+
+  @override
+  String restPauseMiniSet(int index) {
+    return 'Mini-Set $index';
+  }
+
+  @override
+  String get miniSetProgress => 'Progresso Mini-Set';
+
+  @override
+  String get microPause => 'MICRO-PAUSA';
+
+  @override
+  String afterPauseDuration(int duration) {
+    return 'Dopo ${duration}s di pausa';
+  }
+
+  @override
+  String get rpeLabel => 'RPE Complessivo (Sforzo Percepito)';
 
   @override
   String get fitnessQuestionnaireTitle => 'Configurazione Profilo Fitness';
@@ -7419,6 +7587,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Allenamento completato! Ottimo lavoro!';
 
   @override
+  String get workoutResumed =>
+      'Allenamento ripristinato - puoi continuare ad allenarti';
+
+  @override
   String get saveAsTemplate => 'Salva come Template';
 
   @override
@@ -7503,6 +7675,20 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get categoryOther => 'Altro';
+
+  @override
+  String exerciseCategorizedSuccess(
+    String exerciseName,
+    String muscleGroupName,
+  ) {
+    return '\"$exerciseName\" categorizzato come $muscleGroupName';
+  }
+
+  @override
+  String get undo => 'Annulla';
+
+  @override
+  String get categorizationUndone => 'Categorizzazione rimossa';
 
   @override
   String get exerciseEditingComingSoon => 'Modifica esercizio in arrivo!';
@@ -7857,6 +8043,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get executeDropset => 'Esegui DropSet';
+
+  @override
+  String get executeRestPause => 'Esegui Rest-Pause';
 
   @override
   String get keepWorkoutActiveContent =>
@@ -9183,6 +9372,25 @@ class AppLocalizationsIt extends AppLocalizations {
       'Hai bisogno di template di allenamento per creare una routine.\nScegli una delle opzioni qui sotto per continuare.';
 
   @override
+  String get routineCreateTemplatesFirst =>
+      'Prima di creare una routine, devi creare dei template di allenamento con gli esercizi.';
+
+  @override
+  String get routineWorkflowTitle => 'Come funziona';
+
+  @override
+  String get routineWorkflowStep1 =>
+      'Vai su \'Le mie schede\' e crea template di allenamento con esercizi';
+
+  @override
+  String get routineWorkflowStep2 =>
+      'Torna qui e seleziona i tuoi template per la routine';
+
+  @override
+  String get routineWorkflowStep3 =>
+      'Configura la rotazione e completa la configurazione della routine';
+
+  @override
   String get routinePopularTemplates => 'Template Popolari';
 
   @override
@@ -9355,7 +9563,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get averageRPE => 'RPE Medio';
 
   @override
-  String get totalSessions => 'Sessioni';
+  String get totalSessions => 'Sessioni Totali';
 
   @override
   String get exerciseStats => 'Statistiche Esercizio';
@@ -10159,4 +10367,1186 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get suggestionCheckFormat =>
       'Verifica che il formato del template corrisponda all\'esempio';
+
+  @override
+  String get listView => 'Vista Lista';
+
+  @override
+  String get gridView => 'Vista Griglia';
+
+  @override
+  String get parsing => 'Analisi in corso...';
+
+  @override
+  String get matchingExercises => 'Abbinamento esercizi...';
+
+  @override
+  String get convertingWeights => 'Conversione pesi...';
+
+  @override
+  String get finalizing => 'Finalizzazione...';
+
+  @override
+  String get importFailed => 'Importazione fallita';
+
+  @override
+  String get noDescription => 'Nessuna descrizione';
+
+  @override
+  String get exerciseDetailSummary => 'Sommario';
+
+  @override
+  String get exerciseDetailHistory => 'Cronologia';
+
+  @override
+  String get exerciseDetailInstructions => 'Istruzioni';
+
+  @override
+  String get primaryMuscle => 'Muscolo Primario';
+
+  @override
+  String get last3MonthsChart => 'Ultimi 3 Mesi';
+
+  @override
+  String get best1RM => 'Miglior 1RM';
+
+  @override
+  String get bestSetVolume => 'Miglior Volume Set';
+
+  @override
+  String get bestSessionVolume => 'Miglior Volume Sessione';
+
+  @override
+  String get strengthLevel => 'Livello di Forza';
+
+  @override
+  String get strengthLevelComingSoon =>
+      'I benchmark di forza arriveranno presto!';
+
+  @override
+  String get noHistoryYet => 'Nessuna cronologia';
+
+  @override
+  String get startWorkoutToSeeHistory =>
+      'Inizia un allenamento per vedere la cronologia degli esercizi';
+
+  @override
+  String get unknownWorkout => 'Allenamento Sconosciuto';
+
+  @override
+  String get videoTutorial => 'Video Tutorial';
+
+  @override
+  String get formCues => 'Punti Tecnici';
+
+  @override
+  String get warmupPhase1Description =>
+      'Mobilizzazione articolare e stretching dinamico (5-10 min)';
+
+  @override
+  String get warmupPhase2Description =>
+      'Attivazione muscolare con esercizi a corpo libero';
+
+  @override
+  String get warmupPhase3Description =>
+      '2-3 serie di riscaldamento con carico progressivo';
+
+  @override
+  String get warmupPhase4Title => 'Riposo & Recupero';
+
+  @override
+  String get warmupPhase4Description =>
+      '1-2 minuti di riposo prima delle serie di lavoro';
+
+  @override
+  String get tips => 'Consigli';
+
+  @override
+  String get backHint => 'Torna alla schermata precedente';
+
+  @override
+  String get createTemplateHint =>
+      'Apri il modulo per creare un nuovo template di allenamento';
+
+  @override
+  String get syncStatus => 'Stato Sincronizzazione';
+
+  @override
+  String get syncStatusHint =>
+      'Visualizza lo stato della sincronizzazione cloud e le modifiche offline';
+
+  @override
+  String get pageNotFound => 'Pagina Non Trovata';
+
+  @override
+  String modalTestSuccess(String modalName) {
+    return '✅ $modalName - FUNZIONANTE';
+  }
+
+  @override
+  String modalTestOpened(String modalName) {
+    return '✅ $modalName - APERTO (verifica funzionalità)';
+  }
+
+  @override
+  String modalTestError(String modalName, String error) {
+    return '❌ $modalName - ERRORE: $error';
+  }
+
+  @override
+  String modalTestRpeSuccess(String rpe) {
+    return '✅ RpeSelectorBottomSheet - FUNZIONANTE: RPE $rpe';
+  }
+
+  @override
+  String get historyButtonTapped => '📊 Pulsante cronologia premuto';
+
+  @override
+  String get editButtonTapped => '✏️ Pulsante modifica premuto';
+
+  @override
+  String get exerciseSelectVariation => 'Seleziona Variazione';
+
+  @override
+  String get exerciseFilterByEquipment => 'Filtra per attrezzatura disponibile';
+
+  @override
+  String get exerciseVariationStandard => 'Standard';
+
+  @override
+  String get exerciseVariationEquipment => 'Attrezzatura';
+
+  @override
+  String get exerciseVariationGrip => 'Presa';
+
+  @override
+  String get exerciseVariationAngle => 'Angolo';
+
+  @override
+  String get exerciseVariationTempo => 'Tempo';
+
+  @override
+  String get exerciseVariationROM => 'Range di Movimento';
+
+  @override
+  String get exerciseEquipmentNone => 'Corpo Libero';
+
+  @override
+  String exerciseVariationsFiltered(int filtered, int total) {
+    return 'Mostrando $filtered di $total variazioni';
+  }
+
+  @override
+  String exerciseVariationsTotal(int total) {
+    return '$total variazioni disponibili';
+  }
+
+  @override
+  String get exerciseNoVariationsWithEquipment =>
+      'Nessuna variazione disponibile con la tua attrezzatura attuale';
+
+  @override
+  String get exerciseNoVariationsAvailable =>
+      'Nessuna variazione disponibile per questo esercizio';
+
+  @override
+  String get exerciseShowAllVariations => 'Mostra Tutte le Variazioni';
+
+  @override
+  String get equipmentProfile => 'Profilo Attrezzatura';
+
+  @override
+  String get equipmentProfileCreate => 'Nuovo';
+
+  @override
+  String equipmentProfileItemsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count elementi',
+      one: '1 elemento',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get equipmentProfileSelectOne => 'Seleziona un profilo attrezzatura';
+
+  @override
+  String get equipmentProfileSelect => 'Seleziona Profilo Attrezzatura';
+
+  @override
+  String get equipmentProfileCreateError =>
+      'Creazione profilo attrezzatura fallita';
+
+  @override
+  String get equipmentProfileLoadError =>
+      'Caricamento profili attrezzatura fallito';
+
+  @override
+  String get equipmentProfileEmpty => 'Nessun profilo attrezzatura ancora';
+
+  @override
+  String get equipmentProfileCreateFirst => 'Crea Primo Profilo';
+
+  @override
+  String get equipmentProfileCreateNew => 'Crea Profilo Equipaggiamento';
+
+  @override
+  String get equipmentProfileSelectTemplate => 'Seleziona Template Iniziale';
+
+  @override
+  String get equipmentProfileCommercial => 'Palestra Commerciale';
+
+  @override
+  String get equipmentProfileCommercialDesc =>
+      'Tutto disponibile - bilanciere, manubri, macchine, cavi';
+
+  @override
+  String get equipmentProfileHomeBasic => 'Home Gym (Base)';
+
+  @override
+  String get equipmentProfileHomeBasicDesc =>
+      'Bilanciere, manubri, panca, elastici';
+
+  @override
+  String get equipmentProfileHomeComplete => 'Home Gym (Completa)';
+
+  @override
+  String get equipmentProfileHomeCompleteDesc =>
+      'Setup avanzato - kettlebell, TRX, sbarra trazioni';
+
+  @override
+  String get equipmentProfileTravel => 'Viaggio / Hotel';
+
+  @override
+  String get equipmentProfileTravelDesc => 'Minimale - manubri e corpo libero';
+
+  @override
+  String get equipmentProfileBodyweight => 'Solo Corpo Libero';
+
+  @override
+  String get equipmentProfileBodyweightDesc =>
+      'Nessun equipaggiamento - calisthenics';
+
+  @override
+  String get equipment_barbell => 'Bilanciere';
+
+  @override
+  String get equipment_dumbbell => 'Manubri';
+
+  @override
+  String get equipment_machine => 'Macchina';
+
+  @override
+  String get equipment_cables => 'Cavi';
+
+  @override
+  String get equipment_smith_machine => 'Smith Machine';
+
+  @override
+  String get equipment_ez_bar => 'EZ Bar';
+
+  @override
+  String get equipment_kettlebell => 'Kettlebell';
+
+  @override
+  String get equipment_bodyweight => 'Corpo libero';
+
+  @override
+  String get equipment_trx => 'TRX';
+
+  @override
+  String get equipment_bands => 'Elastici';
+
+  @override
+  String get equipment_pullup_bar => 'Sbarra per Trazioni';
+
+  @override
+  String get equipment_parallel_bars => 'Parallele';
+
+  @override
+  String get equipment_rack => 'Rack';
+
+  @override
+  String get equipment_bench => 'Panca';
+
+  @override
+  String get rotationConfigTitle => 'Impostazioni Rotazione';
+
+  @override
+  String get rotationEnabled => 'Abilita Rotazione';
+
+  @override
+  String get rotationEnabledDesc =>
+      'Ruota automaticamente le variazioni degli esercizi';
+
+  @override
+  String get rotationFrequency => 'Frequenza Rotazione';
+
+  @override
+  String get rotationNotifications => 'Notifiche';
+
+  @override
+  String get rotationNotificationsDesc => 'Notifica prima dei cambi variazione';
+
+  @override
+  String get rotationNotifyDaysBefore => 'Giorni preavviso';
+
+  @override
+  String rotationFrequencyWeeks(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: 'Ogni $weeks settimane',
+      one: 'Ogni settimana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rotationNotifyDaysCount(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days giorni',
+      one: '1 giorno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get rotationPreview => 'Anteprima';
+
+  @override
+  String get rotationNextDate => 'Prossima rotazione';
+
+  @override
+  String rotationInDays(int days) {
+    return 'Tra $days giorni';
+  }
+
+  @override
+  String get tomorrow => 'Domani';
+
+  @override
+  String get accessDenied => 'Accesso Negato';
+
+  @override
+  String get noPermissionMessage =>
+      'Non hai il permesso per accedere a questa funzionalità. Per favore, aggiorna il tuo account o contatta il supporto.';
+
+  @override
+  String sessionExpiringSoon(int seconds) {
+    return 'La tua sessione scadrà tra $seconds secondi. Tocca per estenderla.';
+  }
+
+  @override
+  String get sessionExpired =>
+      'La tua sessione è scaduta. Per favore, effettua nuovamente l\'accesso.';
+
+  @override
+  String get extendSession => 'Estendi Sessione';
+
+  @override
+  String get equipmentProfileName => 'Nome Profilo';
+
+  @override
+  String get equipmentProfileNameHint => 'es. Home Gym, Kit Viaggio';
+
+  @override
+  String get equipmentProfileBadge => 'Tipo';
+
+  @override
+  String get equipmentProfileSelectEquipment =>
+      'Seleziona Equipaggiamento Disponibile';
+
+  @override
+  String get selectAll => 'Seleziona Tutto';
+
+  @override
+  String get equipmentProfileEdit => 'Modifica Profilo Equipaggiamento';
+
+  @override
+  String get equipmentProfileTemplateHint =>
+      'Scegli un template da personalizzare o parti da zero';
+
+  @override
+  String get equipmentProfilesTitle => 'Profili Equipaggiamento';
+
+  @override
+  String get equipmentProfilesSubtitle =>
+      'Gestisci la disponibilità del tuo equipaggiamento per raccomandazioni esercizi';
+
+  @override
+  String get equipmentProfilesHelp => 'Aiuto Profili Equipaggiamento';
+
+  @override
+  String get equipmentProfilesHelpText =>
+      'I profili equipaggiamento aiutano l\'app a suggerire esercizi compatibili con ciò che hai a disposizione. Crea profili diversi per location diverse (palestra, casa, viaggio).';
+
+  @override
+  String get equipmentProfileBadgeFull =>
+      'Palestra completa con 6+ tipi di equipaggiamento';
+
+  @override
+  String get equipmentProfileBadgeHome =>
+      'Setup casalingo con 3-5 tipi di equipaggiamento';
+
+  @override
+  String get equipmentProfileBadgeMinimal =>
+      'Setup minimale con 1-2 tipi di equipaggiamento';
+
+  @override
+  String get equipmentProfilesEmpty => 'Nessun Profilo Equipaggiamento';
+
+  @override
+  String get equipmentProfilesEmptyDescription =>
+      'Crea il tuo primo profilo equipaggiamento per ricevere raccomandazioni esercizi basate su ciò che hai disponibile.';
+
+  @override
+  String get equipmentProfileUpdated => 'Profilo aggiornato con successo';
+
+  @override
+  String get equipmentProfileCreated => 'Profilo creato con successo';
+
+  @override
+  String get equipmentProfileSaveError => 'Errore salvataggio profilo';
+
+  @override
+  String get equipmentProfileDeleteConfirmTitle => 'Eliminare Profilo?';
+
+  @override
+  String equipmentProfileDeleteConfirmMessage(String name) {
+    return 'Sei sicuro di voler eliminare \"$name\"? Questa azione non può essere annullata.';
+  }
+
+  @override
+  String get equipmentProfileDeleted => 'Profilo eliminato con successo';
+
+  @override
+  String get equipmentProfileDeleteError => 'Errore eliminazione profilo';
+
+  @override
+  String get equipmentProfileSetDefault => 'Profilo predefinito aggiornato';
+
+  @override
+  String get equipmentProfileDefaultError =>
+      'Errore impostazione profilo predefinito';
+
+  @override
+  String get equipmentProfileDefault => 'Predefinito';
+
+  @override
+  String get equipmentProfileMakeDefault => 'Imposta Come Predefinito';
+
+  @override
+  String get equipmentProfileStepTitle => 'Equipaggiamento Disponibile';
+
+  @override
+  String get equipmentProfileStepDescription =>
+      'Seleziona quale equipaggiamento hai disponibile per questa routine. Questo aiuterà a filtrare gli esercizi compatibili con il tuo setup.';
+
+  @override
+  String get equipmentProfileStepDescriptionOptional =>
+      'Seleziona quale equipaggiamento hai disponibile. Puoi saltare questo passaggio e configurarlo più tardi.';
+
+  @override
+  String get equipmentProfileOptional => '(Opzionale)';
+
+  @override
+  String get equipmentProfileSkipForNow => 'Salta per ora';
+
+  @override
+  String get equipmentProfileSkipConfirmTitle =>
+      'Saltare Profilo Equipaggiamento?';
+
+  @override
+  String get equipmentProfileSkipConfirmMessage =>
+      'Puoi aggiungere un profilo equipaggiamento più tardi dalle Impostazioni. Senza, saranno disponibili tutti gli esercizi.';
+
+  @override
+  String get equipmentProfileStepInfoTitle => 'Perché è importante?';
+
+  @override
+  String get equipmentProfileStepInfoMessage =>
+      'L\'app suggerirà solo esercizi compatibili con l\'equipaggiamento selezionato, garantendo che tu possa eseguire gli allenamenti raccomandati.';
+
+  @override
+  String get equipmentProfileManageInSettings =>
+      'Gestisci Profili nelle Impostazioni';
+
+  @override
+  String get migrationWizardTitle => 'Cambio Profilo Equipaggiamento';
+
+  @override
+  String get migrationWizardImpactAnalysisTitle => 'Analisi Impatto';
+
+  @override
+  String get migrationWizardImpactSummary => 'Impact Summary';
+
+  @override
+  String get migrationWizardFromProfile => 'From';
+
+  @override
+  String get migrationWizardToProfile => 'To';
+
+  @override
+  String migrationWizardAffectedExercises(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count esercizi',
+      one: '1 esercizio',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get migrationWizardWithAlternatives => 'with alternatives';
+
+  @override
+  String get migrationWizardWithoutAlternatives => 'without alternatives';
+
+  @override
+  String migrationWizardAffectedRoutines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine interessate',
+      one: '1 routine interessata',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String migrationWizardAffectedTemplates(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count template interessati',
+      one: '1 template interessato',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get migrationWizardReviewChanges => 'Review Changes';
+
+  @override
+  String get migrationWizardNoImpact =>
+      'No exercises are affected by this change.';
+
+  @override
+  String get migrationWizardNoImpactMessage =>
+      'Tutti gli esercizi nelle tue routine e template sono compatibili con il nuovo profilo equipaggiamento.';
+
+  @override
+  String get migrationWizardExerciseReviewTitle => 'Revisione Esercizi';
+
+  @override
+  String migrationWizardExerciseProgress(int current, int total) {
+    return 'Exercise $current of $total';
+  }
+
+  @override
+  String migrationWizardRequiredEquipment(Object equipment) {
+    return 'Richiede: $equipment (non disponibile)';
+  }
+
+  @override
+  String get migrationWizardUsedIn => 'Usato in:';
+
+  @override
+  String get migrationWizardSuggestedAlternatives =>
+      'Alternative Suggerite (Classificate):';
+
+  @override
+  String get migrationWizardNoAlternatives =>
+      'No compatible alternatives found';
+
+  @override
+  String get migrationWizardNoAlternativesMessage =>
+      'Nessun esercizio nel database corrisponde ai tuoi criteri di equipaggiamento. Puoi mantenere questo esercizio se prevedi di avere l\'equipaggiamento.';
+
+  @override
+  String migrationWizardSimilarityScore(Object score) {
+    return 'Punteggio: $score';
+  }
+
+  @override
+  String get migrationWizardReplaceWith => 'Sostituisci con';
+
+  @override
+  String get migrationWizardKeepExercise => 'Mantieni Comunque';
+
+  @override
+  String get migrationWizardKeepExerciseHint => 'I\'ll get this equipment';
+
+  @override
+  String get migrationWizardRemoveExercise => 'Rimuovi Esercizio';
+
+  @override
+  String get migrationWizardConfirmationTitle => 'Conferma Modifiche';
+
+  @override
+  String get migrationWizardConfirmationMessage =>
+      'Rivedi le tue decisioni prima di applicare le modifiche:';
+
+  @override
+  String get migrationWizardSummaryReplaced => 'Replaced';
+
+  @override
+  String get migrationWizardSummaryKept => 'Kept';
+
+  @override
+  String get migrationWizardSummaryRemoved => 'Removed';
+
+  @override
+  String get migrationWizardWillUpdate => 'This will update';
+
+  @override
+  String get migrationWizardApplyChanges => 'Applica Modifiche';
+
+  @override
+  String get migrationWizardApplying => 'Applying changes...';
+
+  @override
+  String get migrationWizardSuccessTitle => 'Migrazione Completata';
+
+  @override
+  String get migrationWizardSuccessMessage =>
+      'Il tuo profilo equipaggiamento è stato aggiornato con successo!';
+
+  @override
+  String get migrationWizardChangesApplied => 'Modifiche Applicate:';
+
+  @override
+  String migrationWizardExercisesReplaced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count esercizi sostituiti',
+      one: '1 esercizio sostituito',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String migrationWizardExercisesKept(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count esercizi mantenuti',
+      one: '1 esercizio mantenuto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String migrationWizardExercisesRemoved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count esercizi rimossi',
+      one: '1 esercizio rimosso',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get migrationWizardUpdated => 'Updated';
+
+  @override
+  String get migrationWizardAnalyzing => 'Analisi in corso...';
+
+  @override
+  String get migrationWizardScanningRoutines => 'Scansione routine attive';
+
+  @override
+  String get migrationWizardScanningTemplates =>
+      'Scansione template allenamento';
+
+  @override
+  String get migrationWizardFindingAffected => 'Ricerca esercizi interessati';
+
+  @override
+  String get migrationWizardGeneratingAlternatives => 'Generazione alternative';
+
+  @override
+  String get migrationWizardImpactSummaryTitle =>
+      'Riepilogo Impatto Migrazione';
+
+  @override
+  String get migrationWizardTotalAffected => 'Totale Interessati:';
+
+  @override
+  String migrationWizardExercisesWithAlternatives(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count con alternative',
+      one: '1 con alternative',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String migrationWizardExercisesWithoutAlternatives(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count senza alternative',
+      one: '1 senza alternative',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get migrationWizardImpactLabel => 'Impatto:';
+
+  @override
+  String get migrationWizardNoImpactTitle => 'Nessun Impatto';
+
+  @override
+  String get migrationWizardContinueToReview => 'Continua alla Revisione';
+
+  @override
+  String get migrationWizardSkipToConfirmation => 'Salta alla Conferma';
+
+  @override
+  String migrationWizardExerciseXOfY(int current, int total) {
+    return 'Esercizio $current di $total';
+  }
+
+  @override
+  String get migrationWizardNoAlternativesFound =>
+      'Nessuna alternativa compatibile trovata';
+
+  @override
+  String get migrationWizardPreviousExercise => 'Esercizio Precedente';
+
+  @override
+  String get migrationWizardNextExercise => 'Prossimo Esercizio';
+
+  @override
+  String get migrationWizardDecisionsSummary => 'Riepilogo Decisioni:';
+
+  @override
+  String migrationWizardReplaceAction(String original, String replacement) {
+    return 'Sostituisci: $original → $replacement';
+  }
+
+  @override
+  String migrationWizardKeepAction(String exercise) {
+    return 'Mantieni: $exercise';
+  }
+
+  @override
+  String migrationWizardRemoveAction(String exercise) {
+    return 'Rimuovi: $exercise';
+  }
+
+  @override
+  String get migrationWizardBackToReview => 'Torna alla Revisione';
+
+  @override
+  String get migrationWizardApplyingChanges => 'Applicazione modifiche...';
+
+  @override
+  String migrationWizardRoutinesUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine aggiornate',
+      one: '1 routine aggiornata',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String migrationWizardTemplatesUpdated(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count template aggiornati',
+      one: '1 template aggiornato',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String migrationWizardProfileSwitched(String profileName) {
+    return 'Profilo cambiato in: $profileName';
+  }
+
+  @override
+  String get migrationWizardDone => 'Fatto';
+
+  @override
+  String get migrationWizardCancel => 'Annulla';
+
+  @override
+  String get migrationWizardCancelConfirmTitle => 'Annullare Migrazione?';
+
+  @override
+  String get migrationWizardCancelConfirmMessage =>
+      'Le tue decisioni non saranno salvate e il profilo equipaggiamento non sarà modificato.';
+
+  @override
+  String migrationWizardProgress(int percent) {
+    return 'Progresso: $percent%';
+  }
+
+  @override
+  String migrationWizardError(String error) {
+    return 'Errore durante la migrazione: $error';
+  }
+
+  @override
+  String get migrationWizardRetry => 'Riprova';
+
+  @override
+  String get routineShiftTitle => 'Routine Spostata Automaticamente';
+
+  @override
+  String routineShiftMessage(String workoutName, String date) {
+    return 'Abbiamo spostato \'$workoutName\' a $date. Confermi o vuoi skippare definitivamente?';
+  }
+
+  @override
+  String get routineShiftConfirm => 'OK, mantieni spostamento';
+
+  @override
+  String get routineShiftRevert => 'Skippa definitivamente';
+
+  @override
+  String get routineShiftConfirmed => 'Spostamento confermato';
+
+  @override
+  String get routineShiftConfirmFailed => 'Errore durante la conferma';
+
+  @override
+  String get routineShiftReverted => 'Spostamento annullato, workout skippato';
+
+  @override
+  String get routineShiftRevertFailed => 'Errore durante l\'annullamento';
+
+  @override
+  String get routineShiftRevertConfirmTitle => 'Skippare Definitivamente?';
+
+  @override
+  String get routineShiftRevertConfirmMessage =>
+      'Questo annullerà lo spostamento e segnerà il workout come skippato. Non è consigliato. Sei sicuro?';
+
+  @override
+  String routineDateFormat(int day, int month, int year) {
+    return '$day/$month/$year';
+  }
+
+  @override
+  String get exerciseRotationTitle => 'Rotazione Variazioni Esercizi';
+
+  @override
+  String get exerciseRotationSubtitle =>
+      'Ruota automaticamente le variazioni degli esercizi ogni poche settimane per mantenere i tuoi allenamenti freschi e prevenire l\'adattamento';
+
+  @override
+  String get exerciseChangeVariation => 'Cambia Esercizio';
+
+  @override
+  String get exerciseChangeVariationSuccess =>
+      'Esercizio cambiato con successo';
+
+  @override
+  String get rotationDueNow => 'Rotazione Pronta!';
+
+  @override
+  String get rotationNextScheduled => 'Prossima Rotazione Programmata';
+
+  @override
+  String get rotationReadyToApply => 'Pronto per applicare nuove variazioni';
+
+  @override
+  String get rotationApplyNow => 'Applica Rotazione Ora';
+
+  @override
+  String get rotationApplyEarly => 'Applica in Anticipo';
+
+  @override
+  String rotationInWeeks(int weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: 'Tra $weeks settimane',
+      one: 'Tra 1 settimana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get rotationApplyConfirmMessage =>
+      'Questo cambierà tutte le variazioni degli esercizi nella tua routine. Questa azione non può essere annullata. Continuare?';
+
+  @override
+  String get rotationAppliedSuccess =>
+      'Rotazione applicata con successo! Tutte le variazioni degli esercizi sono state aggiornate.';
+
+  @override
+  String get rotationAppliedError =>
+      'Impossibile applicare la rotazione. Riprova.';
+
+  @override
+  String get settingsSaved => 'Impostazioni salvate';
+
+  @override
+  String get noSimilarExercisesFound => 'Nessun esercizio simile trovato';
+
+  @override
+  String get sameMuscleGroup => 'Stesso gruppo muscolare';
+
+  @override
+  String get sameEquipment => 'Stessa attrezzatura';
+
+  @override
+  String get favorites => 'Preferiti';
+
+  @override
+  String get allCategories => 'Tutte le categorie';
+
+  @override
+  String get allEquipment => 'Tutta l\'attrezzatura';
+
+  @override
+  String get replaceExerciseWith => 'Sostituisci questo esercizio con:';
+
+  @override
+  String get skipWorkoutTitle => 'Salta Allenamento';
+
+  @override
+  String skipConsecutiveWarning(int count) {
+    return 'Hai $count skip consecutivi. Considera di recuperarli per mantenere la costanza.';
+  }
+
+  @override
+  String get skipWhyQuestion => 'Perché stai saltando?';
+
+  @override
+  String get skipWhatToDo => 'Cosa vuoi fare?';
+
+  @override
+  String get skipRecoverTitle => 'Recupera (+1 giorno)';
+
+  @override
+  String get skipRecoverSubtitle =>
+      'Sposta l\'intera routine di 1 giorno per recuperare questo allenamento';
+
+  @override
+  String get skipPermanentlyTitle => 'Salta definitivamente';
+
+  @override
+  String get skipPermanentlySubtitle =>
+      'Salta completamente questo allenamento (non recuperabile)';
+
+  @override
+  String get skipAdditionalNotes => 'Note aggiuntive (opzionale)';
+
+  @override
+  String get skipNotesHint => 'es., Non mi sento bene...';
+
+  @override
+  String get skipImpactTitle => 'Impatto sul tuo progresso';
+
+  @override
+  String get skipCurrentStreak => 'Streak Attuale';
+
+  @override
+  String get skipWillBeLost => 'Andrà perso';
+
+  @override
+  String get skipAdherenceRate => 'Tasso di Aderenza';
+
+  @override
+  String skipDaysLabel(int count) {
+    return '$count giorni';
+  }
+
+  @override
+  String get skipReasonSick => 'Malato';
+
+  @override
+  String get skipReasonInjury => 'Infortunio';
+
+  @override
+  String get skipReasonBusy => 'Impegnato';
+
+  @override
+  String get skipReasonTired => 'Stanco';
+
+  @override
+  String get skipReasonTravel => 'Viaggio';
+
+  @override
+  String get skipReasonWeather => 'Meteo';
+
+  @override
+  String get skipReasonOther => 'Altro';
+
+  @override
+  String get rotationPreviewTitle => 'Anteprima Modifiche Rotazione';
+
+  @override
+  String get rotationSelectAll => 'Seleziona Tutto';
+
+  @override
+  String get rotationDeselectAll => 'Deseleziona Tutto';
+
+  @override
+  String rotationSelectedCount(int selected, int total) {
+    return '$selected di $total selezionati';
+  }
+
+  @override
+  String get rotationCurrentLabel => 'Attuale';
+
+  @override
+  String get rotationNewLabel => 'Nuovo';
+
+  @override
+  String get rotationApplyChanges => 'Applica Modifiche';
+
+  @override
+  String get newRecordBadge => 'NUOVO RECORD!';
+
+  @override
+  String get progressTrend => 'Tendenza Progresso';
+
+  @override
+  String get statsBreakdown => 'Riepilogo Statistiche';
+
+  @override
+  String get comparisonAndContext => 'Confronto e Contesto';
+
+  @override
+  String get notesAndMedia => 'Note e Media';
+
+  @override
+  String get relatedSessions => 'Sessioni Correlate';
+
+  @override
+  String get shareFunctionalityComingSoon =>
+      'Funzionalità di condivisione in arrivo';
+
+  @override
+  String get editFunctionalityComingSoon =>
+      'Funzionalità di modifica in arrivo';
+
+  @override
+  String get deleteRecordTitle => 'Elimina Record';
+
+  @override
+  String get deleteRecordConfirmation =>
+      'Sei sicuro di voler eliminare questo record personale?';
+
+  @override
+  String get bodyweightMultiplier => 'Moltiplicatore Peso Corporeo';
+
+  @override
+  String get estimatedOneRM => '1RM Stimato';
+
+  @override
+  String relativeToBodyweight(String weight) {
+    return 'Relativo a $weight kg di peso corporeo';
+  }
+
+  @override
+  String get usingBrzyckiFormula => 'Usando formula Brzycki';
+
+  @override
+  String get totalWeightReps => 'Peso totale × ripetizioni';
+
+  @override
+  String get noTrendDataAvailable => 'Nessun dato tendenza disponibile';
+
+  @override
+  String get timeRangeLabel30D => '30G';
+
+  @override
+  String get timeRangeLabel90D => '90G';
+
+  @override
+  String get timeRangeLabelAll => 'Tutto';
+
+  @override
+  String daysAgo(int days) {
+    return '$days giorni fa';
+  }
+
+  @override
+  String weeksAgo(String weeks) {
+    return '$weeks settimane fa';
+  }
+
+  @override
+  String monthsAgo(String months) {
+    return '$months mesi fa';
+  }
+
+  @override
+  String dAgo(String days) {
+    return '${days}g fa';
+  }
+
+  @override
+  String setsCountShort(String count) {
+    return '$count serie';
+  }
+
+  @override
+  String volumeInTons(String value) {
+    return '${value}t volume';
+  }
+
+  @override
+  String get kgLabel => 'kg';
+
+  @override
+  String get debugLogsTitle => 'Log di Debug';
+
+  @override
+  String get debugLogsSubtitle => 'Configura categorie di log';
+
+  @override
+  String get debugLogsDescription =>
+      'Abilita o disabilita categorie di log specifiche per ridurre il rumore nella console durante il debug. Tutte le categorie sono disabilitate di default.';
+
+  @override
+  String get debugLogsEnableAll => 'Abilita Tutti';
+
+  @override
+  String get debugLogsDisableAll => 'Disabilita Tutti';
+
+  @override
+  String debugLogsEnabledCount(int count) {
+    return '$count abilitati';
+  }
+
+  @override
+  String get debugLogsCategoriesTitle => 'Categorie di Log';
+
+  @override
+  String get debugLogsAllEnabled => 'Tutti i log abilitati con successo';
+
+  @override
+  String get debugLogsAllDisabled => 'Tutti i log disabilitati con successo';
+
+  @override
+  String debugLogsCategoryEnabled(String category) {
+    return '$category abilitato';
+  }
+
+  @override
+  String debugLogsCategoryDisabled(String category) {
+    return '$category disabilitato';
+  }
 }

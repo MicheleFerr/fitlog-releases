@@ -36,13 +36,13 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 
 /// Screen di riepilogo workout completato
 class WorkoutCompletionSummaryScreen extends ConsumerWidget {
-  /// Workout completato da mostrare
-  final Workout workout;
 
   const WorkoutCompletionSummaryScreen({
     super.key,
     required this.workout,
   });
+  /// Workout completato da mostrare
+  final Workout workout;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -242,10 +242,6 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
 
 /// Card statistica singola
 class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
 
   const _StatCard({
     required this.icon,
@@ -253,6 +249,10 @@ class _StatCard extends StatelessWidget {
     required this.value,
     required this.color,
   });
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

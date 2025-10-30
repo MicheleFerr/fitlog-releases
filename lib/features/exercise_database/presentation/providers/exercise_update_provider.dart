@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_update_dialog.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart' show isAdminCachedProvider;
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// Stato del dialog di aggiornamento
 class ExerciseUpdateState {
@@ -194,8 +195,10 @@ final exerciseUpdateProvider = StateNotifierProvider<ExerciseUpdateNotifier, Exe
 
 /// Provider per il repository (da definire dove appropriato)
 final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref) {
+  final boxManager = ref.watch(hiveBoxManagerProvider);
   final locale = ref.watch(localeProvider);
   return HybridExerciseRepository(
+    boxManager: boxManager,
     locale: locale,
   );
 });

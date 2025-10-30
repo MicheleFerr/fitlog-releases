@@ -76,7 +76,7 @@ class MigrationScreen extends ConsumerWidget {
               color: Theme.of(context).colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, -2),
                 ),
@@ -378,7 +378,7 @@ class MigrationScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             LinearProgressIndicator(
               value: state.progress,
-              backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              backgroundColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
             const SizedBox(height: 8),
             if (state.currentMessage != null)

@@ -1,14 +1,17 @@
 /**
  * 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
- * 
+ *
  * 📁 Layer: presentation
  * 🎯 Feature: analytics
- * 🔧 Type: integration guide
+ * 🔧 Type: integration guide (DOCUMENTATION ONLY - No executable code)
  * 🌍 Localization: ✅ AppLocalizations used
  * 🎨 Theme: ✅ ColorScheme responsive
  * 📱 Platform: Universal
- * 
+ *
  * Integration guide for adding analytics to WorkoutScreen
+ *
+ * ⚠️ NOTE: This file contains ONLY documentation comments.
+ * Any Hive.openBox() calls shown are EXAMPLES in documentation.
  */
 
 /*

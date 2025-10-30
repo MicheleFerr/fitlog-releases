@@ -16,6 +16,13 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 
 /// Widget button per segnalare problemi su esercizi
 class ExerciseFeedbackButton extends ConsumerStatefulWidget {
+
+  const ExerciseFeedbackButton({
+    super.key,
+    required this.exerciseId,
+    required this.exerciseName,
+    required this.version,
+  });
   /// ID dell'esercizio
   final String exerciseId;
 
@@ -24,13 +31,6 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
 
   /// Versione dell'esercizio
   final String version;
-
-  const ExerciseFeedbackButton({
-    super.key,
-    required this.exerciseId,
-    required this.exerciseName,
-    required this.version,
-  });
 
   @override
   ConsumerState<ExerciseFeedbackButton> createState() =>
@@ -94,7 +94,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: selectedType,
+                  initialValue: selectedType,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -256,7 +256,7 @@ class _ExerciseFeedbackButtonState
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.surfaceVariant,
+                  color: context.colors.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
@@ -289,7 +289,7 @@ class _ExerciseFeedbackButtonState
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),

@@ -211,7 +211,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
         icon: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: colorScheme.surface.withOpacity(0.8),
+            color: colorScheme.surface.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
@@ -227,10 +227,10 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
         Container(
           margin: const EdgeInsets.only(right: 16),
           decoration: BoxDecoration(
-            color: colorScheme.surface.withOpacity(0.8),
+            color: colorScheme.surface.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: colorScheme.outline.withOpacity(0.2),
+              color: colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
           child: Material(
@@ -277,9 +277,9 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.primary.withOpacity(0.1),
-            colorScheme.secondary.withOpacity(0.05),
-            colorScheme.tertiary.withOpacity(0.1),
+            colorScheme.primary.withValues(alpha: 0.1),
+            colorScheme.secondary.withValues(alpha: 0.05),
+            colorScheme.tertiary.withValues(alpha: 0.1),
             colorScheme.surface,
           ],
           stops: const [0.0, 0.3, 0.7, 1.0],
@@ -363,14 +363,14 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorScheme.primary.withOpacity(0.8),
-            colorScheme.secondary.withOpacity(0.9),
+            colorScheme.primary.withValues(alpha: 0.8),
+            colorScheme.secondary.withValues(alpha: 0.9),
           ],
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withOpacity(0.3),
+            color: colorScheme.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             spreadRadius: 0,
             offset: const Offset(0, 10),
@@ -388,7 +388,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.amber.withOpacity(0.4),
+                  color: Colors.amber.withValues(alpha: 0.4),
                   blurRadius: 16,
                   spreadRadius: 0,
                   offset: const Offset(0, 4),
@@ -419,7 +419,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           Text(
             'Join thousands of athletes achieving their goals with GymBro Premium',
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onPrimary.withOpacity(0.9),
+              color: colorScheme.onPrimary.withValues(alpha: 0.9),
               height: 1.4,
             ),
             textAlign: TextAlign.center,
@@ -497,15 +497,15 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: colorScheme.outline.withOpacity(0.1),
+                  color: colorScheme.outline.withValues(alpha: 0.1),
                 ),
                 // Glass morphism effect
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                     offset: const Offset(0, 4),
@@ -580,10 +580,10 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -651,7 +651,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withOpacity(0.3),
+            color: colorScheme.primary.withValues(alpha: 0.3),
             blurRadius: 12,
             spreadRadius: 0,
             offset: const Offset(0, 6),
@@ -829,18 +829,18 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: isSelected 
-                  ? colorScheme.primaryContainer.withOpacity(0.1)
-                  : colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  ? colorScheme.primaryContainer.withValues(alpha: 0.1)
+                  : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isSelected 
                     ? colorScheme.primary
-                    : colorScheme.outline.withOpacity(0.2),
+                    : colorScheme.outline.withValues(alpha: 0.2),
                 width: isSelected ? 2 : 1,
               ),
               boxShadow: isSelected ? [
                 BoxShadow(
-                  color: colorScheme.primary.withOpacity(0.2),
+                  color: colorScheme.primary.withValues(alpha: 0.2),
                   blurRadius: 20,
                   spreadRadius: 0,
                   offset: const Offset(0, 10),
@@ -963,7 +963,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         boxShadow: [
                           BoxShadow(
                             color: (isPopular ? Colors.amber : colorScheme.tertiary)
-                                .withOpacity(0.3),
+                                .withValues(alpha: 0.3),
                             blurRadius: 8,
                             spreadRadius: 0,
                             offset: const Offset(0, 2),
@@ -994,10 +994,10 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -1025,7 +1025,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Container(
                 width: 1,
                 height: 40,
-                color: colorScheme.outline.withOpacity(0.2),
+                color: colorScheme.outline.withValues(alpha: 0.2),
               ),
               Expanded(
                 child: _buildTrustBadge(
@@ -1038,7 +1038,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Container(
                 width: 1,
                 height: 40,
-                color: colorScheme.outline.withOpacity(0.2),
+                color: colorScheme.outline.withValues(alpha: 0.2),
               ),
               Expanded(
                 child: _buildTrustBadge(
@@ -1166,7 +1166,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            colorScheme.surface.withOpacity(0.0),
+            colorScheme.surface.withValues(alpha: 0.0),
             colorScheme.surface,
           ],
         ),
@@ -1184,7 +1184,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   color: colorScheme.errorContainer,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: colorScheme.error.withOpacity(0.3),
+                    color: colorScheme.error.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -1221,8 +1221,8 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 gradient: LinearGradient(
                   colors: upgradeState.isProcessing || _selectedPlan == null
                       ? [
-                          colorScheme.outline.withOpacity(0.3),
-                          colorScheme.outline.withOpacity(0.2),
+                          colorScheme.outline.withValues(alpha: 0.3),
+                          colorScheme.outline.withValues(alpha: 0.2),
                         ]
                       : [colorScheme.primary, colorScheme.secondary],
                 ),
@@ -1231,7 +1231,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ? null
                     : [
                         BoxShadow(
-                          color: colorScheme.primary.withOpacity(0.4),
+                          color: colorScheme.primary.withValues(alpha: 0.4),
                           blurRadius: 20,
                           spreadRadius: 0,
                           offset: const Offset(0, 10),
@@ -1314,7 +1314,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             decoration: BoxDecoration(
               color: _currentPage == index
                   ? colorScheme.primary
-                  : colorScheme.outline.withOpacity(0.3),
+                  : colorScheme.outline.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(4),
             ),
           );
@@ -1328,7 +1328,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     final theme = Theme.of(context);
 
     return Container(
-      color: Colors.black.withOpacity(0.6),
+      color: Colors.black.withValues(alpha: 0.6),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Center(
@@ -1340,7 +1340,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   spreadRadius: 0,
                   offset: const Offset(0, 10),
@@ -1421,7 +1421,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: colorScheme.primary.withOpacity(0.3),
+                      color: colorScheme.primary.withValues(alpha: 0.3),
                       blurRadius: 20,
                       spreadRadius: 0,
                       offset: const Offset(0, 10),
@@ -1460,10 +1460,10 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.1),
+                    color: colorScheme.outline.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Column(
@@ -1540,7 +1540,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(icon, color: color, size: 20),
@@ -1677,7 +1677,7 @@ class ParticlesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.1)
+      ..color = color.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
     // Create floating particles effect

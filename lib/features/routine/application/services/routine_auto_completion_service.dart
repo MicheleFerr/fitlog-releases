@@ -39,16 +39,12 @@ import 'package:gymbro_flutter_new/features/routine/application/services/routine
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Result of routine auto-completion attempt
 class RoutineAutoCompletionResult {
-  final bool completed;
-  final String? reason;
-  final List<DateTime>? candidateDates;
 
   const RoutineAutoCompletionResult({
     required this.completed,
@@ -78,6 +74,9 @@ class RoutineAutoCompletionResult {
       candidateDates: candidates,
     );
   }
+  final bool completed;
+  final String? reason;
+  final List<DateTime>? candidateDates;
 }
 
 /// Service for automatic routine day completion

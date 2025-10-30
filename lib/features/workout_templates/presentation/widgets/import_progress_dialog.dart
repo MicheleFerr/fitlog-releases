@@ -11,7 +11,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Dialog showing import progress with phases and steps
@@ -110,7 +109,7 @@ class ImportProgressDialog extends StatelessWidget {
                 Text(
                   currentStep,
                   style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colors.onSurfaceVariant.withOpacity(0.7),
+                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
                   ),
                   textAlign: TextAlign.center,
                 ),

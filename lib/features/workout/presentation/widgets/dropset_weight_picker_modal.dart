@@ -170,7 +170,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
+              color: Colors.grey.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -266,7 +266,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
 
     // Show detected equipment type
     return Card(
-      color: context.colors.primaryContainer.withOpacity(0.3),
+      color: context.colors.primaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -329,7 +329,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
 
   Widget _buildEquipmentSelector() {
     return Card(
-      color: context.colors.tertiaryContainer.withOpacity(0.3),
+      color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -410,7 +410,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? context.colors.primary.withOpacity(0.1)
+              ? context.colors.primary.withValues(alpha: 0.1)
               : context.colors.surface,
           border: Border.all(
             color: isSelected ? context.colors.primary : context.colors.outline,
@@ -450,7 +450,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
 
   Widget _buildPercentageSelector() {
     return Card(
-      color: context.colors.secondaryContainer.withOpacity(0.3),
+      color: context.colors.secondaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -499,7 +499,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.primary.withOpacity(0.1),
+                  color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: context.colors.primary),
                 ),

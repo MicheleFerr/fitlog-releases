@@ -67,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: context.colors.primary.withOpacity(0.1),
+                  color: context.colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -91,7 +91,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Text(
                 context.l10n.appSubtitle,
                 style: context.textTheme.bodyLarge?.copyWith(
-                  color: context.colors.onSurface.withOpacity(0.7),
+                  color: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
               ),
               
@@ -119,7 +119,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         context.l10n.welcomeDescription,
                         textAlign: TextAlign.center,
                         style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.colors.onSurface.withOpacity(0.7),
+                          color: context.colors.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -372,7 +372,7 @@ class _FeatureIcon extends StatelessWidget {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -385,7 +385,7 @@ class _FeatureIcon extends StatelessWidget {
         Text(
           label,
           style: context.textTheme.labelSmall?.copyWith(
-            color: context.colors.onSurface.withOpacity(0.7),
+            color: context.colors.onSurface.withValues(alpha: 0.7),
           ),
         ),
       ],

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Import core entities
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 // Import modal widgets
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/unified_set_input_modal.dart';
@@ -259,7 +260,7 @@ class ModalTesterWidget extends ConsumerWidget {
       exerciseName: 'Test Exercise',
       onSave: (set) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ UnifiedSetInputModal - WORKING')),
+          SnackBar(content: Text(context.l10n.modalTestSuccess('UnifiedSetInputModal'))),
         );
       },
     );
@@ -282,7 +283,7 @@ class ModalTesterWidget extends ConsumerWidget {
         onConfirm: (actualReps, actualWeight, rpe) {
           Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('✅ RpeSelectorBottomSheet - WORKING: RPE $rpe')),
+            SnackBar(content: Text(context.l10n.modalTestRpeSuccess(rpe.toString()))),
           );
         },
       ),
@@ -297,13 +298,13 @@ class ModalTesterWidget extends ConsumerWidget {
     ).then((_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ AddExerciseModal - OPENED (check functionality)')),
+          SnackBar(content: Text(context.l10n.modalTestOpened('AddExerciseModal'))),
         );
       }
     }).catchError((e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('❌ AddExerciseModal - ERROR: $e')),
+          SnackBar(content: Text(context.l10n.modalTestError('AddExerciseModal', e.toString()))),
         );
       }
     });
@@ -318,13 +319,13 @@ class ModalTesterWidget extends ConsumerWidget {
       ).then((_) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('✅ EnhancedAddExerciseModal - OPENED (check vs original)')),
+            SnackBar(content: Text(context.l10n.modalTestOpened('EnhancedAddExerciseModal'))),
           );
         }
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('❌ EnhancedAddExerciseModal - ERROR: $e')),
+        SnackBar(content: Text(context.l10n.modalTestError('EnhancedAddExerciseModal', e.toString()))),
       );
     }
   }
@@ -335,12 +336,12 @@ class ModalTesterWidget extends ConsumerWidget {
       _getMockExercise(),
       onHistory: () {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('📊 History button tapped')),
+          SnackBar(content: Text(context.l10n.historyButtonTapped)),
         );
       },
       onEdit: () {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✏️ Edit button tapped')),
+          SnackBar(content: Text(context.l10n.editButtonTapped)),
         );
       },
     );

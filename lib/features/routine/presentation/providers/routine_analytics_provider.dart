@@ -22,7 +22,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_analytics.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_repository_provider.dart';
 
 /// Provider for routine analytics of the active routine
 final activeRoutineAnalyticsProvider =
@@ -103,8 +102,8 @@ RoutineAdherenceMetrics _calculateAdherenceMetrics(FlexibleRoutine routine) {
   // Calculate total planned days (non-rest days in schedule)
   int totalPlannedDays = 0;
   int completedDays = 0;
-  int skippedDays = skipTracker.skippedDays.length;
-  int recoveredDays = skipTracker.recoveredDays.length;
+  final int skippedDays = skipTracker.skippedDays.length;
+  final int recoveredDays = skipTracker.recoveredDays.length;
 
   // Count template distribution
   final Map<String, int> templateCounts = {};

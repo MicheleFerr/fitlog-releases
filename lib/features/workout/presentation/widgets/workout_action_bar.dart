@@ -85,7 +85,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.shadow.withOpacity(0.1),
+                    color: theme.colorScheme.shadow.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -232,7 +232,7 @@ class _ActionButton extends StatelessWidget {
                 size: 18,
                 color: enabled
                   ? theme.colorScheme.onPrimaryContainer
-                  : theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               const SizedBox(width: 4),
               Text(
@@ -240,7 +240,7 @@ class _ActionButton extends StatelessWidget {
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: enabled
                     ? theme.colorScheme.onPrimaryContainer
-                    : theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -422,7 +422,7 @@ class _ActionHistory extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: const BorderRadius.vertical(
           bottom: Radius.circular(16),
         ),
@@ -457,7 +457,7 @@ class _ActionHistory extends StatelessWidget {
                 Text(
                   _formatTime(action.timestamp),
                   style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -567,7 +567,7 @@ class _ActionToastState extends State<_ActionToast>
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),

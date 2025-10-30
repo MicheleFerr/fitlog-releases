@@ -202,21 +202,30 @@ class ExerciseSelectionState {
   ExerciseSelectionState copyWith({
     String? searchQuery,
     Set<String>? selectedIds,
-    String? focusedCategory,
-    String? focusedEquipment,
+    Object? focusedCategory = _undefined,
+    Object? focusedEquipment = _undefined,
     bool? isMultiSelect,
-    ExerciseType? targetType,
+    Object? targetType = _undefined,
   }) {
     return ExerciseSelectionState(
       searchQuery: searchQuery ?? this.searchQuery,
       selectedIds: selectedIds ?? this.selectedIds,
-      focusedCategory: focusedCategory ?? this.focusedCategory,
-      focusedEquipment: focusedEquipment ?? this.focusedEquipment,
+      focusedCategory: focusedCategory == _undefined
+          ? this.focusedCategory
+          : focusedCategory as String?,
+      focusedEquipment: focusedEquipment == _undefined
+          ? this.focusedEquipment
+          : focusedEquipment as String?,
       isMultiSelect: isMultiSelect ?? this.isMultiSelect,
-      targetType: targetType ?? this.targetType,
+      targetType: targetType == _undefined
+          ? this.targetType
+          : targetType as ExerciseType?,
     );
   }
 }
+
+// Sentinel value for nullable parameters in copyWith
+const Object _undefined = Object();
 
 /// 🚀 TIER-1: State notifier with optimized updates
 class ExerciseSelectionNotifier extends StateNotifier<ExerciseSelectionState> {
@@ -269,10 +278,33 @@ class ExerciseSelectionNotifier extends StateNotifier<ExerciseSelectionState> {
   void reset() {
     state = const ExerciseSelectionState();
   }
+
+  /// Clear all filters (but keep selection)
+  void clearFilters() {
+    state = state.copyWith(
+      searchQuery: '',
+      focusedCategory: null,
+      focusedEquipment: null,
+    );
+  }
+
+  /// Clear specific filter
+  void clearCategoryFilter() {
+    state = state.copyWith(focusedCategory: null);
+  }
+
+  void clearEquipmentFilter() {
+    state = state.copyWith(focusedEquipment: null);
+  }
+
+  void clearSearchQuery() {
+    state = state.copyWith(searchQuery: '');
+  }
 }
 
-final exerciseSelectionProvider = 
-    StateNotifierProvider.autoDispose<ExerciseSelectionNotifier, ExerciseSelectionState>((ref) {
+// ✅ FIX: Removed .autoDispose to persist filters across navigation
+final exerciseSelectionProvider =
+    StateNotifierProvider<ExerciseSelectionNotifier, ExerciseSelectionState>((ref) {
   return ExerciseSelectionNotifier();
 });
 

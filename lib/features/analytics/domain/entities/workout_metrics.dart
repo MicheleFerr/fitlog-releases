@@ -13,7 +13,7 @@ library;
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 /// Real-time workout metrics calculated during active workout
 class WorkoutMetrics {
@@ -505,4 +505,4 @@ class PersonalRecordAchieved {
   }
 }
 
-// PRType enum is imported from pr_tracker.dart
+// PRType enum is imported from pr_tracker.dartimport 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';

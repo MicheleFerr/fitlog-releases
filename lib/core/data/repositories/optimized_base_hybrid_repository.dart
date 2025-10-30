@@ -13,22 +13,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Optimized Base repository with smart premium detection
 abstract class OptimizedBaseHybridRepository<T> {
-  
+
   OptimizedBaseHybridRepository({
     required this.featureName,
     required this.collectionName,
+    required HiveBoxManagerEnhanced boxManager,
     this.requiresPremiumForCloud = true,
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance {
+       _auth = auth ?? FirebaseAuth.instance,
+       _boxManager = boxManager {
     _initialize();
   }
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
+  final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _localBox;
   late Box<Map> _syncQueueBox;
   
@@ -61,8 +65,8 @@ abstract class OptimizedBaseHybridRepository<T> {
   /// Initialize with optimized profile loading
   Future<void> _initialize() async {
     // Initialize Hive boxes
-    _localBox = await Hive.openBox<Map>('${featureName}_data');
-    _syncQueueBox = await Hive.openBox<Map>('${featureName}_sync_queue');
+    _localBox = await _boxManager.openBox<Map>('${featureName}_data');
+    _syncQueueBox = await _boxManager.openBox<Map>('${featureName}_sync_queue');
     
     // OPTIMIZED: Load cached profile first
     await _loadCachedProfile();
@@ -80,7 +84,7 @@ abstract class OptimizedBaseHybridRepository<T> {
   Future<void> _loadCachedProfile() async {
     try {
       // Check local cache first
-      final cacheBox = await Hive.openBox<Map>('user_profile_cache');
+      final cacheBox = await _boxManager.openBox<Map>('user_profile_cache');
       final cachedData = cacheBox.get('profile');
 
       if (cachedData != null) {
@@ -105,7 +109,7 @@ abstract class OptimizedBaseHybridRepository<T> {
       debugPrint('⚠️ Failed to load cached profile: $e');
       // Clear corrupted cache and retry from Firestore
       try {
-        final cacheBox = await Hive.openBox<Map>('user_profile_cache');
+        final cacheBox = await _boxManager.openBox<Map>('user_profile_cache');
         await cacheBox.delete('profile');
         debugPrint('🗑️ Cleared corrupted cache');
       } catch (_) {}
@@ -180,7 +184,7 @@ abstract class OptimizedBaseHybridRepository<T> {
     if (_cachedUserProfile == null) return;
 
     try {
-      final cacheBox = await Hive.openBox<Map>('user_profile_cache');
+      final cacheBox = await _boxManager.openBox<Map>('user_profile_cache');
 
       // ✅ FIX: Convert Timestamp objects to strings BEFORE caching
       // This prevents type cast errors when reading from Hive

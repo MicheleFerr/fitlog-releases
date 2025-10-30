@@ -151,11 +151,7 @@ class ExerciseFuzzyMatcher {
 }
 
 /// Risultato fuzzy match con metadati per UI
-class ExerciseFuzzyResult {
-  final Exercise exercise;
-  final double score;           // 0.0-1.0 (1.0 = match perfetto)
-  final String matchedText;     // Testo che ha matchato (per debug/UI)
-  final bool wasAutoCorrected;  // True se score < 0.95 (c'era typo/variante)
+class ExerciseFuzzyResult {  // True se score < 0.95 (c'era typo/variante)
 
   ExerciseFuzzyResult({
     required this.exercise,
@@ -163,6 +159,10 @@ class ExerciseFuzzyResult {
     required this.matchedText,
     required this.wasAutoCorrected,
   });
+  final Exercise exercise;
+  final double score;           // 0.0-1.0 (1.0 = match perfetto)
+  final String matchedText;     // Testo che ha matchato (per debug/UI)
+  final bool wasAutoCorrected;
 
   /// Formatta score come percentuale
   String get scorePercentage => '${(score * 100).toStringAsFixed(0)}%';

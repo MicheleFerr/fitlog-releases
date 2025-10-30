@@ -2,27 +2,32 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draft.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Repository for managing workout drafts in local storage
 class WorkoutDraftRepository {
+  WorkoutDraftRepository([HiveBoxManagerEnhanced? boxManager])
+      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+
   static const String _boxName = 'workout_drafts';
   static const String _currentDraftKey = 'current_draft';
   static const String _recoveredDraftsKey = 'recovered_drafts';
-  
+
+  final HiveBoxManagerEnhanced _boxManager;
   Box<WorkoutDraft>? _draftBox;
   Box? _recoveredBox;
 
   /// Initialize the draft storage
   Future<void> init() async {
     if (!Hive.isBoxOpen(_boxName)) {
-      _draftBox = await Hive.openBox<WorkoutDraft>(_boxName);
+      _draftBox = await _boxManager.openBox<WorkoutDraft>(_boxName);
     } else {
       _draftBox = Hive.box<WorkoutDraft>(_boxName);
     }
-    
+
     // Initialize recovered drafts box
     if (!Hive.isBoxOpen('recovered_drafts')) {
-      _recoveredBox = await Hive.openBox('recovered_drafts');
+      _recoveredBox = await _boxManager.openBox('recovered_drafts');
     } else {
       _recoveredBox = Hive.box('recovered_drafts');
     }
@@ -137,13 +142,13 @@ class WorkoutDraftRepository {
   Future<void> clearOldDrafts() async {
     try {
       await init();
-      
+
       // Clear stale current draft
       final current = await getCurrentDraft();
       if (current?.isStale ?? false) {
         await clearCurrentDraft();
       }
-      
+
       // Clear old recovered drafts (keep last 5)
       final recovered = await getRecoveredDrafts();
       if (recovered.length > 5) {
@@ -153,6 +158,41 @@ class WorkoutDraftRepository {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to clear old drafts: $e');
+      }
+    }
+  }
+
+  /// MEMORY LEAK FIX: Close Hive boxes to free memory
+  Future<void> dispose() async {
+    try {
+      int closedCount = 0;
+
+      // Close draft box
+      if (_draftBox != null && _draftBox!.isOpen) {
+        await _draftBox!.close();
+        _draftBox = null;
+        closedCount++;
+        if (kDebugMode) {
+          debugPrint('✅ Closed workout_drafts box');
+        }
+      }
+
+      // Close recovered box
+      if (_recoveredBox != null && _recoveredBox!.isOpen) {
+        await _recoveredBox!.close();
+        _recoveredBox = null;
+        closedCount++;
+        if (kDebugMode) {
+          debugPrint('✅ Closed recovered_drafts box');
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ WorkoutDraftRepository disposed: $closedCount boxes closed');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error disposing WorkoutDraftRepository: $e');
       }
     }
   }

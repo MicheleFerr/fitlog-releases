@@ -15,14 +15,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 
 /// Messaggio per comunicazione con isolate
 class _SearchMessage {
-  final String query;
-  final List<Exercise> exercises;
-  final Map<String, double> userBoosts; // Pre-calculated boosts
-  final String? currentCategory;
-  final double strictThreshold;
-  final double typeThreshold;
-  final int maxResults;
-  final SendPort replyPort;
 
   _SearchMessage({
     required this.query,
@@ -34,14 +26,18 @@ class _SearchMessage {
     required this.maxResults,
     required this.replyPort,
   });
+  final String query;
+  final List<Exercise> exercises;
+  final Map<String, double> userBoosts; // Pre-calculated boosts
+  final String? currentCategory;
+  final double strictThreshold;
+  final double typeThreshold;
+  final int maxResults;
+  final SendPort replyPort;
 }
 
 /// Risultato serializzabile per invio da isolate
 class _SearchResult {
-  final String exerciseId;
-  final double score;
-  final String matchedText;
-  final bool wasAutoCorrected;
 
   _SearchResult({
     required this.exerciseId,
@@ -49,6 +45,10 @@ class _SearchResult {
     required this.matchedText,
     required this.wasAutoCorrected,
   });
+  final String exerciseId;
+  final double score;
+  final String matchedText;
+  final bool wasAutoCorrected;
 }
 
 /// Servizio per gestire persistent isolate per fuzzy search
@@ -59,13 +59,13 @@ class _SearchResult {
 /// - Pre-calcola ML boosts fuori dall'isolate
 /// - Ottimizzato per 1500+ esercizi
 class ExerciseFuzzySearchIsolate {
-  /// Singleton instance
-  static final ExerciseFuzzySearchIsolate _instance =
-      ExerciseFuzzySearchIsolate._internal();
 
   factory ExerciseFuzzySearchIsolate() => _instance;
 
   ExerciseFuzzySearchIsolate._internal();
+  /// Singleton instance
+  static final ExerciseFuzzySearchIsolate _instance =
+      ExerciseFuzzySearchIsolate._internal();
 
   /// Isolate reference
   Isolate? _isolate;
@@ -335,10 +335,6 @@ class ExerciseFuzzySearchIsolate {
 
 /// Risultato search (versione public API)
 class ExerciseFuzzySearchResult {
-  final Exercise exercise;
-  final double score;
-  final String matchedText;
-  final bool wasAutoCorrected;
 
   ExerciseFuzzySearchResult({
     required this.exercise,
@@ -346,6 +342,10 @@ class ExerciseFuzzySearchResult {
     required this.matchedText,
     required this.wasAutoCorrected,
   });
+  final Exercise exercise;
+  final double score;
+  final String matchedText;
+  final bool wasAutoCorrected;
 
   /// Formatta score come percentuale
   String get scorePercentage => '${(score * 100).toStringAsFixed(0)}%';

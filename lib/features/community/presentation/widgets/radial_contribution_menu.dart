@@ -146,7 +146,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
           });
         },
         child: Container(
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.black.withValues(alpha: 0.5),
           child: Stack(
             children: [
               // Backdrop blur effect
@@ -154,7 +154,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                 opacity: _fadeAnimation,
                 child: BackdropFilter(
                   filter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.3),
+                    Colors.black.withValues(alpha: 0.3),
                     BlendMode.darken,
                   ),
                   child: Container(),
@@ -174,8 +174,8 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                         decoration: BoxDecoration(
                           gradient: RadialGradient(
                             colors: [
-                              theme.colorScheme.primary.withOpacity(0.2),
-                              theme.colorScheme.primary.withOpacity(0.05),
+                              theme.colorScheme.primary.withValues(alpha: 0.2),
+                              theme.colorScheme.primary.withValues(alpha: 0.05),
                               Colors.transparent,
                             ],
                             stops: const [0.0, 0.5, 1.0],
@@ -206,7 +206,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: theme.colorScheme.primary.withOpacity(0.5),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.5),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -264,7 +264,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                       fontWeight: FontWeight.bold,
                       shadows: [
                         Shadow(
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                           blurRadius: 10,
                         ),
                       ],
@@ -359,18 +359,18 @@ class _RadialMenuItemState extends State<_RadialMenuItem>
                 color: theme.colorScheme.surface,
                 boxShadow: [
                   BoxShadow(
-                    color: widget.item.color.withOpacity(_isHovered ? 0.6 : 0.3),
+                    color: widget.item.color.withValues(alpha: _isHovered ? 0.6 : 0.3),
                     blurRadius: _isHovered ? 25 : 15,
                     spreadRadius: _isHovered ? 3 : 1,
                   ),
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
                 ],
                 border: Border.all(
-                  color: widget.item.color.withOpacity(_isHovered ? 0.8 : 0.5),
+                  color: widget.item.color.withValues(alpha: _isHovered ? 0.8 : 0.5),
                   width: 2,
                 ),
               ),

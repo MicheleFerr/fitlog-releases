@@ -286,7 +286,7 @@ class _SupersetSequentialExecutionSheetState
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: context.colors.outline.withOpacity(0.3),
+                  color: context.colors.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -347,7 +347,7 @@ class _SupersetSequentialExecutionSheetState
                     border: Border.all(
                       color: isCompleted
                           ? context.colors.secondary
-                          : context.colors.outline.withOpacity(0.2),
+                          : context.colors.outline.withValues(alpha: 0.2),
                       width: 2,
                     ),
                   ),
@@ -378,7 +378,7 @@ class _SupersetSequentialExecutionSheetState
                                 Icon(
                                   Icons.edit,
                                   size: 14,
-                                  color: context.colors.outline.withOpacity(0.5),
+                                  color: context.colors.outline.withValues(alpha: 0.5),
                                 ),
                               ],
                             ),
@@ -404,7 +404,7 @@ class _SupersetSequentialExecutionSheetState
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withOpacity(0.5),
+                color: context.colors.primaryContainer.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

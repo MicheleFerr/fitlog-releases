@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_draft_repository.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// Provider for the draft repository
 final workoutDraftRepositoryProvider = Provider<WorkoutDraftRepository>((ref) {
-  return WorkoutDraftRepository();
+  return WorkoutDraftRepository(ref.watch(hiveBoxManagerProvider));
 });
 
 /// Provider for workout auto-save functionality

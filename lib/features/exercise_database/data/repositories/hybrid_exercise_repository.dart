@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/services/exer
 class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
 
   HybridExerciseRepository({
+    required super.boxManager,
     ExerciseCacheManager? cacheManager,
     ExerciseVersionService? versionService,
     super.firestore,

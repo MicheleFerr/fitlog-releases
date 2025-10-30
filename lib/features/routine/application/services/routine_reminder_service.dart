@@ -100,8 +100,8 @@ class RoutineReminderService {
       debugPrint('ℹ️ [RoutineReminder] No past unfinished days found');
     }
 
-    return SkippedDaysSummary(
-      skippedDays: const [],
+    return const SkippedDaysSummary(
+      skippedDays: [],
       notificationNeeded: false,
     );
   }

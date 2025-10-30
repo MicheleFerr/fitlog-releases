@@ -80,7 +80,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             child: Text(
               '${_filteredExercises.length} ${l10n.exercisesFound}',
               style: Theme.of(context).textTheme.bodySmall,
@@ -127,7 +127,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: _getDifficultyColor(exercise.difficolta).withOpacity(0.2),
+                    color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -232,7 +232,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
           Icon(
             Icons.search_off,
             size: 64,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -243,7 +243,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
           Text(
             l10n.tryModifyingFilters,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
           ),
         ],

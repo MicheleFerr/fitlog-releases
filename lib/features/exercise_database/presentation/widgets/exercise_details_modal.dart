@@ -77,7 +77,7 @@ class ExerciseDetailsModal extends StatelessWidget {
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: context.colors.onSurface.withOpacity(0.2),
+        color: context.colors.onSurface.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(2),
       ),
     );
@@ -136,10 +136,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -165,10 +165,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -199,10 +199,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest.withOpacity(0.3),
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.1),
+          color: context.colors.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -247,10 +247,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.secondaryContainer.withOpacity(0.2),
+        color: context.colors.secondaryContainer.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.1),
+          color: context.colors.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -353,7 +353,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.1),
+          color: context.colors.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -382,7 +382,7 @@ class ExerciseDetailsModal extends StatelessWidget {
           Text(
             content,
             style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.8),
+              color: context.colors.onSurface.withValues(alpha: 0.8),
               fontFamily: isMonospace ? 'monospace' : null,
               height: 1.4,
             ),
@@ -404,7 +404,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         Text(
           text,
           style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colors.onSurface.withOpacity(0.8),
+            color: context.colors.onSurface.withValues(alpha: 0.8),
             height: 1.5,
           ),
         ),
@@ -436,7 +436,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               child: Text(
                 step,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.onSurface.withOpacity(0.8),
+                  color: context.colors.onSurface.withValues(alpha: 0.8),
                   height: 1.5,
                 ),
               ),

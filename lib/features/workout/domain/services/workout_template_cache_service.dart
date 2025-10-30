@@ -16,14 +16,21 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class WorkoutTemplateCacheService {
+
+  WorkoutTemplateCacheService({HiveBoxManagerEnhanced? boxManager})
+      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+
+  final HiveBoxManagerEnhanced _boxManager;
   static const String _boxName = 'template_cache';
   static const int _maxCacheDays = 30; // Giorni massimi di cache
   static const Duration _debounceTime = Duration(seconds: 1); // Save ogni 1 secondo (ridotto per UX migliore)
 
   late Box<Map<dynamic, dynamic>> _cacheBox;
   bool _isInitialized = false;
+  bool _isDisposed = false;  // MEMORY LEAK FIX: Track disposal state
 
   // Debounce timer per evitare salvataggi continui
   Timer? _debounceTimer;
@@ -35,7 +42,7 @@ class WorkoutTemplateCacheService {
   Future<void> initialize() async {
     if (_isInitialized) return;
 
-    _cacheBox = await Hive.openBox<Map<dynamic, dynamic>>(_boxName);
+    _cacheBox = await _boxManager.openBox<Map<dynamic, dynamic>>(_boxName);
     _isInitialized = true;
 
     // Cleanup old cache entries
@@ -79,7 +86,16 @@ class WorkoutTemplateCacheService {
 
   /// Execute pending save
   Future<void> _executePendingSave() async {
-    if (_pendingSaveData == null) return;
+    if (_pendingSaveData == null) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [TemplateCache] _executePendingSave called but NO pending data');
+      }
+      return;
+    }
+
+    if (kDebugMode) {
+      debugPrint('💾 [TemplateCache] _executePendingSave START - Templates: ${_pendingSaveData!.keys.toList()}');
+    }
 
     for (final entry in _pendingSaveData!.entries) {
       try {
@@ -93,22 +109,44 @@ class WorkoutTemplateCacheService {
         await _cacheBox.put(cacheKey, cacheData);
 
         if (kDebugMode) {
-          debugPrint('💾 [TemplateCache] Saved modifications for template: ${entry.key}');
+          debugPrint('✅ [TemplateCache] Saved template: ${entry.key}');
+          debugPrint('   📝 Exercises count: ${entry.value.exercises.length}');
+          debugPrint('   🔑 Cache key: $cacheKey');
         }
       } catch (e) {
         if (kDebugMode) {
-          debugPrint('❌ [TemplateCache] Error saving modifications: $e');
+          debugPrint('❌ [TemplateCache] Error saving template ${entry.key}: $e');
         }
       }
     }
 
     _pendingSaveData = null;
+
+    if (kDebugMode) {
+      debugPrint('✅ [TemplateCache] _executePendingSave COMPLETED');
+    }
   }
 
   /// Force immediate save (useful when app goes to background)
   Future<void> forceSave() async {
+    if (kDebugMode) {
+      debugPrint('🚀 [TemplateCache] forceSave() CALLED - Pending data: ${_pendingSaveData?.keys.toList()}');
+    }
+
     _debounceTimer?.cancel();
     await _executePendingSave();
+
+    // 🔥 CRITICAL FIX: Force flush to disk
+    try {
+      await _cacheBox.flush();
+      if (kDebugMode) {
+        debugPrint('✅ [TemplateCache] forceSave() COMPLETED with flush to disk');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [TemplateCache] Flush failed: $e');
+      }
+    }
   }
 
   /// Get cached workout modifications if they exist
@@ -116,15 +154,30 @@ class WorkoutTemplateCacheService {
   Future<Workout?> getCachedWorkout(String templateId) async {
     if (!_isInitialized) await initialize();
 
+    if (kDebugMode) {
+      debugPrint('🔍 [TemplateCache] getCachedWorkout CALLED for: $templateId');
+      debugPrint('   📦 All cache keys: ${_cacheBox.keys.toList()}');
+    }
+
     try {
       final cacheKey = _getCacheKey(templateId);
+
+      if (kDebugMode) {
+        debugPrint('   🔑 Looking for cache key: $cacheKey');
+      }
+
       final cacheData = _cacheBox.get(cacheKey);
 
       if (cacheData == null) {
         if (kDebugMode) {
-          debugPrint('📭 [TemplateCache] No cache found for template: $templateId');
+          debugPrint('❌ [TemplateCache] No cache found for template: $templateId');
         }
         return null;
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ [TemplateCache] Cache FOUND for template: $templateId');
+        debugPrint('   ⏰ Last modified: ${cacheData['lastModified']}');
       }
 
       // Check if cache is expired
@@ -133,7 +186,7 @@ class WorkoutTemplateCacheService {
 
       if (daysDiff > _maxCacheDays) {
         if (kDebugMode) {
-          debugPrint('⏰ [TemplateCache] Cache expired for template: $templateId (${daysDiff} days old)');
+          debugPrint('⏰ [TemplateCache] Cache expired for template: $templateId ($daysDiff days old)');
         }
         await _cacheBox.delete(cacheKey);
         return null;
@@ -252,9 +305,23 @@ class WorkoutTemplateCacheService {
   }
 
   /// Dispose of resources
+  /// MEMORY LEAK FIX: Close Hive box to free memory
   void dispose() {
+    if (_isDisposed) return;
+    _isDisposed = true;
+
     _debounceTimer?.cancel();
+    _debounceTimer = null;
+
     forceSave(); // Save any pending data before disposing
+
+    // MEMORY LEAK FIX: Close cache box
+    if (_isInitialized && _cacheBox.isOpen) {
+      _cacheBox.close();
+      if (kDebugMode) {
+        debugPrint('✅ WorkoutTemplateCacheService: Closed cache box');
+      }
+    }
   }
 }
 

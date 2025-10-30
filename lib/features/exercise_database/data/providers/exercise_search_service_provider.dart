@@ -13,6 +13,7 @@
 /// - ExerciseFuzzySearchIsolate (for fuzzy matching)
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/i_exercise_search_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/ml_exercise_search_service.dart';
@@ -85,11 +86,8 @@ final exerciseSearchServiceProvider = Provider<IExerciseSearchService>((ref) {
   // Note: This runs in background, service will throw if used before init completes
   service.initialize().catchError((e) {
     // Log error but don't crash app
-    if (const bool.fromEnvironment('dart.vm.product')) {
-      // Production: silent fail
-    } else {
-      // Debug: print error
-      print('❌ Failed to initialize search service: $e');
+    if (kDebugMode) {
+      debugPrint('❌ Failed to initialize search service: $e');
     }
   });
 

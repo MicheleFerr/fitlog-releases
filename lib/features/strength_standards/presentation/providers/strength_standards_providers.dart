@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_
 import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/fitness_profile_local_datasource.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/questionnaire_analytics_datasource.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/strength_standards_local_datasource.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/repositories/strength_standards_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/exercise_mapping.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
@@ -27,13 +28,15 @@ final strengthStandardsLocalDataSourceProvider =
 /// Fitness profile local datasource provider
 final fitnessProfileLocalDataSourceProvider =
     Provider<FitnessProfileLocalDataSource>((ref) {
-  return FitnessProfileLocalDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return FitnessProfileLocalDataSource(boxManager);
 });
 
 /// Questionnaire analytics datasource provider
 final questionnaireAnalyticsDataSourceProvider =
     Provider<QuestionnaireAnalyticsDataSource>((ref) {
-  return QuestionnaireAnalyticsDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return QuestionnaireAnalyticsDataSource(boxManager);
 });
 
 /// Repository provider

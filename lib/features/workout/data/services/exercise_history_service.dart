@@ -15,6 +15,7 @@ library;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseHistoryData {
 
@@ -31,10 +32,16 @@ class ExerciseHistoryData {
 }
 
 class ExerciseHistoryService {
-  
-  const ExerciseHistoryService({this.enableDebugLogging = true});
+
+  const ExerciseHistoryService({
+    required HiveBoxManagerEnhanced boxManager,
+    this.enableDebugLogging = true,
+  }) : _boxManager = boxManager;
+
   static const String _workoutsBoxName = 'workouts';
-  
+
+  final HiveBoxManagerEnhanced _boxManager;
+
   /// Enable debug logging (useful for troubleshooting)
   final bool enableDebugLogging;
   
@@ -100,7 +107,7 @@ class ExerciseHistoryService {
   /// Internal method to get exercise history from Hive storage
   Future<List<ExerciseHistoryData>> _getExerciseHistory(String exerciseName, String userId, {int limit = 50}) async {
     try {
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+      final box = await _boxManager.openBox<Map>(_workoutsBoxName);
       final historyData = <ExerciseHistoryData>[];
 
       // Get all workouts for this user
@@ -221,7 +228,7 @@ class ExerciseHistoryService {
   /// Debug method to get all exercise names for a user
   Future<List<String>> getAllExerciseNames(String userId) async {
     try {
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+      final box = await _boxManager.openBox<Map>(_workoutsBoxName);
       final exerciseNames = <String>{};
       
       final userKeys = box.keys.where((key) => key.toString().startsWith('${userId}_'));
@@ -263,7 +270,7 @@ class ExerciseHistoryService {
   /// Debug method to get workout count for a user
   Future<int> getWorkoutCount(String userId) async {
     try {
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+      final box = await _boxManager.openBox<Map>(_workoutsBoxName);
       final userKeys = box.keys.where((key) => key.toString().startsWith('${userId}_'));
       return userKeys.length;
     } catch (e) {
@@ -337,5 +344,24 @@ class ExerciseHistoryService {
       firstWorkout: dates.isNotEmpty ? dates.first : null,
       lastWorkout: dates.isNotEmpty ? dates.last : null,
     );
+  }
+
+  /// MEMORY LEAK FIX: Close workouts box to free memory
+  /// Note: This service opens boxes in multiple methods.
+  /// A better approach would be to open once and reuse, but that requires refactoring.
+  /// For now, this static method allows manual cleanup when needed.
+  static Future<void> dispose() async {
+    try {
+      if (Hive.isBoxOpen(_workoutsBoxName)) {
+        await Hive.box<Map>(_workoutsBoxName).close();
+        if (kDebugMode) {
+          debugPrint('✅ ExerciseHistoryService: Closed workouts box');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error disposing ExerciseHistoryService: $e');
+      }
+    }
   }
 }

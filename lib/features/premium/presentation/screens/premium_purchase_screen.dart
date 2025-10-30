@@ -13,7 +13,6 @@ library;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
@@ -113,7 +112,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  colorScheme.primary.withOpacity(0.1),
+                  colorScheme.primary.withValues(alpha: 0.1),
                   colorScheme.surface,
                 ],
               ),
@@ -173,7 +172,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
         gradient: LinearGradient(
           colors: [
             colorScheme.primaryContainer,
-            colorScheme.primaryContainer.withOpacity(0.5),
+            colorScheme.primaryContainer.withValues(alpha: 0.5),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -308,7 +307,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                   ),
                   borderRadius: BorderRadius.circular(12),
                   color: isSelected 
-                      ? colorScheme.primaryContainer.withOpacity(0.1)
+                      ? colorScheme.primaryContainer.withValues(alpha: 0.1)
                       : null,
                 ),
                 child: Stack(
@@ -493,7 +492,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
         color: colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),

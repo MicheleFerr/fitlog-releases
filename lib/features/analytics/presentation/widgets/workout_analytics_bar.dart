@@ -177,9 +177,9 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: colorScheme.secondary.withOpacity(0.1),
+                  color: colorScheme.secondary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: colorScheme.secondary.withOpacity(0.3)),
+                  border: Border.all(color: colorScheme.secondary.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -344,10 +344,10 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -377,7 +377,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
               subtitle,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontSize: 10,
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -434,7 +434,7 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
         gradient: LinearGradient(
           colors: [
             colorScheme.primaryContainer,
-            colorScheme.primaryContainer.withOpacity(0.7),
+            colorScheme.primaryContainer.withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -442,7 +442,7 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withOpacity(0.1),
+            color: colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -465,7 +465,7 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
                 Text(
                   '${metrics.formattedVolume} • ${metrics.formattedDuration} • ${_getQualityGrade(metrics.qualityScore)}',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onPrimaryContainer.withOpacity(0.8),
+                    color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
                   ),
                 ),
                 if (analytics.hasNewPRs) ...[
@@ -555,7 +555,7 @@ class FloatingAnalyticsWidget extends ConsumerWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: colorScheme.shadow.withOpacity(0.2),
+                color: colorScheme.shadow.withValues(alpha: 0.2),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),

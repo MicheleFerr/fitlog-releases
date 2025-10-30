@@ -18,6 +18,8 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// State for recovery operation
 class RecoveryState {
@@ -40,24 +42,26 @@ class RecoveryState {
 final workoutRecoveryProvider = StateNotifierProvider<WorkoutRecoveryNotifier, RecoveryState>((ref) {
   final userProfile = ref.watch(unifiedUserProfileProvider);
   final userId = userProfile.value?.uid;
-  
-  return WorkoutRecoveryNotifier(userId);
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+
+  return WorkoutRecoveryNotifier(userId, boxManager);
 });
 
 class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
-  
-  WorkoutRecoveryNotifier(this.userId) : super(RecoveryState());
+
+  WorkoutRecoveryNotifier(this.userId, this._boxManager) : super(RecoveryState());
   final String? userId;
+  final HiveBoxManagerEnhanced _boxManager;
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   
   /// Clear all local workouts before recovery
   Future<void> clearLocalWorkouts() async {
     if (userId == null) return;
-    
+
     try {
-      final localDataSource = HiveWorkoutDataSource();
-      final box = await Hive.openBox<Map>('workouts');
+      final localDataSource = HiveWorkoutDataSource(_boxManager);
+      final box = await _boxManager.openBox<Map>('workouts');
       
       // Remove all workouts for this user
       final keysToRemove = box.keys
@@ -74,156 +78,88 @@ class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
     }
   }
   
-  /// Recover all workouts from Firestore to local storage
+  /// ✅ MIGRATED: Recover all workouts from Firestore 'workouts' collection to local storage
+  /// Much simpler now - workouts are already complete, no need to reconstruct!
   Future<void> recoverWorkoutsFromCloud() async {
     if (state.isRecovering || userId == null) return;
-    
+
     state = RecoveryState(
       isRecovering: true,
       currentOperation: 'Clearing old data...',
     );
-    
+
     // Clear existing local workouts first
     await clearLocalWorkouts();
-    
+
     state = RecoveryState(
       isRecovering: true,
       currentOperation: 'Connecting to Firestore...',
     );
-    
+
     try {
-      final userEmail = _auth.currentUser?.email;
-      if (userEmail == null) {
-        throw Exception('User not authenticated');
-      }
-      
-      debugPrint('🔄 Starting recovery for user: $userEmail (uid: $userId)');
-      debugPrint('📧 Searching with email: ${userEmail.toLowerCase().trim()}');
-      
-      // 1. Try to fetch from exercise_activities collection (newer format)
+      debugPrint('🔄 [MIGRATED] Starting recovery for user: $userId');
+
+      // ✅ MIGRATED: Read from 'workouts' collection instead of exerciseActivities
       state = RecoveryState(
         isRecovering: true,
         currentOperation: 'Fetching workout data...',
       );
-      
-      // First try exerciseActivities (correct collection name)
-      // Order by createdAt to avoid index requirement
-      final List<QueryDocumentSnapshot> allActivities = [];
-      
-      // Try with exact email match first
-      debugPrint('🔍 Querying with email field = $userEmail');
-      final activitiesQuery = await _firestore
-          .collection('exerciseActivities')
-          .where('email', isEqualTo: userEmail)
+
+      debugPrint('🔍 [MIGRATED] Querying users/$userId/workouts collection');
+      final workoutsQuery = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('workouts')
           .orderBy('createdAt', descending: true)
           .limit(500)
           .get();
-      
-      debugPrint('📦 Found ${activitiesQuery.docs.length} exercise activities with email field');
-      allActivities.addAll(activitiesQuery.docs);
-      
-      // If no results, try with userEmail field
-      if (allActivities.isEmpty) {
-        debugPrint('🔍 Trying with userEmail field = $userEmail');
-        final altQuery = await _firestore
-            .collection('exerciseActivities')
-            .where('userEmail', isEqualTo: userEmail)
-            .orderBy('createdAt', descending: true)
-            .limit(500)
-            .get();
-        
-        debugPrint('📦 Found ${altQuery.docs.length} activities with userEmail field');
-        allActivities.addAll(altQuery.docs);
-      }
-      
-      // If still no results, try without email filter to debug
-      if (allActivities.isEmpty) {
-        debugPrint('⚠️ No activities found for user. Checking if collection has data...');
-        final sampleQuery = await _firestore
-            .collection('exerciseActivities')
-            .limit(5)
-            .get();
-        
-        debugPrint('📊 Collection has ${sampleQuery.docs.length} sample documents');
-        if (sampleQuery.docs.isNotEmpty) {
-          final sampleDoc = sampleQuery.docs.first.data();
-          debugPrint('📄 Sample document fields: ${sampleDoc.keys.join(', ')}');
-          if (sampleDoc.containsKey('email')) {
-            debugPrint('📧 Sample email value: ${sampleDoc['email']}');
-          }
-          if (sampleDoc.containsKey('userEmail')) {
-            debugPrint('📧 Sample userEmail value: ${sampleDoc['userEmail']}');
-          }
-        }
-      }
-      
+
+      debugPrint('📦 Found ${workoutsQuery.docs.length} complete workouts');
+
       state = RecoveryState(
         isRecovering: true,
-        workoutsFound: allActivities.length,
-        currentOperation: 'Processing activities...',
+        workoutsFound: workoutsQuery.docs.length,
+        currentOperation: 'Saving workouts...',
       );
-      
-      // 2. Group activities by workout
-      final workoutGroups = <String, List<QueryDocumentSnapshot>>{};
-      
-      for (final doc in allActivities) {
-        final data = doc.data() as Map<String, dynamic>;
-        final workoutId = data['workoutId'] ?? 
-                         data['workoutName']?.replaceAll(' ', '_') ?? 
-                         'workout_${data['createdAt']?.toDate().millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch}';
-        
-        if (!workoutGroups.containsKey(workoutId)) {
-          workoutGroups[workoutId] = [];
-        }
-        workoutGroups[workoutId]!.add(doc);
-      }
-      
-      debugPrint('📊 Grouped into ${workoutGroups.length} workouts');
-      
-      // 3. Reconstruct and save workouts
-      final localDataSource = HiveWorkoutDataSource();
+
+      // ✅ SIMPLIFIED: No need to reconstruct - workouts are already complete!
+      final localDataSource = HiveWorkoutDataSource(_boxManager);
       int recovered = 0;
-      
-      for (final entry in workoutGroups.entries) {
+
+      for (final doc in workoutsQuery.docs) {
         try {
-          final workoutId = entry.key;
-          final activities = entry.value;
-          
-          // Reconstruct workout from activities
-          final workout = _reconstructWorkoutFromActivities(
-            workoutId: workoutId,
-            activities: activities,
+          final data = doc.data();
+
+          // Parse workout directly from Firestore
+          final workout = WorkoutModel.fromJson(data);
+
+          // Save to local storage
+          await localDataSource.saveWorkout(workout, userId!);
+          recovered++;
+
+          state = RecoveryState(
+            isRecovering: true,
+            workoutsRecovered: recovered,
+            workoutsFound: workoutsQuery.docs.length,
+            currentOperation: 'Recovered $recovered/${workoutsQuery.docs.length} workouts',
           );
-          
-          if (workout != null) {
-            // Save to local storage
-            await localDataSource.saveWorkout(workout, userId!);
-            recovered++;
-            
-            state = RecoveryState(
-              isRecovering: true,
-              workoutsRecovered: recovered,
-              workoutsFound: workoutGroups.length,
-              currentOperation: 'Recovered $recovered/${workoutGroups.length} workouts',
-            );
-            
-            debugPrint('✅ Recovered workout: ${workout.name}');
-          }
+
+          debugPrint('✅ Recovered workout: ${workout.name}');
         } catch (e) {
           debugPrint('⚠️ Failed to recover workout: $e');
           // Continue with next workout
         }
       }
-      
+
       state = RecoveryState(
         isRecovering: false,
-        workoutsFound: workoutGroups.length,
+        workoutsFound: workoutsQuery.docs.length,
         workoutsRecovered: recovered,
         currentOperation: 'Recovery complete!',
       );
-      
+
       debugPrint('🎉 Recovery complete: $recovered workouts recovered');
-      
+
     } catch (e) {
       debugPrint('❌ Recovery failed: $e');
       state = RecoveryState(
@@ -303,7 +239,7 @@ class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
         double totalVolume = 0;
         for (final set in sets) {
           if (set.isCompleted) {
-            final volume = set.weight * set.reps;
+            final volume = set.weight * (set.reps ?? 0);
             totalVolume += volume;
             // Update set volume
             sets[sets.indexOf(set)] = ExerciseSetModel(
@@ -353,5 +289,30 @@ class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
       debugPrint('Failed to reconstruct workout: $e');
       return null;
     }
+  }
+
+  /// MEMORY LEAK FIX: Close workouts box when disposing
+  /// Note: Box is opened in clearLocalWorkouts() method
+  /// Best practice would be to keep reference and close here
+  /// For now, rely on HiveWorkoutDataSource.dispose() for cleanup
+  @override
+  void dispose() {
+    // MEMORY LEAK FIX: Close workouts box if opened by this provider
+    if (Hive.isBoxOpen('workouts')) {
+      Hive.box<Map>('workouts').close().then((_) {
+        if (kDebugMode) {
+          debugPrint('✅ WorkoutRecoveryNotifier: Closed workouts box');
+        }
+      }).catchError((e) {
+        if (kDebugMode) {
+          debugPrint('❌ Error closing workouts box: $e');
+        }
+      });
+    }
+
+    if (kDebugMode) {
+      debugPrint('✅ WorkoutRecoveryNotifier disposed');
+    }
+    super.dispose();
   }
 }

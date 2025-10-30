@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/notifications/domain/use_cases/sched
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/services/notification_service.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// PROBLEM #4 FIX: Background strategies for different timer durations
 enum BackgroundStrategy {
@@ -210,7 +211,8 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
   Future<void> _initializeComponents() async {
     try {
       // Initialize storage
-      _storage = await Hive.openBox<Map>('timer_storage');
+      final boxManager = ref.read(hiveBoxManagerProvider);
+      _storage = await boxManager.openBox<Map>('timer_storage');
       
       // Initialize audio player
       _audioPlayer = AudioPlayer();
@@ -324,10 +326,15 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
       // Store exercise ID for duration tracking
       _currentExerciseId = exerciseId;
       // Timer started with exerciseId: $exerciseId
-      
+
       // DEBUG: Log what custom sound is being set
       if (kDebugMode) {
-        debugPrint('🔊 [TIMER SOUND DEBUG 2] Creating timer state with customSound: $customSound');
+        final currentConfig = ref.read(appConfigProvider);
+        debugPrint('🔊 [TIMER SOUND DEBUG 2] Creating timer state:');
+        debugPrint('  - customSound parameter received: "$customSound"');
+        debugPrint('  - AppConfig.timerSound current value: "${currentConfig.timerSound}"');
+        debugPrint('  - AppConfig.soundEnabled: ${currentConfig.soundEnabled}');
+        debugPrint('  - Will create state with customSoundName: "$customSound"');
       }
 
       // Create new timer state

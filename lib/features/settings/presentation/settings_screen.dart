@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart' show isAdminCachedProvider;
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -30,7 +31,9 @@ class SettingsScreen extends ConsumerWidget {
     // Auto-load fitness profile when user is authenticated
     ref.watch(fitnessProfileAutoLoadProvider);
 
-    return Scaffold(
+    return DebugScreenNameOverlay(
+      screenName: 'SettingsScreen',
+      child: Scaffold(
       appBar: AppBar(
         title: Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
@@ -50,17 +53,21 @@ class SettingsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Fitness Benchmark Hero Card
-            _buildFitnessBenchmarkCard(context, ref),
-            const SizedBox(height: 24),
+            // DISABLED: Fitness Benchmark Hero Card
+            // Reason: GDPR compliance - medical questionnaire data
+            // Date: 2025-01-21
+            // _buildFitnessBenchmarkCard(context, ref),
+            // const SizedBox(height: 24),
 
             // User Info Section
             _buildUserInfoSection(context, ref, currentUser),
             const SizedBox(height: 24),
 
-            // Fitness Profile Section
-            _buildFitnessProfileSection(context, ref),
-            const SizedBox(height: 24),
+            // DISABLED: Fitness Profile Section
+            // Reason: GDPR compliance - medical questionnaire data
+            // Date: 2025-01-21
+            // _buildFitnessProfileSection(context, ref),
+            // const SizedBox(height: 24),
 
             // Appearance Settings
             _buildAppearanceSection(context, ref, config),
@@ -92,6 +99,7 @@ class SettingsScreen extends ConsumerWidget {
             _buildAccountSection(context, ref),
           ],
         ),
+      ),
       ),
     );
   }
@@ -736,16 +744,19 @@ class SettingsScreen extends ConsumerWidget {
                 final isAdmin = ref.watch(isAdminCachedProvider);
                 if (!isAdmin) return const SizedBox.shrink();
 
-                return Column(
+                return const Column(
                   children: [
-                    _buildSettingTile(
-                      context,
-                      title: 'Fitness Profile Debug',
-                      subtitle: 'View fitness profile and weight suggestions status',
-                      leading: const Icon(Icons.bug_report),
-                      onTap: () => context.pushNamed('fitness-profile-debug'),
-                    ),
-                    const Divider(),
+                    // DISABLED: Fitness Profile Debug
+                    // Reason: GDPR compliance - medical questionnaire data
+                    // Date: 2025-01-21
+                    // _buildSettingTile(
+                    //   context,
+                    //   title: 'Fitness Profile Debug',
+                    //   subtitle: 'View fitness profile and weight suggestions status',
+                    //   leading: const Icon(Icons.bug_report),
+                    //   onTap: () => context.pushNamed('fitness-profile-debug'),
+                    // ),
+                    // const Divider(),
                   ],
                 );
               },

@@ -149,6 +149,9 @@ import FirebaseCore
 
         if FeatureFlags.useNewAudioManager {
             AudioSessionManager.shared.reactivate()
+        } else {
+            // Legacy: Reactivate audio session for timer sounds
+            legacyReactivateAudioSession()
         }
     }
     
@@ -493,7 +496,30 @@ import FirebaseCore
             Logger.shared.log(.error, "Foreground audio configuration failed: \(error)", category: .audioSession)
         }
     }
-    
+
+    private func legacyReactivateAudioSession() {
+        // Reactivate audio session for timer sounds when app becomes active
+        // This is simpler than the new AudioSessionManager to avoid OSStatus -50 errors
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+
+            // Simply reconfigure - don't deactivate first to avoid errors
+            try audioSession.setCategory(.playback, mode: .default, options: [
+                .mixWithOthers,      // Mix with other audio apps
+                .duckOthers,         // Duck other audio when timer sounds
+                .allowBluetooth,
+                .allowBluetoothA2DP
+            ])
+
+            // Ensure session is active for timer sounds
+            try audioSession.setActive(true)
+
+            Logger.shared.log(.info, "Legacy audio session reactivated for timer", category: .audioSession)
+        } catch {
+            Logger.shared.log(.error, "Legacy audio reactivation failed: \(error)", category: .audioSession)
+        }
+    }
+
     private func legacyRegisterBackgroundTasks() {
         // Modern background task registration
         if #available(iOS 13.0, *) {

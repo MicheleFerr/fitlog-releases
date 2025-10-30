@@ -81,7 +81,7 @@ class OptimizedConsumer extends ConsumerWidget {
 final class AutoDisposeTimerMixin<T> {
   Timer? _disposeTimer;
   
-  void scheduleDisposal(AutoDisposeRef ref, Duration delay) {
+  void scheduleDisposal(Ref ref, Duration delay) {
     _disposeTimer?.cancel();
     _disposeTimer = Timer(delay, () {
       // Check if the ref is still valid before invalidating

@@ -109,7 +109,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -117,7 +117,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -153,7 +153,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.error
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         );
@@ -211,7 +211,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -219,7 +219,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -255,7 +255,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.error
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         );
@@ -306,7 +306,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -327,10 +327,10 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                                  color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(6),
                                   border: Border.all(
-                                    color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+                                    color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                                   ),
                                 ),
                                 child: Text(
@@ -413,7 +413,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     color: isCompleted 
-                        ? Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.3)
+                        ? Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.3)
                         : null,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -429,7 +429,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 decoration: BoxDecoration(
                                   color: isCompleted
                                       ? Theme.of(context).colorScheme.secondary
-                                      : Theme.of(context).colorScheme.error.withOpacity(0.15),
+                                      : Theme.of(context).colorScheme.error.withValues(alpha: 0.15),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
@@ -490,11 +490,11 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                       color: isCompleted
-                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
                                           : null,
                                     ),
                                     child: Row(
@@ -532,11 +532,11 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                       color: isCompleted
-                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
                                           : null,
                                     ),
                                     child: Row(
@@ -636,7 +636,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                                color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(

@@ -39,6 +39,19 @@ class RepRangePreset {
     this.order = 0,
   });
 
+  /// Create from JSON
+  factory RepRangePreset.fromJson(Map<String, dynamic> json) {
+    return RepRangePreset(
+      id: json['id'] as String,
+      labelKey: json['labelKey'] as String,
+      reps: json['reps'] as int,
+      descriptionKey: json['descriptionKey'] as String,
+      iconName: json['iconName'] as String,
+      colorHex: json['colorHex'] as String,
+      order: json['order'] as int? ?? 0,
+    );
+  }
+
   /// Unique identifier (e.g., 'strength', 'hypertrophy', 'endurance')
   final String id;
 
@@ -87,19 +100,6 @@ class RepRangePreset {
     'timer_off': Icons.timer_off,
     'repeat': Icons.repeat,
   };
-
-  /// Create from JSON
-  factory RepRangePreset.fromJson(Map<String, dynamic> json) {
-    return RepRangePreset(
-      id: json['id'] as String,
-      labelKey: json['labelKey'] as String,
-      reps: json['reps'] as int,
-      descriptionKey: json['descriptionKey'] as String,
-      iconName: json['iconName'] as String,
-      colorHex: json['colorHex'] as String,
-      order: json['order'] as int? ?? 0,
-    );
-  }
 
   /// Convert to JSON
   Map<String, dynamic> toJson() {
@@ -157,15 +157,6 @@ class SetCountPreset {
     this.order = 0,
   });
 
-  /// Unique identifier (e.g., 'sets_3')
-  final String id;
-
-  /// Number of sets
-  final int sets;
-
-  /// Display order (lower = first)
-  final int order;
-
   /// Create from JSON
   factory SetCountPreset.fromJson(Map<String, dynamic> json) {
     return SetCountPreset(
@@ -174,6 +165,15 @@ class SetCountPreset {
       order: json['order'] as int? ?? 0,
     );
   }
+
+  /// Unique identifier (e.g., 'sets_3')
+  final String id;
+
+  /// Number of sets
+  final int sets;
+
+  /// Display order (lower = first)
+  final int order;
 
   /// Convert to JSON
   Map<String, dynamic> toJson() {
@@ -220,6 +220,17 @@ class RestTimePreset {
     this.order = 0,
   });
 
+  /// Create from JSON
+  factory RestTimePreset.fromJson(Map<String, dynamic> json) {
+    return RestTimePreset(
+      id: json['id'] as String,
+      labelKey: json['labelKey'] as String,
+      seconds: json['seconds'] as int?,
+      iconName: json['iconName'] as String,
+      order: json['order'] as int? ?? 0,
+    );
+  }
+
   /// Unique identifier (e.g., 'rest_60', 'rest_none')
   final String id;
 
@@ -238,17 +249,6 @@ class RestTimePreset {
   /// Parse icon from name
   IconData get icon {
     return RepRangePreset._iconMap[iconName] ?? Icons.timer;
-  }
-
-  /// Create from JSON
-  factory RestTimePreset.fromJson(Map<String, dynamic> json) {
-    return RestTimePreset(
-      id: json['id'] as String,
-      labelKey: json['labelKey'] as String,
-      seconds: json['seconds'] as int?,
-      iconName: json['iconName'] as String,
-      order: json['order'] as int? ?? 0,
-    );
   }
 
   /// Convert to JSON

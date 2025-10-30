@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/intelligent_workout_suggestion_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_suggestion_analytics.dart';
 
 /// Smart workout CTA button that suggests workouts based on user's patterns
 class SmartWorkoutCTA extends ConsumerWidget {
@@ -27,6 +28,8 @@ class SmartWorkoutCTA extends ConsumerWidget {
             reason: localizedSuggestion.reason,
             pattern: localizedSuggestion.patternDescription,
             confidence: localizedSuggestion.confidence,
+            recoveryEmoji: localizedSuggestion.recoveryStatus?.emoji,
+            recoveryDescription: localizedSuggestion.recoveryStatus?.description,
           );
         } else {
           // Fallback to simple day-based logic
@@ -53,7 +56,18 @@ class SmartWorkoutCTA extends ConsumerWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => context.goNamed('workout'),
+          onTap: () async {
+            // Track user action on suggestion
+            await WorkoutSuggestionAnalytics.trackSuggestionAction(
+              action: 'accepted',
+              templateName: workoutInfo.title,
+            );
+
+            // Navigate to workout
+            if (context.mounted) {
+              context.goNamed('workout');
+            }
+          },
           borderRadius: BorderRadius.circular(24),
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -129,6 +143,17 @@ class SmartWorkoutCTA extends ConsumerWidget {
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
                             ),
+                          ),
+                        ),
+                      ],
+                      if (workoutInfo.recoveryEmoji != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          '${workoutInfo.recoveryEmoji} ${workoutInfo.recoveryDescription}',
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary.withValues(alpha: 0.85),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -276,9 +301,13 @@ class WorkoutInfo {
     required this.reason,
     this.pattern,
     this.confidence,
+    this.recoveryEmoji,
+    this.recoveryDescription,
   });
   final String title;
   final String reason;
   final String? pattern;
   final double? confidence;
+  final String? recoveryEmoji;
+  final String? recoveryDescription;
 }

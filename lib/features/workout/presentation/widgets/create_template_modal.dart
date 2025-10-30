@@ -10,10 +10,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/template_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_onboarding_overlay.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
 import 'package:uuid/uuid.dart';
+// Input Validation
+import 'package:gymbro_flutter_new/shared/domain/validation/template_validator.dart';
 
 class CreateTemplateModal extends ConsumerStatefulWidget {
   const CreateTemplateModal({super.key});
@@ -199,12 +198,19 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         labelText: localizations.templateNameLabel ?? 'Nome Template *',
                         hintText: 'es. Upper Body Strength',
                         border: const OutlineInputBorder(),
+                        helperText: 'Max ${TemplateValidator.maxNameLength} characters',
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return localizations.templateNameRequired ?? 'Il nome è obbligatorio';
+                      maxLength: TemplateValidator.maxNameLength,
+                      validator: (value) => TemplateValidator.validateTemplateName(value),
+                      onChanged: (value) {
+                        // Auto-sanitize as user types
+                        final sanitized = TemplateValidator.sanitizeTemplateName(value);
+                        if (sanitized != value) {
+                          _nameController.value = TextEditingValue(
+                            text: sanitized,
+                            selection: TextSelection.collapsed(offset: sanitized.length),
+                          );
                         }
-                        return null;
                       },
                     ),
                     const SizedBox(height: 16),
@@ -217,9 +223,23 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         labelText: localizations.templateDescriptionOptional,
                         hintText: localizations.templateDescriptionHint ?? 'Breve descrizione del workout...',
                         border: const OutlineInputBorder(),
+                        helperText: 'Optional, max ${TemplateValidator.maxDescriptionLength} characters',
                       ),
                       maxLines: 3,
-                      // Validator rimosso - campo opzionale
+                      maxLength: TemplateValidator.maxDescriptionLength,
+                      validator: (value) => TemplateValidator.validateTemplateDescription(value),
+                      onChanged: (value) {
+                        // Auto-sanitize as user types
+                        if (value.isNotEmpty) {
+                          final sanitized = TemplateValidator.sanitizeTemplateDescription(value);
+                          if (sanitized != value) {
+                            _descriptionController.value = TextEditingValue(
+                              text: sanitized,
+                              selection: TextSelection.collapsed(offset: sanitized.length),
+                            );
+                          }
+                        }
+                      },
                     ),
                     const SizedBox(height: 16),
 
@@ -362,7 +382,10 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
 
                     const SizedBox(height: 20),
 
-                    // Fitness Profile / Weight Suggestions
+                    // DISABLED: Fitness Profile / Weight Suggestions
+                    // Reason: GDPR compliance concerns - medical questionnaire data
+                    // Date: 2025-01-21
+                    /*
                     Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,6 +462,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         ],
                       ),
                     ),
+                    */
 
                     const SizedBox(height: 32),
                   ],

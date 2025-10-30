@@ -105,7 +105,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                       Text(
                         customization.exercise.focusDisplayName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -114,7 +114,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: _getDifficultyColor(customization.exercise.difficolta).withOpacity(0.2),
+                              color: _getDifficultyColor(customization.exercise.difficolta).withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -446,7 +446,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -499,7 +499,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -621,7 +621,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

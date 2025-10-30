@@ -205,7 +205,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                           width: 48,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: context.colors.outline.withOpacity(0.4),
+                            color: context.colors.outline.withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -229,7 +229,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                                   Text(
                                     _formatDate(syntheticActivities.first.createdAt),
                                     style: context.textTheme.bodyMedium?.copyWith(
-                                      color: context.colors.onSurface.withOpacity(0.6),
+                                      color: context.colors.onSurface.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ],
@@ -238,7 +238,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
                                   Icons.close,
-                                  color: context.colors.onSurface.withOpacity(0.6),
+                                  color: context.colors.onSurface.withValues(alpha: 0.6),
                                 ),
                               ),
                             ],
@@ -253,7 +253,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: context.colors.primaryContainer.withOpacity(0.3),
+                      color: context.colors.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(

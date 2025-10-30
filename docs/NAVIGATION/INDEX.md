@@ -1,6 +1,6 @@
 # 📚 GymBro Documentation Index
 
-**Last Updated**: October 18, 2025
+**Last Updated**: October 21, 2025
 **Version**: 2.0 (Cleaned & Consolidated)
 
 ---
@@ -85,6 +85,8 @@ open docs/QUICK_REFERENCE.md
 | [`WORKOUT_SYSTEM_OVERVIEW.md`](./WORKOUT_SYSTEM_OVERVIEW.md) | Non-technical overview of workout flow | PM/Designers/Devs | 15 min |
 | [`EXERCISE_CARD_SYSTEM_OVERVIEW.md`](./EXERCISE_CARD_SYSTEM_OVERVIEW.md) | Non-technical overview of exercise UI | PM/Designers/Devs | 15 min |
 | [`EXERCISE_INSERTION_SYSTEM_OVERVIEW.md`](./EXERCISE_INSERTION_SYSTEM_OVERVIEW.md) | Non-technical overview of insertion flow | PM/Designers/Devs | 15 min |
+| **[`HIVE_BOX_MANAGER_MIGRATION_REPORT.md`](../TECHNICAL_FOUNDATION/HIVE_BOX_MANAGER_MIGRATION_REPORT.md)** | **✅ Complete migration report: HiveBoxManager centralized pattern (68+ calls)** | **All developers** | **20 min** |
+| **[`HIVE_BOX_MANAGER_CHECKLIST.md`](../TECHNICAL_FOUNDATION/HIVE_BOX_MANAGER_CHECKLIST.md)** | **🚨 Mandatory checklist for all Hive storage (prevents memory leaks)** | **All developers** | **10 min** |
 
 ### 💻 IMPLEMENTATION GUIDES (ROE - Rules of Engagement)
 These are **mandatory** before implementing features in their domain:
@@ -225,6 +227,13 @@ These cover initial setup and configuration:
 - `NOTIFICATION_SYSTEM_KB.md`
 - `ERROR_KB.md`
 
+### UX Flows & System Reports
+- `UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT.md` 🎯 (Workout suggestion algorithm analysis)
+- `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_REPORT.md` 📋 (Templates screen architecture & flow analysis)
+- `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_IMPROVEMENT_REPORT.md` 🔧 (Improvement plan for AI consultants)
+- `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_COMPLIANCE_SECURITY_REPORT.md` 🔒 (Compliance & security audit: WCAG 2.2, OWASP, GDPR)
+- `UX_FLOWS/routine_center/UNUSED_TEMPLATE_SCREENS_AUDIT.md` 🔍 (Dead code audit: 3 unused template screens - COMPLETED)
+
 ### Architecture & Design
 - `EXERCISE_DATABASE_SYNC_ARCHITECTURE.md`
 - `HYBRID_ARCHITECTURE.md`
@@ -270,11 +279,13 @@ These cover initial setup and configuration:
 
 ## 📊 Documentation Statistics
 
-- **Total active docs**: 28 files
+- **Total active docs**: 29 files
 - **Obsolete docs deleted**: 132 files
 - **Documentation reduced**: 91% cleanup
 - **Maintained categories**: 8 (AI Rules, Security, Architecture, Implementation, KB, Setup, Platform, Tracking)
 - **Latest Additions**:
+  - Workout Templates Compliance & Security Report (Oct 21, 2025) 🔒
+  - Workout Suggestion System Report (Oct 21, 2025) 🎯
   - Security Audit Report (Oct 20, 2025) 🔒
   - AI Assistant Rules linked (Oct 20, 2025) 🤖
   - Exercise Feedback System Architecture (Oct 18, 2025)

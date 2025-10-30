@@ -171,7 +171,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -192,10 +192,10 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+                      color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -335,7 +335,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -353,7 +353,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                          color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -408,7 +408,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.error
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         );
@@ -488,15 +488,15 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.errorContainer.withOpacity(0.8),
-            theme.colorScheme.tertiaryContainer.withOpacity(0.8),
+            theme.colorScheme.errorContainer.withValues(alpha: 0.8),
+            theme.colorScheme.tertiaryContainer.withValues(alpha: 0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.colorScheme.error.withOpacity(0.3),
+          color: theme.colorScheme.error.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -504,7 +504,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.colorScheme.error.withOpacity(0.2),
+              color: theme.colorScheme.error.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -560,7 +560,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.error.withOpacity(0.1),
+                  color: theme.colorScheme.error.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -741,7 +741,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: theme.colorScheme.outline.withOpacity(0.3)),
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.3)),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -810,11 +810,11 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: index == 0
-                      ? theme.colorScheme.errorContainer.withOpacity(0.3)
-                      : theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                      ? theme.colorScheme.errorContainer.withValues(alpha: 0.3)
+                      : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: theme.colorScheme.error.withOpacity(0.2),
+                    color: theme.colorScheme.error.withValues(alpha: 0.2),
                   ),
                 ),
                 child: Row(
@@ -823,7 +823,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.error.withOpacity(0.15),
+                        color: theme.colorScheme.error.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
                       child: Center(

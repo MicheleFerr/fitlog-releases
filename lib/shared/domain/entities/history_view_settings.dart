@@ -27,6 +27,16 @@ class HistoryViewSettings {
     required this.showExerciseCount,
   });
 
+  /// Default settings
+  factory HistoryViewSettings.defaults() {
+    return const HistoryViewSettings(
+      viewMode: HistoryViewMode.list,
+      showThumbnails: true,
+      showDuration: true,
+      showExerciseCount: true,
+    );
+  }
+
   /// Current view mode
   final HistoryViewMode viewMode;
 
@@ -38,16 +48,6 @@ class HistoryViewSettings {
 
   /// Show exercise count
   final bool showExerciseCount;
-
-  /// Default settings
-  factory HistoryViewSettings.defaults() {
-    return const HistoryViewSettings(
-      viewMode: HistoryViewMode.list,
-      showThumbnails: true,
-      showDuration: true,
-      showExerciseCount: true,
-    );
-  }
 
   /// Copy with modifications
   HistoryViewSettings copyWith({

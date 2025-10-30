@@ -25,7 +25,7 @@ class EnhancedProgressRing extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final effectiveProgressColor = progressColor ?? colorScheme.primary;
-    final effectiveBackgroundColor = backgroundColor ?? colorScheme.outline.withOpacity(0.2);
+    final effectiveBackgroundColor = backgroundColor ?? colorScheme.outline.withValues(alpha: 0.2);
 
     return SizedBox(
       width: size,
@@ -138,7 +138,7 @@ class EnhancedLinearProgress extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: [
                         effectiveProgressColor,
-                        effectiveProgressColor.withOpacity(0.8),
+                        effectiveProgressColor.withValues(alpha: 0.8),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(height / 2),
@@ -176,7 +176,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -286,8 +286,8 @@ class EnhancedProgressIndicator extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: isImproving 
-            ? Colors.green.withOpacity(0.1)
-            : Colors.orange.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.orange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -321,7 +321,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -342,7 +342,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color.withOpacity(0.8),
+                    color: color.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -440,7 +440,7 @@ class GoalProgressWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: effectiveColor.withOpacity(0.1),
+                    color: effectiveColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -473,7 +473,7 @@ class GoalProgressWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: Colors.green.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Icon(

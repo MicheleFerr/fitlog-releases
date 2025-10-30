@@ -78,7 +78,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -199,7 +199,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
                 )
               : null,
           filled: true,
-          fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -264,7 +264,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
             Icon(
               Icons.search_off,
               size: 64,
-              color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -325,7 +325,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -438,7 +438,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: _getDifficultyColor(exercise.difficolta, theme)
-                                .withOpacity(0.2),
+                                .withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -476,7 +476,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
                   height: 24,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       width: 2,
                     ),
                     shape: BoxShape.circle,
@@ -495,7 +495,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
         width: 60,
         height: 60,
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
@@ -518,7 +518,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
         placeholder: (context, url) => Container(
           width: 60,
           height: 60,
-          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           child: const Center(
             child: SizedBox(
               width: 20,
@@ -530,7 +530,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
         errorWidget: (context, url, error) => Container(
           width: 60,
           height: 60,
-          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           child: Icon(
             Icons.broken_image,
             size: 30,

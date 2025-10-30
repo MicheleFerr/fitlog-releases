@@ -44,17 +44,17 @@ import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.d
 /// Mostra barra di progresso quando FirestoreBatchWriter sta eseguendo flush.
 /// Si nasconde automaticamente quando sync completa.
 class SyncProgressIndicator extends ConsumerWidget implements PreferredSizeWidget {
-  /// Altezza del widget (usata da AppBar.bottom)
-  final double height;
-
-  /// Mostra dettagli extra (ops count, elapsed time)
-  final bool showDetails;
 
   const SyncProgressIndicator({
     super.key,
     this.height = 56.0,
     this.showDetails = true,
   });
+  /// Altezza del widget (usata da AppBar.bottom)
+  final double height;
+
+  /// Mostra dettagli extra (ops count, elapsed time)
+  final bool showDetails;
 
   @override
   Size get preferredSize => Size.fromHeight(height);
@@ -79,7 +79,7 @@ class SyncProgressIndicator extends ConsumerWidget implements PreferredSizeWidge
           // Progress bar
           LinearProgressIndicator(
             value: syncState.progress,
-            backgroundColor: context.colors.surfaceVariant,
+            backgroundColor: context.colors.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(
               context.colors.primary,
             ),
@@ -146,7 +146,7 @@ class CompactSyncProgressIndicator extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: LinearProgressIndicator(
         value: syncState.progress,
-        backgroundColor: context.colors.surfaceVariant,
+        backgroundColor: context.colors.surfaceContainerHighest,
         valueColor: AlwaysStoppedAnimation<Color>(
           context.colors.primary,
         ),
@@ -162,14 +162,14 @@ class CompactSyncProgressIndicator extends ConsumerWidget {
 /// Mostra progress dialog modale durante sync importante.
 /// Blocca interazione utente fino a completamento.
 class SyncProgressDialog extends ConsumerWidget {
-  final String? title;
-  final String? message;
 
   const SyncProgressDialog({
     super.key,
     this.title,
     this.message,
   });
+  final String? title;
+  final String? message;
 
   /// Mostra dialog con progress
   ///

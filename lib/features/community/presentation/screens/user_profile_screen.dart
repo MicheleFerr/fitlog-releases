@@ -229,7 +229,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                   const SizedBox(height: 8),
                   LinearProgressIndicator(
                     value: _calculateLevelProgress(stats.totalPoints),
-                    backgroundColor: Colors.white.withOpacity(0.3),
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                     valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
                   ),
                 ],
@@ -294,7 +294,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             fontSize: 10,
           ),
         ),
@@ -328,7 +328,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
           end: Alignment.bottomRight,
           colors: [
             theme.colorScheme.error,
-            theme.colorScheme.error.withOpacity(0.7),
+            theme.colorScheme.error.withValues(alpha: 0.7),
           ],
         ),
       ),
@@ -377,7 +377,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
               Icon(
                 Icons.article_outlined,
                 size: 64,
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(

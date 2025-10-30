@@ -270,10 +270,10 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer.withOpacity(0.2),
+            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: theme.colorScheme.primary.withOpacity(0.3),
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
             ),
           ),
           child: Column(
@@ -333,7 +333,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: barbell.color.withOpacity(0.2),
+                      color: barbell.color.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -355,7 +355,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.1),
+                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -417,11 +417,11 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected 
-              ? color.withOpacity(0.3) 
+              ? color.withValues(alpha: 0.3) 
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? color : theme.colorScheme.outline.withOpacity(0.3),
+            color: isSelected ? color : theme.colorScheme.outline.withValues(alpha: 0.3),
           ),
         ),
         child: Row(

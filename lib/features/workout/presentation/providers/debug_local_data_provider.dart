@@ -15,6 +15,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Debug state for local data inspection
 class LocalDataDebugState {
@@ -37,24 +39,26 @@ class LocalDataDebugState {
 final localDataDebugProvider = StateNotifierProvider<LocalDataDebugNotifier, LocalDataDebugState>((ref) {
   final userProfile = ref.watch(unifiedUserProfileProvider);
   final userId = userProfile.value?.uid;
-  
-  return LocalDataDebugNotifier(userId);
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+
+  return LocalDataDebugNotifier(userId, boxManager);
 });
 
 class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
-  
-  LocalDataDebugNotifier(this.userId) : super(LocalDataDebugState()) {
+
+  LocalDataDebugNotifier(this.userId, this._boxManager) : super(LocalDataDebugState()) {
     if (userId != null) {
       inspectLocalData();
     }
   }
   final String? userId;
+  final HiveBoxManagerEnhanced _boxManager;
   
   Future<void> inspectLocalData() async {
     state = LocalDataDebugState(isLoading: true);
-    
+
     try {
-      final dataSource = HiveWorkoutDataSource();
+      final dataSource = HiveWorkoutDataSource(_boxManager);
       
       // Get all workouts
       final allWorkouts = await dataSource.getWorkouts(userId!);
@@ -73,7 +77,7 @@ class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
       }
       
       // Check raw Hive data
-      final workoutsBox = await Hive.openBox<Map>('workouts');
+      final workoutsBox = await _boxManager.openBox<Map>('workouts');
       final userKeys = workoutsBox.keys
           .where((key) => key.toString().startsWith('${userId}_'))
           .toList();
@@ -91,8 +95,8 @@ class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
       }
       
       // Check activities and summaries boxes
-      final activitiesBox = await Hive.openBox<Map>('exercise_activities');
-      final summariesBox = await Hive.openBox<Map>('workout_summaries');
+      final activitiesBox = await _boxManager.openBox<Map>('exercise_activities');
+      final summariesBox = await _boxManager.openBox<Map>('workout_summaries');
       
       debugInfo['totalActivities'] = activitiesBox.length;
       debugInfo['totalSummaries'] = summariesBox.length;
@@ -133,9 +137,9 @@ class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
   /// Force mark all workouts as unsynced for testing
   Future<void> forceMarkAllAsUnsynced() async {
     if (userId == null) return;
-    
+
     try {
-      final workoutsBox = await Hive.openBox<Map>('workouts');
+      final workoutsBox = await _boxManager.openBox<Map>('workouts');
       final userKeys = workoutsBox.keys
           .where((key) => key.toString().startsWith('${userId}_'))
           .toList();
@@ -159,5 +163,33 @@ class LocalDataDebugNotifier extends StateNotifier<LocalDataDebugState> {
         debugPrint('❌ Error marking workouts as unsynced: $e');
       }
     }
+  }
+
+  /// MEMORY LEAK FIX: Note - boxes are opened in methods
+  /// Best practice would be to keep references and close them here
+  /// For now, boxes will be closed by HiveWorkoutDataSource.dispose()
+  @override
+  void dispose() {
+    // MEMORY LEAK FIX: Close all Hive boxes opened by this provider
+    final boxesToClose = ['workouts', 'exercise_activities', 'workout_summaries'];
+
+    for (final boxName in boxesToClose) {
+      if (Hive.isBoxOpen(boxName)) {
+        Hive.box<Map>(boxName).close().then((_) {
+          if (kDebugMode) {
+            debugPrint('✅ DebugLocalDataNotifier: Closed $boxName box');
+          }
+        }).catchError((e) {
+          if (kDebugMode) {
+            debugPrint('❌ Error closing $boxName box: $e');
+          }
+        });
+      }
+    }
+
+    if (kDebugMode) {
+      debugPrint('✅ DebugLocalDataNotifier disposed');
+    }
+    super.dispose();
   }
 }

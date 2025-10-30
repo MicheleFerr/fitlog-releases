@@ -12,12 +12,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseVersionService {
 
-  ExerciseVersionService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  ExerciseVersionService({
+    FirebaseFirestore? firestore,
+    HiveBoxManagerEnhanced? boxManager,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _boxManager = boxManager ?? HiveBoxManagerEnhanced();
   final FirebaseFirestore _firestore;
+  final HiveBoxManagerEnhanced _boxManager;
   static const String _metadataCollection = 'exercises_metadata';
   static const String _versionDocId = 'version_info';
   static const String _cacheBoxName = 'exercise_version_cache';
@@ -30,7 +35,7 @@ class ExerciseVersionService {
     if (_initialized) return;
 
     try {
-      _cacheBox = await Hive.openBox<Map>(_cacheBoxName);
+      _cacheBox = await _boxManager.openBox<Map>(_cacheBoxName);
       _initialized = true;
       debugPrint('✅ ExerciseVersionService initialized');
     } catch (e) {

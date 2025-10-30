@@ -2,23 +2,28 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboarding_state.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 final onboardingStateProvider = StateNotifierProvider<OnboardingStateNotifier, OnboardingState>((ref) {
-  return OnboardingStateNotifier();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return OnboardingStateNotifier(boxManager);
 });
 
 class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
 
-  OnboardingStateNotifier() : super(const OnboardingState()) {
+  OnboardingStateNotifier(this._boxManager) : super(const OnboardingState()) {
     _initializeOnboarding();
   }
+
+  final HiveBoxManagerEnhanced _boxManager;
   static const String _boxName = 'onboarding_state';
   late Box<OnboardingState> _onboardingBox;
 
   Future<void> _initializeOnboarding() async {
     try {
       if (!Hive.isBoxOpen(_boxName)) {
-        _onboardingBox = await Hive.openBox<OnboardingState>(_boxName);
+        _onboardingBox = await _boxManager.openBox<OnboardingState>(_boxName);
       } else {
         _onboardingBox = Hive.box<OnboardingState>(_boxName);
       }

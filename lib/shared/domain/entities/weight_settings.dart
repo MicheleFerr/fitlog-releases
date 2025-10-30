@@ -11,6 +11,26 @@ class WeightSettings {
     this.useCustomIncrement = false,
   });
 
+  /// Factory: Default settings for kg
+  factory WeightSettings.defaultKg() {
+    return const WeightSettings(
+      defaultIncrement: WeightIncrement.kg_2_5,
+      customIncrement: WeightIncrement.kg_1_0,
+      useCustomIncrement: false,
+      availablePlates: PlateOption.standardKgPlates,
+    );
+  }
+
+  /// Factory: Default settings for lbs
+  factory WeightSettings.defaultLbs() {
+    return const WeightSettings(
+      defaultIncrement: WeightIncrement.lbs_5_0,
+      customIncrement: WeightIncrement.lbs_2_5,
+      useCustomIncrement: false,
+      availablePlates: PlateOption.standardLbsPlates,
+    );
+  }
+
   /// Default increment for quick +/- buttons
   final WeightIncrement defaultIncrement;
 
@@ -26,26 +46,6 @@ class WeightSettings {
   /// Get active increment (custom or default)
   WeightIncrement get activeIncrement {
     return useCustomIncrement ? customIncrement : defaultIncrement;
-  }
-
-  /// Factory: Default settings for kg
-  factory WeightSettings.defaultKg() {
-    return WeightSettings(
-      defaultIncrement: WeightIncrement.kg_2_5,
-      customIncrement: WeightIncrement.kg_1_0,
-      useCustomIncrement: false,
-      availablePlates: PlateOption.standardKgPlates,
-    );
-  }
-
-  /// Factory: Default settings for lbs
-  factory WeightSettings.defaultLbs() {
-    return WeightSettings(
-      defaultIncrement: WeightIncrement.lbs_5_0,
-      customIncrement: WeightIncrement.lbs_2_5,
-      useCustomIncrement: false,
-      availablePlates: PlateOption.standardLbsPlates,
-    );
   }
 
   WeightSettings copyWith({

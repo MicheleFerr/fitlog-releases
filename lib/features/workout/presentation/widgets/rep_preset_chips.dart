@@ -99,7 +99,7 @@ class RepPresetChips extends ConsumerWidget {
                     label: Text(label),
                     selected: isSelected,
                     selectedColor: preset.color,
-                    backgroundColor: preset.color.withOpacity(0.1),
+                    backgroundColor: preset.color.withValues(alpha: 0.1),
                     checkmarkColor: Colors.white,
                     labelStyle: TextStyle(
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
@@ -240,7 +240,7 @@ class SetCountPresetChips extends ConsumerWidget {
                   avatar: CircleAvatar(
                     backgroundColor: isSelected
                         ? Colors.white
-                        : context.colors.primary.withOpacity(0.2),
+                        : context.colors.primary.withValues(alpha: 0.2),
                     radius: 10,
                     child: Text(
                       '${preset.sets}',

@@ -214,7 +214,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
     
     return Card(
       elevation: 0,
-      color: color.withOpacity(0.1),
+      color: color.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -267,7 +267,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         const SizedBox(height: 16),
         Card(
           elevation: 0,
-          color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
@@ -315,7 +315,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                       dotData: const FlDotData(show: false),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: colorScheme.primary.withOpacity(0.1),
+                        color: colorScheme.primary.withValues(alpha: 0.1),
                       ),
                     ),
                   ],
@@ -579,8 +579,8 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         Card(
           elevation: 0,
           color: data.systemHealth.isHealthy 
-              ? colorScheme.primaryContainer.withOpacity(0.3)
-              : colorScheme.errorContainer.withOpacity(0.3),
+              ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+              : colorScheme.errorContainer.withValues(alpha: 0.3),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

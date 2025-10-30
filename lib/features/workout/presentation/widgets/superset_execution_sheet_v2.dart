@@ -188,7 +188,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: context.colors.outline.withOpacity(0.3),
+                color: context.colors.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -212,7 +212,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                       Icons.arrow_back_ios,
                       color: _currentPage > 0 
                           ? context.colors.primary
-                          : context.colors.outline.withOpacity(0.3),
+                          : context.colors.outline.withValues(alpha: 0.3),
                     ),
                   ),
                   
@@ -252,7 +252,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                       Icons.arrow_forward_ios,
                       color: _currentPage < widget.superset.exercises.length - 1
                           ? context.colors.primary
-                          : context.colors.outline.withOpacity(0.3),
+                          : context.colors.outline.withValues(alpha: 0.3),
                     ),
                   ),
                 ],
@@ -510,7 +510,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       border: Border.all(
                                         color: isSelected 
                                             ? context.colors.primary
-                                            : context.colors.outline.withOpacity(0.3),
+                                            : context.colors.outline.withValues(alpha: 0.3),
                                         width: isSelected ? 2 : 1,
                                       ),
                                     ),

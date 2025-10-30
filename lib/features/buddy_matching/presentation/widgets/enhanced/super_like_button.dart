@@ -55,7 +55,7 @@ class SuperLikeButton extends ConsumerWidget {
             boxShadow: canSuperLike
                 ? [
                     BoxShadow(
-                      color: const Color(0xFF29B6F6).withOpacity(0.3),
+                      color: const Color(0xFF29B6F6).withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -80,7 +80,7 @@ class SuperLikeButton extends ConsumerWidget {
                     size: 28,
                     color: canSuperLike 
                         ? Colors.white 
-                        : colorScheme.onSurfaceVariant.withOpacity(0.5),
+                        : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -281,7 +281,7 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
       builder: (context, child) {
         return Positioned.fill(
           child: Container(
-            color: Colors.black.withOpacity(0.3 * _fadeAnimation.value),
+            color: Colors.black.withValues(alpha: 0.3 * _fadeAnimation.value),
             child: Center(
               child: Transform.scale(
                 scale: _scaleAnimation.value,
@@ -298,7 +298,7 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF29B6F6).withOpacity(0.4),
+                          color: const Color(0xFF29B6F6).withValues(alpha: 0.4),
                           blurRadius: 20,
                           offset: const Offset(0, 8),
                         ),

@@ -128,7 +128,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
       for (final set in activity.sets) {
         // effort is stored as 1-10, but RPE scale is 6-10
         // Convert: if effort <= 5, use RPE 6-7, if effort > 5, map to RPE 7-10
-        final effort = set.effort ?? 7;
+        final effort = set.effort;
         final rpe = effort <= 5 
             ? 6.0 + (effort / 5.0) // Maps 1-5 to 6-7
             : 7.0 + ((effort - 5) / 5.0 * 3); // Maps 6-10 to 7-10

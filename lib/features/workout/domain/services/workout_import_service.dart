@@ -19,7 +19,6 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:csv/csv.dart';
 import 'package:uuid/uuid.dart';
 

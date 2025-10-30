@@ -2,6 +2,22 @@
   "it": [
     "approve",
     "reject",
-    "templateDay"
+    "templateDay",
+    "migrationWizardImpactSummary",
+    "migrationWizardFromProfile",
+    "migrationWizardToProfile",
+    "migrationWizardWithAlternatives",
+    "migrationWizardWithoutAlternatives",
+    "migrationWizardReviewChanges",
+    "migrationWizardNoImpact",
+    "migrationWizardExerciseProgress",
+    "migrationWizardNoAlternatives",
+    "migrationWizardKeepExerciseHint",
+    "migrationWizardSummaryReplaced",
+    "migrationWizardSummaryKept",
+    "migrationWizardSummaryRemoved",
+    "migrationWizardWillUpdate",
+    "migrationWizardApplying",
+    "migrationWizardUpdated"
   ]
 }

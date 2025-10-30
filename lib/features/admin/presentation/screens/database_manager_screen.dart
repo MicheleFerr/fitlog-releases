@@ -167,7 +167,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   ) {
     return Container(
       padding: const EdgeInsets.all(12),
-      color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
       child: stats.when(
         data: (data) => Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -209,7 +209,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -774,7 +774,7 @@ class _FilterChip extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

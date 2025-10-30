@@ -12,17 +12,17 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 void main() {
   group('WeightSettingsScreen', () {
     // Test fixtures
-    final testSettingsKg = WeightSettings(
+    const testSettingsKg = WeightSettings(
       defaultIncrement: WeightIncrement(2.5),
       customIncrement: WeightIncrement(1.25),
       useCustomIncrement: false,
       availablePlates: [
-        const PlateOption(weight: 20, count: 4),
-        const PlateOption(weight: 15, count: 4),
-        const PlateOption(weight: 10, count: 4),
-        const PlateOption(weight: 5, count: 4),
-        const PlateOption(weight: 2.5, count: 4),
-        const PlateOption(weight: 1.25, count: 4),
+        PlateOption(weight: 20, count: 4),
+        PlateOption(weight: 15, count: 4),
+        PlateOption(weight: 10, count: 4),
+        PlateOption(weight: 5, count: 4),
+        PlateOption(weight: 2.5, count: 4),
+        PlateOption(weight: 1.25, count: 4),
       ],
     );
 
@@ -37,11 +37,11 @@ void main() {
           }),
           measurementUnitProvider.overrideWith((ref) => unit),
         ],
-        child: MaterialApp(
+        child: const MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('en'),
-          home: const WeightSettingsScreen(),
+          locale: Locale('en'),
+          home: WeightSettingsScreen(),
         ),
       );
     }
@@ -59,7 +59,7 @@ void main() {
         const error = 'Failed to load settings';
         await tester.pumpWidget(
           buildTestWidget(
-            settingsState: AsyncValue.error(error, StackTrace.empty),
+            settingsState: const AsyncValue.error(error, StackTrace.empty),
           ),
         );
 
@@ -69,7 +69,7 @@ void main() {
 
       testWidgets('should render all sections when data is loaded', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
 
         // Wait for UI to settle
@@ -86,7 +86,7 @@ void main() {
 
       testWidgets('should display app bar with title and reset button', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -98,7 +98,7 @@ void main() {
     group('Quick Increment Chips', () {
       testWidgets('should display all kg increment chips', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg), unit: 'kg'),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg), unit: 'kg'),
         );
         await tester.pumpAndSettle();
 
@@ -112,15 +112,15 @@ void main() {
       });
 
       testWidgets('should display all lbs increment chips', (tester) async {
-        final testSettingsLbs = WeightSettings(
+        const testSettingsLbs = WeightSettings(
           defaultIncrement: WeightIncrement(5.0),
           customIncrement: WeightIncrement(2.5),
           useCustomIncrement: false,
-          availablePlates: [const PlateOption(weight: 45, count: 4)],
+          availablePlates: [PlateOption(weight: 45, count: 4)],
         );
 
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsLbs), unit: 'lbs'),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsLbs), unit: 'lbs'),
         );
         await tester.pumpAndSettle();
 
@@ -135,7 +135,7 @@ void main() {
 
       testWidgets('should show selected chip with proper styling', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -149,7 +149,7 @@ void main() {
 
       testWidgets('should update when different chip is tapped', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -165,7 +165,7 @@ void main() {
     group('Custom Increment Section', () {
       testWidgets('should display custom increment switch', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -177,7 +177,7 @@ void main() {
 
       testWidgets('should toggle custom increment switch', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -190,7 +190,7 @@ void main() {
 
       testWidgets('should display custom increment text field', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -204,7 +204,7 @@ void main() {
     group('Plate Calculator', () {
       testWidgets('should display bar weight and target weight fields', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -218,7 +218,7 @@ void main() {
     group('Reset Functionality', () {
       testWidgets('should show confirmation dialog when reset is tapped', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -233,7 +233,7 @@ void main() {
 
       testWidgets('should not reset when cancel is tapped', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -254,7 +254,7 @@ void main() {
     group('Available Plates', () {
       testWidgets('should display available plates section', (tester) async {
         await tester.pumpWidget(
-          buildTestWidget(settingsState: AsyncValue.data(testSettingsKg)),
+          buildTestWidget(settingsState: const AsyncValue.data(testSettingsKg)),
         );
         await tester.pumpAndSettle();
 
@@ -270,15 +270,15 @@ void main() {
         final widget = ProviderScope(
           overrides: [
             weightSettingsProvider.overrideWith(
-              (ref) => TestWeightSettingsNotifier(AsyncValue.data(testSettingsKg)),
+              (ref) => TestWeightSettingsNotifier(const AsyncValue.data(testSettingsKg)),
             ),
             measurementUnitProvider.overrideWith((ref) => 'kg'),
           ],
-          child: MaterialApp(
+          child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            locale: const Locale('it', 'IT'),
-            home: const WeightSettingsScreen(),
+            locale: Locale('it', 'IT'),
+            home: WeightSettingsScreen(),
           ),
         );
 

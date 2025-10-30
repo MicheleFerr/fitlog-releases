@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import '../providers/exercise_review_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_review_provider.dart';
 
 /// Admin screen for viewing monthly exercise review reports
 class ExerciseReviewScreen extends ConsumerWidget {
-  const ExerciseReviewScreen({Key? key}) : super(key: key);
+  const ExerciseReviewScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -287,7 +287,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         Card(
-          color: context.colors.surfaceVariant,
+          color: context.colors.surfaceContainerHighest,
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -348,7 +348,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Icon(
+            const Icon(
               Icons.schedule_outlined,
               color: Colors.orange,
               size: 20,
@@ -403,7 +403,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Icon(
+            const Icon(
               Icons.flag_outlined,
               color: Colors.amber,
               size: 20,

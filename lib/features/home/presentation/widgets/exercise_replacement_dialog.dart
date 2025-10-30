@@ -202,7 +202,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 border: Border(
-                  top: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+                  top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
                 ),
               ),
               child: Row(
@@ -272,8 +272,8 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                       ExerciseReplacementService.getExerciseDetails(exercise),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: isSelected
-                            ? colorScheme.onPrimaryContainer.withOpacity(0.7)
-                            : colorScheme.onSurfaceVariant.withOpacity(0.7),
+                            ? colorScheme.onPrimaryContainer.withValues(alpha: 0.7)
+                            : colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                       ),
                     ),
                   ],

@@ -13,12 +13,17 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_model.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseCacheManager {
+  ExerciseCacheManager([HiveBoxManagerEnhanced? boxManager])
+      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+
   static const String _exercisesBoxName = 'exercises_cache';
   static const String _metadataBoxName = 'exercises_metadata';
   static const String _syncQueueBoxName = 'exercises_sync_queue';
 
+  final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _exercisesBox;
   late Box<Map> _metadataBox;
   late Box<Map> _syncQueueBox;
@@ -30,9 +35,9 @@ class ExerciseCacheManager {
     if (_initialized) return;
 
     try {
-      _exercisesBox = await Hive.openBox<Map>(_exercisesBoxName);
-      _metadataBox = await Hive.openBox<Map>(_metadataBoxName);
-      _syncQueueBox = await Hive.openBox<Map>(_syncQueueBoxName);
+      _exercisesBox = await _boxManager.openBox<Map>(_exercisesBoxName);
+      _metadataBox = await _boxManager.openBox<Map>(_metadataBoxName);
+      _syncQueueBox = await _boxManager.openBox<Map>(_syncQueueBoxName);
 
       _initialized = true;
       debugPrint('✅ ExerciseCacheManager initialized');

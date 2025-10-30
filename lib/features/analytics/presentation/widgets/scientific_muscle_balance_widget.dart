@@ -61,7 +61,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
                       Text(
                         l10n.volumeDistribution,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.6),
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -235,10 +235,10 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: statusColor.withOpacity(0.3),
+          color: statusColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -262,7 +262,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
                     Text(
                       AppLocalizations.of(context).targetRange(targetRange),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurface.withOpacity(0.6),
+                        color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -289,7 +289,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
           Text(
             details,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.6),
+              color: colorScheme.onSurface.withValues(alpha: 0.6),
               fontSize: 11,
             ),
           ),
@@ -308,7 +308,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
               Icon(
                 Icons.bar_chart,
                 size: 48,
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(
@@ -418,7 +418,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
           Text(
             explanation,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],

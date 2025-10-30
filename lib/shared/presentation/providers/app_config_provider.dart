@@ -5,18 +5,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 // App Configuration State Provider
 final appConfigProvider = StateNotifierProvider<AppConfigNotifier, AppConfig>((ref) {
-  return AppConfigNotifier();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return AppConfigNotifier(boxManager);
 });
 
 class AppConfigNotifier extends StateNotifier<AppConfig> {
 
-  AppConfigNotifier() : super(const AppConfig()) {
+  AppConfigNotifier(this._boxManager) : super(const AppConfig()) {
     _initCompleter = Completer<void>();
     _initializeConfig();
   }
+
+  final HiveBoxManagerEnhanced _boxManager;
   static const String _boxName = 'app_config';
   Box<AppConfig>? _configBox;
 
@@ -33,7 +38,7 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
         debugPrint('📱 [AppConfig] Starting initialization (attempt ${_initRetryCount + 1})');
       }
 
-      _configBox = await Hive.openBox<AppConfig>(_boxName);
+      _configBox = await _boxManager.openBox<AppConfig>(_boxName);
       final savedConfig = _configBox!.get('config');
 
       if (savedConfig != null) {

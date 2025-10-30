@@ -161,15 +161,15 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                     borderRadius: BorderRadius.circular(20),
                     border: widget.isMinimal
                       ? Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
                           width: 1.5,
                         )
                       : null,
                     boxShadow: [
                       BoxShadow(
                         color: widget.isMinimal
-                          ? theme.colorScheme.primary.withOpacity(0.15)
-                          : theme.colorScheme.primary.withOpacity(0.3),
+                          ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                          : theme.colorScheme.primary.withValues(alpha: 0.3),
                         blurRadius: widget.isMinimal ? 8 : 12,
                         offset: const Offset(0, 2),
                       ),
@@ -205,8 +205,8 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                         Icons.info_outline,
                         size: 16,
                         color: widget.isMinimal
-                          ? theme.colorScheme.primary.withOpacity(0.7)
-                          : theme.colorScheme.onPrimary.withOpacity(0.8),
+                          ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                          : theme.colorScheme.onPrimary.withValues(alpha: 0.8),
                       ),
                     ],
                   ),
@@ -267,7 +267,7 @@ class _PulsingIconState extends State<_PulsingIcon>
           height: 28,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -281,7 +281,7 @@ class _PulsingIconState extends State<_PulsingIcon>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(1 - _animation.value),
+                      color: Colors.white.withValues(alpha: 1 - _animation.value),
                       width: 2,
                     ),
                   ),

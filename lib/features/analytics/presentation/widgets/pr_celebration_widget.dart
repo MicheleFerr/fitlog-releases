@@ -43,12 +43,12 @@ class PRCelebrationWidget extends ConsumerWidget {
       duration: const Duration(milliseconds: 500),
       curve: Curves.bounceIn,
       child: Card(
-        color: colorScheme.secondary.withOpacity(0.1),
+        color: colorScheme.secondary.withValues(alpha: 0.1),
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: colorScheme.secondary.withOpacity(0.3),
+            color: colorScheme.secondary.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -133,7 +133,7 @@ class PRCelebrationWidget extends ConsumerWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: colorScheme.secondary.withOpacity(0.2),
+              color: colorScheme.secondary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Center(
@@ -253,14 +253,14 @@ class PRCelebrationDialog extends ConsumerWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              colorScheme.secondary.withOpacity(0.8),
+              colorScheme.secondary.withValues(alpha: 0.8),
               colorScheme.secondaryContainer,
             ],
           ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: colorScheme.shadow.withOpacity(0.3),
+              color: colorScheme.shadow.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -303,7 +303,7 @@ class PRCelebrationDialog extends ConsumerWidget {
               Text(
                 l10n.newPersonalRecordsAchieved,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSecondaryContainer.withOpacity(0.8),
+                  color: colorScheme.onSecondaryContainer.withValues(alpha: 0.8),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -516,7 +516,7 @@ class _FloatingPRNotificationState extends ConsumerState<FloatingPRNotification>
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: colorScheme.shadow.withOpacity(0.3),
+                color: colorScheme.shadow.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -555,7 +555,7 @@ class _FloatingPRNotificationState extends ConsumerState<FloatingPRNotification>
                     Text(
                       '${widget.pr.exerciseName}: ${_formatPRValue(widget.pr)}',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSecondaryContainer.withOpacity(0.8),
+                        color: colorScheme.onSecondaryContainer.withValues(alpha: 0.8),
                       ),
                     ),
                   ],

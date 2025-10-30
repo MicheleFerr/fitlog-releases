@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/services/exer
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_cache_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 // ====================
 // REPOSITORY PROVIDERS
@@ -21,7 +22,8 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 
 /// Provider per ExerciseCacheManager
 final exerciseCacheManagerProvider = Provider<ExerciseCacheManager>((ref) {
-  return ExerciseCacheManager();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return ExerciseCacheManager(boxManager);
 });
 
 /// Provider per ExerciseVersionService
@@ -31,11 +33,13 @@ final exerciseVersionServiceProvider = Provider<ExerciseVersionService>((ref) {
 
 /// Provider principale per HybridExerciseRepository
 final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref) {
+  final boxManager = ref.watch(hiveBoxManagerProvider);
   final cacheManager = ref.read(exerciseCacheManagerProvider);
   final versionService = ref.read(exerciseVersionServiceProvider);
   final locale = ref.watch(localeProvider);
 
   return HybridExerciseRepository(
+    boxManager: boxManager,
     cacheManager: cacheManager,
     versionService: versionService,
     locale: locale,

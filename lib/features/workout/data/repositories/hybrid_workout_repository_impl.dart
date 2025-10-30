@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.da
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/domain/concurrency/mutex_wrapper.dart';
 import 'package:flutter/foundation.dart';
 
 /// Hybrid implementation of WorkoutRepository
@@ -46,13 +47,17 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   final HiveWorkoutDataSource _localDataSource;
   final FirebaseWorkoutDataSource _remoteDataSource;
   final FirebaseAuth _auth;
-  
+
   // Cache user profile to avoid frequent reads
   UserProfile? _cachedUserProfile;
   StreamSubscription? _userProfileSubscription;
 
   // MEMORY LEAK FIX: Disposal flag to prevent operations after dispose
   bool _isDisposed = false;
+
+  // 🔒 RACE CONDITION PROTECTION: Mutex for write operations
+  // Prevents concurrent save/update/delete operations that could corrupt data
+  final _workoutWriteMutex = MutexWrapper(name: 'WorkoutWrite');
   
   /// Initialize listener for user profile changes
   void _initUserProfileListener() {
@@ -118,66 +123,70 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
 
   @override
   Future<Either<Failure, String>> saveWorkout(Workout workout) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
-      }
-      
-      final workoutModel = WorkoutModel.fromDomain(workout);
-      
-      // ALWAYS save locally first (instant response)
-      final localResult = await _localDataSource.saveWorkout(
-        workoutModel,
-        currentUser.uid,
-      );
-      
-      // If premium user or admin, sync to cloud asynchronously
-      if (isPremiumUser || isAdminUser) {
-        _syncToCloudInBackground(
-          workoutModel: workoutModel,
-          userId: currentUser.uid,
-          operation: 'save',
+    return await _workoutWriteMutex.protect(() async {
+      try {
+        final currentUser = _auth.currentUser;
+        if (currentUser == null) {
+          return left(const AuthenticationFailure('User not authenticated'));
+        }
+
+        final workoutModel = WorkoutModel.fromDomain(workout);
+
+        // ALWAYS save locally first (instant response)
+        final localResult = await _localDataSource.saveWorkout(
+          workoutModel,
+          currentUser.uid,
         );
+
+        // If premium user or admin, sync to cloud asynchronously
+        if (isPremiumUser || isAdminUser) {
+          _syncToCloudInBackground(
+            workoutModel: workoutModel,
+            userId: currentUser.uid,
+            operation: 'save',
+          );
+        }
+
+        return right(localResult);
+
+      } catch (e) {
+        return left(UnexpectedFailure('Failed to save workout: $e'));
       }
-      
-      return right(localResult);
-      
-    } catch (e) {
-      return left(UnexpectedFailure('Failed to save workout: $e'));
-    }
+    });
   }
 
   @override
   Future<Either<Failure, void>> updateWorkout(Workout workout) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
-      }
-      
-      final workoutModel = WorkoutModel.fromDomain(workout);
-      
-      // Update locally first
-      await _localDataSource.updateWorkout(
-        workoutModel,
-        currentUser.uid,
-      );
-      
-      // Sync to cloud if premium or admin
-      if (isPremiumUser || isAdminUser) {
-        _syncToCloudInBackground(
-          workoutModel: workoutModel,
-          userId: currentUser.uid,
-          operation: 'update',
+    return await _workoutWriteMutex.protect(() async {
+      try {
+        final currentUser = _auth.currentUser;
+        if (currentUser == null) {
+          return left(const AuthenticationFailure('User not authenticated'));
+        }
+
+        final workoutModel = WorkoutModel.fromDomain(workout);
+
+        // Update locally first
+        await _localDataSource.updateWorkout(
+          workoutModel,
+          currentUser.uid,
         );
+
+        // Sync to cloud if premium or admin
+        if (isPremiumUser || isAdminUser) {
+          _syncToCloudInBackground(
+            workoutModel: workoutModel,
+            userId: currentUser.uid,
+            operation: 'update',
+          );
+        }
+
+        return right(null);
+
+      } catch (e) {
+        return left(UnexpectedFailure('Failed to update workout: $e'));
       }
-      
-      return right(null);
-      
-    } catch (e) {
-      return left(UnexpectedFailure('Failed to update workout: $e'));
-    }
+    });
   }
 
   @override
@@ -314,28 +323,30 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
 
   @override
   Future<Either<Failure, void>> deleteWorkout(String workoutId) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
+    return await _workoutWriteMutex.protect(() async {
+      try {
+        final currentUser = _auth.currentUser;
+        if (currentUser == null) {
+          return left(const AuthenticationFailure('User not authenticated'));
+        }
+
+        // Delete locally first
+        await _localDataSource.deleteWorkout(workoutId, currentUser.uid);
+
+        // Delete from cloud if premium
+        if (isPremiumUser) {
+          _deleteFromCloudInBackground(
+            workoutId: workoutId,
+            userId: currentUser.uid,
+          );
+        }
+
+        return right(null);
+
+      } catch (e) {
+        return left(UnexpectedFailure('Failed to delete workout: $e'));
       }
-      
-      // Delete locally first
-      await _localDataSource.deleteWorkout(workoutId, currentUser.uid);
-      
-      // Delete from cloud if premium
-      if (isPremiumUser) {
-        _deleteFromCloudInBackground(
-          workoutId: workoutId,
-          userId: currentUser.uid,
-        );
-      }
-      
-      return right(null);
-      
-    } catch (e) {
-      return left(UnexpectedFailure('Failed to delete workout: $e'));
-    }
+    });
   }
 
   @override
@@ -343,26 +354,28 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     required Workout workout,
     required String userEmail,
   }) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
+    return await _workoutWriteMutex.protect(() async {
+      try {
+        final currentUser = _auth.currentUser;
+        if (currentUser == null) {
+          return left(const AuthenticationFailure('User not authenticated'));
+        }
+
+        // Save workout to local Hive box for history
+        await _localDataSource.saveWorkout(
+          WorkoutModel.fromDomain(workout),
+          currentUser.uid,
+        );
+
+        // NOTE: Exercise activities are now tracked via unified workout storage
+        // Analytics read directly from workouts collection
+        final activityIds = <String>[];
+
+        return right(activityIds);
+      } catch (e) {
+        return left(UnexpectedFailure('Failed to save completed workout: $e'));
       }
-
-      // Save workout to local Hive box for history
-      await _localDataSource.saveWorkout(
-        WorkoutModel.fromDomain(workout),
-        currentUser.uid,
-      );
-
-      // NOTE: Exercise activities are now tracked via unified workout storage
-      // Analytics read directly from workouts collection
-      final activityIds = <String>[];
-
-      return right(activityIds);
-    } catch (e) {
-      return left(UnexpectedFailure('Failed to save completed workout: $e'));
-    }
+    });
   }
 
   @override
@@ -440,53 +453,55 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     required String exerciseId,
     required ExerciseSet exerciseSet,
   }) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
-      }
-      
-      // Get workout from local storage
-      final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
-      if (workout == null) {
-        return left(const WorkoutNotFoundFailure('Workout not found'));
-      }
-      
-      // Update the exercise set in the workout
-      final updatedExercises = workout.exercises.map((exercise) {
-        if (exercise.id == exerciseId) {
-          final updatedSets = exercise.sets.map((set) {
-            if (set.id == exerciseSet.id) {
-              return ExerciseSetModel.fromDomain(exerciseSet);
-            }
-            return set;
-          }).toList();
-          
-          return exercise.copyWith(sets: updatedSets);
+    return await _workoutWriteMutex.protect(() async {
+      try {
+        final currentUser = _auth.currentUser;
+        if (currentUser == null) {
+          return left(const AuthenticationFailure('User not authenticated'));
         }
-        return exercise;
-      }).toList();
-      
-      final updatedWorkout = workout.copyWith(exercises: updatedExercises);
-      
-      // Save updated workout locally
-      await _localDataSource.updateWorkout(updatedWorkout, currentUser.uid);
-      
-      // Sync to cloud if premium
-      if (isPremiumUser) {
-        _updateExerciseSetInCloudBackground(
-          workoutId: workoutId,
-          exerciseId: exerciseId,
-          exerciseSet: exerciseSet,
-          userId: currentUser.uid,
-        );
+
+        // Get workout from local storage
+        final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
+        if (workout == null) {
+          return left(const WorkoutNotFoundFailure('Workout not found'));
+        }
+
+        // Update the exercise set in the workout
+        final updatedExercises = workout.exercises.map((exercise) {
+          if (exercise.id == exerciseId) {
+            final updatedSets = exercise.sets.map((set) {
+              if (set.id == exerciseSet.id) {
+                return ExerciseSetModel.fromDomain(exerciseSet);
+              }
+              return set;
+            }).toList();
+
+            return exercise.copyWith(sets: updatedSets);
+          }
+          return exercise;
+        }).toList();
+
+        final updatedWorkout = workout.copyWith(exercises: updatedExercises);
+
+        // Save updated workout locally
+        await _localDataSource.updateWorkout(updatedWorkout, currentUser.uid);
+
+        // Sync to cloud if premium
+        if (isPremiumUser) {
+          _updateExerciseSetInCloudBackground(
+            workoutId: workoutId,
+            exerciseId: exerciseId,
+            exerciseSet: exerciseSet,
+            userId: currentUser.uid,
+          );
+        }
+
+        return right(null);
+
+      } catch (e) {
+        return left(UnexpectedFailure('Failed to update exercise set: $e'));
       }
-      
-      return right(null);
-      
-    } catch (e) {
-      return left(UnexpectedFailure('Failed to update exercise set: $e'));
-    }
+    });
   }
 
   @override
@@ -494,40 +509,42 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     required String workoutId,
     required Exercise exercise,
   }) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
+    return await _workoutWriteMutex.protect(() async {
+      try {
+        final currentUser = _auth.currentUser;
+        if (currentUser == null) {
+          return left(const AuthenticationFailure('User not authenticated'));
+        }
+
+        // Get workout from local storage
+        final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
+        if (workout == null) {
+          return left(const WorkoutNotFoundFailure('Workout not found'));
+        }
+
+        // Add exercise to workout
+        final exerciseModel = ExerciseModel.fromDomain(exercise);
+        final updatedExercises = [...workout.exercises, exerciseModel];
+        final updatedWorkout = workout.copyWith(exercises: updatedExercises);
+
+        // Save updated workout locally
+        await _localDataSource.updateWorkout(updatedWorkout, currentUser.uid);
+
+        // Sync to cloud if premium
+        if (isPremiumUser) {
+          _addExerciseToCloudBackground(
+            workoutId: workoutId,
+            exercise: exercise,
+            userId: currentUser.uid,
+          );
+        }
+
+        return right(null);
+
+      } catch (e) {
+        return left(UnexpectedFailure('Failed to add exercise to workout: $e'));
       }
-      
-      // Get workout from local storage
-      final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
-      if (workout == null) {
-        return left(const WorkoutNotFoundFailure('Workout not found'));
-      }
-      
-      // Add exercise to workout
-      final exerciseModel = ExerciseModel.fromDomain(exercise);
-      final updatedExercises = [...workout.exercises, exerciseModel];
-      final updatedWorkout = workout.copyWith(exercises: updatedExercises);
-      
-      // Save updated workout locally
-      await _localDataSource.updateWorkout(updatedWorkout, currentUser.uid);
-      
-      // Sync to cloud if premium
-      if (isPremiumUser) {
-        _addExerciseToCloudBackground(
-          workoutId: workoutId,
-          exercise: exercise,
-          userId: currentUser.uid,
-        );
-      }
-      
-      return right(null);
-      
-    } catch (e) {
-      return left(UnexpectedFailure('Failed to add exercise to workout: $e'));
-    }
+    });
   }
 
   @override
@@ -535,41 +552,43 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     required String workoutId,
     required String exerciseId,
   }) async {
-    try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
+    return await _workoutWriteMutex.protect(() async {
+      try {
+        final currentUser = _auth.currentUser;
+        if (currentUser == null) {
+          return left(const AuthenticationFailure('User not authenticated'));
+        }
+
+        // Get workout from local storage
+        final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
+        if (workout == null) {
+          return left(const WorkoutNotFoundFailure('Workout not found'));
+        }
+
+        // Remove exercise from workout
+        final updatedExercises = workout.exercises
+            .where((e) => e.id != exerciseId)
+            .toList();
+        final updatedWorkout = workout.copyWith(exercises: updatedExercises);
+
+        // Save updated workout locally
+        await _localDataSource.updateWorkout(updatedWorkout, currentUser.uid);
+
+        // Sync to cloud if premium
+        if (isPremiumUser) {
+          _removeExerciseFromCloudBackground(
+            workoutId: workoutId,
+            exerciseId: exerciseId,
+            userId: currentUser.uid,
+          );
+        }
+
+        return right(null);
+
+      } catch (e) {
+        return left(UnexpectedFailure('Failed to remove exercise from workout: $e'));
       }
-      
-      // Get workout from local storage
-      final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
-      if (workout == null) {
-        return left(const WorkoutNotFoundFailure('Workout not found'));
-      }
-      
-      // Remove exercise from workout
-      final updatedExercises = workout.exercises
-          .where((e) => e.id != exerciseId)
-          .toList();
-      final updatedWorkout = workout.copyWith(exercises: updatedExercises);
-      
-      // Save updated workout locally
-      await _localDataSource.updateWorkout(updatedWorkout, currentUser.uid);
-      
-      // Sync to cloud if premium
-      if (isPremiumUser) {
-        _removeExerciseFromCloudBackground(
-          workoutId: workoutId,
-          exerciseId: exerciseId,
-          userId: currentUser.uid,
-        );
-      }
-      
-      return right(null);
-      
-    } catch (e) {
-      return left(UnexpectedFailure('Failed to remove exercise from workout: $e'));
-    }
+    });
   }
 
   /// Merge local and remote workouts, handling conflicts

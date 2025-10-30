@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:csv/csv.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/analytics_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:intl/intl.dart';
 
@@ -469,8 +470,8 @@ class ExportService {
         activity.totalVolume.toStringAsFixed(1),
         activity.maxWeight.toStringAsFixed(1),
         avgWeight.toStringAsFixed(1),
-        activity.duration ?? 0,
-        activity.muscleGroup ?? 'Unknown',
+        activity.duration,
+        activity.muscleGroup,
       ]);
     }
 

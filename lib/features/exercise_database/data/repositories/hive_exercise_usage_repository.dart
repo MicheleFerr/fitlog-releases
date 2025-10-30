@@ -40,11 +40,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/models/exerci
 /// final boosts = await repository.getBatchBoosts(['squat_123', 'bench_456']);
 /// ```
 class HiveExerciseUsageRepository implements IExerciseUsageRepository {
-  /// Hive box for exercise usage data
-  final Box<ExerciseUsageModel> _box;
-
-  /// Flag to track initialization state
-  bool _isInitialized = false;
 
   /// Create repository with Hive box
   ///
@@ -52,6 +47,11 @@ class HiveExerciseUsageRepository implements IExerciseUsageRepository {
   ///
   /// Note: Box should be opened before creating repository instance
   HiveExerciseUsageRepository(this._box);
+  /// Hive box for exercise usage data
+  final Box<ExerciseUsageModel> _box;
+
+  /// Flag to track initialization state
+  bool _isInitialized = false;
 
   @override
   Future<void> initialize() async {

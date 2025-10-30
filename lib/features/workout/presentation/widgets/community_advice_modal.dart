@@ -57,7 +57,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -161,7 +161,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             Icon(
               Icons.lightbulb_outline,
               size: 64,
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -175,7 +175,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             Text(
               l10n.beFirstToShare,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -258,7 +258,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -290,7 +290,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               Text(
                 l10n.peopleFoundHelpful(contribution.upvotes),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                 ),
               ),
             ],

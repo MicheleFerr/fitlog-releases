@@ -121,7 +121,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
     final theme = Theme.of(context);
     
     return Container(
-      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
@@ -964,7 +964,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
             dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
             ),
           ),
         ],

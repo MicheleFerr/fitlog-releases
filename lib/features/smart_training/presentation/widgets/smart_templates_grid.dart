@@ -236,7 +236,7 @@ class SmartTemplateCard extends ConsumerWidget {
                 gradient: LinearGradient(
                   colors: [
                     _getDifficultyColor(template.difficulty),
-                    _getDifficultyColor(template.difficulty).withOpacity(0.7),
+                    _getDifficultyColor(template.difficulty).withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius: const BorderRadius.vertical(

@@ -18,28 +18,33 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Hybrid repository for community contributions
 /// - FREE users: Local contributions only (can contribute locally)
 /// - PREMIUM users: Local + Cloud sync + Access to global community
 class HybridCommunityRepository extends BaseHybridRepository<CommunityContribution> {
-  
+
   HybridCommunityRepository({
+    super.boxManager,
     super.firestore,
     super.auth,
-  }) : super(
+  }) : _boxManager = boxManager ?? HiveBoxManagerEnhanced(),
+       super(
     featureName: 'community',
     collectionName: 'community_contributions',
     requiresPremiumForCloud: true,
   ) {
     _initializeAdditionalBoxes();
   }
+
+  final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _votesBox;
   late Box<Map> _statsBox;
 
   Future<void> _initializeAdditionalBoxes() async {
-    _votesBox = await Hive.openBox<Map>('community_votes');
-    _statsBox = await Hive.openBox<Map>('community_stats');
+    _votesBox = await _boxManager.openBox<Map>('community_votes');
+    _statsBox = await _boxManager.openBox<Map>('community_stats');
   }
 
   @override

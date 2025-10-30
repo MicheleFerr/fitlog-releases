@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exerc
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Secondary Actions widget for the optimized homepage
 ///
@@ -62,7 +63,10 @@ class SecondaryActions extends ConsumerWidget {
   }
 
   Widget _buildSecondaryActionsGrid(
-      BuildContext context, AppLocalizations l10n, WidgetRef ref) {
+    BuildContext context,
+    AppLocalizations l10n,
+    WidgetRef ref,
+  ) {
     final actions = _getSecondaryActions(context, l10n, ref);
 
     // Use a responsive layout - 3 columns on larger screens, 2 on smaller
@@ -85,7 +89,10 @@ class SecondaryActions extends ConsumerWidget {
   }
 
   List<Widget> _getSecondaryActions(
-      BuildContext context, AppLocalizations l10n, WidgetRef ref) {
+    BuildContext context,
+    AppLocalizations l10n,
+    WidgetRef ref,
+  ) {
     return [
       // Analytics & Progress
       _SecondaryActionCard(
@@ -106,7 +113,6 @@ class SecondaryActions extends ConsumerWidget {
         color: _SecondaryActionColors.settings,
         onTap: () => context.goNamed('settings'),
       ),
-
 
       // Exercise Database
       _SecondaryActionCard(
@@ -181,7 +187,8 @@ class SecondaryActions extends ConsumerWidget {
                     // Handle case where user is not logged in or email is not available
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Utente non trovato.')));
+                        SnackBar(content: Text(context.l10n.userNotFound)),
+                      );
                     }
                     return;
                   }
@@ -189,8 +196,9 @@ class SecondaryActions extends ConsumerWidget {
 
                   // Fetch activities
                   final repository = ExerciseActivityRepository();
-                  final activities =
-                      await repository.getUserActivities(userEmail: userEmail);
+                  final activities = await repository.getUserActivities(
+                    userEmail: userEmail,
+                  );
 
                   // Show history modal
                   if (context.mounted) {
@@ -243,9 +251,7 @@ class SecondaryActions extends ConsumerWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -270,26 +276,26 @@ class SecondaryActions extends ConsumerWidget {
             Icon(
               Icons.notifications_off_outlined,
               size: 64,
-              color:
-                  Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context).noNotifications,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
               AppLocalizations.of(context).notificationsDescription,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
-                  ),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
             ),
           ],
         ),
@@ -362,40 +368,24 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
     );
 
     // Scale animation for press effect
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.92,
-    ).animate(CurvedAnimation(
-      parent: _pressController,
-      curve: Curves.easeOutCubic,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.92).animate(
+      CurvedAnimation(parent: _pressController, curve: Curves.easeOutCubic),
+    );
 
     // Bounce animation for release
-    _bounceAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _bounceController,
-      curve: Curves.elasticOut,
-    ));
+    _bounceAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _bounceController, curve: Curves.elasticOut),
+    );
 
     // Glow animation for premium effect
-    _glowAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _glowController,
-      curve: Curves.easeOutQuart,
-    ));
+    _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _glowController, curve: Curves.easeOutQuart),
+    );
 
     // Elevation animation
-    _elevationAnimation = Tween<double>(
-      begin: 2.0,
-      end: 8.0,
-    ).animate(CurvedAnimation(
-      parent: _pressController,
-      curve: Curves.easeOutCubic,
-    ));
+    _elevationAnimation = Tween<double>(begin: 2.0, end: 8.0).animate(
+      CurvedAnimation(parent: _pressController, curve: Curves.easeOutCubic),
+    );
   }
 
   @override
@@ -435,7 +425,12 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
     final colorScheme = Theme.of(context).colorScheme;
 
     return AnimatedBuilder(
-      animation: Listenable.merge([_scaleAnimation, _bounceAnimation, _glowAnimation, _elevationAnimation]),
+      animation: Listenable.merge([
+        _scaleAnimation,
+        _bounceAnimation,
+        _glowAnimation,
+        _elevationAnimation,
+      ]),
       builder: (context, child) {
         final combinedScale = _scaleAnimation.value * _bounceAnimation.value;
 
@@ -473,12 +468,15 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
                     spreadRadius: 1,
                   ),
                   // Glow effect when pressed
-                  if (_isPressed) BoxShadow(
-                    color: widget.color.withValues(alpha: 0.3 * _glowAnimation.value),
-                    blurRadius: 20 * _glowAnimation.value,
-                    offset: const Offset(0, 0),
-                    spreadRadius: 2 * _glowAnimation.value,
-                  ),
+                  if (_isPressed)
+                    BoxShadow(
+                      color: widget.color.withValues(
+                        alpha: 0.3 * _glowAnimation.value,
+                      ),
+                      blurRadius: 20 * _glowAnimation.value,
+                      offset: const Offset(0, 0),
+                      spreadRadius: 2 * _glowAnimation.value,
+                    ),
                 ],
               ),
               child: ClipRRect(
@@ -491,78 +489,99 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.white.withValues(alpha: _isPressed ? 0.15 : 0.05),
+                      color: Colors.white.withValues(
+                        alpha: _isPressed ? 0.15 : 0.05,
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Icon with enhanced animation (NO rotation)
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeOutCubic,
-                            padding: EdgeInsets.all(_isPressed ? 6 : 4),
-                            decoration: BoxDecoration(
-                              color: _isPressed
-                                  ? widget.color.withValues(alpha: 0.1)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 150),
-                              transitionBuilder: (Widget child, Animation<double> animation) {
-                                return ScaleTransition(scale: animation, child: child);
-                              },
-                              child: Icon(
-                                _isPressed ? widget.activeIcon : widget.icon,
-                                key: ValueKey(_isPressed),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Icon with enhanced animation (NO rotation)
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOutCubic,
+                              padding: EdgeInsets.all(_isPressed ? 6 : 4),
+                              decoration: BoxDecoration(
                                 color: _isPressed
-                                    ? widget.color
-                                    : colorScheme.onSurface.withValues(alpha: 0.8),
-                                size: 28,
+                                    ? widget.color.withValues(alpha: 0.1)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 150),
+                                transitionBuilder:
+                                    (Widget child, Animation<double> animation) {
+                                      return ScaleTransition(
+                                        scale: animation,
+                                        child: child,
+                                      );
+                                    },
+                                child: Icon(
+                                  _isPressed ? widget.activeIcon : widget.icon,
+                                  key: ValueKey(_isPressed),
+                                  color: _isPressed
+                                      ? widget.color
+                                      : colorScheme.onSurface.withValues(
+                                          alpha: 0.8,
+                                        ),
+                                  size: 28,
+                                ),
                               ),
                             ),
-                          ),
 
-                          const SizedBox(height: 12),
+                            const SizedBox(height: 12),
 
-                          // Title with enhanced styling
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 200),
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: _isPressed
-                                  ? widget.color
-                                  : colorScheme.onSurface,
-                              letterSpacing: _isPressed ? 0.5 : 0.0,
-                            ) ?? const TextStyle(),
-                            child: Text(
-                              widget.title,
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            // Title with enhanced styling
+                            AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 200),
+                              style:
+                                  Theme.of(
+                                    context,
+                                  ).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: _isPressed
+                                        ? widget.color
+                                        : colorScheme.onSurface,
+                                    letterSpacing: _isPressed ? 0.5 : 0.0,
+                                  ) ??
+                                  const TextStyle(),
+                              child: Text(
+                                widget.title,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
 
-                          const SizedBox(height: 4),
+                            const SizedBox(height: 4),
 
-                          // Subtitle with smooth transition
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 200),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: _isPressed
-                                  ? colorScheme.onSurface.withValues(alpha: 0.8)
-                                  : colorScheme.onSurface.withValues(alpha: 0.6),
-                            ) ?? const TextStyle(),
-                            child: Text(
-                              widget.subtitle,
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                            // Subtitle with smooth transition
+                            AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 200),
+                              style:
+                                  Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: _isPressed
+                                        ? colorScheme.onSurface.withValues(
+                                            alpha: 0.8,
+                                          )
+                                        : colorScheme.onSurface.withValues(
+                                            alpha: 0.6,
+                                          ),
+                                  ) ??
+                                  const TextStyle(),
+                              child: Text(
+                                widget.subtitle,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -579,11 +598,13 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
 /// Color definitions for different secondary action categories
 /// Using Material 3 color palette for consistency
 class _SecondaryActionColors {
-  static const Color analytics = Color(0xFF6750A4);     // Purple - data/insights
-  static const Color settings = Color(0xFF625B71);      // Neutral - customization
-  static const Color exercises = Color(0xFF6B5B73);     // Violet - exploration
-  static const Color community = Color(0xFF006A6B);     // Teal - social/connection
-  static const Color history = Color(0xFF8B5A3C);       // Brown - past/heritage
-  static const Color notifications = Color(0xFF984061); // Rose - attention/alerts
-  static const Color import = Color(0xFF006494);        // Blue - utility/technical
+  static const Color analytics = Color(0xFF6750A4); // Purple - data/insights
+  static const Color settings = Color(0xFF625B71); // Neutral - customization
+  static const Color exercises = Color(0xFF6B5B73); // Violet - exploration
+  static const Color community = Color(0xFF006A6B); // Teal - social/connection
+  static const Color history = Color(0xFF8B5A3C); // Brown - past/heritage
+  static const Color notifications = Color(
+    0xFF984061,
+  ); // Rose - attention/alerts
+  static const Color import = Color(0xFF006494); // Blue - utility/technical
 }

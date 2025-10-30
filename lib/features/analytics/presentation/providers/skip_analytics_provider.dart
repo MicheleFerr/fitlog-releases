@@ -17,6 +17,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/skip_analytics_local_repository.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 // Skip analytics data model
 class SkipAnalytics {
@@ -52,13 +53,15 @@ final skipAnalyticsProvider = StateNotifierProvider<SkipAnalyticsNotifier, SkipA
 });
 
 class SkipAnalyticsNotifier extends StateNotifier<SkipAnalytics> {
-  
-  SkipAnalyticsNotifier(this.ref) : super(SkipAnalytics.empty()) {
+
+  SkipAnalyticsNotifier(this.ref) :
+    _localRepository = SkipAnalyticsLocalRepository(ref.read(hiveBoxManagerProvider)),
+    super(SkipAnalytics.empty()) {
     _initRepository();
   }
   final Ref ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final SkipAnalyticsLocalRepository _localRepository = SkipAnalyticsLocalRepository();
+  final SkipAnalyticsLocalRepository _localRepository;
   
   Future<void> _initRepository() async {
     await _localRepository.init();

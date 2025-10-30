@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
@@ -9,11 +8,6 @@ import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/suggestion_accuracy.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/questionnaire_analytics_datasource.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class EditSetModal extends ConsumerStatefulWidget {
@@ -120,7 +114,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
+                color: Colors.grey.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -494,6 +488,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     required double actualWeight,
     required int actualReps,
   }) async {
+    // DISABLED: Suggestion accuracy tracking
+    // Reason: GDPR compliance - depends on medical questionnaire data
+    // Date: 2025-01-21
+    return;
+
+    /* ORIGINAL CODE - DISABLED
     try {
       // Get current user
       final userAsync = ref.read(firebaseUserProvider);
@@ -541,6 +541,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       }
       // Don't show error to user - this is background tracking
     }
+    */ // END DISABLED CODE
   }
 
   Color _getRpeChipColor(int rpe) {
@@ -562,12 +563,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: hasWeight 
-              ? context.colors.primaryContainer.withOpacity(0.3)
+              ? context.colors.primaryContainer.withValues(alpha: 0.3)
               : context.colors.surfaceContainerHighest,
           border: Border.all(
             color: hasWeight 
-                ? context.colors.primary.withOpacity(0.3)
-                : context.colors.outline.withOpacity(0.2),
+                ? context.colors.primary.withValues(alpha: 0.3)
+                : context.colors.outline.withValues(alpha: 0.2),
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -634,12 +635,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: hasReps 
-              ? context.colors.secondaryContainer.withOpacity(0.3)
+              ? context.colors.secondaryContainer.withValues(alpha: 0.3)
               : context.colors.surfaceContainerHighest,
           border: Border.all(
             color: hasReps 
-                ? context.colors.secondary.withOpacity(0.3)
-                : context.colors.outline.withOpacity(0.2),
+                ? context.colors.secondary.withValues(alpha: 0.3)
+                : context.colors.outline.withValues(alpha: 0.2),
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -759,7 +760,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: Colors.orange.withValues(alpha: 0.1),
         border: Border.all(color: Colors.orange),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -827,8 +828,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isIncrease
-            ? Colors.green.withOpacity(0.1)
-            : Colors.blue.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.blue.withValues(alpha: 0.1),
         border: Border.all(
           color: isIncrease ? Colors.green : Colors.blue,
         ),

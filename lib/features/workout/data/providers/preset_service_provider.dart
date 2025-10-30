@@ -13,6 +13,7 @@
 /// - Supports both sync and async initialization
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/i_preset_service.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/json_preset_repository.dart';
@@ -62,11 +63,8 @@ final presetServiceProvider = Provider<IPresetService>((ref) {
   // Note: This runs in background, service will throw if used before init completes
   service.initialize().catchError((e) {
     // Log error but don't crash app
-    if (const bool.fromEnvironment('dart.vm.product')) {
-      // Production: silent fail
-    } else {
-      // Debug: print error
-      print('❌ Failed to initialize preset service: $e');
+    if (kDebugMode) {
+      debugPrint('❌ Failed to initialize preset service: $e');
     }
   });
 

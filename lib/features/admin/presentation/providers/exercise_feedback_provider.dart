@@ -13,18 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Modello per un singolo feedback su esercizio
 class ExerciseFeedback {
-  final String id;
-  final String userId;
-  final String userEmail;
-  final String exerciseId;
-  final String exerciseName;
-  final String version;
-  final String feedbackType; // BUG, SUGGESTION, TYPO, OTHER
-  final String message;
-  final int severity; // 1-5
-  final DateTime createdAt;
-  final String status; // OPEN, REVIEWING, RESOLVED, DISMISSED
-  final String? adminNotes;
 
   ExerciseFeedback({
     required this.id,
@@ -60,17 +48,22 @@ class ExerciseFeedback {
       adminNotes: data['adminNotes'],
     );
   }
+  final String id;
+  final String userId;
+  final String userEmail;
+  final String exerciseId;
+  final String exerciseName;
+  final String version;
+  final String feedbackType; // BUG, SUGGESTION, TYPO, OTHER
+  final String message;
+  final int severity; // 1-5
+  final DateTime createdAt;
+  final String status; // OPEN, REVIEWING, RESOLVED, DISMISSED
+  final String? adminNotes;
 }
 
 /// Statistiche aggregate del feedback
-class FeedbackStats {
-  final int totalFeedback;
-  final int openCount;
-  final int reviewingCount;
-  final int resolvedCount;
-  final Map<String, int> byType; // feedbackType -> count
-  final Map<String, int> byExercise; // exerciseId -> count
-  final Map<String, int> bySeverity; // severity -> count
+class FeedbackStats { // severity -> count
 
   FeedbackStats({
     required this.totalFeedback,
@@ -93,6 +86,13 @@ class FeedbackStats {
       bySeverity: {},
     );
   }
+  final int totalFeedback;
+  final int openCount;
+  final int reviewingCount;
+  final int resolvedCount;
+  final Map<String, int> byType; // feedbackType -> count
+  final Map<String, int> byExercise; // exerciseId -> count
+  final Map<String, int> bySeverity;
 }
 
 /// 🔴 MASTER STREAM: Single Firestore listener for ALL feedback

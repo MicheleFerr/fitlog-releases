@@ -66,7 +66,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -141,10 +141,10 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.errorContainer.withOpacity(0.1),
+        color: theme.colorScheme.errorContainer.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.colorScheme.error.withOpacity(0.3),
+          color: theme.colorScheme.error.withValues(alpha: 0.3),
           width: 2,
         ),
       ),
@@ -188,7 +188,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                   icon: const Icon(Icons.cancel),
                   label: const Text('Rifiuta'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.red.withOpacity(0.2),
+                    backgroundColor: Colors.red.withValues(alpha: 0.2),
                     foregroundColor: Colors.red,
                   ),
                 ),
@@ -233,7 +233,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                     Icon(
                       Icons.comments_disabled_outlined,
                       size: 48,
-                      color: theme.colorScheme.outline.withOpacity(0.5),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 12),
                     Text(
@@ -265,10 +265,10 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.1),
+          color: theme.colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -333,7 +333,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
         color: theme.colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: theme.colorScheme.outline.withOpacity(0.1),
+            color: theme.colorScheme.outline.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -381,7 +381,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
         label: const Text('Segnala contributo'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,
-          side: BorderSide(color: theme.colorScheme.error.withOpacity(0.3)),
+          side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.3)),
         ),
       ),
     );

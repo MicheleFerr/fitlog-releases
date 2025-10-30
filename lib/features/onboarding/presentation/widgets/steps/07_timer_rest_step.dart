@@ -119,7 +119,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
           Text(
             l10n.onboardingTimerRestDescription,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.8),
+              color: colorScheme.onSurface.withValues(alpha: 0.8),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -145,9 +145,9 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.3),
+                    color: colorScheme.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -158,9 +158,9 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: colorScheme.surface.withOpacity(0.3),
+                        color: colorScheme.surface.withValues(alpha: 0.3),
                         border: Border.all(
-                          color: colorScheme.outline.withOpacity(0.2),
+                          color: colorScheme.outline.withValues(alpha: 0.2),
                         ),
                       ),
                       child: Stack(
@@ -172,7 +172,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
                                   ? 'Durante l\'allenamento'
                                   : 'During workout',
                               style: theme.textTheme.bodyLarge?.copyWith(
-                                color: colorScheme.onSurface.withOpacity(0.3),
+                                color: colorScheme.onSurface.withValues(alpha: 0.3),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -217,7 +217,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
                             ? 'Tocca per avviare il timer tra le serie'
                             : 'Tap to start rest timer between sets',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.6),
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -289,12 +289,12 @@ class _MockTimerOverlay extends StatelessWidget {
         color: isCompleted ? colorScheme.primary : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isCompleted ? colorScheme.primary : colorScheme.outline.withOpacity(0.3),
+          color: isCompleted ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.3),
           width: isCompleted ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.shadow.withOpacity(0.1),
+            color: colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

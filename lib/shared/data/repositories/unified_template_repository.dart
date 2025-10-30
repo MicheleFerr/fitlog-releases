@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/domain/helpers/template_migration_help
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/hybrid_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// Debug logger for unified template repository (TEMPORARY FOR DEBUGGING)
 class _UnifiedTemplateLogger {
@@ -611,7 +612,10 @@ final legacyWorkoutTemplateRepositoryProvider = Provider<WorkoutTemplateReposito
 
 // Provider for hybrid template repository (passes ref for user profile access)
 final hybridTemplateRepositoryProvider = Provider<HybridTemplateRepository>((ref) {
-  return HybridTemplateRepository(ref: ref);
+  return HybridTemplateRepository(
+    boxManager: ref.watch(hiveBoxManagerProvider),
+    ref: ref,
+  );
 });
 
 // Provider for exercise matching service

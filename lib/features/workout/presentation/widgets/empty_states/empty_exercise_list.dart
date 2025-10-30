@@ -20,13 +20,13 @@ class EmptyExerciseList extends StatelessWidget {
             Icon(
               Icons.add_circle_outline,
               size: 64,
-              color: colorScheme.primary.withOpacity(0.3),
+              color: colorScheme.primary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
               l10n.noExercisesYet,
               style: theme.textTheme.titleLarge?.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.7),
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -34,7 +34,7 @@ class EmptyExerciseList extends StatelessWidget {
             Text(
               l10n.tapPlusToAddExercise,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.5),
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
               ),
               textAlign: TextAlign.center,
             ),

@@ -11,7 +11,7 @@ void main() {
     });
 
     test('processPercentageConversions returns empty list', () async {
-      final template = WorkoutTemplateImportData(
+      const template = WorkoutTemplateImportData(
         name: 'Test',
         exercises: [],
         category: 'strength',
@@ -23,7 +23,7 @@ void main() {
     });
 
     test('applyPercentageConversions returns template unchanged', () async {
-      final template = WorkoutTemplateImportData(
+      const template = WorkoutTemplateImportData(
         name: 'Test',
         exercises: [],
         category: 'strength',

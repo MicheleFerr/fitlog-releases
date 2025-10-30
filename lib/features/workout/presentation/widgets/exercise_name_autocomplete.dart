@@ -185,7 +185,7 @@ class _ExerciseNameAutocompleteState
                   color: context.colors.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: context.colors.outline.withOpacity(0.3),
+                    color: context.colors.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: ListView.builder(
@@ -232,10 +232,10 @@ class _ExerciseNameAutocompleteState
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: matchColor.withOpacity(0.2),
+                              color: matchColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: matchColor.withOpacity(0.5),
+                                color: matchColor.withValues(alpha: 0.5),
                                 width: 1,
                               ),
                             ),
@@ -276,7 +276,7 @@ class _ExerciseNameAutocompleteState
         link: _layerLink,
         child: TextField(
           controller: widget.controller,
-          decoration: (widget.decoration ?? InputDecoration())
+          decoration: (widget.decoration ?? const InputDecoration())
               .copyWith(
                 hintText: widget.hint ?? context.l10n.exerciseNameHint,
                 prefixIcon: _isSearching

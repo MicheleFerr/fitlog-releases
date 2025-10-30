@@ -144,7 +144,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: colorScheme.primary.withOpacity(0.3),
+                          color: colorScheme.primary.withValues(alpha: 0.3),
                           blurRadius: 20,
                           offset: const Offset(0, 8),
                         ),
@@ -176,7 +176,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                   Text(
                     _currentSubtitle,
                     style: theme.textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurface.withOpacity(0.7),
+                      color: colorScheme.onSurface.withValues(alpha: 0.7),
                       fontSize: 18,
                       height: 1.4,
                     ),
@@ -260,19 +260,19 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isSelected
-            ? colorScheme.primaryContainer.withOpacity(0.3)
+            ? colorScheme.primaryContainer.withValues(alpha: 0.3)
             : colorScheme.surface,
           border: Border.all(
             color: isSelected
               ? colorScheme.primary
-              : colorScheme.outline.withOpacity(0.3),
+              : colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: isSelected
             ? [
                 BoxShadow(
-                  color: colorScheme.primary.withOpacity(0.2),
+                  color: colorScheme.primary.withValues(alpha: 0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 )

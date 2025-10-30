@@ -79,8 +79,8 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.primary.withOpacity(0.1),
-              colorScheme.secondary.withOpacity(0.05),
+              colorScheme.primary.withValues(alpha: 0.1),
+              colorScheme.secondary.withValues(alpha: 0.05),
             ],
           ),
         ),
@@ -144,7 +144,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     
     return Card(
       elevation: 0,
-      color: colorScheme.primaryContainer.withOpacity(0.3),
+      color: colorScheme.primaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -288,7 +288,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
           ),
           borderRadius: BorderRadius.circular(16),
           color: isPopular 
-              ? colorScheme.primaryContainer.withOpacity(0.1)
+              ? colorScheme.primaryContainer.withValues(alpha: 0.1)
               : colorScheme.surface,
         ),
         child: Stack(
@@ -335,7 +335,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: colorScheme.tertiary.withOpacity(0.2),
+                              color: colorScheme.tertiary.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -410,7 +410,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 margin: const EdgeInsets.only(right: 16),
                 child: Card(
                   elevation: 0,
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -500,7 +500,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         color: theme.scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),

@@ -103,7 +103,7 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
               borderRadius: BorderRadius.circular(16),
               boxShadow: widget.showShadow ? [
                 BoxShadow(
-                  color: backgroundColor.withOpacity(0.4),
+                  color: backgroundColor.withValues(alpha: 0.4),
                   blurRadius: _isPressed ? 8 : 12,
                   offset: Offset(0, _isPressed ? 2 : 4),
                   spreadRadius: _isPressed ? 0 : 1,
@@ -130,7 +130,7 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
                     gradient: LinearGradient(
                       colors: [
                         backgroundColor,
-                        backgroundColor.withOpacity(0.9),
+                        backgroundColor.withValues(alpha: 0.9),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -210,7 +210,7 @@ class CompactActionButton extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: backgroundColor.withOpacity(0.3),
+                color: backgroundColor.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
@@ -288,7 +288,7 @@ class PremiumBottomActionBar extends StatelessWidget {
         color: backgroundColor ?? colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),

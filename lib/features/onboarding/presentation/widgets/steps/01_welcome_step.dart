@@ -136,7 +136,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: colorScheme.primary.withOpacity(0.4),
+                        color: colorScheme.primary.withValues(alpha: 0.4),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),
@@ -179,7 +179,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                       Text(
                         l10n.onboardingWelcomeDescription,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.8),
+                          color: colorScheme.onSurface.withValues(alpha: 0.8),
                           fontSize: 18,
                           height: 1.5,
                         ),
@@ -198,7 +198,7 @@ class _WelcomeStepState extends State<WelcomeStep>
           Text(
             l10n.onboardingWhatToExpect,
             style: theme.textTheme.titleMedium?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.9),
+              color: colorScheme.onSurface.withValues(alpha: 0.9),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -214,13 +214,13 @@ class _WelcomeStepState extends State<WelcomeStep>
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      colorScheme.primaryContainer.withOpacity(0.3),
-                      colorScheme.secondaryContainer.withOpacity(0.3),
+                      colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      colorScheme.secondaryContainer.withValues(alpha: 0.3),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: colorScheme.primary.withOpacity(0.3),
+                    color: colorScheme.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -305,13 +305,13 @@ class _WelcomeStepState extends State<WelcomeStep>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        colorScheme.primaryContainer.withOpacity(0.3),
-                        colorScheme.secondaryContainer.withOpacity(0.3),
+                        colorScheme.primaryContainer.withValues(alpha: 0.3),
+                        colorScheme.secondaryContainer.withValues(alpha: 0.3),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: colorScheme.primary.withOpacity(0.3),
+                      color: colorScheme.primary.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -366,10 +366,10 @@ class _WelcomeStepState extends State<WelcomeStep>
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: color.withOpacity(0.3),
+                      color: color.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -395,7 +395,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                       Text(
                         description,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.7),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],

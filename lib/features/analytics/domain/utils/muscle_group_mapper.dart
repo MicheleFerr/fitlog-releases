@@ -31,8 +31,6 @@ class MuscleGroupMapper {
       case ExerciseCategory.other:
         // Cardio and uncategorized exercises are excluded from volume analysis
         return null;
-      default:
-        return null;
     }
   }
 }
