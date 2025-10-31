@@ -239,7 +239,7 @@ class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
         double totalVolume = 0;
         for (final set in sets) {
           if (set.isCompleted) {
-            final volume = set.weight * (set.reps ?? 0);
+            final volume = ((set.weight ?? 0.0) * (set.reps ?? 0)).toDouble();
             totalVolume += volume;
             // Update set volume
             sets[sets.indexOf(set)] = ExerciseSetModel(
