@@ -129,7 +129,7 @@ class StatsDashboard extends StatelessWidget {
                   icon: Icons.trending_up,
                   label: 'Adherence',
                   value: '${routine.adherenceRate.toInt()}%',
-                  color: _getAdherenceColor(routine.adherenceRate),
+                  color: _getAdherenceColor(routine.adherenceRate, context),
                 ),
               ),
               const SizedBox(width: 12),
@@ -215,7 +215,7 @@ class StatsDashboard extends StatelessWidget {
     );
   }
 
-  Color _getAdherenceColor(double adherence) {
+  Color _getAdherenceColor(double adherence, BuildContext context) {
     if (adherence >= 80) {
       return context.colors.success;
     } else if (adherence >= 60) {

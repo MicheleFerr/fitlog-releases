@@ -171,7 +171,7 @@ class TemplateQuickStartCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildHandleBar(),
+          _buildHandleBar(context),
           const SizedBox(height: 16),
           _buildSheetHeader(context),
           const SizedBox(height: 20),
@@ -216,7 +216,7 @@ class TemplateQuickStartCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHandleBar() {
+  Widget _buildHandleBar(BuildContext context) {
     return Container(
       width: 40,
       height: 4,

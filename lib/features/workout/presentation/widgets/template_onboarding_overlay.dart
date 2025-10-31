@@ -146,6 +146,8 @@ class _OnboardingStep extends StatelessWidget {
               painter: _SpotlightPainter(
                 targetKey: targetKey,
                 spotlightPadding: 8,
+                overlayColor: context.colors.onSurface.withValues(alpha: 0.8),
+                borderColor: context.colors.surface.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -295,9 +297,13 @@ class _SpotlightPainter extends CustomPainter {
   _SpotlightPainter({
     required this.targetKey,
     required this.spotlightPadding,
+    required this.overlayColor,
+    required this.borderColor,
   });
   final GlobalKey targetKey;
   final double spotlightPadding;
+  final Color overlayColor;
+  final Color borderColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -332,7 +338,7 @@ class _SpotlightPainter extends CustomPainter {
 
     canvas.drawPath(
       path,
-      Paint()..color = context.colors.onSurface.withValues(alpha: 0.8),
+      Paint()..color = overlayColor,
     );
 
     // Draw spotlight border
@@ -342,7 +348,7 @@ class _SpotlightPainter extends CustomPainter {
         const Radius.circular(8),
       ),
       Paint()
-        ..color = context.colors.surface.withValues(alpha: 0.8)
+        ..color = borderColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2,
     );

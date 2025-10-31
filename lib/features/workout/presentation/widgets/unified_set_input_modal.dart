@@ -26,9 +26,9 @@ extension UnifiedSetInputModalExtension on BuildContext {
     // Validate inputs
     if (exerciseSet == null) {
       ScaffoldMessenger.of(this).showSnackBar(
-        const SnackBar(
-          content: Text('Error: Unable to edit this set'),
-          backgroundColor: context.colors.error,
+        SnackBar(
+          content: const Text('Error: Unable to edit this set'),
+          backgroundColor: this.colors.error,
         ),
       );
       return;

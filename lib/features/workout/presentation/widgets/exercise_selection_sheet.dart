@@ -546,11 +546,11 @@ class ExerciseSelectionTile extends ConsumerWidget {
   Color _getDifficultyColor(String difficulty, ThemeData theme) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return context.colors.success;
+        return theme.colorScheme.success;
       case 'intermedio':
-        return context.colors.secondary;
+        return theme.colorScheme.secondary;
       case 'avanzato':
-        return context.colors.error;
+        return theme.colorScheme.error;
       default:
         return theme.colorScheme.onSurfaceVariant;
     }
