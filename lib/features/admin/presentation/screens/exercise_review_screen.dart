@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_review_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Admin screen for viewing monthly exercise review reports
 class ExerciseReviewScreen extends ConsumerWidget {
@@ -192,7 +193,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: Icons.schedule_outlined,
               label: 'Esercizi Obsoleti',
               value: staleCount.toString(),
-              color: Colors.orange,
+              color: context.colors.secondary,
               subtitle: '>90 giorni',
             ),
             _buildStatCard(
@@ -200,7 +201,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: Icons.flag_outlined,
               label: 'Esercizi Flaggati',
               value: flaggedCount.toString(),
-              color: Colors.amber,
+              color: context.colors.warning,
               subtitle: '≥3 feedback',
             ),
             _buildStatCard(
@@ -208,7 +209,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: Icons.comment_outlined,
               label: 'Feedback Totali',
               value: totalFeedback.toString(),
-              color: Colors.blue,
+              color: context.colors.primary,
               subtitle: 'flaggati',
             ),
             _buildStatCard(
@@ -216,7 +217,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: Icons.error_outline,
               label: 'Problemi Critici',
               value: criticalCount.toString(),
-              color: Colors.red,
+              color: context.colors.error,
               subtitle: 'severità ≥4',
             ),
           ],
@@ -350,7 +351,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             const Icon(
               Icons.schedule_outlined,
-              color: Colors.orange,
+              color: context.colors.secondary,
               size: 20,
             ),
           ],
@@ -373,7 +374,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 subtitle:
                     'Modificato ${exercise['lastModifiedDaysAgo'] ?? 0} giorni fa',
                 icon: Icons.schedule,
-                color: Colors.orange,
+                color: context.colors.secondary,
               );
             },
           ),
@@ -405,7 +406,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             const Icon(
               Icons.flag_outlined,
-              color: Colors.amber,
+              color: context.colors.warning,
               size: 20,
             ),
           ],
@@ -431,7 +432,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 subtitle:
                     '$feedbackCount feedback${criticalCount > 0 ? ' ($criticalCount critici)' : ''}',
                 icon: Icons.flag,
-                color: criticalCount > 0 ? Colors.red : Colors.amber,
+                color: criticalCount > 0 ? context.colors.error : context.colors.warning,
               );
             },
           ),

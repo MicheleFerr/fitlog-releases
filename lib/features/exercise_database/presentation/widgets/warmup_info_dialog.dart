@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dialog that explains the 3 phases of proper warmup protocol
 class WarmupInfoDialog extends StatelessWidget {
@@ -35,7 +37,7 @@ class WarmupInfoDialog extends StatelessWidget {
                 context: context,
                 title: l10n.warmupPhase1Title,
                 description: l10n.warmupPhase1Desc,
-                color: Colors.blue,
+                color: context.colors.primary,
               ),
               const SizedBox(height: 12),
 
@@ -44,7 +46,7 @@ class WarmupInfoDialog extends StatelessWidget {
                 context: context,
                 title: l10n.warmupPhase2Title,
                 description: l10n.warmupPhase2Desc,
-                color: Colors.orange,
+                color: context.colors.secondary,
               ),
               const SizedBox(height: 12),
 
@@ -52,10 +54,10 @@ class WarmupInfoDialog extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
+                  color: context.colors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.green.withValues(alpha: 0.3),
+                    color: context.colors.success.withValues(alpha: 0.3),
                     width: 1.5,
                   ),
                 ),
@@ -69,20 +71,20 @@ class WarmupInfoDialog extends StatelessWidget {
                             l10n.warmupPhase3Title,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green,
+                              color: context.colors.success,
                             ),
                           ),
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: context.colors.success,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             'AUTO',
                             style: theme.textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
+                              color: context.colors.surface,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -100,14 +102,14 @@ class WarmupInfoDialog extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.1),
+                        color: context.colors.success.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
                         children: [
                           const Icon(
                             Icons.auto_awesome,
-                            color: Colors.green,
+                            color: context.colors.success,
                             size: 18,
                           ),
                           const SizedBox(width: 8),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class XPDisplayWidget extends ConsumerStatefulWidget {
   
@@ -121,13 +123,13 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                             children: [
                               const Icon(
                                 Icons.star,
-                                color: Colors.white,
+                                color: context.colors.surface,
                                 size: 28,
                               ),
                               Text(
                                 'Lv.$level',
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -215,19 +217,19 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                         icon: Icons.edit,
                         label: 'Contributi',
                         value: stats.totalContributions.toString(),
-                        color: Colors.blue,
+                        color: context.colors.primary,
                       ),
                       _StatItem(
                         icon: Icons.check_circle,
                         label: 'Approvati',
                         value: stats.approvedContributions.toString(),
-                        color: Colors.green,
+                        color: context.colors.success,
                       ),
                       _StatItem(
                         icon: Icons.thumb_up,
                         label: 'Voti',
                         value: stats.totalVotes.toString(),
-                        color: Colors.orange,
+                        color: context.colors.secondary,
                       ),
                     ],
                   ),
@@ -376,22 +378,22 @@ class _BadgeChip extends StatelessWidget {
     switch (badge) {
       case 'first_contribution':
         icon = Icons.celebration;
-        color = Colors.purple;
+        color = context.colors.tertiary;
         label = 'Prima Contribuzione';
         break;
       case 'verified_contributor':
         icon = Icons.verified;
-        color = Colors.blue;
+        color = context.colors.primary;
         label = 'Contributore Verificato';
         break;
       case 'top_contributor':
         icon = Icons.military_tech;
-        color = Colors.orange;
+        color = context.colors.secondary;
         label = 'Top Contributor';
         break;
       case 'expert':
         icon = Icons.school;
-        color = Colors.green;
+        color = context.colors.success;
         label = 'Esperto';
         break;
       default:

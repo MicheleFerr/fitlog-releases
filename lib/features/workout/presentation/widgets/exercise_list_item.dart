@@ -985,6 +985,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         case 'duplicate':
                           _duplicateExercise();
                           break;
+                        case 'counting_mode':
+                          _showCountingModeSelector(context);
+                          break;
                         case 'delete':
                           _showDeleteConfirmation(context);
                           break;
@@ -1117,6 +1120,19 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 Icon(Icons.insights, size: 20),
                                 SizedBox(width: 8),
                                 Text('Insight'),
+                              ],
+                            ),
+                          ),
+
+                        // Counting mode - conditional
+                        if (showAdvanced)
+                          PopupMenuItem(
+                            value: 'counting_mode',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.format_list_numbered, size: 20),
+                                const SizedBox(width: 8),
+                                Text(context.l10n.changeCountingMode),
                               ],
                             ),
                           ),

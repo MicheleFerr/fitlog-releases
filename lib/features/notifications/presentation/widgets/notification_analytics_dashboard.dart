@@ -4,6 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_analytics_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dashboard widget for displaying notification analytics
 class NotificationAnalyticsDashboard extends ConsumerWidget {
@@ -75,7 +77,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           value: '${metrics.totalDelivered}',
           subtitle: '${(metrics.deliveryRate * 100).toStringAsFixed(1)}%',
           icon: Icons.check_circle,
-          color: Colors.green,
+          color: context.colors.success,
           theme: theme,
         ),
         _buildMetricCard(
@@ -83,7 +85,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           value: '${metrics.totalClicked}',
           subtitle: '${(metrics.clickRate * 100).toStringAsFixed(1)}% CTR',
           icon: Icons.touch_app,
-          color: Colors.blue,
+          color: context.colors.primary,
           theme: theme,
         ),
         _buildMetricCard(
@@ -91,7 +93,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           value: '${metrics.totalFailed}',
           subtitle: '${(metrics.failureRate * 100).toStringAsFixed(1)}%',
           icon: Icons.error,
-          color: Colors.red,
+          color: context.colors.error,
           theme: theme,
         ),
       ],

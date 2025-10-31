@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/dropset
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
   
@@ -114,7 +115,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.3),
+              color: context.colors.surfaceVariant.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),

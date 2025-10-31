@@ -5,6 +5,8 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_initializer.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
   
@@ -249,19 +251,19 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           icon: Icons.local_fire_department,
           value: stats.currentStreak.toString(),
           label: 'Streak',
-          color: Colors.orange,
+          color: context.colors.secondary,
         ),
         _StatItem(
           icon: Icons.star,
           value: stats.totalPoints.toString(),
           label: 'Punti',
-          color: Colors.amber,
+          color: context.colors.warning,
         ),
         _StatItem(
           icon: Icons.check_circle,
           value: stats.approvedContributions.toString(),
           label: 'Approvati',
-          color: Colors.green,
+          color: context.colors.success,
         ),
         _StatItem(
           icon: Icons.emoji_events,
@@ -493,7 +495,7 @@ class _AnimatedIconState extends State<_AnimatedIcon>
           ),
           child: const Icon(
             Icons.people,
-            color: Colors.white,
+            color: context.colors.surface,
             size: 24,
           ),
         );
@@ -615,8 +617,8 @@ class _MiniContributionCard extends StatelessWidget {
                 },
                 icon: const Icon(Icons.close),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.red.withValues(alpha: 0.1),
-                  foregroundColor: Colors.red,
+                  backgroundColor: context.colors.error.withValues(alpha: 0.1),
+                  foregroundColor: context.colors.error,
                 ),
               ),
               IconButton.filled(
@@ -626,8 +628,8 @@ class _MiniContributionCard extends StatelessWidget {
                 },
                 icon: const Icon(Icons.check),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.green.withValues(alpha: 0.1),
-                  foregroundColor: Colors.green,
+                  backgroundColor: context.colors.success.withValues(alpha: 0.1),
+                  foregroundColor: context.colors.success,
                 ),
               ),
             ],
@@ -644,23 +646,23 @@ class _MiniContributionCard extends StatelessWidget {
     switch (type) {
       case ContributionType.tip:
         icon = Icons.lightbulb;
-        color = Colors.amber;
+        color = context.colors.warning;
         break;
       case ContributionType.warning:
         icon = Icons.warning;
-        color = Colors.orange;
+        color = context.colors.secondary;
         break;
       case ContributionType.correction:
         icon = Icons.edit;
-        color = Colors.blue;
+        color = context.colors.primary;
         break;
       case ContributionType.technique:
         icon = Icons.fitness_center;
-        color = Colors.purple;
+        color = context.colors.tertiary;
         break;
       default:
         icon = Icons.info;
-        color = Colors.grey;
+        color = context.colors.surfaceVariant;
     }
     
     return Container(

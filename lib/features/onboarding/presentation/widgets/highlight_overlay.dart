@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class HighlightOverlay extends StatefulWidget {
 
@@ -184,8 +186,8 @@ class _HighlightOverlayState extends State<HighlightOverlay>
               child: TextButton(
                 onPressed: widget.onSkip,
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.black.withValues(alpha: 0.3),
+                  foregroundColor: context.colors.surface,
+                  backgroundColor: context.colors.onSurface.withValues(alpha: 0.3),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -220,7 +222,7 @@ class _HighlightOverlayState extends State<HighlightOverlay>
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
+                color: context.colors.onSurface.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -292,7 +294,7 @@ class HighlightPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final highlightPaint = Paint()
-      ..color = Colors.white
+      ..color = context.colors.surface
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0 * pulseAnimation.value;
 

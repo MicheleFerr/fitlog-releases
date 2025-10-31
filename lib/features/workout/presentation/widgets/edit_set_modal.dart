@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart'; // ✅ NUOVO
 
 class EditSetModal extends ConsumerStatefulWidget {
 
@@ -20,6 +21,7 @@ class EditSetModal extends ConsumerStatefulWidget {
     this.previousSet,
     this.suggestedWeight,
     this.suggestedReps,
+    this.countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   });
   final ExerciseSet exerciseSet;
   final Function(ExerciseSet) onSave;
@@ -27,6 +29,7 @@ class EditSetModal extends ConsumerStatefulWidget {
   final ExerciseSet? previousSet;
   final double? suggestedWeight;
   final int? suggestedReps;
+  final ExerciseCountingMode countingMode; // ✅ NUOVO: Determines which fields to show/edit
 
   @override
   ConsumerState<EditSetModal> createState() => _EditSetModalState();
@@ -159,17 +162,25 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             ),
           ),
           const SizedBox(height: 16),
-          
-          // Weight and Reps row
+
+          // Weight and Reps row - ✅ NUOVO: Conditional rendering based on counting mode
           Row(
             children: [
-              Expanded(
-                child: _buildWeightSelector(context, config),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildRepsSelector(context),
-              ),
+              // Weight selector (only for weighted exercises)
+              if (widget.countingMode.requiresWeight)
+                Expanded(
+                  child: _buildWeightSelector(context, config),
+                ),
+
+              // Spacing (only if both weight and reps are shown)
+              if (widget.countingMode.requiresWeight && widget.countingMode.requiresReps)
+                const SizedBox(width: 16),
+
+              // Reps selector (for weighted + reps exercises)
+              if (widget.countingMode.requiresReps)
+                Expanded(
+                  child: _buildRepsSelector(context),
+                ),
             ],
           ),
 
@@ -191,10 +202,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             _buildActualRepsField(context),
             const SizedBox(height: 16),
           ],
-          
-          // Duration (for timed exercises) - more compact
-          _buildDurationField(context),
-          const SizedBox(height: 16),
+
+          // Duration (for timed exercises) - ✅ NUOVO: Only show for time-based exercises
+          if (widget.countingMode.requiresTime) ...[
+            _buildDurationField(context),
+            const SizedBox(height: 16),
+          ],
           
           // Notes
           TextField(
@@ -338,6 +351,14 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       setState(() {
         _weightController.text = widget.previousSet!.weight?.toString() ?? '';
         _repsController.text = widget.previousSet!.reps?.toString() ?? '';
+
+        // ✅ NUOVO: Copy seconds for time-based exercises
+        if (widget.countingMode.requiresTime) {
+          final previousSeconds = widget.previousSet!.seconds;
+          if (previousSeconds != null) {
+            _secondsController.text = '$previousSeconds,00';
+          }
+        }
       });
     }
   }
@@ -381,15 +402,16 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       
       final notes = _notesController.text.trim();
 
+      // ✅ NUOVO: Conditionally save fields based on counting mode
       final updatedSet = widget.exerciseSet.copyWith(
-        weight: weight,
-        reps: reps,
-        actualReps: actualReps,
+        weight: widget.countingMode.requiresWeight ? weight : null,
+        reps: widget.countingMode.requiresReps ? reps : null,
+        actualReps: _isCompleted && widget.countingMode.requiresReps ? actualReps : null,
         rpe: _selectedRpe,
-        seconds: seconds,
+        seconds: widget.countingMode.requiresTime ? seconds : null,
         notes: notes.isEmpty ? null : notes,
         isCompleted: _isCompleted,
-        setDurationMillis: setDurationMillis,
+        setDurationMillis: widget.countingMode.requiresTime ? setDurationMillis : null,
         setStartedAt: widget.exerciseSet.setStartedAt, // Preserve start time
       );
 
@@ -903,6 +925,7 @@ extension EditSetModalExtension on BuildContext {
     ExerciseSet? previousSet,
     double? suggestedWeight,
     int? suggestedReps,
+    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) async {
     // Validate inputs
     if (exerciseSet == null) {
@@ -933,6 +956,7 @@ extension EditSetModalExtension on BuildContext {
           previousSet: previousSet,
           suggestedWeight: suggestedWeight,
           suggestedReps: suggestedReps,
+          countingMode: countingMode, // ✅ NUOVO
         ),
       );
     } catch (e, stackTrace) {

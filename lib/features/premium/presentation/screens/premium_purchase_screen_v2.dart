@@ -25,6 +25,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class PremiumPurchaseScreenV2 extends ConsumerStatefulWidget {
   const PremiumPurchaseScreenV2({super.key});
@@ -384,11 +386,11 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.amber,
+              color: context.colors.warning,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.amber.withValues(alpha: 0.4),
+                  color: context.colors.warning.withValues(alpha: 0.4),
                   blurRadius: 16,
                   spreadRadius: 0,
                   offset: const Offset(0, 4),
@@ -398,7 +400,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             child: const Icon(
               Icons.workspace_premium,
               size: 40,
-              color: Colors.white,
+              color: context.colors.surface,
             ),
           ),
           
@@ -505,7 +507,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 // Glass morphism effect
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                     offset: const Offset(0, 4),
@@ -528,7 +530,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       ),
                       child: Icon(
                         feature.icon,
-                        color: Colors.white,
+                        color: context.colors.surface,
                         size: 24,
                       ),
                     ),
@@ -594,7 +596,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               ...List.generate(5, (index) => 
                 const Icon(
                   Icons.star_rounded,
-                  color: Colors.amber,
+                  color: context.colors.warning,
                   size: 20,
                 )
               ),
@@ -675,14 +677,14 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 Text(
                   'Choose Your Plan',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(width: 8),
                 const Icon(
                   Icons.arrow_forward_rounded,
-                  color: Colors.white,
+                  color: context.colors.surface,
                   size: 20,
                 ),
               ],
@@ -941,7 +943,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         child: Text(
                           '🔥 Most Popular Choice',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -958,11 +960,11 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: isPopular ? Colors.amber : colorScheme.tertiary,
+                        color: isPopular ? context.colors.warning : colorScheme.tertiary,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: (isPopular ? Colors.amber : colorScheme.tertiary)
+                            color: (isPopular ? context.colors.warning : colorScheme.tertiary)
                                 .withValues(alpha: 0.3),
                             blurRadius: 8,
                             spreadRadius: 0,
@@ -973,7 +975,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       child: Text(
                         info['save']!,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: isPopular ? Colors.black : colorScheme.onTertiary,
+                          color: isPopular ? context.colors.onSurface : colorScheme.onTertiary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -1254,7 +1256,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   strokeWidth: 2,
                                 ),
                               ),
@@ -1262,7 +1264,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                               Text(
                                 'Processing...',
                                 style: theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1273,14 +1275,14 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                             children: [
                               const Icon(
                                 Icons.rocket_launch_rounded,
-                                color: Colors.white,
+                                color: context.colors.surface,
                                 size: 24,
                               ),
                               const SizedBox(width: 12),
                               Text(
                                 'Start Free Trial • ${_getPlanTitle(_selectedPlan)}',
                                 style: theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1328,7 +1330,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     final theme = Theme.of(context);
 
     return Container(
-      color: Colors.black.withValues(alpha: 0.6),
+      color: context.colors.onSurface.withValues(alpha: 0.6),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Center(
@@ -1340,7 +1342,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: context.colors.onSurface.withValues(alpha: 0.2),
                   blurRadius: 20,
                   spreadRadius: 0,
                   offset: const Offset(0, 10),
@@ -1361,7 +1363,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   ),
                   child: const Center(
                     child: CircularProgressIndicator(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       strokeWidth: 3,
                     ),
                   ),
@@ -1431,7 +1433,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 child: const Icon(
                   Icons.check_circle_outline_rounded,
                   size: 60,
-                  color: Colors.white,
+                  color: context.colors.surface,
                 ),
               ),
               
@@ -1473,7 +1475,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       'Cloud Sync',
                       'Active',
                       Icons.cloud_done_rounded,
-                      Colors.green,
+                      context.colors.success,
                     ),
                     const Divider(height: 24),
                     _buildPremiumFeature(
@@ -1481,7 +1483,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       'Auto Backup',
                       'Enabled',
                       Icons.backup_rounded,
-                      Colors.blue,
+                      context.colors.primary,
                     ),
                     const Divider(height: 24),
                     _buildPremiumFeature(
@@ -1489,7 +1491,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       'Community Access',
                       'Full Access',
                       Icons.people_rounded,
-                      Colors.orange,
+                      context.colors.secondary,
                     ),
                   ],
                 ),
@@ -1602,12 +1604,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             SnackBar(
               content: const Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.white),
+                  Icon(Icons.check_circle, color: context.colors.surface),
                   SizedBox(width: 8),
                   Text('Premium restored successfully!'),
                 ],
               ),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

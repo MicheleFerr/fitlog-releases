@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Large hero card for displaying primary metrics
 class HeroStatCard extends StatelessWidget {
@@ -59,7 +61,7 @@ class HeroStatCard extends StatelessWidget {
                 child: Icon(
                   icon ?? Icons.show_chart,
                   size: 120,
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: context.colors.surface.withValues(alpha: 0.1),
                 ),
               ),
               // Content
@@ -72,7 +74,7 @@ class HeroStatCard extends StatelessWidget {
                     Text(
                       title,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: context.colors.surface.withValues(alpha: 0.9),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -81,7 +83,7 @@ class HeroStatCard extends StatelessWidget {
                     Text(
                       value,
                       style: theme.textTheme.displaySmall?.copyWith(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -90,7 +92,7 @@ class HeroStatCard extends StatelessWidget {
                     Text(
                       subtitle,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: context.colors.surface.withValues(alpha: 0.8),
                       ),
                     ),
                     const Spacer(),

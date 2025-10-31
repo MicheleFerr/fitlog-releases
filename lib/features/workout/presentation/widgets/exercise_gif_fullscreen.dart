@@ -13,6 +13,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseGifFullscreen extends StatelessWidget {
 
@@ -30,7 +31,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Dialog.fullscreen(
-      backgroundColor: Colors.black87,
+      backgroundColor: context.colors.onSurface87,
       child: GestureDetector(
         onTap: () => Navigator.of(context).pop(),
         behavior: HitTestBehavior.opaque,
@@ -92,7 +93,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withValues(alpha: 0.5),
+                        context.colors.onSurface.withValues(alpha: 0.5),
                         Colors.transparent,
                       ],
                     ),
@@ -103,11 +104,11 @@ class ExerciseGifFullscreen extends StatelessWidget {
                         child: Text(
                           exerciseName,
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             shadows: [
                               Shadow(
-                                color: Colors.black.withValues(alpha: 0.5),
+                                color: context.colors.onSurface.withValues(alpha: 0.5),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -122,11 +123,11 @@ class ExerciseGifFullscreen extends StatelessWidget {
                         onPressed: () => Navigator.of(context).pop(),
                         icon: const Icon(
                           Icons.close,
-                          color: Colors.white,
+                          color: context.colors.surface,
                           size: 28,
                         ),
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.black.withValues(alpha: 0.3),
+                          backgroundColor: context.colors.onSurface.withValues(alpha: 0.3),
                         ),
                       ),
                     ],
@@ -148,7 +149,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withValues(alpha: 0.5),
+                        context.colors.onSurface.withValues(alpha: 0.5),
                         Colors.transparent,
                       ],
                     ),
@@ -158,14 +159,14 @@ class ExerciseGifFullscreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.touch_app,
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: context.colors.surface.withValues(alpha: 0.7),
                         size: 16,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         context.l10n.tapAnywhereToClose,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: context.colors.surface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],

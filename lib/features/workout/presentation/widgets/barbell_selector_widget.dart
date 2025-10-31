@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class BarbellType {
 
@@ -42,7 +44,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'None',
       weight: 0,
       icon: Icons.block,
-      color: Colors.grey,
+      color: context.colors.surfaceVariant,
       description: 'Dumbbell or machine exercise',
     ),
     
@@ -52,7 +54,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Olympic',
       weight: 20,
       icon: Icons.fitness_center,
-      color: Colors.blue,
+      color: context.colors.primary,
       description: 'Standard Olympic bar (220cm)',
     ),
     BarbellType(
@@ -70,7 +72,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Standard',
       weight: 17.5,
       icon: Icons.horizontal_rule,
-      color: Colors.orange,
+      color: context.colors.secondary,
       description: 'Common gym standard bar',
     ),
     BarbellType(
@@ -78,7 +80,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Standard',
       weight: 12.5,
       icon: Icons.horizontal_rule,
-      color: Colors.amber,
+      color: context.colors.warning,
       description: 'Lighter standard bar',
     ),
     BarbellType(
@@ -86,7 +88,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Standard',
       weight: 10,
       icon: Icons.horizontal_rule,
-      color: Colors.lightGreen,
+      color: context.colors.success,
       description: 'Beginner/technique bar',
     ),
     
@@ -96,7 +98,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'EZ Curl',
       weight: 10,
       icon: Icons.waves,
-      color: Colors.purple,
+      color: context.colors.tertiary,
       description: 'Olympic EZ curl bar (2" sleeves)',
     ),
     BarbellType(
@@ -104,7 +106,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'EZ Curl',
       weight: 7.5,
       icon: Icons.waves,
-      color: Colors.deepPurple,
+      color: context.colors.tertiary,
       description: 'Standard EZ curl bar (1" sleeves)',
     ),
     BarbellType(
@@ -130,7 +132,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Specialty',
       weight: 25,
       icon: Icons.hexagon_outlined,
-      color: Colors.red,
+      color: context.colors.error,
       description: 'Hexagonal trap bar',
     ),
     BarbellType(
@@ -138,7 +140,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Specialty',
       weight: 30,
       icon: Icons.security,
-      color: Colors.deepOrange,
+      color: context.colors.warning,
       description: 'SSB with shoulder pads',
     ),
     BarbellType(
@@ -162,7 +164,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Specialty',
       weight: 20,
       icon: Icons.trending_down,
-      color: Colors.cyan,
+      color: context.colors.tertiary,
       description: 'Slightly curved bar',
     ),
     
@@ -172,7 +174,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Fixed',
       weight: 10,
       icon: Icons.lock,
-      color: Colors.blueGrey,
+      color: context.colors.primaryGrey,
       description: 'Pre-loaded fixed bar',
     ),
     BarbellType(
@@ -180,7 +182,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Fixed',
       weight: 15,
       icon: Icons.lock,
-      color: Colors.blueGrey,
+      color: context.colors.primaryGrey,
       description: 'Pre-loaded fixed bar',
     ),
     BarbellType(
@@ -188,7 +190,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Fixed',
       weight: 20,
       icon: Icons.lock,
-      color: Colors.blueGrey,
+      color: context.colors.primaryGrey,
       description: 'Pre-loaded fixed bar',
     ),
     
@@ -198,7 +200,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Custom',
       weight: -1, // Special value for custom
       icon: Icons.edit,
-      color: Colors.grey,
+      color: context.colors.surfaceVariant,
       description: 'Enter custom barbell weight',
     ),
   ];
@@ -301,11 +303,11 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  _buildQuickButton('None', 0, Icons.block, Colors.grey),
-                  _buildQuickButton('Olympic', 20, Icons.fitness_center, Colors.blue),
+                  _buildQuickButton('None', 0, Icons.block, context.colors.surfaceVariant),
+                  _buildQuickButton('Olympic', 20, Icons.fitness_center, context.colors.primary),
                   _buildQuickButton('Women\'s', 15, Icons.fitness_center, Colors.pink),
-                  _buildQuickButton('EZ Bar', 7.5, Icons.waves, Colors.purple),
-                  _buildQuickButton('Trap Bar', 25, Icons.hexagon_outlined, Colors.red),
+                  _buildQuickButton('EZ Bar', 7.5, Icons.waves, context.colors.tertiary),
+                  _buildQuickButton('Trap Bar', 25, Icons.hexagon_outlined, context.colors.error),
                 ],
               ),
             ],

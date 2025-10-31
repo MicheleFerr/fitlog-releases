@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class VotingCard extends StatefulWidget {
 
@@ -87,17 +89,17 @@ class _VotingCardState extends State<VotingCard>
     final theme = Theme.of(context);
     switch (widget.contribution.type) {
       case ContributionType.tip:
-        return Colors.amber;
+        return context.colors.warning;
       case ContributionType.warning:
-        return Colors.orange;
+        return context.colors.secondary;
       case ContributionType.correction:
         return theme.colorScheme.primary;
       case ContributionType.technique:
-        return Colors.blue;
+        return context.colors.primary;
       case ContributionType.variant:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ContributionType.translation:
-        return Colors.green;
+        return context.colors.success;
     }
   }
   
@@ -155,7 +157,7 @@ class _VotingCardState extends State<VotingCard>
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: context.colors.onSurface.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -241,8 +243,8 @@ class _VotingCardState extends State<VotingCard>
                                     decoration: BoxDecoration(
                                       gradient: const LinearGradient(
                                         colors: [
-                                          Colors.amber,
-                                          Colors.orange,
+                                          context.colors.warning,
+                                          context.colors.secondary,
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(12),
@@ -253,13 +255,13 @@ class _VotingCardState extends State<VotingCard>
                                         Icon(
                                           Icons.star,
                                           size: 10,
-                                          color: Colors.white,
+                                          color: context.colors.surface,
                                         ),
                                         SizedBox(width: 2),
                                         Text(
                                           'Featured',
                                           style: TextStyle(
-                                            color: Colors.white,
+                                            color: context.colors.surface,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -381,7 +383,7 @@ class _VotingCardState extends State<VotingCard>
                           icon: Icons.thumb_up_outlined,
                           activeIcon: Icons.thumb_up,
                           count: widget.contribution.upvotes,
-                          color: Colors.green,
+                          color: context.colors.success,
                           isActive: hasUpvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
@@ -395,7 +397,7 @@ class _VotingCardState extends State<VotingCard>
                           icon: Icons.thumb_down_outlined,
                           activeIcon: Icons.thumb_down,
                           count: widget.contribution.downvotes,
-                          color: Colors.red,
+                          color: context.colors.error,
                           isActive: hasDownvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
@@ -600,7 +602,7 @@ class _DiffDisplay extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: const BoxDecoration(
-                  color: Colors.red,
+                  color: context.colors.error,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -628,7 +630,7 @@ class _DiffDisplay extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: const BoxDecoration(
-                  color: Colors.green,
+                  color: context.colors.success,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -701,9 +703,9 @@ class _TrustScoreIndicator extends StatelessWidget {
   }
   
   Color _getScoreColor() {
-    if (score >= 80) return Colors.green;
-    if (score >= 60) return Colors.blue;
-    if (score >= 40) return Colors.orange;
-    return Colors.red;
+    if (score >= 80) return context.colors.success;
+    if (score >= 60) return context.colors.primary;
+    if (score >= 40) return context.colors.secondary;
+    return context.colors.error;
   }
 }

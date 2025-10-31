@@ -20,6 +20,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Card widget for displaying a flexible routine
 class RoutineCard extends StatelessWidget {
@@ -165,11 +166,11 @@ class RoutineCard extends StatelessWidget {
         break;
       case RoutineType.semester:
         icon = Icons.event_note;
-        color = Colors.purple;
+        color = context.colors.tertiary;
         break;
       case RoutineType.custom:
         icon = Icons.tune;
-        color = Colors.orange;
+        color = context.colors.secondary;
         break;
     }
 
@@ -314,7 +315,7 @@ class RoutineCard extends StatelessWidget {
             icon: Icons.check_circle,
             label: 'Completed',
             value: '${routine.completedDays}/${routine.totalWorkoutDays}',
-            color: Colors.green,
+            color: context.colors.success,
           ),
         ),
       ],
@@ -482,9 +483,9 @@ class RoutineCard extends StatelessWidget {
 
   Color _getAdherenceColor(BuildContext context, double adherence) {
     if (adherence >= 80) {
-      return Colors.green;
+      return context.colors.success;
     } else if (adherence >= 60) {
-      return Colors.orange;
+      return context.colors.secondary;
     } else {
       return context.colors.error;
     }

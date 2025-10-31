@@ -4,6 +4,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Modal showing user's feedback history on AI Coach insights
 class FeedbackHistoryModal extends ConsumerWidget {
@@ -137,12 +139,12 @@ class FeedbackHistoryModal extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
+                  color: context.colors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Icon(
                   Icons.thumb_up_outlined,
-                  color: Colors.green,
+                  color: context.colors.success,
                   size: 32,
                 ),
               ),
@@ -150,12 +152,12 @@ class FeedbackHistoryModal extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.red.withValues(alpha: 0.1),
+                  color: context.colors.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Icon(
                   Icons.thumb_down_outlined,
-                  color: Colors.red,
+                  color: context.colors.error,
                   size: 32,
                 ),
               ),
@@ -191,7 +193,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
     ColorScheme colorScheme,
   ) {
     final isHelpful = feedback.isHelpful;
-    final cardColor = isHelpful ? Colors.green : Colors.red;
+    final cardColor = isHelpful ? context.colors.success : context.colors.error;
     final formattedDate = DateFormat.yMd(Localizations.localeOf(context).toString())
         .add_Hm()
         .format(feedback.timestamp);

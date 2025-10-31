@@ -16,6 +16,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class SuperLikeButton extends ConsumerWidget {
 
@@ -79,7 +81,7 @@ class SuperLikeButton extends ConsumerWidget {
                     Icons.star,
                     size: 28,
                     color: canSuperLike 
-                        ? Colors.white 
+                        ? context.colors.surface 
                         : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
                 ),
@@ -281,7 +283,7 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
       builder: (context, child) {
         return Positioned.fill(
           child: Container(
-            color: Colors.black.withValues(alpha: 0.3 * _fadeAnimation.value),
+            color: context.colors.onSurface.withValues(alpha: 0.3 * _fadeAnimation.value),
             child: Center(
               child: Transform.scale(
                 scale: _scaleAnimation.value,
@@ -310,13 +312,13 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
                         const Icon(
                           Icons.star,
                           size: 64,
-                          color: Colors.white,
+                          color: context.colors.surface,
                         ),
                         const SizedBox(height: 16),
                         Text(
                           AppLocalizations.of(context).superLike,
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

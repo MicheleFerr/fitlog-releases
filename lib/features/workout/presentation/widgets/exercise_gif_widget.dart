@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/shared/data/services/gif_cache_manager.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseGifWidget extends StatefulWidget {
   ExerciseGifWidget({
@@ -169,7 +171,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
   void _showFullscreen(BuildContext context) {
     showDialog(
       context: context,
-      barrierColor: Colors.black87,
+      barrierColor: context.colors.onSurface87,
       barrierDismissible: true,
       builder: (context) =>
           ExerciseGifFullscreen(gifUrl: widget.gifUrl!, exerciseName: widget.exerciseName),

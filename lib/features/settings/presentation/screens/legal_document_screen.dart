@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class LegalDocumentScreen extends ConsumerStatefulWidget { // 'privacy' or 'terms'
   
@@ -410,8 +412,8 @@ Version 1.0.0 | EU Compliant
             margin: const EdgeInsets.symmetric(vertical: 12),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.orange.withValues(alpha: 0.1),
-              border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+              color: context.colors.secondary.withValues(alpha: 0.1),
+              border: Border.all(color: context.colors.secondary.withValues(alpha: 0.3)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

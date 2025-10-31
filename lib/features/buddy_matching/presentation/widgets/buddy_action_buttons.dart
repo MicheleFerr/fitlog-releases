@@ -16,6 +16,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class BuddyActionButtons extends StatefulWidget {
 
@@ -80,7 +82,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
             theme: theme,
             icon: Icons.close,
             label: l10n.pass,
-            color: Colors.red,
+            color: context.colors.error,
             size: 60,
             onPressed: widget.isEnabled ? () => _handleButtonPress('dislike', widget.onDislike) : null,
             buttonId: 'dislike',
@@ -92,7 +94,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
             theme: theme,
             icon: Icons.star,
             label: l10n.superLike,
-            color: Colors.blue,
+            color: context.colors.primary,
             size: 45,
             onPressed: widget.isEnabled ? () => _handleButtonPress('superlike', widget.onSuperLike) : null,
             buttonId: 'superlike',
@@ -104,7 +106,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
             theme: theme,
             icon: Icons.favorite,
             label: l10n.like,
-            color: Colors.green,
+            color: context.colors.success,
             size: 70,
             onPressed: widget.isEnabled ? () => _handleButtonPress('like', widget.onLike) : null,
             buttonId: 'like',
@@ -176,7 +178,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
                         icon,
                         color: isDisabled 
                             ? theme.colorScheme.onSurface.withValues(alpha: 0.3)
-                            : Colors.white,
+                            : context.colors.surface,
                         size: size * 0.4,
                       ),
                     ),

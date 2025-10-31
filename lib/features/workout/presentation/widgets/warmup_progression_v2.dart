@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WarmupSet {
 
@@ -151,7 +153,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Warmup completed! Ready for working sets 💪'),
-          backgroundColor: Colors.green,
+          backgroundColor: context.colors.success,
           duration: Duration(seconds: 2),
         ),
       );
@@ -197,12 +199,12 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.1),
+                    color: context.colors.secondary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
                     Icons.whatshot,
-                    color: Colors.orange,
+                    color: context.colors.secondary,
                     size: 24,
                   ),
                 ),
@@ -242,8 +244,8 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(
                 completedCount == warmupSets.length 
-                  ? Colors.green 
-                  : Colors.orange,
+                  ? context.colors.success 
+                  : context.colors.secondary,
               ),
             ),
           ),
@@ -272,13 +274,13 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                           height: 56,
                           decoration: BoxDecoration(
                             color: set.completed 
-                              ? Colors.green.withValues(alpha: 0.1)
-                              : Colors.orange.withValues(alpha: 0.1),
+                              ? context.colors.success.withValues(alpha: 0.1)
+                              : context.colors.secondary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: set.completed 
-                                ? Colors.green.withValues(alpha: 0.3)
-                                : Colors.orange.withValues(alpha: 0.3),
+                                ? context.colors.success.withValues(alpha: 0.3)
+                                : context.colors.secondary.withValues(alpha: 0.3),
                               width: 2,
                             ),
                           ),
@@ -290,7 +292,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: set.completed ? Colors.green : Colors.orange,
+                                  color: set.completed ? context.colors.success : context.colors.secondary,
                                 ),
                               ),
                               Text(
@@ -298,7 +300,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                 style: TextStyle(
                                   fontSize: 8,
                                   fontWeight: FontWeight.w600,
-                                  color: set.completed ? Colors.green : Colors.orange,
+                                  color: set.completed ? context.colors.success : context.colors.secondary,
                                 ),
                               ),
                             ],
@@ -386,7 +388,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                         if (set.completed)
                           const Icon(
                             Icons.check_circle,
-                            color: Colors.green,
+                            color: context.colors.success,
                             size: 32,
                           )
                         else

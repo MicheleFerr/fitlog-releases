@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Custom pattern builder widget
 class CustomPatternBuilder extends ConsumerStatefulWidget {
@@ -246,7 +247,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.3),
+                  color: context.colors.surfaceVariant.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

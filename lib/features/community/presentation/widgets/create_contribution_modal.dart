@@ -12,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/quick_exercise_picker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Modal per creare un nuovo contributo community
 class CreateContributionModal extends ConsumerStatefulWidget {
@@ -407,7 +409,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   Icon(
                     _getTypeIcon(type),
                     size: 16,
-                    color: isSelected ? Colors.white : color,
+                    color: isSelected ? context.colors.surface : color,
                   ),
                   const SizedBox(width: 6),
                   Text(_getTypeLabel(type)),
@@ -419,9 +421,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                 }
               },
               selectedColor: color,
-              checkmarkColor: Colors.white,
+              checkmarkColor: context.colors.surface,
               labelStyle: TextStyle(
-                color: isSelected ? Colors.white : color,
+                color: isSelected ? context.colors.surface : color,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             );
@@ -490,7 +492,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('✅ Contributo inviato! In attesa di approvazione'),
-          backgroundColor: Colors.green,
+          backgroundColor: context.colors.success,
           duration: Duration(seconds: 3),
         ),
       );
@@ -547,15 +549,15 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
   Color _getTypeColor(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return Colors.blue;
+        return context.colors.primary;
       case ContributionType.warning:
-        return Colors.orange;
+        return context.colors.secondary;
       case ContributionType.correction:
-        return Colors.red;
+        return context.colors.error;
       case ContributionType.technique:
-        return Colors.green;
+        return context.colors.success;
       case ContributionType.variant:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ContributionType.translation:
         return Colors.teal;
     }

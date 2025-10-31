@@ -16,6 +16,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class SyncDashboardScreen extends ConsumerStatefulWidget {
   const SyncDashboardScreen({super.key});
@@ -530,7 +532,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                       color: colors[index % colors.length],
                       radius: 50,
                       titleStyle: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontWeight: FontWeight.bold,
                       ),
                     );

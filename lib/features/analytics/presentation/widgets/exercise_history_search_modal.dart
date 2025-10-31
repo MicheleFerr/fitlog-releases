@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseHistorySearchModal extends StatefulWidget {
 
@@ -425,21 +427,21 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
             'Total Sets',
             totalSets.toString(),
             Icons.format_list_numbered,
-            Colors.orange,
+            context.colors.secondary,
             theme,
           ),
           _buildStatItem(
             'Total Reps',
             totalReps.toString(),
             Icons.repeat,
-            Colors.green,
+            context.colors.success,
             theme,
           ),
           _buildStatItem(
             'Total Volume',
             '${(totalVolume / 1000).toStringAsFixed(1)}k',
             Icons.bar_chart,
-            Colors.blue,
+            context.colors.primary,
             theme,
           ),
         ],
@@ -738,10 +740,10 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
   }
   
   Color _getEffortColor(int effort) {
-    if (effort >= 9) return Colors.red;
-    if (effort >= 7) return Colors.orange;
-    if (effort >= 5) return Colors.yellow;
-    return Colors.green;
+    if (effort >= 9) return context.colors.error;
+    if (effort >= 7) return context.colors.secondary;
+    if (effort >= 5) return context.colors.warning;
+    return context.colors.success;
   }
   
   String _getRelativeTime(DateTime date) {

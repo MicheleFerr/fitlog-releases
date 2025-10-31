@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced modal for displaying exercise details with improved aesthetics
 /// following Apple HIG and Material Design 3 principles
@@ -185,11 +186,11 @@ class ExerciseDetailsModal extends StatelessWidget {
   Color _getDifficultyColor(BuildContext context) {
     switch (exercise.difficolta.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
         return context.colors.onSurface;
     }

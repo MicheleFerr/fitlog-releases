@@ -15,6 +15,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class TemplateQuotaIndicator extends StatelessWidget {
   
@@ -197,7 +199,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
                 color: isFull 
                     ? colorScheme.error 
                     : isAlmostFull 
-                        ? Colors.orange 
+                        ? context.colors.secondary 
                         : colorScheme.onSurface,
               ),
             ),
@@ -214,7 +216,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
               isFull 
                   ? colorScheme.error 
                   : isAlmostFull 
-                      ? Colors.orange 
+                      ? context.colors.secondary 
                       : color,
             ),
           ),

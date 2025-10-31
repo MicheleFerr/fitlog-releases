@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 // Provider per le attività recenti
 final recentActivityProvider = FutureProvider<List<AdminActivity>>((ref) async {
@@ -343,9 +345,9 @@ class _ActivityItem extends StatelessWidget {
 
   Color _getStatusColor(BuildContext context, String status) {
     return switch (status) {
-      'pending' => Colors.orange,
-      'approved' => Colors.green,
-      'rejected' => Colors.red,
+      'pending' => context.colors.secondary,
+      'approved' => context.colors.success,
+      'rejected' => context.colors.error,
       _ => Theme.of(context).colorScheme.primary,
     };
   }

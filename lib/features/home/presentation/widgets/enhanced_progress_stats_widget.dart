@@ -13,6 +13,8 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/level_info
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_distribution_modal.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
   
@@ -152,7 +154,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                     Text(
                       '${levelInfo.level}',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -160,7 +162,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                     Text(
                       'LVL',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: context.colors.surface.withValues(alpha: 0.9),
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                       ),
@@ -425,7 +427,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             Text(
               '${levelInfo.level}',
               style: const TextStyle(
-                color: Colors.white,
+                color: context.colors.surface,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
@@ -433,7 +435,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             Text(
               'LVL',
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.9),
+                color: context.colors.surface.withValues(alpha: 0.9),
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
               ),
@@ -529,7 +531,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           icon: Icons.fitness_center,
           label: l10n.totalWorkouts,
           value: '${analyticsState.activities.length}',
-          color: Colors.blue,
+          color: context.colors.primary,
           subtitle: l10n.sinceRegistration,
         ),
       ));
@@ -542,7 +544,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           icon: Icons.calendar_today,
           label: l10n.thisMonth,
           value: '${frequencyStats['daysInLast30'] ?? 0}',
-          color: Colors.orange,
+          color: context.colors.secondary,
           subtitle: l10n.activeDays,
         ),
       ));
@@ -555,7 +557,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           icon: Icons.local_fire_department,
           label: l10n.currentStreak,
           value: '${frequencyStats['currentStreak'] ?? 0}',
-          color: Colors.red,
+          color: context.colors.error,
           subtitle: l10n.consecutiveDays,
         ),
       ));
@@ -752,7 +754,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               getDotPainter: (spot, percent, barData, index) {
                 return FlDotCirclePainter(
                   radius: spot.y > 0 ? 4 : 2,
-                  color: Colors.white,
+                  color: context.colors.surface,
                   strokeWidth: 2,
                   strokeColor: spot.y > 0 
                     ? theme.colorScheme.primary 

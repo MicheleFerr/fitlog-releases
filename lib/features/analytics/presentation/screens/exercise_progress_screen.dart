@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseProgressScreen extends ConsumerStatefulWidget {
   const ExerciseProgressScreen({super.key});
@@ -228,19 +229,19 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                   _buildStatItem(
                     context.l10n.maxWeight,
                     '${metrics.maxWeight.toStringAsFixed(1)} kg',
-                    Colors.blue,
+                    context.colors.primary,
                   ),
                   _buildStatItem(
                     context.l10n.avgReps,
                     metrics.averageReps.toStringAsFixed(0),
-                    Colors.green,
+                    context.colors.success,
                   ),
                   _buildStatItem(
                     context.l10n.averageRPE,
                     metrics.averageRPE > 0
                         ? metrics.averageRPE.toStringAsFixed(1)
                         : 'N/A',
-                    Colors.orange,
+                    context.colors.secondary,
                   ),
                 ],
               ),
@@ -281,17 +282,17 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
     switch (trend) {
       case TrendDirection.improving:
         icon = Icons.trending_up;
-        color = Colors.green;
+        color = context.colors.success;
         label = context.l10n.improving;
         break;
       case TrendDirection.declining:
         icon = Icons.trending_down;
-        color = Colors.red;
+        color = context.colors.error;
         label = context.l10n.declining;
         break;
       case TrendDirection.stable:
         icon = Icons.remove;
-        color = Colors.grey;
+        color = context.colors.surfaceVariant;
         label = context.l10n.stable;
         break;
     }

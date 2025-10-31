@@ -16,6 +16,8 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
   const AdminAIInsightsFeedbackWidget({super.key});
@@ -131,14 +133,14 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
                 icon: Icons.thumb_up,
                 label: 'Utile',
                 value: totalHelpful.toString(),
-                color: Colors.green,
+                color: context.colors.success,
               ),
               _buildStatColumn(
                 context,
                 icon: Icons.thumb_down,
                 label: 'Non Utile',
                 value: totalNotHelpful.toString(),
-                color: Colors.red,
+                color: context.colors.error,
               ),
               _buildStatColumn(
                 context,
@@ -181,8 +183,8 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
                   minHeight: 8,
                   backgroundColor: colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    helpfulPercentage >= 70 ? Colors.green :
-                    helpfulPercentage >= 50 ? Colors.orange : Colors.red,
+                    helpfulPercentage >= 70 ? context.colors.success :
+                    helpfulPercentage >= 50 ? context.colors.secondary : context.colors.error,
                   ),
                 ),
               ),
@@ -272,8 +274,8 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: feedback.isHelpful
-              ? Colors.green.withValues(alpha: 0.3)
-              : Colors.red.withValues(alpha: 0.3),
+              ? context.colors.success.withValues(alpha: 0.3)
+              : context.colors.error.withValues(alpha: 0.3),
           width: 2,
         ),
       ),
@@ -285,13 +287,13 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: feedback.isHelpful
-                  ? Colors.green.withValues(alpha: 0.1)
-                  : Colors.red.withValues(alpha: 0.1),
+                  ? context.colors.success.withValues(alpha: 0.1)
+                  : context.colors.error.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               feedback.isHelpful ? Icons.thumb_up : Icons.thumb_down,
-              color: feedback.isHelpful ? Colors.green : Colors.red,
+              color: feedback.isHelpful ? context.colors.success : context.colors.error,
               size: 20,
             ),
           ),

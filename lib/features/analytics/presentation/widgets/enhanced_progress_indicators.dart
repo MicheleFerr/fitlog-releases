@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Progress Ring Indicator
 class EnhancedProgressRing extends StatelessWidget {
@@ -286,8 +288,8 @@ class EnhancedProgressIndicator extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: isImproving 
-            ? Colors.green.withValues(alpha: 0.1)
-            : Colors.orange.withValues(alpha: 0.1),
+            ? context.colors.success.withValues(alpha: 0.1)
+            : context.colors.secondary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -295,14 +297,14 @@ class EnhancedProgressIndicator extends StatelessWidget {
         children: [
           Icon(
             isImproving ? Icons.trending_up : Icons.trending_flat,
-            color: isImproving ? Colors.green : Colors.orange,
+            color: isImproving ? context.colors.success : context.colors.secondary,
             size: 16,
           ),
           const SizedBox(width: 4),
           Text(
             isImproving ? 'Improving' : 'Steady',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isImproving ? Colors.green : Colors.orange,
+              color: isImproving ? context.colors.success : context.colors.secondary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -473,12 +475,12 @@ class GoalProgressWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.1),
+                      color: context.colors.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Icon(
                       Icons.check_circle,
-                      color: Colors.green,
+                      color: context.colors.success,
                       size: 20,
                     ),
                   ),

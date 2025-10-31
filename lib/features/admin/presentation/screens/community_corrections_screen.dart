@@ -13,6 +13,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/community_corrections_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/correction_review_card.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CommunityCorrectionsScreen extends ConsumerWidget {
   const CommunityCorrectionsScreen({super.key});
@@ -99,7 +101,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
                 context,
                 l10n.pendingCorrections,
                 Icons.pending,
-                Colors.orange,
+                context.colors.secondary,
                 pendingCorrections.length,
               ),
               const SizedBox(height: 12),
@@ -118,7 +120,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
                 context,
                 l10n.reviewedCorrections,
                 Icons.check_circle,
-                Colors.green,
+                context.colors.success,
                 reviewedCorrections.length,
               ),
               const SizedBox(height: 12),
@@ -147,7 +149,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             title: l10n.pending,
             value: pending.toString(),
             icon: Icons.pending,
-            color: Colors.orange,
+            color: context.colors.secondary,
           ),
         ),
         const SizedBox(width: 12),
@@ -156,7 +158,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             title: l10n.approved,
             value: approved.toString(),
             icon: Icons.check_circle,
-            color: Colors.green,
+            color: context.colors.success,
           ),
         ),
         const SizedBox(width: 12),
@@ -165,7 +167,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             title: l10n.rejected,
             value: rejected.toString(),
             icon: Icons.cancel,
-            color: Colors.red,
+            color: context.colors.error,
           ),
         ),
       ],

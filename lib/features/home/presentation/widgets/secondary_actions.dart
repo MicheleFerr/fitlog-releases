@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Secondary Actions widget for the optimized homepage
 ///
@@ -456,13 +457,13 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
                 border: Border.all(
                   color: _isPressed
                       ? widget.color.withValues(alpha: 0.5)
-                      : Colors.white.withValues(alpha: 0.1),
+                      : context.colors.surface.withValues(alpha: 0.1),
                   width: _isPressed ? 2 : 1,
                 ),
                 boxShadow: [
                   // Base shadow
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
+                    color: context.colors.onSurface.withValues(alpha: 0.08),
                     blurRadius: _elevationAnimation.value,
                     offset: Offset(0, _elevationAnimation.value / 2),
                     spreadRadius: 1,
@@ -489,7 +490,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.white.withValues(
+                      color: context.colors.surface.withValues(
                         alpha: _isPressed ? 0.15 : 0.05,
                       ),
                     ),

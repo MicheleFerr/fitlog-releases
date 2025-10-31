@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget che mostra chips scrollabili per categoria, tipo e TUT dell'esercizio
 class ScrollableExerciseChips extends StatefulWidget {
@@ -69,8 +71,8 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
                    tut == 'EXP' ? 'ESPLOSIVO' : 
                    tut.toString(), // Mostra solo i numeri, più pulito
             icon: Icons.info_outline, // Icona info più chiara per il tap
-            backgroundColor: Colors.deepPurple.withValues(alpha: 0.15), // Più visibile
-            textColor: Colors.deepPurple,
+            backgroundColor: context.colors.tertiary.withValues(alpha: 0.15), // Più visibile
+            textColor: context.colors.tertiary,
             subtitle: 'TUT', // Indica che è TUT nel subtitle
             onTap: widget.onTutTap,
             isHighlighted: true, // Rende il chip più prominente
@@ -85,8 +87,8 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
           _ChipItem(
             label: 'REP: $rangeRipetizioni',
             icon: Icons.repeat,
-            backgroundColor: Colors.orange.withValues(alpha: 0.1),
-            textColor: Colors.orange,
+            backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
+            textColor: context.colors.secondary,
           ),
         );
       }

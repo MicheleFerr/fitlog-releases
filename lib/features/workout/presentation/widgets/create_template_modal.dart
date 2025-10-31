@@ -13,6 +13,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/templat
 import 'package:uuid/uuid.dart';
 // Input Validation
 import 'package:gymbro_flutter_new/shared/domain/validation/template_validator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CreateTemplateModal extends ConsumerStatefulWidget {
   const CreateTemplateModal({super.key});
@@ -103,7 +105,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: context.colors.surfaceVariant.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -571,7 +573,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Template "$templateName" creato con successo!'),
-            backgroundColor: Colors.green,
+            backgroundColor: context.colors.success,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -583,7 +585,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Errore nella creazione: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: context.colors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );

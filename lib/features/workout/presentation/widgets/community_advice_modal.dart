@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CommunityAdviceModal extends ConsumerStatefulWidget {
 
@@ -306,13 +307,13 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
         return const Icon(
           Icons.lightbulb,
           size: 20,
-          color: Colors.amber,
+          color: context.colors.warning,
         );
       case ContributionType.warning:
         return const Icon(
           Icons.warning,
           size: 20,
-          color: Colors.orange,
+          color: context.colors.secondary,
         );
       case ContributionType.correction:
         return Icon(
@@ -324,19 +325,19 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
         return const Icon(
           Icons.alt_route,
           size: 20,
-          color: Colors.purple,
+          color: context.colors.tertiary,
         );
       case ContributionType.translation:
         return const Icon(
           Icons.translate,
           size: 20,
-          color: Colors.blue,
+          color: context.colors.primary,
         );
       case ContributionType.technique:
         return const Icon(
           Icons.fitness_center,
           size: 20,
-          color: Colors.green,
+          color: context.colors.success,
         );
     }
   }

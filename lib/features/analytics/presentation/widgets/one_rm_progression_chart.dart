@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Grafico avanzato per tracciare la progressione del 1RM (One Rep Max)
 /// con predictive trend lines e analisi del plateau
@@ -349,11 +351,11 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
     int colorIndex = 0;
     final colors = [
       theme.colorScheme.primary,
-      Colors.orange,
-      Colors.green,
-      Colors.purple,
-      Colors.blue,
-      Colors.red,
+      context.colors.secondary,
+      context.colors.success,
+      context.colors.tertiary,
+      context.colors.primary,
+      context.colors.error,
     ];
     
     for (final exercise in exercisesToShow) {
@@ -552,13 +554,13 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: _plateauAnalysis!.isInPlateau
-                  ? Colors.orange.withValues(alpha: 0.1)
-                  : Colors.green.withValues(alpha: 0.1),
+                  ? context.colors.secondary.withValues(alpha: 0.1)
+                  : context.colors.success.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: _plateauAnalysis!.isInPlateau
-                    ? Colors.orange.withValues(alpha: 0.3)
-                    : Colors.green.withValues(alpha: 0.3),
+                    ? context.colors.secondary.withValues(alpha: 0.3)
+                    : context.colors.success.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -572,8 +574,8 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
                           ? Icons.warning_amber
                           : Icons.trending_up,
                       color: _plateauAnalysis!.isInPlateau
-                          ? Colors.orange
-                          : Colors.green,
+                          ? context.colors.secondary
+                          : context.colors.success,
                       size: 20,
                     ),
                     const SizedBox(width: 8),

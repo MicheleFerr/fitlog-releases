@@ -19,6 +19,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseHistoryBottomSheet extends ConsumerStatefulWidget {
 
@@ -125,7 +127,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: context.colors.onSurface.withValues(alpha: 0.06),
             blurRadius: 40,
             offset: const Offset(0, -12),
             spreadRadius: 0,
@@ -475,7 +477,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
           BoxShadow(
             color: stat.isPrimary 
               ? stat.color.withValues(alpha: 0.1)
-              : Colors.black.withValues(alpha: 0.02),
+              : context.colors.onSurface.withValues(alpha: 0.02),
             blurRadius: stat.isPrimary ? 12 : 8,
             offset: const Offset(0, 3),
           ),
@@ -765,7 +767,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.01),
+                color: context.colors.onSurface.withValues(alpha: 0.01),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),

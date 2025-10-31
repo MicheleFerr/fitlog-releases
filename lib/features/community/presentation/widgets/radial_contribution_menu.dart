@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class RadialContributionMenu extends StatefulWidget {
   
@@ -40,25 +42,25 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
       _MenuItem(
         icon: Icons.lightbulb,
         label: 'Consiglio',
-        color: Colors.amber,
+        color: context.colors.warning,
         onTap: widget.onTip,
       ),
       _MenuItem(
         icon: Icons.warning_amber_rounded,
         label: 'Avviso',
-        color: Colors.orange,
+        color: context.colors.secondary,
         onTap: widget.onWarning,
       ),
       _MenuItem(
         icon: Icons.edit_note,
         label: 'Correzione',
-        color: Colors.blue,
+        color: context.colors.primary,
         onTap: widget.onCorrection,
       ),
       _MenuItem(
         icon: Icons.fitness_center,
         label: 'Tecnica',
-        color: Colors.purple,
+        color: context.colors.tertiary,
         onTap: widget.onTechnique,
       ),
     ]);
@@ -146,7 +148,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
           });
         },
         child: Container(
-          color: Colors.black.withValues(alpha: 0.5),
+          color: context.colors.onSurface.withValues(alpha: 0.5),
           child: Stack(
             children: [
               // Backdrop blur effect
@@ -154,7 +156,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                 opacity: _fadeAnimation,
                 child: BackdropFilter(
                   filter: ColorFilter.mode(
-                    Colors.black.withValues(alpha: 0.3),
+                    context.colors.onSurface.withValues(alpha: 0.3),
                     BlendMode.darken,
                   ),
                   child: Container(),
@@ -220,7 +222,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                       },
                       icon: const Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: context.colors.surface,
                         size: 32,
                       ),
                     ),
@@ -260,11 +262,11 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                   child: Text(
                     'Contribuisci alla Community',
                     style: theme.textTheme.headlineSmall?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                       shadows: [
                         Shadow(
-                          color: Colors.black.withValues(alpha: 0.5),
+                          color: context.colors.onSurface.withValues(alpha: 0.5),
                           blurRadius: 10,
                         ),
                       ],
@@ -364,7 +366,7 @@ class _RadialMenuItemState extends State<_RadialMenuItem>
                     spreadRadius: _isHovered ? 3 : 1,
                   ),
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: context.colors.onSurface.withValues(alpha: 0.2),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 🚀 Workout Customization Modal V2 - Improved UX with tooltips and logical grouping
 class WorkoutCustomizationModalV2 extends ConsumerStatefulWidget {
@@ -180,14 +182,14 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     l10n,
                     icon: Icons.fitness_center,
                     title: l10n.coreFeaturesSection,
-                    color: Colors.blue,
+                    color: context.colors.primary,
                   ),
                   const SizedBox(height: 12),
                   _buildToggleCard(
                     theme,
                     l10n,
                     icon: Icons.timer,
-                    iconColor: Colors.blue,
+                    iconColor: context.colors.primary,
                     title: l10n.autoRestTimerTitle,
                     subtitle: l10n.autoRestTimerDescription,
                     tooltip: l10n.autoRestTimerTooltip,
@@ -202,7 +204,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.whatshot,
-                    iconColor: Colors.orange,
+                    iconColor: context.colors.secondary,
                     title: l10n.warmupSuggestionsTitle,
                     subtitle: l10n.warmupSuggestionsDescription,
                     tooltip: l10n.warmupSuggestionsTooltip,
@@ -236,7 +238,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     l10n,
                     icon: Icons.auto_awesome,
                     title: l10n.intelligentAutoRegulation,
-                    color: Colors.deepPurple,
+                    color: context.colors.tertiary,
                   ),
 
                   const SizedBox(height: 16),
@@ -268,7 +270,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.note_alt,
-                    iconColor: Colors.amber,
+                    iconColor: context.colors.warning,
                     title: l10n.exerciseDetailsTitle,
                     subtitle: l10n.exerciseDetailsDescription,
                     tooltip: l10n.exerciseDetailsTooltip,
@@ -283,7 +285,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.lightbulb,
-                    iconColor: Colors.orange,
+                    iconColor: context.colors.secondary,
                     title: l10n.communitySuggestionsTitle,
                     subtitle: l10n.communitySuggestionsDescription,
                     tooltip: l10n.communitySuggestionsTooltip,
@@ -313,7 +315,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.timer,
-                    iconColor: Colors.blue,
+                    iconColor: context.colors.primary,
                     title: l10n.enableTutTitle,
                     subtitle: l10n.enableTutDescription,
                     tooltip: l10n.enableTutTooltip,
@@ -339,7 +341,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.info_outline,
-                    iconColor: Colors.blue,
+                    iconColor: context.colors.primary,
                     title: l10n.quickAccessIconsTitle,
                     subtitle: l10n.quickAccessIconsDescription,
                     tooltip: l10n.quickAccessIconsTooltip,
@@ -358,14 +360,14 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     l10n,
                     icon: Icons.settings,
                     title: l10n.interfaceSection,
-                    color: Colors.grey,
+                    color: context.colors.surfaceVariant,
                   ),
                   const SizedBox(height: 12),
                   _buildToggleCard(
                     theme,
                     l10n,
                     icon: Icons.more_vert,
-                    iconColor: Colors.red,
+                    iconColor: context.colors.error,
                     title: l10n.advancedMenuTitle,
                     subtitle: l10n.advancedMenuDescription,
                     tooltip: l10n.advancedMenuTooltip,
@@ -380,7 +382,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.timer_outlined,
-                    iconColor: Colors.green,
+                    iconColor: context.colors.success,
                     title: l10n.customTimersTitle,
                     subtitle: l10n.customTimersDescription,
                     tooltip: l10n.customTimersTooltip,
@@ -395,7 +397,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.visibility_off,
-                    iconColor: Colors.cyan,
+                    iconColor: context.colors.tertiary,
                     title: l10n.collapseCountdownTitle,
                     subtitle: l10n.collapseCountdownDescription,
                     tooltip: l10n.collapseCountdownTooltip,
@@ -410,7 +412,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     theme,
                     l10n,
                     icon: Icons.animation,
-                    iconColor: Colors.deepOrange,
+                    iconColor: context.colors.warning,
                     title: l10n.simplifiedAnimationsTitle,
                     subtitle: l10n.simplifiedAnimationsDescription,
                     tooltip: l10n.simplifiedAnimationsTooltip,
@@ -685,7 +687,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
           theme,
           l10n,
           icon: Icons.fitness_center,
-          iconColor: Colors.deepPurple,
+          iconColor: context.colors.tertiary,
           title: l10n.enableApreTitle,
           subtitle: l10n.enableApreDescription,
           tooltip: l10n.enableApreTooltip,
@@ -703,7 +705,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
               color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.deepPurple.withValues(alpha: 0.2),
+                color: context.colors.tertiary.withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -750,7 +752,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   ),
                 ),
                 const SizedBox(height: 16),
-                Divider(color: Colors.deepPurple.withValues(alpha: 0.2)),
+                Divider(color: context.colors.tertiary.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -795,7 +797,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                         setState(() => _autoAdjustRestTimeApre = value);
                         _saveSettings();
                       },
-                      activeThumbColor: Colors.deepPurple,
+                      activeThumbColor: context.colors.tertiary,
                     ),
                   ],
                 ),
@@ -814,7 +816,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
           theme,
           l10n,
           icon: Icons.speed,
-          iconColor: Colors.orange,
+          iconColor: context.colors.secondary,
           title: l10n.enableRpeTitle,
           subtitle: l10n.enableRpeDescription,
           tooltip: l10n.enableRpeTooltip,
@@ -829,10 +831,10 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.orange.withValues(alpha: 0.05),
+              color: context.colors.secondary.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.orange.withValues(alpha: 0.2),
+                color: context.colors.secondary.withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -880,12 +882,12 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                         setState(() => _autoAdjustWeightFromRpe = value);
                         _saveSettings();
                       },
-                      activeThumbColor: Colors.orange,
+                      activeThumbColor: context.colors.secondary,
                     ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                Divider(color: Colors.orange.withValues(alpha: 0.2)),
+                Divider(color: context.colors.secondary.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -930,7 +932,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                         setState(() => _autoAdjustRestFromRpe = value);
                         _saveSettings();
                       },
-                      activeThumbColor: Colors.orange,
+                      activeThumbColor: context.colors.secondary,
                     ),
                   ],
                 ),

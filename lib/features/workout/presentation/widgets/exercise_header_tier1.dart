@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Tier-1 Exercise Header Widget with category icons, badges, and TUT timer
 class ExerciseHeaderTier1 extends StatelessWidget {
@@ -100,19 +102,19 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         break;
       case 'arms':
         icon = Icons.sports_martial_arts;
-        color = Colors.orange;
+        color = context.colors.secondary;
         break;
       case 'legs':
         icon = Icons.directions_run;
-        color = Colors.green;
+        color = context.colors.success;
         break;
       case 'core':
         icon = Icons.self_improvement;
-        color = Colors.purple;
+        color = context.colors.tertiary;
         break;
       case 'cardio':
         icon = Icons.favorite;
-        color = Colors.red;
+        color = context.colors.error;
         break;
       default:
         icon = Icons.fitness_center;
@@ -145,15 +147,15 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         break;
       case 'superset':
         badgeText = 'SS';
-        badgeColor = Colors.orange;
+        badgeColor = context.colors.secondary;
         break;
       case 'dropset':
         badgeText = 'DS';
-        badgeColor = Colors.red;
+        badgeColor = context.colors.error;
         break;
       case 'restpause':
         badgeText = 'RS';
-        badgeColor = Colors.purple;
+        badgeColor = context.colors.tertiary;
         break;
       default:
         badgeText = 'S';

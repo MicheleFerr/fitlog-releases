@@ -19,6 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseStartButton extends ConsumerStatefulWidget {
   
@@ -221,7 +223,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
             decoration: BoxDecoration(
               color: _countdownValue > 0 
                   ? colorScheme.primary 
-                  : Colors.green,
+                  : context.colors.success,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -231,7 +233,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
                   _countdownValue > 0 ? '$_countdownValue' : '✓',
                   key: ValueKey(_countdownValue),
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontWeight: FontWeight.bold,
                     fontSize: _countdownValue > 0 ? 16 : 14,
                   ),

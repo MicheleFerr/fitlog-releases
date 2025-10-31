@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -500,7 +502,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         color: theme.scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -529,7 +531,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                       width: 24,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                        valueColor: AlwaysStoppedAnimation(context.colors.surface),
                       ),
                     )
                   : Row(
@@ -650,12 +652,12 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             const SnackBar(
               content: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.white),
+                  Icon(Icons.check_circle, color: context.colors.surface),
                   SizedBox(width: 8),
                   Text('Welcome to Premium! 🎉'),
                 ],
               ),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -683,7 +685,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
+            backgroundColor: context.colors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );

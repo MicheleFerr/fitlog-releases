@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Modal for executing DropSet exercises during workouts
 ///
@@ -605,7 +606,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Colors.white,
+                          color: context.colors.surface,
                         ),
                       )
                     : const Icon(Icons.check_circle),

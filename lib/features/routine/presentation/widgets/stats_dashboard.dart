@@ -19,6 +19,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dashboard showing routine statistics
 class StatsDashboard extends StatelessWidget {
@@ -138,7 +139,7 @@ class StatsDashboard extends StatelessWidget {
                   icon: Icons.local_fire_department,
                   label: 'Streak',
                   value: '${routine.currentStreak}',
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                 ),
               ),
             ],
@@ -164,7 +165,7 @@ class StatsDashboard extends StatelessWidget {
                   icon: Icons.refresh,
                   label: 'Recovered',
                   value: '${routine.skipTracker.totalRecoveries}',
-                  color: Colors.blue,
+                  color: context.colors.primary,
                 ),
               ),
             ],
@@ -216,11 +217,11 @@ class StatsDashboard extends StatelessWidget {
 
   Color _getAdherenceColor(double adherence) {
     if (adherence >= 80) {
-      return Colors.green;
+      return context.colors.success;
     } else if (adherence >= 60) {
-      return Colors.orange;
+      return context.colors.secondary;
     } else {
-      return Colors.red;
+      return context.colors.error;
     }
   }
 }

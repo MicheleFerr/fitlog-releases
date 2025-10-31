@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_sel
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/enhanced_add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 
 /// Widget per testare tutti i modal identificati nell'analisi
@@ -404,7 +405,7 @@ class ModalTesterWidget extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('🚧 $modalName - Need to implement test'),
-        backgroundColor: Colors.orange,
+        backgroundColor: context.colors.secondary,
       ),
     );
   }

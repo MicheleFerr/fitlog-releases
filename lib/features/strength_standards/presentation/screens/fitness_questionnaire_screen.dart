@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/step_feedback_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Fitness questionnaire screen with step-by-step flow
 class FitnessQuestionnaireScreen extends ConsumerStatefulWidget {
@@ -315,7 +316,7 @@ class _FitnessQuestionnaireScreenState
         color: context.colors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, -2),
           ),

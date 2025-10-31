@@ -13,6 +13,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseSyncStatusWidget extends ConsumerWidget {
   const ExerciseSyncStatusWidget({super.key});
@@ -95,7 +97,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         break;
       case SyncStatus.success:
         text = AppLocalizations.of(context).syncSuccess;
-        color = Colors.green;
+        color = context.colors.success;
         icon = Icons.check_circle;
         break;
       case SyncStatus.error:
@@ -224,7 +226,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: context.colors.secondary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
@@ -233,13 +235,13 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                   const Icon(
                     Icons.new_releases,
                     size: 16,
-                    color: Colors.orange,
+                    color: context.colors.secondary,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     AppLocalizations.of(context).updateAvailable,
                     style: const TextStyle(
-                      color: Colors.orange,
+                      color: context.colors.secondary,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
                     ),

@@ -722,11 +722,11 @@ class EnhancedBodyPartChart extends StatelessWidget {
       case 'Shoulders':
         return colorScheme.tertiary;
       case 'Legs':
-        return Colors.green;
+        return colorScheme.success;
       case 'Arms':
-        return Colors.orange;
+        return colorScheme.secondary;
       default:
-        return Colors.grey;
+        return colorScheme.surfaceVariant;
     }
   }
 

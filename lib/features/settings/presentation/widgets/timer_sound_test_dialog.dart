@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/shared/domain/entities/timer_sound.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dialog to test timer sounds directly on iOS
 class TimerSoundTestDialog extends ConsumerStatefulWidget {
@@ -112,7 +114,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
               ListTile(
                 leading: Icon(
                   sound == currentSound ? Icons.check_circle : Icons.circle_outlined,
-                  color: sound == currentSound ? Colors.green : null,
+                  color: sound == currentSound ? context.colors.success : null,
                 ),
                 title: Text(sound.getLocalizedName()),
                 subtitle: const Text('Tap to test with 3-second timer'),

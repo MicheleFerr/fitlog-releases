@@ -5,6 +5,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class DropSetExecutionSheet extends ConsumerStatefulWidget {
 
@@ -618,7 +620,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                                 ? FontWeight.bold
                                                 : FontWeight.normal,
                                             color: _rpes[index] == rpe
-                                                ? Colors.white
+                                                ? context.colors.surface
                                                 : null,
                                           ),
                                         ),
@@ -692,10 +694,10 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   }
   
   Color _getRPEColor(int rpe) {
-    if (rpe <= 6) return Colors.green;
-    if (rpe <= 7) return Colors.lightGreen;
-    if (rpe <= 8) return Colors.orange;
-    if (rpe <= 9) return Colors.deepOrange;
-    return Colors.red;
+    if (rpe <= 6) return context.colors.success;
+    if (rpe <= 7) return context.colors.success;
+    if (rpe <= 8) return context.colors.secondary;
+    if (rpe <= 9) return context.colors.warning;
+    return context.colors.error;
   }
 }

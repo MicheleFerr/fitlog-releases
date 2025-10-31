@@ -5,6 +5,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 🚀 TIER-1: Optimized selection sheet with lazy loading
 class ExerciseSelectionSheet extends ConsumerStatefulWidget {
@@ -325,7 +327,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -544,11 +546,11 @@ class ExerciseSelectionTile extends ConsumerWidget {
   Color _getDifficultyColor(String difficulty, ThemeData theme) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
         return theme.colorScheme.onSurfaceVariant;
     }

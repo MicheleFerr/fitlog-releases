@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WeeklyGoalsWidget extends ConsumerWidget {
   
@@ -441,7 +443,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               icon: Icons.fitness_center,
                               label: 'Completati',
                               value: '$count',
-                              color: Colors.blue,
+                              color: context.colors.primary,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -451,7 +453,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               icon: Icons.flag,
                               label: 'Obiettivo',
                               value: '$goal',
-                              color: Colors.green,
+                              color: context.colors.success,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -461,7 +463,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               icon: Icons.calendar_today,
                               label: 'Giorni rimasti',
                               value: '${7 - DateTime.now().weekday}',
-                              color: Colors.orange,
+                              color: context.colors.secondary,
                             ),
                           ),
                         ],
@@ -512,20 +514,20 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Colors.green.withValues(alpha: 0.1),
-                                Colors.green.withValues(alpha: 0.05),
+                                context.colors.success.withValues(alpha: 0.1),
+                                context.colors.success.withValues(alpha: 0.05),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: Colors.green.withValues(alpha: 0.3),
+                              color: context.colors.success.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
                             children: [
                               const Icon(
                                 Icons.emoji_events,
-                                color: Colors.green,
+                                color: context.colors.success,
                                 size: 32,
                               ),
                               const SizedBox(width: 12),
@@ -536,7 +538,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                                     Text(
                                       'Obiettivo Raggiunto!',
                                       style: theme.textTheme.titleMedium?.copyWith(
-                                        color: Colors.green,
+                                        color: context.colors.success,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

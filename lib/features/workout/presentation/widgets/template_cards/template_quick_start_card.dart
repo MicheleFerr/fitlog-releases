@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class TemplateQuickStartCard extends StatelessWidget {
 
@@ -219,7 +221,7 @@ class TemplateQuickStartCard extends StatelessWidget {
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.3),
+        color: context.colors.surfaceVariant.withValues(alpha: 0.3),
         borderRadius: const BorderRadius.all(Radius.circular(2)),
       ),
     );

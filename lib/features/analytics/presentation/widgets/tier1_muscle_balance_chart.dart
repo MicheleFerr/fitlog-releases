@@ -4,6 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Tier-1 Muscle Balance Radar Chart with full explanations and customization
 class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
@@ -350,8 +352,8 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
     if (_showComparison) {
       dataSets.add(
         RadarDataSet(
-          fillColor: Colors.orange.withValues(alpha: 0.15),
-          borderColor: Colors.orange.withValues(alpha: 0.7),
+          fillColor: context.colors.secondary.withValues(alpha: 0.15),
+          borderColor: context.colors.secondary.withValues(alpha: 0.7),
           borderWidth: 2,
           entryRadius: 3,
           dataEntries: MuscleGroup.values.map((muscle) {
@@ -367,7 +369,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
     dataSets.add(
       RadarDataSet(
         fillColor: Colors.transparent,
-        borderColor: Colors.green.withValues(alpha: 0.4),
+        borderColor: context.colors.success.withValues(alpha: 0.4),
         borderWidth: 1.5,
         entryRadius: 0,
         dataEntries: MuscleGroup.values.map((muscle) {
@@ -402,13 +404,13 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               ),
               if (_showComparison)
                 _buildLegendItem(
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                   label: l10n.lastMonth,
                   value: _calculateAveragePreviousStrength(),
                   theme: theme,
                 ),
               _buildLegendItem(
-                color: Colors.green,
+                color: context.colors.success,
                 label: l10n.target,
                 value: _calculateAverageTarget(),
                 isDashed: true,
@@ -560,7 +562,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             icon: Icons.flag,
             label: l10n.targetStrength,
             value: data.targetStrength,
-            color: Colors.green,
+            color: context.colors.success,
             onEdit: () => _editTarget(_selectedMuscle!, data.targetStrength),
             theme: theme,
             l10n: l10n,
@@ -572,17 +574,17 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: (improvement >= 0 ? Colors.green : Colors.red).withValues(alpha: 0.1),
+                color: (improvement >= 0 ? context.colors.success : context.colors.error).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: (improvement >= 0 ? Colors.green : Colors.red).withValues(alpha: 0.3),
+                  color: (improvement >= 0 ? context.colors.success : context.colors.error).withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     improvement >= 0 ? Icons.trending_up : Icons.trending_down,
-                    color: improvement >= 0 ? Colors.green : Colors.red,
+                    color: improvement >= 0 ? context.colors.success : context.colors.error,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -594,7 +596,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                           '${improvement >= 0 ? '+' : ''}${improvement.toStringAsFixed(1)}% '
                           '(${improvementPercent >= 0 ? '+' : ''}${improvementPercent.toStringAsFixed(1)}%)',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: improvement >= 0 ? Colors.green : Colors.red,
+                            color: improvement >= 0 ? context.colors.success : context.colors.error,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -989,9 +991,9 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   }
 
   Color _getBalanceColor(double balance) {
-    if (balance >= 80) return Colors.green;
-    if (balance >= 60) return Colors.orange;
-    return Colors.red;
+    if (balance >= 80) return context.colors.success;
+    if (balance >= 60) return context.colors.secondary;
+    return context.colors.error;
   }
 
   String _getBalanceRating(double balance, AppLocalizations l10n) {

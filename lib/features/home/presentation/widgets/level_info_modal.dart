@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class LevelInfoModal extends ConsumerWidget {
   
@@ -57,7 +59,7 @@ class LevelInfoModal extends ConsumerWidget {
                   ),
                   child: Icon(
                     _getLevelIcon(currentLevel),
-                    color: Colors.white,
+                    color: context.colors.surface,
                     size: 28,
                   ),
                 ),
@@ -237,7 +239,7 @@ class LevelInfoModal extends ConsumerWidget {
                                   isUnlocked ? Icons.check_circle : Icons.circle_outlined,
                                   size: 16,
                                   color: isUnlocked
-                                    ? Colors.green
+                                    ? context.colors.success
                                     : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                                 ),
                                 const SizedBox(width: 8),
@@ -267,7 +269,7 @@ class LevelInfoModal extends ConsumerWidget {
                           child: Text(
                             l10n.current,
                             style: theme.textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
+                              color: context.colors.surface,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -284,11 +286,11 @@ class LevelInfoModal extends ConsumerWidget {
   }
   
   Color _getLevelColor(int level) {
-    if (level <= 2) return Colors.grey;
-    if (level <= 4) return Colors.green;
-    if (level <= 6) return Colors.blue;
-    if (level <= 8) return Colors.purple;
-    return Colors.orange;
+    if (level <= 2) return context.colors.surfaceVariant;
+    if (level <= 4) return context.colors.success;
+    if (level <= 6) return context.colors.primary;
+    if (level <= 8) return context.colors.tertiary;
+    return context.colors.secondary;
   }
   
   IconData _getLevelIcon(int level) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class SmartSuggestionChip extends StatefulWidget {
   
@@ -267,7 +269,7 @@ class _PulsingIconState extends State<_PulsingIcon>
           height: 28,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withValues(alpha: 0.2),
+            color: context.colors.surface.withValues(alpha: 0.2),
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -281,7 +283,7 @@ class _PulsingIconState extends State<_PulsingIcon>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 1 - _animation.value),
+                      color: context.colors.surface.withValues(alpha: 1 - _animation.value),
                       width: 2,
                     ),
                   ),
@@ -291,7 +293,7 @@ class _PulsingIconState extends State<_PulsingIcon>
               Icon(
                 widget.icon,
                 size: 16,
-                color: Colors.white,
+                color: context.colors.surface,
               ),
             ],
           ),

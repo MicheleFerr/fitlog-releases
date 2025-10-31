@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/community_corrections_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CorrectionReviewCard extends StatelessWidget {
 
@@ -222,8 +224,8 @@ class CorrectionReviewCard extends StatelessWidget {
                       icon: const Icon(Icons.check),
                       label: Text(l10n.approve),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                        backgroundColor: context.colors.success,
+                        foregroundColor: context.colors.surface,
                       ),
                     ),
                   ),
@@ -283,22 +285,22 @@ class CorrectionReviewCard extends StatelessWidget {
 
     switch (status) {
       case 'pending':
-        color = Colors.orange;
+        color = context.colors.secondary;
         icon = Icons.pending;
         label = AppLocalizations.of(context).pending;
         break;
       case 'approved':
-        color = Colors.green;
+        color = context.colors.success;
         icon = Icons.check_circle;
         label = AppLocalizations.of(context).approved;
         break;
       case 'rejected':
-        color = Colors.red;
+        color = context.colors.error;
         icon = Icons.cancel;
         label = AppLocalizations.of(context).rejected;
         break;
       default:
-        color = Colors.grey;
+        color = context.colors.surfaceVariant;
         icon = Icons.help;
         label = status;
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AnimatedSearchIcon extends StatefulWidget {
   
@@ -232,13 +234,13 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: context.colors.error,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       'NEW',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
                       ),
@@ -335,7 +337,7 @@ class _PulsingSearchIconState extends State<PulsingSearchIcon>
               ),
               child: const Icon(
                 Icons.search,
-                color: Colors.white,
+                color: context.colors.surface,
                 size: 20,
               ),
             ),

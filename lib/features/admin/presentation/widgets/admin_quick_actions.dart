@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/firebase_init_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AdminQuickActions extends ConsumerWidget {
   const AdminQuickActions({super.key});
@@ -71,7 +73,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: Icons.flag_circle,
                   title: 'Exercise Feedback',
                   subtitle: 'Segnalazioni e bug utenti',
-                  color: Colors.deepPurple,
+                  color: context.colors.tertiary,
                   onTap: () => _navigateToExerciseFeedback(context),
                   badgeProvider: unreadFeedbackCountProvider,
                 ),
@@ -81,7 +83,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: Icons.rate_review,
                   title: l10n.communityContributions,
                   subtitle: l10n.reviewContributionsDescription,
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                   onTap: () => _navigateToCommunityCorrections(context),
                 ),
 
@@ -90,7 +92,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: Icons.fitness_center,
                   title: 'Esercizi Mancanti',
                   subtitle: 'Gestisci richieste esercizi',
-                  color: Colors.deepOrange,
+                  color: context.colors.warning,
                   onTap: () => _navigateToMissingExercises(context),
                 ),
 
@@ -99,7 +101,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: Icons.build_circle,
                   title: l10n.fixMissingData,
                   subtitle: l10n.fixMissingDataDescription,
-                  color: Colors.blue,
+                  color: context.colors.primary,
                   onTap: () => _fixMissingData(context, ref),
                 ),
 
@@ -108,7 +110,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: Icons.analytics,
                   title: l10n.userAnalytics,
                   subtitle: l10n.userAnalyticsDescription,
-                  color: Colors.green,
+                  color: context.colors.success,
                   onTap: () => _showComingSoon(context, l10n),
                 ),
 
@@ -117,7 +119,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: Icons.backup,
                   title: l10n.databaseBackup,
                   subtitle: l10n.databaseBackupDescription,
-                  color: Colors.purple,
+                  color: context.colors.tertiary,
                   onTap: () => _showComingSoon(context, l10n),
                 ),
 
@@ -126,7 +128,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: Icons.notifications,
                   title: l10n.pushNotifications,
                   subtitle: l10n.pushNotificationsDescription,
-                  color: Colors.red,
+                  color: context.colors.error,
                   onTap: () => _showComingSoon(context, l10n),
                 ),
               ],
@@ -396,7 +398,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: context.colors.error,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         constraints: const BoxConstraints(
@@ -406,7 +408,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                         child: Text(
                           badgeCount > 99 ? '99+' : badgeCount.toString(),
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),

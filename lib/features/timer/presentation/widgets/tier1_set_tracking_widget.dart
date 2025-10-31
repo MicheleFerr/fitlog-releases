@@ -6,6 +6,8 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// TIER-1 Set Tracking Widget with real-time visualization
 /// Shows live metrics, form feedback, and velocity graphs during set execution
@@ -155,11 +157,11 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           width: 12,
           height: 12,
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: context.colors.error,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.red.withValues(alpha: 0.5),
+                color: context.colors.error.withValues(alpha: 0.5),
                 blurRadius: 8,
                 spreadRadius: 2,
               ),
@@ -451,26 +453,26 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
   }
 
   Color _getVelocityColor(double velocity, ThemeData theme) {
-    if (velocity > 1.0) return Colors.green;
+    if (velocity > 1.0) return context.colors.success;
     if (velocity > 0.5) return theme.colorScheme.primary;
-    return Colors.orange;
+    return context.colors.secondary;
   }
 
   Color _getDropColor(double drop, ThemeData theme) {
     if (drop > 25) return theme.colorScheme.error;
-    if (drop > 15) return Colors.orange;
-    return Colors.green;
+    if (drop > 15) return context.colors.secondary;
+    return context.colors.success;
   }
 
   Color _getFatigueColor(double fatigue, ThemeData theme) {
     if (fatigue > 80) return theme.colorScheme.error;
-    if (fatigue > 60) return Colors.orange;
-    return Colors.green;
+    if (fatigue > 60) return context.colors.secondary;
+    return context.colors.success;
   }
 
   Color _getFormColor(double form, ThemeData theme) {
-    if (form > 80) return Colors.green;
-    if (form > 60) return Colors.orange;
+    if (form > 80) return context.colors.success;
+    if (form > 60) return context.colors.secondary;
     return theme.colorScheme.error;
   }
 

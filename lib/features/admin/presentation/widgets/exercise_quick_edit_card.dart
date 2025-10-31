@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
 
@@ -276,7 +277,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             onChanged: (value) => _updateField('tempoEsecuzione', value),
             tooltip: l10n.tempoEsecuzione,
             width: 120,
-            color: Colors.purple,
+            color: context.colors.tertiary,
           ),
       ],
     );
@@ -624,11 +625,11 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
   Color? _getDifficultyColor(String difficulty) {
     switch (difficulty) {
       case 'Principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'Intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'Avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
         return null;
     }

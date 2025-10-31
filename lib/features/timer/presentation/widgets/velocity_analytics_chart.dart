@@ -5,6 +5,8 @@ import 'dart:math' as math;
 
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// TIER-1 Velocity Analytics Chart Widget
 /// Advanced velocity-based training visualization with load-velocity profiling
@@ -664,11 +666,11 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
     ThemeData theme,
   ) {
     final colors = [
-      Colors.red,
-      Colors.orange,
+      context.colors.error,
+      context.colors.secondary,
       theme.colorScheme.primary,
-      Colors.green,
-      Colors.blue,
+      context.colors.success,
+      context.colors.primary,
     ];
     
     return zoneData.entries.map((entry) {
@@ -695,11 +697,11 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
     AppLocalizations l10n,
   ) {
     final colors = [
-      Colors.red,
-      Colors.orange,
+      context.colors.error,
+      context.colors.secondary,
       theme.colorScheme.primary,
-      Colors.green,
-      Colors.blue,
+      context.colors.success,
+      context.colors.primary,
     ];
     
     return zoneData.entries.map((entry) {
@@ -761,8 +763,8 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
 
   Color _getVelocityLossColor(double velocityLoss, ThemeData theme) {
     if (velocityLoss > 25) return theme.colorScheme.error;
-    if (velocityLoss > 15) return Colors.orange;
-    return Colors.green;
+    if (velocityLoss > 15) return context.colors.secondary;
+    return context.colors.success;
   }
 }
 

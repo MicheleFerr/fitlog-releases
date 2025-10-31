@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/features/shared/presentation/extensions/conte
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
 ///
@@ -70,6 +72,7 @@ class _SupersetSequentialExecutionSheetState
       set: exerciseSet,
       targetReps: exerciseData.targetReps ?? 10,
       exercise: firstExercise,
+      countingMode: firstExercise.countingMode, // ✅ NUOVO: Pass counting mode for proper UI
 
       // ✅ SUPERSET MODE
       isPartOfSuperset: true,
@@ -196,7 +199,7 @@ class _SupersetSequentialExecutionSheetState
     // Show QuickEditOverlayV2
     showDialog(
       context: context,
-      barrierColor: Colors.black26,
+      barrierColor: context.colors.onSurface26,
       builder: (context) => Stack(
         children: [
           // Dismiss on tap outside

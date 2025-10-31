@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget interattivo che mostra una metrica con tooltip esplicativo
 class InteractiveMetricWidget extends StatelessWidget {
@@ -354,22 +356,22 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
       case 0:
         explanation = widget.beginnerExplanation;
         levelIcon = Icons.rocket_launch;
-        levelColor = Colors.green;
+        levelColor = context.colors.success;
         break;
       case 1:
         explanation = widget.intermediateExplanation;
         levelIcon = Icons.fitness_center;
-        levelColor = Colors.orange;
+        levelColor = context.colors.secondary;
         break;
       case 2:
         explanation = widget.advancedExplanation;
         levelIcon = Icons.emoji_events;
-        levelColor = Colors.red;
+        levelColor = context.colors.error;
         break;
       default:
         explanation = widget.beginnerExplanation;
         levelIcon = Icons.rocket_launch;
-        levelColor = Colors.green;
+        levelColor = context.colors.success;
     }
     
     return Container(

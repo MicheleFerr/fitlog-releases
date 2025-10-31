@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/template_selection_step.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/template_rotation_step.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/review_step.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Main wizard screen for creating/editing flexible routines
 class RoutineEditorScreen extends ConsumerWidget { // For editing existing routines
@@ -324,7 +325,7 @@ class RoutineEditorScreen extends ConsumerWidget { // For editing existing routi
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                              AlwaysStoppedAnimation<Color>(context.colors.surface),
                         ),
                       )
                     : Text(

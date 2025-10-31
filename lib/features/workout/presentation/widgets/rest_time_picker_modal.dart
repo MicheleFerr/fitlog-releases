@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/workout/data/providers/preset_servic
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/preset_selection_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class RestTimePickerModal extends ConsumerStatefulWidget {
   const RestTimePickerModal({
@@ -90,7 +91,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.withValues(alpha: 0.3),
+                      color: context.colors.surfaceVariant.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),

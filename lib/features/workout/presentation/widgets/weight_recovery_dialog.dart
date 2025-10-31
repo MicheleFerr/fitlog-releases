@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 enum WeightRecoveryOption {
   exact,        // Si (esatti)
@@ -165,7 +167,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                 icon: Icons.trending_up,
                 label: 'Si +2.5%',
                 subtitle: 'Progressive overload',
-                color: Colors.green,
+                color: context.colors.success,
                 option: WeightRecoveryOption.increase,
               ),
               _buildOptionCard(
@@ -181,7 +183,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                 icon: Icons.trending_down,
                 label: 'Si -2.5%',
                 subtitle: 'Deload',
-                color: Colors.orange,
+                color: context.colors.secondary,
                 option: WeightRecoveryOption.decrease,
               ),
               _buildOptionCard(
@@ -549,11 +551,11 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
   Color _getOptionColor(ThemeData theme, WeightRecoveryOption option) {
     switch (option) {
       case WeightRecoveryOption.increase:
-        return Colors.green;
+        return context.colors.success;
       case WeightRecoveryOption.exact:
         return theme.colorScheme.primary;
       case WeightRecoveryOption.decrease:
-        return Colors.orange;
+        return context.colors.secondary;
       case WeightRecoveryOption.none:
         return theme.colorScheme.outline;
     }

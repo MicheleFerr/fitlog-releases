@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// State for sync operation
 class SyncState {
@@ -349,7 +351,7 @@ class PremiumSyncCard extends ConsumerWidget {
                         ? Icons.check_circle 
                         : Icons.error,
                     color: syncState.lastResult!.success 
-                        ? Colors.green 
+                        ? context.colors.success 
                         : theme.colorScheme.error,
                   ),
               ],
@@ -400,7 +402,7 @@ class PremiumSyncCard extends ConsumerWidget {
                     syncState.lastResult!.message,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: syncState.lastResult!.success 
-                          ? Colors.green 
+                          ? context.colors.success 
                           : theme.colorScheme.error,
                     ),
                   ),

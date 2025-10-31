@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Tier-1 Exercise Replacement Dialog with intelligent suggestions
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
@@ -661,10 +662,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   }
 
   Color _getSimilarityColor(int percentage) {
-    if (percentage >= 80) return Colors.green;
-    if (percentage >= 60) return Colors.orange;
-    if (percentage >= 40) return Colors.amber;
-    return Colors.grey;
+    if (percentage >= 80) return context.colors.success;
+    if (percentage >= 60) return context.colors.secondary;
+    if (percentage >= 40) return context.colors.warning;
+    return context.colors.surfaceVariant;
   }
 
   IconData _getCategoryIcon(String? category) {

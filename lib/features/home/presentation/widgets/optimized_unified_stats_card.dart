@@ -7,6 +7,8 @@ import 'package:gymbro_flutter_new/features/progress/presentation/providers/opti
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/home/utils/xp_calculator.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// OPTIMIZED VERSION - Fixed animation loops and excessive rebuilds
 class OptimizedUnifiedStatsCard extends ConsumerStatefulWidget {
@@ -220,7 +222,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   child: const Icon(
                     Icons.auto_awesome,
-                    color: Colors.white,
+                    color: context.colors.surface,
                     size: 16,
                   ),
                 ),
@@ -324,7 +326,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             child: Text(
               '$level',
               style: const TextStyle(
-                color: Colors.white,
+                color: context.colors.surface,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -383,7 +385,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   Text(
                     'LV',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                     ),
@@ -391,7 +393,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   Text(
                     '$level',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -475,7 +477,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                 ],
                 border: isMilestone ? Border.all(
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: context.colors.surface.withValues(alpha: 0.5),
                   width: 2,
                 ) : null,
               ),
@@ -485,7 +487,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   Text(
                     levelTitle.toUpperCase(),
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                       fontSize: 7,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.5,
@@ -494,7 +496,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   Text(
                     '$level',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -502,7 +504,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   if (isMilestone)
                     Icon(
                       Icons.star,
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                       size: 12,
                     ),
                 ],
@@ -580,7 +582,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                 icon: Icons.people,
                 label: 'Community',
                 value: '$communityXP XP',
-                color: Colors.blue,
+                color: context.colors.primary,
               ),
             ),
             const SizedBox(width: 8),
@@ -590,7 +592,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                 icon: Icons.emoji_events,
                 label: 'Achievement',
                 value: '$achievementXP XP',
-                color: Colors.orange,
+                color: context.colors.secondary,
               ),
             ),
             const SizedBox(width: 8),
@@ -600,7 +602,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                 icon: Icons.local_fire_department,
                 label: 'Streak',
                 value: '${stats.currentStreak}',
-                color: Colors.red,
+                color: context.colors.error,
               ),
             ),
           ],
@@ -662,13 +664,13 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
               height: 60,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.green,
+                color: context.colors.success,
               ),
               child: const Center(
                 child: Text(
                   '1',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -756,10 +758,10 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   }
   
   Color _getLevelColor(int level) {
-    if (level >= 20) return Colors.purple;
-    if (level >= 15) return Colors.deepOrange;
-    if (level >= 10) return Colors.orange;
-    if (level >= 5) return Colors.blue;
-    return Colors.green;
+    if (level >= 20) return context.colors.tertiary;
+    if (level >= 15) return context.colors.warning;
+    if (level >= 10) return context.colors.secondary;
+    if (level >= 5) return context.colors.primary;
+    return context.colors.success;
   }
 }

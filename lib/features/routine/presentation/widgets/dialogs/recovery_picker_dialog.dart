@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dialog for selecting recovery date for a skipped workout
 class RecoveryPickerDialog extends StatefulWidget {
@@ -83,12 +84,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withValues(alpha: 0.2),
+                      color: context.colors.primary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.refresh,
-                      color: Colors.blue,
+                      color: context.colors.primary,
                       size: 24,
                     ),
                   ),
@@ -123,17 +124,17 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
+                  color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.blue.withValues(alpha: 0.3),
+                    color: context.colors.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
                   children: [
                     const Icon(
                       Icons.info_outline,
-                      color: Colors.blue,
+                      color: context.colors.primary,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -186,7 +187,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       shape: BoxShape.circle,
                     ),
                     selectedDecoration: const BoxDecoration(
-                      color: Colors.blue,
+                      color: context.colors.primary,
                       shape: BoxShape.circle,
                     ),
                     outsideDaysVisible: false,
@@ -262,8 +263,8 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         ? null
                         : _confirmRecovery,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
+                      backgroundColor: context.colors.primary,
+                      foregroundColor: context.colors.surface,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 12,
@@ -312,12 +313,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.blue
+                      ? context.colors.primary
                       : context.colors.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? Colors.blue
+                        ? context.colors.primary
                         : context.colors.primary.withValues(alpha: 0.3),
                   ),
                 ),
@@ -327,13 +328,13 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                     Icon(
                       Icons.calendar_today,
                       size: 16,
-                      color: isSelected ? Colors.white : context.colors.primary,
+                      color: isSelected ? context.colors.surface : context.colors.primary,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       _formatDateShort(date),
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: isSelected ? Colors.white : context.colors.onSurface,
+                        color: isSelected ? context.colors.surface : context.colors.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -342,7 +343,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       '(Rest day)',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: isSelected
-                            ? Colors.white.withValues(alpha: 0.8)
+                            ? context.colors.surface.withValues(alpha: 0.8)
                             : context.colors.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
@@ -363,7 +364,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
 
     Color? backgroundColor;
     if (isRestDay) {
-      backgroundColor = Colors.green.withValues(alpha: 0.2);
+      backgroundColor = context.colors.success.withValues(alpha: 0.2);
     } else if (isOccupied) {
       backgroundColor = context.colors.error.withValues(alpha: 0.1);
     }
@@ -391,10 +392,10 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
+        color: context.colors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.blue.withValues(alpha: 0.3),
+          color: context.colors.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -404,7 +405,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
             children: [
               const Icon(
                 Icons.check_circle_outline,
-                color: Colors.blue,
+                color: context.colors.primary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -462,14 +463,14 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           const Icon(
             Icons.arrow_upward,
             size: 14,
-            color: Colors.blue,
+            color: context.colors.primary,
           ),
         const SizedBox(width: 4),
         Text(
           value,
           style: context.textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.blue,
+            color: context.colors.primary,
           ),
         ),
       ],

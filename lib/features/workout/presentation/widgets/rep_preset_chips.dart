@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/providers/preset_service_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Rep preset chips widget for quick selection
 ///
@@ -94,16 +95,16 @@ class RepPresetChips extends ConsumerWidget {
                     avatar: Icon(
                       preset.icon,
                       size: 16,
-                      color: isSelected ? Colors.white : preset.color,
+                      color: isSelected ? context.colors.surface : preset.color,
                     ),
                     label: Text(label),
                     selected: isSelected,
                     selectedColor: preset.color,
                     backgroundColor: preset.color.withValues(alpha: 0.1),
-                    checkmarkColor: Colors.white,
+                    checkmarkColor: context.colors.surface,
                     labelStyle: TextStyle(
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected ? Colors.white : context.colors.onSurface,
+                      color: isSelected ? context.colors.surface : context.colors.onSurface,
                       fontSize: 13,
                     ),
                     onSelected: (_) async {
@@ -239,7 +240,7 @@ class SetCountPresetChips extends ConsumerWidget {
                 return FilterChip(
                   avatar: CircleAvatar(
                     backgroundColor: isSelected
-                        ? Colors.white
+                        ? context.colors.surface
                         : context.colors.primary.withValues(alpha: 0.2),
                     radius: 10,
                     child: Text(
@@ -257,10 +258,10 @@ class SetCountPresetChips extends ConsumerWidget {
                   selected: isSelected,
                   selectedColor: context.colors.primary,
                   backgroundColor: context.colors.surfaceContainerHighest,
-                  checkmarkColor: Colors.white,
+                  checkmarkColor: context.colors.surface,
                   labelStyle: TextStyle(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: isSelected ? Colors.white : context.colors.onSurface,
+                    color: isSelected ? context.colors.surface : context.colors.onSurface,
                     fontSize: 13,
                   ),
                   onSelected: (_) async {

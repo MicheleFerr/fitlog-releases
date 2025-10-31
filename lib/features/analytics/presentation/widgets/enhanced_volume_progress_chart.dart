@@ -9,6 +9,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_progress_chart_3d.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_efficiency_calculator.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Volume Progress Chart with interactive date selection and detailed views
 class EnhancedVolumeProgressChart extends ConsumerStatefulWidget {
@@ -626,9 +628,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: volumeChange > 5 
-                    ? Colors.green.withValues(alpha: 0.3)
+                    ? context.colors.success.withValues(alpha: 0.3)
                     : volumeChange < -5 
-                        ? Colors.red.withValues(alpha: 0.3)
+                        ? context.colors.error.withValues(alpha: 0.3)
                         : theme.colorScheme.outline.withValues(alpha: 0.2),
                 width: 1,
               ),
@@ -652,10 +654,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: volumeChange > 5 
-                              ? Colors.green.withValues(alpha: 0.2)
+                              ? context.colors.success.withValues(alpha: 0.2)
                               : volumeChange < -5 
-                                  ? Colors.red.withValues(alpha: 0.2)
-                                  : Colors.orange.withValues(alpha: 0.2),
+                                  ? context.colors.error.withValues(alpha: 0.2)
+                                  : context.colors.secondary.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -669,10 +671,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                       : Icons.remove,
                               size: 14,
                               color: volumeChange > 5 
-                                  ? Colors.green
+                                  ? context.colors.success
                                   : volumeChange < -5 
-                                      ? Colors.red
-                                      : Colors.orange,
+                                      ? context.colors.error
+                                      : context.colors.secondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -683,10 +685,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                       : localizations.stall,
                               style: theme.textTheme.labelSmall?.copyWith(
                                 color: volumeChange > 5 
-                                    ? Colors.green
+                                    ? context.colors.success
                                     : volumeChange < -5 
-                                        ? Colors.red
-                                        : Colors.orange,
+                                        ? context.colors.error
+                                        : context.colors.secondary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -728,9 +730,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         '${volumeChange > 0 ? '+' : ''}${volumeChange.toStringAsFixed(1)}%',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: volumeChange > 0 
-                              ? Colors.green
+                              ? context.colors.success
                               : volumeChange < 0 
-                                  ? Colors.red
+                                  ? context.colors.error
                                   : theme.colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
                         ),
@@ -949,7 +951,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             icon: trend > 0 ? Icons.trending_up : Icons.trending_down,
             label: localizations.trend,
             value: '${trend > 0 ? '+' : ''}${trend.toStringAsFixed(1)}%',
-            color: trend > 0 ? Colors.green : Colors.red,
+            color: trend > 0 ? context.colors.success : context.colors.error,
             theme: theme,
           ),
         ],
@@ -1355,9 +1357,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: volumeChange > 5 
-                          ? Colors.green.withValues(alpha: 0.3)
+                          ? context.colors.success.withValues(alpha: 0.3)
                           : volumeChange < -5 
-                              ? Colors.red.withValues(alpha: 0.3)
+                              ? context.colors.error.withValues(alpha: 0.3)
                               : theme.colorScheme.outline.withValues(alpha: 0.2),
                       width: 1,
                     ),
@@ -1381,10 +1383,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: volumeChange > 5 
-                                ? Colors.green.withValues(alpha: 0.2)
+                                ? context.colors.success.withValues(alpha: 0.2)
                                 : volumeChange < -5 
-                                    ? Colors.red.withValues(alpha: 0.2)
-                                    : Colors.orange.withValues(alpha: 0.2),
+                                    ? context.colors.error.withValues(alpha: 0.2)
+                                    : context.colors.secondary.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -1398,10 +1400,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                         : Icons.remove,
                                 size: 14,
                                 color: volumeChange > 5 
-                                    ? Colors.green
+                                    ? context.colors.success
                                     : volumeChange < -5 
-                                        ? Colors.red
-                                        : Colors.orange,
+                                        ? context.colors.error
+                                        : context.colors.secondary,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -1412,10 +1414,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                         : localizations.stall,
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: volumeChange > 5 
-                                      ? Colors.green
+                                      ? context.colors.success
                                       : volumeChange < -5 
-                                          ? Colors.red
-                                          : Colors.orange,
+                                          ? context.colors.error
+                                          : context.colors.secondary,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1457,9 +1459,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           '${volumeChange > 0 ? '+' : ''}${volumeChange.toStringAsFixed(1)}%',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: volumeChange > 0 
-                                ? Colors.green
+                                ? context.colors.success
                                 : volumeChange < 0 
-                                    ? Colors.red
+                                    ? context.colors.error
                                     : theme.colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
                           ),
@@ -1918,7 +1920,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Fatigue level $fatigueLevel recorded'),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
             ),
           );
         },
@@ -2019,10 +2021,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                               : Icons.remove,
                       size: 20,
                       color: score.trend == EfficiencyTrend.improving
-                          ? Colors.green
+                          ? context.colors.success
                           : score.trend == EfficiencyTrend.declining
-                              ? Colors.red
-                              : Colors.grey,
+                              ? context.colors.error
+                              : context.colors.surfaceVariant,
                     ),
                   ],
                 ),
@@ -2124,9 +2126,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }
 
   Color _getComponentColor(double value) {
-    if (value >= 80) return Colors.green;
-    if (value >= 60) return Colors.orange;
-    return Colors.red;
+    if (value >= 80) return context.colors.success;
+    if (value >= 60) return context.colors.secondary;
+    return context.colors.error;
   }
   
   Widget _buildScoreItem(String day, int? score, Color color, ThemeData theme) {
@@ -2262,7 +2264,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: context.colors.onSurface.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -2292,7 +2294,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                 children: [
                   const Icon(
                     Icons.fitness_center,
-                    color: Colors.white,
+                    color: context.colors.surface,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -2304,14 +2306,14 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                         Text(
                           widget.exerciseName,
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           DateFormat('EEEE, d MMMM yyyy').format(widget.date),
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
+                            color: context.colors.surface.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -2321,7 +2323,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(
                       Icons.close,
-                      color: Colors.white,
+                      color: context.colors.surface,
                       size: 20,
                     ),
                   ),
@@ -2597,13 +2599,13 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
     // Effort color based on value
     Color effortColor;
     if (effort >= 9) {
-      effortColor = Colors.red;
+      effortColor = context.colors.error;
     } else if (effort >= 7) {
-      effortColor = Colors.orange;
+      effortColor = context.colors.secondary;
     } else if (effort >= 5) {
-      effortColor = Colors.green;
+      effortColor = context.colors.success;
     } else {
-      effortColor = Colors.blue;
+      effortColor = context.colors.primary;
     }
     
     return Padding(

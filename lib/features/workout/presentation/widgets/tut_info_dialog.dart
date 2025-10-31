@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Shows TUT (Time Under Tension) information in a bottom sheet modal
 void showTutInfoBottomSheet(BuildContext context, String tutValue) {
@@ -202,7 +204,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                 color: theme.colorScheme.surface,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, -2),
                   ),

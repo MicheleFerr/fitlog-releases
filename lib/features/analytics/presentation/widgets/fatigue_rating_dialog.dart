@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/workout_fatigue.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class FatigueRatingDialog extends StatefulWidget {
 
@@ -196,10 +198,10 @@ class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
         .toDouble();
     
     final efficiencyColor = efficiencyScore >= 70
-        ? Colors.green
+        ? context.colors.success
         : efficiencyScore >= 40
-            ? Colors.orange
-            : Colors.red;
+            ? context.colors.secondary
+            : context.colors.error;
     
     return Container(
       padding: const EdgeInsets.all(16),

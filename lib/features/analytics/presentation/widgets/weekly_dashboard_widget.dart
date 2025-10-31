@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/contextual_training_advisor.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WeeklyDashboardWidget extends StatefulWidget {
 
@@ -331,14 +333,14 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           'Effective Volume',
           '${(_currentWeekData!.effectiveVolume / 1000).toStringAsFixed(1)}k kg',
           Icons.check_circle,
-          Colors.green,
+          context.colors.success,
           theme,
         ),
         _buildStatCard(
           'Avg Intensity',
           '${_currentWeekData!.avgIntensity.toStringAsFixed(1)}/10',
           Icons.local_fire_department,
-          Colors.orange,
+          context.colors.secondary,
           theme,
         ),
         _buildStatCard(
@@ -499,13 +501,13 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: context.colors.error,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Text(
                     'PR!',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -561,7 +563,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Data synced to cloud'),
-                backgroundColor: Colors.green,
+                backgroundColor: context.colors.success,
               ),
             );
           }

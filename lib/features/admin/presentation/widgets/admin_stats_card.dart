@@ -12,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AdminStatsCard extends ConsumerWidget {
   const AdminStatsCard({super.key});
@@ -99,7 +101,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.fitness_center,
                 title: l10n.exerciseCountLabel,
                 value: exerciseCount.toString(),
-                color: exerciseCount > 0 ? Colors.green : Colors.orange,
+                color: exerciseCount > 0 ? context.colors.success : context.colors.secondary,
               ),
             ),
             Expanded(
@@ -107,7 +109,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.info,
                 title: l10n.versionMetadata,
                 value: hasVersionMetadata ? l10n.present : l10n.missing,
-                color: hasVersionMetadata ? Colors.green : Colors.red,
+                color: hasVersionMetadata ? context.colors.success : context.colors.error,
               ),
             ),
             Expanded(
@@ -115,7 +117,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.search,
                 title: l10n.searchIndex,
                 value: hasSearchIndex ? l10n.present : l10n.missing,
-                color: hasSearchIndex ? Colors.green : Colors.red,
+                color: hasSearchIndex ? context.colors.success : context.colors.error,
               ),
             ),
           ],
@@ -147,7 +149,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.feedback,
                 title: l10n.pendingCorrections,
                 value: stats.pendingCorrections.toString(),
-                color: stats.pendingCorrections > 0 ? Colors.orange : Colors.green,
+                color: stats.pendingCorrections > 0 ? context.colors.secondary : context.colors.success,
               ),
             ),
             Expanded(
@@ -155,7 +157,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.check_circle,
                 title: l10n.approvedCorrections,
                 value: stats.approvedCorrections.toString(),
-                color: Colors.green,
+                color: context.colors.success,
               ),
             ),
             Expanded(
@@ -163,7 +165,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.cancel,
                 title: l10n.rejectedCorrections,
                 value: stats.rejectedCorrections.toString(),
-                color: Colors.red,
+                color: context.colors.error,
               ),
             ),
           ],
@@ -176,7 +178,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.people,
                 title: l10n.totalUsers,
                 value: stats.totalUsers.toString(),
-                color: Colors.blue,
+                color: context.colors.primary,
               ),
             ),
             Expanded(
@@ -184,7 +186,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: Icons.update,
                 title: l10n.lastUpdate,
                 value: _formatDate(stats.lastUpdate),
-                color: Colors.purple,
+                color: context.colors.tertiary,
               ),
             ),
             const Expanded(child: SizedBox()), // Spacer

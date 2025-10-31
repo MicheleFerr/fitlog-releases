@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Calendar widget for routine schedule
 class CalendarView extends StatefulWidget {
@@ -158,16 +159,16 @@ class _CalendarViewState extends State<CalendarView> {
 
     switch (dayInfo.status) {
       case DayStatus.completed:
-        backgroundColor = Colors.green.withValues(alpha: 0.2);
-        textColor = Colors.green[700];
+        backgroundColor = context.colors.success.withValues(alpha: 0.2);
+        textColor = context.colors.success[700];
         break;
       case DayStatus.skipped:
         backgroundColor = context.colors.error.withValues(alpha: 0.2);
         textColor = context.colors.error;
         break;
       case DayStatus.recovered:
-        backgroundColor = Colors.blue.withValues(alpha: 0.2);
-        textColor = Colors.blue[700];
+        backgroundColor = context.colors.primary.withValues(alpha: 0.2);
+        textColor = context.colors.primary[700];
         break;
       case DayStatus.rest:
         backgroundColor = context.colors.secondary.withValues(alpha: 0.2);
@@ -212,7 +213,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   Widget _buildLegend(BuildContext context) {
     final legendItems = [
-      (Colors.green, 'Completed'),
+      (context.colors.success, 'Completed'),
       (context.colors.primary, 'Scheduled'),
       (context.colors.error, 'Skipped'),
       (context.colors.secondary, 'Rest'),
