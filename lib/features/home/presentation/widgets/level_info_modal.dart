@@ -51,8 +51,8 @@ class LevelInfoModal extends ConsumerWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        _getLevelColor(currentLevel),
-                        _getLevelColor(currentLevel).withValues(alpha: 0.7),
+                        _getLevelColor(context,currentLevel),
+                        _getLevelColor(context,currentLevel).withValues(alpha: 0.7),
                       ],
                     ),
                     shape: BoxShape.circle,
@@ -77,7 +77,7 @@ class LevelInfoModal extends ConsumerWidget {
                       Text(
                         '${l10n.currentLevel}: ${_getLevelName(currentLevel, l10n)}',
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: _getLevelColor(currentLevel),
+                          color: _getLevelColor(context,currentLevel),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -140,7 +140,7 @@ class LevelInfoModal extends ConsumerWidget {
                       value: currentXp / xpForNextLevel,
                       minHeight: 12,
                       backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
-                      valueColor: AlwaysStoppedAnimation<Color>(_getLevelColor(currentLevel)),
+                      valueColor: AlwaysStoppedAnimation<Color>(_getLevelColor(context,currentLevel)),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -170,14 +170,14 @@ class LevelInfoModal extends ConsumerWidget {
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
                     color: isCurrentLevel
-                      ? _getLevelColor(level).withValues(alpha: 0.1)
+                      ? _getLevelColor(context,level).withValues(alpha: 0.1)
                       : isUnlocked
                         ? theme.colorScheme.surface
                         : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isCurrentLevel
-                        ? _getLevelColor(level)
+                        ? _getLevelColor(context,level)
                         : isUnlocked
                           ? theme.colorScheme.outline.withValues(alpha: 0.2)
                           : theme.colorScheme.outline.withValues(alpha: 0.1),
@@ -190,7 +190,7 @@ class LevelInfoModal extends ConsumerWidget {
                       height: 48,
                       decoration: BoxDecoration(
                         color: isUnlocked
-                          ? _getLevelColor(level).withValues(alpha: 0.2)
+                          ? _getLevelColor(context,level).withValues(alpha: 0.2)
                           : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                         shape: BoxShape.circle,
                       ),
@@ -198,7 +198,7 @@ class LevelInfoModal extends ConsumerWidget {
                         child: isUnlocked
                           ? Icon(
                               _getLevelIcon(level),
-                              color: _getLevelColor(level),
+                              color: _getLevelColor(context,level),
                               size: 24,
                             )
                           : Icon(
@@ -263,7 +263,7 @@ class LevelInfoModal extends ConsumerWidget {
                       ? Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: _getLevelColor(level),
+                            color: _getLevelColor(context,level),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -285,7 +285,7 @@ class LevelInfoModal extends ConsumerWidget {
     );
   }
   
-  Color _getLevelColor(int level) {
+  Color _getLevelColor(BuildContext context, int level) {
     if (level <= 2) return context.colors.surfaceVariant;
     if (level <= 4) return context.colors.success;
     if (level <= 6) return context.colors.primary;

@@ -574,7 +574,7 @@ class _MiniContributionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              _getTypeIcon(contribution.type),
+              _getTypeIcon(context, contribution.type),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -639,10 +639,10 @@ class _MiniContributionCard extends StatelessWidget {
     );
   }
   
-  Widget _getTypeIcon(ContributionType type) {
+  Widget _getTypeIcon(BuildContext context, ContributionType type) {
     IconData icon;
     Color color;
-    
+
     switch (type) {
       case ContributionType.tip:
         icon = Icons.lightbulb;
