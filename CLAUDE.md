@@ -90,10 +90,92 @@
 
 ---
 
-## 🎨 REGOLA #2: TEMA SCURO/CHIARO
+## 🎨 REGOLA #2: TEMA SCURO/CHIARO (TEMA CENTRALIZZATO OBBLIGATORIO)
 
-✅ **SEMPRE**: `context.colors.primary/secondary/surface/onSurface` etc.
-❌ **MAI**: `Colors.blue`, `Theme.of(context).colorScheme` diretto
+### 📖 Sistema Tema
+
+L'app usa un **sistema tema centralizzato** in `lib/shared/presentation/theme/app_theme.dart` che supporta:
+- ✅ Dark/Light mode automatico
+- ✅ Material 3 design system
+- ✅ Colori custom estesi (success, warning)
+- ✅ Rebranding istantaneo (cambia 5 colori → intera app aggiornata)
+
+### ✅ SEMPRE Usa Theme-Aware Colors
+
+```dart
+// ✅ CORRETTO - Theme-aware
+Container(color: context.colors.primary)
+Icon(Icons.check, color: context.colors.success)
+Text('Error', style: TextStyle(color: context.colors.error))
+
+// ❌ SBAGLIATO - Hardcoded
+Container(color: Colors.blue)
+Icon(Icons.check, color: Colors.green)
+Text('Error', style: TextStyle(color: Colors.red))
+```
+
+### 📋 Color Mapping Reference
+
+| Hardcoded | Theme Alternative | Uso |
+|-----------|-------------------|-----|
+| `Colors.blue` | `context.colors.primary` | Brand color, pulsanti principali |
+| `Colors.orange` | `context.colors.secondary` | Accent, azioni secondarie |
+| `Colors.green` | `context.colors.success` | Success, completato, positivo |
+| `Colors.red` | `context.colors.error` | Errore, danger, elimina |
+| `Colors.amber` / `Colors.yellow` | `context.colors.warning` | Warning, attenzione |
+| `Colors.purple` / `Colors.deepPurple` | `context.colors.tertiary` | Azioni terziarie, info |
+| `Colors.white` | `context.colors.surface` | Sfondi, card |
+| `Colors.grey` | `context.colors.surfaceVariant` | Sfondi sottili |
+| `Colors.black` | `context.colors.onSurface` | Testo primario |
+
+**⚠️ Eccezione**: `Colors.transparent` è permesso (universale, valido in tutti i temi)
+
+### 📦 Import Richiesti
+
+```dart
+// Per context.colors.*
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+
+// Per .success, .warning custom extensions
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+```
+
+### 🛠️ Tool Automatici Disponibili
+
+**Fixare violazioni automaticamente**:
+```bash
+# Single file
+./scripts/fix_theme_violations.sh --file path/to/file.dart
+
+# Dry-run (anteprima)
+./scripts/fix_theme_violations.sh --dry-run --file path/to/file.dart
+
+# All files (163 file automatici, ~1110 sostituzioni)
+./scripts/fix_theme_violations.sh
+```
+
+**Rollback se necessario**:
+```bash
+./scripts/rollback_theme_fixes.sh --file path/to/file.dart
+```
+
+### 🔒 Pre-Commit Hook Integrato
+
+Il pre-commit hook automaticamente:
+- ✅ Scansiona ogni file .dart staged
+- ✅ Rileva hardcoded `Colors.*` violations
+- ❌ **BLOCCA commit** se trova violazioni
+- 💡 Mostra fix automatico suggerito
+
+**⚠️ Bypass (NON RACCOMANDATO)**: `git commit --no-verify`
+
+### 📚 Documentazione Completa
+
+Vedi: `scripts/THEME_FIX_README.md` per:
+- Guida completa utilizzo script
+- Test results e statistics
+- FAQ e troubleshooting
+- Color mapping dettagliato
 
 ---
 
@@ -139,10 +221,11 @@ docs: update localization guide with new patterns
 - File IDE specifici (`.vscode/settings.json` personali)
 
 ### ✅ Pre-commit Automatici:
-- Lint check (`flutter analyze`)
-- Hardcoded strings check
-- Localizations regen se necessario
-- Test execution
+- ✅ Lint check (`flutter analyze`)
+- ✅ **Theme violations check** (hardcoded Colors.* detection) 🆕
+- ✅ Hardcoded strings check
+- ✅ Localizations regen se necessario
+- ✅ Test execution
 
 ---
 
@@ -150,18 +233,28 @@ docs: update localization guide with new patterns
 
 Prima di ogni modifica, verifica:
 
-- [ ] 🌍 Nessun testo hardcoded (usa `context.l10n`)
-- [ ] 🎨 Nessun colore hardcoded (usa `context.colors`)
-- [ ] 📱 Import di `build_context_extensions.dart` aggiunto
-- [ ] 🖨️ **Nessun print() - usa debugPrint() + kDebugMode**
-- [ ] 🔤 Traduzioni aggiunte in EN e IT
-- [ ] ⚙️ `flutter gen-l10n` eseguito se aggiunte traduzioni
-- [ ] 🔍 `flutter analyze` passa senza errori
-- [ ] 🧪 Widget testato in entrambi i temi (chiaro/scuro)
-- [ ] 📱 Funzionalità testata su iOS E Android (se applicabile)
-- [ ] 🔒 Autenticazione controllata se usa Firebase
-- [ ] ⚡ Performance ottimizzata (const, select, dispose)
-- [ ] 🧭 Named routes usate (non path hardcoded)
+### 🌍 Localizzazione
+- [ ] ✅ Nessun testo hardcoded (usa `context.l10n`)
+- [ ] ✅ Traduzioni aggiunte in EN e IT (`assets/i18n/*.arb`)
+- [ ] ✅ `flutter gen-l10n` eseguito se aggiunte traduzioni
+
+### 🎨 Tema (CRITICO - Bloccato da pre-commit hook)
+- [ ] ✅ **Nessun `Colors.blue/red/green/etc.`** (usa `context.colors.primary/error/success`)
+- [ ] ✅ **Nessun `Color(0xFF...)`** (usa tema, o giustifica)
+- [ ] ✅ Import `build_context_extensions.dart` + `color_scheme_extensions.dart`
+- [ ] ✅ Widget testato in **Dark E Light mode** (cambia tema in settings)
+- [ ] ✅ Solo `Colors.transparent` è permesso (eccezione universale)
+
+### 🔧 Code Quality
+- [ ] ✅ **Nessun print()** - usa `debugPrint() + kDebugMode`
+- [ ] ✅ `flutter analyze` passa senza errori
+- [ ] ✅ Performance ottimizzata (`const`, `select`, `dispose`)
+- [ ] ✅ Named routes usate (non path hardcoded)
+
+### 🧪 Testing & Platform
+- [ ] ✅ Funzionalità testata su iOS E Android (se applicabile)
+- [ ] ✅ Autenticazione controllata se usa Firebase
+- [ ] ✅ Platform-specific: `Platform.isIOS` check prima di iOS-only code
 
 ---
 
