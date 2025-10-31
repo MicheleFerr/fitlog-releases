@@ -665,7 +665,7 @@ class _TrustScoreIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = _getScoreColor();
+    final color = _getScoreColor(context);
     
     return Container(
       width: 48,
@@ -702,7 +702,7 @@ class _TrustScoreIndicator extends StatelessWidget {
     );
   }
   
-  Color _getScoreColor() {
+  Color _getScoreColor(BuildContext context) {
     if (score >= 80) return context.colors.success;
     if (score >= 60) return context.colors.primary;
     if (score >= 40) return context.colors.secondary;

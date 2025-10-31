@@ -396,7 +396,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       color: isFuture 
                         ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
                         : hasWorkout 
-                          ? _getIntensityColor(dayActivities.length)
+                          ? _getIntensityColor(context,dayActivities.length)
                           : theme.colorScheme.surfaceContainerHighest,
                       shape: BoxShape.circle,
                       border: isToday ? Border.all(
@@ -446,9 +446,9 @@ class StreakTrackerWidget extends ConsumerWidget {
           children: [
             _buildLegendItem(context, 'Riposo', theme.colorScheme.surfaceContainerHighest),
             const SizedBox(width: 16),
-            _buildLegendItem(context, 'Leggero', _getIntensityColor(1)),
+            _buildLegendItem(context, 'Leggero', _getIntensityColor(context,1)),
             const SizedBox(width: 16),
-            _buildLegendItem(context, 'Intenso', _getIntensityColor(3)),
+            _buildLegendItem(context, 'Intenso', _getIntensityColor(context,3)),
           ],
         ),
       ],
@@ -545,7 +545,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                     color: isFuture
                       ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
                       : hasWorkout 
-                        ? _getIntensityColor(activities.length)
+                        ? _getIntensityColor(context,activities.length)
                         : theme.colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                     border: isToday ? Border.all(
@@ -600,11 +600,11 @@ class StreakTrackerWidget extends ConsumerWidget {
             children: [
               _buildLegendItem(context, 'Nessuno', theme.colorScheme.surfaceContainerHighest),
               const SizedBox(width: 12),
-              _buildLegendItem(context, '1-2 es.', _getIntensityColor(1)),
+              _buildLegendItem(context, '1-2 es.', _getIntensityColor(context,1)),
               const SizedBox(width: 12),
-              _buildLegendItem(context, '3-4 es.', _getIntensityColor(3)),
+              _buildLegendItem(context, '3-4 es.', _getIntensityColor(context,3)),
               const SizedBox(width: 12),
-              _buildLegendItem(context, '5+ es.', _getIntensityColor(5)),
+              _buildLegendItem(context, '5+ es.', _getIntensityColor(context,5)),
             ],
           ),
         ],
@@ -636,7 +636,7 @@ class StreakTrackerWidget extends ConsumerWidget {
     );
   }
 
-  Color _getIntensityColor(int exerciseCount) {
+  Color _getIntensityColor(BuildContext context, int exerciseCount) {
     if (exerciseCount == 0) return context.colors.surfaceVariant.withValues(alpha: 0.2);
     if (exerciseCount <= 2) return context.colors.success.withValues(alpha: 0.5);
     if (exerciseCount <= 4) return context.colors.secondary.withValues(alpha: 0.7);
