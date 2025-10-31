@@ -430,7 +430,7 @@ class NotificationTile extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: _getTypeColor(notification.type).withValues(alpha: 0.1),
+                      color: _getTypeColor(context, notification.type).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(
@@ -519,7 +519,7 @@ class NotificationTile extends StatelessWidget {
     );
   }
 
-  Color _getTypeColor(NotificationType type) {
+  Color _getTypeColor(BuildContext context, NotificationType type) {
     switch (type) {
       case NotificationType.aiTip:
         return context.colors.tertiary;

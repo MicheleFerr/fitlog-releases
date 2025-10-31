@@ -59,8 +59,8 @@ class TemplateCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    _getCategoryColor(template.category),
-                    _getCategoryColor(template.category).withValues(alpha: 0.7),
+                    _getCategoryColor(context, template.category),
+                    _getCategoryColor(context, template.category).withValues(alpha: 0.7),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -251,7 +251,7 @@ class TemplateCard extends StatelessWidget {
     );
   }
   
-  Color _getCategoryColor(TemplateCategory category) {
+  Color _getCategoryColor(BuildContext context, TemplateCategory category) {
     switch (category) {
       case TemplateCategory.strength:
         return context.colors.error;

@@ -182,7 +182,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             l10n.velocity,
             '${metrics.currentVelocityMps.toStringAsFixed(2)} m/s',
             Icons.speed,
-            _getVelocityColor(metrics.currentVelocityMps, theme),
+            _getVelocityColor(context, metrics.currentVelocityMps, theme),
           ),
         ),
         const SizedBox(width: 8),
@@ -204,7 +204,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             l10n.drop,
             '${metrics.velocityDropPercent.toStringAsFixed(1)}%',
             Icons.trending_down,
-            _getDropColor(metrics.velocityDropPercent, theme),
+            _getDropColor(context, metrics.velocityDropPercent, theme),
           ),
         ),
       ],
@@ -298,7 +298,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.fatigue,
             fatigueIndex,
-            _getFatigueColor(fatigueIndex, theme),
+            _getFatigueColor(context, fatigueIndex, theme),
             '%',
           ),
         ),
@@ -309,7 +309,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.form,
             formScore,
-            _getFormColor(formScore, theme),
+            _getFormColor(context, formScore, theme),
             '%',
           ),
         ),
@@ -452,25 +452,25 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     }
   }
 
-  Color _getVelocityColor(double velocity, ThemeData theme) {
+  Color _getVelocityColor(BuildContext context, double velocity, ThemeData theme) {
     if (velocity > 1.0) return context.colors.success;
     if (velocity > 0.5) return theme.colorScheme.primary;
     return context.colors.secondary;
   }
 
-  Color _getDropColor(double drop, ThemeData theme) {
+  Color _getDropColor(BuildContext context, double drop, ThemeData theme) {
     if (drop > 25) return theme.colorScheme.error;
     if (drop > 15) return context.colors.secondary;
     return context.colors.success;
   }
 
-  Color _getFatigueColor(double fatigue, ThemeData theme) {
+  Color _getFatigueColor(BuildContext context, double fatigue, ThemeData theme) {
     if (fatigue > 80) return theme.colorScheme.error;
     if (fatigue > 60) return context.colors.secondary;
     return context.colors.success;
   }
 
-  Color _getFormColor(double form, ThemeData theme) {
+  Color _getFormColor(BuildContext context, double form, ThemeData theme) {
     if (form > 80) return context.colors.success;
     if (form > 60) return context.colors.secondary;
     return theme.colorScheme.error;

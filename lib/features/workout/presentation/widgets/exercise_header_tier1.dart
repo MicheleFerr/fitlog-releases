@@ -28,7 +28,7 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         child: Row(
           children: [
             // Category Icon
-            _buildCategoryIcon(theme),
+            _buildCategoryIcon(context, theme),
             
             const SizedBox(width: 12),
             
@@ -50,7 +50,7 @@ class ExerciseHeaderTier1 extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _buildTypeBadge(theme),
+                      _buildTypeBadge(context, theme),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -83,10 +83,10 @@ class ExerciseHeaderTier1 extends StatelessWidget {
     );
   }
   
-  Widget _buildCategoryIcon(ThemeData theme) {
+  Widget _buildCategoryIcon(BuildContext context, ThemeData theme) {
     IconData icon;
     Color color;
-    
+
     switch (exercise.category.name.toLowerCase()) {
       case 'chest':
         icon = Icons.fitness_center;
@@ -136,10 +136,10 @@ class ExerciseHeaderTier1 extends StatelessWidget {
     );
   }
   
-  Widget _buildTypeBadge(ThemeData theme) {
+  Widget _buildTypeBadge(BuildContext context, ThemeData theme) {
     String badgeText;
     Color badgeColor;
-    
+
     switch (exercise.type.name.toLowerCase()) {
       case 'single':
         badgeText = 'S';
