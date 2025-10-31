@@ -345,7 +345,7 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
         for (final set in exercise.sets) {
           if (set.isCompleted) {
             totalSets++;
-            final weight = set.weight;
+            final weight = set.weight ?? 0.0;
             final reps = set.reps ?? 0;
             totalVolume += weight * reps;
           }
