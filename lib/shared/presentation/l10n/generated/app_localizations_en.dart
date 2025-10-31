@@ -11418,4 +11418,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String debugLogsCategoryDisabled(String category) {
     return '$category disabled';
   }
+
+  @override
+  String get countingModeWeighted => 'Weighted';
+
+  @override
+  String get countingModeReps => 'Reps';
+
+  @override
+  String get countingModeTime => 'Time';
 }

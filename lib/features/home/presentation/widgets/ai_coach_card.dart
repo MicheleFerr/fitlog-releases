@@ -1892,38 +1892,47 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
         // No feedback yet - show buttons
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
+              // Question text centered
               Text(
                 l10n.feedbackQuestion,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
+                textAlign: TextAlign.center,
               ),
-              const Spacer(),
-              // Thumbs up button
-              _buildFeedbackButton(
-                context: context,
-                ref: ref,
-                insight: insight,
-                isHelpful: true,
-                icon: Icons.thumb_up_outlined,
-                label: l10n.feedbackHelpful,
-                theme: theme,
-                colorScheme: colorScheme,
-              ),
-              const SizedBox(width: 8),
-              // Thumbs down button
-              _buildFeedbackButton(
-                context: context,
-                ref: ref,
-                insight: insight,
-                isHelpful: false,
-                icon: Icons.thumb_down_outlined,
-                label: l10n.feedbackNotHelpful,
-                theme: theme,
-                colorScheme: colorScheme,
+              const SizedBox(height: 12),
+              // Buttons row centered
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Thumbs up button
+                  _buildFeedbackButton(
+                    context: context,
+                    ref: ref,
+                    insight: insight,
+                    isHelpful: true,
+                    icon: Icons.thumb_up_outlined,
+                    label: l10n.feedbackHelpful,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(width: 16),
+                  // Thumbs down button
+                  _buildFeedbackButton(
+                    context: context,
+                    ref: ref,
+                    insight: insight,
+                    isHelpful: false,
+                    icon: Icons.thumb_down_outlined,
+                    label: l10n.feedbackNotHelpful,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                  ),
+                ],
               ),
             ],
           ),
@@ -2152,7 +2161,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     return switch (insight.type) {
       InsightType.muscleGroupBalance => () {
         final muscleGroup = data['muscleGroup'] as String?;
-        final currentSets = data['currentSets'] as String?;
+        final currentSets = data['currentSets'] as int?;
         if (muscleGroup != null && currentSets != null) {
           return _KeyMetric(
             value: '$currentSets ${l10n.aiCoachSeriesPerWeek}',
@@ -2163,7 +2172,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       }(),
 
       InsightType.volumeOptimization => () {
-        final currentVolume = data['currentVolume'] as String?;
+        final currentVolume = data['currentVolume'];
         if (currentVolume != null) {
           return _KeyMetric(
             value: '$currentVolume ${l10n.aiCoachTons}',
@@ -2174,7 +2183,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       }(),
 
       InsightType.progressOverload => () {
-        final overloadPercent = data['overloadPercent'] as String?;
+        final overloadPercent = data['overloadPercent'];
         if (overloadPercent != null) {
           return _KeyMetric(
             value: '+$overloadPercent%',
@@ -2185,7 +2194,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       }(),
 
       InsightType.frequencyRecommendation => () {
-        final avgPerWeek = data['avgPerWeek'] as String?;
+        final avgPerWeek = data['avgPerWeek'];
         if (avgPerWeek != null) {
           return _KeyMetric(
             value: '$avgPerWeek ${l10n.aiCoachTimesPerWeek}',
@@ -2205,14 +2214,15 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
     // Only show progress for muscle balance insights with set data
     if (insight.type == InsightType.muscleGroupBalance) {
-      final currentSets = data['currentSets'] as String?;
-      final targetMin = data['targetMin'] as String?;
+      final currentSets = data['currentSets'] as int?;
+      final targetMin = data['targetMin'];
 
       if (currentSets != null && targetMin != null) {
         try {
-          final current = int.parse(currentSets);
-          final minSets = int.parse(targetMin.split('-').first);
-          final maxSets = targetMin.contains('-') ? int.parse(targetMin.split('-').last) : minSets + 10;
+          final current = currentSets;
+          final targetMinStr = targetMin.toString();
+          final minSets = int.parse(targetMinStr.split('-').first);
+          final maxSets = targetMinStr.contains('-') ? int.parse(targetMinStr.split('-').last) : minSets + 10;
 
           // Calculate progress (0.0 - 1.0)
           final progress = (current / maxSets).clamp(0.0, 1.0);

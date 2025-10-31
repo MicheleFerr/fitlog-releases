@@ -4957,5 +4957,8 @@
   "debugLogsAllEnabled": "Tutti i log abilitati con successo",
   "debugLogsAllDisabled": "Tutti i log disabilitati con successo",
   "debugLogsCategoryEnabled": "{category} abilitato",
-  "debugLogsCategoryDisabled": "{category} disabilitato"
+  "debugLogsCategoryDisabled": "{category} disabilitato",
+  "countingModeWeighted": "Con Peso",
+  "countingModeReps": "Ripetizioni",
+  "countingModeTime": "Tempo"
 }

@@ -14,8 +14,10 @@ import 'package:gymbro_flutter_new/features/admin/presentation/widgets/firebase_
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_stats_card.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_quick_actions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_recent_activity.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_ai_insights_feedback_widget.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
@@ -55,6 +57,8 @@ class AdminDashboardScreen extends ConsumerWidget {
           ref.invalidate(collectionStatsProvider);
           ref.invalidate(adminStatsProvider);
           ref.invalidate(recentActivityProvider);
+          ref.invalidate(adminFeedbackStatsProvider);
+          ref.invalidate(adminAllFeedbackProvider);
         },
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -78,6 +82,11 @@ class AdminDashboardScreen extends ConsumerWidget {
 
               // Quick Actions
               _buildQuickActionsSection(context, l10n),
+
+              const SizedBox(height: 24),
+
+              // AI Coach Insights Feedback
+              const AdminAIInsightsFeedbackWidget(),
 
               const SizedBox(height: 24),
 

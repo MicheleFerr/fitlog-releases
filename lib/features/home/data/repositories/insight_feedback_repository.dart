@@ -127,4 +127,91 @@ class InsightFeedbackRepository {
       throw Exception('Failed to get feedback stats: $e');
     }
   }
+
+  /// Get all feedback from all users (Admin only)
+  /// Returns feedback ordered by timestamp (most recent first)
+  Future<List<InsightFeedback>> getAllFeedback({int? limit}) async {
+    try {
+      var query = _firestore
+          .collection(_collectionName)
+          .orderBy('timestamp', descending: true);
+
+      if (limit != null) {
+        query = query.limit(limit);
+      }
+
+      final snapshot = await query.get();
+
+      return snapshot.docs
+          .map((doc) => InsightFeedback.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to get all feedback: $e');
+    }
+  }
+
+  /// Get overall feedback statistics (Admin only)
+  Future<Map<String, dynamic>> getOverallStats() async {
+    try {
+      final snapshot = await _firestore.collection(_collectionName).get();
+
+      if (snapshot.docs.isEmpty) {
+        return {
+          'totalFeedback': 0,
+          'totalHelpful': 0,
+          'totalNotHelpful': 0,
+          'helpfulPercentage': 0.0,
+          'uniqueUsers': 0,
+          'byType': <String, dynamic>{},
+        };
+      }
+
+      final total = snapshot.docs.length;
+      final helpful = snapshot.docs
+          .where((doc) => doc.data()['isHelpful'] as bool)
+          .length;
+      final notHelpful = total - helpful;
+      final helpfulPercentage = helpful > 0 ? (helpful / total) * 100 : 0.0;
+
+      // Count unique users
+      final uniqueUsers = snapshot.docs
+          .map((doc) => doc.data()['userId'] as String)
+          .toSet()
+          .length;
+
+      // Stats by insight type
+      final byType = <String, Map<String, dynamic>>{};
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final type = data['insightType'] as String;
+        final isHelpful = data['isHelpful'] as bool;
+
+        if (!byType.containsKey(type)) {
+          byType[type] = {
+            'total': 0,
+            'helpful': 0,
+            'notHelpful': 0,
+          };
+        }
+
+        byType[type]!['total'] = (byType[type]!['total'] as int) + 1;
+        if (isHelpful) {
+          byType[type]!['helpful'] = (byType[type]!['helpful'] as int) + 1;
+        } else {
+          byType[type]!['notHelpful'] = (byType[type]!['notHelpful'] as int) + 1;
+        }
+      }
+
+      return {
+        'totalFeedback': total,
+        'totalHelpful': helpful,
+        'totalNotHelpful': notHelpful,
+        'helpfulPercentage': helpfulPercentage,
+        'uniqueUsers': uniqueUsers,
+        'byType': byType,
+      };
+    } catch (e) {
+      throw Exception('Failed to get overall stats: $e');
+    }
+  }
 }

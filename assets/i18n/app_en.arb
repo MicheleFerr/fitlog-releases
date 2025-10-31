@@ -13486,5 +13486,17 @@
         "description": "Category name"
       }
     }
+  },
+  "countingModeWeighted": "Weighted",
+  "@countingModeWeighted": {
+    "description": "Exercise counting mode for weighted exercises (with weight)"
+  },
+  "countingModeReps": "Reps",
+  "@countingModeReps": {
+    "description": "Exercise counting mode for bodyweight exercises (reps only)"
+  },
+  "countingModeTime": "Time",
+  "@countingModeTime": {
+    "description": "Exercise counting mode for time-based exercises"
   }
 }

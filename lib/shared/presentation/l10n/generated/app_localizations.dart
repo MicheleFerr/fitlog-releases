@@ -20087,6 +20087,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{category} disabled'**
   String debugLogsCategoryDisabled(String category);
+
+  /// Exercise counting mode for weighted exercises (with weight)
+  ///
+  /// In en, this message translates to:
+  /// **'Weighted'**
+  String get countingModeWeighted;
+
+  /// Exercise counting mode for bodyweight exercises (reps only)
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get countingModeReps;
+
+  /// Exercise counting mode for time-based exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get countingModeTime;
 }
 
 class _AppLocalizationsDelegate
