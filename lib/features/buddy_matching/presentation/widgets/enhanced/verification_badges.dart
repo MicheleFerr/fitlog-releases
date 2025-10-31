@@ -98,13 +98,13 @@ class VerificationBadges extends ConsumerWidget {
   }) {
     return Tooltip(
       message: tooltip,
-      child: showText 
+      child: showText
           ? _buildBadgeWithText(context, icon, color, text)
-          : _buildBadgeIcon(icon, color),
+          : _buildBadgeIcon(context, icon, color),
     );
   }
 
-  Widget _buildBadgeIcon(IconData icon, Color color) {
+  Widget _buildBadgeIcon(BuildContext context, IconData icon, Color color) {
     return Container(
       width: size,
       height: size,

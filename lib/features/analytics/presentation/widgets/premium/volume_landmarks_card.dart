@@ -185,7 +185,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   '$currentSets',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: _getZoneColor(zone),
+                    color: _getZoneColor(zone, theme.colorScheme),
                   ),
                 ),
                 Text(
@@ -276,7 +276,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       width: 3,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: _getZoneColor(zone),
+                        color: _getZoneColor(zone, theme.colorScheme),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -286,7 +286,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: _getZoneColor(zone),
+                        color: _getZoneColor(zone, theme.colorScheme),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Text(
@@ -560,17 +560,17 @@ class VolumeLandmarksCard extends StatelessWidget {
     );
   }
 
-  Color _getZoneColor(VolumeZone zone) {
+  Color _getZoneColor(VolumeZone zone, ColorScheme colorScheme) {
     switch (zone) {
       case VolumeZone.belowMaintenance:
       case VolumeZone.maintenance:
-        return context.colors.surfaceVariant;
+        return colorScheme.surfaceVariant;
       case VolumeZone.effective:
-        return context.colors.secondary;
+        return colorScheme.secondary;
       case VolumeZone.optimal:
-        return context.colors.success;
+        return colorScheme.success;
       case VolumeZone.excessive:
-        return context.colors.error;
+        return colorScheme.error;
     }
   }
 

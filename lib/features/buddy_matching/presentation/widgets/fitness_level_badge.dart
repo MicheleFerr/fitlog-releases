@@ -33,7 +33,7 @@ class FitnessLevelBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = _getLevelColor(level);
+    final color = _getLevelColor(level, theme.colorScheme);
     final icon = _getLevelIcon(level);
 
     return Container(
@@ -72,16 +72,16 @@ class FitnessLevelBadge extends StatelessWidget {
     );
   }
 
-  Color _getLevelColor(FitnessLevel level) {
+  Color _getLevelColor(FitnessLevel level, ColorScheme colorScheme) {
     switch (level) {
       case FitnessLevel.beginner:
-        return context.colors.success;
+        return colorScheme.success;
       case FitnessLevel.intermediate:
-        return context.colors.secondary;
+        return colorScheme.secondary;
       case FitnessLevel.advanced:
-        return context.colors.error;
+        return colorScheme.error;
       case FitnessLevel.expert:
-        return context.colors.tertiary;
+        return colorScheme.tertiary;
     }
   }
 

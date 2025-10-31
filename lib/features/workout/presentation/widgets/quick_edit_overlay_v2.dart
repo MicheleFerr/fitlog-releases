@@ -1897,7 +1897,7 @@ extension QuickEditOverlayV2Extension on BuildContext {
   }) {
     return showDialog(
       context: this,
-      barrierColor: context.colors.onSurface54,
+      barrierColor: this.colors.onSurface54,
       builder: (context) => Stack(
         children: [
           GestureDetector(

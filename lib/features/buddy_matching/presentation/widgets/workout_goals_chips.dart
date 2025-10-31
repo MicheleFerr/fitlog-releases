@@ -52,7 +52,7 @@ class WorkoutGoalsChips extends StatelessWidget {
   }
 
   Widget _buildGoalChip(BuildContext context, ThemeData theme, WorkoutGoal goal) {
-    final color = _getGoalColor(goal);
+    final color = _getGoalColor(goal, theme.colorScheme);
     final icon = _getGoalIcon(goal);
 
     return Container(
@@ -113,20 +113,20 @@ class WorkoutGoalsChips extends StatelessWidget {
     );
   }
 
-  Color _getGoalColor(WorkoutGoal goal) {
+  Color _getGoalColor(WorkoutGoal goal, ColorScheme colorScheme) {
     switch (goal) {
       case WorkoutGoal.weightLoss:
-        return context.colors.error;
+        return colorScheme.error;
       case WorkoutGoal.muscleGain:
-        return context.colors.primary;
+        return colorScheme.primary;
       case WorkoutGoal.strength:
-        return context.colors.warning;
+        return colorScheme.warning;
       case WorkoutGoal.endurance:
-        return context.colors.success;
+        return colorScheme.success;
       case WorkoutGoal.flexibility:
-        return context.colors.tertiary;
+        return colorScheme.tertiary;
       case WorkoutGoal.general:
-        return context.colors.surfaceVariant;
+        return colorScheme.surfaceVariant;
     }
   }
 

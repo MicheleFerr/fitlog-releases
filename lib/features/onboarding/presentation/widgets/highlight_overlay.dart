@@ -166,6 +166,7 @@ class _HighlightOverlayState extends State<HighlightOverlay>
                       overlayColor: widget.overlayColor,
                       shape: widget.shape,
                       pulseAnimation: _pulseAnimation,
+                      highlightColor: context.colors.surface,
                     ),
                   )
                 : Container(color: widget.overlayColor),
@@ -281,11 +282,13 @@ class HighlightPainter extends CustomPainter {
     required this.overlayColor,
     required this.shape,
     required this.pulseAnimation,
+    required this.highlightColor,
   }) : super(repaint: pulseAnimation);
   final Rect targetRect;
   final Color overlayColor;
   final HighlightShape shape;
   final Animation<double> pulseAnimation;
+  final Color highlightColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -294,7 +297,7 @@ class HighlightPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final highlightPaint = Paint()
-      ..color = context.colors.surface
+      ..color = highlightColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0 * pulseAnimation.value;
 

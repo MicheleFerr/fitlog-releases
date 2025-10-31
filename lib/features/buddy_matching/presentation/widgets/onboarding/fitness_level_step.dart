@@ -131,12 +131,12 @@ class FitnessLevelStep extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: _getLevelColor(level).withValues(alpha: 0.2),
+                    color: _getLevelColor(level, theme.colorScheme).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     _getLevelIcon(level),
-                    color: _getLevelColor(level),
+                    color: _getLevelColor(level, theme.colorScheme),
                     size: 28,
                   ),
                 ),
@@ -189,16 +189,16 @@ class FitnessLevelStep extends StatelessWidget {
     );
   }
 
-  Color _getLevelColor(FitnessLevel level) {
+  Color _getLevelColor(FitnessLevel level, ColorScheme colorScheme) {
     switch (level) {
       case FitnessLevel.beginner:
-        return context.colors.success;
+        return colorScheme.success;
       case FitnessLevel.intermediate:
-        return context.colors.secondary;
+        return colorScheme.secondary;
       case FitnessLevel.advanced:
-        return context.colors.error;
+        return colorScheme.error;
       case FitnessLevel.expert:
-        return context.colors.tertiary;
+        return colorScheme.tertiary;
     }
   }
 
