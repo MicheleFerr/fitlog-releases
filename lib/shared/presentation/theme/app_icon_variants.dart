@@ -222,13 +222,18 @@ extension IconDataVariants on IconData {
   }
 }
 
-/// Helper to create toggle-able icon widgets
+/// Helper to create toggle-able icon widgets with smooth animation
+///
+/// Uses AnimatedSwitcher for fluid transitions between active/inactive states.
+/// Includes scale animation (300ms) for polished UX.
 class ToggleIcon extends StatelessWidget {
   final bool isActive;
   final AppIconVariant variant;
   final double? size;
   final Color? activeColor;
   final Color? inactiveColor;
+  final Duration duration;
+  final VoidCallback? onTap;
 
   const ToggleIcon({
     super.key,
@@ -237,14 +242,39 @@ class ToggleIcon extends StatelessWidget {
     this.size,
     this.activeColor,
     this.inactiveColor,
+    this.duration = const Duration(milliseconds: 300),
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
+    final icon = Icon(
       isActive ? variant.filled : variant.outlinedOrFilled,
       size: size,
       color: isActive ? activeColor : inactiveColor,
+      key: ValueKey(isActive), // Key ensures AnimatedSwitcher detects change
     );
+
+    final animatedIcon = AnimatedSwitcher(
+      duration: duration,
+      transitionBuilder: (child, animation) {
+        // Scale transition for smooth appearance
+        return ScaleTransition(
+          scale: animation,
+          child: child,
+        );
+      },
+      child: icon,
+    );
+
+    // Wrap in GestureDetector if onTap provided
+    if (onTap != null) {
+      return GestureDetector(
+        onTap: onTap,
+        child: animatedIcon,
+      );
+    }
+
+    return animatedIcon;
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Type-safe icon category system
 ///
@@ -261,13 +263,28 @@ enum AppIconCategory {
   }
 
   /// Get category for an icon (returns null if not found)
+  ///
+  /// Uses lazy-initialized cache for O(1) lookup performance.
+  /// Cache is built on first access and reused for subsequent calls.
   static AppIconCategory? categoryFor(IconData icon) {
+    _buildCategoryMapIfNeeded();
+    return _categoryMap?[icon];
+  }
+
+  /// Lazy-initialized category lookup map for O(1) performance
+  static Map<IconData, AppIconCategory>? _categoryMap;
+
+  /// Build category map on first access (lazy initialization)
+  static void _buildCategoryMapIfNeeded() {
+    if (_categoryMap != null) return;
+
+    final map = <IconData, AppIconCategory>{};
     for (final category in AppIconCategory.values) {
-      if (category.contains(icon)) {
-        return category;
+      for (final icon in category.icons.values) {
+        map[icon] = category;
       }
     }
-    return null;
+    _categoryMap = map;
   }
 
   /// Get all icons across all categories
@@ -295,4 +312,79 @@ extension IconDataCategory on IconData {
 
   /// Check if this icon is in a specific category
   bool isInCategory(AppIconCategory category) => category.contains(this);
+}
+
+/// Semantic helpers for conditional logic based on category type
+///
+/// Useful for applying different styles or behaviors based on icon semantics.
+/// Example: Apply different colors to action icons vs status icons.
+extension AppIconCategoryHelpers on AppIconCategory {
+  /// Icons representing user actions (navigation, CRUD operations)
+  bool get isAction =>
+      this == AppIconCategory.action || this == AppIconCategory.navigation;
+
+  /// Icons for data visualization and analytics
+  bool get isVisualization => this == AppIconCategory.analytics;
+
+  /// Icons representing state or feedback
+  bool get isState => this == AppIconCategory.status;
+
+  /// Icons for social interactions and user engagement
+  bool get isSocial => this == AppIconCategory.social;
+
+  /// Icons for content and media
+  bool get isContent => this == AppIconCategory.media;
+
+  /// Icons for configuration and preferences
+  bool get isConfiguration => this == AppIconCategory.settings;
+
+  /// Icons for time-related features
+  bool get isTemporal =>
+      this == AppIconCategory.timer || this == AppIconCategory.workout;
+
+  /// Get suggested icon color based on category semantics
+  ///
+  /// Returns context-aware color that matches category intent:
+  /// - Action/Navigation → Primary (brand color)
+  /// - Visualization → Secondary (accent)
+  /// - State → Varies by state (success/error/warning)
+  /// - Social → Tertiary (community feel)
+  /// - Default → OnSurface (neutral)
+  Color suggestedColor(BuildContext context) {
+    return switch (this) {
+      AppIconCategory.workout => context.colors.primary,
+      AppIconCategory.analytics => context.colors.secondary,
+      AppIconCategory.timer => context.colors.secondary,
+      AppIconCategory.status => context.colors.tertiary,
+      AppIconCategory.action => context.colors.primary,
+      AppIconCategory.navigation => context.colors.primary,
+      AppIconCategory.social => context.colors.tertiary,
+      AppIconCategory.settings => context.colors.onSurface,
+      AppIconCategory.premium => context.colors.secondary,
+      AppIconCategory.media => context.colors.tertiary,
+      AppIconCategory.misc => context.colors.onSurface,
+    };
+  }
+
+  /// Get suggested icon size based on category importance
+  ///
+  /// Returns semantic size that reflects typical usage:
+  /// - Premium/Workout → Large (featured content)
+  /// - Navigation/Action → Medium (standard UI)
+  /// - Status/Misc → Small (secondary indicators)
+  double get suggestedSize {
+    return switch (this) {
+      AppIconCategory.premium => AppIconSize.xlarge,
+      AppIconCategory.workout => AppIconSize.large,
+      AppIconCategory.analytics => AppIconSize.large,
+      AppIconCategory.navigation => AppIconSize.medium,
+      AppIconCategory.action => AppIconSize.medium,
+      AppIconCategory.timer => AppIconSize.medium,
+      AppIconCategory.social => AppIconSize.medium,
+      AppIconCategory.media => AppIconSize.medium,
+      AppIconCategory.status => AppIconSize.small,
+      AppIconCategory.settings => AppIconSize.small,
+      AppIconCategory.misc => AppIconSize.small,
+    };
+  }
 }
