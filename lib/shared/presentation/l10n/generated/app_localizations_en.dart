@@ -3290,6 +3290,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noDataForExercise => 'No data available for this exercise';
 
   @override
+  String get noDataForChart => 'No data available for selected metrics';
+
+  @override
+  String get chartTapToSeeRealValues => 'Tap chart to see real values';
+
+  @override
   String get volumeHeatmap => 'Volume Heatmap';
 
   @override

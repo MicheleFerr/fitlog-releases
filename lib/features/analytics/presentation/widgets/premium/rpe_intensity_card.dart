@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/rpe_analyz
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// RPE & Intensity Distribution Card
 ///
@@ -158,7 +159,7 @@ class RPEIntensityCard extends StatelessWidget {
       child: Column(
         children: [
           Icon(
-            Icons.speed_outlined,
+            AppIcons.speedOutlined,
             size: 64,
             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),

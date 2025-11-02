@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/zen_mode_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ZenModeSettingsDialog extends ConsumerWidget {
   const ZenModeSettingsDialog({super.key});
@@ -87,7 +88,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Card Riscaldamento',
                         subtitle: 'Nasconde i suggerimenti di warmup',
-                        icon: Icons.whatshot_outlined,
+                        icon: AppIcons.whatshotOutlined,
                         value: zenState.config.hideWarmupCards,
                         onChanged: (value) => zenNotifier.updateConfigField('hideWarmupCards', value),
                       ),
@@ -103,7 +104,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Animazioni XP',
                         subtitle: 'Nasconde le barre XP animate',
-                        icon: Icons.auto_awesome_outlined,
+                        icon: AppIcons.autoAwesomeOutlined,
                         value: zenState.config.hideXPAnimations,
                         onChanged: (value) => zenNotifier.updateConfigField('hideXPAnimations', value),
                       ),
@@ -138,7 +139,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Time Under Tension (TUT)',
                         subtitle: 'Mostra tempo sotto tensione per set',
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timer,
                         value: zenState.config.showTUT,
                         onChanged: (value) => zenNotifier.updateConfigField('showTUT', value),
                         isComingSoon: true,
@@ -156,7 +157,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Volume Totale',
                         subtitle: 'Mostra volume totale allenamento',
-                        icon: Icons.analytics_outlined,
+                        icon: AppIcons.analytics,
                         value: zenState.config.showVolume,
                         onChanged: (value) => zenNotifier.updateConfigField('showVolume', value),
                       ),

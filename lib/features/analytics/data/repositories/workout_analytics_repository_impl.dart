@@ -753,9 +753,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
 
   /// Clean up resources
   Future<void> dispose() async {
-    for (final controller in _updateControllers.values) {
-      controller.close();
-    }
+    await Future.wait(
+      _updateControllers.values.map((controller) => controller.close()),
+    );
     _updateControllers.clear();
 
     // Print final cache statistics

@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing comparison with previous similar workout
 class WorkoutComparisonWidget extends ConsumerWidget {
@@ -350,7 +351,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.analytics_outlined,
+              AppIcons.analytics,
               color: colorScheme.onSurfaceVariant,
               size: 48,
             ),

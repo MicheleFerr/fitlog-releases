@@ -33,6 +33,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen di riepilogo workout completato
 class WorkoutCompletionSummaryScreen extends ConsumerWidget {
@@ -134,7 +135,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                     children: [
                       // Durata
                       _StatCard(
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timer,
                         label: context.l10n.duration,
                         value: durationText,
                         color: context.colors.primary,
@@ -198,7 +199,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                       // TODO: Navigate to workout history detail
                       context.pop();
                     },
-                    icon: const Icon(Icons.analytics_outlined),
+                    icon: const Icon(AppIcons.analytics),
                     label: Text(context.l10n.viewDetails),
                   ),
                   const SizedBox(height: 12),

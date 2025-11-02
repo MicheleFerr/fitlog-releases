@@ -275,9 +275,17 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
           ),
         ),
         const SizedBox(height: 16),
-        
-        // Plan cards
-        ...PremiumPlan.values.map((plan) {
+
+        // Plan cards with RadioGroup
+        RadioGroup<PremiumPlan>(
+          groupValue: _selectedPlan,
+          onChanged: (value) {
+            if (value != null) {
+              setState(() => _selectedPlan = value);
+            }
+          },
+          child: Column(
+            children: PremiumPlan.values.map((plan) {
           final info = productInfo[plan]!;
           final isSelected = _selectedPlan == plan;
           final isRecommended = plan == PremiumPlan.yearly;
@@ -319,9 +327,6 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                           // Radio button
                           Radio<PremiumPlan>(
                             value: plan,
-                            groupValue: _selectedPlan,
-                            onChanged: (value) => setState(() => _selectedPlan = value),
-                            activeColor: colorScheme.primary,
                           ),
                           const SizedBox(width: 12),
                           
@@ -415,7 +420,9 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
               ),
             ),
           );
-        }),
+        }).toList(),
+          ),
+        ),
       ],
     );
   }
@@ -742,26 +749,29 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
     
     try {
       await ref.read(premiumUpgradeProvider.notifier).restorePurchases();
-      
-      if (mounted) {
-        final userProfile = ref.read(userProfileProvider).valueOrNull;
-        if (userProfile?.isPremium ?? false) {
-          // Successfully restored
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('✅ Premium restored successfully!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          Navigator.of(context).pop();
-        } else {
-          // No purchases to restore
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('No purchases found to restore'),
-            ),
-          );
-        }
+
+      if (!mounted) return;
+
+      final userProfile = ref.read(userProfileProvider).valueOrNull;
+
+      if (!context.mounted) return;
+
+      if (userProfile?.isPremium ?? false) {
+        // Successfully restored
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Premium restored successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.of(context).pop();
+      } else {
+        // No purchases to restore
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No purchases found to restore'),
+          ),
+        );
       }
     } finally {
       if (mounted) {

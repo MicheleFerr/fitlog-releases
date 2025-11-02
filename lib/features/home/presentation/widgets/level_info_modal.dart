@@ -286,7 +286,7 @@ class LevelInfoModal extends ConsumerWidget {
   }
   
   Color _getLevelColor(BuildContext context, int level) {
-    if (level <= 2) return context.colors.surfaceVariant;
+    if (level <= 2) return context.colors.surfaceContainerHighest;
     if (level <= 4) return context.colors.success;
     if (level <= 6) return context.colors.primary;
     if (level <= 8) return context.colors.tertiary;

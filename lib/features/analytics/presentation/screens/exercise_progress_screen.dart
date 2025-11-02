@@ -292,7 +292,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
         break;
       case TrendDirection.stable:
         icon = Icons.remove;
-        color = context.colors.surfaceVariant;
+        color = context.colors.surfaceContainerHighest;
         label = context.l10n.stable;
         break;
     }

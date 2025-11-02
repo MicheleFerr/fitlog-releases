@@ -204,6 +204,7 @@ class ExerciseModel {
     required this.category,
     required this.sets,
     this.restTime,
+    this.tut,
     this.notes,
     required this.isCompleted,
     required this.totalVolume,
@@ -221,6 +222,7 @@ class ExerciseModel {
           .map((set) => ExerciseSetModel.fromDomain(set))
           .toList(),
       restTime: exercise.restTime,
+      tut: exercise.tut,
       notes: exercise.notes,
       isCompleted: exercise.isCompleted,
       totalVolume: exercise.totalVolume,
@@ -291,6 +293,7 @@ class ExerciseModel {
       category: category,
       sets: sets,
       restTime: data['restTimeSeconds'] as int?,
+      tut: data['tut'] as String?,
       notes: notes,
       isCompleted: data['isCompleted'] as bool? ?? false,
       totalVolume: (data['totalVolume'] as num?)?.toDouble() ?? 0.0,
@@ -304,6 +307,7 @@ class ExerciseModel {
   final String category;
   final List<ExerciseSetModel> sets;
   final int? restTime;
+  final String? tut;
   final String? notes;
   final bool isCompleted;
   final double totalVolume;
@@ -324,6 +328,7 @@ class ExerciseModel {
       ),
       sets: sets.map((setModel) => setModel.toDomain()).toList(),
       restTime: restTime,
+      tut: tut,
       notes: notes,
       createdAt: createdAt,
     );
@@ -337,6 +342,7 @@ class ExerciseModel {
       'category': category,
       'sets': sets.map((e) => e.toJson()).toList(),
       'restTimeSeconds': restTime,
+      'tut': tut,
       'notes': notes,
       'isCompleted': isCompleted,
       'totalVolume': totalVolume,
@@ -353,6 +359,7 @@ class ExerciseModel {
     String? category,
     List<ExerciseSetModel>? sets,
     int? restTime,
+    String? tut,
     String? notes,
     bool? isCompleted,
     double? totalVolume,
@@ -366,6 +373,7 @@ class ExerciseModel {
       category: category ?? this.category,
       sets: sets ?? this.sets,
       restTime: restTime ?? this.restTime,
+      tut: tut ?? this.tut,
       notes: notes ?? this.notes,
       isCompleted: isCompleted ?? this.isCompleted,
       totalVolume: totalVolume ?? this.totalVolume,

@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_review_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin screen for viewing monthly exercise review reports
 class ExerciseReviewScreen extends ConsumerWidget {
@@ -190,7 +191,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
           children: [
             _buildStatCard(
               context,
-              icon: Icons.schedule_outlined,
+              icon: AppIcons.scheduleOutlined,
               label: 'Esercizi Obsoleti',
               value: staleCount.toString(),
               color: context.colors.secondary,
@@ -349,8 +350,8 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Icon(
-              Icons.schedule_outlined,
+            Icon(
+              AppIcons.scheduleOutlined,
               color: context.colors.secondary,
               size: 20,
             ),
@@ -404,7 +405,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const Icon(
+            Icon(
               Icons.flag_outlined,
               color: context.colors.warning,
               size: 20,

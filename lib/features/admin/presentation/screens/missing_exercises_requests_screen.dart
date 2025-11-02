@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/missing_exercise_request.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class MissingExercisesRequestsScreen extends ConsumerStatefulWidget {
   const MissingExercisesRequestsScreen({super.key});
@@ -157,7 +158,7 @@ class _MissingExercisesRequestsScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.check_circle_outline,
+              AppIcons.completeOutline,
               size: 64,
               color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
             ),
@@ -503,9 +504,9 @@ class _MissingExercisesRequestsScreenState
       case RequestStatus.pending:
         return Icons.hourglass_empty;
       case RequestStatus.approved:
-        return Icons.check_circle_outline;
+        return AppIcons.completeOutline;
       case RequestStatus.rejected:
-        return Icons.cancel_outlined;
+        return AppIcons.cancelOutlined;
       case RequestStatus.completed:
         return Icons.done_all;
     }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_optimization_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🎯 TIER-1 PREMIUM GESTURES & ANIMATIONS
 /// Advanced interaction patterns for professional fitness app
@@ -283,7 +284,7 @@ class _SwipeBackground extends StatelessWidget {
         child: Icon(
           direction == SwipeDirection.left
               ? Icons.delete_outline
-              : Icons.check_circle_outline,
+              : AppIcons.completeOutline,
           color: theme.colorScheme.onError,
           size: 28,
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Volume Chart with Material 3 styling
 class EnhancedVolumeChart extends StatelessWidget {
@@ -57,7 +58,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                       value: 'details',
                       child: Row(
                         children: [
-                          const Icon(Icons.info_outlined),
+                          const Icon(AppIcons.infoOutlined),
                           const SizedBox(width: 8),
                           Text(localizations.viewDetails),
                         ],
@@ -726,7 +727,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
       case 'Arms':
         return colorScheme.secondary;
       default:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
     }
   }
 

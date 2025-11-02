@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_st
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Minimal Timer Overlay - Refactored for Consolidated Provider System
 /// 
@@ -274,7 +275,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
     return Center(
       child: Text(
         timeText,
-        style: const TextStyle(
+        style: TextStyle(
           color: context.colors.surface,
           fontSize: 15,
           fontWeight: FontWeight.w600,
@@ -295,7 +296,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
           // Progress indicator - more compact
           _buildProgressIndicator(progress),
           
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           
           // Timer info - more compact layout
           Expanded(
@@ -305,7 +306,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
               children: [
                 Text(
                   _formatTime(remainingSeconds),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: context.colors.surface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -314,7 +315,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                   ),
                 ),
                 if (timerState.exerciseName != null) ...[
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     timerState.exerciseName!,
                     style: TextStyle(
@@ -331,7 +332,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             ),
           ),
           
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           
           // Quick controls - more compact
           _buildQuickControls(timerState),
@@ -365,9 +366,9 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             ),
           ),
           // Center icon
-          const Center(
+          Center(
             child: Icon(
-              Icons.timer_outlined,
+              AppIcons.timer,
               color: context.colors.surface,
               size: 14,
             ),
@@ -382,13 +383,13 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildControlButton(
-          icon: timerState.isPaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
+          icon: timerState.isPaused ? AppIcons.playArrowRounded : AppIcons.pauseRounded,
           onPressed: () => _handlePauseResume(timerState),
           semanticLabel: timerState.isPaused 
             ? AppLocalizations.of(context).resume 
             : 'Pause',
         ),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         _buildControlButton(
           icon: Icons.skip_next_rounded,
           onPressed: _handleSkip,

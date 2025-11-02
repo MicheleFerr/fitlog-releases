@@ -265,6 +265,8 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
               final cacheService = ref.read(workoutTemplateCacheServiceProvider);
               await cacheService.forceSave();
 
+              if (!mounted) return;
+
               if (kDebugMode) {
                 debugPrint('✅ [DISCARD] forceSave() completed, now clearing workout');
               }

@@ -45,6 +45,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/communi
 import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseListItem extends ConsumerStatefulWidget {
   const ExerciseListItem({
@@ -680,7 +681,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               Row(
                 children: [
                   _buildExerciseTypeIcon(context),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -721,7 +722,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           ),
                         ),
                         // Spacing tra nome e badge
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6),
                         // Badge row (APRE, Timer, Countdown) - Horizontally scrollable
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -755,15 +756,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.auto_awesome,
                                           size: 14,
                                           color: Colors.deepPurple,
                                         ),
-                                        const SizedBox(width: 4),
+                                        SizedBox(width: 4),
                                         Text(
                                           'APRE ${widget.exercise.apreProtocol ?? 6}',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.deepPurple,
@@ -773,7 +774,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Rest timer indicator (tappable) - conditional on showCustomTimers
                               if (config.showCustomTimers ?? isProMode) ...[
@@ -807,7 +808,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                       children: [
                                         Icon(
                                           widget.exercise.restTime != null
-                                              ? Icons.timer_outlined
+                                              ? AppIcons.timer
                                               : Icons.timer_off_outlined,
                                           size: 14,
                                           color:
@@ -815,7 +816,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                               ? context.colors.primary
                                               : context.colors.onSurfaceVariant,
                                         ),
-                                        const SizedBox(width: 4),
+                                        SizedBox(width: 4),
                                         Text(
                                           widget.exercise.restTime != null
                                               ? _formatRestTime(
@@ -833,7 +834,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                                       .onSurfaceVariant,
                                           ),
                                         ),
-                                        const SizedBox(width: 2),
+                                        SizedBox(width: 2),
                                         Icon(
                                           Icons.edit,
                                           size: 10,
@@ -848,7 +849,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Countdown visuale per auto-collasso - conditional on showCollapseCountdown
                               // REFACTORED: countdown now from provider
@@ -880,7 +881,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                           size: 14,
                                           color: context.colors.tertiary,
                                         ),
-                                        const SizedBox(width: 4),
+                                        SizedBox(width: 4),
                                         Text(
                                           '${_autoCollapseState.countdown}',
                                           style: TextStyle(
@@ -889,7 +890,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                             color: context.colors.tertiary,
                                           ),
                                         ),
-                                        const SizedBox(width: 2),
+                                        SizedBox(width: 2),
                                         Icon(
                                           Icons.close,
                                           size: 10,
@@ -900,12 +901,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // TUT chip - moved here
                               if (config.showTutInfo ?? isProMode) ...[
                                 _buildTutChip(context),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Quick Info icon
                               if (config.showQuickInfoIcon ?? isProMode) ...[
@@ -921,7 +922,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     }
                                   },
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Warmup icon
                               if (config.showWarmupIcon ?? isProMode) ...[
@@ -939,7 +940,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     }
                                   },
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Prevention icon
                               if (config.showPreventionIcon ?? isProMode) ...[
@@ -964,7 +965,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         // Insight chip - conditional on showExerciseInsights
                         if (_lastActivity != null &&
                             (config.showExerciseInsights ?? isProMode)) ...[
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           _buildInsightChip(context),
                         ],
                       ],
@@ -985,9 +986,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         case 'duplicate':
                           _duplicateExercise();
                           break;
-                        case 'counting_mode':
-                          _showCountingModeSelector(context);
-                          break;
+                        // case 'counting_mode':  // TODO: Implement _showCountingModeSelector
+                        //   _showCountingModeSelector(context);
+                        //   break;
                         case 'delete':
                           _showDeleteConfirmation(context);
                           break;
@@ -1020,7 +1021,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     ? context.colors.primary
                                     : null,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 context.l10n.autoAdjustment,
                                 style:
@@ -1033,7 +1034,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               ),
                               if (widget.exercise.autoAdjustmentType !=
                                   null) ...[
-                                const Spacer(),
+                                Spacer(),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 6,
@@ -1093,8 +1094,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'change_exercise',
                             child: Row(
                               children: [
-                                const Icon(Icons.swap_horiz, size: 20),
-                                const SizedBox(width: 8),
+                                Icon(Icons.swap_horiz, size: 20),
+                                SizedBox(width: 8),
                                 Text(context.l10n.exerciseChangeVariation),
                               ],
                             ),
@@ -1125,17 +1126,18 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           ),
 
                         // Counting mode - conditional
-                        if (showAdvanced)
-                          PopupMenuItem(
-                            value: 'counting_mode',
-                            child: Row(
-                              children: [
-                                const Icon(Icons.format_list_numbered, size: 20),
-                                const SizedBox(width: 8),
-                                Text(context.l10n.changeCountingMode),
-                              ],
-                            ),
-                          ),
+                        // TODO: Implement counting mode selector + localization
+                        // if (showAdvanced)
+                        //   PopupMenuItem(
+                        //     value: 'counting_mode',
+                        //     child: Row(
+                        //       children: [
+                        //         Icon(Icons.format_list_numbered, size: 20),
+                        //         SizedBox(width: 8),
+                        //         Text(context.l10n.changeCountingMode),
+                        //       ],
+                        //     ),
+                        //   ),
 
                         // Community advice - conditional
                         if (showCommunity && showAdvanced)
@@ -1143,8 +1145,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'community_advice',
                             child: Row(
                               children: [
-                                const Icon(Icons.lightbulb_outline, size: 20),
-                                const SizedBox(width: 8),
+                                Icon(Icons.lightbulb_outline, size: 20),
+                                SizedBox(width: 8),
                                 Text(context.l10n.communityAdvice),
                               ],
                             ),
@@ -1157,7 +1159,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
               // Notes section - conditional on showExerciseNotes
               if (config.showExerciseNotes ?? isProMode) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 GestureDetector(
                   onTap: _toggleNotesEdit,
                   child: AnimatedContainer(
@@ -1193,7 +1195,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 : context.colors.onSurfaceVariant,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6),
                         Expanded(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
@@ -1257,7 +1259,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ],
 
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               // Start button for first set duration tracking
               if ((config.setDurationTracking ?? false) &&
@@ -1319,7 +1321,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         color: context.colors.onSurfaceVariant,
                         size: 16,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         '${widget.exercise.sets.length} ${widget.exercise.sets.length == 1 ? 'set' : 'sets'}',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -1330,7 +1332,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       if (widget.exercise.sets
                           .where((s) => s.isCompleted)
                           .isNotEmpty) ...[
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           '• ${widget.exercise.sets.where((s) => s.isCompleted).length}/${widget.exercise.sets.length} completati',
                           style: context.textTheme.bodySmall?.copyWith(
@@ -1350,12 +1352,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.check_circle,
                         color: Colors.green,
                         size: 16,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         '${widget.exercise.sets.where((s) => s.isCompleted).length} sets completati',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -1363,7 +1365,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const Spacer(),
+                      Spacer(),
                       Text(
                         'Tocca per espandere',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -1562,7 +1564,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ? context.colors.onSurfaceVariant
                   : context.colors.primary,
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text(
               _formatTutDisplay(tutText),
               style: TextStyle(
@@ -1646,7 +1648,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   size: 20,
                   color: context.colors.tertiary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     context.l10n.executeDropset,
@@ -1689,7 +1691,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   size: 20,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     context.l10n.executeRestPause,
@@ -1727,7 +1729,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               size: 18,
               color: context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               'No sets yet - tap to add',
               style: context.textTheme.bodySmall?.copyWith(
@@ -1751,7 +1753,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const Spacer(),
+            Spacer(),
             if (widget.exercise.sets.isNotEmpty)
               Text(
                 'Weight × Reps',
@@ -1761,11 +1763,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         ...widget.exercise.sets.asMap().entries.map(
           (entry) => _buildSetItem(context, entry.key, entry.value, config),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         // Add set button (with smooth animated collapse button when completed)
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
@@ -1817,7 +1819,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 size: 20,
                                 color: context.colors.primary,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 context.l10n.addSet,
                                 style: context.textTheme.labelLarge?.copyWith(
@@ -1830,7 +1832,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     // Collapse button (right) - fades in smoothly
                     Expanded(
                       child: TweenAnimationBuilder<double>(
@@ -1878,7 +1880,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                   size: 20,
                                   color: context.colors.secondary,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Text(
                                   context.l10n.collapseExercise,
                                   style: context.textTheme.labelLarge?.copyWith(
@@ -1917,7 +1919,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           size: 20,
                           color: context.colors.primary,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           context.l10n.addSet,
                           style: context.textTheme.labelLarge?.copyWith(
@@ -1953,7 +1955,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           color: Colors.red.shade400,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 24),
+        child: Icon(Icons.delete_outline, color: Colors.white, size: 24),
       ),
       confirmDismiss: (direction) async {
         // Show smooth animated confirmation dialog
@@ -2052,7 +2054,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
                 child: Center(
                   child: isWarmup
-                      ? const Icon(
+                      ? Icon(
                           Icons.local_fire_department,
                           size: 14,
                           color: Colors.orange,
@@ -2069,7 +2071,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               // Warmup badge
               if (isWarmup) ...[
@@ -2091,7 +2093,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
               ],
 
               // Set details (adapted based on counting mode)
@@ -2103,7 +2105,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
                     // RPE indicator if completed
                     if (set.isCompleted && set.rpe != null) ...[
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 6,
@@ -2132,7 +2134,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ],
 
                     // Quick edit hint
-                    const Spacer(),
+                    Spacer(),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 4,
@@ -2346,9 +2348,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: const EdgeInsets.only(bottom: 20),
                   children: [
                     ListTile(
-                      leading: const Icon(Icons.edit),
-                      title: const Text('Modifica nome e note'),
-                      subtitle: const Text(
+                      leading: Icon(Icons.edit),
+                      title: Text('Modifica nome e note'),
+                      subtitle: Text(
                         'Personalizza nome esercizio e aggiungi note',
                       ),
                       onTap: () {
@@ -2357,9 +2359,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.info_outline),
-                      title: const Text('Info esercizio'),
-                      subtitle: const Text('Muscoli coinvolti e tecnica'),
+                      leading: Icon(Icons.info_outline),
+                      title: Text('Info esercizio'),
+                      subtitle: Text('Muscoli coinvolti e tecnica'),
                       onTap: () async {
                         // Cattura il context prima di chiudere il menu
                         final scaffoldContext = context;
@@ -2373,9 +2375,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.whatshot, color: Colors.orange),
-                      title: const Text('Info riscaldamento'),
-                      subtitle: const Text('Consigli per il warmup'),
+                      leading: Icon(Icons.whatshot, color: Colors.orange),
+                      title: Text('Info riscaldamento'),
+                      subtitle: Text('Consigli per il warmup'),
                       onTap: () async {
                         // Cattura il context prima di chiudere il menu
                         final scaffoldContext = context;
@@ -2390,12 +2392,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.shield_outlined,
                         color: Colors.green,
                       ),
-                      title: const Text('Prevenzione infortuni'),
-                      subtitle: const Text('Consigli per evitare infortuni'),
+                      title: Text('Prevenzione infortuni'),
+                      subtitle: Text('Consigli per evitare infortuni'),
                       onTap: () async {
                         // Cattura il context prima di chiudere il menu
                         final scaffoldContext = context;
@@ -2412,32 +2414,32 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         }
                       },
                     ),
-                    const Divider(),
+                    Divider(),
                     ListTile(
-                      leading: const Icon(Icons.history),
-                      title: const Text('Storico'),
+                      leading: Icon(Icons.history),
+                      title: Text('Storico'),
                       onTap: () {
                         Navigator.pop(context);
                         _showExerciseHistory(context);
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.copy),
-                      title: const Text('Duplica esercizio'),
+                      leading: Icon(Icons.copy),
+                      title: Text('Duplica esercizio'),
                       onTap: () {
                         Navigator.pop(context);
                         _duplicateExercise();
                       },
                     ),
-                    const Divider(),
+                    Divider(),
                     // 🆕 Segnala problema
                     ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.flag_outlined,
                         color: Colors.orange,
                       ),
-                      title: const Text('Segnala problema'),
-                      subtitle: const Text('Bug, errori o suggerimenti'),
+                      title: Text('Segnala problema'),
+                      subtitle: Text('Bug, errori o suggerimenti'),
                       onTap: () {
                         Navigator.pop(context);
                         // Show feedback dialog
@@ -2449,7 +2451,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         );
                       },
                     ),
-                    const Divider(),
+                    Divider(),
                     ListTile(
                       leading: Icon(Icons.delete, color: context.colors.error),
                       title: Text(
@@ -2522,7 +2524,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 child: Row(
                   children: [
                     Icon(Icons.edit, color: context.colors.primary),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Modifica esercizio',
@@ -2533,13 +2535,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
+                      icon: Icon(Icons.close),
                     ),
                   ],
                 ),
               ),
 
-              const Divider(),
+              Divider(),
 
               // Editor form
               Expanded(
@@ -2697,13 +2699,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Title
               Row(
                 children: [
                   Icon(Icons.timer, color: context.colors.primary),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Text(
                     'Rest Timer Settings',
                     style: context.textTheme.titleLarge?.copyWith(
@@ -2712,14 +2714,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'Set rest time between sets for "${widget.exercise.name}"',
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Default option
               Card(
@@ -2743,7 +2745,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               ? context.colors.primary
                               : context.colors.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2777,7 +2779,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Quick options
               Text(
@@ -2786,7 +2788,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -2804,7 +2806,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Action buttons
               Row(
@@ -2812,10 +2814,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text('Cancel'),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: FilledButton(
                       onPressed: selectedTime != widget.exercise.restTime
@@ -2835,12 +2837,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               );
                             }
                           : null,
-                      child: const Text('Save'),
+                      child: Text('Save'),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
             ],
           ),
         ),
@@ -2873,11 +2875,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ),
 
-              const Text(
+              Text(
                 'Set Rest Timer',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Timer options
               Wrap(
@@ -2904,7 +2906,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 }).toList(),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Custom time option
               OutlinedButton.icon(
@@ -2920,7 +2922,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     });
                   }
                 },
-                icon: const Icon(Icons.edit, size: 18),
+                icon: Icon(Icons.edit, size: 18),
                 label: Text(
                   selectedTime != null &&
                           ![
@@ -2937,7 +2939,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Action buttons
               Row(
@@ -2945,9 +2947,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text('Cancel'),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   FilledButton(
                     onPressed: selectedTime != null
                         ? () {
@@ -2964,7 +2966,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             );
                           }
                         : null,
-                    child: const Text('Confirm'),
+                    child: Text('Confirm'),
                   ),
                 ],
               ),
@@ -2985,7 +2987,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     return showDialog<int>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Custom Rest Time'),
+        title: Text('Custom Rest Time'),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -2993,8 +2995,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Minutes', style: TextStyle(fontSize: 12)),
-                const SizedBox(height: 8),
+                Text('Minutes', style: TextStyle(fontSize: 12)),
+                SizedBox(height: 8),
                 SizedBox(
                   width: 60,
                   child: TextField(
@@ -3012,15 +3014,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ],
             ),
-            const SizedBox(width: 16),
-            const Text(':', style: TextStyle(fontSize: 24)),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
+            Text(':', style: TextStyle(fontSize: 24)),
+            SizedBox(width: 16),
             // Seconds picker
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Seconds', style: TextStyle(fontSize: 12)),
-                const SizedBox(height: 8),
+                Text('Seconds', style: TextStyle(fontSize: 12)),
+                SizedBox(height: 8),
                 SizedBox(
                   width: 60,
                   child: TextField(
@@ -3043,14 +3045,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           FilledButton(
             onPressed: () {
               final totalSeconds = (minutes * 60) + seconds;
               Navigator.pop(context, totalSeconds > 0 ? totalSeconds : null);
             },
-            child: const Text('Set'),
+            child: Text('Set'),
           ),
         ],
       ),
@@ -3105,9 +3107,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 decoration: set.isCompleted ? TextDecoration.lineThrough : null,
               ),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text('×', style: context.textTheme.bodySmall),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
           ],
           if (set.reps != null)
             Text(
@@ -3192,7 +3194,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       child: Column(
         children: [
           Icon(icon, size: 20, color: color),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             value,
             style: TextStyle(
@@ -3226,11 +3228,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 'Exercise Notes',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextField(
                 controller: controller,
                 maxLines: 4,
@@ -3239,13 +3241,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text('Cancel'),
                   ),
                   FilledButton(
                     onPressed: () {
@@ -3255,7 +3257,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       widget.onExerciseUpdate?.call(updated);
                       Navigator.pop(context);
                     },
-                    child: const Text('Save'),
+                    child: Text('Save'),
                   ),
                 ],
               ),
@@ -3279,14 +3281,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Exercise'),
+        title: Text('Delete Exercise'),
         content: Text(
           'Are you sure you want to delete "${widget.exercise.name}"?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           FilledButton(
             onPressed: () {
@@ -3296,7 +3298,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.error,
             ),
-            child: const Text('Delete'),
+            child: Text('Delete'),
           ),
         ],
       ),
@@ -3886,7 +3888,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   );
                 },
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 'Ultimo: ${maxWeight.toStringAsFixed(1)}kg x $maxReps ($timeAgo)',
                 style: context.textTheme.labelSmall?.copyWith(
@@ -3894,7 +3896,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Icon(
                 Icons.chevron_right,
                 size: 14,
@@ -4034,7 +4036,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 child: Row(
                   children: [
                     Icon(Icons.history, color: context.colors.primary),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -4058,7 +4060,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ),
 
-              const Divider(),
+              Divider(),
 
               // Content
               Expanded(
@@ -4072,7 +4074,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               size: 48,
                               color: context.colors.outline,
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16),
                             Text(
                               'Nessun allenamento precedente',
                               style: context.textTheme.titleMedium,
@@ -4156,7 +4158,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Statistiche riassuntive
             Row(
@@ -4177,7 +4179,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Dettaglio serie
             ExpansionTile(
@@ -4212,13 +4214,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Text(
                         '${weight.toStringAsFixed(1)}kg x $reps',
                         style: context.textTheme.bodyMedium,
                       ),
                       if (set.effort > 0) ...[
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 6,
@@ -4259,7 +4261,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             color: context.colors.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 2),
+        SizedBox(height: 2),
         Text(
           value,
           style: context.textTheme.titleSmall?.copyWith(
@@ -4443,7 +4445,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 16, color: color),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Text(
                 label,
                 style: TextStyle(
@@ -4840,7 +4842,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     child: Icon(icon, color: color, size: 28),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4851,7 +4853,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           widget.exercise.name,
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -4870,7 +4872,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             .withValues(alpha: 0.5),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, size: 20),
+                      child: Icon(Icons.close, size: 20),
                     ),
                   ),
                 ],
@@ -4928,7 +4930,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                       group.accentColor ??
                                       context.colors.primary,
                                 ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: 10),
                                 Text(
                                   group.groupTitle,
                                   style: context.textTheme.titleMedium
@@ -4978,7 +4980,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                             color:
                                                 context.colors.onSurfaceVariant,
                                           ),
-                                          const SizedBox(width: 8),
+                                          SizedBox(width: 8),
                                         ],
                                         Expanded(
                                           child: Column(
@@ -4998,7 +5000,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                                           FontWeight.w500,
                                                     ),
                                               ),
-                                              const SizedBox(height: 4),
+                                              SizedBox(height: 4),
                                               Text(
                                                 _formatStepText(item.value),
                                                 style: context
@@ -5020,7 +5022,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -5043,21 +5045,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: onCorrection,
-                          icon: const Icon(Icons.edit_note, size: 18),
-                          label: const Text('Correggi info'),
+                          icon: Icon(Icons.edit_note, size: 18),
+                          label: Text('Correggi info'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(0, 40),
                           ),
                         ),
                       ),
                     if (onCorrection != null && onAddTip != null)
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                     if (onAddTip != null)
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: onAddTip,
-                          icon: const Icon(Icons.lightbulb_outline, size: 18),
-                          label: const Text('Aggiungi tip'),
+                          icon: Icon(Icons.lightbulb_outline, size: 18),
+                          label: Text('Aggiungi tip'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(0, 40),
                             foregroundColor: context.colors.primary,
@@ -5135,7 +5137,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     child: Icon(icon, color: color, size: 28),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -5146,7 +5148,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           widget.exercise.name,
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -5165,7 +5167,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             .withValues(alpha: 0.5),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, size: 20),
+                      child: Icon(Icons.close, size: 20),
                     ),
                   ),
                 ],
@@ -5209,7 +5211,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                   size: 20,
                                   color: context.colors.primary,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Text(
                                   section.title,
                                   style: context.textTheme.titleMedium
@@ -5217,7 +5219,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12),
                             Text(
                               section.content,
                               style: context.textTheme.bodyLarge?.copyWith(
@@ -5229,7 +5231,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
               ),
             ),

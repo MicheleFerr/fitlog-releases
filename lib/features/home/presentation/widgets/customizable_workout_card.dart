@@ -120,14 +120,16 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
     if (preferredTemplateId != null) {
       // Carica il template preferito
       final templatesAsync = await ref.read(allWorkoutTemplatesProvider.future);
+
+      if (!mounted) return;
+
       final template = templatesAsync.firstWhere(
         (t) => t.id == preferredTemplateId,
         orElse: () => templatesAsync.first,
       );
-      
+
       // Avvia allenamento con template
       ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
-      if (!context.mounted) return;
       context.goNamed('workout');
     } else {
       // Vai alla schermata workout vuota

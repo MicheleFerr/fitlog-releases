@@ -4310,6 +4310,14 @@
   "@noDataForExercise": {
     "description": "Message when no data exists for exercise"
   },
+  "noDataForChart": "No data available for selected metrics",
+  "@noDataForChart": {
+    "description": "Message when multi-metric chart has no data"
+  },
+  "chartTapToSeeRealValues": "Tap chart to see real values",
+  "@chartTapToSeeRealValues": {
+    "description": "Hint text explaining that chart shows normalized values and user can tap to see actual values"
+  },
   "volumeHeatmap": "Volume Heatmap",
   "@volumeHeatmap": {
     "description": "Volume heatmap chart title"

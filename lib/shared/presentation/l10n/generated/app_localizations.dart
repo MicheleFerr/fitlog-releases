@@ -6125,6 +6125,18 @@ abstract class AppLocalizations {
   /// **'No data available for this exercise'**
   String get noDataForExercise;
 
+  /// Message when multi-metric chart has no data
+  ///
+  /// In en, this message translates to:
+  /// **'No data available for selected metrics'**
+  String get noDataForChart;
+
+  /// Hint text explaining that chart shows normalized values and user can tap to see actual values
+  ///
+  /// In en, this message translates to:
+  /// **'Tap chart to see real values'**
+  String get chartTapToSeeRealValues;
+
   /// Volume heatmap chart title
   ///
   /// In en, this message translates to:

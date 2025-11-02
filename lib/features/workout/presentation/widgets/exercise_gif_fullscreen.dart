@@ -31,7 +31,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Dialog.fullscreen(
-      backgroundColor: context.colors.onSurface87,
+      backgroundColor: context.colors.onSurface.withValues(alpha: 0.87),
       child: GestureDetector(
         onTap: () => Navigator.of(context).pop(),
         behavior: HitTestBehavior.opaque,
@@ -64,7 +64,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                           color: colorScheme.error,
                           size: 64,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Text(
                           context.l10n.errorLoadingImage,
                           style: TextStyle(
@@ -118,10 +118,10 @@ class ExerciseGifFullscreen extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.close,
                           color: context.colors.surface,
                           size: 28,
@@ -162,7 +162,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                         color: context.colors.surface.withValues(alpha: 0.7),
                         size: 16,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         context.l10n.tapAnywhereToClose,
                         style: theme.textTheme.bodySmall?.copyWith(

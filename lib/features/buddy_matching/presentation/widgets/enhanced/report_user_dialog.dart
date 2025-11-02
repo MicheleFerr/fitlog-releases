@@ -176,24 +176,30 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
             ),
             const SizedBox(height: 8),
 
-            ...ReportReason.values.map((reason) {
-              return RadioListTile<ReportReason>(
-                title: Text(
-                  _getReasonText(l10n, reason),
-                  style: TextStyle(color: colorScheme.onSurface, fontSize: 14),
-                ),
-                value: reason,
-                groupValue: _selectedReason,
-                onChanged: (value) {
+            RadioGroup<ReportReason>(
+              groupValue: _selectedReason,
+              onChanged: (value) {
+                if (value != null) {
                   setState(() {
                     _selectedReason = value;
                   });
-                },
-                activeColor: colorScheme.primary,
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-              );
-            }),
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: ReportReason.values.map((reason) {
+                  return RadioListTile<ReportReason>(
+                    title: Text(
+                      _getReasonText(l10n, reason),
+                      style: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+                    ),
+                    value: reason,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  );
+                }).toList(),
+              ),
+            ),
 
             const SizedBox(height: 16),
 

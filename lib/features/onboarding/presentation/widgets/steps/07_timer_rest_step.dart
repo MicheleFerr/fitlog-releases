@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TimerRestStep extends StatefulWidget {
 
@@ -102,7 +103,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.timer_outlined,
+            AppIcons.timer,
             size: 80,
             color: colorScheme.primary,
           ),

@@ -68,19 +68,19 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         children: [
           // Period selector
           _buildPeriodSelector(),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // View mode toggle
           _buildViewModeToggle(),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Stats summary
           _buildStatsSummary(metrics, filteredSets),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Charts based on view mode
           if (_viewMode == ChartViewMode.combined) ...[
@@ -93,7 +93,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               context.colors.primary,
               _buildWeightChart(filteredSets),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Volume progression chart
             _buildChartCard(
@@ -102,7 +102,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               context.colors.secondary,
               _buildVolumeChart(filteredSets),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Reps progression chart
             _buildChartCard(
@@ -111,7 +111,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               context.colors.success,
               _buildRepsChart(filteredSets),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // RPE progression chart (if available)
             if (filteredSets.any((s) => s.rpe != null)) ...[
@@ -121,13 +121,13 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 context.colors.error,
                 _buildRPEChart(filteredSets),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
             ],
           ],
 
           // Session history
           _buildSessionHistory(filteredSets),
-          const SizedBox(height: 100),
+          SizedBox(height: 100),
         ],
       ),
     );
@@ -159,7 +159,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       child: GestureDetector(
         onTap: () => setState(() => _selectedPeriod = period),
         child: Container(
-          margin: const EdgeInsets.all(4),
+          margin: EdgeInsets.all(4),
           decoration: BoxDecoration(
             color: isSelected ? context.colors.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
@@ -184,12 +184,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ButtonSegment<ChartViewMode>(
           value: ChartViewMode.combined,
           label: Text(context.l10n.combinedView),
-          icon: const Icon(Icons.show_chart),
+          icon: Icon(Icons.show_chart),
         ),
         ButtonSegment<ChartViewMode>(
           value: ChartViewMode.separated,
           label: Text(context.l10n.separatedView),
-          icon: const Icon(Icons.stacked_line_chart),
+          icon: Icon(Icons.stacked_line_chart),
         ),
       ],
       selected: {_viewMode},
@@ -222,14 +222,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Icon(Icons.insights, color: context.colors.primary, size: 24),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.combinedChart,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -238,7 +238,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.tapToToggle,
               style: context.textTheme.bodySmall?.copyWith(
@@ -246,9 +246,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 fontStyle: FontStyle.italic,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildCombinedChart(sets),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildInteractiveLegend(sets),
           ],
         ),
@@ -258,7 +258,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
   Widget _buildCombinedChart(List<ExerciseSetData> sets) {
     if (sets.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 300,
         child: Center(child: Text('No data available')),
       );
@@ -389,7 +389,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       preventCurveOverShooting: true,
       color: useGradient ? null : color,
       gradient: useGradient
-          ? const LinearGradient(
+          ? LinearGradient(
               colors: [
                 context.colors.success,
                 context.colors.secondary,
@@ -464,7 +464,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       borderRadius: BorderRadius.circular(8),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isVisible ? color.withValues(alpha: 0.15) : context.colors.surfaceContainer,
           borderRadius: BorderRadius.circular(8),
@@ -481,7 +481,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               size: 18,
               color: isVisible ? color : context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(
               label,
               style: context.textTheme.bodySmall?.copyWith(
@@ -514,7 +514,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         : 0.0;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -537,7 +537,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               color: context.colors.primary,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -577,7 +577,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: context.textTheme.titleSmall?.copyWith(
@@ -600,14 +600,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
   Widget _buildChartCard(String title, IconData icon, Color color, Widget chart) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Icon(icon, color: color, size: 24),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   title,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -616,7 +616,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             chart,
           ],
         ),
@@ -626,7 +626,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
   Widget _buildWeightChart(List<ExerciseSetData> sets) {
     if (sets.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 200,
         child: Center(child: Text('No data available')),
       );
@@ -681,7 +681,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
   Widget _buildVolumeChart(List<ExerciseSetData> sets) {
     if (sets.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 200,
         child: Center(child: Text('No data available')),
       );
@@ -735,7 +735,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
   Widget _buildRepsChart(List<ExerciseSetData> sets) {
     if (sets.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 200,
         child: Center(child: Text('No data available')),
       );
@@ -791,7 +791,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     final setsWithRPE = sets.where((s) => s.rpe != null).toList();
 
     if (setsWithRPE.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 200,
         child: Center(child: Text('No RPE data available')),
       );
@@ -838,7 +838,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 colors: [context.colors.success, context.colors.secondary, context.colors.error],
               ),
               barWidth: 3,
@@ -893,7 +893,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -903,7 +903,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             ...sortedDates.take(5).map((dateKey) {
               final sessionSets = sessionsByDate[dateKey]!;
               final date = DateTime.parse(dateKey);
@@ -921,9 +921,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     final totalVolume = sets.fold<double>(0, (sum, set) => sum + set.volume);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: 12),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: context.colors.surfaceContainer,
           borderRadius: BorderRadius.circular(12),
@@ -931,7 +931,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: context.colors.primaryContainer,
                 borderRadius: BorderRadius.circular(8),
@@ -942,7 +942,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 size: 20,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

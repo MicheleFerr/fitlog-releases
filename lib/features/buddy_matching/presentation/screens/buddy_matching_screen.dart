@@ -13,6 +13,7 @@
 /// - Hive: None
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -402,23 +403,23 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
   }
 
   void _handleDislike() async {
-    HapticFeedback.lightImpact();
+    unawaited(HapticFeedback.lightImpact());
     await ref.read(matchingProvider.notifier).dislikeCurrentProfile();
   }
 
   void _handleLike() async {
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     final match = await ref.read(matchingProvider.notifier).likeCurrentProfile();
-    
+
     if (match != null && match.isMutualMatch) {
       _showMatchCelebration();
     }
   }
 
   void _handleSuperLike() async {
-    HapticFeedback.heavyImpact();
+    unawaited(HapticFeedback.heavyImpact());
     // Super like implementation
-    _handleLike();
+    await _handleLike();
   }
 
   void _showMatchCelebration() {

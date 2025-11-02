@@ -645,51 +645,51 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         // Immediately refresh profile
         debugPrint('✅ Purchase successful - refreshing profile immediately');
         await ref.read(currentUserProvider.notifier).forceRefreshProfile();
-        
+
+        if (!context.mounted) return;
+
         // Show success
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Row(
-                children: [
-                  Icon(Icons.check_circle, color: context.colors.surface),
-                  SizedBox(width: 8),
-                  Text('Welcome to Premium! 🎉'),
-                ],
-              ),
-              backgroundColor: context.colors.success,
-              behavior: SnackBarBehavior.floating,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text('Welcome to Premium! 🎉'),
+              ],
             ),
-          );
-          
-          // Navigate back or to premium features
-          Navigator.of(context).pop(true);
-        }
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+
+        // Navigate back or to premium features
+        Navigator.of(context).pop(true);
       } else {
         // Purchase cancelled or failed
         debugPrint('❌ Purchase cancelled/failed - 2-minute timer still active');
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Purchase cancelled'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      debugPrint('❌ Purchase error: $e');
-      
-      if (mounted) {
+
+        if (!context.mounted) return;
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: context.colors.error,
+          const SnackBar(
+            content: Text('Purchase cancelled'),
             behavior: SnackBarBehavior.floating,
           ),
         );
       }
+    } catch (e) {
+      debugPrint('❌ Purchase error: $e');
+
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() {

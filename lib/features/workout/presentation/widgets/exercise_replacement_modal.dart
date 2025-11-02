@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
   
@@ -342,7 +343,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       compatibilityIcon = Icons.star_half;
     } else if (suggestion.compatibilityScore >= 40) {
       compatibilityColor = context.colors.warning;
-      compatibilityIcon = Icons.star_outline;
+      compatibilityIcon = AppIcons.star;
     } else {
       compatibilityColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
       compatibilityIcon = Icons.star_border;

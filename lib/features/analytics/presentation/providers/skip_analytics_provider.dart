@@ -65,7 +65,7 @@ class SkipAnalyticsNotifier extends StateNotifier<SkipAnalytics> {
   
   Future<void> _initRepository() async {
     await _localRepository.init();
-    _loadAnalytics();
+    await _loadAnalytics();
   }
   
   Future<void> _loadAnalytics() async {

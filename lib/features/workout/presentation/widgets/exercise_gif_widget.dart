@@ -171,7 +171,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
   void _showFullscreen(BuildContext context) {
     showDialog(
       context: context,
-      barrierColor: context.colors.onSurface87,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.87),
       barrierDismissible: true,
       builder: (context) =>
           ExerciseGifFullscreen(gifUrl: widget.gifUrl!, exerciseName: widget.exerciseName),

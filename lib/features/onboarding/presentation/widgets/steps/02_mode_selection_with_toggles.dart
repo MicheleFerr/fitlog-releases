@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ModeSelectionWithTogglesStep extends ConsumerStatefulWidget {
 
@@ -137,7 +138,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       context,
                       title: l10n.onboardingBaseMode,
                       description: l10n.onboardingBaseModeDescription,
-                      icon: Icons.play_arrow_rounded,
+                      icon: AppIcons.playArrowRounded,
                       isSelected: _selectedMode == false,
                       onTap: () => _selectMode(false),
                       features: [

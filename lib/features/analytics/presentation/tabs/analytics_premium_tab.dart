@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/premi
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/premium/rpe_intensity_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/premium/premium_lock_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Premium Analytics Tab
 ///
@@ -79,7 +80,7 @@ class AnalyticsPremiumTab extends ConsumerWidget {
             context,
             l10n.tutVelocityAnalytics,
             l10n.tutVelocityDesc,
-            Icons.timer_outlined,
+            AppIcons.timer,
           ),
           const SizedBox(height: 16),
 
@@ -87,7 +88,7 @@ class AnalyticsPremiumTab extends ConsumerWidget {
             context,
             l10n.dataConfidenceScore,
             l10n.dataConfidenceDesc,
-            Icons.verified_outlined,
+            AppIcons.verifiedOutlined,
           ),
           const SizedBox(height: 16),
 

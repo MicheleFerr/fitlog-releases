@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Premium Lock Card
 ///
@@ -25,7 +26,7 @@ class PremiumLockCard extends StatelessWidget {
           context,
           l10n.repContinuum,
           l10n.repContinuumPreview,
-          Icons.analytics_outlined,
+          AppIcons.analytics,
         ),
         const SizedBox(height: 16),
 

@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_analytics.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tab displaying routine-specific analytics
 class AnalyticsRoutineTab extends ConsumerWidget {
@@ -56,7 +57,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.calendar_today_outlined,
+              AppIcons.calendarTodayOutlined,
               size: 80,
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
             ),

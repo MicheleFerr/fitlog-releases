@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter/services.dart';
 
@@ -10,10 +11,13 @@ class MockHiveInterface extends Mock implements HiveInterface {}
 /// Initialize test environment
 Future<void> initializeTestEnvironment() async {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Hive for testing
   Hive.init('./test_hive');
-  
+
+  // Initialize HiveBoxManagerEnhanced
+  await HiveBoxManagerEnhanced.initialize();
+
   // Mock platform channels
   _mockPlatformChannels();
 }

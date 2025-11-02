@@ -3,6 +3,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Exercise Header Widget with category icons, badges, and TUT timer
 class ExerciseHeaderTier1 extends StatelessWidget {
@@ -73,7 +74,7 @@ class ExerciseHeaderTier1 extends StatelessWidget {
             
             // Chevron
             Icon(
-              Icons.chevron_right_rounded,
+              AppIcons.chevronRightRounded,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               size: 24,
             ),

@@ -115,7 +115,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: context.colors.surfaceVariant.withValues(alpha: 0.3),
+              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),

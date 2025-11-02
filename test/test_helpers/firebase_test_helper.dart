@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 // Mock Firebase implementation for tests
 void setupFirebaseCoreMocks() {
@@ -58,24 +59,32 @@ Future<void> setupTestEnvironment() async {
   setupFirebaseCoreMocks();
   await Firebase.initializeApp();
   await Hive.initFlutter('./test/hive_test');
+  await HiveBoxManagerEnhanced.initialize();
 }
 
 /// Enhanced Firebase test environment setup
 Future<void> setupEnhancedTestEnvironment() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   setupFirebaseCoreMocks();
-  
+
   try {
     await Firebase.initializeApp();
   } catch (e) {
     // Firebase already initialized, continue
   }
-  
+
   // Initialize Hive for local storage tests
   try {
     await Hive.initFlutter('./test/hive_test');
   } catch (e) {
     // Hive already initialized, continue
+  }
+
+  // Initialize HiveBoxManagerEnhanced
+  try {
+    await HiveBoxManagerEnhanced.initialize();
+  } catch (e) {
+    // Already initialized, continue
   }
 }
 

@@ -3314,6 +3314,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessun dato disponibile per questo esercizio';
 
   @override
+  String get noDataForChart =>
+      'Nessun dato disponibile per le metriche selezionate';
+
+  @override
+  String get chartTapToSeeRealValues =>
+      'Tocca il grafico per vedere i valori reali';
+
+  @override
   String get volumeHeatmap => 'Mappa di Calore del Volume';
 
   @override

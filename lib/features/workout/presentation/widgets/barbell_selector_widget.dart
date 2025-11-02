@@ -36,15 +36,16 @@ class BarbellSelectorWidget extends StatefulWidget {
 }
 
 class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
-  // Comprehensive list of barbell types
-  static const List<BarbellType> barbellTypes = [
+  // Comprehensive list of barbell types (method to access theme colors)
+  List<BarbellType> _getBarbellTypes(BuildContext context) {
+    return [
     // No Barbell option
     BarbellType(
       name: 'No Barbell',
       category: 'None',
       weight: 0,
       icon: Icons.block,
-      color: context.colors.surfaceVariant,
+      color: context.colors.surfaceContainerHighest,
       description: 'Dumbbell or machine exercise',
     ),
     
@@ -174,7 +175,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Fixed',
       weight: 10,
       icon: Icons.lock,
-      color: context.colors.primaryGrey,
+      color: context.colors.surfaceContainerHighest,
       description: 'Pre-loaded fixed bar',
     ),
     BarbellType(
@@ -182,7 +183,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Fixed',
       weight: 15,
       icon: Icons.lock,
-      color: context.colors.primaryGrey,
+      color: context.colors.surfaceContainerHighest,
       description: 'Pre-loaded fixed bar',
     ),
     BarbellType(
@@ -190,7 +191,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Fixed',
       weight: 20,
       icon: Icons.lock,
-      color: context.colors.primaryGrey,
+      color: context.colors.surfaceContainerHighest,
       description: 'Pre-loaded fixed bar',
     ),
     
@@ -200,10 +201,11 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       category: 'Custom',
       weight: -1, // Special value for custom
       icon: Icons.edit,
-      color: context.colors.surfaceVariant,
+      color: context.colors.surfaceContainerHighest,
       description: 'Enter custom barbell weight',
     ),
   ];
+  }
   
   double? _selectedWeight;
   double _customWeight = 0;
@@ -221,7 +223,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
   }
   
   bool _isStandardWeight(double weight) {
-    return barbellTypes.any((b) => b.weight == weight);
+    return _getBarbellTypes(context).any((b) => b.weight == weight);
   }
   
   @override
@@ -233,6 +235,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final barbellTypes = _getBarbellTypes(context);
     final categories = ['All', ...barbellTypes.map((b) => b.category).toSet()];
     
     return Column(
@@ -303,7 +306,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  _buildQuickButton('None', 0, Icons.block, context.colors.surfaceVariant),
+                  _buildQuickButton('None', 0, Icons.block, context.colors.surfaceContainerHighest),
                   _buildQuickButton('Olympic', 20, Icons.fitness_center, context.colors.primary),
                   _buildQuickButton('Women\'s', 15, Icons.fitness_center, Colors.pink),
                   _buildQuickButton('EZ Bar', 7.5, Icons.waves, context.colors.tertiary),
@@ -319,9 +322,9 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
         // Barbell list
         Expanded(
           child: ListView.builder(
-            itemCount: _getFilteredBarbells().length,
+            itemCount: _getFilteredBarbells(context).length,
             itemBuilder: (context, index) {
-              final barbell = _getFilteredBarbells()[index];
+              final barbell = _getFilteredBarbells(context)[index];
               final isSelected = barbell.weight == _selectedWeight ||
                   (barbell.weight == -1 && _customWeight > 0 && !_isStandardWeight(_customWeight));
               
@@ -490,7 +493,8 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
     }
   }
   
-  List<BarbellType> _getFilteredBarbells() {
+  List<BarbellType> _getFilteredBarbells(BuildContext context) {
+    final barbellTypes = _getBarbellTypes(context);
     if (_selectedCategory == 'All') {
       return barbellTypes;
     }

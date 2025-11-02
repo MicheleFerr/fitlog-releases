@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseSyncStatusWidget extends ConsumerWidget {
   const ExerciseSyncStatusWidget({super.key});
@@ -83,7 +84,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
       case SyncStatus.idle:
         text = AppLocalizations.of(context).syncIdle;
         color = Theme.of(context).colorScheme.onSurface;
-        icon = Icons.check_circle_outline;
+        icon = AppIcons.completeOutline;
         break;
       case SyncStatus.loading:
         text = AppLocalizations.of(context).syncLoading;
@@ -286,7 +287,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.warning_outlined,
+            AppIcons.warning,
             size: 16,
             color: Theme.of(context).colorScheme.error,
           ),
@@ -565,14 +566,31 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context).selectSyncFrequency),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _frequencyOption(const Duration(hours: 1), AppLocalizations.of(context).everyHour),
-            _frequencyOption(const Duration(hours: 6), AppLocalizations.of(context).every6Hours),
-            _frequencyOption(const Duration(hours: 12), AppLocalizations.of(context).every12Hours),
-            _frequencyOption(const Duration(hours: 24), AppLocalizations.of(context).daily),
-          ],
+        content: RadioGroup<Duration>(
+          groupValue: _syncFrequency,
+          onChanged: (value) async {
+            if (value != null) {
+              final syncActions = ref.read(exerciseSyncActionsProvider);
+              await syncActions.setSyncFrequency(value);
+
+              if (!mounted) return;
+
+              setState(() {
+                _syncFrequency = value;
+              });
+
+              Navigator.of(context).pop();
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _frequencyOption(const Duration(hours: 1), AppLocalizations.of(context).everyHour),
+              _frequencyOption(const Duration(hours: 6), AppLocalizations.of(context).every6Hours),
+              _frequencyOption(const Duration(hours: 12), AppLocalizations.of(context).every12Hours),
+              _frequencyOption(const Duration(hours: 24), AppLocalizations.of(context).daily),
+            ],
+          ),
         ),
       ),
     );
@@ -582,19 +600,6 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
     return RadioListTile<Duration>(
       title: Text(title),
       value: frequency,
-      groupValue: _syncFrequency,
-      onChanged: (value) async {
-        if (value != null) {
-          final syncActions = ref.read(exerciseSyncActionsProvider);
-          await syncActions.setSyncFrequency(value);
-
-          setState(() {
-            _syncFrequency = value;
-          });
-
-          Navigator.of(context).pop();
-        }
-      },
     );
   }
 

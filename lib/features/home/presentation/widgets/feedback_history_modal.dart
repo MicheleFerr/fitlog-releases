@@ -22,7 +22,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         children: [
@@ -30,7 +30,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
           Container(
             width: 40,
             height: 4,
-            margin: const EdgeInsets.only(top: 12),
+            margin: EdgeInsets.only(top: 12),
             decoration: BoxDecoration(
               color: colorScheme.outline.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
@@ -39,7 +39,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
 
           // Header
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24),
             child: Row(
               children: [
                 Icon(
@@ -47,7 +47,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   color: colorScheme.primary,
                   size: 28,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   l10n.myFeedback,
                   style: theme.textTheme.headlineSmall?.copyWith(
@@ -67,10 +67,10 @@ class FeedbackHistoryModal extends ConsumerWidget {
                 }
                 return _buildFeedbackList(context, feedbackList, l10n, theme, colorScheme);
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => Center(child: CircularProgressIndicator()),
               error: (error, _) => Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(24),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -79,7 +79,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                         size: 64,
                         color: colorScheme.error.withValues(alpha: 0.6),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
                         'Error loading feedback: $error',
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -105,7 +105,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
     ColorScheme colorScheme,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -114,7 +114,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             size: 80,
             color: colorScheme.outline.withValues(alpha: 0.6),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Text(
             l10n.noFeedbackYet,
             style: theme.textTheme.titleLarge?.copyWith(
@@ -123,7 +123,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             l10n.startRatingInsights,
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -131,31 +131,31 @@ class FeedbackHistoryModal extends ConsumerWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           // Illustrative icons showing how feedback works
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: context.colors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.thumb_up_outlined,
                   color: context.colors.success,
                   size: 32,
                 ),
               ),
-              const SizedBox(width: 24),
+              SizedBox(width: 24),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: context.colors.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.thumb_down_outlined,
                   color: context.colors.error,
                   size: 32,
@@ -176,7 +176,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
     ColorScheme colorScheme,
   ) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: 24),
       itemCount: feedbackList.length,
       itemBuilder: (context, index) {
         final feedback = feedbackList[index];
@@ -210,8 +210,8 @@ class FeedbackHistoryModal extends ConsumerWidget {
     insightTypeDisplay = insightTypeDisplay[0].toUpperCase() + insightTypeDisplay.substring(1);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: cardColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
@@ -239,7 +239,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +251,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                         color: cardColor,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       formattedDate,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -263,11 +263,11 @@ class FeedbackHistoryModal extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Insight type
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
@@ -280,7 +280,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   size: 14,
                   color: colorScheme.primary,
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   '${l10n.feedbackOn}: $insightTypeDisplay',
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -294,9 +294,9 @@ class FeedbackHistoryModal extends ConsumerWidget {
 
           // Comment if available
           if (feedback.comment != null && feedback.comment!.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: colorScheme.surface.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(8),

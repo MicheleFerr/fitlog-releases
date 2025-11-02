@@ -256,20 +256,20 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             children: [
               // Header with PO Score
               _buildPOScoreCard(theme),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               
               // Weekly Stats Grid
               _buildStatsGrid(theme),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               
               // e1RM Tracker Chart
               _buildE1RMChart(theme),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               
               // Best Set Performance
               if (_currentWeekData!.bestSet != null) ...[
                 _buildBestSetCard(theme),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
               
               // Premium sync button
@@ -362,7 +362,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
     ThemeData theme,
   ) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
@@ -374,7 +374,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             value,
             style: theme.textTheme.titleMedium?.copyWith(
@@ -382,7 +382,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
               color: color,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -399,14 +399,14 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
       ..sort((a, b) => b.value.compareTo(a.value));
     
     if (e1rmData.isEmpty) {
-      return const SizedBox();
+      return SizedBox();
     }
     
     // Take top 5 exercises
     final topExercises = e1rmData.take(5).toList();
     
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
@@ -420,9 +420,9 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           ...topExercises.map((entry) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -445,7 +445,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 LinearProgressIndicator(
                   value: entry.value / (topExercises.first.value + 10),
                   backgroundColor: theme.colorScheme.surfaceContainerHighest,
@@ -465,7 +465,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
     final bestSet = _currentWeekData!.bestSet!;
     
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -489,7 +489,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                 Icons.emoji_events,
                 color: theme.colorScheme.tertiary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Best Set of the Week',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -497,14 +497,14 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                 ),
               ),
               if (bestSet.isPR) ...[
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: context.colors.error,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
+                  child: Text(
                     'PR!',
                     style: TextStyle(
                       color: context.colors.surface,
@@ -516,29 +516,29 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
               ],
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             bestSet.exerciseName,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Icon(Icons.fitness_center, size: 16, color: theme.colorScheme.onSurfaceVariant),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 '${bestSet.weight.toStringAsFixed(1)} kg × ${bestSet.reps} reps',
                 style: theme.textTheme.bodyLarge,
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Row(
             children: [
               Icon(Icons.rocket_launch, size: 16, color: theme.colorScheme.onSurfaceVariant),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 'e1RM: ${bestSet.e1RM.toStringAsFixed(1)} kg',
                 style: theme.textTheme.bodyLarge?.copyWith(
@@ -561,15 +561,15 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             HapticFeedback.lightImpact();
             widget.onDataSync?.call(_currentWeekData!);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
+              SnackBar(
                 content: Text('Data synced to cloud'),
                 backgroundColor: context.colors.success,
               ),
             );
           }
         },
-        icon: const Icon(Icons.cloud_upload),
-        label: const Text('Sync to Cloud'),
+        icon: Icon(Icons.cloud_upload),
+        label: Text('Sync to Cloud'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.primary,
         ),
@@ -579,7 +579,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
 
   Widget _buildEmptyState(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
@@ -592,12 +592,12 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             size: 64,
             color: theme.colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'No workout data this week',
             style: theme.textTheme.titleMedium,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Complete workouts to see your progress',
             style: theme.textTheme.bodyMedium?.copyWith(

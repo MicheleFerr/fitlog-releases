@@ -205,7 +205,7 @@ class _ExerciseNameAutocompleteState
                     } else if (fuzzyResult.score >= 0.70) {
                       matchColor = context.colors.secondary;
                     } else {
-                      matchColor = context.colors.surfaceVariant;
+                      matchColor = context.colors.surfaceContainerHighest;
                     }
 
                     return ListTile(

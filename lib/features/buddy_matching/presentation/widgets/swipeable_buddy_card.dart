@@ -286,7 +286,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                         ? context.colors.success 
                         : widget.profile.isRecentlyActive 
                             ? context.colors.secondary 
-                            : context.colors.surfaceVariant,
+                            : context.colors.surfaceContainerHighest,
                     shape: BoxShape.circle,
                     border: Border.all(color: context.colors.surface, width: 2),
                   ),

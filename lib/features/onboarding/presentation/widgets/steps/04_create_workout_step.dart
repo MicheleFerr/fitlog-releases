@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CreateWorkoutStep extends StatefulWidget {
 
@@ -493,7 +494,7 @@ class _MockWorkoutCard extends StatelessWidget {
             Row(
               children: [
                 _InfoChip(
-                  icon: Icons.timer_outlined,
+                  icon: AppIcons.timer,
                   label: '45 min',
                   colorScheme: colorScheme,
                   theme: theme,

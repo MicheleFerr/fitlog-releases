@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_pr
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -146,7 +147,7 @@ class SettingsScreen extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.analytics_outlined,
+                    AppIcons.analytics,
                     size: 32,
                     color: context.colors.primary,
                   ),
@@ -1017,46 +1018,34 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.chooseTheme),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.themeLight),
-              subtitle: Text(l10n.themeLightDesc),
-              value: ThemeMode.light,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setThemeMode(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.themeDark),
-              subtitle: Text(l10n.themeDarkDesc),
-              value: ThemeMode.dark,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setThemeMode(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.themeSystem),
-              subtitle: Text(l10n.themeSystemDesc),
-              value: ThemeMode.system,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setThemeMode(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+        content: RadioGroup<ThemeMode>(
+          groupValue: currentMode,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(appConfigProvider.notifier).setThemeMode(value);
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<ThemeMode>(
+                title: Text(l10n.themeLight),
+                subtitle: Text(l10n.themeLightDesc),
+                value: ThemeMode.light,
+              ),
+              RadioListTile<ThemeMode>(
+                title: Text(l10n.themeDark),
+                subtitle: Text(l10n.themeDarkDesc),
+                value: ThemeMode.dark,
+              ),
+              RadioListTile<ThemeMode>(
+                title: Text(l10n.themeSystem),
+                subtitle: Text(l10n.themeSystemDesc),
+                value: ThemeMode.system,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1067,34 +1056,29 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Choose Language'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<String>(
-              title: Text(context.l10n.languageEnglish),
-              subtitle: const Text('English (US)'),
-              value: 'en',
-              groupValue: currentLang,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setLanguage(value, 'US');
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('Italiano'),
-              subtitle: const Text('Italian (IT)'),
-              value: 'it',
-              groupValue: currentLang,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setLanguage(value, 'IT');
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+        content: RadioGroup<String>(
+          groupValue: currentLang,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(appConfigProvider.notifier).setLanguage(value, value == 'en' ? 'US' : 'IT');
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: Text(context.l10n.languageEnglish),
+                subtitle: const Text('English (US)'),
+                value: 'en',
+              ),
+              RadioListTile<String>(
+                title: const Text('Italiano'),
+                subtitle: const Text('Italian (IT)'),
+                value: 'it',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1105,34 +1089,29 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Weight Units'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<String>(
-              title: const Text('Kilograms (kg)'),
-              subtitle: const Text('Metric system'),
-              value: 'kg',
-              groupValue: currentUnit,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setMeasurementUnit(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('Pounds (lbs)'),
-              subtitle: const Text('Imperial system'),
-              value: 'lbs',
-              groupValue: currentUnit,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setMeasurementUnit(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+        content: RadioGroup<String>(
+          groupValue: currentUnit,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(appConfigProvider.notifier).setMeasurementUnit(value);
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: const Text('Kilograms (kg)'),
+                subtitle: const Text('Metric system'),
+                value: 'kg',
+              ),
+              RadioListTile<String>(
+                title: const Text('Pounds (lbs)'),
+                subtitle: const Text('Imperial system'),
+                value: 'lbs',
+              ),
+            ],
+          ),
         ),
       ),
     );

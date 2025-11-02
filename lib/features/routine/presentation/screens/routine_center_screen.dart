@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_re
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_reminder_service_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Main screen for managing all flexible routines
 class RoutineCenterScreen extends ConsumerStatefulWidget {
@@ -300,7 +301,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.calendar_today_outlined,
+              AppIcons.calendarTodayOutlined,
               size: 80,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),

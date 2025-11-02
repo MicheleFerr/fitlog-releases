@@ -1000,6 +1000,8 @@
   "current1RM": "1RM Attuale",
   "bestEver": "Migliore di Sempre",
   "noDataForExercise": "Nessun dato disponibile per questo esercizio",
+  "noDataForChart": "Nessun dato disponibile per le metriche selezionate",
+  "chartTapToSeeRealValues": "Tocca il grafico per vedere i valori reali",
   "volumeHeatmap": "Mappa di Calore del Volume",
   "workoutDays": "Giorni di Allenamento",
   "weeksToShow": "Settimane da Mostrare",

@@ -270,7 +270,7 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.cardio:
         return Colors.pink;
       case TemplateCategory.mixed:
-        return context.colors.surfaceVariant;
+        return context.colors.surfaceContainerHighest;
       case TemplateCategory.custom:
         return context.colors.primaryGrey;
     }

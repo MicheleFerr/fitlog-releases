@@ -2024,7 +2024,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           ? context.colors.success
                           : score.trend == EfficiencyTrend.declining
                               ? context.colors.error
-                              : context.colors.surfaceVariant,
+                              : context.colors.surfaceContainerHighest,
                     ),
                   ],
                 ),

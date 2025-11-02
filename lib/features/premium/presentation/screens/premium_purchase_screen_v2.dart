@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class PremiumPurchaseScreenV2 extends ConsumerStatefulWidget {
   const PremiumPurchaseScreenV2({super.key});
@@ -451,14 +452,14 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
         delay: 200,
       ),
       _FeatureData(
-        icon: Icons.analytics_rounded,
+        icon: AppIcons.analyticsRounded,
         title: 'Advanced Analytics',
         description: 'Detailed insights & progress tracking',
         gradient: [colorScheme.tertiary, colorScheme.primary],
         delay: 400,
       ),
       _FeatureData(
-        icon: Icons.people_rounded,
+        icon: AppIcons.peopleRounded,
         title: 'Community Access',
         description: 'Connect with other athletes',
         gradient: [colorScheme.primary, colorScheme.tertiary],
@@ -595,7 +596,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             children: [
               ...List.generate(5, (index) => 
                 const Icon(
-                  Icons.star_rounded,
+                  AppIcons.starRounded,
                   color: context.colors.warning,
                   size: 20,
                 )
@@ -683,7 +684,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 ),
                 const SizedBox(width: 8),
                 const Icon(
-                  Icons.arrow_forward_rounded,
+                  AppIcons.arrowForwardRounded,
                   color: context.colors.surface,
                   size: 20,
                 ),
@@ -1032,7 +1033,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Expanded(
                 child: _buildTrustBadge(
                   context,
-                  Icons.cancel_rounded,
+                  AppIcons.cancelRounded,
                   'Easy Cancel',
                   'Anytime',
                 ),
@@ -1192,7 +1193,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 child: Row(
                   children: [
                     Icon(
-                      Icons.error_outline_rounded,
+                      AppIcons.errorOutlineRounded,
                       color: colorScheme.onErrorContainer,
                     ),
                     const SizedBox(width: 12),
@@ -1207,7 +1208,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     IconButton(
                       onPressed: () => ref.read(premiumUpgradeProvider.notifier).clearError(),
-                      icon: const Icon(Icons.close_rounded),
+                      icon: const Icon(AppIcons.closeRounded),
                       color: colorScheme.onErrorContainer,
                     ),
                   ],
@@ -1274,7 +1275,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Icon(
-                                Icons.rocket_launch_rounded,
+                                AppIcons.rocketLaunchRounded,
                                 color: context.colors.surface,
                                 size: 24,
                               ),
@@ -1431,7 +1432,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   ],
                 ),
                 child: const Icon(
-                  Icons.check_circle_outline_rounded,
+                  AppIcons.completeOutline,
                   size: 60,
                   color: context.colors.surface,
                 ),
@@ -1490,7 +1491,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       context,
                       'Community Access',
                       'Full Access',
-                      Icons.people_rounded,
+                      AppIcons.peopleRounded,
                       context.colors.secondary,
                     ),
                   ],
@@ -1505,7 +1506,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.settings_rounded,
+                      AppIcons.settingsRounded,
                       color: colorScheme.primary,
                       size: 20,
                     ),
@@ -1597,28 +1598,32 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     try {
       await ref.read(premiumUpgradeProvider.notifier).restorePurchases();
 
-      if (mounted) {
-        final userProfile = ref.read(unifiedUserProfileProvider).valueOrNull;
-        if (userProfile?.isPremium ?? false) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Row(
-                children: [
-                  Icon(Icons.check_circle, color: context.colors.surface),
-                  SizedBox(width: 8),
-                  Text('Premium restored successfully!'),
-                ],
-              ),
-              backgroundColor: context.colors.success,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+      if (!mounted) return;
+
+      final userProfile = ref.read(unifiedUserProfileProvider).valueOrNull;
+
+      if (!context.mounted) return;
+
+      if (userProfile?.isPremium ?? false) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text('Premium restored successfully!'),
+              ],
             ),
-          );
-          Navigator.of(context).pop();
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Text('No purchases found to restore'),
               behavior: SnackBarBehavior.floating,

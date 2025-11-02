@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/sync_
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/skeleton_loader.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TabbedAnalyticsScreen extends ConsumerStatefulWidget {
   const TabbedAnalyticsScreen({super.key});
@@ -127,19 +128,19 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.trending_up_outlined, size: 24),
+                  icon: Icon(AppIcons.trendUp, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.insights_outlined, size: 24),
+                  icon: Icon(AppIcons.insights, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.calendar_month_outlined, size: 24),
+                  icon: Icon(AppIcons.calendarMonthOutlined, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.auto_awesome_outlined, size: 24),
+                  icon: Icon(AppIcons.autoAwesomeOutlined, size: 24),
                 ),
               ],
             ),

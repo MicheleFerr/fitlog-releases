@@ -160,7 +160,7 @@ class _CalendarViewState extends State<CalendarView> {
     switch (dayInfo.status) {
       case DayStatus.completed:
         backgroundColor = context.colors.success.withValues(alpha: 0.2);
-        textColor = context.colors.success[700];
+        textColor = context.colors.success.withValues(red: context.colors.success.r * 0.7, green: context.colors.success.g * 0.7, blue: context.colors.success.b * 0.7);
         break;
       case DayStatus.skipped:
         backgroundColor = context.colors.error.withValues(alpha: 0.2);
@@ -168,7 +168,7 @@ class _CalendarViewState extends State<CalendarView> {
         break;
       case DayStatus.recovered:
         backgroundColor = context.colors.primary.withValues(alpha: 0.2);
-        textColor = context.colors.primary[700];
+        textColor = context.colors.primary.withValues(red: context.colors.primary.r * 0.7, green: context.colors.primary.g * 0.7, blue: context.colors.primary.b * 0.7);
         break;
       case DayStatus.rest:
         backgroundColor = context.colors.secondary.withValues(alpha: 0.2);

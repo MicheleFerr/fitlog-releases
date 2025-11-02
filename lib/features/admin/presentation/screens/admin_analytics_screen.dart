@@ -13,6 +13,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_analytics_sync_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminAnalyticsScreen extends ConsumerStatefulWidget {
   const AdminAnalyticsScreen({super.key});
@@ -341,7 +342,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.analytics_outlined,
+              AppIcons.analytics,
               size: 64,
               color: theme.colorScheme.outline,
             ),

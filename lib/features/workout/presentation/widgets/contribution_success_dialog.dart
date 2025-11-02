@@ -194,7 +194,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
               children: [
                 // Header with success animation
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -204,7 +204,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                         color.withValues(alpha: 0.05),
                       ],
                     ),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                   ),
                   child: Column(
                     children: [
@@ -239,7 +239,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                                       colors: [color, color.withValues(alpha: 0.8)],
                                     ),
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.check,
                                     color: context.colors.surface,
                                     size: 40,
@@ -251,7 +251,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                         ],
                       ),
                       
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       
                       // Title
                       Text(
@@ -261,7 +261,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                         ),
                       ),
                       
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       
                       // Subtitle
                       Text(
@@ -304,33 +304,33 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                 
                 // Action Buttons
                 Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(24),
                   child: Row(
                     children: [
                       Expanded(
                         child: OutlinedButton(
                           onPressed: widget.onViewContribution,
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text('I Miei Contributi'),
+                          child: Text('I Miei Contributi'),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: FilledButton(
                           onPressed: widget.onClose,
                           style: FilledButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: 12),
                             backgroundColor: color,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text('Fantastico!'),
+                          child: Text('Fantastico!'),
                         ),
                       ),
                     ],

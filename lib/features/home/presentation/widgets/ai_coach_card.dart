@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_servic
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// AI Coach card with modern design and animations
 class AICoachCard extends ConsumerStatefulWidget {
@@ -603,7 +604,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.analytics_outlined,
+            AppIcons.analytics,
             size: 64,
             color: colorScheme.primary.withValues(alpha: 0.8),
           ),
@@ -2056,7 +2057,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             child: Row(
               children: [
                 Icon(
-                  Icons.verified_outlined,
+                  AppIcons.verifiedOutlined,
                   size: 16,
                   color: colorScheme.primary,
                 ),

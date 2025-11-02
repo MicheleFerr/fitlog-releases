@@ -171,9 +171,9 @@ class OneRMCalculator {
   /// Validate if a weight/reps combination is realistic for given 1RM
   static bool isRealisticLift(double weight, int reps, double estimated1RM) {
     if (weight <= 0 || reps <= 0 || estimated1RM <= 0) return false;
-    
+
     final percentage = (weight / estimated1RM) * 100;
-    
+
     // Based on strength training standards
     if (reps == 1 && percentage > 100) return percentage <= 105; // Allow 5% variance
     if (reps <= 3 && percentage > 93) return false;
@@ -182,7 +182,7 @@ class OneRMCalculator {
     if (reps <= 12 && percentage > 70) return false;
     if (reps <= 15 && percentage > 65) return false;
     if (reps <= 20 && percentage > 60) return false;
-    
+
     return true;
   }
 }

@@ -300,7 +300,7 @@ class CorrectionReviewCard extends StatelessWidget {
         label = AppLocalizations.of(context).rejected;
         break;
       default:
-        color = context.colors.surfaceVariant;
+        color = context.colors.surfaceContainerHighest;
         icon = Icons.help;
         label = status;
     }

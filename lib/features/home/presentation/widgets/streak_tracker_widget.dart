@@ -637,7 +637,7 @@ class StreakTrackerWidget extends ConsumerWidget {
   }
 
   Color _getIntensityColor(BuildContext context, int exerciseCount) {
-    if (exerciseCount == 0) return context.colors.surfaceVariant.withValues(alpha: 0.2);
+    if (exerciseCount == 0) return context.colors.surfaceContainerHighest.withValues(alpha: 0.2);
     if (exerciseCount <= 2) return context.colors.success.withValues(alpha: 0.5);
     if (exerciseCount <= 4) return context.colors.secondary.withValues(alpha: 0.7);
     return context.colors.error.withValues(alpha: 0.8);

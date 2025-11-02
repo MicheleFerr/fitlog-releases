@@ -222,7 +222,7 @@ class SmartSuggestionTile extends ConsumerWidget {
       case SuggestionPriority.medium:
         return context.colors.primary;
       case SuggestionPriority.low:
-        return context.colors.surfaceVariant;
+        return context.colors.surfaceContainerHighest;
     }
   }
 

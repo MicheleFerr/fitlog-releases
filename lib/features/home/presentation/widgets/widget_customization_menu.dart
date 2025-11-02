@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/providers/home_customization_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WidgetCustomizationMenu extends ConsumerWidget {
   const WidgetCustomizationMenu({super.key});
@@ -139,7 +140,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.check_circle_outline,
+            AppIcons.completeOutline,
             size: 64,
             color: theme.colorScheme.primary.withValues(alpha: 0.5),
           ),

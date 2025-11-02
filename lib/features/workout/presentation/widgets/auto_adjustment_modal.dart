@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_cal
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
 
@@ -117,7 +118,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: context.colors.surfaceVariant.withValues(alpha: 0.3),
+                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -210,29 +211,37 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
   }
 
   Widget _buildTypeSelector(AppLocalizations l10n) {
-    return Column(
-      children: [
-        // APRE Card
-        Card(
-          elevation: _selectedType == AutoAdjustmentType.apre ? 3 : 0,
-          color: _selectedType == AutoAdjustmentType.apre
-              ? context.colors.primaryContainer
-              : context.colors.surfaceContainerHighest,
-          child: InkWell(
-            onTap: () {
-              setState(() => _selectedType = AutoAdjustmentType.apre);
-              _calculate1RMAndBaseWeight();
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Radio<AutoAdjustmentType>(
-                    value: AutoAdjustmentType.apre,
-                    groupValue: _selectedType,
-                    onChanged: (value) => setState(() => _selectedType = value),
-                  ),
+    return RadioGroup<AutoAdjustmentType>(
+      groupValue: _selectedType,
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => _selectedType = value);
+          if (value == AutoAdjustmentType.apre) {
+            _calculate1RMAndBaseWeight();
+          }
+        }
+      },
+      child: Column(
+        children: [
+          // APRE Card
+          Card(
+            elevation: _selectedType == AutoAdjustmentType.apre ? 3 : 0,
+            color: _selectedType == AutoAdjustmentType.apre
+                ? context.colors.primaryContainer
+                : context.colors.surfaceContainerHighest,
+            child: InkWell(
+              onTap: () {
+                setState(() => _selectedType = AutoAdjustmentType.apre);
+                _calculate1RMAndBaseWeight();
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Radio<AutoAdjustmentType>(
+                      value: AutoAdjustmentType.apre,
+                    ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -280,8 +289,6 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 children: [
                   Radio<AutoAdjustmentType>(
                     value: AutoAdjustmentType.rpe,
-                    groupValue: _selectedType,
-                    onChanged: (value) => setState(() => _selectedType = value),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -314,7 +321,8 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           ),
         ),
       ],
-    );
+    ),
+  );
   }
 
   Widget _buildAPREConfiguration(AppLocalizations l10n) {
@@ -436,7 +444,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 Row(
                   children: [
                     Icon(
-                      Icons.check_circle_outline,
+                      AppIcons.completeOutline,
                       size: 16,
                       color: context.colors.primary,
                     ),

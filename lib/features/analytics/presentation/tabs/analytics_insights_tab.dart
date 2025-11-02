@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/lazy_
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsInsightsTab extends ConsumerStatefulWidget {
 
@@ -524,7 +525,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
     final l10n = AppLocalizations.of(context);
 
     final icon = type == 'warning' ? Icons.warning_amber_rounded
-                : type == 'success' ? Icons.check_circle_outline
+                : type == 'success' ? AppIcons.completeOutline
                 : Icons.info_outline;
 
     final color = type == 'warning' ? Colors.orange

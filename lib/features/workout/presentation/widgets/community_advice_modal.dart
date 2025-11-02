@@ -72,7 +72,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                     Icons.lightbulb_outline,
                     color: theme.colorScheme.primary,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +136,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                         size: 48,
                         color: theme.colorScheme.error,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
                         'Errore nel caricamento',
                         style: theme.textTheme.titleMedium,
@@ -164,7 +164,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               size: 64,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               l10n.noAdviceAvailable,
               style: theme.textTheme.titleMedium?.copyWith(
@@ -172,7 +172,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               l10n.beFirstToShare,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -205,7 +205,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             Row(
               children: [
                 _getTypeIcon(contribution.type, theme),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     contribution.title,
@@ -217,7 +217,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Description
             Text(
@@ -225,7 +225,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               style: theme.textTheme.bodyMedium,
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Footer with author and like button
             Row(
@@ -238,7 +238,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                         size: 16,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Text(
                         contribution.userName,
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -270,7 +270,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                           size: 16,
                           color: theme.colorScheme.primary,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           contribution.upvotes.toString(),
                           style: theme.textTheme.bodySmall?.copyWith(
@@ -287,7 +287,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
 
             // Helpful text if upvotes > 0
             if (contribution.upvotes > 0) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 l10n.peopleFoundHelpful(contribution.upvotes),
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -304,13 +304,13 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
   Widget _getTypeIcon(ContributionType type, ThemeData theme) {
     switch (type) {
       case ContributionType.tip:
-        return const Icon(
+        return Icon(
           Icons.lightbulb,
           size: 20,
           color: context.colors.warning,
         );
       case ContributionType.warning:
-        return const Icon(
+        return Icon(
           Icons.warning,
           size: 20,
           color: context.colors.secondary,
@@ -322,19 +322,19 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
           color: theme.colorScheme.primary,
         );
       case ContributionType.variant:
-        return const Icon(
+        return Icon(
           Icons.alt_route,
           size: 20,
           color: context.colors.tertiary,
         );
       case ContributionType.translation:
-        return const Icon(
+        return Icon(
           Icons.translate,
           size: 20,
           color: context.colors.primary,
         );
       case ContributionType.technique:
-        return const Icon(
+        return Icon(
           Icons.fitness_center,
           size: 20,
           color: context.colors.success,

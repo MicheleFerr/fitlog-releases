@@ -32,7 +32,7 @@ class ExerciseStatsCard extends StatelessWidget {
                       Icons.leaderboard,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       'Top Exercises',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -43,19 +43,19 @@ class ExerciseStatsCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () => _showAllExercises(context, exerciseStats),
-                  child: const Text('View All'),
+                  child: Text('View All'),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             
             if (exerciseStats.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
                   padding: EdgeInsets.all(32.0),
                   child: Text(
                     'No exercise data available',
-                    style: TextStyle(color: context.colors.surfaceVariant),
+                    style: TextStyle(color: context.colors.surfaceContainerHighest),
                   ),
                 ),
               )
@@ -82,7 +82,7 @@ class ExerciseStatsCard extends StatelessWidget {
             radius: 20,
             child: Icon(Icons.fitness_center, size: 20),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           
           // Exercise info
           Expanded(
@@ -95,7 +95,7 @@ class ExerciseStatsCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(
                   '${stat.totalSets} sets • ${stat.sessions} sessions',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -125,7 +125,7 @@ class ExerciseStatsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -170,7 +170,7 @@ class ExerciseStatsCard extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: context.colors.surfaceVariant[300],
+                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -182,7 +182,7 @@ class ExerciseStatsCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               
               // Exercises list
               Expanded(
@@ -200,14 +200,14 @@ class ExerciseStatsCard extends StatelessWidget {
                             const CircleAvatar(
                               child: Icon(Icons.fitness_center),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     stat.exerciseName,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     '${stat.sessions} sessions • ${stat.totalSets} sets',
@@ -223,7 +223,7 @@ class ExerciseStatsCard extends StatelessWidget {
                               children: [
                                 Text(
                                   '${stat.maxWeight.toStringAsFixed(0)} kg',
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   '${(stat.totalVolume / 1000).toStringAsFixed(1)}t vol',

@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_chart_widgets.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_stat_cards.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_progress_indicators.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Statistics Dashboard with Material 3 design and responsive layout
 class EnhancedStatisticsDashboard extends ConsumerWidget {
@@ -380,7 +381,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.analytics_outlined,
+            AppIcons.analytics,
             size: 120,
             color: Colors.grey.withValues(alpha: 0.5),
           ),

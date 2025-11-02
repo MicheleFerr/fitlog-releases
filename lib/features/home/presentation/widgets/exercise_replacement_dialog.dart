@@ -167,29 +167,36 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                     ),
                     const SizedBox(height: 12),
 
-                    RadioListTile<String>(
-                      value: 'keep',
+                    RadioGroup<String>(
                       groupValue: weightOption,
-                      onChanged: (value) => setState(() => weightOption = value!),
-                      title: Text(l10n.keepCurrentWeight),
-                      dense: true,
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    RadioListTile<String>(
-                      value: 'reset',
-                      groupValue: weightOption,
-                      onChanged: (value) => setState(() => weightOption = value!),
-                      title: Text(l10n.resetWeight),
-                      dense: true,
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    RadioListTile<String>(
-                      value: 'manual',
-                      groupValue: weightOption,
-                      onChanged: (value) => setState(() => weightOption = value!),
-                      title: Text(l10n.setManually),
-                      dense: true,
-                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => weightOption = value);
+                        }
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RadioListTile<String>(
+                            value: 'keep',
+                            title: Text(l10n.keepCurrentWeight),
+                            dense: true,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                          RadioListTile<String>(
+                            value: 'reset',
+                            title: Text(l10n.resetWeight),
+                            dense: true,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                          RadioListTile<String>(
+                            value: 'manual',
+                            title: Text(l10n.setManually),
+                            dense: true,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

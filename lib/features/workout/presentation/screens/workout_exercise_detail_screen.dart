@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_s
 import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_history_tab.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_instructions_tab.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Schermata di dettaglio esercizio con 3 tab: Sommario, Cronologia, Istruzioni
 ///
@@ -86,7 +87,7 @@ class _WorkoutExerciseDetailScreenState
           tabs: [
             Tab(
               text: context.l10n.exerciseDetailSummary,
-              icon: const Icon(Icons.analytics_outlined),
+              icon: const Icon(AppIcons.analytics),
             ),
             Tab(
               text: context.l10n.exerciseDetailHistory,

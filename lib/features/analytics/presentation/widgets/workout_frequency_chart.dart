@@ -31,7 +31,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
                   Icons.show_chart,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Weekly Frequency',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -40,22 +40,22 @@ class WorkoutFrequencyChart extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             
             // Simple bar chart representation
             SizedBox(
               height: 200,
               child: weeklyData.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
                         'No data available',
-                        style: TextStyle(color: context.colors.surfaceVariant),
+                        style: TextStyle(color: context.colors.surfaceContainerHighest),
                       ),
                     )
                   : _buildSimpleBarChart(context, weeklyData),
             ),
             
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             
             // Legend
             _buildLegend(context, weeklyData),
@@ -67,7 +67,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
 
   Widget _buildSimpleBarChart(BuildContext context, List<WeeklyData> data) {
     final maxValue = data.map((d) => d.workoutCount).reduce((a, b) => a > b ? a : b);
-    if (maxValue == 0) return const Center(child: Text('No workouts yet'));
+    if (maxValue == 0) return Center(child: Text('No workouts yet'));
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -110,7 +110,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
                           : null,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
 
                   // Week label
                   Text(
@@ -191,7 +191,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(

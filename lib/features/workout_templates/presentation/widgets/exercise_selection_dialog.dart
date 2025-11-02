@@ -143,77 +143,81 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                         ],
                       ),
                     )
-                  : ListView.builder(
-                      itemCount: _filteredMatches.length,
-                      itemBuilder: (context, index) {
-                        final match = _filteredMatches[index];
-                        final isSelected = _selectedExerciseId == match.exercise.id;
-                        
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          child: ListTile(
-                            title: Text(match.exercise.nome),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('${l10n.targetMuscles}: ${match.exercise.focus}'),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: colorScheme.primary.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        '${(match.similarity * 100).round()}% ${l10n.match}',
-                                        style: context.textTheme.labelSmall?.copyWith(
-                                          color: colorScheme.primary,
+                  : RadioGroup<String>(
+                      groupValue: _selectedExerciseId,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedExerciseId = value;
+                          });
+                        }
+                      },
+                      child: ListView.builder(
+                        itemCount: _filteredMatches.length,
+                        itemBuilder: (context, index) {
+                          final match = _filteredMatches[index];
+                          final isSelected = _selectedExerciseId == match.exercise.id;
+
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              title: Text(match.exercise.nome),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('${l10n.targetMuscles}: ${match.exercise.focus}'),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: colorScheme.primary.withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          '${(match.similarity * 100).round()}% ${l10n.match}',
+                                          style: context.textTheme.labelSmall?.copyWith(
+                                            color: colorScheme.primary,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: colorScheme.secondary.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        match.matchReason,
-                                        style: context.textTheme.labelSmall?.copyWith(
-                                          color: colorScheme.secondary,
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: colorScheme.secondary.withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          match.matchReason,
+                                          style: context.textTheme.labelSmall?.copyWith(
+                                            color: colorScheme.secondary,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            leading: Radio<String>(
-                              value: match.exercise.id,
-                              groupValue: _selectedExerciseId,
-                              onChanged: (value) {
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              leading: Radio<String>(
+                                value: match.exercise.id,
+                              ),
+                              onTap: () {
                                 setState(() {
-                                  _selectedExerciseId = value;
+                                  _selectedExerciseId = match.exercise.id;
                                 });
                               },
                             ),
-                            onTap: () {
-                              setState(() {
-                                _selectedExerciseId = match.exercise.id;
-                              });
-                            },
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
             ),
           ],

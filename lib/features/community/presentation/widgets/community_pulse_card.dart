@@ -662,7 +662,7 @@ class _MiniContributionCard extends StatelessWidget {
         break;
       default:
         icon = Icons.info;
-        color = context.colors.surfaceVariant;
+        color = context.colors.surfaceContainerHighest;
     }
     
     return Container(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_selector.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Info bar minimalista e professionale per mostrare categoria, tipo e TUT
 class ExerciseInfoBar extends StatefulWidget {
@@ -202,7 +203,7 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                   children: [
                     Flexible(
                       child: _buildInfoItem(
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timer,
                         text: _formatTut(tut!),
                         color: theme.colorScheme.primary,
                         theme: theme,

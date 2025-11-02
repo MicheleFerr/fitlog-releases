@@ -407,7 +407,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                         ),
                         child: Text(
                           badgeCount > 99 ? '99+' : badgeCount.toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: context.colors.surface,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,

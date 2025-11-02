@@ -126,7 +126,7 @@ class WorkoutGoalsChips extends StatelessWidget {
       case WorkoutGoal.flexibility:
         return colorScheme.tertiary;
       case WorkoutGoal.general:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
     }
   }
 

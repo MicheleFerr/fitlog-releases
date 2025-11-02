@@ -980,10 +980,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 ),
               ),
               const SizedBox(height: 16),
-              RadioListTile<ProgressWidgetLayout>(
-                title: Text(l10n.fullView),
-                subtitle: Text(AppLocalizations.of(context).completeStatistics),
-                value: ProgressWidgetLayout.full,
+              RadioGroup<ProgressWidgetLayout>(
                 groupValue: currentLayout,
                 onChanged: (value) {
                   if (value != null) {
@@ -991,30 +988,26 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                     Navigator.pop(context);
                   }
                 },
-              ),
-              RadioListTile<ProgressWidgetLayout>(
-                title: Text(l10n.compactView),
-                subtitle: Text(AppLocalizations.of(context).essentialStatistics),
-                value: ProgressWidgetLayout.compact,
-                groupValue: currentLayout,
-                onChanged: (value) {
-                  if (value != null) {
-                    ref.read(progressWidgetPreferencesProvider.notifier).setLayout(value);
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-              RadioListTile<ProgressWidgetLayout>(
-                title: Text(l10n.minimalView),
-                subtitle: Text(AppLocalizations.of(context).levelAndXpOnly),
-                value: ProgressWidgetLayout.minimal,
-                groupValue: currentLayout,
-                onChanged: (value) {
-                  if (value != null) {
-                    ref.read(progressWidgetPreferencesProvider.notifier).setLayout(value);
-                    Navigator.pop(context);
-                  }
-                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<ProgressWidgetLayout>(
+                      title: Text(l10n.fullView),
+                      subtitle: Text(AppLocalizations.of(context).completeStatistics),
+                      value: ProgressWidgetLayout.full,
+                    ),
+                    RadioListTile<ProgressWidgetLayout>(
+                      title: Text(l10n.compactView),
+                      subtitle: Text(AppLocalizations.of(context).essentialStatistics),
+                      value: ProgressWidgetLayout.compact,
+                    ),
+                    RadioListTile<ProgressWidgetLayout>(
+                      title: Text(l10n.minimalView),
+                      subtitle: Text(AppLocalizations.of(context).levelAndXpOnly),
+                      value: ProgressWidgetLayout.minimal,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
             ],

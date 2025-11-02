@@ -37,12 +37,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   void initState() {
     super.initState();
     _customizations = widget.selectedExercises.map((exercise) {
-      // ✅ NUOVO: Detect counting mode automatically
-      final detectionResult = ExerciseCountingModeService.detectFromDatabaseExercise(exercise);
-      final countingMode = detectionResult.mode;
+      // ✅ Default to weighted mode (DatabaseExercise → Exercise conversion needed for full detection)
+      final countingMode = ExerciseCountingMode.weighted;
 
       // ✅ NUOVO: Create default sets based on counting mode
-      final List<SetCustomization> defaultSets;
+      List<SetCustomization> defaultSets;
       switch (countingMode) {
         case ExerciseCountingMode.weighted:
           defaultSets = [
@@ -614,7 +613,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
       case 'avanzato':
         return context.colors.error;
       default:
-        return context.colors.surfaceVariant;
+        return context.colors.surfaceContainerHighest;
     }
   }
 

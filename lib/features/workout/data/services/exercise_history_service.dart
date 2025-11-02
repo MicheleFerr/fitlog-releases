@@ -22,11 +22,17 @@ class ExerciseHistoryData {
   const ExerciseHistoryData({
     this.weight,
     this.reps,
+    this.rpe,  // ✅ Include RPE from set
+    this.tut,  // ✅ Include TUT from exercise level
+    this.setDurationMillis,  // ✅ Include actual set duration
     required this.date,
     required this.workoutName,
   });
   final double? weight;
   final int? reps;
+  final int? rpe;  // Rate of Perceived Exertion (5-10)
+  final String? tut;  // Time Under Tension from Exercise level
+  final double? setDurationMillis;  // Actual set duration in milliseconds
   final DateTime date;
   final String workoutName;
 }
@@ -107,6 +113,11 @@ class ExerciseHistoryService {
   /// Internal method to get exercise history from Hive storage
   Future<List<ExerciseHistoryData>> _getExerciseHistory(String exerciseName, String userId, {int limit = 50}) async {
     try {
+      // ✅ DEBUG: Log query
+      if (enableDebugLogging && kDebugMode) {
+        debugPrint('🔍 [HISTORY QUERY] Searching for exercise: "$exerciseName" (userId: $userId, limit: $limit)');
+      }
+
       final box = await _boxManager.openBox<Map>(_workoutsBoxName);
       final historyData = <ExerciseHistoryData>[];
 
@@ -197,12 +208,22 @@ class ExerciseHistoryService {
             }
 
             for (final set in setsToProcess) {
-              historyData.add(ExerciseHistoryData(
+              final historyEntry = ExerciseHistoryData(
                 weight: (set.weight ?? 0) > 0 ? set.weight : null,
                 reps: (set.reps ?? 0) > 0 ? set.reps : null,
+                rpe: set.rpe,  // ✅ Include RPE from set
+                tut: exercise.tut,  // ✅ Include TUT from exercise level
+                setDurationMillis: set.setDurationMillis,  // ✅ Include actual set duration
                 date: workoutDate,
                 workoutName: workout.name,
-              ));
+              );
+
+              // ✅ DEBUG: Log RPE extraction
+              if (enableDebugLogging && kDebugMode && set.rpe != null) {
+                debugPrint('📊 [HISTORY] Found RPE: exercise=${exercise.name}, RPE=${set.rpe}, weight=${set.weight}, reps=${set.reps}, workout=${workout.name}');
+              }
+
+              historyData.add(historyEntry);
             }
           }
         }
@@ -210,6 +231,16 @@ class ExerciseHistoryService {
 
       // Sort by date (newest first) before limiting
       historyData.sort((a, b) => b.date.compareTo(a.date));
+
+      // ✅ DEBUG: Log summary
+      if (enableDebugLogging && kDebugMode) {
+        final withRPE = historyData.where((d) => d.rpe != null).length;
+        final withWeight = historyData.where((d) => d.weight != null).length;
+        final withReps = historyData.where((d) => d.reps != null).length;
+        final withTUT = historyData.where((d) => d.setDurationMillis != null).length;
+        debugPrint('📊 [HISTORY SUMMARY] Found ${historyData.length} total sets for "$exerciseName"');
+        debugPrint('   → With RPE: $withRPE, With Weight: $withWeight, With Reps: $withReps, With TUT: $withTUT');
+      }
 
       return historyData.take(limit).toList();
     } catch (e, stackTrace) {

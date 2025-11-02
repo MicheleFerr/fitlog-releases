@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_a
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Secondary Actions widget for the optimized homepage
 ///
@@ -97,7 +98,7 @@ class SecondaryActions extends ConsumerWidget {
     return [
       // Analytics & Progress
       _SecondaryActionCard(
-        icon: Icons.analytics_outlined,
+        icon: AppIcons.analytics,
         activeIcon: Icons.analytics,
         title: l10n.analytics,
         subtitle: l10n.trackProgress,
@@ -107,7 +108,7 @@ class SecondaryActions extends ConsumerWidget {
 
       // Settings & Customization
       _SecondaryActionCard(
-        icon: Icons.settings_outlined,
+        icon: AppIcons.settings,
         activeIcon: Icons.settings,
         title: l10n.settings,
         subtitle: l10n.customizeApp,
@@ -117,7 +118,7 @@ class SecondaryActions extends ConsumerWidget {
 
       // Exercise Database
       _SecondaryActionCard(
-        icon: Icons.search_outlined,
+        icon: AppIcons.searchOutlined,
         activeIcon: Icons.search,
         title: l10n.exercises,
         subtitle: l10n.searchExercises,
@@ -138,7 +139,7 @@ class SecondaryActions extends ConsumerWidget {
 
       // Workout History Database
       _SecondaryActionCard(
-        icon: Icons.history_outlined,
+        icon: AppIcons.historyOutlined,
         activeIcon: Icons.history,
         title: l10n.history,
         subtitle: l10n.viewPastWorkouts,

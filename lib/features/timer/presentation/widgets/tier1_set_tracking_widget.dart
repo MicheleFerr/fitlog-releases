@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// TIER-1 Set Tracking Widget with real-time visualization
 /// Shows live metrics, form feedback, and velocity graphs during set execution
@@ -517,7 +518,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
       case _CoachingSeverity.info:
         return Icons.info_outline;
       case _CoachingSeverity.warning:
-        return Icons.warning_outlined;
+        return AppIcons.warning;
     }
   }
 

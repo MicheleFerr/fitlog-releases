@@ -665,7 +665,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
     if (percentage >= 80) return context.colors.success;
     if (percentage >= 60) return context.colors.secondary;
     if (percentage >= 40) return context.colors.warning;
-    return context.colors.surfaceVariant;
+    return context.colors.surfaceContainerHighest;
   }
 
   IconData _getCategoryIcon(String? category) {

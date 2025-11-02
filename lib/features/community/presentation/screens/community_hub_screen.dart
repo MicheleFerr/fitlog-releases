@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/widgets/contr
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/create_contribution_modal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityHubScreen extends ConsumerStatefulWidget {
   const CommunityHubScreen({super.key});
@@ -341,7 +342,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.check_circle_outline,
+                            AppIcons.completeOutline,
                             size: 64,
                             color: Theme.of(context).colorScheme.primary,
                           ),

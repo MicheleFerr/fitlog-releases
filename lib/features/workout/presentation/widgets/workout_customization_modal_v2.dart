@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🚀 Workout Customization Modal V2 - Improved UX with tooltips and logical grouping
 class WorkoutCustomizationModalV2 extends ConsumerStatefulWidget {
@@ -299,7 +300,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   _buildToggleCard(
                     theme,
                     l10n,
-                    icon: Icons.timer_outlined,
+                    icon: AppIcons.timer,
                     iconColor: Colors.teal,
                     title: l10n.tutInfoTitle,
                     subtitle: l10n.tutInfoDescription,
@@ -360,7 +361,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                     l10n,
                     icon: Icons.settings,
                     title: l10n.interfaceSection,
-                    color: context.colors.surfaceVariant,
+                    color: context.colors.surfaceContainerHighest,
                   ),
                   const SizedBox(height: 12),
                   _buildToggleCard(
@@ -381,7 +382,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   _buildToggleCard(
                     theme,
                     l10n,
-                    icon: Icons.timer_outlined,
+                    icon: AppIcons.timer,
                     iconColor: context.colors.success,
                     title: l10n.customTimersTitle,
                     subtitle: l10n.customTimersDescription,

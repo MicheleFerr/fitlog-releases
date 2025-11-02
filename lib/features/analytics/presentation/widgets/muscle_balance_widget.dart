@@ -201,13 +201,13 @@ class MuscleBalanceWidget extends StatelessWidget {
               Icon(
                 Icons.equalizer,
                 size: 48,
-                color: context.colors.surfaceVariant.withValues(alpha: 0.5),
+                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(
                 'No muscle group data available',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.colors.surfaceVariant,
+                  color: context.colors.surfaceContainerHighest,
                 ),
               ),
             ],

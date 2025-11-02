@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grafico avanzato per tracciare la progressione del 1RM (One Rep Max)
 /// con predictive trend lines e analisi del plateau
@@ -801,7 +802,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.analytics_outlined,
+            AppIcons.analytics,
             size: 64,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),

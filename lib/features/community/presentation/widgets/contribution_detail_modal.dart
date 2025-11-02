@@ -657,16 +657,23 @@ class _ReportDialogState extends State<_ReportDialog> {
             ),
           ),
           const SizedBox(height: 12),
-          ..._reportReasons.map((reason) => RadioListTile<String>(
-                title: Text(reason),
-                value: reason,
-                groupValue: _selectedReason,
-                onChanged: (value) {
-                  setState(() => _selectedReason = value);
-                },
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-              )),
+          RadioGroup<String>(
+            groupValue: _selectedReason,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _selectedReason = value);
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _reportReasons.map((reason) => RadioListTile<String>(
+                    title: Text(reason),
+                    value: reason,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  )).toList(),
+            ),
+          ),
           if (_selectedReason == 'Altro') ...[
             const SizedBox(height: 12),
             TextField(

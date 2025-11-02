@@ -139,7 +139,7 @@ class _VotingCardState extends State<VotingCard>
           onTap: widget.onTap,
           borderRadius: BorderRadius.circular(20),
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -174,7 +174,7 @@ class _VotingCardState extends State<VotingCard>
               children: [
                 // Header with type and user info
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -208,7 +208,7 @@ class _VotingCardState extends State<VotingCard>
                           );
                         },
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +216,7 @@ class _VotingCardState extends State<VotingCard>
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 8,
                                     vertical: 2,
                                   ),
@@ -233,15 +233,15 @@ class _VotingCardState extends State<VotingCard>
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 if (widget.contribution.isFeatured)
                                   Container(
-                                    padding: const EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                       horizontal: 6,
                                       vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
+                                      gradient: LinearGradient(
                                         colors: [
                                           context.colors.warning,
                                           context.colors.secondary,
@@ -249,7 +249,7 @@ class _VotingCardState extends State<VotingCard>
                                       ),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
@@ -271,7 +271,7 @@ class _VotingCardState extends State<VotingCard>
                                   ),
                               ],
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               widget.contribution.exerciseName,
                               style: theme.textTheme.titleMedium?.copyWith(
@@ -292,7 +292,7 @@ class _VotingCardState extends State<VotingCard>
                 
                 // Content
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -303,7 +303,7 @@ class _VotingCardState extends State<VotingCard>
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       
                       // Description
                       Text(
@@ -317,14 +317,14 @@ class _VotingCardState extends State<VotingCard>
                       // Original vs Suggested (if correction)
                       if (widget.contribution.originalValue != null &&
                           widget.contribution.suggestedValue != null) ...[
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         _DiffDisplay(
                           original: widget.contribution.originalValue!,
                           suggested: widget.contribution.suggestedValue!,
                         ),
                       ],
                       
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       
                       // User info and timestamp
                       Row(
@@ -341,21 +341,21 @@ class _VotingCardState extends State<VotingCard>
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Text(
                             widget.contribution.userName,
                             style: theme.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Text(
                             '•',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.outline,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Text(
                             _formatTimeAgo(widget.contribution.createdAt),
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -370,9 +370,9 @@ class _VotingCardState extends State<VotingCard>
                 
                 // Actions
                 if (widget.showActions) ...[
-                  const Divider(height: 1),
+                  Divider(height: 1),
                   Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,
                     ),
@@ -390,7 +390,7 @@ class _VotingCardState extends State<VotingCard>
                             widget.onUpvote();
                           },
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(width: 16),
 
                         // Downvote button
                         _VoteButton(
@@ -405,7 +405,7 @@ class _VotingCardState extends State<VotingCard>
                           },
                         ),
                         
-                        const Spacer(),
+                        Spacer(),
                         
                         // Comment button
                         if (widget.onComment != null)
@@ -416,7 +416,7 @@ class _VotingCardState extends State<VotingCard>
                                 widget.contribution.comments.length.toString(),
                               ),
                               isLabelVisible: widget.contribution.comments.isNotEmpty,
-                              child: const Icon(Icons.comment_outlined),
+                              child: Icon(Icons.comment_outlined),
                             ),
                           ),
                         
@@ -426,7 +426,7 @@ class _VotingCardState extends State<VotingCard>
                             HapticFeedback.selectionClick();
                             // TODO: Implement share
                           },
-                          icon: const Icon(Icons.share_outlined),
+                          icon: Icon(Icons.share_outlined),
                         ),
                       ],
                     ),
@@ -524,7 +524,7 @@ class _VoteButtonState extends State<_VoteButton>
       onTap: widget.onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: widget.isActive
               ? widget.color.withValues(alpha: 0.1)
@@ -554,7 +554,7 @@ class _VoteButtonState extends State<_VoteButton>
                 );
               },
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(
               widget.count.toString(),
               style: TextStyle(
@@ -585,7 +585,7 @@ class _DiffDisplay extends StatelessWidget {
     final theme = Theme.of(context);
     
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
@@ -601,12 +601,12 @@ class _DiffDisplay extends StatelessWidget {
               Container(
                 width: 8,
                 height: 8,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: context.colors.error,
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Prima',
                 style: theme.textTheme.labelSmall?.copyWith(
@@ -615,7 +615,7 @@ class _DiffDisplay extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             original,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -623,18 +623,18 @@ class _DiffDisplay extends StatelessWidget {
               color: theme.colorScheme.error.withValues(alpha: 0.7),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               Container(
                 width: 8,
                 height: 8,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: context.colors.success,
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Dopo',
                 style: theme.textTheme.labelSmall?.copyWith(
@@ -643,7 +643,7 @@ class _DiffDisplay extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             suggested,
             style: theme.textTheme.bodySmall?.copyWith(

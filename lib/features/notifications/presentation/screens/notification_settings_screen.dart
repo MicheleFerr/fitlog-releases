@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
@@ -203,7 +204,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                Icons.warning_rounded,
+                AppIcons.warningRounded,
                 color: context.colors.onErrorContainer,
               ),
               const SizedBox(width: 12),

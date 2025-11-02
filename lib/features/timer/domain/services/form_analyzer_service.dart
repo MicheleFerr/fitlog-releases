@@ -173,8 +173,8 @@ class FormAnalyzerService {
     
     // Lower jerk = smoother movement = higher score
     final smoothnessScore = math.max(0, 100 - (averageJerk * 20));
-    
-    return smoothnessScore;
+
+    return smoothnessScore.toDouble();
   }
 
   /// Calculate movement rhythm score
@@ -210,8 +210,8 @@ class FormAnalyzerService {
         .reduce((a, b) => a + b) / peakIntervals.length;
     
     final rhythmConsistency = math.max(0, 100 - (math.sqrt(intervalVariance) * 2));
-    
-    return rhythmConsistency;
+
+    return rhythmConsistency.toDouble();
   }
 
   /// Calculate range of motion score (based on velocity variation)

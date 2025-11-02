@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExecuteSetStep extends StatefulWidget {
 
@@ -137,7 +138,7 @@ class _ExecuteSetStepState extends State<ExecuteSetStep> with TickerProviderStat
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.check_circle_outline,
+            AppIcons.completeOutline,
             size: 80,
             color: colorScheme.primary,
           ),

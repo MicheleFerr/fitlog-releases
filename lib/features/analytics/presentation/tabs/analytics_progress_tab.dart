@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_stats_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/lazy_chart_wrapper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsProgressTab extends ConsumerWidget {
   
@@ -178,7 +179,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.emoji_events_outlined,
+                        AppIcons.emojiEventsOutlined,
                         size: 48,
                         color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       ),

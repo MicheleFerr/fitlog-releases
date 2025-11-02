@@ -37,6 +37,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   const WorkoutScreen({super.key});
@@ -536,7 +537,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         Row(
                           children: [
                             Icon(
-                              Icons.timer_outlined,
+                              AppIcons.timer,
                               size: 14,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
@@ -637,7 +638,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                               style: Theme.of(modalContext).textTheme.bodySmall,
                             ),
                             const SizedBox(width: 12),
-                            Icon(Icons.timer_outlined, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
+                            Icon(AppIcons.timer, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
                             const SizedBox(width: 4),
                             Text(
                               '~${template.estimatedDuration} min',

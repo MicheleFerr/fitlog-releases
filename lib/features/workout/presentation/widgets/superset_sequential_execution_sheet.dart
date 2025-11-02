@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
-import 'package:gymbro_flutter_new/features/shared/presentation/extensions/context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
@@ -72,7 +71,6 @@ class _SupersetSequentialExecutionSheetState
       set: exerciseSet,
       targetReps: exerciseData.targetReps ?? 10,
       exercise: firstExercise,
-      countingMode: firstExercise.countingMode, // ✅ NUOVO: Pass counting mode for proper UI
 
       // ✅ SUPERSET MODE
       isPartOfSuperset: true,
@@ -199,7 +197,7 @@ class _SupersetSequentialExecutionSheetState
     // Show QuickEditOverlayV2
     showDialog(
       context: context,
-      barrierColor: context.colors.onSurface26,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.26),
       builder: (context) => Stack(
         children: [
           // Dismiss on tap outside
