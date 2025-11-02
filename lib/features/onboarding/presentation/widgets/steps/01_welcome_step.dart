@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -87,13 +89,13 @@ class _WelcomeStepState extends State<WelcomeStep>
 
   void _startAnimations() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    _heroController.forward();
+    unawaited(_heroController.forward());
 
     await Future.delayed(const Duration(milliseconds: 600));
-    _textController.forward();
+    unawaited(_textController.forward());
 
     await Future.delayed(const Duration(milliseconds: 400));
-    _featureController.forward();
+    unawaited(_featureController.forward());
   }
 
   @override

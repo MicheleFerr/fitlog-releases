@@ -61,7 +61,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       l10n.volumeLandmarksSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -72,16 +72,16 @@ class VolumeLandmarksCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.info_outline),
+                icon: Icon(Icons.info_outline),
                 onPressed: () => _showScientificExplanation(context),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Legend
           _buildLegend(context),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Muscle groups
           ...MuscleGroup.values.map((muscle) {
@@ -93,7 +93,7 @@ class VolumeLandmarksCard extends StatelessWidget {
             return Column(
               children: [
                 _buildMuscleRow(context, muscle, sets, landmarks, zone, exercises),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
             );
           }),
@@ -101,7 +101,7 @@ class VolumeLandmarksCard extends StatelessWidget {
           // Uncategorized exercises warning
           if (uncategorizedExercises.isNotEmpty) ...[
             _buildUncategorizedSection(context, uncategorizedExercises),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
           ],
 
           // Scientific citation
@@ -118,7 +118,7 @@ class VolumeLandmarksCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildLegendItem(context, 'MV', l10n.maintenanceVolume, context.colors.surfaceVariant),
+        _buildLegendItem(context, 'MV', l10n.maintenanceVolume, context.colors.surfaceContainerHighest),
         _buildLegendItem(context, 'MEV', l10n.minEffectiveVolume, context.colors.secondary),
         _buildLegendItem(context, 'MAV', l10n.maxAdaptiveVolume, context.colors.success),
         _buildLegendItem(context, 'MRV', l10n.maxRecoverableVolume, context.colors.error),
@@ -144,7 +144,7 @@ class VolumeLandmarksCard extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(
@@ -198,7 +198,7 @@ class VolumeLandmarksCard extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         // Volume bar
         Stack(
@@ -222,7 +222,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                     flex: landmarks.mv,
                     child: Container(
                       height: 24,
-                      color: context.colors.surfaceVariant.withValues(alpha: 0.3),
+                      color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                     ),
                   ),
                   // MEV to MAV zone (green gradient)
@@ -289,7 +289,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         color: _getZoneColor(zone, theme.colorScheme),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text(
+                      child: Text(
                         '●',
                         style: TextStyle(
                           color: context.colors.surface,
@@ -302,7 +302,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         // Zone indicator with dynamic explanations and exercises (expandable)
         _buildZoneIndicator(context, zone, currentSets, landmarks, muscle, exercises),
@@ -376,14 +376,14 @@ class VolumeLandmarksCard extends StatelessWidget {
         explanation = l10n.volumeBelowMaintenanceExplanation(currentSets, landmarks.mv);
         advice = l10n.volumeBelowMaintenanceAdvice(landmarks.mv - currentSets);
         icon = Icons.trending_down;
-        color = context.colors.surfaceVariant;
+        color = context.colors.surfaceContainerHighest;
         break;
       case VolumeZone.maintenance:
         message = l10n.volumeZoneMaintenance;
         explanation = l10n.volumeMaintenanceExplanation(currentSets, landmarks.mv, landmarks.mev);
         advice = l10n.volumeMaintenanceAdvice(landmarks.mev - currentSets);
         icon = Icons.pause_circle_outline;
-        color = context.colors.surfaceVariant;
+        color = context.colors.surfaceContainerHighest;
         break;
       case VolumeZone.effective:
         message = l10n.volumeZoneEffective;
@@ -423,7 +423,7 @@ class VolumeLandmarksCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 14, color: color),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Text(
                 message,
                 style: theme.textTheme.labelSmall?.copyWith(
@@ -431,7 +431,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Icon(
                 Icons.keyboard_arrow_down,
                 size: 16,
@@ -462,7 +462,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       size: 16,
                       color: color,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         explanation,
@@ -473,7 +473,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // Advice
                 Row(
@@ -484,7 +484,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       size: 16,
                       color: color,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         advice,
@@ -499,9 +499,9 @@ class VolumeLandmarksCard extends StatelessWidget {
 
                 // Exercise breakdown
                 if (exercises.isNotEmpty) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Divider(color: color.withValues(alpha: 0.3)),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Row(
                     children: [
                       Icon(
@@ -509,7 +509,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         size: 16,
                         color: color,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         l10n.exercisesThisWeek,
                         style: theme.textTheme.labelMedium?.copyWith(
@@ -519,7 +519,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   ...exercises.map((exercise) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 6),
@@ -533,7 +533,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                               shape: BoxShape.circle,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               exercise.exerciseName,
@@ -564,7 +564,7 @@ class VolumeLandmarksCard extends StatelessWidget {
     switch (zone) {
       case VolumeZone.belowMaintenance:
       case VolumeZone.maintenance:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
       case VolumeZone.effective:
         return colorScheme.secondary;
       case VolumeZone.optimal:
@@ -635,7 +635,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                 color: theme.colorScheme.error,
                 size: 24,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   l10n.uncategorizedExercises,
@@ -647,14 +647,14 @@ class VolumeLandmarksCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             l10n.uncategorizedExercisesDesc,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onErrorContainer,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           ...uncategorized.map((exercise) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
@@ -677,7 +677,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         color: theme.colorScheme.error,
                         size: 20,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -736,7 +736,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               size: 20,
               color: theme.colorScheme.primary,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -748,7 +748,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     'Bernárdez-Vázquez et al. (2022) - Healthcare',
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -808,14 +808,14 @@ class VolumeLandmarksCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       l10n.volumeLandmarksScientificSubtitle,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
 
                     // Paper info
                     _buildPaperCard(
@@ -825,7 +825,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       l10n.volumeLandmarksPaperSummary,
                       'https://doi.org/10.3390/healthcare10040674',
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
 
                     // Volume zones explanation
                     Text(
@@ -834,36 +834,36 @@ class VolumeLandmarksCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
 
                     _buildZoneExplanation(
                       context,
                       'MV',
                       l10n.mvExplanation,
-                      context.colors.surfaceVariant,
+                      context.colors.surfaceContainerHighest,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MEV',
                       l10n.mevExplanation,
                       context.colors.secondary,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MAV',
                       l10n.mavExplanation,
                       context.colors.success,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MRV',
                       l10n.mrvExplanation,
                       context.colors.error,
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
 
                     // Practical advice
                     Text(
@@ -872,7 +872,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Text(
                       l10n.volumeLandmarksPracticalAdvice,
                       style: theme.textTheme.bodyMedium?.copyWith(
@@ -919,7 +919,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   Icons.article_outlined,
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -946,7 +946,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               summary,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -985,7 +985,7 @@ class VolumeLandmarksCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Text(
             explanation,
@@ -1018,7 +1018,7 @@ class VolumeLandmarksCard extends StatelessWidget {
         title: Row(
           children: [
             Icon(Icons.edit, color: theme.colorScheme.primary),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 l10n.categorizeExercise,
@@ -1045,7 +1045,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                     Icons.fitness_center,
                     color: theme.colorScheme.primary,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       exercise.exerciseName,
@@ -1057,14 +1057,14 @@ class VolumeLandmarksCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               l10n.selectCorrectMuscleGroup,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             ...muscleGroups.map((group) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -1092,7 +1092,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                           color: theme.colorScheme.primary,
                           size: 24,
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(width: 16),
                         Text(
                           group.$2,
                           style: theme.textTheme.bodyLarge,
@@ -1114,6 +1114,9 @@ class VolumeLandmarksCard extends StatelessWidget {
       ),
     ).then((selectedGroup) {
       if (selectedGroup != null) {
+        // Check if widget is still mounted before using context
+        if (!context.mounted) return;
+
         // TODO: Save mapping to SharedPreferences/Hive
         // For now, show a snackbar
         final muscleGroupName = _getMuscleGroupLocalizedName(context, selectedGroup);

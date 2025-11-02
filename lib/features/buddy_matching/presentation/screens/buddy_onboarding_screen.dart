@@ -13,6 +13,8 @@
 /// - Hive: None
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -286,9 +288,9 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
     try {
       final preferences = _buildPreferences();
       await ref.read(buddyPreferencesProvider.notifier).updatePreferences(preferences);
-      
+
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/buddy-matching');
+        unawaited(Navigator.of(context).pushReplacementNamed('/buddy-matching'));
       }
     } catch (e) {
       if (mounted) {

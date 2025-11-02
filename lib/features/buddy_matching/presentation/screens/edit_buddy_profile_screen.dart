@@ -165,15 +165,21 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
               // Fitness Level
               _buildSectionCard(
                 title: l10n.fitnessLevel,
-                child: Column(
-                  children: FitnessLevel.values.map((level) {
-                    return RadioListTile<FitnessLevel>(
-                      title: Text(_getFitnessLevelName(level, l10n)),
-                      value: level,
-                      groupValue: _fitnessLevel,
-                      onChanged: (value) => setState(() => _fitnessLevel = value!),
-                    );
-                  }).toList(),
+                child: RadioGroup<FitnessLevel>(
+                  groupValue: _fitnessLevel,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _fitnessLevel = value);
+                    }
+                  },
+                  child: Column(
+                    children: FitnessLevel.values.map((level) {
+                      return RadioListTile<FitnessLevel>(
+                        title: Text(_getFitnessLevelName(level, l10n)),
+                        value: level,
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
 
@@ -305,27 +311,29 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
               // Matching Purpose
               _buildSectionCard(
                 title: l10n.matchingPurpose,
-                child: Column(
-                  children: [
-                    RadioListTile<MatchingPurpose>(
-                      title: Text(l10n.workoutPartnerOnly),
-                      value: MatchingPurpose.workoutPartner,
-                      groupValue: _matchingPurpose,
-                      onChanged: (value) => setState(() => _matchingPurpose = value!),
-                    ),
-                    RadioListTile<MatchingPurpose>(
-                      title: Text(l10n.gymBuddyOnly),
-                      value: MatchingPurpose.gymBuddy,
-                      groupValue: _matchingPurpose,
-                      onChanged: (value) => setState(() => _matchingPurpose = value!),
-                    ),
-                    RadioListTile<MatchingPurpose>(
-                      title: Text(l10n.bothWorkoutAndGym),
-                      value: MatchingPurpose.both,
-                      groupValue: _matchingPurpose,
-                      onChanged: (value) => setState(() => _matchingPurpose = value!),
-                    ),
-                  ],
+                child: RadioGroup<MatchingPurpose>(
+                  groupValue: _matchingPurpose,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _matchingPurpose = value);
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      RadioListTile<MatchingPurpose>(
+                        title: Text(l10n.workoutPartnerOnly),
+                        value: MatchingPurpose.workoutPartner,
+                      ),
+                      RadioListTile<MatchingPurpose>(
+                        title: Text(l10n.gymBuddyOnly),
+                        value: MatchingPurpose.gymBuddy,
+                      ),
+                      RadioListTile<MatchingPurpose>(
+                        title: Text(l10n.bothWorkoutAndGym),
+                        value: MatchingPurpose.both,
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -536,13 +544,15 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
       
       // Get current location
       final location = await locationService.getCurrentLocation();
-      
+
+      if (!mounted) return;
+
       if (location != null) {
         setState(() {
           _selectedCityCode = location.cityCode;
           _selectedCityName = location.cityName;
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('✅ ${l10n.locationUpdated}: ${location.cityName}'),
