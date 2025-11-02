@@ -291,6 +291,144 @@ Navigator.push(
 
 **Location**: `lib/shared/presentation/screens/icon_showcase_screen.dart`
 
+### 📦 8. AppIconCategory - Type-Safe Organization (NEW - Priority 3)
+
+**Enum-based categories** per organizzare le 445 icone in modo type-safe
+
+```dart
+// ✅ CORRETTO - Type-safe category access
+final workoutIcons = AppIconCategory.workout.icons;
+final timerIcons = AppIconCategory.timer.icons;
+
+// ✅ CORRETTO - Check icon category
+if (AppIcons.workout.category == AppIconCategory.workout) {
+  // This icon belongs to workout category
+}
+
+// ✅ CORRETTO - Find category for any icon
+final category = AppIconCategory.categoryFor(AppIcons.timer);
+print(category?.displayName); // "Timer"
+
+// ❌ SBAGLIATO - String-based categories (no compile-time safety)
+final icons = getCategoryIcons('workout'); // typo = runtime error
+```
+
+**Available Categories** (11 total):
+- `workout` - Exercise and training icons
+- `timer` - Time tracking and scheduling
+- `analytics` - Data visualization and metrics
+- `status` - State and feedback indicators
+- `action` - User actions and CRUD operations
+- `navigation` - Navigation and directional
+- `social` - Social and user interaction
+- `settings` - Configuration and settings
+- `premium` - Premium features
+- `media` - Media playback and capture
+- `misc` - Utility and miscellaneous
+
+**Methods**:
+- `category.icons` - Get all icons in category as `Map<String, IconData>`
+- `category.contains(icon)` - Check if icon belongs to category
+- `AppIconCategory.categoryFor(icon)` - Get category for any icon
+- `AppIconCategory.allIcons` - Get all icons across all categories
+- `icon.category` - Extension to get category from IconData
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_category.dart';`
+
+### 🔄 9. AppIconVariants - Outlined/Filled Alternatives (NEW - Priority 3)
+
+**Factory system** per icone con varianti filled/outlined (perfetto per toggle states)
+
+```dart
+// ✅ CORRETTO - Toggle between filled/outlined
+Icon(
+  isActive
+    ? AppIconVariants.star.filled
+    : AppIconVariants.star.outlined,
+)
+
+// ✅ CORRETTO - Using ToggleIcon widget
+ToggleIcon(
+  isActive: isFavorite,
+  variant: AppIconVariants.star,
+  activeColor: context.iconSuccess,
+  inactiveColor: context.iconDisabled,
+)
+
+// ✅ CORRETTO - Extension toggle
+Icon(AppIcons.star.toggled) // Switch between filled/outlined
+
+// ❌ SBAGLIATO - Hardcoding both variants
+Icon(isFavorite ? Icons.star : Icons.star_border)
+```
+
+**Available Variants** (13 pre-defined):
+- **Status**: `checkCircle`, `star`, `info`, `error`
+- **Action**: `addCircle`, `delete`
+- **Social**: `people`, `thumbUp`, `thumbDown`
+- **Media**: `playCircle`, `pauseCircle`
+- **Navigation**: `home`, `settings`
+
+**Features**:
+- `variant.filled` - Get filled variant
+- `variant.outlined` - Get outlined variant (nullable)
+- `variant.outlinedOrFilled` - Fallback to filled if no outlined
+- `variant.hasOutlined` - Check if outlined variant exists
+- `icon.outlined` / `icon.filled` - Extensions for dynamic lookup
+- `icon.toggled` - Smart toggle between variants
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_variants.dart';`
+
+### 📚 10. AppIconMetadata - Rich Discovery System (NEW - Priority 3)
+
+**Metadata completo** per ogni icona: descrizioni, use cases, keywords, semantic labels suggeriti
+
+```dart
+// ✅ CORRETTO - Get metadata
+final metadata = AppIcons.workout.metadata;
+print(metadata?.description); // "Exercise and workout tracking"
+print(metadata?.suggestedSemanticLabel); // "Workout"
+
+// ✅ CORRETTO - Search by keyword
+final results = AppIconMetadata.search('timer');
+for (final entry in results) {
+  print(entry.key); // IconData
+  print(entry.value.description); // IconMetadata
+}
+
+// ✅ CORRETTO - Get related icons
+final relatedIcons = AppIcons.cardio.relatedIcons;
+// Returns: [AppIcons.workout, AppIcons.speed]
+
+// ✅ CORRETTO - Get suggested semantic label
+SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: AppIcons.timer.suggestedSemanticLabel ?? 'Timer',
+)
+```
+
+**Metadata Fields**:
+- `description` - Human-readable description
+- `useCases` - Suggested use cases (List<String>)
+- `relatedIcons` - Alternative/complementary icons (List<IconData>)
+- `suggestedSemanticLabel` - WCAG 2.1 AA accessibility label
+- `keywords` - Search keywords/tags (List<String>)
+- `platformNotes` - iOS/Android specific notes (optional)
+- `exampleUsage` - Code example (optional)
+
+**Methods**:
+- `AppIconMetadata.metadataFor(icon)` - Get metadata for specific icon
+- `AppIconMetadata.search(query)` - Search by keyword/description
+- `AppIconMetadata.byCategory(category)` - Get metadata by category
+- `AppIconMetadata.byKeyword(keyword)` - Filter by specific keyword
+- `AppIconMetadata.relatedTo(icon)` - Get related icons
+- `icon.metadata` - Extension to get metadata from IconData
+- `icon.hasMetadata` - Check if metadata exists
+
+**Coverage**: ~30 core icons have rich metadata (workout, timer, analytics, status, action, navigation, social, settings, premium, media, misc)
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_metadata.dart';`
+
 ### 🚫 Enforcement Automatico
 
 - ✅ **Pre-commit hook** blocca `Icons.*` inline
@@ -302,11 +440,15 @@ Navigator.push(
 ### 📊 Perché Tier-1 Design System?
 
 1. **Consistency** - Stessi size/color ovunque (no magic numbers)
-2. **Accessibility** - Screen readers leggono tutte le icone
-3. **Reusability** - Animation/badge patterns riusabili
-4. **Developer Experience** - Icon showcase + auto-complete
+2. **Accessibility** - Screen readers leggono tutte le icone (WCAG 2.1 AA compliant)
+3. **Reusability** - Animation/badge patterns riusabili (no duplication)
+4. **Developer Experience** - Icon showcase + auto-complete + metadata search
 5. **Maintainability** - Refactoring facile (semantic constants)
 6. **Performance** - Widget ottimizzati con const
+7. **Type Safety** - Enum-based categories (compile-time safety) 🆕
+8. **Discoverability** - Rich metadata system (search by keyword/use case) 🆕
+9. **Flexibility** - Icon variants (filled/outlined toggle states) 🆕
+10. **Documentation** - Every icon has description, use cases, related icons 🆕
 
 ### ⚡ Quick Examples
 
@@ -334,6 +476,22 @@ Icon(
   size: AppIconSize.medium,
   color: context.iconStateActive(isConnected),
 )
+
+// 📦 Type-safe category access (Priority 3)
+final timerIcons = AppIconCategory.timer.icons;
+final category = AppIcons.workout.category;
+
+// 🔄 Icon variants for toggle states (Priority 3)
+ToggleIcon(
+  isActive: isFavorite,
+  variant: AppIconVariants.star,
+  activeColor: context.iconSuccess,
+)
+
+// 📚 Rich metadata discovery (Priority 3)
+final metadata = AppIcons.timer.metadata;
+final suggestedLabel = AppIcons.workout.suggestedSemanticLabel;
+final results = AppIconMetadata.search('workout');
 ```
 
 ---
