@@ -20225,6 +20225,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version Information'**
   String get versionInformation;
+
+  /// Title for Quick Start screen
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to GymBro!'**
+  String get quickStartTitle;
+
+  /// Subtitle for Quick Start screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your personalized fitness journey starts here'**
+  String get quickStartSubtitle;
+
+  /// Quick Start question asking about user experience
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have gym experience?'**
+  String get quickStartQuestion;
+
+  /// Description for Quick Start question
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us customize your experience'**
+  String get quickStartQuestionDescription;
+
+  /// Beginner option in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'No, I\'m new 🌱'**
+  String get quickStartBeginner;
+
+  /// Description for beginner option
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll guide you step-by-step'**
+  String get quickStartBeginnerDescription;
+
+  /// Expert option in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I\'m experienced 💪'**
+  String get quickStartExpert;
+
+  /// Description for expert option
+  ///
+  /// In en, this message translates to:
+  /// **'Get out of my way'**
+  String get quickStartExpertDescription;
+
+  /// Continue button in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get quickStartContinue;
+
+  /// Skip button in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get quickStartSkip;
+
+  /// Home empty state title for beginners
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to start your fitness journey? 🌱'**
+  String get homeEmptyBeginnerTitle;
+
+  /// Home empty state description for beginners
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t worry, I\'ll guide you through every step. Let\'s start with your first workout!'**
+  String get homeEmptyBeginnerDescription;
+
+  /// Home empty state CTA button for beginners
+  ///
+  /// In en, this message translates to:
+  /// **'Start My First Workout'**
+  String get homeEmptyBeginnerCTA;
+
+  /// Home empty state title for experts
+  ///
+  /// In en, this message translates to:
+  /// **'No active workout'**
+  String get homeEmptyExpertTitle;
+
+  /// Home empty state description for experts
+  ///
+  /// In en, this message translates to:
+  /// **'Start a quick workout or use a template'**
+  String get homeEmptyExpertDescription;
+
+  /// Home empty state CTA button for experts
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get homeEmptyExpertCTA;
+
+  /// Button to use a workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Use Template'**
+  String get useTemplate;
 }
 
 class _AppLocalizationsDelegate

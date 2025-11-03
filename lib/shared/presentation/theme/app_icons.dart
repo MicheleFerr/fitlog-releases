@@ -52,6 +52,15 @@ class AppIcons {
   /// ⚖️ Weight tracking
   static const IconData weight = Icons.monitor_weight;
 
+  /// 🌱 Beginner level
+  static const IconData beginner = Icons.local_florist;
+
+  /// 💪 Expert level
+  static const IconData expert = Icons.military_tech;
+
+  /// 📋 Workout template
+  static const IconData template = Icons.description;
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ⏱️ TIMER & SCHEDULING
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

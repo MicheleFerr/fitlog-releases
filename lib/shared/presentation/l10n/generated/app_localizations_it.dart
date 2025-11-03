@@ -11628,4 +11628,60 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get versionInformation => 'Informazioni Versione';
+
+  @override
+  String get quickStartTitle => 'Benvenuto in GymBro!';
+
+  @override
+  String get quickStartSubtitle =>
+      'Il tuo percorso fitness personalizzato inizia qui';
+
+  @override
+  String get quickStartQuestion => 'Hai esperienza in palestra?';
+
+  @override
+  String get quickStartQuestionDescription =>
+      'Questo ci aiuta a personalizzare la tua esperienza';
+
+  @override
+  String get quickStartBeginner => 'No, sono nuovo 🌱';
+
+  @override
+  String get quickStartBeginnerDescription => 'Ti guiderò passo dopo passo';
+
+  @override
+  String get quickStartExpert => 'Sì, sono esperto 💪';
+
+  @override
+  String get quickStartExpertDescription => 'Levati di mezzo';
+
+  @override
+  String get quickStartContinue => 'Continua';
+
+  @override
+  String get quickStartSkip => 'Salta per ora';
+
+  @override
+  String get homeEmptyBeginnerTitle =>
+      'Pronto per iniziare il tuo percorso fitness? 🌱';
+
+  @override
+  String get homeEmptyBeginnerDescription =>
+      'Non preoccuparti, ti guiderò in ogni passo. Iniziamo con il tuo primo allenamento!';
+
+  @override
+  String get homeEmptyBeginnerCTA => 'Inizia il Mio Primo Allenamento';
+
+  @override
+  String get homeEmptyExpertTitle => 'Nessun allenamento attivo';
+
+  @override
+  String get homeEmptyExpertDescription =>
+      'Inizia un allenamento veloce o usa un template';
+
+  @override
+  String get homeEmptyExpertCTA => 'Inizia Allenamento';
+
+  @override
+  String get useTemplate => 'Usa Template';
 }

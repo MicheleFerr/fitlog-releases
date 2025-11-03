@@ -46,8 +46,12 @@ class PatternDetectionService {
         .map((w) => _normalizeWorkoutName(w.name ?? 'Unknown'))
         .toList();
 
-    // Check minimum data requirement (need at least minPatternLength * minRepetitions workouts)
-    if (sequence.isEmpty || sequence.length < minPatternLength * minRepetitions) {
+    // Check minimum data requirement
+    // Business rule: need at least 6 workouts AND minPatternLength * minRepetitions
+    const minWorkoutsRequired = 6;
+    if (sequence.isEmpty ||
+        sequence.length < minWorkoutsRequired ||
+        sequence.length < minPatternLength * minRepetitions) {
       return null; // Insufficient data
     }
 

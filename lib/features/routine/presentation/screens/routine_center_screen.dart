@@ -36,6 +36,9 @@ import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_re
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_reminder_service_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/workout_suggestion_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/workout_suggestion_card.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Main screen for managing all flexible routines
@@ -94,7 +97,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
         backgroundColor: context.colors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () async {
             // First try Navigator pop (for internal navigation like detail screens)
             final didPop = await Navigator.of(context).maybePop();
@@ -114,7 +117,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           // Create new routine button
           IconButton(
             onPressed: () => _navigateToCreateRoutine(context),
-            icon: const Icon(Icons.add_circle),
+            icon: const Icon(AppIcons.addCircleOutline),
             color: context.colors.primary,
             iconSize: 28,
             tooltip: 'Create New Routine',
@@ -131,7 +134,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                 value: 'tutorial',
                 child: Row(
                   children: [
-                    Icon(Icons.school, size: 20),
+                    Icon(AppIcons.education, size: 20),
                     SizedBox(width: 12),
                     Text('Show Tutorial'),
                   ],
@@ -196,6 +199,10 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                 onDelete: () => _deleteRoutine(context, ref, activeRoutine.id),
               ),
             ),
+            // Workout Suggestion Card (AI-powered next workout prediction)
+            SliverToBoxAdapter(
+              child: _buildWorkoutSuggestionCard(context, ref),
+            ),
             // Skip Recovery Card
             SliverToBoxAdapter(
               child: _buildSkipRecoveryCard(context, ref, activeRoutine),
@@ -236,7 +243,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               child: _buildSectionHeader(
                 context,
                 title: 'Archived',
-                icon: Icons.archive,
+                icon: AppIcons.archive,
                 color: context.colors.onSurface.withValues(alpha: 0.6),
               ),
             ),
@@ -325,7 +332,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             const SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: () => _navigateToCreateRoutine(context),
-              icon: Icon(Icons.add, color: context.colors.onPrimary),
+              icon: Icon(AppIcons.add, color: context.colors.onPrimary),
               label: Text(
                 'Create Your First Routine',
                 style: TextStyle(
@@ -373,7 +380,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.errorOutlineRounded,
               size: 64,
               color: context.colors.error,
             ),
@@ -408,7 +415,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                   }
                 }
               },
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(AppIcons.back),
               label: const Text('Go Back'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
@@ -589,6 +596,127 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     }
   }
 
+  // === WORKOUT SUGGESTION ===
+
+  Widget _buildWorkoutSuggestionCard(BuildContext context, WidgetRef ref) {
+    final suggestionAsync = ref.watch(workoutSuggestionProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: suggestionAsync.when(
+        data: (suggestion) => WorkoutSuggestionCard(
+          suggestion: suggestion,
+          onStartWorkout: (workoutName) {
+            // TODO: Navigate to workout screen with suggested workout name
+            SnackBarService.showSuccess(
+              context,
+              'Starting workout: $workoutName',
+            );
+            // Haptic feedback
+            HapticFeedback.mediumImpact();
+          },
+          onShowAlternatives: () {
+            // TODO: Show alternatives dialog with other suggestions
+            SnackBarService.showInfo(
+              context,
+              'Alternatives feature coming soon!',
+            );
+          },
+          onWhyThisSuggestion: () {
+            // Show explanation of why this workout was suggested
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Why This Suggestion?'),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Suggestion Level: ${_getLevelName(suggestion.level)}',
+                        style: context.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        suggestion.reason,
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      if (suggestion.patternInfo != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          suggestion.patternInfo!,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                      if (suggestion.frequencyData != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          suggestion.frequencyData!,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 16),
+                      Text(
+                        'Confidence: ${suggestion.displayConfidence}',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Got it'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        loading: () => const WorkoutSuggestionLoadingState(),
+        error: (error, stack) {
+          // If <6 workouts, show empty state instead of error
+          if (error.toString().contains('Insufficient')) {
+            return WorkoutSuggestionEmptyState(
+              onCreateWorkout: () {
+                // TODO: Navigate to create workout screen
+                SnackBarService.showInfo(
+                  context,
+                  'Create workout feature coming soon!',
+                );
+              },
+            );
+          }
+
+          // For other errors, don't show card at all
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+  }
+
+  String _getLevelName(SuggestionLevel level) {
+    switch (level) {
+      case SuggestionLevel.pattern:
+        return 'Pattern Detection';
+      case SuggestionLevel.routine:
+        return 'Routine Schedule';
+      case SuggestionLevel.frequency:
+        return 'Frequency Analysis';
+      case SuggestionLevel.dayBased:
+        return 'Day-Based Default';
+    }
+  }
+
   // === SKIP RECOVERY ===
 
   Widget _buildSkipRecoveryCard(
@@ -663,7 +791,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                       ),
                     ),
                     Icon(
-                      Icons.arrow_forward_ios,
+                      AppIcons.arrowForwardRounded,
                       size: 18,
                       color: context.colors.onSecondaryContainer
                           .withValues(alpha: 0.5),
