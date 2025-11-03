@@ -822,12 +822,11 @@ class AppIcons {
   static const IconData warningAmber = Icons.warning_amber;
   static const IconData warningAmberRounded = Icons.warning_amber_rounded;
 
-  // SYSTEM (5 icons)
+  // SYSTEM (4 icons)
   static const IconData batteryAlert = Icons.battery_alert;
   static const IconData batteryChargingFull = Icons.battery_charging_full;
   static const IconData phoneAndroid = Icons.phone_android;
   static const IconData phoneIphone = Icons.phone_iphone;
-  static const IconData wifiOff = Icons.wifi_off;
 
   // TIMER_DATE (18 icons)
   static const IconData bedtime = Icons.bedtime;
