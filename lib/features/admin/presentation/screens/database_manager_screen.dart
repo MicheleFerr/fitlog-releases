@@ -860,6 +860,73 @@ class _DatabaseManagerScreenState
               );
             }).toList(),
           ),
+          const SizedBox(height: 12),
+
+          // Type chips (Compound/Isolation)
+          Text('Type:', style: context.textTheme.labelSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            children: ['Compound', 'Isolamento'].map((type) {
+              final isSelected = exercise.tipoEsercizio == type;
+              return ChoiceChip(
+                label: Text(type),
+                selected: isSelected,
+                onSelected: (_) => _quickUpdateField(exercise.id, 'tipoEsercizio', type, language),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 12),
+
+          // Focus muscles (multi-select)
+          Text('Focus Muscles:', style: context.textTheme.labelSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            children: _getAvailableMuscles().map((muscle) {
+              final isSelected = exercise.focus.contains(muscle);
+              return FilterChip(
+                label: Text(muscle),
+                selected: isSelected,
+                onSelected: (selected) {
+                  final updatedFocus = List<String>.from(exercise.focus);
+                  if (selected) {
+                    updatedFocus.add(muscle);
+                  } else {
+                    updatedFocus.remove(muscle);
+                  }
+                  _quickUpdateField(exercise.id, 'focus', updatedFocus, language);
+                },
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 12),
+
+          // Secondary muscles (multi-select)
+          Text('Secondary Muscles:', style: context.textTheme.labelSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            children: _getAvailableMuscles().map((muscle) {
+              final isSelected = exercise.muscoliSecondari.contains(muscle);
+              return FilterChip(
+                label: Text(muscle),
+                selected: isSelected,
+                onSelected: (selected) {
+                  final updatedSecondary = List<String>.from(exercise.muscoliSecondari);
+                  if (selected) {
+                    updatedSecondary.add(muscle);
+                  } else {
+                    updatedSecondary.remove(muscle);
+                  }
+                  _quickUpdateField(exercise.id, 'muscoliSecondari', updatedSecondary, language);
+                },
+              );
+            }).toList(),
+          ),
         ],
       ),
     );
@@ -876,6 +943,15 @@ class _DatabaseManagerScreenState
       'Elastici',
       'TRX',
       'Vario',
+    ];
+  }
+
+  List<String> _getAvailableMuscles() {
+    return [
+      'QUAD', 'GLUT', 'HAMS', 'POLP', // Legs
+      'PETT', 'DELT', 'TRAP', 'DORS', 'CORE', // Upper body
+      'BICI', 'TRIC', 'AVAMB', // Arms
+      'ADDUT', 'ABDUT', // Leg stabilizers
     ];
   }
 
