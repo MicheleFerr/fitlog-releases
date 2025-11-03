@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityAdviceModal extends ConsumerStatefulWidget {
 
@@ -234,7 +235,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.person_outline,
+                        AppIcons.personOutline,
                         size: 16,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -329,7 +330,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
         );
       case ContributionType.translation:
         return Icon(
-          Icons.translate,
+          AppIcons.translate,
           size: 20,
           color: context.colors.primary,
         );

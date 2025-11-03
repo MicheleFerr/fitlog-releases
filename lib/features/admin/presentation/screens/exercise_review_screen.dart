@@ -199,7 +199,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: Icons.flag_outlined,
+              icon: AppIcons.flagOutlined,
               label: 'Esercizi Flaggati',
               value: flaggedCount.toString(),
               color: context.colors.warning,
@@ -406,7 +406,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
             ),
             Icon(
-              Icons.flag_outlined,
+              AppIcons.flagOutlined,
               color: context.colors.warning,
               size: 20,
             ),
@@ -432,7 +432,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     '$feedbackCount feedback${criticalCount > 0 ? ' ($criticalCount critici)' : ''}',
-                icon: Icons.flag,
+                icon: AppIcons.flag,
                 color: criticalCount > 0 ? context.colors.error : context.colors.warning,
               );
             },

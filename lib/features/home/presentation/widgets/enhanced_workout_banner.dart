@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced workout banner that shows active workout status
 class EnhancedWorkoutBanner extends ConsumerWidget {
@@ -47,7 +48,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                   child: Icon(
                     workout.isActive
                         ? Icons.fitness_center
-                        : Icons.pause_circle,
+                        : AppIcons.pauseCircle,
                     color: theme.colorScheme.onPrimary,
                     size: 24,
                   ),
@@ -264,8 +265,6 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
 
               final cacheService = ref.read(workoutTemplateCacheServiceProvider);
               await cacheService.forceSave();
-
-              if (!mounted) return;
 
               if (kDebugMode) {
                 debugPrint('✅ [DISCARD] forceSave() completed, now clearing workout');

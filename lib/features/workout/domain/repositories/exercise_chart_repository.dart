@@ -2,39 +2,30 @@
 ///
 /// 📁 Layer: domain/repositories
 /// 🎯 Feature: workout
-/// 🔧 Type: repository interface (Chart Data)
+/// 🔧 Type: repository interface (abstract)
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
 ///
 /// Dependencies:
-/// - ChartDataPoint entity
-/// - Either/ChartFailure (FASE 2)
+/// - fpdart: Either type for error handling
+/// - Domain entities
 library;
 
 import 'package:fpdart/fpdart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_point.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/failures/chart_failure.dart';
 
-/// Repository interface per chart data - definisce contratto per data layer
+/// Abstract repository per chart data
 ///
-/// Clean Architecture: Domain layer non dipende da implementation details.
-/// Data layer implementerà questo contratto.
-///
-/// FASE 1: Return type semplice (Future<List<ChartDataPoint>>)
-/// FASE 2: Aggiornato a Either<Failure, List<ChartDataPoint>>
+/// Clean Architecture: Domain layer non dipende da implementazione
+/// Data layer implementa questa interfaccia
 abstract class ExerciseChartRepository {
-  /// Ottiene dati grafico per esercizio e metrica specifici
+  /// Get chart data per esercizio e metrica
   ///
-  /// [exerciseName] - Nome esercizio
-  /// [metric] - Metrica da visualizzare (Peso/Reps/RPE/TUT)
-  /// [days] - Numero giorni da filtrare (default 90)
-  ///
-  /// Returns Either:
-  /// - Right: Lista ChartDataPoint ordinati per data crescente (può essere vuota)
-  /// - Left: ChartFailure specifico per tipo di errore
-  ///
-  /// FASE 2: ✅ Either pattern implementato
+  /// Returns:
+  /// - Right(List<ChartDataPoint>): Success con dati
+  /// - Left(ChartFailure): Failure con errore
   Future<Either<ChartFailure, List<ChartDataPoint>>> getChartData({
     required String exerciseName,
     required String metric,

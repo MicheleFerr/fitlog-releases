@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget base che mostra una lista di esercizi filtrabili
 /// Usato come componente riutilizzabile da vari picker
@@ -152,7 +153,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
             ? (isSelected
                 ? Icon(Icons.check_circle,
                     color: Theme.of(context).colorScheme.primary)
-                : const Icon(Icons.radio_button_unchecked))
+                : const Icon(AppIcons.radioButtonUnchecked))
             : null,
         onTap: () => widget.config.strategy.onExerciseTap(context, exercise),
       ),

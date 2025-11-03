@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/zen_m
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/zen_mode_settings_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_actions/template_save_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutSettingsMenu extends ConsumerWidget {
 
@@ -159,7 +160,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
               if (currentWorkout != null)
                 ListTile(
                   leading: Icon(
-                    Icons.mobile_screen_share,
+                    AppIcons.mobileScreenShare,
                     color: zenState.isKeepScreenOnActive
                       ? Theme.of(context).colorScheme.primary
                       : null,
@@ -186,7 +187,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
   List<Widget> _buildGeneralActions(BuildContext context) {
     return [
       ListTile(
-        leading: const Icon(Icons.tune),
+        leading: const Icon(AppIcons.tune),
         title: Text(AppLocalizations.of(context).customizeWorkout),
         subtitle: Text(AppLocalizations.of(context).rpeTimerAndMore),
         onTap: () {

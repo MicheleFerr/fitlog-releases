@@ -3,6 +3,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_info_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced modal for displaying exercise details with improved aesthetics
 /// following Apple HIG and Material Design 3 principles
@@ -120,7 +121,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         // Equipment
         _buildInfoChip(
           context,
-          icon: Icons.sports_gymnastics,
+          icon: AppIcons.sportsGymnastics,
           label: exercise.attrezzatura,
           color: context.colors.tertiary,
         ),

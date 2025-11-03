@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_pattern.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/custom_pattern_builder.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Step 2: Pattern selection
 class PatternSelectionStep extends ConsumerWidget {
@@ -112,7 +113,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.grid_view,
+                      AppIcons.gridView,
                       color: state.usePresetPattern
                           ? context.colors.onPrimary
                           : context.colors.onSurface.withValues(alpha: 0.6),
@@ -152,7 +153,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.edit_calendar,
+                      AppIcons.editCalendar,
                       color: !state.usePresetPattern
                           ? context.colors.onTertiary
                           : context.colors.onSurface.withValues(alpha: 0.6),
@@ -490,7 +491,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  Icons.calendar_view_week,
+                  AppIcons.calendarViewWeek,
                   color: context.colors.primary,
                   size: 24,
                 ),

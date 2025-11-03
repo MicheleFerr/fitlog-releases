@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Schermata profilo utente community
 class UserProfileScreen extends ConsumerStatefulWidget { // Null = current user
@@ -212,7 +213,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(
-                        Icons.stars,
+                        AppIcons.stars,
                         color: Colors.amber,
                         size: 20,
                       ),

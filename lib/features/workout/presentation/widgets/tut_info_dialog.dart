@@ -150,7 +150,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   _buildPhaseInfo(
                     theme: theme,
                     l10n: l10n,
-                    icon: Icons.arrow_downward,
+                    icon: AppIcons.arrowDownward,
                     label: l10n.tutEccentricPhase,
                     description: l10n.tutEccentricFullDescription,
                     value: phases.eccentric,
@@ -174,7 +174,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   _buildPhaseInfo(
                     theme: theme,
                     l10n: l10n,
-                    icon: Icons.arrow_upward,
+                    icon: AppIcons.arrowUpward,
                     label: l10n.tutConcentricPhase,
                     description: l10n.tutConcentricFullDescription,
                     value: phases.concentric,

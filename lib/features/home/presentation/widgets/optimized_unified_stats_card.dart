@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/home/utils/xp_calculator.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// OPTIMIZED VERSION - Fixed animation loops and excessive rebuilds
 class OptimizedUnifiedStatsCard extends ConsumerStatefulWidget {
@@ -520,7 +521,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.bolt,
+              AppIcons.bolt,
               color: theme.colorScheme.primary,
               size: 24,
             ),

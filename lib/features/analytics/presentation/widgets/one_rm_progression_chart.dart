@@ -572,7 +572,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
                   children: [
                     Icon(
                       _plateauAnalysis!.isInPlateau
-                          ? Icons.warning_amber
+                          ? AppIcons.warningAmber
                           : Icons.trending_up,
                       color: _plateauAnalysis!.isInPlateau
                           ? context.colors.secondary
@@ -630,7 +630,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
           Row(
             children: [
               const Icon(
-                Icons.auto_graph,
+                AppIcons.autoGraph,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -969,9 +969,9 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
       case ChartTimeRange.month:
         return Icons.calendar_today;
       case ChartTimeRange.threeMonths:
-        return Icons.date_range;
+        return AppIcons.dateRange;
       case ChartTimeRange.sixMonths:
-        return Icons.calendar_view_month;
+        return AppIcons.calendarViewMonth;
       case ChartTimeRange.year:
         return Icons.calendar_month;
       case ChartTimeRange.all:

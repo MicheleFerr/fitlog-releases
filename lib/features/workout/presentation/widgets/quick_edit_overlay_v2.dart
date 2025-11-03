@@ -401,7 +401,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               if (widget.previousSet != null && !widget.isSuperset)
                 TextButton.icon(
                   onPressed: _copyFromPreviousSet,
-                  icon: Icon(Icons.content_copy_rounded, size: 16),
+                  icon: Icon(AppIcons.contentCopyRounded, size: 16),
                   label: Text(AppLocalizations.of(context).copy, style: TextStyle(fontSize: 12)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -497,7 +497,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             Spacer(),
             IconButton(
               icon: Icon(
-                _isManualWeightEntry ? Icons.dialpad : Icons.keyboard,
+                _isManualWeightEntry ? Icons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {
@@ -652,7 +652,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             Spacer(),
             IconButton(
               icon: Icon(
-                _isManualRepsEntry ? Icons.dialpad : Icons.keyboard,
+                _isManualRepsEntry ? Icons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {
@@ -802,7 +802,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             Spacer(),
             IconButton(
               icon: Icon(
-                _isManualSecondsEntry ? Icons.dialpad : Icons.keyboard,
+                _isManualSecondsEntry ? Icons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {

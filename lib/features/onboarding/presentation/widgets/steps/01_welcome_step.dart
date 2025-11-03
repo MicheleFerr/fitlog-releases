@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WelcomeStep extends StatefulWidget {
 
@@ -270,7 +271,7 @@ class _WelcomeStepState extends State<WelcomeStep>
               const SizedBox(height: 16),
               _buildAnimatedFeature(
                 1,
-                Icons.tune,
+                AppIcons.tune,
                 l10n.onboardingWelcomeFeature2Title,
                 l10n.onboardingWelcomeFeature2Description,
                 colorScheme.secondary,

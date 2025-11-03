@@ -163,6 +163,11 @@ These cover initial setup and configuration:
 1. Read: [`EXERCISE_FEEDBACK_SYSTEM_ARCHITECTURE.md`](./EXERCISE_FEEDBACK_SYSTEM_ARCHITECTURE.md)
 2. Reference: [`EXERCISE_DATABASE_SYNC_ARCHITECTURE.md`](./EXERCISE_DATABASE_SYNC_ARCHITECTURE.md) (parent system)
 
+**Routine Center Improvements (Pattern Detection & Smart Suggestions)**:
+1. Read: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md)
+2. Reference: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT.md) (current system)
+3. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md) (architecture)
+
 ### "I'm hitting an error..."
 
 1. Check: [`ERROR_KB.md`](./ERROR_KB.md) - Common solutions
@@ -228,6 +233,7 @@ These cover initial setup and configuration:
 - `ERROR_KB.md`
 
 ### UX Flows & System Reports
+- `UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md` 🚀 **NEW!** (Complete improvement plan: Pattern detection, multi-level suggestions, UI/UX redesign)
 - `UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT.md` 🎯 (Workout suggestion algorithm analysis)
 - `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_REPORT.md` 📋 (Templates screen architecture & flow analysis)
 - `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_IMPROVEMENT_REPORT.md` 🔧 (Improvement plan for AI consultants)

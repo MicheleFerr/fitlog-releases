@@ -43,6 +43,13 @@ class ExerciseChartRepositoryImpl implements ExerciseChartRepository {
     int days = 90,
   }) async {
     try {
+      if (kDebugMode) {
+        debugPrint('\n📊 ========== CHART DATA REQUEST ==========');
+        debugPrint('   Exercise: $exerciseName');
+        debugPrint('   Metric: $metric');
+        debugPrint('   Days: $days');
+      }
+
       // ✅ FASE 2: Input validation
       if (exerciseName.trim().isEmpty) {
         return left(const ChartFailure.invalidInput(
@@ -70,20 +77,56 @@ class ExerciseChartRepositoryImpl implements ExerciseChartRepository {
         exerciseHistoryDataGroupedProvider(exerciseName).future,
       );
 
+      if (kDebugMode) {
+        debugPrint('   📦 Total history entries: ${historyGrouped.length}');
+      }
+
       // Filtra per ultimi N giorni
       final cutoffDate = DateTime.now().subtract(Duration(days: days));
+      if (kDebugMode) {
+        debugPrint('   📅 Cutoff date: ${cutoffDate.toIso8601String().split('T')[0]}');
+      }
+
       final dataPoints = <ChartDataPoint>[];
+      int totalSetsProcessed = 0;
+      int datesWithinRange = 0;
 
       historyGrouped.forEach((date, sets) {
+        totalSetsProcessed += sets.length;
+
         if (date.isAfter(cutoffDate) || date.isAtSameMomentAs(cutoffDate)) {
+          datesWithinRange++;
+
+          if (kDebugMode) {
+            debugPrint('   ✅ Date ${date.toIso8601String().split('T')[0]}: ${sets.length} sets');
+          }
+
           // Calcola valore medio per metrica
           final value = _calculateMetricAverage(sets, metric);
 
           if (value != null) {
             dataPoints.add(ChartDataPoint(date: date, value: value));
+            if (kDebugMode) {
+              debugPrint('      → Average $metric: ${value.toStringAsFixed(2)}');
+            }
+          } else {
+            if (kDebugMode) {
+              debugPrint('      ⚠️ No valid $metric data in these sets');
+            }
           }
         }
       });
+
+      if (kDebugMode) {
+        debugPrint('   📊 Results:');
+        debugPrint('      - Total sets processed: $totalSetsProcessed');
+        debugPrint('      - Dates within range: $datesWithinRange');
+        debugPrint('      - Data points created: ${dataPoints.length}');
+        if (dataPoints.isEmpty && datesWithinRange > 0) {
+          debugPrint('      ⚠️ WARNING: Dates exist but no metric values found!');
+        }
+        debugPrint('========================================\n');
+      }
 
       // Ordina per data crescente
       dataPoints.sort((a, b) => a.date.compareTo(b.date));
@@ -136,15 +179,24 @@ class ExerciseChartRepositoryImpl implements ExerciseChartRepository {
 
       case 'RPE':
         // ✅ RPE: Average Rate of Perceived Exertion (5-10 scale)
+        if (kDebugMode) {
+          debugPrint('         🔍 RPE Metric Analysis:');
+          debugPrint('            Total sets: ${sets.length}');
+          for (int i = 0; i < sets.length; i++) {
+            final set = sets[i];
+            debugPrint('            Set ${i + 1}: rpe=${set.rpe} (${set.rpe != null ? "✅" : "❌ null"})');
+          }
+        }
+
         final rpeValues = sets.where((s) => s.rpe != null).map((s) => s.rpe!.toDouble());
 
-        // ✅ DEBUG: Log RPE data availability
         if (kDebugMode) {
-          debugPrint('📊 RPE Calculation: ${sets.length} sets total, ${rpeValues.length} with RPE');
           if (rpeValues.isNotEmpty) {
-            debugPrint('   RPE values: ${rpeValues.toList()}');
+            debugPrint('            ✅ RPE values found: ${rpeValues.toList()}');
+            final avg = rpeValues.reduce((a, b) => a + b) / rpeValues.length;
+            debugPrint('            → Average RPE: ${avg.toStringAsFixed(2)}');
           } else {
-            debugPrint('   ⚠️ NO RPE DATA - user needs to add RPE to workout sets');
+            debugPrint('            ❌ NO RPE VALUES - all sets have null RPE');
           }
         }
 
@@ -154,9 +206,30 @@ class ExerciseChartRepositoryImpl implements ExerciseChartRepository {
 
       case 'TUT':
         // ✅ TUT: Average set duration in seconds (from setDurationMillis)
+        if (kDebugMode) {
+          debugPrint('         🔍 TUT Metric Analysis:');
+          debugPrint('            Total sets: ${sets.length}');
+          for (int i = 0; i < sets.length; i++) {
+            final set = sets[i];
+            final seconds = set.setDurationMillis != null ? (set.setDurationMillis! / 1000).toStringAsFixed(1) : 'null';
+            debugPrint('            Set ${i + 1}: setDurationMillis=${set.setDurationMillis} → ${seconds}s (${set.setDurationMillis != null ? "✅" : "❌ null"})');
+          }
+        }
+
         final durations = sets
             .where((s) => s.setDurationMillis != null)
             .map((s) => s.setDurationMillis! / 1000); // Convert ms to seconds
+
+        if (kDebugMode) {
+          if (durations.isNotEmpty) {
+            debugPrint('            ✅ TUT durations found: ${durations.map((d) => "${d.toStringAsFixed(1)}s").toList()}');
+            final avg = durations.reduce((a, b) => a + b) / durations.length;
+            debugPrint('            → Average TUT: ${avg.toStringAsFixed(2)}s');
+          } else {
+            debugPrint('            ❌ NO TUT VALUES - all sets have null setDurationMillis');
+          }
+        }
+
         return durations.isNotEmpty
             ? durations.reduce((a, b) => a + b) / durations.length
             : null;

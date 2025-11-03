@@ -32,7 +32,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.notifications_active, color: context.colors.primary),
+            Icon(AppIcons.notificationsActive, color: context.colors.primary),
             const SizedBox(width: 8),
             const Text('Notification Settings'),
           ],

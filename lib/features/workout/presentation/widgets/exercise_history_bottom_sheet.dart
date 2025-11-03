@@ -362,7 +362,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
       _StatCardData(
         label: l10n.avgWeight,
         value: stats.avgWeight > 0 ? '${stats.avgWeight.toStringAsFixed(1)}kg' : '--',
-        icon: Icons.trending_up_rounded,
+        icon: AppIcons.trendingUpRounded,
         color: theme.colorScheme.tertiary,
         isPrimary: false,
       ),
@@ -708,7 +708,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                                 turns: isExpanded ? 0.5 : 0.0,
                                 duration: const Duration(milliseconds: 200),
                                 child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
+                                  AppIcons.keyboardArrowDownRounded,
                                   color: theme.colorScheme.primary,
                                   size: 24,
                                 ),
@@ -1157,11 +1157,11 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
     final dateOnly = DateTime(date.year, date.month, date.day);
 
     if (dateOnly == today) {
-      return Icons.today_rounded;
+      return AppIcons.todayRounded;
     } else if (dateOnly == yesterday) {
       return AppIcons.scheduleRounded;
     } else if (now.difference(dateOnly).inDays < 7) {
-      return Icons.date_range_rounded;
+      return AppIcons.dateRangeRounded;
     } else {
       return AppIcons.calendarMonthRounded;
     }

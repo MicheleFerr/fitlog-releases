@@ -234,7 +234,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.new_releases,
+                    AppIcons.newReleases,
                     size: 16,
                     color: context.colors.secondary,
                   ),

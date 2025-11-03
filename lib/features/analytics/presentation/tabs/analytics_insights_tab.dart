@@ -137,7 +137,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 Row(
                   children: [
                     Icon(
-                      Icons.calendar_view_month,
+                      AppIcons.calendarViewMonth,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -524,7 +524,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
-    final icon = type == 'warning' ? Icons.warning_amber_rounded
+    final icon = type == 'warning' ? AppIcons.warningAmberRounded
                 : type == 'success' ? AppIcons.completeOutline
                 : Icons.info_outline;
 
@@ -751,7 +751,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                     theme,
                     l10n.target,
                     '${data.targetStrength.toStringAsFixed(0)}%',
-                    Icons.flag,
+                    AppIcons.flag,
                     color: theme.colorScheme.tertiary,
                   ),
                 ],

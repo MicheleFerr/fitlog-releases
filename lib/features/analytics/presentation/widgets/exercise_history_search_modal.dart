@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseHistorySearchModal extends StatefulWidget {
 
@@ -730,12 +731,12 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
   
   IconData _getExerciseIcon(String exerciseName) {
     final name = exerciseName.toLowerCase();
-    if (name.contains('squat') || name.contains('leg')) return Icons.airline_seat_recline_normal;
-    if (name.contains('bench') || name.contains('chest')) return Icons.airline_seat_flat;
+    if (name.contains('squat') || name.contains('leg')) return AppIcons.airlineSeatReclineNormal;
+    if (name.contains('bench') || name.contains('chest')) return AppIcons.airlineSeatFlat;
     if (name.contains('deadlift') || name.contains('stacco')) return Icons.fitness_center;
-    if (name.contains('curl') || name.contains('bicep')) return Icons.sports_gymnastics;
+    if (name.contains('curl') || name.contains('bicep')) return AppIcons.sportsGymnastics;
     if (name.contains('shoulder') || name.contains('spalle')) return Icons.accessibility_new;
-    if (name.contains('back') || name.contains('dorso')) return Icons.rowing;
+    if (name.contains('back') || name.contains('dorso')) return AppIcons.rowing;
     return Icons.fitness_center;
   }
   

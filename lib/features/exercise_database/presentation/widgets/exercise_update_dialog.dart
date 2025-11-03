@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseUpdateDialog extends ConsumerStatefulWidget {
 
@@ -87,7 +88,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   child: Icon(
-                    Icons.system_update,
+                    AppIcons.systemUpdate,
                     size: 40,
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),

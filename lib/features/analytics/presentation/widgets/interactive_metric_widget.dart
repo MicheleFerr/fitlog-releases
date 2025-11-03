@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget interattivo che mostra una metrica con tooltip esplicativo
 class InteractiveMetricWidget extends StatelessWidget {
@@ -266,7 +267,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
                             Row(
                               children: [
                                 Icon(
-                                  Icons.functions,
+                                  AppIcons.functions,
                                   color: theme.colorScheme.primary,
                                   size: 20,
                                 ),
@@ -480,7 +481,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
           Row(
             children: [
               Icon(
-                Icons.tips_and_updates,
+                AppIcons.tipsAndUpdates,
                 color: theme.colorScheme.tertiary,
                 size: 24,
               ),

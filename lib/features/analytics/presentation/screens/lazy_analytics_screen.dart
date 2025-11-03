@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_e
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Analytics screen with lazy loading and optimized performance
 class LazyAnalyticsScreen extends ConsumerStatefulWidget {
@@ -109,7 +110,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(AppIcons.moreVert),
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -568,7 +569,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+              isPositive ? AppIcons.arrowUpward : AppIcons.arrowDownward,
               color: isPositive ? Colors.green : Colors.red,
               size: 16,
             ),

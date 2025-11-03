@@ -179,7 +179,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       context,
                       title: l10n.onboardingProMode,
                       description: l10n.onboardingProModeDescription,
-                      icon: Icons.stars_rounded,
+                      icon: AppIcons.starsRounded,
                       isSelected: _selectedMode == true,
                       onTap: () => _selectMode(true),
                       features: [

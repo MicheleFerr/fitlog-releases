@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/feedback_detail_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseFeedbackScreen extends ConsumerWidget {
   const ExerciseFeedbackScreen({super.key});
@@ -30,7 +31,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.flag_circle,
+              AppIcons.flagCircle,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -124,7 +125,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.feedbackStatsOpen,
             value: stats.openCount.toString(),
-            icon: Icons.pending,
+            icon: AppIcons.pending,
             color: context.colors.secondary,
           ),
         ),

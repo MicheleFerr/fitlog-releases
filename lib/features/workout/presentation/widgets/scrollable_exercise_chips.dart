@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget che mostra chips scrollabili per categoria, tipo e TUT dell'esercizio
 class ScrollableExerciseChips extends StatefulWidget {
@@ -285,9 +286,9 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
       case ExerciseCategory.shoulders:
         return Icons.accessibility_new;
       case ExerciseCategory.back:
-        return Icons.sports_gymnastics;
+        return AppIcons.sportsGymnastics;
       case ExerciseCategory.arms:
-        return Icons.sports_mma;
+        return AppIcons.sportsMma;
       case ExerciseCategory.legs:
         return Icons.directions_run;
       case ExerciseCategory.abs:
@@ -308,7 +309,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
       case ExerciseType.dropset:
         return Icons.trending_down;
       case ExerciseType.restPause:
-        return Icons.pause_circle_outline;
+        return AppIcons.pauseCircleOutline;
     }
   }
   

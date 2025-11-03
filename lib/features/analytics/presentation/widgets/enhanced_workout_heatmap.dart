@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Heatmap calendar with zoom controls and detailed exercise view
 class EnhancedWorkoutHeatmap extends ConsumerStatefulWidget {
@@ -190,7 +191,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
         // Zoom out button
         IconButton(
           onPressed: isZoomedOut ? null : _zoomOut,
-          icon: const Icon(Icons.remove_circle_outline),
+          icon: const Icon(AppIcons.removeCircleOutline),
           tooltip: l10n.zoomOut,
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.surfaceContainer,
@@ -1017,7 +1018,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 4),
                                                 child: Icon(
-                                                  Icons.arrow_downward,
+                                                  AppIcons.arrowDownward,
                                                   size: 14,
                                                   color: Colors.orange,
                                                 ),

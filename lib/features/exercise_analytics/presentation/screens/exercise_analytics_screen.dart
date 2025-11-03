@@ -18,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Schermata per analizzare le statistiche di singoli esercizi
 class ExerciseAnalyticsScreen extends ConsumerStatefulWidget {
@@ -134,7 +135,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(AppIcons.arrowBackIos),
           onPressed: () => context.pop(),
         ),
         actions: [

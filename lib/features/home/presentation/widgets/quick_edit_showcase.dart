@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class QuickEditShowcase extends ConsumerStatefulWidget {
   const QuickEditShowcase({super.key});
@@ -219,7 +220,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.layers, color: Colors.purple, size: 24),
+                const Icon(AppIcons.layers, color: Colors.purple, size: 24),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(

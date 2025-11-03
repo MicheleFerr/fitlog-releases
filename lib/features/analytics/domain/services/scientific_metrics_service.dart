@@ -322,7 +322,8 @@ class ProgressiveOverloadResult {
     required this.previousVolume,
     required this.overloadPercent,
     required this.exerciseName,
-  }) : hasData = true;
+    this.hasData = true,
+  });
 
   factory ProgressiveOverloadResult.noData() {
     return ProgressiveOverloadResult(
@@ -330,6 +331,7 @@ class ProgressiveOverloadResult {
       previousVolume: 0,
       overloadPercent: 0,
       exerciseName: '',
+      hasData: false,
     );
   }
   final double currentVolume;
@@ -369,7 +371,8 @@ class RelativeIntensityResult {
     required this.formula,
     required this.reliability,
     required this.zone,
-  }) : isValid = true;
+    this.isValid = true,
+  });
 
   factory RelativeIntensityResult.invalid() {
     return RelativeIntensityResult(
@@ -380,6 +383,7 @@ class RelativeIntensityResult {
       formula: 'None',
       reliability: 'Invalid',
       zone: IntensityZone.endurance,
+      isValid: false,
     );
   }
   final double weight;

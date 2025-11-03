@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provi
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VolumeDisplayWidget extends ConsumerWidget {
   
@@ -228,7 +229,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
             if (showSettings) ...[
               const SizedBox(width: 8),
               Icon(
-                Icons.arrow_drop_down,
+                AppIcons.arrowDropDown,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                 size: 20,
               ),

@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_selection_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🚀 TIER-1: Enhanced Add Exercise Modal with database selection
 class EnhancedAddExerciseModal extends ConsumerStatefulWidget {
@@ -831,7 +832,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
               child: Row(
                 children: [
                   Icon(
-                    Icons.pause_circle,
+                    AppIcons.pauseCircle,
                     color: theme.colorScheme.onTertiaryContainer,
                   ),
                   const SizedBox(width: 8),

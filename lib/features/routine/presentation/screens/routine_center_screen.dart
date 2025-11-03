@@ -182,7 +182,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               child: _buildSectionHeader(
                 context,
                 title: 'Active Routine',
-                icon: Icons.play_circle,
+                icon: AppIcons.playCircle,
                 color: context.colors.primary,
               ),
             ),
@@ -208,7 +208,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               child: _buildSectionHeader(
                 context,
                 title: 'Other Routines',
-                icon: Icons.folder_outlined,
+                icon: AppIcons.folderOutlined,
                 color: context.colors.secondary,
               ),
             ),
@@ -632,7 +632,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        Icons.restore,
+                        AppIcons.restore,
                         color: context.colors.secondary,
                         size: 28,
                       ),

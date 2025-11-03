@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/progress/presentation/providers/prog
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class NotificationHub extends ConsumerWidget {
   const NotificationHub({super.key});
@@ -231,7 +232,7 @@ class NotificationPanel extends ConsumerWidget {
               const Spacer(),
               if (user != null)
                 Icon(
-                  Icons.verified_user,
+                  AppIcons.verifiedUser,
                   size: 16,
                   color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
                 ),
@@ -338,7 +339,7 @@ class NotificationPanel extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.notifications_none,
+            AppIcons.notificationsNone,
             size: 64,
             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
           ),

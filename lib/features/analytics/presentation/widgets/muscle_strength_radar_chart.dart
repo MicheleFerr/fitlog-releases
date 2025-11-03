@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Radar chart interattivo per visualizzare la forza relativa
 /// dei diversi gruppi muscolari
@@ -510,7 +511,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
       case MuscleGroup.shoulders:
         return Icons.accessibility_new;
       case MuscleGroup.arms:
-        return Icons.sports_handball;
+        return AppIcons.sportsHandball;
       case MuscleGroup.legs:
         return Icons.directions_run;
       case MuscleGroup.core:

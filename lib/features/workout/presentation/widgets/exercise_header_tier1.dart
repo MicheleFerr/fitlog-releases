@@ -98,11 +98,11 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         color = theme.colorScheme.secondary;
         break;
       case 'shoulders':
-        icon = Icons.sports_gymnastics;
+        icon = AppIcons.sportsGymnastics;
         color = theme.colorScheme.tertiary;
         break;
       case 'arms':
-        icon = Icons.sports_martial_arts;
+        icon = AppIcons.sportsMartialArts;
         color = context.colors.secondary;
         break;
       case 'legs':

@@ -19,6 +19,8 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -260,6 +262,25 @@ class SettingsScreen extends ConsumerWidget {
                             label: Text(context.l10n.adminDashboard),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: context.colors.primary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        // Database Manager Button (Direct Access)
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const DatabaseManagerScreen(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.storage),
+                            label: Text(context.l10n.databaseManager),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: context.colors.primary,
                             ),
                           ),
                         ),
@@ -540,7 +561,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Language',
               subtitle: _getLanguageText(config.languageCode),
-              leading: const Icon(Icons.translate),
+              leading: const Icon(AppIcons.translate),
               onTap: () => _showLanguageDialog(context, ref, config.languageCode),
             ),
 
@@ -570,7 +591,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.phone_iphone,
+                  AppIcons.phoneIphone,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -668,10 +689,10 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.timerSound,
               subtitle: TimerSound.fromFileName(config.timerSound).getLocalizedName(),
-              leading: const Icon(Icons.notifications_active),
+              leading: const Icon(AppIcons.notificationsActive),
               onTap: () => _showTimerSoundDialog(context, ref, config.timerSound),
               trailing: IconButton(
-                icon: const Icon(Icons.play_circle_outline),
+                icon: const Icon(AppIcons.playCircleOutline),
                 tooltip: 'Test Sounds',
                 onPressed: () => showTimerSoundTestDialog(context),
               ),
@@ -735,6 +756,17 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: 'Reset draggable timer to default position',
               leading: const Icon(Icons.picture_in_picture_alt),
               onTap: () => _resetTimerPosition(context, ref),
+            ),
+
+            const Divider(),
+
+            // Clear Exercise Cache
+            _buildSettingTile(
+              context,
+              title: context.l10n.clearCache,
+              subtitle: context.l10n.clearExerciseCacheDesc,
+              leading: const Icon(Icons.delete_sweep),
+              onTap: () => _clearExerciseCache(context, ref),
             ),
 
             const Divider(),
@@ -889,7 +921,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Reset to Defaults',
               subtitle: 'Restore all settings to default',
-              leading: const Icon(Icons.restore, color: Colors.red),
+              leading: const Icon(AppIcons.restore, color: Colors.red),
               onTap: () => _showResetDialog(context, ref),
             ),
           ],
@@ -1214,6 +1246,46 @@ class SettingsScreen extends ConsumerWidget {
               SnackBarService.showSuccess(context, 'Timer position reset to default');
             },
             child: const Text('Reset Position'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _clearExerciseCache(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.clearCache),
+        content: Text(l10n.clearCacheConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              try {
+                // Clear exercise cache from repository
+                final repository = ref.read(hybridExerciseRepositoryProvider);
+                await repository.clearCache();
+
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  SnackBarService.showSuccess(context, l10n.exerciseCacheCleared);
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  SnackBarService.showError(context, 'Failed to clear cache: $e');
+                }
+              }
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
+            ),
+            child: Text(l10n.clear),
           ),
         ],
       ),

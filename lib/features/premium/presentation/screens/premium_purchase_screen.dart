@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class PremiumPurchaseScreen extends ConsumerStatefulWidget {
   const PremiumPurchaseScreen({super.key});
@@ -651,7 +652,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                         context,
                         'Cloud Sync',
                         'Active',
-                        Icons.cloud_done,
+                        AppIcons.cloudDone,
                         Colors.green,
                       ),
                       const Divider(),

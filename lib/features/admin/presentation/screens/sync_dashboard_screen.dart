@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SyncDashboardScreen extends ConsumerStatefulWidget {
   const SyncDashboardScreen({super.key});
@@ -184,7 +185,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             ),
             _buildStatCard(
               context,
-              icon: Icons.storage,
+              icon: AppIcons.storage,
               title: 'Local Data',
               value: _formatBytes(data.localDataSize),
               subtitle: '${data.localEntities} entities',
@@ -657,7 +658,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
       case 'preferences':
         return Icons.settings;
       default:
-        return Icons.folder;
+        return AppIcons.folder;
     }
   }
 

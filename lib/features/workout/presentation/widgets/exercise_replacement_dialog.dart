@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Exercise Replacement Dialog with intelligent suggestions
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
@@ -35,9 +36,6 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   String? _selectedCategory;
   String? _selectedEquipment;
   bool _showOnlyFavorites = false;
-  
-  // Filter mode: 'smart' or 'all'
-  final String _filterMode = 'smart';
 
   @override
   void initState() {
@@ -64,17 +62,33 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
 
   List<ExerciseRecommendation> _getSmartRecommendations(List<ExerciseDatabase> allExercises) {
     // Find current exercise in database
-    final currentDbExercise = allExercises.firstWhere(
-      (e) => e.id == widget.currentExercise.id,
-      orElse: () => allExercises.first,
-    );
+    // First try by ID, then by name (case-insensitive)
+    ExerciseDatabase? currentDbExercise;
+
+    // Try matching by ID first
+    try {
+      currentDbExercise = allExercises.firstWhere(
+        (e) => e.id == widget.currentExercise.id,
+      );
+    } catch (_) {
+      // If ID match fails, try matching by name (case-insensitive)
+      try {
+        currentDbExercise = allExercises.firstWhere(
+          (e) => e.name.toLowerCase() == widget.currentExercise.name.toLowerCase(),
+        );
+      } catch (_) {
+        // If both fail, return empty recommendations
+        debugPrint('⚠️ Could not find exercise: ${widget.currentExercise.name} (ID: ${widget.currentExercise.id})');
+        return [];
+      }
+    }
 
     // Get smart recommendations
     return ExerciseSimilarityService.getRecommendations(
       targetExercise: currentDbExercise,
       availableExercises: allExercises,
       maxRecommendations: 20,
-      minSimilarityThreshold: 0.2,
+      minSimilarityThreshold: 0.4, // Increased to filter out irrelevant matches
     );
   }
 
@@ -222,7 +236,8 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Wrap(
-              spacing: 8,
+              spacing: 12, // Default spacing per DESIGN_GUIDELINES.md
+              runSpacing: 8, // Vertical spacing for wrapped chips
               children: [
                 _buildFilterChip(
                   label: l10n.sameMuscleGroup,
@@ -232,7 +247,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                 ),
                 _buildFilterChip(
                   label: l10n.sameEquipment,
-                  icon: Icons.sports_gymnastics,
+                  icon: AppIcons.sportsGymnastics,
                   isSelected: false,
                   theme: theme,
                 ),
@@ -401,25 +416,13 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                   ),
                 ),
                 child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '$similarity%',
-                        style: TextStyle(
-                          color: color,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        l10n.match,
-                        style: TextStyle(
-                          color: color,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    '$similarity%',
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
               ),
@@ -549,7 +552,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             ],
             if (exercise.primaryMuscleGroups?.isNotEmpty ?? false) ...[
               Icon(
-                Icons.sports_gymnastics,
+                AppIcons.sportsGymnastics,
                 size: 14,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -650,7 +653,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               ),
               const SizedBox(width: 4),
               Icon(
-                Icons.arrow_drop_down,
+                AppIcons.arrowDropDown,
                 size: 18,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -673,13 +676,13 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
       case 'chest':
         return Icons.fitness_center;
       case 'back':
-        return Icons.sports_gymnastics;
+        return AppIcons.sportsGymnastics;
       case 'legs':
         return Icons.directions_run;
       case 'shoulders':
         return Icons.accessibility_new;
       case 'arms':
-        return Icons.sports_handball;
+        return AppIcons.sportsHandball;
       case 'core':
         return Icons.self_improvement;
       default:

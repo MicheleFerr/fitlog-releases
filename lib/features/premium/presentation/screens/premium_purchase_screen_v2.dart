@@ -1475,7 +1475,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       context,
                       'Cloud Sync',
                       'Active',
-                      Icons.cloud_done_rounded,
+                      AppIcons.cloudDoneRounded,
                       context.colors.success,
                     ),
                     const Divider(height: 24),
@@ -1624,15 +1624,14 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
         Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('No purchases found to restore'),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+          SnackBar(
+            content: const Text('No purchases found to restore'),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-          );
-        }
+          ),
+        );
       }
     } finally {
       if (mounted) {

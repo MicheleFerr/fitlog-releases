@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/city_picker_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/data/services/location_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EditBuddyProfileScreen extends ConsumerStatefulWidget {
   const EditBuddyProfileScreen({super.key});
@@ -358,7 +359,7 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         onPressed: _updateCurrentLocation,
-                        icon: const Icon(Icons.my_location),
+                        icon: const Icon(AppIcons.myLocation),
                         label: Text(l10n.useCurrentLocation),
                       ),
                     ),
@@ -391,7 +392,7 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
                   controller: _instagramController,
                   decoration: const InputDecoration(
                     hintText: '@username',
-                    prefixIcon: Icon(Icons.alternate_email),
+                    prefixIcon: Icon(AppIcons.alternateEmail),
                     border: OutlineInputBorder(),
                   ),
                 ),

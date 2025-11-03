@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_su
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Extension for easy modal showing
 extension UnifiedSetInputModalExtension on BuildContext {
@@ -643,7 +644,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             icon: Icon(
                                               _isCompleted 
                                                 ? Icons.check_circle 
-                                                : Icons.radio_button_unchecked,
+                                                : AppIcons.radioButtonUnchecked,
                                               color: _isCompleted 
                                                 ? colorScheme.tertiary 
                                                 : colorScheme.outline,

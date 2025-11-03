@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Simple premium screen that works without crashes
 class SimplePremiumScreen extends ConsumerWidget {
@@ -123,7 +124,7 @@ class SimplePremiumScreen extends ConsumerWidget {
               ),
               _buildFeatureItem(
                 context,
-                Icons.block,
+                AppIcons.block,
                 'No Ads',
                 'Enjoy ad-free experience',
                 theme,

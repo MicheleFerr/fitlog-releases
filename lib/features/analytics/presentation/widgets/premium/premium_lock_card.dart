@@ -94,7 +94,7 @@ class PremiumLockCard extends StatelessWidget {
               const SizedBox(height: 12),
               _buildFeatureItem(
                 context,
-                Icons.timeline,
+                AppIcons.timeline,
                 l10n.volumeLandmarksFeature,
               ),
               const SizedBox(height: 12),

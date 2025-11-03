@@ -27,7 +27,10 @@ dependencies:
   
   # State Management
   flutter_riverpod: ^2.4.9
-  
+
+  # Functional Programming (Clean Architecture)
+  fpdart: ^1.1.0
+
   # Storage & Persistence
   hive_flutter: ^1.1.0
   flutter_secure_storage: ^9.0.0

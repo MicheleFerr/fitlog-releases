@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// TIER-1 Performance Heatmap Widget
 /// Visualizes performance data as an interactive heatmap with drill-down capabilities
@@ -452,7 +453,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         child: Column(
           children: [
             Icon(
-              Icons.grid_view,
+              AppIcons.gridView,
               size: 64,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
@@ -506,7 +507,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
       case HeatmapMetric.formScore:
         return Icons.star;
       case HeatmapMetric.fatigueIndex:
-        return Icons.battery_alert;
+        return AppIcons.batteryAlert;
       case HeatmapMetric.velocity:
         return Icons.speed;
       case HeatmapMetric.consistency:

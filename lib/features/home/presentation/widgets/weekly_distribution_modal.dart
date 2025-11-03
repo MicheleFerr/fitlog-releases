@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WeeklyDistributionModal extends ConsumerWidget {
   
@@ -61,7 +62,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.calendar_view_week,
+                    AppIcons.calendarViewWeek,
                     color: context.colors.surface,
                     size: 24,
                   ),

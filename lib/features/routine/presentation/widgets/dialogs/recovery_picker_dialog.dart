@@ -428,7 +428,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           ),
           SizedBox(height: 8),
           _buildImpactRow(
-            icon: Icons.event_available,
+            icon: AppIcons.eventAvailable,
             label: 'Recovery Date',
             value: _formatDate(_selectedDay!),
             isPositive: true,
@@ -462,7 +462,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
         ),
         if (isPositive)
           Icon(
-            Icons.arrow_upward,
+            AppIcons.arrowUpward,
             size: 14,
             color: context.colors.primary,
           ),

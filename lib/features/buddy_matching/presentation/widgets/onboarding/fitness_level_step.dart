@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FitnessLevelStep extends StatelessWidget {
 
@@ -177,7 +178,7 @@ class FitnessLevelStep extends StatelessWidget {
                   )
                 else
                   Icon(
-                    Icons.radio_button_unchecked,
+                    AppIcons.radioButtonUnchecked,
                     color: theme.colorScheme.outline.withValues(alpha: 0.5),
                     size: 24,
                   ),

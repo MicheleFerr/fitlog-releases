@@ -276,7 +276,7 @@ class SecondaryActions extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.notifications_off_outlined,
+              AppIcons.notificationsOffOutlined,
               size: 64,
               color: Theme.of(
                 context,

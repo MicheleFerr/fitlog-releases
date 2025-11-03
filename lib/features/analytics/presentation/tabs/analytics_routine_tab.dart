@@ -248,7 +248,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 context,
                 title: 'Skip Rate',
                 value: '${(metrics.skipRate * 100).toStringAsFixed(1)}%',
-                icon: Icons.event_busy,
+                icon: AppIcons.eventBusy,
                 color: _getSkipRateColor(context, metrics.skipRate),
                 subtitle: '${metrics.skippedDays} skipped',
               ),
@@ -263,7 +263,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 context,
                 title: 'Recovery',
                 value: '${(metrics.recoveryRate * 100).toStringAsFixed(1)}%',
-                icon: Icons.replay,
+                icon: AppIcons.replay,
                 color: _getRecoveryColor(context, metrics.recoveryRate),
                 subtitle: '${metrics.recoveredDays} recovered',
               ),
@@ -274,7 +274,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 context,
                 title: 'Avg Gap',
                 value: '${metrics.avgDaysBetweenWorkouts.toStringAsFixed(1)}d',
-                icon: Icons.trending_neutral,
+                icon: AppIcons.trendingNeutral,
                 color: context.colors.secondary,
                 subtitle: 'between workouts',
               ),
@@ -493,7 +493,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.pie_chart,
+                  AppIcons.pieChart,
                   color: context.colors.primary,
                   size: 20,
                 ),
@@ -569,7 +569,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.calendar_view_week,
+                  AppIcons.calendarViewWeek,
                   color: context.colors.primary,
                   size: 20,
                 ),

@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_initializer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
   
@@ -332,7 +333,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: widget.onViewAll,
-        icon: const Icon(Icons.explore),
+        icon: const Icon(AppIcons.explore),
         label: const Text('Esplora Community'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimaryContainer,

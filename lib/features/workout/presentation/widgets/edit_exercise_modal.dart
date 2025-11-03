@@ -262,7 +262,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                       children: [
                         ListTile(
                           leading: Icon(
-                            Icons.tune,
+                            AppIcons.tune,
                             color: _useCustomRestTime
                                 ? Theme.of(context).colorScheme.secondary
                                 : Theme.of(context).colorScheme.onSurfaceVariant,

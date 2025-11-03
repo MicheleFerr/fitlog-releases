@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VotingCard extends StatefulWidget {
 
@@ -73,15 +74,15 @@ class _VotingCardState extends State<VotingCard>
       case ContributionType.tip:
         return Icons.lightbulb;
       case ContributionType.warning:
-        return Icons.warning_amber_rounded;
+        return AppIcons.warningAmberRounded;
       case ContributionType.correction:
-        return Icons.edit_note;
+        return AppIcons.editNote;
       case ContributionType.technique:
         return Icons.fitness_center;
       case ContributionType.variant:
         return Icons.alt_route;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
     }
   }
   

@@ -152,7 +152,7 @@ class AnalyticsPremiumTab extends ConsumerWidget {
             ),
           ),
           Icon(
-            Icons.lock_clock,
+            AppIcons.lockClock,
             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
         ],

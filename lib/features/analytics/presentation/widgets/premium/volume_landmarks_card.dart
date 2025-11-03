@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Volume Landmarks Dashboard
 ///
@@ -382,7 +383,7 @@ class VolumeLandmarksCard extends StatelessWidget {
         message = l10n.volumeZoneMaintenance;
         explanation = l10n.volumeMaintenanceExplanation(currentSets, landmarks.mv, landmarks.mev);
         advice = l10n.volumeMaintenanceAdvice(landmarks.mev - currentSets);
-        icon = Icons.pause_circle_outline;
+        icon = AppIcons.pauseCircleOutline;
         color = context.colors.surfaceContainerHighest;
         break;
       case VolumeZone.effective:
@@ -433,7 +434,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               ),
               SizedBox(width: 4),
               Icon(
-                Icons.keyboard_arrow_down,
+                AppIcons.keyboardArrowDown,
                 size: 16,
                 color: color,
               ),
@@ -631,7 +632,7 @@ class VolumeLandmarksCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.warning_amber_rounded,
+                AppIcons.warningAmberRounded,
                 color: theme.colorScheme.error,
                 size: 24,
               ),
@@ -1007,7 +1008,7 @@ class VolumeLandmarksCard extends StatelessWidget {
       (MuscleGroup.chest, l10n.chestMuscle, Icons.favorite),
       (MuscleGroup.back, l10n.backMuscle, Icons.grid_4x4),
       (MuscleGroup.shoulders, l10n.shouldersMuscle, Icons.north),
-      (MuscleGroup.arms, l10n.armsMuscle, Icons.sports_martial_arts),
+      (MuscleGroup.arms, l10n.armsMuscle, AppIcons.sportsMartialArts),
       (MuscleGroup.legs, l10n.legsMuscle, Icons.directions_run),
       (MuscleGroup.core, l10n.coreMuscle, Icons.favorite_border),
     ];

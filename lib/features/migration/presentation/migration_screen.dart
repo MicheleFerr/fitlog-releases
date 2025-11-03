@@ -16,6 +16,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/migration/presentation/providers/migration_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class MigrationScreen extends ConsumerWidget {
   const MigrationScreen({super.key});
@@ -269,7 +270,7 @@ class MigrationScreen extends ConsumerWidget {
               context,
               l10n.workoutsFound,
               '${result.totalWorkouts}',
-              Icons.event_note,
+              AppIcons.eventNote,
             ),
             if (state.isCompleted) ...[
               _buildStatRow(
@@ -337,7 +338,7 @@ class MigrationScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
                         leading: Icon(
-                          Icons.event_note,
+                          AppIcons.eventNote,
                           color: colorScheme.primary,
                         ),
                         title: Text(group.schedaName),

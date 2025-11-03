@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Vista di benvenuto quando non c'è un workout attivo
 /// Mostra messaggio di benvenuto e suggerimenti per iniziare
@@ -44,7 +45,7 @@ class WorkoutWelcomeView extends ConsumerWidget {
             const SizedBox(height: 32),
             _buildSuggestionCard(
               context: context,
-              icon: Icons.play_circle_outline,
+              icon: AppIcons.playCircleOutline,
               title: l10n.quickStart,
               description: l10n.quickStartDescription,
               color: colorScheme.primary,

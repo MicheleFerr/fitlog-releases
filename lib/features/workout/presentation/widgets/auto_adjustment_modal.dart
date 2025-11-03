@@ -577,7 +577,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   decoration: InputDecoration(
                     labelText: 'Min RPE',
                     hintText: '7',
-                    prefixIcon: const Icon(Icons.arrow_downward),
+                    prefixIcon: const Icon(AppIcons.arrowDownward),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -592,7 +592,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   decoration: InputDecoration(
                     labelText: 'Max RPE',
                     hintText: '9',
-                    prefixIcon: const Icon(Icons.arrow_upward),
+                    prefixIcon: const Icon(AppIcons.arrowUpward),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

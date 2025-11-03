@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DropSetExecutionSheet extends ConsumerStatefulWidget {
 
@@ -470,7 +471,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 icon: Icon(
                                   isCompleted 
                                       ? Icons.check_circle 
-                                      : Icons.radio_button_unchecked,
+                                      : AppIcons.radioButtonUnchecked,
                                   color: isCompleted
                                       ? Theme.of(context).colorScheme.secondary
                                       : null,
@@ -517,7 +518,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         ),
                                         if (!isCompleted)
                                           Icon(
-                                            Icons.arrow_drop_down,
+                                            AppIcons.arrowDropDown,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                       ],
@@ -569,7 +570,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         ),
                                         if (!isCompleted)
                                           Icon(
-                                            Icons.arrow_drop_down,
+                                            AppIcons.arrowDropDown,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                       ],
@@ -644,7 +645,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.warning_amber_rounded,
+                                    AppIcons.warningAmberRounded,
                                     size: 16,
                                     color: Theme.of(context).colorScheme.error,
                                   ),

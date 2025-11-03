@@ -883,11 +883,251 @@ SnackBarService.showSuccess(context, message)
 
 ---
 
+## 🛠️ Advanced Tools & Utilities
+
+### Semantic Colors (`SemanticColors` extension)
+
+Use semantic color names for better intent clarity:
+
+```dart
+// ✅ Use semantic colors for clear intent
+Container(
+  color: context.successColor,        // Green - success states
+  child: Text('Saved!', style: TextStyle(color: context.textOnSuccess)),
+)
+
+Container(
+  color: context.errorColor,          // Red - error states
+  child: Text('Error', style: TextStyle(color: context.textOnError)),
+)
+
+Container(
+  color: context.warningColor,        // Orange - warnings
+  child: Text('Warning', style: TextStyle(color: context.textOnWarning)),
+)
+
+Container(
+  color: context.infoColor,           // Blue - info messages
+  child: Text('Info', style: TextStyle(color: context.textOnInfo)),
+)
+
+// Container variants with proper alpha
+Container(color: context.successContainer)  // Light green background
+Container(color: context.errorContainer)    // Light red background
+Container(color: context.warningContainer)  // Light orange background
+Container(color: context.infoContainer)     // Light blue background
+```
+
+**Benefits**:
+- ✅ WCAG AA compliant contrast ratios guaranteed
+- ✅ Self-documenting code (intent is clear)
+- ✅ Automatic theme adaptation
+
+### Extended Spacing System (`AppSpacing`)
+
+Beyond the base 8-level scale, use extended spacing and semantic aliases:
+
+```dart
+// Extended scale for edge cases
+Padding(padding: EdgeInsets.all(AppSpacing.xxxl))   // 48px - full-screen modals
+Padding(padding: EdgeInsets.all(AppSpacing.xxxxl))  // 64px - onboarding
+
+// Semantic aliases (self-documenting)
+Padding(padding: AppSpacing.card)              // EdgeInsets.all(16)
+Padding(padding: AppSpacing.dialog)            // EdgeInsets.all(24)
+Padding(padding: AppSpacing.screen)            // Horizontal(20), Vertical(24)
+Padding(padding: AppSpacing.button)            // Horizontal(16), Vertical(12)
+
+// Responsive spacing
+final spacing = AppSpacing.responsive(
+  context.screenWidth,
+  AppSpacing.md,  // Base: 16px
+);
+// Returns: 16px (mobile), 20px (tablet), 24px (desktop)
+```
+
+**Benefits**:
+- ✅ Covers all use cases (base + extended + semantic)
+- ✅ Responsive out of the box
+- ✅ Validation helper (`AppSpacing.isValid(value)`)
+
+### Responsive Typography (`ResponsiveTypography` extension)
+
+Automatically scale typography based on device size:
+
+```dart
+// ✅ Use responsive typography for tablets/desktops
+Text(
+  'Title',
+  style: context.responsiveTextTheme.headlineMedium,
+)
+// Font size scales automatically:
+// - Mobile (<600px): 1.0x (no scaling)
+// - Tablet (600-900px): 1.15x
+// - Desktop (>900px): 1.3x
+
+// Device type checks
+if (context.isMobile) {
+  // Mobile-specific layout
+} else if (context.isTablet) {
+  // Tablet-specific layout
+} else if (context.isDesktop) {
+  // Desktop-specific layout
+}
+```
+
+**Benefits**:
+- ✅ Automatic scaling for larger screens
+- ✅ Performance-optimized (returns base theme if scale = 1.0)
+- ✅ Consistent breakpoints across app
+
+### Accessibility Utilities (`AccessibilityUtils`)
+
+Verify WCAG compliance programmatically:
+
+```dart
+// Check contrast ratio
+final ratio = AccessibilityUtils.getContrastRatio(
+  Colors.blue,   // Foreground
+  Colors.white,  // Background
+);
+print('Contrast: ${ratio.toStringAsFixed(2)}:1');
+
+// Check WCAG conformance
+final isAccessible = AccessibilityUtils.meetsWCAG_AA(
+  foreground: Colors.blue,
+  background: Colors.white,
+);
+
+if (!isAccessible) {
+  print('⚠️ Contrast ratio too low!');
+}
+
+// Get suggested text color (white or black)
+final textColor = AccessibilityUtils.suggestTextColor(Colors.blue);
+
+// Generate full accessibility report
+print(AccessibilityUtils.getAccessibilityReport(
+  foreground: Colors.blue,
+  background: Colors.white,
+  label: 'Primary Button',
+));
+// Output:
+// 🎨 Accessibility Report: Primary Button
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Foreground: #2196F3
+// Background: #FFFFFF
+// Contrast Ratio: 3.14:1
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// WCAG AA (4.5:1):        ❌ FAIL
+// WCAG AA Large (3:1):    ✅ PASS
+```
+
+**WCAG Standards**:
+- **AA Normal**: 4.5:1 (text < 18pt)
+- **AA Large**: 3:1 (text ≥ 18pt or bold ≥ 14pt)
+- **AAA Normal**: 7:1 (enhanced)
+- **AAA Large**: 4.5:1 (enhanced)
+
+### Theme Preview Screen (`ThemePreviewScreen`)
+
+Developer tool for hot reload testing:
+
+```dart
+// Navigate to preview during development
+Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) => ThemePreviewScreen()),
+);
+
+// Features:
+// - Toggle light/dark theme with button
+// - See all components side-by-side
+// - Test semantic colors
+// - Verify spacing system
+// - Hot reload after theme changes
+```
+
+**Location**: `lib/tools/theme_preview_screen.dart`
+
+### Golden Tests (Visual Regression)
+
+Prevent visual regressions automatically:
+
+```bash
+# Run golden tests
+flutter test test/golden/
+
+# Update goldens after intentional changes
+flutter test --update-goldens test/golden/
+```
+
+**Test Files**:
+- `test/golden/design_system_test.dart` - Core design system components
+- `test/golden/README.md` - Complete golden test guide
+
+**What They Test**:
+- ✅ Standard cards (light + dark)
+- ✅ Buttons (light + dark)
+- ✅ Semantic colors (light + dark)
+- ✅ Loading indicators
+- ✅ Prevents accidental visual changes
+
+### Pre-Commit Hook
+
+Automatic design violations check before each commit:
+
+**What It Checks**:
+1. ❌ Hardcoded strings → Block commit
+2. ⚠️ Hardcoded colors → Warning (allow commit)
+3. ❌ `CircularProgressIndicator()` → Block commit (use `LoadingIndicator()`)
+4. ✅ Localization regenerated if ARB files modified
+5. ✅ `flutter analyze` passes
+
+**Bypass** (emergency only):
+```bash
+git commit --no-verify -m "emergency fix"
+```
+
+### Design Violations Scanner
+
+Find all violations across codebase:
+
+```bash
+# Run full scan
+./scripts/check_design_violations.sh
+
+# Output:
+# 🎨 Design System Violations Checker
+# ==========================================
+#
+# 📝 [1/6] Checking hardcoded strings...
+# ✅ No hardcoded strings found
+#
+# 🎨 [2/6] Checking hardcoded colors...
+# ❌ Found 182 files with Colors.*
+# ...
+```
+
+**What It Scans**:
+1. Hardcoded strings in `Text()`
+2. Hardcoded colors (`Colors.*`, `Color(0x...)`)
+3. Hardcoded `TextStyle()`
+4. Wrong components (`CircularProgressIndicator`, `ScaffoldMessenger`)
+5. Deprecated `.withOpacity()` (use `.withValues(alpha:)`)
+6. `print()` statements (use `debugPrint()`)
+
+---
+
 ## Resources
 
 - **Material Design 3**: https://m3.material.io/
 - **Flutter Docs**: https://docs.flutter.dev/
 - **WCAG Guidelines**: https://www.w3.org/WAI/WCAG21/quickref/
+- **Golden Tests**: https://docs.flutter.dev/cookbook/testing/integration/golden-tests
+- **App Spacing System**: `lib/shared/presentation/theme/app_spacing.dart`
+- **Accessibility Utils**: `lib/shared/utils/accessibility_utils.dart`
+- **Theme Preview**: `lib/tools/theme_preview_screen.dart`
 
 ---
 

@@ -14,6 +14,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Rep range preset for different training goals
 ///
@@ -87,16 +88,16 @@ class RepRangePreset {
   /// Icon name to IconData mapping
   static const Map<String, IconData> _iconMap = {
     'fitness_center': Icons.fitness_center,
-    'bolt': Icons.bolt,
+    'bolt': AppIcons.bolt,
     'trending_up': Icons.trending_up,
-    'bubble_chart': Icons.bubble_chart,
+    'bubble_chart': AppIcons.bubbleChart,
     'timer': Icons.timer,
     'all_inclusive': Icons.all_inclusive,
     'speed': Icons.speed,
     'flash_on': Icons.flash_on,
     'schedule': Icons.schedule,
     'access_time': Icons.access_time,
-    'hourglass_empty': Icons.hourglass_empty,
+    'hourglass_empty': AppIcons.hourglassEmpty,
     'timer_off': Icons.timer_off,
     'repeat': Icons.repeat,
   };

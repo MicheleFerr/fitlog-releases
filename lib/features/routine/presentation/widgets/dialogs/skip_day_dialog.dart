@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/skip_tracker.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Result returned when user confirms skip
 class SkipDayResult {
@@ -102,7 +103,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        Icons.event_busy,
+                        AppIcons.eventBusy,
                         color: context.colors.error,
                         size: 24,
                       ),
@@ -148,7 +149,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.warning_amber_rounded,
+                          AppIcons.warningAmberRounded,
                           color: context.colors.secondary,
                           size: 24,
                         ),
@@ -259,10 +260,10 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
       (SkipReasons.sick, Icons.sick, 'Sick'),
       (SkipReasons.injury, Icons.healing, 'Injury'),
       (SkipReasons.busy, Icons.work, 'Busy'),
-      (SkipReasons.tired, Icons.bedtime, 'Tired'),
+      (SkipReasons.tired, AppIcons.bedtime, 'Tired'),
       (SkipReasons.travel, Icons.flight, 'Travel'),
       (SkipReasons.weather, Icons.cloud, 'Weather'),
-      (SkipReasons.other, Icons.more_horiz, 'Other'),
+      (SkipReasons.other, AppIcons.moreHoriz, 'Other'),
     ];
 
     return reasons.map((reason) {
@@ -394,7 +395,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
         if (change != null) ...[
           SizedBox(width: 8),
           Icon(
-            isNegative ? Icons.arrow_downward : Icons.arrow_upward,
+            isNegative ? AppIcons.arrowDownward : AppIcons.arrowUpward,
             size: 14,
             color: isNegative ? context.colors.error : context.colors.success,
           ),

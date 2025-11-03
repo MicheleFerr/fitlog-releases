@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart
 import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grid widget that displays smart workout templates
 class SmartTemplatesGrid extends ConsumerWidget {
@@ -144,7 +145,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
             ),
             const SizedBox(width: 4),
             Icon(
-              Icons.arrow_drop_down,
+              AppIcons.arrowDropDown,
               size: 16,
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),

@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/hybrid_analytics_service.dart';
 import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin Analytics Dashboard Screen
 ///
@@ -278,7 +279,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildOverviewCard(
                 context,
-                icon: Icons.event,
+                icon: AppIcons.event,
                 title: 'Total Events',
                 value: events.length.toString(),
                 color: context.colors.primary,
@@ -298,7 +299,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildOverviewCard(
                 context,
-                icon: Icons.today,
+                icon: AppIcons.today,
                 title: 'Today',
                 value: todayEvents.toString(),
                 color: context.colors.tertiary,
@@ -523,7 +524,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildMetricCard(
                 context,
-                icon: Icons.cancel,
+                icon: AppIcons.cancel,
                 title: 'Cancelled',
                 value: workoutsCancelled.toString(),
                 subtitle: 'workouts',
@@ -832,7 +833,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.cloud_done,
+                    AppIcons.cloudDone,
                     size: 16,
                     color: context.colors.primary,
                   ),
@@ -902,15 +903,15 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
     if (eventName.contains('workout')) {
       return Icons.fitness_center;
     } else if (eventName.contains('exercise')) {
-      return Icons.sports_gymnastics;
+      return AppIcons.sportsGymnastics;
     } else if (eventName.contains('set')) {
       return Icons.check_circle;
     } else if (eventName.contains('timer') || eventName.contains('rest')) {
       return Icons.timer;
     } else if (eventName.contains('preset')) {
-      return Icons.tune;
+      return AppIcons.tune;
     } else {
-      return Icons.event;
+      return AppIcons.event;
     }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TogglePanoramaStep extends ConsumerStatefulWidget {
 
@@ -84,7 +85,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
     ToggleCategory(
       title: l10n.onboardingToggleInterfaceTitle,
       description: l10n.onboardingToggleInterfaceDescription,
-      icon: Icons.tune,
+      icon: AppIcons.tune,
       color: Colors.purple,
       toggles: [
         ToggleInfo(
@@ -333,7 +334,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  Icons.more_vert,
+                                  AppIcons.moreVert,
                                   size: 14,
                                   color: colorScheme.primary,
                                 ),

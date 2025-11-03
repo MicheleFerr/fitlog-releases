@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BarbellType {
 
@@ -44,7 +45,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       name: 'No Barbell',
       category: 'None',
       weight: 0,
-      icon: Icons.block,
+      icon: AppIcons.block,
       color: context.colors.surfaceContainerHighest,
       description: 'Dumbbell or machine exercise',
     ),
@@ -148,7 +149,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       name: 'Swiss/Football Bar',
       category: 'Specialty',
       weight: 18,
-      icon: Icons.sports_football,
+      icon: AppIcons.sportsFootball,
       color: Colors.teal,
       description: 'Multi-grip neutral bar',
     ),
@@ -306,7 +307,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  _buildQuickButton('None', 0, Icons.block, context.colors.surfaceContainerHighest),
+                  _buildQuickButton('None', 0, AppIcons.block, context.colors.surfaceContainerHighest),
                   _buildQuickButton('Olympic', 20, Icons.fitness_center, context.colors.primary),
                   _buildQuickButton('Women\'s', 15, Icons.fitness_center, Colors.pink),
                   _buildQuickButton('EZ Bar', 7.5, Icons.waves, context.colors.tertiary),

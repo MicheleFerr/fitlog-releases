@@ -472,7 +472,7 @@ class _MockSetRow extends StatelessWidget {
                 ),
               ),
               child: Icon(
-                isCompleted ? Icons.check : Icons.check_box_outline_blank,
+                isCompleted ? Icons.check : AppIcons.checkBoxOutlineBlank,
                 color: isCompleted
                   ? colorScheme.onPrimary
                   : colorScheme.onSurface.withValues(alpha: 0.6),
@@ -690,7 +690,7 @@ class _MockQuickEditV2 extends StatelessWidget {
               // Notes button
               IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.note_add, size: 20),
+                icon: const Icon(AppIcons.noteAdd, size: 20),
                 style: IconButton.styleFrom(
                   backgroundColor: colorScheme.secondary.withValues(alpha: 0.1),
                   foregroundColor: colorScheme.secondary,

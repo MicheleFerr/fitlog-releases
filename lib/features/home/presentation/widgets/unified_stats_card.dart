@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class UnifiedStatsCard extends ConsumerStatefulWidget {
 
@@ -257,7 +258,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.bolt,
+                              AppIcons.bolt,
                               color: theme.colorScheme.primary,
                               size: 24,
                             ),
@@ -569,7 +570,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bolt, color: theme.colorScheme.primary, size: 24),
+            Icon(AppIcons.bolt, color: theme.colorScheme.primary, size: 24),
             const SizedBox(width: 8),
             Text(
               '0 XP',

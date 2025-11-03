@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutHistoryListItem extends StatelessWidget {
 
@@ -186,7 +187,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
-                        Icons.more_vert,
+                        AppIcons.moreVert,
                         size: 18,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),

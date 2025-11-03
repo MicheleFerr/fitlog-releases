@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'dart:convert';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🚀 TIER-1: Modal condiviso per opzioni esercizio sia per single che superset
 class ExerciseOptionsModal extends StatelessWidget {
@@ -115,7 +116,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.zoom_out_map,
+                                AppIcons.zoomOutMap,
                                 size: 16,
                                 color: Colors.white.withValues(alpha: 0.9),
                               ),
@@ -239,7 +240,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // 🆕 Segnala problema
                   ListTile(
-                    leading: const Icon(Icons.flag_outlined, color: Colors.orange),
+                    leading: const Icon(AppIcons.flagOutlined, color: Colors.orange),
                     title: const Text('Segnala problema'),
                     subtitle: const Text('Bug, errori o suggerimenti'),
                     onTap: () {
@@ -434,7 +435,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Muscoli Secondari',
                         exerciseData['muscoliSecondari'],
-                        Icons.sports,
+                        AppIcons.sports,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -444,7 +445,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Attrezzatura',
                         exerciseData['attrezzatura'],
-                        Icons.build,
+                        AppIcons.build,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -621,7 +622,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Prevenzione Infortuni',
                         exerciseData['prevenzioneInfortuni'],
-                        Icons.warning_amber,
+                        AppIcons.warningAmber,
                       ),
                       const SizedBox(height: 16),
                     ],

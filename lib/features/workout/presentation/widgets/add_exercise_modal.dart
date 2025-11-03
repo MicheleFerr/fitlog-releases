@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
   
@@ -465,7 +466,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               labelText: context.l10n.exerciseNameLabel,
               hintText: context.l10n.exerciseNameHintBenchPress,
-              prefixIcon: const Icon(Icons.pause_circle),
+              prefixIcon: const Icon(AppIcons.pauseCircle),
             ),
           ),
           const SizedBox(height: 16),
@@ -983,7 +984,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             onPressed: () {
               ref.read(exerciseSetsProvider.notifier).removeSet(set.id);
             },
-            icon: const Icon(Icons.remove_circle_outline, size: 20),
+            icon: const Icon(AppIcons.removeCircleOutline, size: 20),
             tooltip: context.l10n.removeSetTooltip,
           ),
       ],
@@ -1120,7 +1121,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                     _dropsetStages.removeAt(index);
                   });
                 },
-                icon: const Icon(Icons.remove_circle_outline, size: 20),
+                icon: const Icon(AppIcons.removeCircleOutline, size: 20),
               ),
           ],
         ),

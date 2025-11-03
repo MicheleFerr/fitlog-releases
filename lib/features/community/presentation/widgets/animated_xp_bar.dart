@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:async';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnimatedXPBar extends StatefulWidget {
   
@@ -372,7 +373,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.bolt,
+                AppIcons.bolt,
                 color: theme.colorScheme.primary,
                 size: 28,
               ),

@@ -16,6 +16,14 @@ class ExerciseSimilarityService {
   ) {
     if (exercise1.id == exercise2.id) return 1.0;
 
+    // ⚠️ HARD BLOCK: Prevent absurd matches between incompatible muscle groups
+    if (_areIncompatibleMuscleGroups(
+      exercise1.primaryMuscleGroups ?? [],
+      exercise2.primaryMuscleGroups ?? [],
+    )) {
+      return 0.0; // Force 0% similarity for incompatible exercises
+    }
+
     double score = 0.0;
 
     // Primary muscle groups (most important)
@@ -166,6 +174,55 @@ class ExerciseSimilarityService {
     return 0.0;
   }
 
+  /// Check if two muscle groups are incompatible (should NEVER be matched)
+  /// Example: Core exercises should NEVER match with Leg/Glute exercises
+  static bool _areIncompatibleMuscleGroups(
+    List<String> muscles1,
+    List<String> muscles2,
+  ) {
+    if (muscles1.isEmpty || muscles2.isEmpty) return false;
+
+    // Define incompatible muscle group pairs
+    final incompatiblePairs = <Set<String>>[
+      // Core/Abs should NOT match with lower body
+      {'CORE', 'GLUT'}, // Core ≠ Glutes
+      {'CORE', 'FEMOR'}, // Core ≠ Hamstrings
+      {'CORE', 'QUAD'}, // Core ≠ Quads
+      {'CORE', 'LAT'}, // Core ≠ Lats (back)
+      {'CORE', 'TRAP'}, // Core ≠ Traps (back)
+
+      // Upper body should NOT match with lower body
+      {'PETT', 'GLUT'}, // Chest ≠ Glutes
+      {'PETT', 'FEMOR'}, // Chest ≠ Hamstrings
+      {'PETT', 'QUAD'}, // Chest ≠ Quads
+      {'SPALL', 'GLUT'}, // Shoulders ≠ Glutes
+      {'SPALL', 'FEMOR'}, // Shoulders ≠ Hamstrings
+      {'SPALL', 'QUAD'}, // Shoulders ≠ Quads
+
+      // Arms should NOT match with legs
+      {'BIC', 'GLUT'}, // Biceps ≠ Glutes
+      {'BIC', 'FEMOR'}, // Biceps ≠ Hamstrings
+      {'BIC', 'QUAD'}, // Biceps ≠ Quads
+      {'TRIC', 'GLUT'}, // Triceps ≠ Glutes
+      {'TRIC', 'FEMOR'}, // Triceps ≠ Hamstrings
+      {'TRIC', 'QUAD'}, // Triceps ≠ Quads
+    ];
+
+    final set1 = muscles1.map((m) => m.toUpperCase()).toSet();
+    final set2 = muscles2.map((m) => m.toUpperCase()).toSet();
+
+    // Check if any incompatible pair exists
+    for (final pair in incompatiblePairs) {
+      final pairList = pair.toList();
+      if ((set1.contains(pairList[0]) && set2.contains(pairList[1])) ||
+          (set1.contains(pairList[1]) && set2.contains(pairList[0]))) {
+        return true; // Found incompatible pair - block match
+      }
+    }
+
+    return false;
+  }
+
   /// Get exercise recommendations sorted by similarity
   static List<ExerciseRecommendation> getRecommendations({
     required ExerciseDatabase targetExercise,
@@ -179,7 +236,7 @@ class ExerciseSimilarityService {
       if (exercise.id == targetExercise.id) continue;
 
       final similarity = calculateSimilarity(targetExercise, exercise);
-      
+
       if (similarity >= minSimilarityThreshold) {
         recommendations.add(ExerciseRecommendation(
           exercise: exercise,

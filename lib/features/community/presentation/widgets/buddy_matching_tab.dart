@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/buddy_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/buddy_matching_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingTab extends ConsumerWidget {
   const BuddyMatchingTab({super.key});
@@ -104,7 +105,7 @@ class BuddyMatchingTab extends ConsumerWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () => _navigateToOnboarding(context),
-              icon: const Icon(Icons.person_add),
+              icon: const Icon(AppIcons.personAdd),
               label: const Text('Inizia'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -117,7 +118,7 @@ class BuddyMatchingTab extends ConsumerWidget {
           // Alternative: Go directly to matching
           OutlinedButton.icon(
             onPressed: () => _navigateToMatching(context),
-            icon: const Icon(Icons.explore),
+            icon: const Icon(AppIcons.explore),
             label: const Text('Esplora ora'),
           ),
         ],
@@ -173,7 +174,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                 child: _buildQuickActionCard(
                   context,
                   theme,
-                  Icons.explore,
+                  AppIcons.explore,
                   'Trova Partner',
                   'Scopri nuovi buddy',
                   () => _navigateToMatching(context),

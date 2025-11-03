@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/community_corrections_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CorrectionReviewCard extends StatelessWidget {
 
@@ -286,7 +287,7 @@ class CorrectionReviewCard extends StatelessWidget {
     switch (status) {
       case 'pending':
         color = context.colors.secondary;
-        icon = Icons.pending;
+        icon = AppIcons.pending;
         label = AppLocalizations.of(context).pending;
         break;
       case 'approved':
@@ -296,7 +297,7 @@ class CorrectionReviewCard extends StatelessWidget {
         break;
       case 'rejected':
         color = context.colors.error;
-        icon = Icons.cancel;
+        icon = AppIcons.cancel;
         label = AppLocalizations.of(context).rejected;
         break;
       default:

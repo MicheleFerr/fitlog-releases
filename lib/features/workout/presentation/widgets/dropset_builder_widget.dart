@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Builder widget for creating dropset exercises
 /// Reuses UI patterns from SupersetBuilderWidget
@@ -768,7 +769,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                 ],
               ),
             ),
-            Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurfaceVariant),
+            Icon(AppIcons.arrowDropDown, color: theme.colorScheme.onSurfaceVariant),
           ],
         ),
       ),

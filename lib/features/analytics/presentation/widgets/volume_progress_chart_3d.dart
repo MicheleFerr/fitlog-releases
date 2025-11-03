@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grafico 3D interattivo per visualizzare il volume di allenamento
 /// con effetti di profondità e animazioni touch-responsive
@@ -102,17 +103,17 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
             ButtonSegment(
               value: VolumeChartType.daily,
               label: Text('Giorno'),
-              icon: Icon(Icons.calendar_view_day, size: 18),
+              icon: Icon(AppIcons.calendarViewDay, size: 18),
             ),
             ButtonSegment(
               value: VolumeChartType.weekly,
               label: Text('Settimana'),
-              icon: Icon(Icons.calendar_view_week, size: 18),
+              icon: Icon(AppIcons.calendarViewWeek, size: 18),
             ),
             ButtonSegment(
               value: VolumeChartType.monthly,
               label: Text('Mese'),
-              icon: Icon(Icons.calendar_view_month, size: 18),
+              icon: Icon(AppIcons.calendarViewMonth, size: 18),
             ),
           ],
           selected: {_currentChartType},

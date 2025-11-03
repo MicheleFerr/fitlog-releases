@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_ai_
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
@@ -293,7 +294,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             _InfoItem(
-              icon: Icons.system_update,
+              icon: AppIcons.systemUpdate,
               title: l10n.versionControl,
               description: l10n.versionControlDescription,
             ),

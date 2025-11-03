@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
 import 'package:gymbro_flutter_new/features/workout/presentation/utils/weight_rounding_utils.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal for picking weight in DropSet exercises with smart rounding
 ///
@@ -277,7 +278,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                   ? Icons.fitness_center
                   : _effectiveEquipmentType == EquipmentType.machine
                       ? Icons.settings
-                      : Icons.sports_gymnastics,
+                      : AppIcons.sportsGymnastics,
               color: context.colors.primary,
             ),
             const SizedBox(width: 12),
@@ -357,7 +358,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 Expanded(
                   child: _buildEquipmentCard(
                     type: EquipmentType.dumbbell,
-                    icon: Icons.sports_gymnastics,
+                    icon: AppIcons.sportsGymnastics,
                     title: context.l10n.dumbbell,
                     subtitle: '2.5kg',
                   ),

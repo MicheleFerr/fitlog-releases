@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🔍 Spiegazione di come l'AI è arrivata a un insight
 class InsightExplanation {
@@ -130,7 +131,7 @@ class TimelineEvent {
       case TimelineEventType.injury:
         return Icons.warning;
       case TimelineEventType.deload:
-        return Icons.battery_charging_full;
+        return AppIcons.batteryChargingFull;
       case TimelineEventType.achievement:
         return Icons.emoji_events;
     }

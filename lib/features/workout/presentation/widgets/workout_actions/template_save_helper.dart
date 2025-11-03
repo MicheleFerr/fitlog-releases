@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplateSaveHelper {
   static void showSaveAsTemplateDialog(BuildContext context, WidgetRef ref) async {
@@ -190,7 +191,7 @@ class TemplateSaveHelper {
       child: Row(
         children: [
           Icon(
-            Icons.warning_amber_rounded,
+            AppIcons.warningAmberRounded,
             color: Theme.of(context).colorScheme.secondary,
             size: 20,
           ),

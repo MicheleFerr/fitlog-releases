@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/barbell_selector_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class PlateCalculatorWidget extends ConsumerStatefulWidget {
   
@@ -137,7 +138,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               OutlinedButton.icon(
                 onPressed: () => _showBarbellSelector(context),
                 icon: Icon(
-                  _barbellWeight != null ? Icons.fitness_center : Icons.block,
+                  _barbellWeight != null ? Icons.fitness_center : AppIcons.block,
                   size: 16,
                 ),
                 label: Text(
@@ -372,7 +373,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                               )
                             else
                               Icon(
-                                Icons.cancel,
+                                AppIcons.cancel,
                                 size: 16,
                                 color: theme.colorScheme.outline.withValues(alpha: 0.5),
                               ),

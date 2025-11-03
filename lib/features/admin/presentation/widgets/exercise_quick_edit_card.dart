@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/databas
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
 
@@ -312,7 +313,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             context,
             'Note Tecniche',
             widget.exercise.noteTecniche!,
-            Icons.notes,
+            AppIcons.notes,
           ),
           const SizedBox(height: 8),
         ],
@@ -334,7 +335,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             context,
             'Attivazione Pre',
             widget.exercise.attivazionePre!,
-            Icons.bolt,
+            AppIcons.bolt,
           ),
           const SizedBox(height: 8),
         ],
@@ -458,7 +459,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                   height: 40,
                   color: context.colors.surface,
                   child: Icon(
-                    Icons.broken_image,
+                    AppIcons.brokenImage,
                     size: 20,
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -574,7 +575,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.broken_image,
+                        AppIcons.brokenImage,
                         size: 64,
                         color: context.colors.onSurfaceVariant,
                       ),
@@ -707,7 +708,7 @@ class _QuickDropdown extends StatelessWidget {
             isExpanded: true,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             icon: Icon(
-              Icons.arrow_drop_down,
+              AppIcons.arrowDropDown,
               size: 18,
               color: color,
             ),

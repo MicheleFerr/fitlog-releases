@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feedback_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin dashboard for managing user feedback
 /// Only accessible to ferrara-michele@hotmail.it
@@ -163,7 +164,7 @@ class _AdminFeedbackDashboardScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.inbox,
+                          AppIcons.inbox,
                           size: 64,
                           color: context.colors.outline,
                         ),
@@ -256,7 +257,7 @@ class _AdminFeedbackDashboardScreenState
                 child: _buildStatItem(
                   'New',
                   stats.newFeedback.toString(),
-                  Icons.new_releases,
+                  AppIcons.newReleases,
                 ),
               ),
               Expanded(
@@ -422,7 +423,7 @@ class _AdminFeedbackDashboardScreenState
                   ),
                 if (feedback.deviceInfo != null)
                   _buildMetadataItem(
-                    Icons.phone_android,
+                    AppIcons.phoneAndroid,
                     feedback.deviceInfo!,
                   ),
               ],
@@ -502,7 +503,7 @@ class _AdminFeedbackDashboardScreenState
                   // Dismiss
                   TextButton.icon(
                     onPressed: () => _dismissFeedback(feedback),
-                    icon: const Icon(Icons.cancel),
+                    icon: const Icon(AppIcons.cancel),
                     label: const Text('Dismiss'),
                     style: TextButton.styleFrom(
                       foregroundColor: context.colors.error,

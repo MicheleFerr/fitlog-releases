@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class XPDisplayWidget extends ConsumerStatefulWidget {
   
@@ -149,7 +150,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.bolt,
+                      AppIcons.bolt,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),

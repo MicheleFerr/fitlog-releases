@@ -9,7 +9,7 @@
 ///
 /// Dependencies:
 /// - fl_chart: Line chart rendering
-/// - Chart Data Provider
+/// - Chart Data Domain Entity
 library;
 
 import 'package:fl_chart/fl_chart.dart';
@@ -42,122 +42,120 @@ class ExerciseMetricChart extends StatelessWidget {
       return _buildEmptyState(context);
     }
 
-    // ✅ FASE 3: RepaintBoundary per ottimizzare rendering del grafico
-    // Evita repaint inutili quando parent widget rebuilds
     return RepaintBoundary(
       child: Container(
-      height: 200,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: context.colors.outline.withValues(alpha: 0.2),
-        ),
-      ),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: _calculateInterval(),
-            getDrawingHorizontalLine: (value) => FlLine(
-              color: context.colors.outline.withValues(alpha: 0.1),
-              strokeWidth: 1,
-            ),
+        height: 200,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: context.colors.outline.withValues(alpha: 0.2),
           ),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 40,
-                getTitlesWidget: (value, meta) => Text(
-                  value.toStringAsFixed(0),
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colors.onSurface.withValues(alpha: 0.6),
-                  ),
-                ),
+        ),
+        child: LineChart(
+          LineChartData(
+            gridData: FlGridData(
+              show: true,
+              drawVerticalLine: false,
+              horizontalInterval: _calculateInterval(),
+              getDrawingHorizontalLine: (value) => FlLine(
+                color: context.colors.outline.withValues(alpha: 0.1),
+                strokeWidth: 1,
               ),
             ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 30,
-                interval: _calculateDateInterval(),
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index < 0 || index >= dataPoints.length) {
-                    return const SizedBox.shrink();
-                  }
-                  final date = dataPoints[index].date;
-                  return Text(
-                    DateFormat('dd/MM').format(date),
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, meta) => Text(
+                    value.toStringAsFixed(0),
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
-                  );
-                },
-              ),
-            ),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          ),
-          borderData: FlBorderData(show: false),
-          lineBarsData: [
-            LineChartBarData(
-              spots: dataPoints
-                  .asMap()
-                  .entries
-                  .map((e) => FlSpot(e.key.toDouble(), e.value.value))
-                  .toList(),
-              isCurved: true,
-              color: context.colors.primary,
-              barWidth: 3,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-                  radius: 4,
-                  color: context.colors.primary,
-                  strokeWidth: 2,
-                  strokeColor: context.colors.surface,
-                ),
-              ),
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  colors: [
-                    context.colors.primary.withValues(alpha: 0.3),
-                    context.colors.primary.withValues(alpha: 0.0),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ],
-          lineTouchData: LineTouchData(
-            touchTooltipData: LineTouchTooltipData(
-              getTooltipColor: (touchedSpot) => context.colors.primary,
-              getTooltipItems: (touchedSpots) => touchedSpots.map((spot) {
-                final index = spot.x.toInt();
-                if (index < 0 || index >= dataPoints.length) return null;
-
-                final date = dataPoints[index].date;
-                final value = spot.y;
-
-                return LineTooltipItem(
-                  '${DateFormat('dd/MM').format(date)}\n${value.toStringAsFixed(1)}${_getUnit()}',
-                  TextStyle(
-                    color: context.colors.onPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
                   ),
-                );
-              }).toList(),
+                ),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 30,
+                  interval: _calculateDateInterval(),
+                  getTitlesWidget: (value, meta) {
+                    final index = value.toInt();
+                    if (index < 0 || index >= dataPoints.length) {
+                      return const SizedBox.shrink();
+                    }
+                    final date = dataPoints[index].date;
+                    return Text(
+                      DateFormat('dd/MM').format(date),
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onSurface.withValues(alpha: 0.6),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            ),
+            borderData: FlBorderData(show: false),
+            lineBarsData: [
+              LineChartBarData(
+                spots: dataPoints
+                    .asMap()
+                    .entries
+                    .map((e) => FlSpot(e.key.toDouble(), e.value.value))
+                    .toList(),
+                isCurved: true,
+                color: context.colors.primary,
+                barWidth: 3,
+                dotData: FlDotData(
+                  show: true,
+                  getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
+                    radius: 4,
+                    color: context.colors.primary,
+                    strokeWidth: 2,
+                    strokeColor: context.colors.surface,
+                  ),
+                ),
+                belowBarData: BarAreaData(
+                  show: true,
+                  gradient: LinearGradient(
+                    colors: [
+                      context.colors.primary.withValues(alpha: 0.3),
+                      context.colors.primary.withValues(alpha: 0.0),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            ],
+            lineTouchData: LineTouchData(
+              touchTooltipData: LineTouchTooltipData(
+                getTooltipColor: (touchedSpot) => context.colors.primary,
+                getTooltipItems: (touchedSpots) => touchedSpots.map((spot) {
+                  final index = spot.x.toInt();
+                  if (index < 0 || index >= dataPoints.length) return null;
+
+                  final date = dataPoints[index].date;
+                  final value = spot.y;
+
+                  return LineTooltipItem(
+                    '${DateFormat('dd/MM').format(date)}\n${value.toStringAsFixed(1)}${_getUnit()}',
+                    TextStyle(
+                      color: context.colors.onPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }

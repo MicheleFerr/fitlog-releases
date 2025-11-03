@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WeeklyGoalsWidget extends ConsumerWidget {
   
@@ -79,7 +80,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          Icons.flag,
+                          AppIcons.flag,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
@@ -196,7 +197,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          Icons.flag,
+                          AppIcons.flag,
                           color: theme.colorScheme.onPrimary,
                           size: 24,
                         ),
@@ -450,7 +451,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: Icons.flag,
+                              icon: AppIcons.flag,
                               label: 'Obiettivo',
                               value: '$goal',
                               color: context.colors.success,

@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/admin_moderation_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/contribution_detail_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/create_contribution_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class CommunityHubScreen extends ConsumerStatefulWidget {
   const CommunityHubScreen({super.key});
@@ -253,7 +266,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
           data: (contributions) {
             if (contributions.isEmpty) {
               return _buildEmptyStateWithAction(
-                icon: Icons.edit_note,
+                icon: AppIcons.editNote,
                 title: 'Nessun Contributo',
                 subtitle: 'Non hai ancora contribuito alla community',
                 actionText: 'Come Contribuire',
@@ -308,22 +321,22 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatChip(
-                      icon: Icons.pending_actions,
+                      icon: AppIcons.pendingActions,
                       label: 'Pending',
                       value: stats.pendingCount.toString(),
-                      color: Colors.orange,
+                      color: context.warningColor,
                     ),
                     _buildStatChip(
                       icon: Icons.lightbulb,
                       label: 'Tips',
                       value: stats.tipCount.toString(),
-                      color: Colors.blue,
+                      color: context.infoColor,
                     ),
                     _buildStatChip(
                       icon: Icons.warning,
                       label: 'Warnings',
                       value: stats.warningCount.toString(),
-                      color: Colors.red,
+                      color: context.errorColor,
                     ),
                   ],
                 ),
@@ -480,15 +493,15 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     icon: const Icon(Icons.check_circle, size: 18),
                     label: const Text('Approva'),
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.green,
+                      foregroundColor: context.successColor,
                     ),
                   ),
                   TextButton.icon(
                     onPressed: () => _handleReject(contribution.id),
-                    icon: const Icon(Icons.cancel, size: 18),
+                    icon: const Icon(AppIcons.cancel, size: 18),
                     label: const Text('Rifiuta'),
                     style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
+                      foregroundColor: context.errorColor,
                     ),
                   ),
                 ],
@@ -547,7 +560,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, 'No reason provided'),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: context.errorColor),
             child: const Text('Rifiuta'),
           ),
         ],
@@ -884,7 +897,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   width: 200,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: context.colors.outline.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -893,7 +906,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   width: double.infinity,
                   height: 16,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: context.colors.outline.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -902,7 +915,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   width: 150,
                   height: 16,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: context.colors.outline.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -931,13 +944,13 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isNetworkError
-                    ? Colors.orange.withValues(alpha: 0.1)
+                    ? context.warningColor.withValues(alpha: 0.1)
                     : theme.colorScheme.error.withValues(alpha: 0.1),
               ),
               child: Icon(
-                isNetworkError ? Icons.wifi_off : Icons.error_outline,
+                isNetworkError ? AppIcons.wifiOff : Icons.error_outline,
                 size: 64,
-                color: isNetworkError ? Colors.orange : theme.colorScheme.error,
+                color: isNetworkError ? context.warningColor : theme.colorScheme.error,
               ),
             ),
             const SizedBox(height: 24),
@@ -1094,28 +1107,28 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
       case ContributionType.tip:
         return Icons.lightbulb_outline;
       case ContributionType.warning:
-        return Icons.warning_amber_rounded;
+        return AppIcons.warningAmberRounded;
       case ContributionType.correction:
-        return Icons.edit_note;
+        return AppIcons.editNote;
       case ContributionType.technique:
         return Icons.fitness_center;
       case ContributionType.variant:
         return Icons.alt_route;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
     }
   }
 
   Color _getTypeColor(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return Colors.blue;
+        return context.infoColor;
       case ContributionType.warning:
-        return Colors.orange;
+        return context.warningColor;
       case ContributionType.correction:
-        return Colors.purple;
+        return context.colors.primary;
       case ContributionType.technique:
-        return Colors.green;
+        return context.successColor;
       case ContributionType.variant:
         return Colors.teal;
       case ContributionType.translation:
@@ -1126,13 +1139,13 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
   Color _getStatusColor(ContributionStatus status) {
     switch (status) {
       case ContributionStatus.approved:
-        return Colors.green;
+        return context.successColor;
       case ContributionStatus.rejected:
-        return Colors.red;
+        return context.errorColor;
       case ContributionStatus.pending:
-        return Colors.orange;
+        return context.warningColor;
       case ContributionStatus.underReview:
-        return Colors.purple;
+        return context.colors.primary;
     }
   }
 

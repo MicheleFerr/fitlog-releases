@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: Add callback parameter
 
@@ -456,7 +457,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         if (_customizations[exerciseIndex].sets.length > 1)
           IconButton(
             onPressed: () => _removeSet(exerciseIndex, setIndex),
-            icon: const Icon(Icons.remove_circle_outline, size: 20),
+            icon: const Icon(AppIcons.removeCircleOutline, size: 20),
             tooltip: 'Rimuovi Set',
           ),
       ],

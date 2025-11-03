@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_det
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
   
@@ -274,7 +275,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.more_vert, size: 20),
+                  icon: const Icon(AppIcons.moreVert, size: 20),
                   onPressed: () => _showOptionsMenu(context),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -931,7 +932,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.checklist),
+                leading: const Icon(AppIcons.checklist),
                 title: Text(l10n.selectMetrics),
                 onTap: () {
                   Navigator.pop(context);
@@ -939,7 +940,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.restore),
+                leading: const Icon(AppIcons.restore),
                 title: Text(l10n.resetDefaults),
                 onTap: () {
                   Navigator.pop(context);

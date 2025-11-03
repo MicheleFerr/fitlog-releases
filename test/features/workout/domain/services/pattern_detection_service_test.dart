@@ -1,443 +1,392 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/pattern_detection_result.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_detection_service.dart';
-import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
-import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
-
-class MockHiveWorkoutDataSource extends Mock implements HiveWorkoutDataSource {}
 
 void main() {
   late PatternDetectionService service;
-  late MockHiveWorkoutDataSource mockDataSource;
 
   setUp(() {
-    mockDataSource = MockHiveWorkoutDataSource();
-    service = PatternDetectionService(hiveDataSource: mockDataSource);
+    service = PatternDetectionService();
   });
 
-  group('PatternDetectionService', () {
-    group('normalizeWorkoutType', () {
-      test('should normalize push-related keywords correctly', () {
-        expect(PatternDetectionService.normalizeWorkoutType('Push Day'), 'PUSH');
-        expect(PatternDetectionService.normalizeWorkoutType('Chest & Triceps'), 'PUSH');
-        expect(PatternDetectionService.normalizeWorkoutType('Petto e Tricipiti'), 'PUSH');
-        expect(PatternDetectionService.normalizeWorkoutType('Spinta'), 'PUSH');
-        expect(PatternDetectionService.normalizeWorkoutType('Bench Press Day'), 'PUSH');
-        expect(PatternDetectionService.normalizeWorkoutType('Shoulder Session'), 'PUSH');
+  group('PatternDetectionService - Basic Pattern Detection', () {
+    test('detects simple 3-workout pattern (Push-Pull-Legs)', () async {
+      // Arrange: Create 12 workouts = 4 complete cycles of [Push, Pull, Legs]
+      final workouts = _createWorkoutSequence([
+        'Push', 'Pull', 'Legs', // Cycle 1
+        'Push', 'Pull', 'Legs', // Cycle 2
+        'Push', 'Pull', 'Legs', // Cycle 3
+        'Push', 'Pull', 'Legs', // Cycle 4
+      ]);
 
-        // Variazioni creative/giocose
-        expect(PatternDetectionService.normalizeWorkoutType('Pushiamo'), 'PUSH');
-        expect(PatternDetectionService.normalizeWorkoutType('Spingiamo Forte'), 'PUSH');
-        expect(PatternDetectionService.normalizeWorkoutType('Premi e Basta'), 'PUSH');
-      });
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
 
-      test('should normalize pull-related keywords correctly', () {
-        expect(PatternDetectionService.normalizeWorkoutType('Pull Day'), 'PULL');
-        expect(PatternDetectionService.normalizeWorkoutType('Back & Biceps'), 'PULL');
-        expect(PatternDetectionService.normalizeWorkoutType('Schiena'), 'PULL');
-        expect(PatternDetectionService.normalizeWorkoutType('Tirata'), 'PULL');
-        expect(PatternDetectionService.normalizeWorkoutType('Deadlift Day'), 'PULL');
-        expect(PatternDetectionService.normalizeWorkoutType('Lat Pulldown Focus'), 'PULL');
-
-        // Variazioni creative/giocose
-        expect(PatternDetectionService.normalizeWorkoutType('Pulliamo'), 'PULL');
-        expect(PatternDetectionService.normalizeWorkoutType('Tiriamo Tutto'), 'PULL');
-      });
-
-      test('should normalize leg-related keywords correctly', () {
-        expect(PatternDetectionService.normalizeWorkoutType('Leg Day'), 'LEGS');
-        expect(PatternDetectionService.normalizeWorkoutType('Gambe'), 'LEGS');
-        expect(PatternDetectionService.normalizeWorkoutType('Squat Session'), 'LEGS');
-        expect(PatternDetectionService.normalizeWorkoutType('Quad & Hamstring'), 'LEGS');
-        expect(PatternDetectionService.normalizeWorkoutType('Glutes Focus'), 'LEGS');
-
-        // Variazioni creative/giocose
-        expect(PatternDetectionService.normalizeWorkoutType('Legghiamo'), 'LEGS');
-        expect(PatternDetectionService.normalizeWorkoutType('Gambizziamo'), 'LEGS');
-        expect(PatternDetectionService.normalizeWorkoutType('Gambettoni Power'), 'LEGS');
-      });
-
-      test('should normalize upper/lower body keywords correctly', () {
-        expect(PatternDetectionService.normalizeWorkoutType('Upper Body'), 'UPPER');
-        expect(PatternDetectionService.normalizeWorkoutType('Parte Superiore'), 'UPPER');
-        // Note: 'Lower Body' maps to 'LEGS' because 'legs' keyword is checked before 'lower'
-        expect(PatternDetectionService.normalizeWorkoutType('Lower Body'), 'LEGS');
-        expect(PatternDetectionService.normalizeWorkoutType('Parte Inferiore'), 'LOWER');
-      });
-
-      test('should normalize full body keywords correctly', () {
-        expect(PatternDetectionService.normalizeWorkoutType('Full Body'), 'FULL_BODY');
-        expect(PatternDetectionService.normalizeWorkoutType('Total Body'), 'FULL_BODY');
-        expect(PatternDetectionService.normalizeWorkoutType('HIIT Circuit'), 'FULL_BODY');
-        expect(PatternDetectionService.normalizeWorkoutType('CrossFit WOD'), 'FULL_BODY');
-        expect(PatternDetectionService.normalizeWorkoutType('Functional Training'), 'FULL_BODY');
-      });
-
-      test('should create custom normalized name for unmatched workouts', () {
-        expect(PatternDetectionService.normalizeWorkoutType('Custom Workout 123'),
-               'CUSTOM_WORKOUT_123');
-        expect(PatternDetectionService.normalizeWorkoutType('My Special Routine'),
-               'MY_SPECIAL_ROUTINE');
-      });
-
-      test('should handle null and empty strings', () {
-        expect(PatternDetectionService.normalizeWorkoutType(null), null);
-        expect(PatternDetectionService.normalizeWorkoutType(''), null);
-      });
+      // Assert
+      expect(result, isNotNull);
+      expect(result!.pattern, equals(['push', 'pull', 'legs']));
+      expect(result.repetitions, equals(4));
+      expect(result.confidence, greaterThanOrEqualTo(0.70));
+      expect(result.patternLength, equals(3));
     });
 
-    group('extractSequences', () {
-      test('should handle creative Italian names like Pushiamo/Pulliamo/Legghiamo', () async {
-        final now = DateTime.now();
-        final workouts = [
-          WorkoutModel(
-            id: '1',
-            name: 'Pushiamo',
-            startTime: now.subtract(const Duration(days: 6)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 6)),
-            updatedAt: now.subtract(const Duration(days: 6)),
-          ),
-          WorkoutModel(
-            id: '2',
-            name: 'Pulliamo',
-            startTime: now.subtract(const Duration(days: 5)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 5)),
-            updatedAt: now.subtract(const Duration(days: 5)),
-          ),
-          WorkoutModel(
-            id: '3',
-            name: 'Legghiamo',
-            startTime: now.subtract(const Duration(days: 4)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 4)),
-            updatedAt: now.subtract(const Duration(days: 4)),
-          ),
-          WorkoutModel(
-            id: '4',
-            name: 'Pushiamo Forte',
-            startTime: now.subtract(const Duration(days: 3)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 3)),
-            updatedAt: now.subtract(const Duration(days: 3)),
-          ),
-          WorkoutModel(
-            id: '5',
-            name: 'Pulliamo Tutto',
-            startTime: now.subtract(const Duration(days: 2)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 2)),
-            updatedAt: now.subtract(const Duration(days: 2)),
-          ),
-          WorkoutModel(
-            id: '6',
-            name: 'Legghiamo Power',
-            startTime: now.subtract(const Duration(days: 1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 1)),
-            updatedAt: now.subtract(const Duration(days: 1)),
-          ),
-        ];
+    test('detects 2-workout alternating pattern (Upper-Lower)', () async {
+      // Arrange: 10 workouts = 5 cycles of [Upper, Lower]
+      final workouts = _createWorkoutSequence([
+        'Upper', 'Lower',
+        'Upper', 'Lower',
+        'Upper', 'Lower',
+        'Upper', 'Lower',
+        'Upper', 'Lower',
+      ]);
 
-        when(() => mockDataSource.getWorkouts(
-          'user123',
-          startDate: any(named: 'startDate'),
-          limit: 100,
-        )).thenAnswer((_) async => workouts);
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
 
-        final sequences = await service.extractSequences(
-          userId: 'user123',
-          lookbackDays: 21,
-        );
+      // Assert
+      expect(result, isNotNull);
+      expect(result!.pattern, equals(['upper', 'lower']));
+      expect(result.repetitions, equals(5));
+      expect(result.confidence, greaterThanOrEqualTo(0.70));
+    });
 
-        // Should detect the pattern as PUSH → PULL → LEGS
-        expect(sequences, equals(['PUSH', 'PULL', 'LEGS', 'PUSH', 'PULL', 'LEGS']));
+    test('detects pattern with arbitrary names (franco-ciccio-paolo)', () async {
+      // Arrange: 9 workouts = 3 cycles
+      final workouts = _createWorkoutSequence([
+        'Franco', 'Ciccio', 'Paolo',
+        'Franco', 'Ciccio', 'Paolo',
+        'Franco', 'Ciccio', 'Paolo',
+      ]);
 
-        // Verify pattern detection works
-        final detector = SimplePatternDetector();
-        final pattern = detector.detectRepeatingPattern(sequences);
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
 
-        expect(pattern, isNotNull);
-        expect(pattern!.pattern, equals(['PUSH', 'PULL', 'LEGS']));
-        expect(pattern.confidence, equals(1.0)); // Perfect match
-      });
+      // Assert
+      expect(result, isNotNull);
+      expect(result!.pattern, equals(['franco', 'ciccio', 'paolo']));
+      expect(result.repetitions, equals(3));
+    });
 
-      test('should extract and normalize workout sequences', () async {
-        final now = DateTime.now();
-        final workouts = [
-          WorkoutModel(
-            id: '1',
-            name: 'Push Day',
-            startTime: now.subtract(const Duration(days: 6)),
-            endTime: now.subtract(const Duration(days: 6, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 6)),
-            updatedAt: now.subtract(const Duration(days: 6)),
-          ),
-          WorkoutModel(
-            id: '2',
-            name: 'Pull Day',
-            startTime: now.subtract(const Duration(days: 5)),
-            endTime: now.subtract(const Duration(days: 5, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 5)),
-            updatedAt: now.subtract(const Duration(days: 5)),
-          ),
-          WorkoutModel(
-            id: '3',
-            name: 'Leg Day',
-            startTime: now.subtract(const Duration(days: 4)),
-            endTime: now.subtract(const Duration(days: 4, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 4)),
-            updatedAt: now.subtract(const Duration(days: 4)),
-          ),
-          WorkoutModel(
-            id: '4',
-            name: 'Push Day',
-            startTime: now.subtract(const Duration(days: 3)),
-            endTime: now.subtract(const Duration(days: 3, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 3)),
-            updatedAt: now.subtract(const Duration(days: 3)),
-          ),
-          WorkoutModel(
-            id: '5',
-            name: 'Pull Day',
-            startTime: now.subtract(const Duration(days: 2)),
-            endTime: now.subtract(const Duration(days: 2, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 2)),
-            updatedAt: now.subtract(const Duration(days: 2)),
-          ),
-          WorkoutModel(
-            id: '6',
-            name: 'Leg Day',
-            startTime: now.subtract(const Duration(days: 1)),
-            endTime: now.subtract(const Duration(days: 1, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 1)),
-            updatedAt: now.subtract(const Duration(days: 1)),
-          ),
-        ];
+    test('detects 5-workout pattern (PPL + Upper + Lower)', () async {
+      // Arrange: 10 workouts = 2 cycles of 5-workout pattern
+      final workouts = _createWorkoutSequence([
+        'Push', 'Pull', 'Legs', 'Upper', 'Lower',
+        'Push', 'Pull', 'Legs', 'Upper', 'Lower',
+      ]);
 
-        when(() => mockDataSource.getWorkouts(
-          'user123',
-          startDate: any(named: 'startDate'),
-          limit: 100,
-        )).thenAnswer((_) async => workouts);
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
 
-        final sequences = await service.extractSequences(
-          userId: 'user123',
-          lookbackDays: 21,
-        );
-
-        expect(sequences, equals(['PUSH', 'PULL', 'LEGS', 'PUSH', 'PULL', 'LEGS']));
-      });
-
-      test('should return empty list when no workouts found', () async {
-        when(() => mockDataSource.getWorkouts(
-          'user123',
-          startDate: any(named: 'startDate'),
-          limit: 100,
-        )).thenAnswer((_) async => []);
-
-        final sequences = await service.extractSequences(
-          userId: 'user123',
-          lookbackDays: 21,
-        );
-
-        expect(sequences, isEmpty);
-      });
-
-      test('should filter out empty workout names', () async {
-        final now = DateTime.now();
-        final workouts = [
-          WorkoutModel(
-            id: '1',
-            name: 'Push Day',
-            startTime: now.subtract(const Duration(days: 2)),
-            endTime: now.subtract(const Duration(days: 2, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 2)),
-            updatedAt: now.subtract(const Duration(days: 2)),
-          ),
-          WorkoutModel(
-            id: '2',
-            name: '', // Empty name should be filtered
-            startTime: now.subtract(const Duration(days: 1)),
-            endTime: now.subtract(const Duration(days: 1, hours: -1)),
-            exercises: const [],
-            status: 'completed',
-            createdAt: now.subtract(const Duration(days: 1)),
-            updatedAt: now.subtract(const Duration(days: 1)),
-          ),
-        ];
-
-        when(() => mockDataSource.getWorkouts(
-          'user123',
-          startDate: any(named: 'startDate'),
-          limit: 100,
-        )).thenAnswer((_) async => workouts);
-
-        final sequences = await service.extractSequences(
-          userId: 'user123',
-          lookbackDays: 21,
-        );
-
-        expect(sequences, equals(['PUSH']));
-      });
+      // Assert
+      expect(result, isNotNull);
+      expect(result!.pattern.length, equals(5));
+      expect(result.repetitions, equals(2));
     });
   });
 
-  group('SimplePatternDetector', () {
-    late SimplePatternDetector detector;
+  group('PatternDetectionService - Edge Cases', () {
+    test('returns null when insufficient data (<6 workouts)', () async {
+      // Arrange: Only 5 workouts
+      final workouts = _createWorkoutSequence(['Push', 'Pull', 'Legs', 'Push', 'Pull']);
 
-    setUp(() {
-      detector = SimplePatternDetector();
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      expect(result, isNull);
     });
 
-    group('detectRepeatingPattern', () {
-      test('should detect simple PPL pattern with high confidence', () {
-        final sequence = ['PUSH', 'PULL', 'LEGS', 'PUSH', 'PULL', 'LEGS', 'PUSH', 'PULL', 'LEGS'];
+    test('returns null when no repeating pattern found', () async {
+      // Arrange: All unique workout names
+      final workouts = _createWorkoutSequence([
+        'Workout1', 'Workout2', 'Workout3',
+        'Workout4', 'Workout5', 'Workout6',
+        'Workout7', 'Workout8',
+      ]);
 
-        final result = detector.detectRepeatingPattern(sequence);
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
 
-        expect(result, isNotNull);
-        expect(result!.pattern, equals(['PUSH', 'PULL', 'LEGS']));
-        expect(result.confidence, greaterThanOrEqualTo(0.95));
-        expect(result.occurrences, equals(3));
-      });
-
-      test('should detect Upper/Lower pattern', () {
-        final sequence = ['UPPER', 'LOWER', 'UPPER', 'LOWER', 'UPPER', 'LOWER'];
-
-        final result = detector.detectRepeatingPattern(sequence);
-
-        expect(result, isNotNull);
-        expect(result!.pattern, equals(['UPPER', 'LOWER']));
-        expect(result.confidence, equals(1.0));
-        expect(result.occurrences, equals(3));
-      });
-
-      test('should detect pattern with minor variations', () {
-        final sequence = ['PUSH', 'PULL', 'LEGS', 'PUSH', 'PULL', 'LEGS', 'PUSH', 'FULL_BODY', 'LEGS'];
-
-        final result = detector.detectRepeatingPattern(sequence);
-
-        expect(result, isNotNull);
-        expect(result!.pattern, equals(['PUSH', 'PULL', 'LEGS']));
-        expect(result.confidence, greaterThanOrEqualTo(0.75));
-        expect(result.confidence, lessThan(1.0)); // Not perfect due to variation
-      });
-
-      test('should return null for sequences too short', () {
-        final sequence = ['PUSH', 'PULL', 'LEGS'];
-
-        final result = detector.detectRepeatingPattern(sequence);
-
-        expect(result, isNull);
-      });
-
-      test('should return null for empty sequences', () {
-        final result = detector.detectRepeatingPattern([]);
-
-        expect(result, isNull);
-      });
-
-      test('should return null for random sequences without pattern', () {
-        final sequence = ['PUSH', 'LEGS', 'PULL', 'UPPER', 'LOWER', 'FULL_BODY', 'CHEST'];
-
-        final result = detector.detectRepeatingPattern(sequence);
-
-        expect(result, isNull);
-      });
-
-      test('should detect longer patterns (4-day split)', () {
-        final sequence = [
-          'PUSH', 'PULL', 'LEGS', 'UPPER',
-          'PUSH', 'PULL', 'LEGS', 'UPPER',
-          'PUSH', 'PULL', 'LEGS', 'UPPER',
-        ];
-
-        final result = detector.detectRepeatingPattern(sequence);
-
-        expect(result, isNotNull);
-        expect(result!.pattern, equals(['PUSH', 'PULL', 'LEGS', 'UPPER']));
-        expect(result.confidence, equals(1.0));
-        expect(result.occurrences, equals(3));
-      });
-
-      test('should prefer shorter patterns when both are valid', () {
-        final sequence = ['A', 'B', 'A', 'B', 'A', 'B', 'A', 'B'];
-
-        final result = detector.detectRepeatingPattern(sequence);
-
-        expect(result, isNotNull);
-        expect(result!.pattern, equals(['A', 'B']));
-        expect(result.confidence, equals(1.0));
-      });
+      // Assert
+      expect(result, isNull);
     });
 
-    group('detectPatternWithRest', () {
-      test('should detect pattern including rest days', () {
-        final workoutSequence = ['PUSH', 'PULL', 'LEGS', 'PUSH', 'PULL', 'LEGS'];
-        final workoutDates = [
-          DateTime.now().subtract(const Duration(days: 13)),
-          DateTime.now().subtract(const Duration(days: 12)),
-          DateTime.now().subtract(const Duration(days: 10)), // 2 days rest
-          DateTime.now().subtract(const Duration(days: 9)),
-          DateTime.now().subtract(const Duration(days: 8)),
-          DateTime.now().subtract(const Duration(days: 6)), // 2 days rest
-        ];
+    test('handles minimum repetitions (2 cycles)', () async {
+      // Arrange: Pattern appears exactly 2 times
+      final workouts = _createWorkoutSequence([
+        'Push', 'Pull', 'Legs',
+        'Push', 'Pull', 'Legs',
+      ]);
 
-        final result = detector.detectPatternWithRest(workoutSequence, workoutDates);
+      // Act
+      final result = await service.detectPattern(
+        recentWorkouts: workouts,
+        minRepetitions: 2,
+      );
 
-        expect(result, isNotNull);
-        // Should detect pattern with rest days included
-        expect(result!.pattern.contains('REST'), isTrue);
-      });
+      // Assert: 2 complete cycles = valid
+      expect(result, isNotNull);
+    });
 
-      test('should limit rest days to max 3', () {
-        final workoutSequence = ['PUSH', 'PULL'];
-        final workoutDates = [
-          DateTime.now().subtract(const Duration(days: 10)),
-          DateTime.now().subtract(const Duration(days: 1)), // 9 days gap
-        ];
+    test('handles empty workout list', () async {
+      // Arrange
+      final workouts = <Workout>[];
 
-        final result = detector.detectPatternWithRest(workoutSequence, workoutDates);
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
 
-        // Even with 9 days gap, should only add max 3 REST days
-        final restCount = result?.pattern.where((p) => p == 'REST').length ?? 0;
-        expect(restCount, lessThanOrEqualTo(3));
-      });
-
-      test('should return null for mismatched sequences and dates', () {
-        final workoutSequence = ['PUSH', 'PULL', 'LEGS'];
-        final workoutDates = [
-          DateTime.now().subtract(const Duration(days: 2)),
-          DateTime.now().subtract(const Duration(days: 1)),
-          // Missing third date
-        ];
-
-        final result = detector.detectPatternWithRest(workoutSequence, workoutDates);
-
-        expect(result, isNull);
-      });
+      // Assert
+      expect(result, isNull);
     });
   });
+
+  group('PatternDetectionService - Confidence Calculation', () {
+    test('calculates higher confidence for more repetitions', () async {
+      // Arrange: 6 cycles vs 3 cycles
+      final manyReps = _createWorkoutSequence(
+        List.generate(18, (i) => ['Push', 'Pull', 'Legs'][i % 3]),
+      );
+      final fewReps = _createWorkoutSequence(
+        List.generate(9, (i) => ['Push', 'Pull', 'Legs'][i % 3]),
+      );
+
+      // Act
+      final resultMany = await service.detectPattern(recentWorkouts: manyReps);
+      final resultFew = await service.detectPattern(recentWorkouts: fewReps);
+
+      // Assert
+      expect(resultMany!.confidence, greaterThan(resultFew!.confidence));
+    });
+
+    test('confidence is capped at 0.95 (never 100%)', () async {
+      // Arrange: Perfect pattern with 10 cycles
+      final workouts = _createWorkoutSequence(
+        List.generate(30, (i) => ['Push', 'Pull', 'Legs'][i % 3]),
+      );
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      expect(result!.confidence, lessThanOrEqualTo(0.95));
+    });
+
+    test('confidence formula matches specification', () async {
+      // Arrange: 3 cycles of 3-workout pattern (9 workouts)
+      final workouts = _createWorkoutSequence(
+        List.generate(9, (i) => ['A', 'B', 'C'][i % 3]),
+      );
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      // Formula: base (0.5 + repetitions * 0.1) + coverage bonus + length bonus
+      // Base: 0.5 + (3 * 0.1) = 0.80
+      // Coverage: (9/9) * 0.2 = 0.20
+      // Length: (3 - 2) * 0.02 = 0.02
+      // Total: 0.80 + 0.20 + 0.02 = 1.02 → capped at 0.95
+      expect(result!.confidence, equals(0.95));
+      expect(result.repetitions, equals(3));
+    });
+  });
+
+  group('PatternDetectionService - Normalization', () {
+    test('normalizes workout names (case-insensitive matching)', () async {
+      // Arrange: Mixed case names
+      final workouts = _createWorkoutSequence([
+        'PUSH', 'pull', 'LeGs',
+        'Push', 'PULL', 'legs',
+        'pUsH', 'Pull', 'LEGS',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      expect(result, isNotNull);
+      expect(result!.pattern, equals(['push', 'pull', 'legs']));
+      expect(result.repetitions, equals(3));
+    });
+
+    test('handles extra whitespace in workout names', () async {
+      // Arrange: Names with extra spaces
+      final workouts = _createWorkoutSequence([
+        '  Push  ', ' Pull', 'Legs ',
+        'Push', '  Pull  ', '  Legs',
+        ' Push ', 'Pull ', ' Legs ',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      expect(result, isNotNull);
+      expect(result!.pattern, equals(['push', 'pull', 'legs']));
+    });
+  });
+
+  group('PatternDetectionService - Last Position Detection', () {
+    test('finds last position correctly when complete cycle', () async {
+      // Arrange: 3 complete cycles, last workout is "Legs" (position 2)
+      final workouts = _createWorkoutSequence([
+        'Push', 'Pull', 'Legs',
+        'Push', 'Pull', 'Legs',
+        'Push', 'Pull', 'Legs',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      expect(result!.lastPosition, equals(2)); // Legs is position 2 (0-indexed)
+      expect(result.predictNext(), equals('push')); // Next should wrap to Push
+    });
+
+    test('finds last position correctly when incomplete cycle', () async {
+      // Arrange: 2 complete cycles + partial (Push, Pull)
+      final workouts = _createWorkoutSequence([
+        'Push', 'Pull', 'Legs',
+        'Push', 'Pull', 'Legs',
+        'Push', 'Pull', // Incomplete cycle
+      ]);
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      expect(result!.lastPosition, equals(1)); // Pull is position 1
+      expect(result.predictNext(), equals('legs')); // Next should be Legs
+    });
+  });
+
+  group('PatternDetectionService - Pattern Selection', () {
+    test('prefers longer patterns over shorter ones with better score', () async {
+      // Arrange: Could be [A,B] repeated 5 times OR [A,B,A,B,A] repeated 2 times
+      final workouts = _createWorkoutSequence([
+        'A', 'B', 'A', 'B', 'A',
+        'A', 'B', 'A', 'B', 'A',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert
+      // Scoring: [A,B] = 5 reps * 10 + 2 length = 52
+      //          [A,B,A,B,A] = 2 reps * 10 + 5 length = 25
+      // Should prefer [A,B] with higher score
+      expect(result!.pattern.length, equals(2));
+      expect(result.repetitions, equals(5));
+    });
+
+    test('handles pattern with one violation (soft transition)', () async {
+      // Arrange: Mostly PPL but one "Rest Day" inserted
+      final workouts = _createWorkoutSequence([
+        'Push', 'Pull', 'Legs',
+        'Push', 'Pull', 'Legs',
+        'Push', 'Rest Day', 'Pull', 'Legs', // Violation here
+        'Push', 'Pull', 'Legs',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(recentWorkouts: workouts);
+
+      // Assert: Should still detect PPL pattern with slightly lower confidence
+      expect(result, isNotNull);
+      expect(result!.pattern, equals(['push', 'pull', 'legs']));
+      expect(result.confidence, lessThan(0.85)); // Penalty for violation
+    });
+  });
+
+  group('PatternDetectionService - Performance', () {
+    test('performance <100ms for 50 workouts', () async {
+      // Arrange: 50 workouts with complex pattern
+      final workouts = _createWorkoutSequence(
+        List.generate(50, (i) => ['Push', 'Pull', 'Legs', 'Upper', 'Lower'][i % 5]),
+      );
+
+      // Act
+      final stopwatch = Stopwatch()..start();
+      final result = await service.detectPattern(recentWorkouts: workouts);
+      stopwatch.stop();
+
+      // Assert
+      expect(result, isNotNull);
+      expect(stopwatch.elapsedMilliseconds, lessThan(100),
+          reason: 'Pattern detection should complete in <100ms');
+    });
+  });
+
+  group('PatternDetectionService - Custom Parameters', () {
+    test('respects minPatternLength parameter', () async {
+      // Arrange: Pattern of length 2, but require minimum 3
+      final workouts = _createWorkoutSequence([
+        'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(
+        recentWorkouts: workouts,
+        minPatternLength: 3,
+      );
+
+      // Assert
+      expect(result, isNull); // Should not find [A,B] pattern
+    });
+
+    test('respects maxPatternLength parameter', () async {
+      // Arrange: Pattern of length 8
+      final workouts = _createWorkoutSequence([
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(
+        recentWorkouts: workouts,
+        maxPatternLength: 5, // Limit to 5
+      );
+
+      // Assert
+      expect(result, isNull); // Should not find 8-workout pattern
+    });
+
+    test('respects minRepetitions parameter', () async {
+      // Arrange: Pattern repeats 2 times
+      final workouts = _createWorkoutSequence([
+        'Push', 'Pull', 'Legs',
+        'Push', 'Pull', 'Legs',
+      ]);
+
+      // Act
+      final result = await service.detectPattern(
+        recentWorkouts: workouts,
+        minRepetitions: 3, // Require 3 cycles
+      );
+
+      // Assert
+      expect(result, isNull); // Only 2 cycles, need 3
+    });
+  });
+}
+
+/// Helper function to create workout sequence from name list
+List<Workout> _createWorkoutSequence(List<String> names) {
+  final workouts = names.asMap().entries.map((entry) {
+    final index = entry.key;
+    final name = entry.value;
+    final startTime = DateTime.now().subtract(Duration(days: names.length - index));
+    return Workout(
+      id: 'workout_$index',
+      name: name,
+      startTime: startTime,
+      endTime: startTime.add(const Duration(minutes: 60)),
+      exercises: [], // Empty for testing
+      status: WorkoutStatus.completed,
+    );
+  }).toList();
+
+  // Reverse to get newest first (most recent workout at index 0)
+  return workouts.reversed.toList();
 }

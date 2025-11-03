@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EmptyMatchesView extends StatelessWidget {
 
@@ -93,7 +94,7 @@ class EmptyMatchesView extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: onSetupProfile,
-                      icon: const Icon(Icons.person_add),
+                      icon: const Icon(AppIcons.personAdd),
                       label: Text(l10n.getStarted),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.primary,

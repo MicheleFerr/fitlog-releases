@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal per visualizzare dettagli completi di un contributo
 class ContributionDetailModal extends ConsumerStatefulWidget {
@@ -187,7 +188,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
               Expanded(
                 child: FilledButton.tonalIcon(
                   onPressed: () => _handleReject(),
-                  icon: const Icon(Icons.cancel),
+                  icon: const Icon(AppIcons.cancel),
                   label: const Text('Rifiuta'),
                   style: FilledButton.styleFrom(
                     backgroundColor: context.colors.error.withValues(alpha: 0.2),
@@ -379,7 +380,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       margin: const EdgeInsets.all(16),
       child: OutlinedButton.icon(
         onPressed: () => _showReportDialog(),
-        icon: const Icon(Icons.flag_outlined),
+        icon: const Icon(AppIcons.flagOutlined),
         label: const Text('Segnala contributo'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,

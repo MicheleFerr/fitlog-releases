@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Rappresenta un widget configurabile nella home screen
 class HomeWidgetConfig {
@@ -25,9 +26,9 @@ class HomeWidgetConfig {
       Icons.play_arrow.codePoint: Icons.play_arrow,
       Icons.trending_up.codePoint: Icons.trending_up,
       Icons.people.codePoint: Icons.people,
-      Icons.apps.codePoint: Icons.apps,
+      AppIcons.apps.codePoint: AppIcons.apps,
       Icons.history.codePoint: Icons.history,
-      Icons.flag.codePoint: Icons.flag,
+      AppIcons.flag.codePoint: AppIcons.flag,
       Icons.format_quote.codePoint: Icons.format_quote,
       // Add more icons as needed
     };
@@ -36,7 +37,7 @@ class HomeWidgetConfig {
       id: json['id'],
       type: json['type'],
       title: json['title'],
-      icon: iconMap[json['icon']] ?? Icons.widgets, // Fallback to Icons.widgets
+      icon: iconMap[json['icon']] ?? AppIcons.widgets, // Fallback to AppIcons.widgets
       isVisible: json['isVisible'] ?? true,
       order: json['order'],
       settings: json['settings'],
@@ -195,7 +196,7 @@ class DefaultHomeWidgets {
       id: 'quick_actions',
       type: HomeWidgetType.quickActions,
       title: 'Azioni Rapide',
-      icon: Icons.apps,
+      icon: AppIcons.apps,
       order: 5,
       allowResize: false, // Cannot be resized
       size: WidgetSize.large,
@@ -213,7 +214,7 @@ class DefaultHomeWidgets {
       id: 'weekly_goals',
       type: HomeWidgetType.weeklyGoals,
       title: 'Obiettivi Settimanali',
-      icon: Icons.flag,
+      icon: AppIcons.flag,
       order: 7,
       isVisible: false,
       size: WidgetSize.small,
@@ -250,7 +251,7 @@ class DefaultHomeWidgets {
       id: 'weekly_goals_new',
       type: HomeWidgetType.weeklyGoalsNew,
       title: 'Obiettivi',
-      icon: Icons.flag,
+      icon: AppIcons.flag,
       order: 11,
       isVisible: true,
       size: WidgetSize.small,

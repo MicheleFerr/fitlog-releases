@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FeedbackDetailScreen extends ConsumerStatefulWidget {
 
@@ -152,7 +153,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                         Expanded(
                           child: _buildInfoChip(
                             context,
-                            icon: Icons.priority_high,
+                            icon: AppIcons.priorityHigh,
                             label: severityLabel,
                             color: severityColor,
                           ),
@@ -316,7 +317,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   _buildActionButton(
                     context,
                     label: l10n.feedbackActionDismiss,
-                    icon: Icons.cancel,
+                    icon: AppIcons.cancel,
                     color: Colors.grey,
                     onTap: () => _updateStatus('DISMISSED'),
                   ),

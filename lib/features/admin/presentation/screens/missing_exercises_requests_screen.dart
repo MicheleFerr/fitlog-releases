@@ -303,7 +303,7 @@ class _MissingExercisesRequestsScreenState
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: () => _markAsCompleted(request),
-                  icon: const Icon(Icons.done_all),
+                  icon: const Icon(AppIcons.doneAll),
                   label: const Text('Segna come Completato'),
                 ),
               ),
@@ -502,13 +502,13 @@ class _MissingExercisesRequestsScreenState
   IconData _getStatusIcon(RequestStatus status) {
     switch (status) {
       case RequestStatus.pending:
-        return Icons.hourglass_empty;
+        return AppIcons.hourglassEmpty;
       case RequestStatus.approved:
         return AppIcons.completeOutline;
       case RequestStatus.rejected:
         return AppIcons.cancelOutlined;
       case RequestStatus.completed:
-        return Icons.done_all;
+        return AppIcons.doneAll;
     }
   }
 

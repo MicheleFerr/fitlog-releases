@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebas
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminStatsCard extends ConsumerWidget {
   const AdminStatsCard({super.key});
@@ -162,7 +163,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: Icons.cancel,
+                icon: AppIcons.cancel,
                 title: l10n.rejectedCorrections,
                 value: stats.rejectedCorrections.toString(),
                 color: context.colors.error,
@@ -183,7 +184,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: Icons.update,
+                icon: AppIcons.update,
                 title: l10n.lastUpdate,
                 value: _formatDate(stats.lastUpdate),
                 color: context.colors.tertiary,

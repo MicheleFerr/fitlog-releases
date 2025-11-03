@@ -381,9 +381,9 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
       case ExerciseCategory.shoulders:
         return Icons.accessibility_new;
       case ExerciseCategory.back:
-        return Icons.sports_gymnastics;
+        return AppIcons.sportsGymnastics;
       case ExerciseCategory.arms:
-        return Icons.sports_mma;
+        return AppIcons.sportsMma;
       case ExerciseCategory.legs:
         return Icons.directions_run;
       case ExerciseCategory.abs:

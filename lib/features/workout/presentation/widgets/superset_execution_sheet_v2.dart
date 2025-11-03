@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// ⚠️ DEPRECATED: Use SupersetSequentialExecutionSheet instead
 ///
@@ -209,7 +210,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                           }
                         : null,
                     icon: Icon(
-                      Icons.arrow_back_ios,
+                      AppIcons.arrowBackIos,
                       color: _currentPage > 0 
                           ? context.colors.primary
                           : context.colors.outline.withValues(alpha: 0.3),

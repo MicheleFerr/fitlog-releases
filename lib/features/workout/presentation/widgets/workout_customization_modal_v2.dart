@@ -133,7 +133,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
               child: Row(
                 children: [
                   Icon(
-                    Icons.tune,
+                    AppIcons.tune,
                     color: theme.colorScheme.primary,
                     size: 28,
                   ),
@@ -219,7 +219,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   _buildToggleCard(
                     theme,
                     l10n,
-                    icon: Icons.unfold_less,
+                    icon: AppIcons.unfoldLess,
                     iconColor: Colors.indigo,
                     title: l10n.autoCollapseTitle,
                     subtitle: l10n.autoCollapseDescription,
@@ -367,7 +367,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
                   _buildToggleCard(
                     theme,
                     l10n,
-                    icon: Icons.more_vert,
+                    icon: AppIcons.moreVert,
                     iconColor: context.colors.error,
                     title: l10n.advancedMenuTitle,
                     subtitle: l10n.advancedMenuDescription,

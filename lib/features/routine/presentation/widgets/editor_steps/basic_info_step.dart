@@ -21,6 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Step 1: Basic information form
 class BasicInfoStep extends ConsumerStatefulWidget {
@@ -85,7 +86,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               decoration: InputDecoration(
                 labelText: context.l10n.routineNameLabel,
                 hintText: context.l10n.routineNameHint,
-                prefixIcon: const Icon(Icons.label),
+                prefixIcon: const Icon(AppIcons.label),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -196,11 +197,11 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
 
   Widget _buildTypeSelector(BuildContext context, RoutineType selectedType) {
     final types = [
-      (RoutineType.weekly, Icons.calendar_view_week, context.l10n.routineTypeWeekly, context.l10n.routineTypeWeeklyDuration),
+      (RoutineType.weekly, AppIcons.calendarViewWeek, context.l10n.routineTypeWeekly, context.l10n.routineTypeWeeklyDuration),
       (RoutineType.monthly, Icons.calendar_month, context.l10n.routineTypeMonthly, context.l10n.routineTypeMonthlyDuration),
-      (RoutineType.bimonthly, Icons.date_range, context.l10n.routineTypeBimonthly, context.l10n.routineTypeBimonthlyDuration),
-      (RoutineType.semester, Icons.event_note, context.l10n.routineTypeSemester, context.l10n.routineTypeSemesterDuration),
-      (RoutineType.custom, Icons.tune, context.l10n.routineTypeCustom, context.l10n.routineTypeCustomDuration),
+      (RoutineType.bimonthly, AppIcons.dateRange, context.l10n.routineTypeBimonthly, context.l10n.routineTypeBimonthlyDuration),
+      (RoutineType.semester, AppIcons.eventNote, context.l10n.routineTypeSemester, context.l10n.routineTypeSemesterDuration),
+      (RoutineType.custom, AppIcons.tune, context.l10n.routineTypeCustom, context.l10n.routineTypeCustomDuration),
     ];
 
     return Wrap(

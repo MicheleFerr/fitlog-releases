@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -141,7 +142,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
-                                : const Icon(Icons.g_mobiledata, size: 24),
+                                : const Icon(AppIcons.gMobiledata, size: 24),
                             label: Text(context.l10n.continueWithGoogle),
                           ),
                         ),
@@ -324,7 +325,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 // Google Sign Up Button
                 OutlinedButton.icon(
                   onPressed: authController.isLoading ? null : _handleGoogleSignUp,
-                  icon: const Icon(Icons.g_mobiledata, size: 24),
+                  icon: const Icon(AppIcons.gMobiledata, size: 24),
                   label: Text(context.l10n.signUpWithGoogle),
                 ),
                 const SizedBox(height: 16),

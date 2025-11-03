@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutShareSummary extends ConsumerStatefulWidget {
   
@@ -408,7 +409,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                               theme: theme,
                             ),
                             _buildImageButton(
-                              icon: Icons.photo_library,
+                              icon: AppIcons.photoLibrary,
                               label: 'Choose Photo',
                               onTap: () => _pickImage(ImageSource.gallery),
                               theme: theme,

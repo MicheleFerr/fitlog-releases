@@ -139,7 +139,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.video_library_outlined,
+                  AppIcons.videoLibraryOutlined,
                   size: 64,
                   color: colorScheme.onSurface.withValues(alpha: 0.4),
                 ),

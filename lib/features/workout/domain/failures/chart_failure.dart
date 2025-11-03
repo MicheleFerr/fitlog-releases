@@ -2,80 +2,83 @@
 ///
 /// 📁 Layer: domain/failures
 /// 🎯 Feature: workout
-/// 🔧 Type: failure hierarchy (Chart Data)
-/// 🌍 Localization: N/A (Error codes)
+/// 🔧 Type: failure (error handling)
+/// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
 ///
-/// Dependencies:
-/// - fpdart: Either pattern
+/// Dependencies: None (pure domain)
 library;
 
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'chart_failure.freezed.dart';
-
-/// Base class per errori chart data
+/// Chart failure sealed class
 ///
-/// Freezed per type-safety e pattern matching.
-/// Usato con Either<ChartFailure, T> per error handling funzionale.
-///
-/// Gerarchia:
-/// - DataNotFound: Nessun dato disponibile
-/// - InvalidInput: Input non valido (nome esercizio vuoto, metrica sconosciuta)
-/// - CacheFailure: Errore cache/storage
-/// - ServerFailure: Errore remoto (Firestore)
-/// - UnknownFailure: Errore generico/inatteso
-@freezed
-class ChartFailure with _$ChartFailure {
-  /// Nessun dato disponibile per parametri specificati
-  ///
-  /// Scenarios:
-  /// - Esercizio mai eseguito
-  /// - Periodo senza allenamenti
-  /// - Metrica non tracciata
-  const factory ChartFailure.dataNotFound({
-    @Default('No data found for chart') String message,
-  }) = DataNotFound;
+/// Rappresenta tutti i possibili errori che possono verificarsi
+/// durante il caricamento dei dati chart
+sealed class ChartFailure {
+  final String message;
+  final Object? error;
+  final StackTrace? stackTrace;
 
-  /// Input non valido
-  ///
-  /// Scenarios:
-  /// - Exercise name vuoto
-  /// - Metrica non supportata
-  /// - Days <= 0
+  const ChartFailure({
+    required this.message,
+    this.error,
+    this.stackTrace,
+  });
+
+  /// Invalid input parameters
   const factory ChartFailure.invalidInput({
-    @Default('Invalid input parameters') String message,
+    required String message,
     String? details,
-  }) = InvalidInput;
+  }) = ChartInvalidInputFailure;
 
-  /// Errore cache/local storage
-  ///
-  /// Scenarios:
-  /// - Hive read/write error
-  /// - Corrupted data
-  const factory ChartFailure.cacheFailure({
-    @Default('Cache error') String message,
-    Object? error,
-  }) = CacheFailure;
-
-  /// Errore server/Firestore
-  ///
-  /// Scenarios:
-  /// - Network error
-  /// - Permission denied
-  /// - Firestore timeout
+  /// Server/Firebase error
   const factory ChartFailure.serverFailure({
-    @Default('Server error') String message,
-    Object? error,
-  }) = ServerFailure;
-
-  /// Errore generico/inatteso
-  ///
-  /// Fallback per errori non categorizzati
-  const factory ChartFailure.unknown({
-    @Default('Unknown error occurred') String message,
+    required String message,
     Object? error,
     StackTrace? stackTrace,
-  }) = UnknownFailure;
+  }) = ChartServerFailure;
+
+  /// Unknown/unexpected error
+  const factory ChartFailure.unknown({
+    required String message,
+    Object? error,
+    StackTrace? stackTrace,
+  }) = ChartUnknownFailure;
+}
+
+/// Invalid input failure (validation error)
+final class ChartInvalidInputFailure extends ChartFailure {
+  final String? details;
+
+  const ChartInvalidInputFailure({
+    required super.message,
+    this.details,
+  }) : super(error: null, stackTrace: null);
+
+  @override
+  String toString() => 'ChartInvalidInputFailure(message: $message, details: $details)';
+}
+
+/// Server failure (network, Firebase, etc.)
+final class ChartServerFailure extends ChartFailure {
+  const ChartServerFailure({
+    required super.message,
+    super.error,
+    super.stackTrace,
+  });
+
+  @override
+  String toString() => 'ChartServerFailure(message: $message, error: $error)';
+}
+
+/// Unknown failure (catch-all)
+final class ChartUnknownFailure extends ChartFailure {
+  const ChartUnknownFailure({
+    required super.message,
+    super.error,
+    super.stackTrace,
+  });
+
+  @override
+  String toString() => 'ChartUnknownFailure(message: $message, error: $error)';
 }

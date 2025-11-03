@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Volume Heatmap - Shows training volume distribution over time
 class VolumeHeatmap extends StatelessWidget {
@@ -50,7 +51,7 @@ class VolumeHeatmap extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.grid_on,
+                    AppIcons.gridOn,
                     size: 48,
                     color: context.colors.onSurface.withValues(alpha: 0.3),
                   ),

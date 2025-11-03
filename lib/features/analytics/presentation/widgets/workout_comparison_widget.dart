@@ -563,9 +563,9 @@ class DetailedWorkoutComparison extends ConsumerWidget {
                 const Spacer(),
                 Icon(
                   isPositive
-                      ? Icons.arrow_upward
+                      ? AppIcons.arrowUpward
                       : isNegative
-                          ? Icons.arrow_downward
+                          ? AppIcons.arrowDownward
                           : Icons.remove,
                   color: color,
                   size: 16,

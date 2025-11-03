@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercis
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/firebase_init_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminQuickActions extends ConsumerWidget {
   const AdminQuickActions({super.key});
@@ -61,7 +62,7 @@ class AdminQuickActions extends ConsumerWidget {
               children: [
                 // Gestione database esercizi
                 _QuickActionCard(
-                  icon: Icons.storage,
+                  icon: AppIcons.storage,
                   title: l10n.databaseManager,
                   subtitle: l10n.manageExercisesDescription,
                   color: Theme.of(context).colorScheme.primary,
@@ -70,7 +71,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Exercise Feedback (NUOVO)
                 _QuickActionCardWithBadge(
-                  icon: Icons.flag_circle,
+                  icon: AppIcons.flagCircle,
                   title: 'Exercise Feedback',
                   subtitle: 'Segnalazioni e bug utenti',
                   color: context.colors.tertiary,
@@ -98,7 +99,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Fix dati mancanti
                 _QuickActionCard(
-                  icon: Icons.build_circle,
+                  icon: AppIcons.buildCircle,
                   title: l10n.fixMissingData,
                   subtitle: l10n.fixMissingDataDescription,
                   color: context.colors.primary,
@@ -220,7 +221,7 @@ class AdminQuickActions extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.build_circle,
+              AppIcons.buildCircle,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),

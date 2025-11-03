@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exe
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({
@@ -189,7 +190,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ButtonSegment<ChartViewMode>(
           value: ChartViewMode.separated,
           label: Text(context.l10n.separatedView),
-          icon: Icon(Icons.stacked_line_chart),
+          icon: Icon(AppIcons.stackedLineChart),
         ),
       ],
       selected: {_viewMode},

@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:async';
 
 class RestPauseExecutionSheet extends ConsumerStatefulWidget {
@@ -568,7 +569,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                         ),
                       ),
                       Icon(
-                        Icons.arrow_drop_down,
+                        AppIcons.arrowDropDown,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ],
@@ -708,7 +709,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                   ),
                                   if (!isCompleted && !isLocked && !_isResting)
                                     Icon(
-                                      Icons.arrow_drop_down,
+                                      AppIcons.arrowDropDown,
                                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                                     ),
                                 ],

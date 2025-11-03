@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_e
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
 ///
@@ -355,7 +356,7 @@ class _SupersetSequentialExecutionSheetState
                   child: Row(
                     children: [
                       Icon(
-                        isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+                        isCompleted ? Icons.check_circle : AppIcons.radioButtonUnchecked,
                         color: isCompleted
                             ? context.colors.secondary
                             : context.colors.outline,

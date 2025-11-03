@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget for celebrating personal record achievements
 class PRCelebrationWidget extends ConsumerWidget {
@@ -205,7 +206,7 @@ class PRCelebrationWidget extends ConsumerWidget {
       case PRType.volume:
         return Icons.trending_up;
       case PRType.oneRM:
-        return Icons.stars;
+        return AppIcons.stars;
       case PRType.totalSets:
         return Icons.format_list_numbered;
       case PRType.duration:

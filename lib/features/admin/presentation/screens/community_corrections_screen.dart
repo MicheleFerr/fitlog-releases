@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/widgets/correctio
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityCorrectionsScreen extends ConsumerWidget {
   const CommunityCorrectionsScreen({super.key});
@@ -100,7 +101,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
               _buildSectionHeader(
                 context,
                 l10n.pendingCorrections,
-                Icons.pending,
+                AppIcons.pending,
                 context.colors.secondary,
                 pendingCorrections.length,
               ),
@@ -148,7 +149,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.pending,
             value: pending.toString(),
-            icon: Icons.pending,
+            icon: AppIcons.pending,
             color: context.colors.secondary,
           ),
         ),
@@ -166,7 +167,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.rejected,
             value: rejected.toString(),
-            icon: Icons.cancel,
+            icon: AppIcons.cancel,
             color: context.colors.error,
           ),
         ),
@@ -256,7 +257,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.inbox,
+            AppIcons.inbox,
             size: 64,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),

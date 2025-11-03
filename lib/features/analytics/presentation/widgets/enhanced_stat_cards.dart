@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/enhanced_statistics_dashboard.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Stat Card with Material 3 styling
 class EnhancedStatCard extends StatelessWidget {
@@ -427,7 +428,7 @@ class EnhancedStreakCard extends StatelessWidget {
                 context,
                 '${streakData.weeklyGoal}/${streakData.weeklyGoalTarget}',
                 'Weekly Goal',
-                Icons.flag,
+                AppIcons.flag,
                 Colors.green,
               ),
             ],

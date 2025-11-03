@@ -8,6 +8,10 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_chart_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_metric_chart.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/multi_metric_chart.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_point.dart';
 
 /// Tab Sommario: mostra stats, grafico, record personali e livello di forza
 class ExerciseSummaryTab extends ConsumerStatefulWidget {
@@ -25,6 +29,9 @@ class ExerciseSummaryTab extends ConsumerStatefulWidget {
 class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   // Chip selezionato per il grafico: Peso, Reps, RPE, TUT
   String _selectedChip = 'Peso';
+
+  // Metriche selezionate per il grafico multi-metrica (default: tutte)
+  final List<String> _selectedMultiMetrics = ['Peso', 'Reps', 'RPE', 'TUT'];
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +53,13 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
             const SizedBox(height: 24),
 
-            // Grafico ultimi 3 mesi con chips (placeholder)
+            // Grafico ultimi 3 mesi con chips (singola metrica)
             _buildChartSection(),
+
+            const SizedBox(height: 24),
+
+            // Grafico multi-metrica overlay
+            _buildMultiMetricChartSection(),
 
             const SizedBox(height: 24),
 
@@ -119,8 +131,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
         const SizedBox(height: 16),
 
-        // Grafico (placeholder)
-        _buildChartPlaceholder(),
+        // Grafico con dati reali
+        _buildChart(),
       ],
     );
   }
@@ -154,35 +166,165 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  Widget _buildChartPlaceholder() {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: context.colors.outline.withValues(alpha: 0.2),
+  /// Build sezione grafico multi-metrica con overlay
+  Widget _buildMultiMetricChartSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.multiMetricComparison,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.onSurface,
+          ),
         ),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.show_chart,
-              size: 48,
-              color: context.colors.onSurface.withValues(alpha: 0.3),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Grafico $_selectedChip',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurface.withValues(alpha: 0.5),
+        const SizedBox(height: 12),
+
+        // Build multi-metric chart
+        _buildMultiMetricChart(),
+      ],
+    );
+  }
+
+  /// Build grafico multi-metrica con dati da tutti i metric provider
+  Widget _buildMultiMetricChart() {
+    // Fetch data for all selected metrics
+    final Map<String, AsyncValue<List<ChartDataPoint>>> metricDataMap = {};
+
+    for (final metric in _selectedMultiMetrics) {
+      final params = ChartDataParams(
+        exerciseName: widget.exerciseName,
+        metric: metric,
+        days: 90,
+      );
+      metricDataMap[metric] = ref.watch(exerciseChartCleanProvider(params));
+    }
+
+    // Check if all data is loaded
+    final allLoaded = metricDataMap.values.every((asyncValue) => asyncValue.hasValue);
+    final anyError = metricDataMap.values.any((asyncValue) => asyncValue.hasError);
+    final anyLoading = metricDataMap.values.any((asyncValue) => asyncValue.isLoading);
+
+    if (anyLoading) {
+      return Container(
+        height: 250,
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(child: LoadingIndicator()),
+      );
+    }
+
+    if (anyError) {
+      return Container(
+        height: 250,
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: context.colors.outline.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: context.colors.error.withValues(alpha: 0.5),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                context.l10n.errorLoadingData,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.error,
+                ),
+              ),
+            ],
+          ),
         ),
+      );
+    }
+
+    if (allLoaded) {
+      // Extract data from AsyncValue
+      final Map<String, List<ChartDataPoint>> dataByMetric = {};
+      metricDataMap.forEach((metric, asyncValue) {
+        dataByMetric[metric] = asyncValue.value ?? [];
+      });
+
+      return MultiMetricChart(
+        dataByMetric: dataByMetric,
+        selectedMetrics: _selectedMultiMetrics,
+      );
+    }
+
+    // Fallback (should not reach here)
+    return const SizedBox.shrink();
+  }
+
+  /// Build grafico con dati reali dal provider
+  Widget _buildChart() {
+    // Crea parametri per chart data provider
+    final params = ChartDataParams(
+      exerciseName: widget.exerciseName,
+      metric: _selectedChip,
+      days: 90, // Ultimi 3 mesi
+    );
+
+    // Ottieni chart data dal provider
+    final chartDataAsync = ref.watch(exerciseChartCleanProvider(params));
+
+    return chartDataAsync.when(
+      data: (dataPoints) {
+        // Render chart widget con dati
+        return ExerciseMetricChart(
+          dataPoints: dataPoints,
+          metric: _selectedChip,
+        );
+      },
+      loading: () => Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(child: LoadingIndicator()),
       ),
+      error: (error, stack) {
+        // Show error state
+        return Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: context.colors.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: context.colors.error.withValues(alpha: 0.5),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  context.l10n.errorLoadingData,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.error,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

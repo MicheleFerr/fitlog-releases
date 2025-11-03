@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_e
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing muscle group balance analysis
 class MuscleBalanceWidget extends StatelessWidget {
@@ -162,7 +163,7 @@ class MuscleBalanceWidget extends StatelessWidget {
       child: Row(
         children: [
           const Icon(
-            Icons.warning_amber,
+            AppIcons.warningAmber,
             color: context.colors.secondary,
             size: 20,
           ),

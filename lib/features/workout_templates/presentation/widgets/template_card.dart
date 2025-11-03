@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplateCard extends StatelessWidget {
   
@@ -285,11 +286,11 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.endurance:
         return Icons.directions_run;
       case TemplateCategory.powerlifting:
-        return Icons.sports_martial_arts;
+        return AppIcons.sportsMartialArts;
       case TemplateCategory.bodybuilding:
         return Icons.accessibility_new;
       case TemplateCategory.crossfit:
-        return Icons.sports;
+        return AppIcons.sports;
       case TemplateCategory.calisthenics:
         return Icons.accessibility;
       case TemplateCategory.cardio:
@@ -297,7 +298,7 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.mixed:
         return Icons.shuffle;
       case TemplateCategory.custom:
-        return Icons.tune;
+        return AppIcons.tune;
     }
   }
 }

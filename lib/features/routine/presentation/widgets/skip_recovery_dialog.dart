@@ -162,7 +162,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
             Row(
               children: [
                 Icon(
-                  Icons.restore,
+                  AppIcons.restore,
                   color: context.colors.primary,
                   size: 28,
                 ),
@@ -356,7 +356,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
               Row(
                 children: [
                   Icon(
-                    isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                    isSelected ? AppIcons.radioButtonChecked : AppIcons.radioButtonUnchecked,
                     size: 20,
                     color: isSelected
                         ? context.colors.primary
@@ -401,7 +401,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
           child: Row(
             children: [
               Icon(
-                Icons.event_available,
+                AppIcons.eventAvailable,
                 size: 20,
                 color: context.colors.primary,
               ),

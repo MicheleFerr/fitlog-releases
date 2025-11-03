@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget per RPE Live Activity senza ombreggiature
 class RPELiveActivityWidget extends ConsumerStatefulWidget {
@@ -431,8 +435,8 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.blue.shade600,
-            Colors.purple.shade600,
+            context.infoColor,
+            context.colors.primary,
           ],
         ),
         borderRadius: BorderRadius.circular(16),

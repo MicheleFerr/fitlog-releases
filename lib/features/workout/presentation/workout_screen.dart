@@ -164,7 +164,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         );
                       }
                     },
-                    icon: Icon(_isReorderMode ? Icons.done : Icons.swap_vert),
+                    icon: Icon(_isReorderMode ? AppIcons.done : Icons.swap_vert),
                     tooltip: _isReorderMode ? context.l10n.confirmReorder : context.l10n.reorderExercises,
                   ),
                 if (isActive)
@@ -175,7 +175,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   ),
                 IconButton(
                   onPressed: () => _showSettingsMenu(context, ref),
-                  icon: const Icon(Icons.more_vert),
+                  icon: const Icon(AppIcons.moreVert),
                 ),
               ],
             ),
@@ -213,14 +213,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             // Mostra ExpandableFAB quando non c'è workout attivo, DraggableActionButton altrimenti
             if (!hasWorkout)
               ExpandableFAB(
-                icon: Icons.note_add,
+                icon: AppIcons.noteAdd,
                 label: AppLocalizations.of(context).createTemplate,
                 options: [
                   ExpandableFabOption(
                     icon: Icons.flash_on,
                     label: context.l10n.startNow,
                     onTap: () => _startQuickWorkout(context, ref),
-                    backgroundColor: Colors.green,
+                    backgroundColor: context.successColor,
                     foregroundColor: Colors.white,
                   ),
                   ExpandableFabOption(
@@ -258,7 +258,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         ),
                       );
                     },
-                    color: Colors.orange,
+                    color: context.warningColor,
                   ),
                   DraggableActionOption(
                     icon: Icons.save,
@@ -270,7 +270,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         context.l10n.saveTemplateFunctionComingSoon,
                       );
                     },
-                    color: Colors.blue,
+                    color: context.infoColor,
                   ),
                 ],
               ),
@@ -294,7 +294,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              Icon(Icons.error_outline, size: 64, color: context.errorColor),
               const SizedBox(height: 16),
               Text(context.l10n.errorOccurred),
               const SizedBox(height: 8),
@@ -332,7 +332,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   text: context.l10n.yourTemplates,
                 ),
                 Tab(
-                  icon: const Icon(Icons.stars),
+                  icon: const Icon(AppIcons.stars),
                   text: context.l10n.predefinedWorkouts,
                 ),
               ],
@@ -402,7 +402,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              isCustomTab ? Icons.note_add : Icons.inventory_2_outlined,
+              isCustomTab ? AppIcons.noteAdd : Icons.inventory_2_outlined,
               size: 64,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
@@ -597,7 +597,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: context.colors.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -661,10 +661,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
+                  color: context.successContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.play_arrow, color: Colors.green),
+                child: Icon(Icons.play_arrow, color: context.successColor),
               ),
               title: Text(AppLocalizations.of(modalContext).startWorkout, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).startWorkoutWithTemplate),
@@ -680,10 +680,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.blue.withValues(alpha: 0.1),
+                    color: context.infoContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.edit, color: Colors.blue),
+                  child: Icon(Icons.edit, color: context.infoColor),
                 ),
                 title: Text(AppLocalizations.of(modalContext).editTemplate, style: const TextStyle(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).editTemplateSubtitle),
@@ -699,10 +699,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.orange.withValues(alpha: 0.1),
+                  color: context.warningContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.share, color: Colors.orange),
+                child: Icon(Icons.share, color: context.warningColor),
               ),
               title: Text(AppLocalizations.of(modalContext).sharePdf, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).sharePdfSubtitle),
@@ -717,10 +717,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.purple.withValues(alpha: 0.1),
+                  color: context.colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.print, color: Colors.purple),
+                child: Icon(Icons.print, color: context.colors.primary),
               ),
               title: Text(AppLocalizations.of(modalContext).print, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).printTemplate),
@@ -736,10 +736,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
+                    color: context.errorContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.delete, color: Colors.red),
+                  child: Icon(Icons.delete, color: context.errorColor),
                 ),
                 title: Text(AppLocalizations.of(modalContext).deleteTemplate, style: const TextStyle(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).deleteTemplateSubtitle),
@@ -835,10 +835,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         context: context,
         builder: (context) => AlertDialog(
           title: Text(context.l10n.keepWorkoutActive),
-          content: const Text(
-            'Do you want to go back to Home and keep your workout running in the background?\n\n'
-            'You can return to continue your workout anytime.',
-          ),
+          content: Text(context.l10n.keepWorkoutActiveMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -881,7 +878,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             // Quick Start Card - Most prominent
             Card(
               elevation: 4,
-              color: Colors.green.shade50,
+              color: context.successContainer,
               child: InkWell(
                 onTap: () => _startQuickWorkout(context, ref),
                 borderRadius: BorderRadius.circular(12),
@@ -893,7 +890,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: context.successColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
@@ -911,14 +908,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                               context.l10n.startNow,
                               style: context.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green.shade900,
+                                color: context.textOnSuccess,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               context.l10n.startImmediately,
                               style: context.textTheme.bodyMedium?.copyWith(
-                                color: Colors.green.shade700,
+                                color: context.textOnSuccess,
                               ),
                             ),
                           ],
@@ -926,7 +923,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
-                        color: Colors.green.shade700,
+                        color: context.textOnSuccess,
                       ),
                     ],
                   ),
@@ -1007,7 +1004,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                                       duration: const Duration(milliseconds: 200),
                                       opacity: 1.0,
                                       child: Icon(
-                                        Icons.drag_indicator,
+                                        AppIcons.dragIndicator,
                                         color: context.colors.onSurfaceVariant,
                                       ),
                                     ),
@@ -1377,7 +1374,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.3),
+              color: context.colors.outline.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -1402,7 +1399,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               },
             ),
             ListTile(
-              leading: const Icon(Icons.stop, color: Colors.red),
+              leading: Icon(Icons.stop, color: context.errorColor),
               title: Text(context.l10n.endWorkout),
               onTap: () {
                 Navigator.pop(context);
@@ -1412,7 +1409,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             const Divider(),
           ],
           ListTile(
-            leading: const Icon(Icons.tune),
+            leading: const Icon(AppIcons.tune),
             title: Text(context.l10n.customizeWorkout),
             subtitle: Text(context.l10n.rpeTimerMore),
             onTap: () {
@@ -1622,7 +1619,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 }
               }
             },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(backgroundColor: context.errorColor),
             child: Text(context.l10n.delete),
           ),
         ],
@@ -1856,7 +1853,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: context.colors.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -1934,12 +1931,12 @@ class _TemplateQuickStartCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
+                    color: context.errorContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.delete,
-                    color: Colors.red,
+                    color: context.errorColor,
                   ),
                 ),
                 title: Text(context.l10n.deleteTemplate),
@@ -2039,7 +2036,7 @@ class _SaveTemplateHelper {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: usedTemplates >= maxTemplates - 2
-                    ? Colors.orange.withValues(alpha: 0.2)
+                    ? context.warningColor.withValues(alpha: 0.2)
                     : context.colors.primaryContainer.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -2049,7 +2046,7 @@ class _SaveTemplateHelper {
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: usedTemplates >= maxTemplates - 2
-                      ? Colors.orange
+                      ? context.warningColor
                       : context.colors.primary,
                 ),
               ),
@@ -2066,26 +2063,26 @@ class _SaveTemplateHelper {
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.1),
+                    color: context.warningContainer,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Colors.orange.withValues(alpha: 0.3),
+                      color: context.warningColor.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        color: Colors.orange,
+                      Icon(
+                        AppIcons.warningAmberRounded,
+                        color: context.warningColor,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Solo ${maxTemplates - usedTemplates} template rimanenti nel piano Free',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Colors.orange,
+                            color: context.warningColor,
                           ),
                         ),
                       ),
@@ -2199,7 +2196,7 @@ class _SaveTemplateHelper {
                 SnackBarService.showCustom(
                   context,
                   message: '✅ ${context.l10n.templateSavedSuccessfully(name)}',
-                  backgroundColor: Colors.green,
+                  backgroundColor: context.successColor,
                   actionLabel: context.l10n.view,
                   onAction: () => context.push('/templates'),
                 );
@@ -2218,10 +2215,10 @@ class _SaveTemplateHelper {
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.inventory_2,
                             size: 48,
-                            color: Colors.orange,
+                            color: context.warningColor,
                           ),
                           const SizedBox(height: 16),
                           Text(errorMessage.replaceAll('Exception: ', '')),

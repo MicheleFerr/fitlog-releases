@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_action.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ReportUserDialog extends ConsumerStatefulWidget {
 
@@ -105,7 +106,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
       title: Row(
         children: [
           Icon(
-            Icons.report_problem,
+            AppIcons.reportProblem,
             color: colorScheme.error,
             size: 24,
           ),
@@ -245,7 +246,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.warning_amber,
+                    AppIcons.warningAmber,
                     color: colorScheme.onErrorContainer,
                     size: 20,
                   ),
@@ -346,7 +347,7 @@ class BlockUserDialog extends ConsumerWidget {
       title: Row(
         children: [
           Icon(
-            Icons.block,
+            AppIcons.block,
             color: colorScheme.error,
             size: 24,
           ),

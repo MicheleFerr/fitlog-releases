@@ -577,7 +577,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       case ContributionType.variant:
         return Icons.alt_route;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
     }
   }
 

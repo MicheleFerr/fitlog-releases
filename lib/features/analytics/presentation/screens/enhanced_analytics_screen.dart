@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_cal
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced analytics screen with advanced features
 class EnhancedAnalyticsScreen extends ConsumerStatefulWidget {
@@ -85,7 +86,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(AppIcons.moreVert),
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -573,7 +574,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         Row(
           children: [
             Icon(
-              isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+              isPositive ? AppIcons.arrowUpward : AppIcons.arrowDownward,
               color: color,
               size: 16,
             ),

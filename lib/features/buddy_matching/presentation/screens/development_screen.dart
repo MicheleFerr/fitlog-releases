@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/ice_breaker_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/report_user_dialog.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/super_like_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DevelopmentScreen extends ConsumerStatefulWidget {
   const DevelopmentScreen({super.key});
@@ -240,7 +241,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                 _buildSectionCard(
                   context,
                   title: 'Feature Status',
-                  icon: Icons.checklist,
+                  icon: AppIcons.checklist,
                   children: [
                     _buildFeatureStatus('Multi-purpose Matching', true),
                     _buildFeatureStatus('Italian Cities System', true),
@@ -463,7 +464,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
       child: Row(
         children: [
           Icon(
-            isImplemented ? Icons.check_circle : Icons.radio_button_unchecked,
+            isImplemented ? Icons.check_circle : AppIcons.radioButtonUnchecked,
             size: 16,
             color: isImplemented ? const Color(0xFF4CAF50) : colorScheme.onSurfaceVariant,
           ),

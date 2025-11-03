@@ -41,7 +41,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                 ),
                 const Spacer(),
                 PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert, color: colorScheme.outline),
+                  icon: Icon(AppIcons.moreVert, color: colorScheme.outline),
                   onSelected: (value) => _handleChartAction(value),
                   itemBuilder: (context) => [
                     PopupMenuItem(

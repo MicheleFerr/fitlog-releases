@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/export_ser
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog for exporting analytics data
 class ExportDialog extends ConsumerStatefulWidget {
@@ -68,7 +69,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                     ExportFormat.csv,
                     'CSV Spreadsheet',
                     'Raw data for analysis in Excel or Google Sheets',
-                    Icons.table_chart,
+                    AppIcons.tableChart,
                   ),
                 ],
               ),

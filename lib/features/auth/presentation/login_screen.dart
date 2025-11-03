@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -224,7 +225,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(Icons.g_mobiledata, size: 24),
+                        : const Icon(AppIcons.gMobiledata, size: 24),
                     label: Text(context.l10n.signInWithGoogle),
                   ),
                 ),
@@ -271,7 +272,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => context.pushNamed('register'),
-                    icon: const Icon(Icons.person_add),
+                    icon: const Icon(AppIcons.personAdd),
                     label: Text(context.l10n.signUpButton),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: context.colors.primary,
@@ -293,7 +294,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     color: context.colors.primary,
                   ),
                   _FeatureIcon(
-                    icon: Icons.phone_iphone,
+                    icon: AppIcons.phoneIphone,
                     label: context.l10n.featureLiveActivities,
                     color: context.colors.secondary,
                   ),

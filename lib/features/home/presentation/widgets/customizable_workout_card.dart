@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CustomizableWorkoutCard extends ConsumerStatefulWidget {
   const CustomizableWorkoutCard({super.key});
@@ -398,7 +399,7 @@ class _CustomizationMenu extends ConsumerWidget {
       return Icons.fitness_center;
     }
     if (nameLower.contains('pull') || nameLower.contains('dorso') || nameLower.contains('back')) {
-      return Icons.sports_gymnastics;
+      return AppIcons.sportsGymnastics;
     }
     if (nameLower.contains('leg') || nameLower.contains('gamb')) {
       return Icons.directions_run;

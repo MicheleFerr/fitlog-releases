@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout
 import 'package:gymbro_flutter_new/shared/presentation/providers/history_view_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Database completo e modificabile per la cronologia degli allenamenti
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {
@@ -129,7 +130,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(AppIcons.arrowBackIos),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -156,7 +157,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             onPressed: _toggleSearch,
           ),
           PopupMenuButton<WorkoutSortOption>(
-            icon: const Icon(Icons.sort),
+            icon: const Icon(AppIcons.sort),
             onSelected: (value) {
               final currentFilter = ref.read(workoutHistoryFilterProvider);
               ref.read(workoutHistoryFilterProvider.notifier).state =
@@ -524,7 +525,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                 ),
                                 PopupMenuButton<String>(
                                   icon: Icon(
-                                    Icons.more_vert,
+                                    AppIcons.moreVert,
                                     color: colorScheme.onSurface.withValues(alpha: 0.6),
                                   ),
                                   onSelected: (action) {

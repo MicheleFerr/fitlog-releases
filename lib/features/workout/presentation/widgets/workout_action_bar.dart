@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/scree
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🎯 TIER-1 WORKOUT ACTION BAR
 /// Undo/Redo system with batch operations
@@ -344,7 +345,7 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.completeAll,
           child: Row(
             children: [
-              const Icon(Icons.done_all, size: 20),
+              const Icon(AppIcons.doneAll, size: 20),
               const SizedBox(width: 12),
               Text(l10n.completeAllSets),
             ],
@@ -686,7 +687,7 @@ class _ScreenAlwaysOnToggle extends ConsumerWidget {
               duration: const Duration(milliseconds: 200),
               child: Icon(
                 wakelockState.isEnabled
-                  ? Icons.mobile_screen_share
+                  ? AppIcons.mobileScreenShare
                   : Icons.mobile_off,
                 key: ValueKey(wakelockState.isEnabled),
                 size: 20,

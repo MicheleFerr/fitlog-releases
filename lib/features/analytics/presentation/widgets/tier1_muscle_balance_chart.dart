@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Muscle Balance Radar Chart with full explanations and customization
 class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
@@ -559,7 +560,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           
           // Target with edit button
           _buildEditableMetricRow(
-            icon: Icons.flag,
+            icon: AppIcons.flag,
             label: l10n.targetStrength,
             value: data.targetStrength,
             color: context.colors.success,
@@ -1070,7 +1071,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
       case MuscleGroup.shoulders:
         return Icons.accessibility_new;
       case MuscleGroup.arms:
-        return Icons.sports_handball;
+        return AppIcons.sportsHandball;
       case MuscleGroup.legs:
         return Icons.directions_run;
       case MuscleGroup.core:

@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/animated_xp_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ContributionSuccessDialog extends ConsumerStatefulWidget {
 
@@ -131,11 +132,11 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
       case ContributionType.warning:
         return Icons.warning;
       case ContributionType.variant:
-        return Icons.tune;
+        return AppIcons.tune;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
       case ContributionType.technique:
-        return Icons.sports_gymnastics;
+        return AppIcons.sportsGymnastics;
     }
   }
   

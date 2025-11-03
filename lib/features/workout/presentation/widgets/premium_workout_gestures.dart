@@ -415,7 +415,7 @@ class _DraggableExerciseItem extends ConsumerWidget {
               ),
             ),
             child: Icon(
-              Icons.drag_indicator,
+              AppIcons.dragIndicator,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
@@ -550,7 +550,7 @@ class _QuickActionMenuState extends ConsumerState<QuickActionMenu>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       _QuickActionButton(
-                        icon: Icons.done_all,
+                        icon: AppIcons.doneAll,
                         color: theme.colorScheme.primary,
                         onTap: () {
                           batchOps.completeAllSets(widget.exerciseId);

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FirebaseInitWidget extends ConsumerWidget {
   const FirebaseInitWidget({super.key});
@@ -88,7 +89,7 @@ class FirebaseInitWidget extends ConsumerWidget {
             isSuccess: initialized,
           ),
           loading: () => _StatusTile(
-            icon: Icons.hourglass_empty,
+            icon: AppIcons.hourglassEmpty,
             title: l10n.firebaseStatus,
             subtitle: l10n.checking,
             isSuccess: null,
@@ -112,7 +113,7 @@ class FirebaseInitWidget extends ConsumerWidget {
             isSuccess: version != null,
           ),
           loading: () => _StatusTile(
-            icon: Icons.hourglass_empty,
+            icon: AppIcons.hourglassEmpty,
             title: l10n.currentVersion,
             subtitle: l10n.loading,
             isSuccess: null,
@@ -131,7 +132,7 @@ class FirebaseInitWidget extends ConsumerWidget {
         collectionStats.when(
           data: (stats) => _buildStatsDisplay(context, l10n, stats),
           loading: () => _StatusTile(
-            icon: Icons.hourglass_empty,
+            icon: AppIcons.hourglassEmpty,
             title: l10n.collectionStats,
             subtitle: l10n.loading,
             isSuccess: null,
@@ -229,7 +230,7 @@ class FirebaseInitWidget extends ConsumerWidget {
             // Fix dati mancanti
             ElevatedButton.icon(
               onPressed: isLoading ? null : () => ref.read(firebaseInitStateProvider.notifier).fixMissingData(),
-              icon: const Icon(Icons.build_circle),
+              icon: const Icon(AppIcons.buildCircle),
               label: Text(l10n.fixMissingData),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,

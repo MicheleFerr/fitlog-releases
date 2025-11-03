@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_sequential_execution_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
@@ -285,7 +286,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         // Menu button
         IconButton(
           onPressed: () => _showSupersetOptions(context),
-          icon: const Icon(Icons.more_vert),
+          icon: const Icon(AppIcons.moreVert),
           tooltip: 'Options',
         ),
       ],
@@ -343,7 +344,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       ),
                       const SizedBox(width: 4),
                       Icon(
-                        _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        _isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
                         size: 16,
                         color: context.colors.primary,
                       ),

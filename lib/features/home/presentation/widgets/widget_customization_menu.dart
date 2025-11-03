@@ -42,7 +42,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.widgets,
+                    AppIcons.widgets,
                     color: theme.colorScheme.primary,
                     size: 28,
                   ),
@@ -110,7 +110,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                         onPressed: () {
                           _showResetConfirmation(context, ref);
                         },
-                        icon: const Icon(Icons.restore),
+                        icon: const Icon(AppIcons.restore),
                         label: Text(AppLocalizations.of(context).resetLayout),
                       ),
                     ),

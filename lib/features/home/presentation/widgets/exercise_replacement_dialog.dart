@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/exercise_replacement_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
 
@@ -261,7 +262,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               if (isSelected)
                 Icon(Icons.check_circle, color: colorScheme.primary)
               else
-                Icon(Icons.radio_button_unchecked, color: colorScheme.onSurfaceVariant),
+                Icon(AppIcons.radioButtonUnchecked, color: colorScheme.onSurfaceVariant),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/routi
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/routine/data/popular_templates_data.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Step 3: Select templates for automatic rotation
 class TemplateSelectionStep extends ConsumerWidget {
@@ -488,7 +489,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          Icons.create,
+                          AppIcons.create,
                           color: context.colors.onSecondaryContainer,
                           size: 28,
                         ),

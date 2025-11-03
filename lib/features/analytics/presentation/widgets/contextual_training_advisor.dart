@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget che fornisce consigli contestuali invece di un numero astratto
 class ContextualTrainingAdvisor extends StatelessWidget {
@@ -36,14 +41,14 @@ class ContextualTrainingAdvisor extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: _getGradientColors(category),
+            colors: _getGradientColors(context, category),
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: _getGradientColors(category).first.withValues(alpha: 0.3),
+              color: _getGradientColors(context, category).first.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -187,18 +192,18 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     );
   }
 
-  List<Color> _getGradientColors(AdviceCategory category) {
+  List<Color> _getGradientColors(BuildContext context, AdviceCategory category) {
     switch (category) {
       case AdviceCategory.pushHard:
-        return [Colors.green.shade400, Colors.green.shade600];
+        return [context.successColor.withOpacity(0.7), context.successColor];
       case AdviceCategory.maintainPace:
-        return [Colors.blue.shade400, Colors.blue.shade600];
+        return [context.colors.tertiary.withOpacity(0.7), context.colors.tertiary];
       case AdviceCategory.beCareful:
-        return [Colors.orange.shade400, Colors.orange.shade600];
+        return [context.warningColor.withOpacity(0.7), context.warningColor];
       case AdviceCategory.takeRest:
-        return [Colors.red.shade400, Colors.red.shade600];
+        return [context.errorColor.withOpacity(0.7), context.errorColor];
       case AdviceCategory.recovery:
-        return [Colors.purple.shade400, Colors.purple.shade600];
+        return [context.colors.primary.withOpacity(0.7), context.colors.primary];
     }
   }
 
@@ -209,7 +214,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
       case AdviceCategory.maintainPace:
         return Icons.directions_run;
       case AdviceCategory.beCareful:
-        return Icons.warning_amber;
+        return AppIcons.warningAmber;
       case AdviceCategory.takeRest:
         return Icons.hotel;
       case AdviceCategory.recovery:
@@ -268,14 +273,14 @@ class ContextualTrainingAdvisor extends StatelessWidget {
         return ContextualAdvice(
           mainMessage: 'Volume aumentato del ${volumeChange.toStringAsFixed(0)}%, ma la fatica è elevata.',
           subMessage: 'Considera di mantenere il volume attuale per consolidare i progressi.',
-          subIcon: Icons.warning_amber,
+          subIcon: AppIcons.warningAmber,
         );
       }
     } else if (daysSinceLastWorkout > 4) {
       return ContextualAdvice(
         mainMessage: "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
         subMessage: 'Riparti con calma, magari con un volume ridotto del 20-30%.',
-        subIcon: Icons.directions_walk,
+        subIcon: AppIcons.directionsWalk,
       );
     } else if (normalizedIntensity > 8) {
       return ContextualAdvice(
@@ -409,7 +414,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Il volume è ${volumeChange > 0 ? "aumentato" : "diminuito"} del ${volumeChange.abs().toStringAsFixed(1)}%',
               _getVolumeExplanation(),
               volumeChange > 0 ? Icons.trending_up : Icons.trending_down,
-              volumeChange > 0 ? Colors.green : Colors.orange,
+              volumeChange > 0 ? context.successColor : context.warningColor,
             ),
             
             _buildExplanationCard(
@@ -418,16 +423,16 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'RPE ${(6 + (avgIntensity - 1) * 4 / 9).toStringAsFixed(1)} su 10',
               _getIntensityExplanation(),
               Icons.flash_on,
-              _getIntensityColor(),
+              _getIntensityColor(context),
             ),
-            
+
             _buildExplanationCard(
               context,
               'Stato di Recupero',
               'Fatica media: ${avgFatigue.toStringAsFixed(1)}/5',
               _getRecoveryExplanation(),
               Icons.hotel,
-              _getFatigueColor(),
+              _getFatigueColor(context),
             ),
             
             _buildExplanationCard(
@@ -436,7 +441,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               '$workoutCount allenamenti questa settimana',
               _getFrequencyExplanation(),
               Icons.calendar_today,
-              Colors.blue,
+              context.infoColor,
             ),
             
             if (!isPremium) ...[
@@ -624,19 +629,19 @@ class _DetailedExplanationSheet extends StatelessWidget {
     }
   }
 
-  Color _getIntensityColor() {
+  Color _getIntensityColor(BuildContext context) {
     final rpe = 6 + (avgIntensity - 1) * 4 / 9;
-    if (rpe >= 9) return Colors.red;
-    if (rpe >= 7.5) return Colors.orange;
-    if (rpe >= 6.5) return Colors.blue;
-    return Colors.grey;
+    if (rpe >= 9) return context.errorColor;
+    if (rpe >= 7.5) return context.warningColor;
+    if (rpe >= 6.5) return context.colors.tertiary;
+    return context.colors.outline;
   }
 
-  Color _getFatigueColor() {
-    if (avgFatigue < 2) return Colors.green;
-    if (avgFatigue < 3) return Colors.blue;
-    if (avgFatigue < 4) return Colors.orange;
-    return Colors.red;
+  Color _getFatigueColor(BuildContext context) {
+    if (avgFatigue < 2) return context.successColor;
+    if (avgFatigue < 3) return context.colors.tertiary;
+    if (avgFatigue < 4) return context.warningColor;
+    return context.errorColor;
   }
 }
 

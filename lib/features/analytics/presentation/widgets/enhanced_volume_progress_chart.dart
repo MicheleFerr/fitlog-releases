@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_eff
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Volume Progress Chart with interactive date selection and detailed views
 class EnhancedVolumeProgressChart extends ConsumerStatefulWidget {
@@ -128,17 +129,17 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         ButtonSegment(
           value: VolumeChartType.daily,
           label: Text(localizations.day),
-          icon: const Icon(Icons.calendar_view_day, size: 18),
+          icon: const Icon(AppIcons.calendarViewDay, size: 18),
         ),
         ButtonSegment(
           value: VolumeChartType.weekly,
           label: Text(localizations.week),
-          icon: const Icon(Icons.calendar_view_week, size: 18),
+          icon: const Icon(AppIcons.calendarViewWeek, size: 18),
         ),
         ButtonSegment(
           value: VolumeChartType.monthly,
           label: Text(localizations.month),
-          icon: const Icon(Icons.calendar_view_month, size: 18),
+          icon: const Icon(AppIcons.calendarViewMonth, size: 18),
         ),
       ],
       selected: {_currentChartType},
@@ -1066,7 +1067,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             const SizedBox(height: 8),
             // Recovery Recommendation
             _buildPremiumInsight(
-              icon: Icons.bedtime,
+              icon: AppIcons.bedtime,
               title: localizations.recoveryRecommendation,
               value: _getRecoveryRecommendation(),
               theme: theme,
@@ -2374,7 +2375,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   });
                 },
                 icon: Icon(
-                  _showComparison ? Icons.keyboard_arrow_up : Icons.history,
+                  _showComparison ? AppIcons.keyboardArrowUp : Icons.history,
                   size: 20,
                 ),
                 label: Text(widget.localizations.compareWithHistory),
@@ -2511,7 +2512,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.list_alt,
+                          AppIcons.listAlt,
                           color: theme.colorScheme.primary,
                           size: 18,
                         ),

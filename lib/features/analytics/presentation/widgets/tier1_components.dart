@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Universal help button with explanations
 class HelpButton extends StatelessWidget {
@@ -125,7 +126,7 @@ class HelpButton extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.functions, size: 16, color: colorScheme.primary),
+                Icon(AppIcons.functions, size: 16, color: colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   localizations.formula,
@@ -215,7 +216,7 @@ class HelpButton extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.tips_and_updates, size: 16, color: colorScheme.tertiary),
+                Icon(AppIcons.tipsAndUpdates, size: 16, color: colorScheme.tertiary),
                 const SizedBox(width: 8),
                 Text(
                   localizations.proTip,

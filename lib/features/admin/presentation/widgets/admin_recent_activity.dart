@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Provider per le attività recenti
 final recentActivityProvider = FutureProvider<List<AdminActivity>>((ref) async {
@@ -215,7 +216,7 @@ class AdminRecentActivity extends ConsumerWidget {
       child: Column(
         children: [
           Icon(
-            Icons.inbox,
+            AppIcons.inbox,
             size: 48,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -354,9 +355,9 @@ class _ActivityItem extends StatelessWidget {
 
   IconData _getStatusIcon(String status) {
     return switch (status) {
-      'pending' => Icons.pending,
+      'pending' => AppIcons.pending,
       'approved' => Icons.check_circle,
-      'rejected' => Icons.cancel,
+      'rejected' => AppIcons.cancel,
       _ => Icons.info,
     };
   }

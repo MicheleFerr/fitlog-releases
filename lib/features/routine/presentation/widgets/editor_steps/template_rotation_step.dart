@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Step 4: Arrange rotation order and preview distribution
 class TemplateRotationStep extends ConsumerWidget {
@@ -199,7 +200,7 @@ class TemplateRotationStep extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.drag_handle,
+              AppIcons.dragHandle,
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
             const SizedBox(width: 8),

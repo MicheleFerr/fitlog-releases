@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/data/services/rewarded_ad_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CustomizableHomeScreen extends ConsumerStatefulWidget {
   const CustomizableHomeScreen({super.key});
@@ -307,7 +308,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
-                              Icons.flag_circle,
+                              AppIcons.flagCircle,
                               color: Colors.white,
                               size: 32,
                             ),
@@ -471,7 +472,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                     width: 40,
                     alignment: Alignment.center,
                     child: Icon(
-                      Icons.drag_indicator,
+                      AppIcons.dragIndicator,
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
@@ -634,11 +635,11 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
   IconData _getSizeIcon(WidgetSize size) {
     switch (size) {
       case WidgetSize.small:
-        return Icons.crop_square;
+        return AppIcons.cropSquare;
       case WidgetSize.medium:
-        return Icons.crop_16_9;
+        return AppIcons.crop169;
       case WidgetSize.large:
-        return Icons.crop_portrait;
+        return AppIcons.cropPortrait;
     }
   }
   
@@ -865,7 +866,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                 ),
               ),
               const Icon(
-                Icons.play_circle_filled,
+                AppIcons.playCircleFilled,
                 color: Colors.white,
                 size: 40,
               ),

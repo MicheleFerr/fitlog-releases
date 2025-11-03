@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_replacement_modal.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutHistoryEditorEnhanced extends ConsumerStatefulWidget {
 
@@ -476,7 +477,7 @@ class _WorkoutHistoryEditorEnhancedState
             child: Container(
               padding: const EdgeInsets.all(4),
               child: Icon(
-                set.isCompleted ? Icons.check_box : Icons.check_box_outline_blank,
+                set.isCompleted ? AppIcons.checkBox : AppIcons.checkBoxOutlineBlank,
                 color: set.isCompleted
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,

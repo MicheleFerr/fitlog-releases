@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DayDetailSheet extends ConsumerStatefulWidget {
 
@@ -793,7 +794,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       case DayStatus.skipped:
         return Icons.skip_next;
       case DayStatus.recovered:
-        return Icons.replay;
+        return AppIcons.replay;
       case DayStatus.rest:
         return Icons.hotel;
     }

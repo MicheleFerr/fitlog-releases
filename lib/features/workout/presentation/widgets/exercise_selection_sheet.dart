@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🚀 TIER-1: Optimized selection sheet with lazy loading
 class ExerciseSelectionSheet extends ConsumerStatefulWidget {
@@ -534,7 +535,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
           height: 60,
           color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           child: Icon(
-            Icons.broken_image,
+            AppIcons.brokenImage,
             size: 30,
             color: theme.colorScheme.onSurfaceVariant,
           ),

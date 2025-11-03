@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VerificationBadges extends ConsumerWidget {
 
@@ -65,7 +66,7 @@ class VerificationBadges extends ConsumerWidget {
       badges.add(_buildBadge(
         context,
         icon: Icons.photo_camera,
-        color: const Color(0xFF4CAF50), // Green
+        color: context.successColor, // Success
         text: AppLocalizations.of(context).photoVerified,
         tooltip: 'Foto del profilo verificata',
       ));
@@ -76,7 +77,7 @@ class VerificationBadges extends ConsumerWidget {
       badges.add(_buildBadge(
         context,
         icon: Icons.rocket_launch,
-        color: const Color(0xFFFF9800), // Orange
+        color: context.warningColor, // Warning
         text: AppLocalizations.of(context).boosted,
         tooltip: 'Profilo in evidenza',
       ));
@@ -196,17 +197,17 @@ class TrustScoreIndicator extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     
     Color getScoreColor() {
-      if (trustScore >= 80) return const Color(0xFF4CAF50); // Green
-      if (trustScore >= 60) return const Color(0xFFFF9800); // Orange
-      if (trustScore >= 40) return const Color(0xFFFFC107); // Amber
-      return const Color(0xFFF44336); // Red
+      if (trustScore >= 80) return context.successColor; // Success
+      if (trustScore >= 60) return context.warningColor; // Warning
+      if (trustScore >= 40) return context.warningColor; // Warning
+      return context.errorColor; // Error
     }
 
     IconData getScoreIcon() {
       if (trustScore >= 80) return Icons.shield_outlined;
-      if (trustScore >= 60) return Icons.verified_user_outlined;
+      if (trustScore >= 60) return AppIcons.verifiedUserOutlined;
       if (trustScore >= 40) return Icons.security;
-      return Icons.report_problem_outlined;
+      return AppIcons.reportProblemOutlined;
     }
 
     final color = getScoreColor();
@@ -280,8 +281,8 @@ class ConnectionTypeBadges extends ConsumerWidget {
         context,
         emoji: '🤝',
         text: compact ? '' : l10n.openToFriendship,
-        color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
-        textColor: const Color(0xFF4CAF50),
+        color: context.successContainer,
+        textColor: context.successColor,
       ));
     }
 
@@ -290,8 +291,8 @@ class ConnectionTypeBadges extends ConsumerWidget {
         context,
         emoji: '❤️',
         text: compact ? '' : l10n.openToDating,
-        color: const Color(0xFFF44336).withValues(alpha: 0.1),
-        textColor: const Color(0xFFF44336),
+        color: context.errorContainer,
+        textColor: context.errorColor,
       ));
     }
 

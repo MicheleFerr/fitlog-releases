@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_pi
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
 
@@ -324,7 +325,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       ReorderableDragStartListener(
                         index: index,
                         child: Icon(
-                          Icons.drag_handle,
+                          AppIcons.dragHandle,
                           color: context.colors.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
@@ -560,7 +561,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     if (exerciseTemplate.sets.length > 1)
                       IconButton(
                         onPressed: () => _removeSet(exerciseIndex, setIndex),
-                        icon: const Icon(Icons.remove_circle_outline),
+                        icon: const Icon(AppIcons.removeCircleOutline),
                         color: Colors.red,
                         iconSize: 20,
                         tooltip: context.l10n.removeSet,

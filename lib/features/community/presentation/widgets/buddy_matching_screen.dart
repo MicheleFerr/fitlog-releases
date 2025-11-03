@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/community/data/services/demo_profiles_loader.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
   const BuddyMatchingScreen({super.key});
@@ -429,7 +430,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.explore_off,
+            AppIcons.exploreOff,
             size: 80,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),

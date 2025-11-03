@@ -547,11 +547,11 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       case ExerciseCategory.chest:
         return Icons.fitness_center;
       case ExerciseCategory.back:
-        return Icons.rowing;
+        return AppIcons.rowing;
       case ExerciseCategory.shoulders:
         return Icons.accessibility_new;
       case ExerciseCategory.arms:
-        return Icons.sports_gymnastics;
+        return AppIcons.sportsGymnastics;
       case ExerciseCategory.legs:
         return Icons.directions_run;
       case ExerciseCategory.abs:
@@ -559,7 +559,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       case ExerciseCategory.cardio:
         return Icons.favorite;
       case ExerciseCategory.other:
-        return Icons.sports;
+        return AppIcons.sports;
     }
   }
   

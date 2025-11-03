@@ -2,37 +2,37 @@
 ///
 /// 📁 Layer: domain/entities
 /// 🎯 Feature: workout
-/// 🔧 Type: entity (Chart Data Point)
-/// 🌍 Localization: N/A (Domain entity)
+/// 🔧 Type: entity (immutable value object)
+/// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
 ///
-/// Dependencies: None (Pure domain entity)
+/// Dependencies: None (pure domain)
 library;
 
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'chart_data_point.freezed.dart';
-part 'chart_data_point.g.dart';
-
-/// Domain entity rappresenta un punto dati per il grafico metrica
+/// Chart data point entity
 ///
-/// Immutabile con Freezed per garantire purezza del domain layer.
-/// Usato da:
-/// - GetExerciseChartData use case
-/// - ExerciseChartRepository
-/// - Presentation layer per rendering grafico
-@freezed
-class ChartDataPoint with _$ChartDataPoint {
-  const factory ChartDataPoint({
-    /// Data del punto (workout date)
-    required DateTime date,
+/// Immutable value object rappresenta un singolo punto dati per chart
+class ChartDataPoint {
+  final DateTime date;
+  final double value;
 
-    /// Valore della metrica (peso/reps/rpe/tut)
-    required double value,
-  }) = _ChartDataPoint;
+  const ChartDataPoint({
+    required this.date,
+    required this.value,
+  });
 
-  /// Factory per JSON deserialization (se necessario per caching futuro)
-  factory ChartDataPoint.fromJson(Map<String, dynamic> json) =>
-      _$ChartDataPointFromJson(json);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ChartDataPoint &&
+          runtimeType == other.runtimeType &&
+          date == other.date &&
+          value == other.value;
+
+  @override
+  int get hashCode => date.hashCode ^ value.hashCode;
+
+  @override
+  String toString() => 'ChartDataPoint(date: $date, value: $value)';
 }

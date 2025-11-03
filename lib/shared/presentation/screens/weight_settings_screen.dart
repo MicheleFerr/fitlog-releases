@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/providers/weight_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Weight Settings Screen
 ///
@@ -47,7 +48,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
         title: Text(context.l10n.weightSettings),
         actions: [
           IconButton(
-            icon: const Icon(Icons.restore),
+            icon: const Icon(AppIcons.restore),
             tooltip: context.l10n.resetToDefaults,
             onPressed: () => _showResetConfirmation(),
           ),
@@ -101,7 +102,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
 
         // Section 2: Custom Increment
         _buildSectionHeader(
-          icon: Icons.tune,
+          icon: AppIcons.tune,
           title: context.l10n.customIncrement,
           subtitle: context.l10n.customIncrementDescription,
         ),

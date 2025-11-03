@@ -1,84 +1,150 @@
-# Fix Async Warnings
+# Interactive Async Warnings Checker
 
-Automatically fix `use_build_context_synchronously` and `unawaited_futures` warnings.
+**Interactive tool** to check and fix `use_build_context_synchronously` and `unawaited_futures` warnings - **you control every fix**.
 
 ## What It Does
 
-**Patterns Fixed:**
+Scans your code for async warnings and **prompts you interactively**:
 
-1. **BuildContext Async Safety**
-   - Adds `if (!mounted) return;` after `await` statements
-   - Prevents crashes from using context after widget disposal
-
-2. **Unawaited Futures**
-   - Wraps fire-and-forget calls with `unawaited()`
-   - Patterns: `ref.read().notifier.method()`, `HapticFeedback.*()`, animation controllers
-   - Adds `import 'dart:async';` if missing
+1. **Shows** code context around each warning
+2. **Explains** why the warning exists (press `E`)
+3. **Previews** the suggested fix (press `P`)
+4. **Waits** for your decision: Accept, Skip, or Quit
+5. **Saves** progress so you can resume later
 
 ## Usage
 
 ```bash
-# Preview changes (dry-run)
-python3 scripts/fix_async_warnings.py --dry-run
-
-# Fix all warnings
+# Interactive mode (RECOMMENDED)
 python3 scripts/fix_async_warnings.py
 
-# Fix specific file
+# Check specific file only
 python3 scripts/fix_async_warnings.py --file lib/path/to/file.dart
+
+# Resume from previous session
+python3 scripts/fix_async_warnings.py --resume
 ```
 
-## When to Use
+## Interactive Commands
 
-- After implementing new features
-- Before creating a PR
-- Periodically during development
-- When `flutter analyze` shows async warnings
+| Key | Action | Description |
+|-----|--------|-------------|
+| **A** | **Accept** | Apply the fix |
+| **S** | **Skip** | Skip this warning |
+| **P** | **Preview** | Show suggested fix |
+| **E** | **Explain** | Learn why warning exists |
+| **Q** | **Quit** | Save progress and exit |
 
-## Safety
-
-- **Dry-run first**: Always preview changes with `--dry-run`
-- **Review diffs**: Check `git diff` after running
-- **Test manually**: Verify app still works correctly
-- **Commit separately**: Easy to revert if needed
-
-## Example Output
+## Example Session
 
 ```
 🔍 Scanning for async warnings...
-📊 Found 15 BuildContext + 8 unawaited warnings
+📊 Found 77 BuildContext + 56 unawaited warnings
+   Total: 133 warnings to check
 
-🔧 Fixing use_build_context_synchronously warnings...
+Press Enter to start...
 
-📄 lib/features/home/presentation/widgets/card.dart
-  ✅ Added mounted check at line 45
+======================================================================
+[1/133] use_build_context_synchronously
+📄 lib/features/home/widgets/card.dart:45
+======================================================================
 
-🔧 Fixing unawaited_futures warnings...
+📄 Current code:
+    42:   Future<void> loadData() async {
+    43:     await fetchData();
+>>> 44:     Navigator.of(context).push(...);
+    45:   }
 
-📄 lib/features/buddy/presentation/widgets/fab.dart
-  ✅ Wrapped with unawaited() at line 233
+[A]ccept [S]kip [P]review [E]xplain [Q]uit? e
 
-✨ Summary: 23/23 warnings fixed
+📚 BuildContext Async Safety Explanation:
+⚠️  PROBLEM:
+   After 'await', your widget might be disposed (unmounted).
+   Using 'context' after await without checking can crash.
 
-✅ Done! Run 'flutter analyze' to verify
+✅  SOLUTION:
+   Add 'if (!mounted) return;' after await statements.
+
+[A]ccept [S]kip [P]review [E]xplain [Q]uit? p
+
+🔍 Suggested fix:
+    43: await fetchData();
+>>> NEW : if (!mounted) return;
+
+    44: Navigator.of(context).push(...);
+
+[A]ccept [S]kip [P]review [E]xplain [Q]uit? a
+
+✅ Fixed!
 ```
 
-## Limitations
+## Warning Types
 
-- Only fixes common patterns (not all edge cases)
-- May need manual adjustment for complex async flows
-- Doesn't understand business logic context
-- Review changes before committing
+### 1. BuildContext Async Safety
+
+**Problem**: Context used after `await` without mounted check
+**Fix**: Adds `if (!mounted) return;` after await
+
+### 2. Unawaited Futures
+
+**Problem**: Async function called but not awaited
+**Fix**: Wraps with `unawaited()` and adds `import 'dart:async';`
+
+## When to Use
+
+- **After implementing** new features
+- **Before creating** a PR
+- **When `flutter analyze`** shows async warnings
+- **Periodically** during development
+
+## Best Practices
+
+1. **Start with `E`** (Explain) for new patterns
+2. **Always `P`** (Preview) before accepting
+3. **Work in sessions**: Fix 20-30 warnings, then `Q` (Quit)
+4. **Resume later**: `--resume` flag continues where you left off
+5. **Test after**: `flutter run` to verify fixes work
+6. **Commit often**: One session = one commit
+
+## Progress Tracking
+
+Tool saves progress to `.async_warnings_progress.json`:
+
+```bash
+# Session 1: Fix 20 warnings
+python3 scripts/fix_async_warnings.py
+# [Process 20, then Q]
+
+💾 Saving progress...
+✨ Session summary:
+   ✅ Fixed: 18
+   ⏭️  Skipped: 2
+   📊 Progress: 20/133 (15%)
+
+# Session 2: Resume
+python3 scripts/fix_async_warnings.py --resume
+
+📂 Resuming from warning 21/133
+```
+
+## Advantages
+
+- ✅ **Full control**: You decide every fix
+- ✅ **Educational**: Learn Flutter async patterns
+- ✅ **Safe**: Preview before applying
+- ✅ **Resumable**: Quit and continue anytime
+- ✅ **Focused**: `--file` flag for specific files
 
 ## Pro Tips
 
-1. **Run dry-run first**: `python3 scripts/fix_async_warnings.py --dry-run`
-2. **Commit often**: Fix → Test → Commit → Repeat
-3. **Batch by feature**: `--file` flag for controlled fixes
-4. **Verify**: Always run `flutter analyze` after
-5. **Test**: Quick smoke test on real device
+1. **Batch by feature**: Use `--file` for one feature at a time
+2. **Learn first**: Press `E` for patterns you don't know
+3. **Preview always**: Press `P` before `A`
+4. **Skip complex**: Press `S` for complex async flows (manual review)
+5. **Session length**: 20-30 warnings (~15 minutes) per session
 
 ---
 
-**Created by**: Claude Code automation
-**Last Updated**: 2025-11-02
+**Type**: Interactive Checker (User-Controlled)
+**Created**: 2025-11-02
+**Full docs**: `scripts/ASYNC_WARNINGS_README.md`

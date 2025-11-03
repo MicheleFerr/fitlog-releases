@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/utils/impor
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/import_progress_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
@@ -124,7 +125,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _buildStat(
-                            icon: Icons.folder_outlined,
+                            icon: AppIcons.folderOutlined,
                             value: '${templateState.userTemplates.length}',
                             label: l10n.myTemplates,
                             colorScheme: colorScheme,
@@ -152,7 +153,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               // Show view toggle button only on "My Templates" tab
               if (_tabController.index == 0)
                 IconButton(
-                  icon: Icon(_isGridView ? Icons.view_list : Icons.grid_view),
+                  icon: Icon(_isGridView ? Icons.view_list : AppIcons.gridView),
                   tooltip: _isGridView ? l10n.listView : l10n.gridView,
                   onPressed: () {
                     setState(() {
@@ -171,7 +172,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   text: l10n.myTemplates,
                 ),
                 Tab(
-                  icon: const Icon(Icons.explore),
+                  icon: const Icon(AppIcons.explore),
                   text: l10n.discover,
                 ),
                 Tab(
@@ -412,7 +413,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     borderSide: BorderSide.none,
                   ),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.tune),
+                    icon: const Icon(AppIcons.tune),
                     onPressed: () => _showFilters(context),
                   ),
                 ),
@@ -544,7 +545,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             // Uncomment when ready to enable: import from JSON and file picker features
             /* const Divider(),
             ListTile(
-              leading: Icon(Icons.upload_file, color: colorScheme.secondary),
+              leading: Icon(AppIcons.uploadFile, color: colorScheme.secondary),
               title: Text(l10n.importFromJSON),
               subtitle: Text(l10n.importJSONDescription),
               onTap: () {

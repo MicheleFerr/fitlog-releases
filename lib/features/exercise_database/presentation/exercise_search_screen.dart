@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -141,7 +142,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
-            icon: const Icon(Icons.arrow_downward, size: 18),
+            icon: const Icon(AppIcons.arrowDownward, size: 18),
             label: const Text('Riduci priorità'),
           ),
           FilledButton.icon(
@@ -1260,7 +1261,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         ),
         trailing: isSelected
             ? Icon(Icons.check_circle, color: context.colors.primary)
-            : (widget.selectionMode ? const Icon(Icons.arrow_forward_ios, size: 16) : const Icon(Icons.radio_button_unchecked)),
+            : (widget.selectionMode ? const Icon(Icons.arrow_forward_ios, size: 16) : const Icon(AppIcons.radioButtonUnchecked)),
         onTap: () {
           // Selection mode: return exercise and close
           if (widget.selectionMode) {
@@ -1483,7 +1484,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ? Icon(Icons.check_circle, color: context.colors.primary)
                   : (widget.selectionMode
                       ? const Icon(Icons.arrow_forward_ios, size: 16)
-                      : const Icon(Icons.radio_button_unchecked)),
+                      : const Icon(AppIcons.radioButtonUnchecked)),
             ],
           ),
         ),

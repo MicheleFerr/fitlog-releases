@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
@@ -17,6 +18,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/streak_tra
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/recent_workouts_widget.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_goals_widget.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Factory class to build home widgets based on configuration
 class HomeWidgetFactory {
@@ -300,7 +302,7 @@ class HomeWidgetFactory {
                     context,
                     icon: Icons.check_circle,
                     label: 'Termina',
-                    color: Colors.green,
+                    color: context.successColor,
                     onTap: () => _showCompleteDialog(context, ref, workout),
                   ),
                 ),
@@ -309,7 +311,7 @@ class HomeWidgetFactory {
                   context,
                   icon: Icons.delete_outline,
                   label: '',
-                  color: Colors.red,
+                  color: context.errorColor,
                   onTap: () => _showDiscardDialog(context, ref),
                   isIconOnly: true,
                 ),
@@ -611,9 +613,9 @@ class HomeWidgetFactory {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.trending_up,
-                            color: Colors.green,
+                            color: context.successColor,
                             size: 16,
                           ),
                           const SizedBox(width: 8),
@@ -730,7 +732,7 @@ class HomeWidgetFactory {
                 ),
                 const SizedBox(height: 20),
                 // Insights list
-                ..._buildInsightsList(theme),
+                ..._buildInsightsList(context, theme),
               ],
             ),
           ),
@@ -739,28 +741,28 @@ class HomeWidgetFactory {
     }
   }
   
-  static List<Widget> _buildInsightsList(ThemeData theme) {
+  static List<Widget> _buildInsightsList(BuildContext context, ThemeData theme) {
     final insights = [
       {
         'icon': Icons.trending_up,
         'title': 'Progressione Carico',
         'message': 'Squat: incremento del 2-5% consigliato',
         'detail': 'Basato su 4 settimane di progressi costanti',
-        'color': Colors.green,
+        'color': context.successColor,
       },
       {
         'icon': Icons.schedule,
         'title': 'Recupero Ottimale',
         'message': 'Considera 48-72h tra sessioni intense',
         'detail': 'Il tuo volume è aumentato del 15% questo mese',
-        'color': Colors.orange,
+        'color': context.warningColor,
       },
       {
         'icon': Icons.fitness_center,
         'title': 'Bilanciamento Muscolare',
         'message': 'Rapporto push/pull equilibrato',
         'detail': 'Mantieni il volume attuale per i prossimi 2 microcicli',
-        'color': Colors.blue,
+        'color': context.infoColor,
       },
     ];
     
@@ -955,7 +957,7 @@ class HomeWidgetFactory {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      ..._buildDetailedInsightsList(theme),
+                      ..._buildDetailedInsightsList(context, theme),
                       const SizedBox(height: 16),
                       
                       // Footer con azioni
@@ -1024,7 +1026,7 @@ class HomeWidgetFactory {
     );
   }
   
-  static Widget _buildDetailWidget(ThemeData theme, Map<String, dynamic> insight) {
+  static Widget _buildDetailWidget(BuildContext context, ThemeData theme, Map<String, dynamic> insight) {
     final data = insight['detailData'] as Map<String, dynamic>;
     
     if (insight['title'] == 'Progressione Carico') {
@@ -1149,7 +1151,7 @@ class HomeWidgetFactory {
                       Text(
                         item['status'],
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.green,
+                          color: context.successColor,
                         ),
                       ),
                     ],
@@ -1259,7 +1261,7 @@ class HomeWidgetFactory {
     return const SizedBox.shrink();
   }
   
-  static List<Widget> _buildDetailedInsightsList(ThemeData theme) {
+  static List<Widget> _buildDetailedInsightsList(BuildContext context, ThemeData theme) {
     final insights = [
       {
         'icon': Icons.trending_up,
@@ -1277,7 +1279,7 @@ class HomeWidgetFactory {
           'summary': 'Progressione totale: +6.25% in 4 settimane.\nUn incremento del 2-5% (2.5-5kg) ti permetterà di continuare a progredire senza rischiare sovraccarico.',
         },
         'action': 'Prova con 87.5kg nel prossimo allenamento',
-        'color': Colors.green,
+        'color': context.successColor,
       },
       {
         'icon': Icons.schedule,
@@ -1295,7 +1297,7 @@ class HomeWidgetFactory {
           'summary': 'Volume totale aumentato del 15% questo mese.\nAssicurati di avere 48-72h tra sessioni intense per le gambe.',
         },
         'action': 'Mantieni 2-3 giorni tra allenamenti gambe',
-        'color': Colors.orange,
+        'color': context.warningColor,
       },
       {
         'icon': Icons.fitness_center,
@@ -1319,7 +1321,7 @@ class HomeWidgetFactory {
           'summary': 'Rapporto Push/Pull: 1.02 (ottimale è 1:1)\nEquilibrio perfetto per prevenire squilibri posturali.',
         },
         'action': 'Equilibrio perfetto, mantieni così',
-        'color': Colors.blue,
+        'color': context.infoColor,
       },
     ];
     
@@ -1379,7 +1381,7 @@ class HomeWidgetFactory {
               const SizedBox(height: 12),
               // Check if we need to build a custom widget for the detail
               if (insight['detailWidget'] == true && insight['detailData'] != null) ...[
-                _buildDetailWidget(theme, insight),
+                _buildDetailWidget(context, theme, insight),
               ] else if (insight['detail'] != null) ...[
                 Text(
                   insight['detail'] as String,
@@ -1776,7 +1778,7 @@ class HomeWidgetFactory {
           children: [
             Row(
               children: [
-                Icon(Icons.flag, color: theme.colorScheme.primary, size: 20),
+                Icon(AppIcons.flag, color: theme.colorScheme.primary, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   'Obiettivi',
@@ -1856,12 +1858,12 @@ class HomeWidgetFactory {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withValues(alpha: 0.2),
+                  color: context.warningContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.fitness_center,
-                  color: Colors.orange,
+                  color: context.warningColor,
                   size: 24,
                 ),
               ),
@@ -1879,7 +1881,7 @@ class HomeWidgetFactory {
                     Text(
                       'Squat - 4x12',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.orange,
+                        color: context.warningColor,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -1935,7 +1937,7 @@ class _AICoachDialog extends ConsumerWidget {
     final analyticsState = dialogRef.watch(analyticsProvider);
     
     // Genera insights basati sui dati reali
-    final insights = _generateRealInsights(analyticsState, theme);
+    final insights = _generateRealInsights(context, analyticsState, theme);
     
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -2083,7 +2085,7 @@ class _AICoachDialog extends ConsumerWidget {
     );
   }
   
-  List<Widget> _generateRealInsights(AnalyticsState state, ThemeData theme) {
+  static List<Widget> _generateRealInsights(BuildContext context, AnalyticsState state, ThemeData theme) {
     final insights = <Widget>[];
     
     // Analizza progressione per gli esercizi più frequenti
@@ -2118,7 +2120,7 @@ class _AICoachDialog extends ConsumerWidget {
             ? exerciseHistory.sublist(exerciseHistory.length - 4)
             : exerciseHistory;
         
-        insights.add(_buildProgressionInsight(
+        insights.add(_buildProgressionInsight(context, 
           theme,
           mostFrequentExercise,
           recentHistory,
@@ -2129,18 +2131,18 @@ class _AICoachDialog extends ConsumerWidget {
     // Analizza tempi di recupero se disponibili
     // TODO: Implement rest time analysis when available
     // if (state.activities.isNotEmpty) {
-    //   insights.add(_buildRestTimeInsight(theme, state.activities));
+    //   insights.add(_buildRestTimeInsight(context, theme, state.activities));
     // }
     
     // Analizza bilanciamento muscolare
     if (state.muscleBalance.volumeDistribution.isNotEmpty) {
-      insights.add(_buildMuscleBalanceInsight(theme, state.muscleBalance));
+      insights.add(_buildMuscleBalanceInsight(context, theme, state.muscleBalance));
     }
     
     return insights;
   }
   
-  Widget _buildProgressionInsight(
+  static Widget _buildProgressionInsight(BuildContext context, 
     ThemeData theme,
     String exerciseName,
     List<ExerciseActivity> history,
@@ -2153,7 +2155,7 @@ class _AICoachDialog extends ConsumerWidget {
           color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Colors.green.withValues(alpha: 0.3),
+            color: context.successColor.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -2165,12 +2167,12 @@ class _AICoachDialog extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.2),
+                    color: context.successColor.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.trending_up,
-                    color: Colors.green,
+                    color: context.successColor,
                     size: 20,
                   ),
                 ),
@@ -2188,7 +2190,7 @@ class _AICoachDialog extends ConsumerWidget {
                       Text(
                         'Ultimi ${history.length} allenamenti',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.green,
+                          color: context.successColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -2268,23 +2270,23 @@ class _AICoachDialog extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.1),
+                    color: context.successColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.lightbulb_outline,
                         size: 14,
-                        color: Colors.green,
+                        color: context.successColor,
                       ),
                       const SizedBox(width: 6),
                       Flexible(
                         child: Text(
                           _generateProgressionAdvice(history),
-                          style: const TextStyle(
-                            color: Colors.green,
+                          style: TextStyle(
+                            color: context.successColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
                           ),
@@ -2301,17 +2303,17 @@ class _AICoachDialog extends ConsumerWidget {
     );
   }
   
-  Widget _buildRestTimeInsight(ThemeData theme, List<ExerciseActivity> activities) {
+  static Widget _buildRestTimeInsight(BuildContext context, ThemeData theme, List<ExerciseActivity> activities) {
     // Placeholder - da implementare con logica reale
     return const SizedBox.shrink();
   }
   
-  Widget _buildMuscleBalanceInsight(ThemeData theme, MuscleGroupBalance balance) {
+  static Widget _buildMuscleBalanceInsight(BuildContext context, ThemeData theme, MuscleGroupBalance balance) {
     // Placeholder - da implementare con logica reale
     return const SizedBox.shrink();
   }
   
-  String _formatDate(DateTime date) {
+  static String _formatDate(DateTime date) {
     final now = DateTime.now();
     final diff = now.difference(date).inDays;
     
@@ -2322,7 +2324,7 @@ class _AICoachDialog extends ConsumerWidget {
     return '${(diff / 30).floor()} mesi fa';
   }
   
-  String _generateProgressionAdvice(List<ExerciseActivity> history) {
+  static String _generateProgressionAdvice(List<ExerciseActivity> history) {
     if (history.length < 2) return 'Continua così';
     
     final last = history.last;

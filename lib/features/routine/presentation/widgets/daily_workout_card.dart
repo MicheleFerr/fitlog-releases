@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/day_detail_sheet.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Card showing today's workout
 class DailyWorkoutCard extends ConsumerWidget {
@@ -218,7 +219,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                             Expanded(
                               child: OutlinedButton.icon(
                                 onPressed: onSkip,
-                                icon: const Icon(Icons.event_busy, size: 20),
+                                icon: const Icon(AppIcons.eventBusy, size: 20),
                                 label: const Text('Skip'),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: context.colors.error,
@@ -258,7 +259,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: onSkip,
-                          icon: const Icon(Icons.event_busy, size: 20),
+                          icon: const Icon(AppIcons.eventBusy, size: 20),
                           label: const Text('Skip'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: context.colors.error,
@@ -295,7 +296,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: onSkip,
-                        icon: const Icon(Icons.event_busy, size: 20),
+                        icon: const Icon(AppIcons.eventBusy, size: 20),
                         label: const Text('Skip'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.colors.error,
@@ -332,7 +333,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: onSkip,
-                      icon: const Icon(Icons.event_busy, size: 20),
+                      icon: const Icon(AppIcons.eventBusy, size: 20),
                       label: const Text('Skip'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: context.colors.error,
@@ -377,7 +378,7 @@ class DailyWorkoutCard extends ConsumerWidget {
         color = Colors.green;
         break;
       case DayStatus.skipped:
-        icon = Icons.cancel;
+        icon = AppIcons.cancel;
         color = context.colors.error;
         break;
       case DayStatus.recovered:

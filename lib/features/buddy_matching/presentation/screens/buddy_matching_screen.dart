@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/screens/edit_buddy_profile_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
   const BuddyMatchingScreen({super.key});
@@ -152,7 +153,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
               IconButton(
                 onPressed: () => _showFilterSheet(context),
                 icon: Icon(
-                  Icons.tune,
+                  AppIcons.tune,
                   color: theme.colorScheme.primary,
                 ),
                 style: IconButton.styleFrom(

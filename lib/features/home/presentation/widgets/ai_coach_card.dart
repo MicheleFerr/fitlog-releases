@@ -19,6 +19,8 @@ import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// AI Coach card with modern design and animations
 class AICoachCard extends ConsumerStatefulWidget {
@@ -225,15 +227,15 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: AppSpacing.chip,
           decoration: BoxDecoration(
-            color: colorScheme.primary.withValues(alpha: 0.1),
+            color: context.infoContainer,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             l10n.aiBadge,
             style: theme.textTheme.labelSmall?.copyWith(
-              color: colorScheme.primary,
+              color: context.infoColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -245,7 +247,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
   Widget _buildAdviceSection(AppLocalizations l10n, ThemeData theme, ColorScheme colorScheme,
       AsyncValue<String> primaryAdviceAsync) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.surface.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(16),
@@ -260,7 +262,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
             color: colorScheme.tertiary,
             size: 20,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: AppSpacing.sm),
           Expanded(
             child: primaryAdviceAsync.when(
               data: (advice) => Text(
@@ -314,7 +316,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
             color: colorScheme.secondary,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: AppSpacing.sm),
         Expanded(
           child: _StaticAIInsight(
             icon: Icons.local_fire_department,
@@ -337,7 +339,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
           size: 16,
           color: colorScheme.outline,
         ),
-        const SizedBox(width: 6),
+        SizedBox(width: AppSpacing.xxs),
         Text(
           l10n.aiCoachTapHint,
           style: theme.textTheme.bodySmall?.copyWith(
@@ -471,13 +473,13 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
   Color _getSeverityColor(InsightSeverity severity, ColorScheme colorScheme) {
     switch (severity) {
       case InsightSeverity.critical:
-        return colorScheme.error; // 🔴 Red
+        return context.errorColor; // 🔴 Red - Semantic color
       case InsightSeverity.warning:
-        return Colors.orange; // 🟠 Orange
+        return context.warningColor; // 🟠 Orange - Semantic color
       case InsightSeverity.info:
-        return colorScheme.primary; // 🔵 Blue
+        return context.infoColor; // 🔵 Blue - Semantic color
       case InsightSeverity.success:
-        return Colors.green; // 🟢 Green
+        return context.successColor; // 🟢 Green - Semantic color
     }
   }
 
@@ -487,7 +489,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       case InsightSeverity.critical:
         return Icons.error;
       case InsightSeverity.warning:
-        return Icons.warning_amber;
+        return AppIcons.warningAmber;
       case InsightSeverity.info:
         return Icons.info;
       case InsightSeverity.success:
@@ -646,7 +648,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     debugPrint('🔍 [AI COACH MODAL] Building insights list with ${insights.length} items');
 
     return ListView(
-      padding: EdgeInsets.zero, // ✅ FIX: Remove horizontal padding (already applied at parent level)
+      padding: EdgeInsets.zero,
       children: [
         // DEBUG INFO (remove after testing)
         if (kDebugMode) ...[
@@ -671,23 +673,23 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         // Dismissible disclaimer at the top
         if (_showDisclaimer)
           Container(
-            margin: const EdgeInsets.only(bottom: 16),
+            margin: EdgeInsets.only(bottom: AppSpacing.md),
             child: Material(
-              color: colorScheme.errorContainer.withValues(alpha: 0.2),
+              color: context.errorContainer,
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 onTap: () => setState(() => _showDisclaimer = false),
                 child: Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(AppSpacing.sm),
                   child: Row(
                     children: [
                       Icon(
                         Icons.info_outline,
-                        color: colorScheme.error,
+                        color: context.errorColor,
                         size: 18,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
                           l10n.aiCoachDisclaimer,
@@ -730,8 +732,8 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     final IconData icon = switch (insight.type) {
       InsightType.muscleGroupBalance => Icons.balance,
       InsightType.progressOverload => Icons.trending_up,
-      InsightType.recoveryPattern => Icons.bedtime,
-      InsightType.volumeOptimization => Icons.tune,
+      InsightType.recoveryPattern => AppIcons.bedtime,
+      InsightType.volumeOptimization => AppIcons.tune,
       InsightType.frequencyRecommendation => Icons.schedule,
       InsightType.plateauBreaker => Icons.trending_flat,
       InsightType.formWarning => Icons.warning,
@@ -744,7 +746,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
     // Progressive disclosure: ALL content inside expansion
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         color: cardColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
@@ -782,7 +784,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: AppSpacing.xs),
                   // Severity badge (more prominent)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -801,7 +803,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   ),
                   // Data quality badge (if low confidence)
                   if (insight.hasDataQualityIssues) ...[
-                    const SizedBox(width: 4),
+                    SizedBox(width: AppSpacing.xxs),
                     Tooltip(
                       message: l10n.dataQualityWarning,
                       child: Container(
@@ -811,7 +813,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
-                          Icons.warning_amber,
+                          AppIcons.warningAmber,
                           size: 12,
                           color: Colors.black87,
                         ),
@@ -823,7 +825,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
               // Row 2: Key Metric (LARGE - HIG guideline)
               if (keyMetric != null) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: AppSpacing.sm),
                 Text(
                   keyMetric.value,
                   style: theme.textTheme.headlineSmall?.copyWith(
@@ -832,7 +834,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     fontSize: 28,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSpacing.xxs),
                 Text(
                   keyMetric.label,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -843,7 +845,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
               // Row 3: Progress Bar (for volume/training metrics)
               if (progressData != null) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: AppSpacing.sm),
                 _buildMEVProgressBar(context, progressData, cardColor, theme, colorScheme),
               ],
             ],
@@ -872,7 +874,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   child: Row(
                     children: [
                       Icon(Icons.recommend, size: 16, color: cardColor),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
                           insight.recommendation,
@@ -890,7 +892,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
                 // Detailed Analysis subsection (if exists)
                 if (insight.detailedAnalysis != null) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSpacing.md),
                   _ExpandableSubsection(
                     title: l10n.whyThisMatters,
                     icon: Icons.analytics,
@@ -909,7 +911,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
                 // Data Points subsection (if exists)
                 if (insight.dataPoints != null && insight.dataPoints!.isNotEmpty) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSpacing.sm),
                   _ExpandableSubsection(
                     title: l10n.yourData,
                     icon: Icons.bar_chart,
@@ -944,7 +946,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
                 // Strategies subsection (if exists)
                 if (insight.strategies != null && insight.strategies!.isNotEmpty) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSpacing.sm),
                   _ExpandableSubsection(
                     title: '🎯 ${l10n.evidenceBasedSolutions}',
                     icon: Icons.psychology,
@@ -968,7 +970,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ],
 
                 // Explainability subsection (always show - helps users understand AI logic)
-                const SizedBox(height: 12),
+                SizedBox(height: AppSpacing.sm),
                 _ExpandableSubsection(
                   title: '🔍 Come l\'AI calcola',  // TODO: Localize
                   icon: Icons.science,
@@ -984,7 +986,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
                 // Scientific Reference (collapsible footer - HIG guideline)
                 if (insight.scientificReference != null) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSpacing.sm),
                   _ExpandableSubsection(
                     title: '📚 ${l10n.aiCoachScientificReferences}',
                     icon: Icons.menu_book,
@@ -1056,7 +1058,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       },
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: EdgeInsets.all(AppSpacing.sm),
                         decoration: BoxDecoration(
                           color: colorScheme.surface.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
@@ -1068,7 +1070,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                         child: Row(
                           children: [
                             Icon(Icons.science, size: 16, color: colorScheme.primary),
-                            const SizedBox(width: 8),
+                            SizedBox(width: AppSpacing.xs),
                             Expanded(
                               child: Text(
                                 insight.scientificReference!,
@@ -1088,12 +1090,12 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ],
 
                 // Feedback widget (always visible)
-                const SizedBox(height: 16),
+                SizedBox(height: AppSpacing.md),
                 _buildFeedbackWidget(context, ref, insight, theme, colorScheme),
 
                 // Action Button (always visible if exists)
                 if (insight.hasAction) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSpacing.md),
                   _buildActionButton(context, ref, insight, theme, colorScheme, cardColor),
                 ],
               ],
@@ -1116,8 +1118,8 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     final IconData icon = switch (insight.type) {
       InsightType.muscleGroupBalance => Icons.balance,
       InsightType.progressOverload => Icons.trending_up,
-      InsightType.recoveryPattern => Icons.bedtime,
-      InsightType.volumeOptimization => Icons.tune,
+      InsightType.recoveryPattern => AppIcons.bedtime,
+      InsightType.volumeOptimization => AppIcons.tune,
       InsightType.frequencyRecommendation => Icons.schedule,
       InsightType.plateauBreaker => Icons.trending_flat,
       InsightType.formWarning => Icons.warning,
@@ -1198,7 +1200,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
-                      Icons.warning_amber,
+                      AppIcons.warningAmber,
                       size: 12,
                       color: Colors.black87,
                     ),
@@ -1234,8 +1236,8 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     InsightSeverity severity,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.only(bottom: AppSpacing.md),
+      padding: EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: cardColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
@@ -1258,7 +1260,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ),
                 child: Icon(icon, color: cardColor, size: 20),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   insight.title,
@@ -1297,7 +1299,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
-                      Icons.warning_amber,
+                      AppIcons.warningAmber,
                       size: 12,
                       color: Colors.black87,
                     ),
@@ -1306,7 +1308,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               ],
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSpacing.sm),
           Text(
             insight.description,
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -1351,9 +1353,9 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       children: [
         // Detailed Analysis Section
         if (insight.detailedAnalysis != null) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: AppSpacing.sm),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(AppSpacing.md),
             decoration: BoxDecoration(
               color: colorScheme.surface.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
@@ -1364,7 +1366,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 Row(
                   children: [
                     Icon(Icons.analytics, size: 18, color: cardColor),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSpacing.xs),
                     Text(
                       l10n.whyThisMatters,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -1374,7 +1376,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSpacing.xs),
                 Text(
                   insight.detailedAnalysis!,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -1389,9 +1391,9 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
         // Data Points Section
         if (insight.dataPoints != null && insight.dataPoints!.isNotEmpty) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: AppSpacing.sm),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(AppSpacing.md),
             decoration: BoxDecoration(
               color: cardColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
@@ -1405,7 +1407,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 Row(
                   children: [
                     Icon(Icons.bar_chart, size: 18, color: cardColor),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSpacing.xs),
                     Text(
                       l10n.yourData,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -1415,13 +1417,13 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: AppSpacing.sm),
                 ...insight.dataPoints!.map((point) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
+                  padding: EdgeInsets.only(bottom: AppSpacing.xxs),
                   child: Row(
                     children: [
                       Icon(Icons.fiber_manual_record, size: 8, color: cardColor),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
                           point,
@@ -1441,7 +1443,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
         // Scientific Strategies Section
         if (insight.strategies != null && insight.strategies!.isNotEmpty) ...[
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.md),
           Text(
             '🎯 ${l10n.evidenceBasedSolutions}',
             style: theme.textTheme.titleMedium?.copyWith(
@@ -1461,7 +1463,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
         // Scientific Reference (clickable if contains DOI/URL)
         if (insight.scientificReference != null) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: AppSpacing.sm),
           InkWell(
             onTap: () async {
               // Extract DOI or URL from the reference
@@ -1563,12 +1565,12 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         ],
 
         // Feedback widget
-        const SizedBox(height: 16),
+        SizedBox(height: AppSpacing.md),
         _buildFeedbackWidget(context, ref, insight, theme, colorScheme),
 
         // Action Button
         if (insight.hasAction) ...[
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.md),
           _buildActionButton(context, ref, insight, theme, colorScheme, cardColor),
         ],
       ],
@@ -1578,8 +1580,8 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
   Widget _buildStrategyCard(BuildContext context, ScientificStrategy strategy, ThemeData theme, ColorScheme colorScheme, Color cardColor) {
     final l10n = AppLocalizations.of(context);
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
@@ -1601,7 +1603,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: Text(
                   strategy.title,
@@ -1613,7 +1615,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSpacing.xs),
 
           // Description
           Text(
@@ -1623,11 +1625,11 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               height: 1.4,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSpacing.sm),
 
           // How to Implement
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
               color: cardColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(8),
@@ -1638,7 +1640,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 Row(
                   children: [
                     Icon(Icons.play_arrow, size: 16, color: cardColor),
-                    const SizedBox(width: 6),
+                    SizedBox(width: AppSpacing.xxs),
                     Text(
                       l10n.howToImplement,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -1648,7 +1650,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: AppSpacing.xxs),
                 Text(
                   strategy.howToImplement,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -1665,24 +1667,24 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.timeline, size: 16, color: Colors.green),
+              const Icon(AppIcons.timeline, size: 16, color: Colors.green),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   strategy.expectedOutcome,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.green.shade700,
+                    color: context.successColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSpacing.xs),
 
           // Scientific Basis
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: AppSpacing.chip,
             decoration: BoxDecoration(
               color: colorScheme.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(6),
@@ -1777,7 +1779,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         style: FilledButton.styleFrom(
           backgroundColor: cardColor,
           foregroundColor: _getTextColor(cardColor),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
         ),
       ),
     );
@@ -1865,7 +1867,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         if (existingFeedback != null) {
           // User already gave feedback - show their choice
           return Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
@@ -1878,7 +1880,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   size: 16,
                   color: colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: AppSpacing.xs),
                 Text(
                   l10n.feedbackThankYou,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -1893,7 +1895,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
         // No feedback yet - show buttons
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.sm, horizontal: AppSpacing.xs),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1905,7 +1907,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSpacing.sm),
               // Buttons row centered
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1921,7 +1923,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     theme: theme,
                     colorScheme: colorScheme,
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: AppSpacing.md),
                   // Thumbs down button
                   _buildFeedbackButton(
                     context: context,
@@ -1987,7 +1989,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       icon: Icon(icon, size: 16),
       label: Text(label),
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
         side: BorderSide(color: colorScheme.outline.withValues(alpha: 0.3)),
         foregroundColor: colorScheme.onSurface.withValues(alpha: 0.8),
       ),
@@ -2012,7 +2014,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             height: 1.5,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: AppSpacing.md),
 
         // Threshold explanations
         _buildThresholdExplanation(
@@ -2044,12 +2046,12 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
           theme,
           colorScheme,
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: AppSpacing.md),
 
         // Data quality indicator
         if (insight.dataQualityConfidence != null) ...[
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
@@ -2061,7 +2063,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   size: 16,
                   color: colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: RichText(
                     text: TextSpan(
@@ -2075,8 +2077,8 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                           text: '${(insight.dataQualityConfidence! * 100).toStringAsFixed(0)}%',
                           style: TextStyle(
                             color: insight.dataQualityConfidence! >= 0.7
-                                ? Colors.green
-                                : Colors.orange,
+                                ? context.successColor
+                                : context.warningColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -2114,7 +2116,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2281,7 +2283,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: AppSpacing.xxs),
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
@@ -2358,8 +2360,8 @@ class _ExpandableSubsection extends StatelessWidget {
       child: Theme(
         data: theme.copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          tilePadding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+          childrenPadding: EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.sm),
           leading: Icon(icon, size: 18, color: iconColor),
           title: Text(
             title,
@@ -2369,7 +2371,7 @@ class _ExpandableSubsection extends StatelessWidget {
             ),
           ),
           children: [
-            const SizedBox(height: 8),
+            SizedBox(height: AppSpacing.xs),
             child,
           ],
         ),
