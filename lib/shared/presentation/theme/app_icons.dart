@@ -40,6 +40,9 @@ class AppIcons {
   /// 🤸 Gymnastics/Bodyweight
   static const IconData gymnastics = Icons.sports_gymnastics;
 
+  /// 🤸 Sports gymnastics (alias for gymnastics)
+  static const IconData sportsGymnastics = Icons.sports_gymnastics;
+
   /// 🧘 Flexibility/Yoga
   static const IconData flexibility = Icons.self_improvement;
 
@@ -89,6 +92,9 @@ class AppIcons {
 
   /// ✅ All done
   static const IconData allDone = Icons.done_all;
+
+  /// ✅ Done all (alias for allDone)
+  static const IconData doneAll = Icons.done_all;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 📈 PROGRESS & ANALYTICS
@@ -210,7 +216,7 @@ class AppIcons {
   static const IconData add = Icons.add;
 
   /// ➕ Add circle outline
-  static const IconData addCircle = Icons.add_circle_outline;
+  static const IconData addCircleOutline = Icons.add_circle_outline;
 
   /// 🗑️ Delete
   static const IconData delete = Icons.delete;
@@ -511,6 +517,340 @@ class AppIcons {
 
   // verified variants (total: 10 usages)
   static const IconData verifiedOutlined = Icons.verified_outlined;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🎯 PHASE 3: COMPLETE CENTRALIZATION
+  // All remaining icons from the codebase (303 total)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  // ACTION (18 icons)
+  static const IconData contentCopyRounded = Icons.content_copy_rounded;
+  static const IconData create = Icons.create;
+  static const IconData dragHandle = Icons.drag_handle;
+  static const IconData dragIndicator = Icons.drag_indicator;
+  static const IconData editCalendar = Icons.edit_calendar;
+  static const IconData editNote = Icons.edit_note;
+  static const IconData filter9Plus = Icons.filter_9_plus;
+  static const IconData filterAltOff = Icons.filter_alt_off;
+  static const IconData filterListOutlined = Icons.filter_list_outlined;
+  static const IconData mobileScreenShare = Icons.mobile_screen_share;
+  static const IconData noteAdd = Icons.note_add;
+  static const IconData personAdd = Icons.person_add;
+  static const IconData removeCircleOutline = Icons.remove_circle_outline;
+  static const IconData saveAlt = Icons.save_alt;
+  static const IconData shareOutlined = Icons.share_outlined;
+  static const IconData sort = Icons.sort;
+
+  // ANALYTICS (9 icons)
+  static const IconData autoGraph = Icons.auto_graph;
+  static const IconData bubbleChart = Icons.bubble_chart;
+  static const IconData gMobiledata = Icons.g_mobiledata;
+  static const IconData pieChart = Icons.pie_chart;
+  static const IconData stackedLineChart = Icons.stacked_line_chart;
+  static const IconData tableChart = Icons.table_chart;
+  static const IconData trendingNeutral = Icons.trending_neutral;
+  static const IconData trendingUpRounded = Icons.trending_up_rounded;
+
+  // COMMUNICATION (9 icons)
+  static const IconData alternateEmail = Icons.alternate_email;
+  static const IconData commentOutlined = Icons.comment_outlined;
+  static const IconData commentsDisabledOutlined = Icons.comments_disabled_outlined;
+  static const IconData message = Icons.message;
+  static const IconData notificationsActive = Icons.notifications_active;
+  static const IconData notificationsNone = Icons.notifications_none;
+  static const IconData notificationsOffOutlined = Icons.notifications_off_outlined;
+  static const IconData notificationsOutlined = Icons.notifications_outlined;
+  static const IconData send = Icons.send;
+
+  // CONTENT (11 icons)
+  static const IconData brokenImage = Icons.broken_image;
+  static const IconData fileDownload = Icons.file_download;
+  static const IconData fileUpload = Icons.file_upload;
+  static const IconData fileUploadOutlined = Icons.file_upload_outlined;
+  static const IconData folder = Icons.folder;
+  static const IconData folderOutlined = Icons.folder_outlined;
+  static const IconData imageNotSupported = Icons.image_not_supported;
+  static const IconData photoCamera = Icons.photo_camera;
+  static const IconData photoLibrary = Icons.photo_library;
+  static const IconData uploadFile = Icons.upload_file;
+  static const IconData videoLibraryOutlined = Icons.video_library_outlined;
+
+  // EMOJI (1 icons)
+
+  // FITNESS (8 icons)
+  static const IconData fitnessCenterOutlined = Icons.fitness_center_outlined;
+  static const IconData fitnessCenterRounded = Icons.fitness_center_rounded;
+  static const IconData healthAndSafety = Icons.health_and_safety;
+  static const IconData sports = Icons.sports;
+  static const IconData sportsFootball = Icons.sports_football;
+  static const IconData sportsHandball = Icons.sports_handball;
+  static const IconData sportsMartialArts = Icons.sports_martial_arts;
+  static const IconData sportsMma = Icons.sports_mma;
+
+  // LOCATION (4 icons)
+  static const IconData gpsFixed = Icons.gps_fixed;
+  static const IconData locationCity = Icons.location_city;
+  static const IconData myLocation = Icons.my_location;
+  static const IconData zoomOutMap = Icons.zoom_out_map;
+
+  // MEDIA (9 icons)
+  static const IconData pauseCircle = Icons.pause_circle;
+  static const IconData pauseCircleOutline = Icons.pause_circle_outline;
+  static const IconData playCircle = Icons.play_circle;
+  static const IconData playCircleFilled = Icons.play_circle_filled;
+  static const IconData playCircleOutline = Icons.play_circle_outline;
+  static const IconData replay = Icons.replay;
+  static const IconData skipNextRounded = Icons.skip_next_rounded;
+  static const IconData volumeUp = Icons.volume_up;
+
+  // MISC (151 icons)
+  static const IconData acUnit = Icons.ac_unit;
+  static const IconData accessible = Icons.accessible;
+  static const IconData airlineSeatFlat = Icons.airline_seat_flat;
+  static const IconData airlineSeatReclineNormal = Icons.airline_seat_recline_normal;
+  static const IconData allInclusive = Icons.all_inclusive;
+  static const IconData altRoute = Icons.alt_route;
+  static const IconData animation = Icons.animation;
+  static const IconData apple = Icons.apple;
+  static const IconData apps = Icons.apps;
+  static const IconData architecture = Icons.architecture;
+  static const IconData archive = Icons.archive;
+  static const IconData article = Icons.article;
+  static const IconData articleOutlined = Icons.article_outlined;
+  static const IconData assignment = Icons.assignment;
+  static const IconData assignmentOutlined = Icons.assignment_outlined;
+  static const IconData autoFixHigh = Icons.auto_fix_high;
+  static const IconData autoMode = Icons.auto_mode;
+  static const IconData badge = Icons.badge;
+  static const IconData balance = Icons.balance;
+  static const IconData bed = Icons.bed;
+  static const IconData bolt = Icons.bolt;
+  static const IconData bugReport = Icons.bug_report;
+  static const IconData calculate = Icons.calculate;
+  static const IconData calculateOutlined = Icons.calculate_outlined;
+  static const IconData calculateRounded = Icons.calculate_rounded;
+  static const IconData category = Icons.category;
+  static const IconData centerFocusStrong = Icons.center_focus_strong;
+  static const IconData circle = Icons.circle;
+  static const IconData circleOutlined = Icons.circle_outlined;
+  static const IconData clearAll = Icons.clear_all;
+  static const IconData cloudDownload = Icons.cloud_download;
+  static const IconData cloudOff = Icons.cloud_off;
+  static const IconData cloudSyncRounded = Icons.cloud_sync_rounded;
+  static const IconData code = Icons.code;
+  static const IconData construction = Icons.construction;
+  static const IconData crop169 = Icons.crop_16_9;
+  static const IconData cropPortrait = Icons.crop_portrait;
+  static const IconData cropSquare = Icons.crop_square;
+  static const IconData dashboard = Icons.dashboard;
+  static const IconData dashboardCustomize = Icons.dashboard_customize;
+  static const IconData dashboardOutlined = Icons.dashboard_outlined;
+  static const IconData dialpad = Icons.dialpad;
+  static const IconData diamond = Icons.diamond;
+  static const IconData directionsWalk = Icons.directions_walk;
+  static const IconData donutLarge = Icons.donut_large;
+  static const IconData downloadForOffline = Icons.download_for_offline;
+  static const IconData equalizer = Icons.equalizer;
+  static const IconData explore = Icons.explore;
+  static const IconData exploreOff = Icons.explore_off;
+  static const IconData female = Icons.female;
+  static const IconData fiberManualRecord = Icons.fiber_manual_record;
+  static const IconData flag = Icons.flag;
+  static const IconData flagCircle = Icons.flag_circle;
+  static const IconData flagOutlined = Icons.flag_outlined;
+  static const IconData flashOn = Icons.flash_on;
+  static const IconData flight = Icons.flight;
+  static const IconData formatListBulleted = Icons.format_list_bulleted;
+  static const IconData formatListNumbered = Icons.format_list_numbered;
+  static const IconData formatQuote = Icons.format_quote;
+  static const IconData formatSize = Icons.format_size;
+  static const IconData functions = Icons.functions;
+  static const IconData grid4x4 = Icons.grid_4x4;
+  static const IconData gridOn = Icons.grid_on;
+  static const IconData gridView = Icons.grid_view;
+  static const IconData healing = Icons.healing;
+  static const IconData hexagonOutlined = Icons.hexagon_outlined;
+  static const IconData horizontalRule = Icons.horizontal_rule;
+  static const IconData hotel = Icons.hotel;
+  static const IconData hourglassEmpty = Icons.hourglass_empty;
+  static const IconData howToVote = Icons.how_to_vote;
+  static const IconData inbox = Icons.inbox;
+  static const IconData inventory2 = Icons.inventory_2;
+  static const IconData inventory2Outlined = Icons.inventory_2_outlined;
+  static const IconData label = Icons.label;
+  static const IconData labelOutline = Icons.label_outline;
+  static const IconData layers = Icons.layers;
+  static const IconData leaderboard = Icons.leaderboard;
+  static const IconData libraryBooks = Icons.library_books;
+  static const IconData list = Icons.list;
+  static const IconData listAlt = Icons.list_alt;
+  static const IconData logout = Icons.logout;
+  static const IconData looks = Icons.looks;
+  static const IconData looks3 = Icons.looks_3;
+  static const IconData looks6 = Icons.looks_6;
+  static const IconData looksOne = Icons.looks_one;
+  static const IconData male = Icons.male;
+  static const IconData militaryTech = Icons.military_tech;
+  static const IconData mobileOff = Icons.mobile_off;
+  static const IconData monitorWeightOutlined = Icons.monitor_weight_outlined;
+  static const IconData newReleases = Icons.new_releases;
+  static const IconData nightlightRound = Icons.nightlight_round;
+  static const IconData north = Icons.north;
+  static const IconData note = Icons.note;
+  static const IconData noteAlt = Icons.note_alt;
+  static const IconData notes = Icons.notes;
+  static const IconData openInNew = Icons.open_in_new;
+  static const IconData percent = Icons.percent;
+  static const IconData pictureAsPdf = Icons.picture_as_pdf;
+  static const IconData pictureInPictureAlt = Icons.picture_in_picture_alt;
+  static const IconData policyOutlined = Icons.policy_outlined;
+  static const IconData preview = Icons.preview;
+  static const IconData print = Icons.print;
+  static const IconData privacyTipRounded = Icons.privacy_tip_rounded;
+  static const IconData rateReview = Icons.rate_review;
+  static const IconData recommend = Icons.recommend;
+  static const IconData reportProblem = Icons.report_problem;
+  static const IconData reportProblemOutlined = Icons.report_problem_outlined;
+  static const IconData rowing = Icons.rowing;
+  static const IconData scale = Icons.scale;
+  static const IconData schoolOutlined = Icons.school_outlined;
+  static const IconData selectAll = Icons.select_all;
+  static const IconData shuffle = Icons.shuffle;
+  static const IconData sick = Icons.sick;
+  static const IconData south = Icons.south;
+  static const IconData spa = Icons.spa;
+  static const IconData storage = Icons.storage;
+  static const IconData straighten = Icons.straighten;
+  static const IconData tag = Icons.local_offer;
+  static const IconData package = Icons.inventory_2;
+  static const IconData support = Icons.support;
+  static const IconData supportAgent = Icons.support_agent;
+  static const IconData swapHoriz = Icons.swap_horiz;
+  static const IconData swapHorizRounded = Icons.swap_horiz_rounded;
+  static const IconData swapVert = Icons.swap_vert;
+  static const IconData swipe = Icons.swipe;
+  static const IconData sync = Icons.sync;
+  static const IconData syncAlt = Icons.sync_alt;
+  static const IconData title = Icons.title;
+  static const IconData toggleOff = Icons.toggle_off;
+  static const IconData toggleOn = Icons.toggle_on;
+  static const IconData touchApp = Icons.touch_app;
+  static const IconData trackChanges = Icons.track_changes;
+  static const IconData translate = Icons.translate;
+  static const IconData unarchive = Icons.unarchive;
+  static const IconData unfoldLess = Icons.unfold_less;
+  static const IconData vibration = Icons.vibration;
+  static const IconData viewAgenda = Icons.view_agenda;
+  static const IconData viewList = Icons.view_list;
+  static const IconData viewCompact = Icons.view_compact;
+  static const IconData viewDetailed = Icons.view_agenda;
+  static const IconData expand = Icons.unfold_more;
+  static const IconData export = Icons.upload_file;
+  static const IconData waves = Icons.waves;
+  static const IconData wavingHand = Icons.waving_hand;
+  static const IconData wbSunny = Icons.wb_sunny;
+  static const IconData wbSunnyOutlined = Icons.wb_sunny_outlined;
+  static const IconData whatshot = Icons.whatshot;
+  static const IconData widgets = Icons.widgets;
+  static const IconData work = Icons.work;
+  static const IconData workspaces = Icons.workspaces;
+
+  // MONEY (1 icons)
+  static const IconData restore = Icons.restore;
+
+  // NAVIGATION (18 icons)
+  static const IconData arrowBackIos = Icons.arrow_back_ios;
+  static const IconData arrowBackIosNew = Icons.arrow_back_ios_new;
+  static const IconData arrowDownward = Icons.arrow_downward;
+  static const IconData arrowDropDown = Icons.arrow_drop_down;
+  static const IconData arrowUpward = Icons.arrow_upward;
+  static const IconData backup = Icons.backup;
+  static const IconData backupRounded = Icons.backup_rounded;
+  static const IconData doubleArrow = Icons.double_arrow;
+  static const IconData feedback = Icons.feedback;
+  static const IconData feedbackOutlined = Icons.feedback_outlined;
+  static const IconData keyboardArrowDown = Icons.keyboard_arrow_down;
+  static const IconData keyboardArrowDownRounded = Icons.keyboard_arrow_down_rounded;
+  static const IconData keyboardArrowUp = Icons.keyboard_arrow_up;
+  static const IconData menuBook = Icons.menu_book;
+  static const IconData menuBookOutlined = Icons.menu_book_outlined;
+
+  // SECURITY (7 icons)
+  static const IconData block = Icons.block;
+  static const IconData keyboard = Icons.keyboard;
+  static const IconData lockOutline = Icons.lock_outline;
+  static const IconData security = Icons.security;
+  static const IconData securityRounded = Icons.security_rounded;
+  static const IconData shield = Icons.shield;
+  static const IconData shieldOutlined = Icons.shield_outlined;
+
+  // SETTINGS (5 icons)
+  static const IconData build = Icons.build;
+  static const IconData buildCircle = Icons.build_circle;
+  static const IconData developerMode = Icons.developer_mode;
+  static const IconData settingsApplications = Icons.settings_applications;
+  static const IconData tune = Icons.tune;
+
+  // SOCIAL (8 icons)
+  static const IconData favorite = Icons.favorite;
+  static const IconData favoriteBorder = Icons.favorite_border;
+  static const IconData public = Icons.public;
+  static const IconData starHalf = Icons.star_half;
+  static const IconData stars = Icons.stars;
+  static const IconData starsRounded = Icons.stars_rounded;
+  static const IconData thumbDownOutlined = Icons.thumb_down_outlined;
+  static const IconData thumbUpOutlined = Icons.thumb_up_outlined;
+
+  // STATUS (21 icons)
+  static const IconData cancel = Icons.cancel;
+  static const IconData checkCircle = Icons.check_circle;
+  static const IconData wifiOff = Icons.wifi_off;
+  static const IconData checkBox = Icons.check_box;
+  static const IconData checkBoxOutlineBlank = Icons.check_box_outline_blank;
+  static const IconData checklist = Icons.checklist;
+  static const IconData cloudDone = Icons.cloud_done;
+  static const IconData cloudDoneRounded = Icons.cloud_done_rounded;
+  static const IconData done = Icons.done;
+  static const IconData downloadDone = Icons.download_done;
+  static const IconData pending = Icons.pending;
+  static const IconData pendingActions = Icons.pending_actions;
+  static const IconData priorityHigh = Icons.priority_high;
+  static const IconData radioButtonChecked = Icons.radio_button_checked;
+  static const IconData radioButtonUnchecked = Icons.radio_button_unchecked;
+  static const IconData verifiedUser = Icons.verified_user;
+  static const IconData verifiedUserOutlined = Icons.verified_user_outlined;
+  static const IconData warningAmber = Icons.warning_amber;
+  static const IconData warningAmberRounded = Icons.warning_amber_rounded;
+
+  // SYSTEM (5 icons)
+  static const IconData batteryAlert = Icons.battery_alert;
+  static const IconData batteryChargingFull = Icons.battery_charging_full;
+  static const IconData phoneAndroid = Icons.phone_android;
+  static const IconData phoneIphone = Icons.phone_iphone;
+  static const IconData wifiOff = Icons.wifi_off;
+
+  // TIMER_DATE (18 icons)
+  static const IconData bedtime = Icons.bedtime;
+  static const IconData calendarViewDay = Icons.calendar_view_day;
+  static const IconData calendarViewMonth = Icons.calendar_view_month;
+  static const IconData calendarViewWeek = Icons.calendar_view_week;
+  static const IconData dateRange = Icons.date_range;
+  static const IconData dateRangeRounded = Icons.date_range_rounded;
+  static const IconData event = Icons.event;
+  static const IconData eventAvailable = Icons.event_available;
+  static const IconData eventBusy = Icons.event_busy;
+  static const IconData eventNote = Icons.event_note;
+  static const IconData lockClock = Icons.lock_clock;
+  static const IconData systemUpdate = Icons.system_update;
+  static const IconData timeline = Icons.timeline;
+  static const IconData timerOffOutlined = Icons.timer_off_outlined;
+  static const IconData tipsAndUpdates = Icons.tips_and_updates;
+  static const IconData today = Icons.today;
+  static const IconData todayRounded = Icons.today_rounded;
+  static const IconData update = Icons.update;
+
+  // USER_PROFILE (1 icons)
+  static const IconData personOutline = Icons.person_outline;
 }
 
 /// 📦 Icon Groups - For when you need multiple related icons

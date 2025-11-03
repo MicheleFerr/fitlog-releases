@@ -519,6 +519,14 @@
   "@clearCacheConfirmation": {
     "description": "Confirmation message for clearing cache"
   },
+  "clearExerciseCacheDesc": "Clear cached exercise database and force reload from JSON assets",
+  "@clearExerciseCacheDesc": {
+    "description": "Description for clear exercise cache option"
+  },
+  "exerciseCacheCleared": "Exercise cache cleared successfully! Exercises will reload from JSON assets on next use.",
+  "@exerciseCacheCleared": {
+    "description": "Success message after clearing exercise cache"
+  },
   "cancel": "Cancel",
   "@cancel": {
     "description": "Cancel button"
@@ -4318,6 +4326,10 @@
   "@chartTapToSeeRealValues": {
     "description": "Hint text explaining that chart shows normalized values and user can tap to see actual values"
   },
+  "multiMetricComparison": "Multi-Metric Comparison",
+  "@multiMetricComparison": {
+    "description": "Title for multi-metric overlay chart section"
+  },
   "volumeHeatmap": "Volume Heatmap",
   "@volumeHeatmap": {
     "description": "Volume heatmap chart title"
@@ -5483,6 +5495,72 @@
   "databaseManager": "Database Manager",
   "@databaseManager": {
     "description": "Database Manager screen title"
+  },
+  "publishNewVersion": "Publish New Version",
+  "@publishNewVersion": {
+    "description": "Button to publish new exercise database version"
+  },
+  "currentVersion": "Current Version",
+  "@currentVersion": {
+    "description": "Current database version label"
+  },
+  "lastPublished": "Last Published",
+  "@lastPublished": {
+    "description": "Last publication date label"
+  },
+  "totalExercisesInDb": "Total Exercises in Database",
+  "@totalExercisesInDb": {
+    "description": "Total exercises count label"
+  },
+  "versionHistory": "Version History",
+  "@versionHistory": {
+    "description": "Version history section title"
+  },
+  "publishVersion": "Publish Version",
+  "@publishVersion": {
+    "description": "Publish version dialog title"
+  },
+  "versionNumber": "Version Number",
+  "@versionNumber": {
+    "description": "Version number input label"
+  },
+  "changelog": "Changelog",
+  "@changelog": {
+    "description": "Changelog input label"
+  },
+  "changelogHint": "Describe what changed in this version (e.g., 'Added 15 new shoulder exercises')",
+  "@changelogHint": {
+    "description": "Changelog input hint"
+  },
+  "publishing": "Publishing...",
+  "@publishing": {
+    "description": "Publishing progress message"
+  },
+  "versionPublished": "Version {version} published successfully! All users will receive the update within 6 hours.",
+  "@versionPublished": {
+    "description": "Version published success message",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "publishFailed": "Failed to publish version: {error}",
+  "@publishFailed": {
+    "description": "Publish failed error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "forceUpdate": "Force Update (Required)",
+  "@forceUpdate": {
+    "description": "Force update checkbox label"
+  },
+  "forceUpdateDesc": "If enabled, users must update to continue using the app",
+  "@forceUpdateDesc": {
+    "description": "Force update description"
   },
   "multiSelectMode": "Multi-Select Mode",
   "@multiSelectMode": {
@@ -13506,5 +13584,13 @@
   "countingModeTime": "Time",
   "@countingModeTime": {
     "description": "Exercise counting mode for time-based exercises"
+  },
+  "refreshed": "Refreshed",
+  "@refreshed": {
+    "description": "Data refreshed successfully status message"
+  },
+  "versionInformation": "Version Information",
+  "@versionInformation": {
+    "description": "Database version information section title"
   }
 }

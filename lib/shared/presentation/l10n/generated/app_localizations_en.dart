@@ -419,6 +419,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to clear the exercise cache? This will remove all cached exercises and they will be downloaded again on next sync.';
 
   @override
+  String get clearExerciseCacheDesc =>
+      'Clear cached exercise database and force reload from JSON assets';
+
+  @override
+  String get exerciseCacheCleared =>
+      'Exercise cache cleared successfully! Exercises will reload from JSON assets on next use.';
+
+  @override
   String get cancel => 'Cancel';
 
   @override
@@ -3296,6 +3304,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chartTapToSeeRealValues => 'Tap chart to see real values';
 
   @override
+  String get multiMetricComparison => 'Multi-Metric Comparison';
+
+  @override
   String get volumeHeatmap => 'Volume Heatmap';
 
   @override
@@ -4171,6 +4182,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get databaseManager => 'Database Manager';
+
+  @override
+  String get publishNewVersion => 'Publish New Version';
+
+  @override
+  String get lastPublished => 'Last Published';
+
+  @override
+  String get totalExercisesInDb => 'Total Exercises in Database';
+
+  @override
+  String get versionHistory => 'Version History';
+
+  @override
+  String get publishVersion => 'Publish Version';
+
+  @override
+  String get versionNumber => 'Version Number';
+
+  @override
+  String get changelog => 'Changelog';
+
+  @override
+  String get changelogHint =>
+      'Describe what changed in this version (e.g., \'Added 15 new shoulder exercises\')';
+
+  @override
+  String get publishing => 'Publishing...';
+
+  @override
+  String versionPublished(String version) {
+    return 'Version $version published successfully! All users will receive the update within 6 hours.';
+  }
+
+  @override
+  String publishFailed(String error) {
+    return 'Failed to publish version: $error';
+  }
+
+  @override
+  String get forceUpdate => 'Force Update (Required)';
+
+  @override
+  String get forceUpdateDesc =>
+      'If enabled, users must update to continue using the app';
 
   @override
   String get multiSelectMode => 'Multi-Select Mode';
@@ -11433,4 +11489,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get countingModeTime => 'Time';
+
+  @override
+  String get refreshed => 'Refreshed';
+
+  @override
+  String get versionInformation => 'Version Information';
 }

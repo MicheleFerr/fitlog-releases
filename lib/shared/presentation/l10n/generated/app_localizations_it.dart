@@ -420,6 +420,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Sei sicuro di voler pulire la cache degli esercizi? Questo rimuoverà tutti gli esercizi in cache e verranno scaricati nuovamente alla prossima sincronizzazione.';
 
   @override
+  String get clearExerciseCacheDesc =>
+      'Pulisci il database esercizi in cache e forza il ricaricamento dai file JSON';
+
+  @override
+  String get exerciseCacheCleared =>
+      'Cache esercizi pulita con successo! Gli esercizi verranno ricaricati dai file JSON al prossimo utilizzo.';
+
+  @override
   String get cancel => 'Annulla';
 
   @override
@@ -3322,6 +3330,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tocca il grafico per vedere i valori reali';
 
   @override
+  String get multiMetricComparison => 'Confronto Multi-Metrica';
+
+  @override
   String get volumeHeatmap => 'Mappa di Calore del Volume';
 
   @override
@@ -4205,6 +4216,51 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get databaseManager => 'Gestione Database';
+
+  @override
+  String get publishNewVersion => 'Pubblica Nuova Versione';
+
+  @override
+  String get lastPublished => 'Ultima Pubblicazione';
+
+  @override
+  String get totalExercisesInDb => 'Esercizi Totali nel Database';
+
+  @override
+  String get versionHistory => 'Cronologia Versioni';
+
+  @override
+  String get publishVersion => 'Pubblica Versione';
+
+  @override
+  String get versionNumber => 'Numero Versione';
+
+  @override
+  String get changelog => 'Changelog';
+
+  @override
+  String get changelogHint =>
+      'Descrivi cosa è cambiato in questa versione (es. \'Aggiunti 15 nuovi esercizi per spalle\')';
+
+  @override
+  String get publishing => 'Pubblicazione in corso...';
+
+  @override
+  String versionPublished(String version) {
+    return 'Versione $version pubblicata con successo! Tutti gli utenti riceveranno l\'aggiornamento entro 6 ore.';
+  }
+
+  @override
+  String publishFailed(String error) {
+    return 'Errore nella pubblicazione della versione: $error';
+  }
+
+  @override
+  String get forceUpdate => 'Aggiornamento Obbligatorio';
+
+  @override
+  String get forceUpdateDesc =>
+      'Se abilitato, gli utenti devono aggiornare per continuare a usare l\'app';
 
   @override
   String get multiSelectMode => 'Modalità Multi-Selezione';
@@ -11566,4 +11622,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get countingModeTime => 'Tempo';
+
+  @override
+  String get refreshed => 'Aggiornato';
+
+  @override
+  String get versionInformation => 'Informazioni Versione';
 }

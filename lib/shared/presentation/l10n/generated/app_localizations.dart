@@ -842,6 +842,18 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to clear the exercise cache? This will remove all cached exercises and they will be downloaded again on next sync.'**
   String get clearCacheConfirmation;
 
+  /// Description for clear exercise cache option
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cached exercise database and force reload from JSON assets'**
+  String get clearExerciseCacheDesc;
+
+  /// Success message after clearing exercise cache
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise cache cleared successfully! Exercises will reload from JSON assets on next use.'**
+  String get exerciseCacheCleared;
+
   /// Cancel button
   ///
   /// In en, this message translates to:
@@ -6137,6 +6149,12 @@ abstract class AppLocalizations {
   /// **'Tap chart to see real values'**
   String get chartTapToSeeRealValues;
 
+  /// Title for multi-metric overlay chart section
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-Metric Comparison'**
+  String get multiMetricComparison;
+
   /// Volume heatmap chart title
   ///
   /// In en, this message translates to:
@@ -7127,7 +7145,7 @@ abstract class AppLocalizations {
   /// **'Check Failed'**
   String get checkFailed;
 
-  /// Current version label
+  /// Current database version label
   ///
   /// In en, this message translates to:
   /// **'Current Version'**
@@ -7768,6 +7786,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Database Manager'**
   String get databaseManager;
+
+  /// Button to publish new exercise database version
+  ///
+  /// In en, this message translates to:
+  /// **'Publish New Version'**
+  String get publishNewVersion;
+
+  /// Last publication date label
+  ///
+  /// In en, this message translates to:
+  /// **'Last Published'**
+  String get lastPublished;
+
+  /// Total exercises count label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Exercises in Database'**
+  String get totalExercisesInDb;
+
+  /// Version history section title
+  ///
+  /// In en, this message translates to:
+  /// **'Version History'**
+  String get versionHistory;
+
+  /// Publish version dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Publish Version'**
+  String get publishVersion;
+
+  /// Version number input label
+  ///
+  /// In en, this message translates to:
+  /// **'Version Number'**
+  String get versionNumber;
+
+  /// Changelog input label
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get changelog;
+
+  /// Changelog input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what changed in this version (e.g., \'Added 15 new shoulder exercises\')'**
+  String get changelogHint;
+
+  /// Publishing progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing...'**
+  String get publishing;
+
+  /// Version published success message
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} published successfully! All users will receive the update within 6 hours.'**
+  String versionPublished(String version);
+
+  /// Publish failed error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to publish version: {error}'**
+  String publishFailed(String error);
+
+  /// Force update checkbox label
+  ///
+  /// In en, this message translates to:
+  /// **'Force Update (Required)'**
+  String get forceUpdate;
+
+  /// Force update description
+  ///
+  /// In en, this message translates to:
+  /// **'If enabled, users must update to continue using the app'**
+  String get forceUpdateDesc;
 
   /// Multi-select mode toggle tooltip
   ///
@@ -20117,6 +20213,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time'**
   String get countingModeTime;
+
+  /// Data refreshed successfully status message
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshed'**
+  String get refreshed;
+
+  /// Database version information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Version Information'**
+  String get versionInformation;
 }
 
 class _AppLocalizationsDelegate
