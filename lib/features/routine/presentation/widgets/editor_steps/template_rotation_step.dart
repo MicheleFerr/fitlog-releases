@@ -76,7 +76,7 @@ class TemplateRotationStep extends ConsumerWidget {
       );
     }
 
-    final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
+    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     return templatesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -89,12 +89,18 @@ class TemplateRotationStep extends ConsumerWidget {
         ),
       ),
       data: (allTemplates) {
-        // Map IDs to actual templates
+        // Map IDs to actual templates, filtering out any not found
         final selectedTemplates = selectedTemplateIds
-            .map((id) => allTemplates.firstWhere(
-                  (t) => t.id == id,
-                  orElse: () => allTemplates.first,
-                ))
+            .map((id) {
+              try {
+                return allTemplates.firstWhere((t) => t.id == id);
+              } catch (e) {
+                // Template not found - this shouldn't happen but handle gracefully
+                debugPrint('⚠️ Template with ID $id not found in provider');
+                return null;
+              }
+            })
+            .whereType<WorkoutTemplate>() // Filter out nulls
             .toList();
 
         return _buildContent(context, ref, state, selectedTemplates);

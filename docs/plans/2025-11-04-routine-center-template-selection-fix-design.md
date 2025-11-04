@@ -459,4 +459,79 @@ If we had feature flags, we could toggle between:
 
 ---
 
+## ADDENDUM: Step 4 Rotation Bug Fix (2025-11-04)
+
+### 🐛 Issue Discovered After Step 3 Fix
+
+After implementing Step 3 provider change (`allWorkoutTemplatesProvider` → `customWorkoutTemplatesProvider`), discovered cascading bug in Step 4.
+
+**Error**:
+```
+Bad state: No element
+at List.first (dart:core-patch/growable_array.dart:352)
+at template_rotation_step.dart:96
+```
+
+**Root Cause**:
+- Step 3 (after fix): Uses `customWorkoutTemplatesProvider` to show only user's custom templates
+- Step 4 (before fix): Still used `allWorkoutTemplatesProvider` at line 79
+- User selects custom template IDs in Step 3
+- Step 4 tries to look up those IDs in `allWorkoutTemplatesProvider` (wrong provider)
+- `firstWhere` fails to find templates → calls `orElse: () => allTemplates.first`
+- If `allTemplates` is empty → crashes with "No element"
+
+### 🔧 Fix Applied
+
+**File**: `lib/features/routine/presentation/widgets/editor_steps/template_rotation_step.dart`
+
+**Change 1** (line 79): Provider consistency
+```dart
+// BEFORE:
+final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
+
+// AFTER:
+final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+```
+
+**Change 2** (lines 93-104): Improved error handling
+```dart
+// BEFORE: Unsafe orElse that crashes if list empty
+final selectedTemplates = selectedTemplateIds
+    .map((id) => allTemplates.firstWhere(
+          (t) => t.id == id,
+          orElse: () => allTemplates.first, // ← Crashes if empty!
+        ))
+    .toList();
+
+// AFTER: Safe try-catch with null filtering
+final selectedTemplates = selectedTemplateIds
+    .map((id) {
+      try {
+        return allTemplates.firstWhere((t) => t.id == id);
+      } catch (e) {
+        debugPrint('⚠️ Template with ID $id not found in provider');
+        return null;
+      }
+    })
+    .whereType<WorkoutTemplate>() // Filter out nulls
+    .toList();
+```
+
+### ✅ Result
+
+- Step 4 now uses same provider as Step 3 (consistency)
+- Gray screen error fixed
+- Template lookup safe even if IDs somehow don't match
+- User can proceed through entire wizard flow
+
+### 📝 Testing Notes
+
+Test entire wizard flow:
+1. Step 1 (Info) → Step 2 (Pattern) → Step 3 (Selection) → Step 4 (Rotation)
+2. Verify Step 4 displays selected templates correctly
+3. Verify reordering works
+4. Verify distribution preview shows correct rotation
+
+---
+
 **End of Design Document**
