@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
@@ -80,9 +82,18 @@ final exerciseActivityRepositoryProvider = Provider<ExerciseActivityRepository>(
 // NOTE: WorkoutHistoryRepository removed - using unified HybridWorkoutRepository instead
 
 // Current workout state provider
-final currentWorkoutProvider = StateNotifierProvider<CurrentWorkoutNotifier, Workout?>((ref) {
-  return CurrentWorkoutNotifier(ref);
-});
+final currentWorkoutProvider = StateNotifierProvider<CurrentWorkoutNotifier, Workout?>(
+  (ref) {
+    final notifier = CurrentWorkoutNotifier(ref);
+    notifier._startCleanupTimer();
+
+    ref.onDispose(() {
+      notifier._cleanupTimer?.cancel();
+    });
+
+    return notifier;
+  },
+);
 
 class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   CurrentWorkoutNotifier(this.ref) : super(null);
@@ -98,6 +109,10 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   // 💾 Track current template ID for auto-save
   String? _currentTemplateId;
 
+  // 🧹 Cleanup timer fields
+  Timer? _cleanupTimer;
+  bool _timerPaused = false;
+
   // 💾 Helper method to auto-save modifications
   void _autoSaveIfNeeded() {
     if (_currentTemplateId != null && state != null) {
@@ -109,8 +124,71 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     }
   }
 
+  /// Creates workout from routine with pre-loaded exercises
+  Future<void> createWorkoutFromRoutine({
+    required String routineName,
+    required List<Exercise> exercises,
+    required String sessionId,
+  }) async {
+    final workout = Workout(
+      id: const Uuid().v4(),
+      name: routineName,
+      exercises: exercises,
+      status: WorkoutStatus.planned,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      isPreloaded: true, // Flag to identify pre-loaded state
+      preloadExpiry: DateTime.now().add(const Duration(minutes: 15)), // 15-min timeout
+      sessionId: sessionId, // Analytics tracking
+    );
+
+    state = workout;
+    _autoSaveIfNeeded();
+  }
+
+  void _startCleanupTimer() {
+    _cleanupTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (_timerPaused) return; // Skip if paused
+
+      final workout = state;
+      if (workout?.isPreloaded == true && workout!.isExpired) {
+        state = null; // Cleanup expired workout
+        if (kDebugMode) debugPrint('🧹 Preloaded workout expired and removed');
+      }
+    });
+  }
+
+  void pauseCleanupTimer() {
+    _timerPaused = true;
+    if (kDebugMode) debugPrint('⏸️ Cleanup timer paused');
+  }
+
+  void resumeCleanupTimer() {
+    _timerPaused = false;
+    if (kDebugMode) debugPrint('▶️ Cleanup timer resumed');
+  }
+
+  Future<void> replaceExercisesFromTemplate(wt.WorkoutTemplate template) async {
+    final workout = state;
+    if (workout == null) return;
+
+    state = workout.copyWith(
+      name: template.name,
+      exercises: template.exercises,
+      isPreloaded: false, // No longer pre-loaded
+      exercisesModified: true, // Track modification
+    );
+
+    _autoSaveIfNeeded();
+  }
+
   void createWorkout(String name) {
-    state = Workout(name: name);
+    state = Workout(
+      id: const Uuid().v4(),
+      name: name,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
     _currentTemplateId = null; // Reset template ID for manual workouts
   }
 
@@ -1582,6 +1660,10 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     // CRITICAL FIX: Mark as disposed to prevent async operations from modifying state
     _isDisposed = true;
     debugLog(LogCategory.workout, '🔒 [WorkoutProvider] Provider disposed - blocking future async operations');
+
+    // Cancel cleanup timer
+    _cleanupTimer?.cancel();
+
     super.dispose();
   }
 }
