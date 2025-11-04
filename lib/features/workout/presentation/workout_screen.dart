@@ -40,6 +40,8 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/contextual_overlay_manager.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
+import 'package:uuid/uuid.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   const WorkoutScreen({super.key});
@@ -149,6 +151,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
 
     // ⚡ OPTIMIZATION: Use .select() for granular rebuilds
     // Only rebuild when specific properties change, not entire workout object
+    final currentWorkout = ref.watch(currentWorkoutProvider);
+    final sessionId = (GoRouterState.of(context).extra as Map?)?['sessionId'] as String?;
+
     final workoutName = ref.watch(
       currentWorkoutProvider.select((workout) => workout?.name),
     );
@@ -160,6 +165,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     );
     final hasWorkout = ref.watch(
       currentWorkoutProvider.select((workout) => workout != null),
+    );
+
+    // Check if this is a pre-loaded workout
+    final isPreloaded = ref.watch(
+      currentWorkoutProvider.select((workout) => workout?.isPreloaded ?? false),
     );
 
     // PHASE 2: Listen for first exercise added to show "addFirstSet" overlay
@@ -274,16 +284,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             ),
             body: Stack(
               children: [
-                hasWorkout
-                    ? Consumer(
-                        builder: (context, ref, child) {
-                          // ⚡ OPTIMIZATION: Watch full workout only in body builder
-                          // This isolates rebuilds to this section when exercise data changes
-                          final currentWorkout = ref.watch(currentWorkoutProvider);
-                          return _buildWorkoutView(context, ref, currentWorkout!);
-                        },
-                      )
-                    : _buildWelcomeView(context, ref),
+                // Conditional rendering based on workout state
+                if (!hasWorkout)
+                  _buildWelcomeView(context, ref)
+                else if (isPreloaded && hasExercises)
+                  _buildPreloadedView(context, ref, currentWorkout!, sessionId ?? _generateSessionId())
+                else
+                  Consumer(
+                    builder: (context, ref, child) {
+                      // ⚡ OPTIMIZATION: Watch full workout only in body builder
+                      // This isolates rebuilds to this section when exercise data changes
+                      final currentWorkout = ref.watch(currentWorkoutProvider);
+                      return _buildWorkoutView(context, ref, currentWorkout!);
+                    },
+                  ),
                 // Timer Overlay
                 Consumer(
                   builder: (context, ref, child) {
@@ -960,6 +974,258 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       // No active workout, just go back
       context.goNamed('home');
     }
+  }
+
+  String _generateSessionId() => const Uuid().v4();
+
+  Widget _buildPreloadedView(
+    BuildContext context,
+    WidgetRef ref,
+    Workout workout,
+    String sessionId,
+  ) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(workout.name),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    AppIcons.autoAwesome,
+                    size: 14,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Suggerito',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          // "Cambio Programma" banner
+          _buildChangeWorkoutBanner(context, ref, sessionId),
+
+          // Exercise list
+          Expanded(
+            child: ListView.builder(
+              itemCount: workout.exercises.length,
+              itemBuilder: (_, i) {
+                final exercise = workout.exercises[i];
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text('${i + 1}'),
+                  ),
+                  title: Text(exercise.name),
+                  subtitle: Text(exercise.category.toString().split('.').last),
+                );
+              },
+            ),
+          ),
+
+          // Start button
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton.icon(
+              onPressed: () => _onStartWorkout(context, ref, workout, sessionId),
+              icon: const Icon(AppIcons.playArrowRounded),
+              label: Text(context.l10n.startWorkout),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.successColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChangeWorkoutBanner(
+    BuildContext context,
+    WidgetRef ref,
+    String sessionId,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: context.colors.primary.withValues(alpha: 0.1),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.3),
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              '💡 Non è quello che volevi?',
+              style: context.textTheme.bodySmall,
+            ),
+          ),
+          TextButton(
+            onPressed: () => _showTemplateSelection(context, ref, sessionId),
+            child: const Text('Sfoglia Template'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showTemplateSelection(
+    BuildContext context,
+    WidgetRef ref,
+    String sessionId,
+  ) async {
+    // Pause cleanup timer while user browses templates
+    ref.read(currentWorkoutProvider.notifier).pauseCleanupTimer();
+
+    try {
+      // Show template selection modal
+      final templates = await ref.read(customWorkoutTemplatesProvider.future);
+
+      if (context.mounted) {
+        await showModalBottomSheet(
+          context: context,
+          isDismissible: true,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (modalContext) => DraggableScrollableSheet(
+            initialChildSize: 0.7,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            expand: false,
+            builder: (_, scrollController) => Column(
+              children: [
+                // Handle bar
+                Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 8),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.outline.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Seleziona Template',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                // Template list
+                Expanded(
+                  child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: templates.length,
+                    itemBuilder: (_, index) {
+                      final template = templates[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+                          child: Icon(
+                            AppIcons.workout,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                        title: Text(template.name),
+                        subtitle: Text('${template.exercises.length} esercizi • ~${template.estimatedDuration} min'),
+                        trailing: const Icon(AppIcons.arrowForwardRounded, size: 16),
+                        onTap: () async {
+                          // Replace exercises with selected template
+                          await ref
+                              .read(currentWorkoutProvider.notifier)
+                              .replaceExercisesFromTemplate(template);
+
+                          // Track modification
+                          await WorkoutAnalytics.trackEvent(
+                            'workout_template_changed',
+                            properties: {
+                              'sessionId': sessionId,
+                              'newTemplateName': template.name,
+                              'exerciseCount': template.exercises.length,
+                              'timestamp': DateTime.now().toIso8601String(),
+                            },
+                          );
+
+                          if (modalContext.mounted) {
+                            Navigator.pop(modalContext);
+                            // Resume cleanup timer
+                            ref.read(currentWorkoutProvider.notifier).resumeCleanupTimer();
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    } finally {
+      // Ensure timer resumed even if error occurs
+      ref.read(currentWorkoutProvider.notifier).resumeCleanupTimer();
+    }
+  }
+
+  Future<void> _onStartWorkout(
+    BuildContext context,
+    WidgetRef ref,
+    Workout workout,
+    String sessionId,
+  ) async {
+    // Track analytics
+    await WorkoutAnalytics.trackEvent(
+      'workout_started',
+      properties: {
+        'sessionId': sessionId,
+        'sourceFlow': workout.isPreloaded ? 'smart_cta' : 'fab',
+        'exercisesModified': workout.exercisesModified ?? false,
+        'exerciseCount': workout.exercises.length,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+    );
+
+    // Update workout status to active
+    ref.read(currentWorkoutProvider.notifier).startWorkout();
+
+    // Show success feedback
+    SnackBarService.showSuccess(
+      context,
+      '⚡ ${context.l10n.workoutStarted(workout.name)}',
+    );
+
+    // The UI will rebuild based on workout status
   }
 
   Widget _buildWelcomeView(BuildContext context, WidgetRef ref) {
