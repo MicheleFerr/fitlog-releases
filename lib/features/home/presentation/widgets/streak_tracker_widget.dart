@@ -246,7 +246,7 @@ class StreakTrackerWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
@@ -540,7 +540,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                 onTap: hasWorkout 
                   ? () => _showDayDetails(context, date, activities)
                   : null,
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: isFuture
                       ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)

@@ -37,146 +37,49 @@ final intelligentWorkoutSuggestionProvider = FutureProvider<WorkoutSuggestion?>(
       return null; // No history, can't make intelligent suggestion
     }
 
-    // LEVEL 1: Try CUSTOM NAME pattern detection first (supporta nomi come "Pippo", "Giovanni")
-    final patternService = PatternDetectionService(hiveDataSource: hiveDataSource);
+    // LEVEL 1: Try pattern detection with new PatternDetectionService
+    final patternService = PatternDetectionService();
 
-    // PROVA 1: Pattern con nomi esatti (custom)
-    final customSequence = await patternService.extractSequences(
-      userId: userId,
-      lookbackDays: 21,
-      normalizeNames: false, // USA NOMI ESATTI!
+    // Convert WorkoutModel to Workout domain entities
+    final domainWorkouts = recentWorkouts.map((w) => w.toDomain()).toList();
+
+    // Detect pattern from recent workouts
+    final patternResult = await patternService.detectPattern(
+      recentWorkouts: domainWorkouts,
+      minPatternLength: 2,
+      maxPatternLength: 7,
+      minRepetitions: 2,
     );
 
-    if (customSequence.isNotEmpty) {
-      final detector = SimplePatternDetector();
-      final customPatternResult = detector.detectRepeatingPattern(customSequence);
-
-      if (customPatternResult != null && customPatternResult.confidence >= 0.75) {
-        // Pattern trovato con nomi custom!
+    if (patternResult != null && patternResult.confidence >= 0.75) {
+        // Pattern found!
         stopwatch.stop();
 
         if (kDebugMode) {
-          debugPrint('🎯 Custom name pattern detected: ${customPatternResult.pattern.join(" → ")}');
-        }
-
-        await WorkoutSuggestionAnalytics.trackPatternDetection(
-          patternFound: true,
-          confidence: customPatternResult.confidence,
-          patternLength: customPatternResult.pattern.length,
-          sequenceLength: customSequence.length,
-          computationTimeMs: stopwatch.elapsedMilliseconds,
-        );
-
-        final nextWorkoutType = customPatternResult.predictNext(customSequence);
-        final recoveryCalculator = RecoveryTimeCalculator();
-
-        // Usa useExactNames = true per nomi custom
-        final recoveryStatuses = recoveryCalculator.calculateAllRecoveryStatuses(
-          workoutTypes: customPatternResult.pattern,
-          recentWorkouts: recentWorkouts,
-          useExactNames: true, // IMPORTANTE: confronta nomi esatti
-        );
-
-        final predictedRecoveryStatus = recoveryStatuses[nextWorkoutType];
-        String finalWorkoutType = nextWorkoutType;
-        String suggestionReason = customPatternResult.occurrences >= 3
-            ? 'Continue your routine'
-            : 'Next in rotation';
-
-        if (predictedRecoveryStatus != null && !predictedRecoveryStatus.isRecovered) {
-          final bestRecovered = recoveryCalculator.findBestRecoveredWorkout(
-            recoveryStatuses: recoveryStatuses,
-          );
-
-          if (bestRecovered != null && bestRecovered != nextWorkoutType) {
-            finalWorkoutType = bestRecovered;
-            suggestionReason = 'Better recovery time';
-
-            if (kDebugMode) {
-              debugPrint('🔄 Recovery override: $nextWorkoutType → $finalWorkoutType');
-            }
-          }
-        }
-
-        // Cerca template con nome esatto
-        final matchingTemplate = _findMatchingTemplate(
-          templates,
-          finalWorkoutType,
-          preferExactMatch: true, // PROVA PRIMA MATCH ESATTO
-        );
-
-        if (matchingTemplate != null) {
-          final daysSinceLastWorkout = recentWorkouts.isNotEmpty && recentWorkouts.first.startTime != null
-            ? DateTime.now().difference(recentWorkouts.first.startTime!).inDays
-            : 0;
-
-          double finalConfidence = customPatternResult.confidence;
-          if (recoveryStatuses.containsKey(finalWorkoutType)) {
-            final recoveryBoost = recoveryCalculator.getRecoveryConfidenceBoost(
-              recoveryStatuses[finalWorkoutType]!,
-            );
-            finalConfidence = (finalConfidence + recoveryBoost).clamp(0.0, 1.0);
-          }
-
-          final suggestion = WorkoutSuggestion(
-            templateName: matchingTemplate.name,
-            reason: suggestionReason,
-            confidence: finalConfidence,
-            pattern: customPatternResult.pattern,
-            daysSinceLastWorkout: daysSinceLastWorkout,
-            recoveryStatus: recoveryStatuses[finalWorkoutType],
-          );
-
-          await WorkoutSuggestionAnalytics.trackSuggestionShown(
-            templateName: suggestion.templateName,
-            reason: suggestion.reason,
-            confidence: suggestion.confidence,
-            suggestionLevel: 'intelligent_custom',
-            pattern: suggestion.pattern,
-          );
-
-          return suggestion;
-        }
-      }
-    }
-
-    // PROVA 2: Fallback a pattern normalizzati (PUSH, PULL, LEGS)
-    final normalizedSequence = await patternService.extractSequences(
-      userId: userId,
-      lookbackDays: 21,
-      normalizeNames: true, // USA NORMALIZZAZIONE
-    );
-
-    if (normalizedSequence.isNotEmpty) {
-      final detector = SimplePatternDetector();
-      final patternResult = detector.detectRepeatingPattern(normalizedSequence);
-
-      if (patternResult != null && patternResult.confidence >= 0.75) {
-        stopwatch.stop();
-
-        if (kDebugMode) {
-          debugPrint('🎯 Normalized pattern detected: ${patternResult.pattern.join(" → ")}');
+          debugPrint('🎯 Pattern detected: ${patternResult.pattern.join(" → ")}');
         }
 
         await WorkoutSuggestionAnalytics.trackPatternDetection(
           patternFound: true,
           confidence: patternResult.confidence,
           patternLength: patternResult.pattern.length,
-          sequenceLength: normalizedSequence.length,
+          sequenceLength: recentWorkouts.length,
           computationTimeMs: stopwatch.elapsedMilliseconds,
         );
 
-        final nextWorkoutType = patternResult.predictNext(normalizedSequence);
+        final nextWorkoutType = patternResult.predictNext();
         final recoveryCalculator = RecoveryTimeCalculator();
+
+        // Calculate recovery statuses for all workouts in pattern
         final recoveryStatuses = recoveryCalculator.calculateAllRecoveryStatuses(
           workoutTypes: patternResult.pattern,
           recentWorkouts: recentWorkouts,
-          useExactNames: false, // Usa normalizzazione
+          useExactNames: false,
         );
 
         final predictedRecoveryStatus = recoveryStatuses[nextWorkoutType];
         String finalWorkoutType = nextWorkoutType;
-        String suggestionReason = patternResult.occurrences >= 3
+        String suggestionReason = patternResult.repetitions >= 3
             ? 'Continue your routine'
             : 'Next in rotation';
 
@@ -195,7 +98,12 @@ final intelligentWorkoutSuggestionProvider = FutureProvider<WorkoutSuggestion?>(
           }
         }
 
-        final matchingTemplate = _findMatchingTemplate(templates, finalWorkoutType);
+        // Find matching template
+        final matchingTemplate = _findMatchingTemplate(
+          templates,
+          finalWorkoutType,
+          preferExactMatch: false,
+        );
 
         if (matchingTemplate != null) {
           final daysSinceLastWorkout = recentWorkouts.isNotEmpty && recentWorkouts.first.startTime != null
@@ -223,7 +131,7 @@ final intelligentWorkoutSuggestionProvider = FutureProvider<WorkoutSuggestion?>(
             templateName: suggestion.templateName,
             reason: suggestion.reason,
             confidence: suggestion.confidence,
-            suggestionLevel: 'intelligent_normalized',
+            suggestionLevel: 'intelligent',
             pattern: suggestion.pattern,
           );
 
@@ -236,11 +144,11 @@ final intelligentWorkoutSuggestionProvider = FutureProvider<WorkoutSuggestion?>(
           patternFound: patternResult != null,
           confidence: patternResult?.confidence ?? 0.0,
           patternLength: patternResult?.pattern.length ?? 0,
-          sequenceLength: normalizedSequence.length,
+          sequenceLength: recentWorkouts.length,
           computationTimeMs: stopwatch.elapsedMilliseconds,
         );
       }
-    }
+
 
     // LEVEL 2: Fall back to frequency-based suggestion
     final frequencySuggestion = _getFrequencyBasedSuggestion(recentWorkouts, templates);
@@ -336,8 +244,10 @@ WorkoutTemplate? _findMatchingTemplate(
   }
 
   // STEP 2: Try normalized match (per categorie come PUSH, PULL, LEGS)
+  // Normalize workout names for matching (lowercase and trim)
+  final normalizedWorkoutType = workoutType.trim().toLowerCase();
   final normalizedMatch = templates.firstWhereOrNull(
-    (t) => PatternDetectionService.normalizeWorkoutType(t.name) == workoutType,
+    (t) => t.name.trim().toLowerCase() == normalizedWorkoutType,
   );
 
   if (normalizedMatch != null) {

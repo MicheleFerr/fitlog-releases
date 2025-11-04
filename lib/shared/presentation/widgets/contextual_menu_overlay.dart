@@ -170,7 +170,7 @@ class _ContextualMenuOverlayState extends State<ContextualMenuOverlay>
     return GestureDetector(
       onTap: _dismiss,
       behavior: HitTestBehavior.translucent,
-      child: Container(
+      child: ColoredBox(
         color: Colors.transparent,
         child: Stack(
           children: [

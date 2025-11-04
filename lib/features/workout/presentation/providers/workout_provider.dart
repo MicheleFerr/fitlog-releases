@@ -19,7 +19,6 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/intelligent_notification_service.dart';
 // Achievement notification service for PR, streak, and volume notifications
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_providers.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/achievement_notification_provider.dart';
 // MIGRATION: Using bridge provider for backward compatibility while migrating to unified system
 // import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart'; // REMOVED: cleanup
@@ -628,33 +627,31 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         // Collects all achievements for 3 seconds then sends ONE notification
         try {
           final achievementService = ref.read(achievementNotificationServiceProvider);
-          if (achievementService != null) {
-            // 1. Detect Personal Records and queue them
-            final prUseCase = ref.read(detectPersonalRecordsUseCaseProvider);
-            final prs = await prUseCase.execute(currentUser.uid, workout);
+          // 1. Detect Personal Records and queue them
+          final prUseCase = ref.read(detectPersonalRecordsUseCaseProvider);
+          final prs = await prUseCase.execute(currentUser.uid, workout);
 
-            if (prs.isNotEmpty) {
-              final queuedCount = await achievementService.notifyMultiplePRs(prs, workoutId: workout.id);
-              debugLog(LogCategory.workout, '📦 [Batching] Queued $queuedCount PRs for batch ${workout.id}');
-            }
-
-            // 2. Queue Streak Milestone
-            final streakAsync = await ref.read(currentStreakProvider.future);
-            if (streakAsync > 0) {
-              await achievementService.queueStreakAchievement(streakAsync, workoutId: workout.id);
-              debugLog(LogCategory.workout, '📦 [Batching] Queued streak milestone: $streakAsync days');
-            }
-
-            // 3. Queue Volume Milestone
-            final progressData = await ref.read(progressDataProvider.future);
-            if (progressData != null && progressData.totalVolume > 0) {
-              await achievementService.queueVolumeAchievement(progressData.totalVolume, workoutId: workout.id);
-              debugLog(LogCategory.workout, '📦 [Batching] Queued volume milestone: ${progressData.totalVolume}kg');
-            }
-
-            debugLog(LogCategory.workout, '📦 [Batching] All achievements queued - will send 1 notification in 3s');
+          if (prs.isNotEmpty) {
+            final queuedCount = await achievementService.notifyMultiplePRs(prs, workoutId: workout.id);
+            debugLog(LogCategory.workout, '📦 [Batching] Queued $queuedCount PRs for batch ${workout.id}');
           }
-        } catch (achievementError) {
+
+          // 2. Queue Streak Milestone
+          final streakAsync = await ref.read(currentStreakProvider.future);
+          if (streakAsync > 0) {
+            await achievementService.queueStreakAchievement(streakAsync, workoutId: workout.id);
+            debugLog(LogCategory.workout, '📦 [Batching] Queued streak milestone: $streakAsync days');
+          }
+
+          // 3. Queue Volume Milestone
+          final progressData = await ref.read(progressDataProvider.future);
+          if (progressData != null && progressData.totalVolume > 0) {
+            await achievementService.queueVolumeAchievement(progressData.totalVolume, workoutId: workout.id);
+            debugLog(LogCategory.workout, '📦 [Batching] Queued volume milestone: ${progressData.totalVolume}kg');
+          }
+
+          debugLog(LogCategory.workout, '📦 [Batching] All achievements queued - will send 1 notification in 3s');
+                } catch (achievementError) {
           debugLog(LogCategory.workout, '⚠️ [Achievements] Failed to queue achievement notifications: $achievementError');
           // Non-critical - continue with other operations
         }

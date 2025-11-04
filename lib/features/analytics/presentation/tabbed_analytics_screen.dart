@@ -112,7 +112,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
-          child: Container(
+          child: ColoredBox(
             color: theme.colorScheme.surface,
             child: TabBar(
               controller: _tabController,

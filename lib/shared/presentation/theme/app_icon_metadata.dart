@@ -25,6 +25,16 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_category.d
 /// final label = AppIcons.timer.suggestedSemanticLabel;
 /// ```
 class IconMetadata {
+
+  const IconMetadata({
+    required this.description,
+    required this.useCases,
+    required this.relatedIcons,
+    required this.suggestedSemanticLabel,
+    required this.keywords,
+    this.platformNotes,
+    this.exampleUsage,
+  });
   /// Human-readable description of what this icon represents
   final String description;
 
@@ -45,16 +55,6 @@ class IconMetadata {
 
   /// Code example showing typical usage
   final String? exampleUsage;
-
-  const IconMetadata({
-    required this.description,
-    required this.useCases,
-    required this.relatedIcons,
-    required this.suggestedSemanticLabel,
-    required this.keywords,
-    this.platformNotes,
-    this.exampleUsage,
-  });
 
   /// Check if this metadata matches a search query
   bool matches(String query) {

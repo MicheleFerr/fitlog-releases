@@ -465,8 +465,8 @@ class _DifficultyFilterSheet extends ConsumerWidget {
                     ),
                   ),
                 ),
-                ListTile(
-                  title: const Text('ALL'),
+                const ListTile(
+                  title: Text('ALL'),
                   leading: Radio<DifficultyLevel?>(
                     value: null,
                   ),
@@ -513,8 +513,8 @@ class _CategoryFilterSheet extends ConsumerWidget {
                     ),
                   ),
                 ),
-                ListTile(
-                  title: const Text('ALL'),
+                const ListTile(
+                  title: Text('ALL'),
                   leading: Radio<WorkoutCategory?>(
                     value: null,
                   ),
@@ -561,8 +561,8 @@ class _StyleFilterSheet extends ConsumerWidget {
                     ),
                   ),
                 ),
-                ListTile(
-                  title: const Text('ALL'),
+                const ListTile(
+                  title: Text('ALL'),
                   leading: Radio<TrainingStyle?>(
                     value: null,
                   ),
@@ -611,8 +611,8 @@ class _DurationFilterSheet extends ConsumerWidget {
                     ),
                   ),
                 ),
-                ListTile(
-                  title: const Text('ANY DURATION'),
+                const ListTile(
+                  title: Text('ANY DURATION'),
                   leading: Radio<int?>(
                     value: null,
                   ),

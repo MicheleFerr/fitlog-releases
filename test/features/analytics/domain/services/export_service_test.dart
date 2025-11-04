@@ -28,10 +28,10 @@ void main() {
           exerciseId: 'ex1',
           exerciseName: 'Bench Press',
           muscleGroup: 'Chest',
-          sets: [
-            const AnalyticsSet(weight: 100, reps: 10, rpe: 8, restTime: 120),
-            const AnalyticsSet(weight: 110, reps: 8, rpe: 9, restTime: 150),
-            const AnalyticsSet(weight: 120, reps: 6, rpe: 10),
+          sets: const [
+            AnalyticsSet(weight: 100, reps: 10, rpe: 8, restTime: 120),
+            AnalyticsSet(weight: 110, reps: 8, rpe: 9, restTime: 150),
+            AnalyticsSet(weight: 120, reps: 6, rpe: 10),
           ],
           totalVolume: 2360,
           totalReps: 24,
@@ -46,10 +46,10 @@ void main() {
           exerciseId: 'ex2',
           exerciseName: 'Squat',
           muscleGroup: 'Legs',
-          sets: [
-            const AnalyticsSet(weight: 140, reps: 8, rpe: 8),
-            const AnalyticsSet(weight: 150, reps: 6, rpe: 9),
-            const AnalyticsSet(weight: 160, reps: 5, rpe: 10),
+          sets: const [
+            AnalyticsSet(weight: 140, reps: 8, rpe: 8),
+            AnalyticsSet(weight: 150, reps: 6, rpe: 9),
+            AnalyticsSet(weight: 160, reps: 5, rpe: 10),
           ],
           totalVolume: 2820,
           totalReps: 19,

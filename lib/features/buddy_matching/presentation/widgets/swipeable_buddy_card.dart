@@ -115,7 +115,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -300,7 +300,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
   }
 
   Widget _buildProfilePlaceholder(ThemeData theme) {
-    return Container(
+    return ColoredBox(
       color: theme.colorScheme.primary.withValues(alpha: 0.1),
       child: Center(
         child: Icon(
@@ -459,7 +459,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
     if (_dragDistance > 30) {
       // Like indicator (right swipe)
       return Positioned.fill(
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.success.withValues(alpha: 0.2 * opacity),
             borderRadius: BorderRadius.circular(20),
@@ -488,7 +488,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
     } else if (_dragDistance < -30) {
       // Dislike indicator (left swipe)
       return Positioned.fill(
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.error.withValues(alpha: 0.2 * opacity),
             borderRadius: BorderRadius.circular(20),

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -39,7 +38,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     super.initState();
     _customizations = widget.selectedExercises.map((exercise) {
       // ✅ Default to weighted mode (DatabaseExercise → Exercise conversion needed for full detection)
-      final countingMode = ExerciseCountingMode.weighted;
+      const countingMode = ExerciseCountingMode.weighted;
 
       // ✅ NUOVO: Create default sets based on counting mode
       List<SetCustomization> defaultSets;

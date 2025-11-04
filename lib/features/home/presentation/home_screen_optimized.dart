@@ -20,6 +20,9 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_pr
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/mixins/tour_target_keys_mixin.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/onboarding_tour_overlay_enhanced.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_tour_manager.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
 /// while ensuring full compliance with localization and theming standards
@@ -30,39 +33,61 @@ class HomeScreenOptimized extends ConsumerStatefulWidget {
   ConsumerState<HomeScreenOptimized> createState() => _HomeScreenOptimizedState();
 }
 
-class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
+class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
+    with TourTargetKeysMixin {
+  /// Enhanced tour manager for advanced positioning
+  late final OnboardingTourManager _tourManager;
+
   @override
   void initState() {
     super.initState();
 
+    // Initialize tour manager with target keys and completion callback
+    _tourManager = OnboardingTourManager(
+      tourTargetKeys,
+      onTourCompleted: () {
+        // Save tour completion to persistent storage
+        ref.read(onboardingStateProvider.notifier).completeOnboarding();
+        // Also mark overlay as seen for backward compatibility
+        ref.read(onboardingStateProvider.notifier).markOverlaySeen('homeTour');
+        debugPrint('✅ [TOUR] Tour completion saved to storage');
+      },
+    );
+
     // Start exercise update check with 30-second delay
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(exerciseUpdateProvider.notifier).checkForUpdatesOnAppStart(context);
-
-      // Check if user should see onboarding with additional safety checks
-      final shouldShow = ref.read(shouldShowOnboardingProvider);
-      final onboardingState = ref.read(onboardingStateProvider);
 
       // Debug state for troubleshooting
       if (kDebugMode) {
         ref.read(onboardingStateProvider.notifier).debugOnboardingState();
       }
 
-      // Only navigate if really necessary - never seen AND not completed
-      if (shouldShow && !onboardingState.hasSeenGlobalOnboarding && !onboardingState.isCompleted) {
-        // Small delay to ensure UI is ready
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
-            debugPrint('🚀 Navigating to onboarding - first time user');
-            context.goNamed('onboarding');
+      // 🎯 AUTO-START TOUR: If user is beginner and hasn't seen global onboarding
+      final onboardingState = ref.read(onboardingStateProvider);
+      if (onboardingState.isBeginner && !onboardingState.hasSeenGlobalOnboarding) {
+        debugPrint('🎯 [TOUR] Auto-starting ENHANCED tour for beginner user');
+        // Delay to ensure UI is fully rendered
+        Future.delayed(const Duration(milliseconds: 800), () async {
+          if (mounted && context.mounted) {
+            // Validate tour setup before starting
+            final missingSteps = _tourManager.validateTourSetup();
+            if (missingSteps.isEmpty) {
+              await _tourManager.startTour(context);
+            } else {
+              debugPrint('⚠️ [TOUR] Cannot start - missing target keys: $missingSteps');
+            }
           }
         });
-      } else if (shouldShow) {
-        // This shouldn't happen with our new logic, but log it for debugging
-        debugPrint('⚠️ shouldShow is true but onboarding conditions not met - investigating');
-        debugPrint('hasSeenGlobal: ${onboardingState.hasSeenGlobalOnboarding}, isCompleted: ${onboardingState.isCompleted}');
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // Dispose tour manager
+    _tourManager.dispose();
+    super.dispose();
   }
 
   @override
@@ -70,9 +95,14 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
     final currentWorkout = ref.watch(currentWorkoutProvider);
     final l10n = AppLocalizations.of(context);
 
+    // Note: FAB step removed from tour (was obscured by bottom sheet)
+
     return DebugScreenNameOverlay(
       screenName: 'HomeScreenOptimized',
-      child: Scaffold(
+      child: Stack(
+        children: [
+          // Main scaffold content
+          Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
@@ -82,7 +112,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
             floating: true,
             pinned: true,
             backgroundColor: Colors.transparent,
-            flexibleSpace: Container(
+            flexibleSpace: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -102,7 +132,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                 titlePadding: EdgeInsets.only(left: 20, bottom: 16),
               ),
             ),
-            actions: const [NotificationHub(), SizedBox(width: 16)],
+            actions: [NotificationHub(key: notificationHubKey), const SizedBox(width: 16)],
           ),
 
           // Main content
@@ -124,15 +154,16 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                 // Removed gamification features for MVP
 
                 // AI Coach Insights Card
-                const AICoachCard(),
+                AICoachCard(key: aiCoachCardKey),
                 const SizedBox(height: 24),
 
                 // Primary CTA - Smart workout starter
-                const SmartWorkoutCTA(),
+                SmartWorkoutCTA(key: smartWorkoutCardKey),
                 const SizedBox(height: 24),
 
                 // Routine Center Card (Flexible Multi-Period Routines)
                 Material(
+                  key: routineCenterCardKey,
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
@@ -207,6 +238,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
 
                 // Community card - navigate to community hub
                 Material(
+                  key: communityCardKey,
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
@@ -249,7 +281,10 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                 const SizedBox(height: 24),
 
                 // Secondary Actions Grid
-                const SecondaryActions(),
+                SecondaryActions(
+                  analyticsKey: analyticsCardKey,
+                  historyKey: historyCardKey,
+                ),
                 const SizedBox(height: 24),
 
                 // Admin panel (only visible for admin users)
@@ -386,15 +421,57 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
       ),
 
       // Floating Action Button for emergency quick start
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: PremiumActionButton(
-          onPressed: () => context.goNamed('workout'),
-          icon: Icons.add,
-          label: l10n.quickStart,
-        ),
-      ),
-      ),
+      floatingActionButton: kDebugMode
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Debug: Reset Onboarding Button
+                FloatingActionButton.small(
+                  heroTag: 'resetOnboarding',
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  onPressed: () async {
+                    await ref.read(onboardingStateProvider.notifier).resetOnboarding();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('🔄 Onboarding reset! Riavvia l\'app per vedere Quick Start'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Icon(Icons.refresh, size: 20),
+                ),
+                const SizedBox(height: 8),
+                // Regular Quick Start
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: PremiumActionButton(
+                    key: quickStartFabKey,
+                    onPressed: () => context.goNamed('workout'),
+                    icon: Icons.add,
+                    label: l10n.quickStart,
+                  ),
+                ),
+              ],
+            )
+          : Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: PremiumActionButton(
+                key: quickStartFabKey,
+                onPressed: () => context.goNamed('workout'),
+                icon: Icons.add,
+                label: l10n.quickStart,
+              ),
+            ),
+          ), // End of Scaffold
+
+          // 🎯 ENHANCED ONBOARDING TOUR OVERLAY
+          // Shows dynamic spotlight with auto-centering + bottom sheet
+          // Uses OnboardingTourManager for advanced positioning
+          OnboardingTourOverlayEnhanced(manager: _tourManager),
+        ],
+      ), // End of Stack
     );
   }
 }

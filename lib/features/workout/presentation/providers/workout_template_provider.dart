@@ -27,8 +27,26 @@ final workoutTemplateRepositoryProvider = Provider<dynamic>((ref) {
 
 // Tutti i template (predefiniti + personalizzati)
 final allWorkoutTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) async {
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [ALL_TEMPLATES] Provider called');
+  }
+
   final repository = ref.watch(workoutTemplateRepositoryProvider);
-  return repository.getAllTemplates();
+
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [ALL_TEMPLATES] Repository type: ${repository.runtimeType}');
+  }
+
+  final templates = await repository.getAllTemplates();
+
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [ALL_TEMPLATES] Got ${templates.length} templates from repository');
+    for (final template in templates) {
+      debugPrint('  - ${template.name} (${template.id})');
+    }
+  }
+
+  return templates;
 });
 
 // Solo template personalizzati

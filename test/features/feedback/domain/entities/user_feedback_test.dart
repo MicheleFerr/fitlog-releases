@@ -337,7 +337,7 @@ void main() {
 
   group('UserFeedbackExtensions - Category Icons', () {
     test('categoryIcon should return non-empty icon for all categories', () {
-      final categories = FeedbackCategory.values;
+      const categories = FeedbackCategory.values;
 
       for (final category in categories) {
         final feedback = UserFeedback(
@@ -380,7 +380,7 @@ void main() {
 
   group('UserFeedbackExtensions - Status Icons', () {
     test('statusIcon should return non-empty icon for all statuses', () {
-      final statuses = FeedbackStatus.values;
+      const statuses = FeedbackStatus.values;
 
       for (final status in statuses) {
         final feedback = UserFeedback(

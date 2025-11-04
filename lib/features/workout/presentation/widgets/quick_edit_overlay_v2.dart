@@ -21,7 +21,6 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
@@ -303,7 +302,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _buildHeader(theme),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         _buildContent(theme, measurementUnit),
                       ],
                     ),
@@ -356,7 +355,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildHeader(theme),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     _buildContent(theme, measurementUnit),
                   ],
                 ),
@@ -385,7 +384,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   widget.isSuperset 
@@ -401,8 +400,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               if (widget.previousSet != null && !widget.isSuperset)
                 TextButton.icon(
                   onPressed: _copyFromPreviousSet,
-                  icon: Icon(AppIcons.contentCopyRounded, size: 16),
-                  label: Text(AppLocalizations.of(context).copy, style: TextStyle(fontSize: 12)),
+                  icon: const Icon(AppIcons.contentCopyRounded, size: 16),
+                  label: Text(AppLocalizations.of(context).copy, style: const TextStyle(fontSize: 12)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: const Size(0, 0),
@@ -412,7 +411,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ],
           ),
           if (widget.isSuperset) ...[
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             _buildExerciseTabs(theme),
           ],
         ],
@@ -436,7 +435,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               // Conditional spacing
               if (widget.countingMode.requiresWeight &&
                   (widget.countingMode.requiresReps || widget.countingMode.requiresTime))
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
 
               // Conditional reps picker (for weighted + reps modes)
               if (widget.countingMode.requiresReps)
@@ -448,29 +447,29 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ],
           ),
           
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           
           // Recent Weights (if available)
           if (widget.exerciseName != null || (widget.isSuperset && widget.exerciseNames != null)) ...[
             _buildRecentWeights(theme),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
           
           // Apply to All buttons for superset
           if (widget.isSuperset) ...[
             _buildApplyToAllButtons(theme),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
           
           // NEW: Primary Control Toolbar
           _buildPrimaryToolbar(theme, measurementUnit),
           
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           
           // Adjustment Buttons
           _buildAdjustmentButtons(theme),
           
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           
           // Action Buttons
           _buildActionButtons(theme),
@@ -486,7 +485,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Row(
           children: [
             Icon(Icons.fitness_center, size: 14, color: theme.colorScheme.primary),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context).weightKg.replaceAll('kg', measurementUnit),
               style: theme.textTheme.labelMedium?.copyWith(
@@ -494,7 +493,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             IconButton(
               icon: Icon(
                 _isManualWeightEntry ? Icons.dialpad : AppIcons.keyboard,
@@ -525,7 +524,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Container(
           height: 100,
           decoration: BoxDecoration(
@@ -576,7 +575,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                           },
                         ),
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       IconButton(
                         onPressed: _confirmManualWeight,
                         icon: Icon(
@@ -641,7 +640,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Row(
           children: [
             Icon(Icons.repeat, size: 14, color: theme.colorScheme.secondary),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context).reps,
               style: theme.textTheme.labelMedium?.copyWith(
@@ -649,7 +648,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             IconButton(
               icon: Icon(
                 _isManualRepsEntry ? Icons.dialpad : AppIcons.keyboard,
@@ -680,7 +679,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Container(
           height: 100,
           decoration: BoxDecoration(
@@ -725,7 +724,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                           },
                         ),
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       IconButton(
                         onPressed: _confirmManualReps,
                         icon: Icon(
@@ -791,7 +790,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Row(
           children: [
             Icon(Icons.timer, size: 14, color: theme.colorScheme.tertiary),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Text(
               'Duration',  // TODO: Add localization
               style: theme.textTheme.labelMedium?.copyWith(
@@ -799,7 +798,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             IconButton(
               icon: Icon(
                 _isManualSecondsEntry ? Icons.dialpad : AppIcons.keyboard,
@@ -827,7 +826,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Container(
           height: 100,
           decoration: BoxDecoration(
@@ -872,7 +871,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                           },
                         ),
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       IconButton(
                         onPressed: _confirmManualSeconds,
                         icon: Icon(
@@ -958,7 +957,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       size: 14,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       AppLocalizations.of(context).recentWeights,
                       style: theme.textTheme.labelSmall?.copyWith(
@@ -968,7 +967,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -1053,7 +1052,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           // Mode Toggle - Clear segmented control
           _buildModeToggle(theme),
 
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
 
           // Dynamic content area
           Expanded(
@@ -1062,7 +1061,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               : const SizedBox.shrink(),
           ),
 
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
 
           // ✅ MODIFICATO: Plate Calculator - Only visible for weighted mode
           if (widget.countingMode.requiresWeight)
@@ -1078,7 +1077,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         ? AppLocalizations.of(context).duration // "Secondi" or "Duration"
         : 'KG';
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
@@ -1195,7 +1194,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   ? theme.colorScheme.onSecondary 
                   : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
-              SizedBox(width: 6),
+              const SizedBox(width: 6),
               Text(
                 'Plates',  // Using simple English until localization key is added
                 style: theme.textTheme.labelMedium?.copyWith(
@@ -1227,7 +1226,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             theme.colorScheme.error,
             theme,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           _buildAdjustButton(
             '+${_percentageValue.toInt()}%',
             () => widget.countingMode.requiresTime
@@ -1247,11 +1246,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildAdjustButton('-20s', () => _adjustSeconds(-20), theme.colorScheme.error, theme),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           _buildAdjustButton('-5s', () => _adjustSeconds(-5), theme.colorScheme.error.withValues(alpha: 0.7), theme),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           _buildAdjustButton('+5s', () => _adjustSeconds(5), theme.colorScheme.primary, theme),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           _buildAdjustButton('+20s', () => _adjustSeconds(20), theme.colorScheme.tertiary, theme),
         ],
       );
@@ -1262,11 +1261,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildAdjustButton('-2.5', () => _adjustWeight(-2.5), theme.colorScheme.error, theme),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         _buildAdjustButton('+2.5', () => _adjustWeight(2.5), theme.colorScheme.primary, theme),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         _buildAdjustButton('+5', () => _adjustWeight(5), theme.colorScheme.primary, theme),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         _buildAdjustButton('+10', () => _adjustWeight(10), theme.colorScheme.tertiary, theme),
       ],
     );
@@ -1306,7 +1305,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Expanded(
           child: OutlinedButton.icon(
             onPressed: _cancel,
-            icon: Icon(AppIcons.closeRounded, size: 18),
+            icon: const Icon(AppIcons.closeRounded, size: 18),
             label: Text(AppLocalizations.of(context).cancel),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1316,13 +1315,13 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         // Save button
         Expanded(
           flex: 2,
           child: FilledButton.icon(
             onPressed: _save,
-            icon: Icon(AppIcons.checkRounded, size: 18),
+            icon: const Icon(AppIcons.checkRounded, size: 18),
             label: Text(AppLocalizations.of(context).save),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1550,8 +1549,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: _isWeightAppliedToAll
             ? FilledButton.icon(
                 onPressed: _applyWeightToAll,
-                icon: Icon(Icons.fitness_center, size: 16),
-                label: Text('Weight to All'),  // TODO: Add localization
+                icon: const Icon(Icons.fitness_center, size: 16),
+                label: const Text('Weight to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   backgroundColor: theme.colorScheme.primary,
@@ -1560,8 +1559,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               )
             : OutlinedButton.icon(
                 onPressed: _applyWeightToAll,
-                icon: Icon(Icons.fitness_center, size: 16),
-                label: Text('Weight to All'),  // TODO: Add localization
+                icon: const Icon(Icons.fitness_center, size: 16),
+                label: const Text('Weight to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(
@@ -1571,14 +1570,14 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 ),
               ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         // Reps to All button
         Expanded(
           child: _isRepsAppliedToAll
             ? FilledButton.icon(
                 onPressed: _applyRepsToAll,
-                icon: Icon(Icons.repeat, size: 16),
-                label: Text('Reps to All'),  // TODO: Add localization
+                icon: const Icon(Icons.repeat, size: 16),
+                label: const Text('Reps to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   backgroundColor: theme.colorScheme.secondary,
@@ -1587,8 +1586,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               )
             : OutlinedButton.icon(
                 onPressed: _applyRepsToAll,
-                icon: Icon(Icons.repeat, size: 16),
-                label: Text('Reps to All'),  // TODO: Add localization
+                icon: const Icon(Icons.repeat, size: 16),
+                label: const Text('Reps to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(
@@ -1771,21 +1770,21 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       color: theme.colorScheme.secondary,
                       size: 24,
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Text(
                       'Plate Calculator',
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Expanded(
                   child: SingleChildScrollView(
                     controller: scrollController,
@@ -1898,7 +1897,7 @@ extension QuickEditOverlayV2Extension on BuildContext {
   }) {
     return showDialog(
       context: this,
-      barrierColor: this.colors.onSurface.withValues(alpha: 0.54),
+      barrierColor: colors.onSurface.withValues(alpha: 0.54),
       builder: (context) => Stack(
         children: [
           GestureDetector(

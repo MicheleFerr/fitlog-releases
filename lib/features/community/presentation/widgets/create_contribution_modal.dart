@@ -72,16 +72,16 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
               // Handle bar
               Container(
-                margin: EdgeInsets.symmetric(vertical: 12),
+                margin: const EdgeInsets.symmetric(vertical: 12),
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
@@ -92,7 +92,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
               // Header
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
                     Expanded(
@@ -105,13 +105,13 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                     ),
                   ],
                 ),
               ),
 
-              Divider(height: 1),
+              const Divider(height: 1),
 
               // Form
               Expanded(
@@ -119,15 +119,15 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   key: _formKey,
                   child: ListView(
                     controller: scrollController,
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     children: [
                       // Exercise Selection
                       _buildExerciseSelector(theme),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       // Contribution Type
                       _buildTypeSelector(theme),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       // Title
                       TextFormField(
@@ -138,7 +138,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          prefixIcon: Icon(Icons.title),
+                          prefixIcon: const Icon(Icons.title),
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
@@ -151,7 +151,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // Description
                       TextFormField(
@@ -162,7 +162,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          prefixIcon: Icon(Icons.description),
+                          prefixIcon: const Icon(Icons.description),
                           alignLabelWithHint: true,
                         ),
                         maxLines: 5,
@@ -180,7 +180,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
                       // Correction-specific fields
                       if (_selectedType == ContributionType.correction) ...[
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextFormField(
                           controller: _originalValueController,
                           decoration: InputDecoration(
@@ -189,7 +189,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            prefixIcon: Icon(Icons.error_outline),
+                            prefixIcon: const Icon(Icons.error_outline),
                           ),
                           validator: _selectedType == ContributionType.correction
                               ? (value) {
@@ -200,7 +200,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                                 }
                               : null,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextFormField(
                           controller: _suggestedValueController,
                           decoration: InputDecoration(
@@ -209,7 +209,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            prefixIcon: Icon(AppIcons.completeOutline),
+                            prefixIcon: const Icon(AppIcons.completeOutline),
                           ),
                           validator: _selectedType == ContributionType.correction
                               ? (value) {
@@ -222,11 +222,11 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                         ),
                       ],
 
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
                       // Info box
                       Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(12),
@@ -240,7 +240,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                               Icons.info_outline,
                               color: theme.colorScheme.primary,
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Text(
                                 'Il tuo contributo sarà revisionato da un admin prima di essere pubblicato. Riceverai +50 XP se approvato!',
@@ -253,28 +253,28 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                         ),
                       ),
 
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
                       // Submit Button
                       FilledButton.icon(
                         onPressed: _isSubmitting ? null : _handleSubmit,
                         icon: _isSubmitting
-                            ? SizedBox(
+                            ? const SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : Icon(Icons.send),
+                            : const Icon(Icons.send),
                         label: Text(_isSubmitting ? 'Invio...' : 'Invia Contributo'),
                         style: FilledButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
 
-                      SizedBox(height: 80), // Space for keyboard
+                      const SizedBox(height: 80), // Space for keyboard
                     ],
                   ),
                 ),
@@ -289,7 +289,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
   Widget _buildExerciseSelector(ThemeData theme) {
     if (_selectedExerciseName != null) {
       return Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(12),
@@ -303,7 +303,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
               Icons.fitness_center,
               color: theme.colorScheme.primary,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,7 +330,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   _selectedExerciseName = null;
                 });
               },
-              icon: Icon(Icons.edit),
+              icon: const Icon(Icons.edit),
             ),
           ],
         ),
@@ -346,12 +346,12 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         InkWell(
           onTap: () => _showExercisePicker(),
           borderRadius: BorderRadius.circular(12),
           child: Container(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               border: Border.all(color: theme.colorScheme.outline),
               borderRadius: BorderRadius.circular(12),
@@ -362,7 +362,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   Icons.fitness_center,
                   color: theme.colorScheme.primary,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Tocca per selezionare un esercizio',
@@ -394,7 +394,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -412,7 +412,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                     size: 16,
                     color: isSelected ? context.colors.surface : color,
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(_getTypeLabel(type)),
                 ],
               ),
@@ -430,7 +430,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
             );
           }).toList(),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           _getTypeDescription(_selectedType),
           style: theme.textTheme.bodySmall?.copyWith(
@@ -461,7 +461,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
     if (_selectedExerciseId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('⚠️ Seleziona un esercizio'),
           behavior: SnackBarBehavior.floating,
         ),
@@ -492,9 +492,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('✅ Contributo inviato! In attesa di approvazione'),
+          content: const Text('✅ Contributo inviato! In attesa di approvazione'),
           backgroundColor: context.colors.success,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         ),
       );
     } catch (e) {

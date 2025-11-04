@@ -30,7 +30,7 @@ class WarmupInfoDialog extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Phase 1: Mobility
               _buildPhaseCard(
@@ -39,7 +39,7 @@ class WarmupInfoDialog extends StatelessWidget {
                 description: l10n.warmupPhase1Desc,
                 color: context.colors.primary,
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Phase 2: Activation
               _buildPhaseCard(
@@ -48,7 +48,7 @@ class WarmupInfoDialog extends StatelessWidget {
                 description: l10n.warmupPhase2Desc,
                 color: context.colors.secondary,
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Phase 3: Warmup Sets (Dynamic)
               Container(
@@ -91,14 +91,14 @@ class WarmupInfoDialog extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       l10n.warmupPhase3Desc,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -112,7 +112,7 @@ class WarmupInfoDialog extends StatelessWidget {
                             color: context.colors.success,
                             size: 18,
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               'Calculated automatically based on your working weight during the workout',
@@ -127,7 +127,7 @@ class WarmupInfoDialog extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Why Important Section
               Container(
@@ -150,7 +150,7 @@ class WarmupInfoDialog extends StatelessWidget {
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             l10n.warmupWhyImportant,
@@ -162,7 +162,7 @@ class WarmupInfoDialog extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       l10n.warmupWhyImportantAnswer,
                       style: theme.textTheme.bodyMedium,
@@ -170,7 +170,7 @@ class WarmupInfoDialog extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Close Button
               SizedBox(
@@ -218,7 +218,7 @@ class WarmupInfoDialog extends StatelessWidget {
               color: color,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             description,
             style: theme.textTheme.bodyMedium?.copyWith(

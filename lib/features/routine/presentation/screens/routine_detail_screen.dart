@@ -154,7 +154,7 @@ class RoutineDetailScreen extends ConsumerWidget {
             color: context.colors.onSurface,
           ),
         ),
-        background: Container(
+        background: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,

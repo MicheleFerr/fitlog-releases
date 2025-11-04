@@ -111,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
     final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
     final l10n = context.l10n;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -1104,9 +1104,9 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: const Text('English (US)'),
                 value: 'en',
               ),
-              RadioListTile<String>(
-                title: const Text('Italiano'),
-                subtitle: const Text('Italian (IT)'),
+              const RadioListTile<String>(
+                title: Text('Italiano'),
+                subtitle: Text('Italian (IT)'),
                 value: 'it',
               ),
             ],
@@ -1129,17 +1129,17 @@ class SettingsScreen extends ConsumerWidget {
               Navigator.pop(context);
             }
           },
-          child: Column(
+          child: const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               RadioListTile<String>(
-                title: const Text('Kilograms (kg)'),
-                subtitle: const Text('Metric system'),
+                title: Text('Kilograms (kg)'),
+                subtitle: Text('Metric system'),
                 value: 'kg',
               ),
               RadioListTile<String>(
-                title: const Text('Pounds (lbs)'),
-                subtitle: const Text('Imperial system'),
+                title: Text('Pounds (lbs)'),
+                subtitle: Text('Imperial system'),
                 value: 'lbs',
               ),
             ],

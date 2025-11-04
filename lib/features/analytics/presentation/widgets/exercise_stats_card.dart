@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:collection/collection.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseStatsCard extends StatelessWidget {
 
@@ -32,7 +31,7 @@ class ExerciseStatsCard extends StatelessWidget {
                       Icons.leaderboard,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       'Top Exercises',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -43,16 +42,16 @@ class ExerciseStatsCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () => _showAllExercises(context, exerciseStats),
-                  child: Text('View All'),
+                  child: const Text('View All'),
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             
             if (exerciseStats.isEmpty)
               Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(32.0),
                   child: Text(
                     'No exercise data available',
                     style: TextStyle(color: context.colors.surfaceContainerHighest),
@@ -82,7 +81,7 @@ class ExerciseStatsCard extends StatelessWidget {
             radius: 20,
             child: Icon(Icons.fitness_center, size: 20),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           
           // Exercise info
           Expanded(
@@ -95,7 +94,7 @@ class ExerciseStatsCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
                   '${stat.totalSets} sets • ${stat.sessions} sessions',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -125,7 +124,7 @@ class ExerciseStatsCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -182,7 +181,7 @@ class ExerciseStatsCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               
               // Exercises list
               Expanded(
@@ -200,14 +199,14 @@ class ExerciseStatsCard extends StatelessWidget {
                             const CircleAvatar(
                               child: Icon(Icons.fitness_center),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     stat.exerciseName,
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     '${stat.sessions} sessions • ${stat.totalSets} sets',
@@ -223,7 +222,7 @@ class ExerciseStatsCard extends StatelessWidget {
                               children: [
                                 Text(
                                   '${stat.maxWeight.toStringAsFixed(0)} kg',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   '${(stat.totalVolume / 1000).toStringAsFixed(1)}t vol',

@@ -13,7 +13,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/intelligent_workout_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/recovery_time_calculator.dart';
 
 // ============================================================================
@@ -56,7 +55,7 @@ void main() {
       });
 
       test('should create suggestion with optional fields', () {
-        final recoveryStatus = RecoveryStatus(
+        const recoveryStatus = RecoveryStatus(
           workoutType: 'PUSH',
           isRecovered: true,
           hoursSinceWorkout: 72,
@@ -168,7 +167,7 @@ void main() {
 
       test('should preserve pattern and other fields', () {
         final mockL10n = _MockLocalizations();
-        final recoveryStatus = RecoveryStatus(
+        const recoveryStatus = RecoveryStatus(
           workoutType: 'PUSH',
           isRecovered: true,
           hoursSinceWorkout: 72,

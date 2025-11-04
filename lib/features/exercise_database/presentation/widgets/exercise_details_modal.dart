@@ -31,7 +31,7 @@ class ExerciseDetailsModal extends StatelessWidget {
       initialChildSize: 0.7,
       maxChildSize: 0.9,
       minChildSize: 0.5,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

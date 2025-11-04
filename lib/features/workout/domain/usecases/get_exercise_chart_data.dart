@@ -24,9 +24,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/exercise
 /// - Usa repository interface (non implementation)
 /// - Returns Either<Failure, Success>
 class GetExerciseChartData {
-  final ExerciseChartRepository _repository;
 
   const GetExerciseChartData(this._repository);
+  final ExerciseChartRepository _repository;
 
   /// Execute use case
   ///

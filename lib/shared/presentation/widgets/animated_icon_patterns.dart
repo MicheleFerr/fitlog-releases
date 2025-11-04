@@ -216,11 +216,6 @@ class AnimatedIconPatterns {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class _RotatingIcon extends StatefulWidget {
-  final IconData icon;
-  final Duration duration;
-  final Color? color;
-  final double size;
-  final String? semanticLabel;
 
   const _RotatingIcon({
     required this.icon,
@@ -229,6 +224,11 @@ class _RotatingIcon extends StatefulWidget {
     required this.size,
     this.semanticLabel,
   });
+  final IconData icon;
+  final Duration duration;
+  final Color? color;
+  final double size;
+  final String? semanticLabel;
 
   @override
   State<_RotatingIcon> createState() => _RotatingIconState();
@@ -268,12 +268,6 @@ class _RotatingIconState extends State<_RotatingIcon>
 }
 
 class _PulsingIcon extends StatefulWidget {
-  final IconData icon;
-  final Duration duration;
-  final double scaleAmount;
-  final Color? color;
-  final double size;
-  final String? semanticLabel;
 
   const _PulsingIcon({
     required this.icon,
@@ -283,6 +277,12 @@ class _PulsingIcon extends StatefulWidget {
     required this.size,
     this.semanticLabel,
   });
+  final IconData icon;
+  final Duration duration;
+  final double scaleAmount;
+  final Color? color;
+  final double size;
+  final String? semanticLabel;
 
   @override
   State<_PulsingIcon> createState() => _PulsingIconState();
@@ -331,12 +331,6 @@ class _PulsingIconState extends State<_PulsingIcon>
 }
 
 class _BouncingIcon extends StatelessWidget {
-  final IconData icon;
-  final Duration duration;
-  final double bounceHeight;
-  final Color? color;
-  final double size;
-  final String? semanticLabel;
 
   const _BouncingIcon({
     required this.icon,
@@ -346,6 +340,12 @@ class _BouncingIcon extends StatelessWidget {
     required this.size,
     this.semanticLabel,
   });
+  final IconData icon;
+  final Duration duration;
+  final double bounceHeight;
+  final Color? color;
+  final double size;
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -370,13 +370,6 @@ class _BouncingIcon extends StatelessWidget {
 }
 
 class _ShakingIcon extends StatefulWidget {
-  final IconData icon;
-  final bool trigger;
-  final Duration duration;
-  final double shakeOffset;
-  final Color? color;
-  final double size;
-  final String? semanticLabel;
 
   const _ShakingIcon({
     required this.icon,
@@ -387,6 +380,13 @@ class _ShakingIcon extends StatefulWidget {
     required this.size,
     this.semanticLabel,
   });
+  final IconData icon;
+  final bool trigger;
+  final Duration duration;
+  final double shakeOffset;
+  final Color? color;
+  final double size;
+  final String? semanticLabel;
 
   @override
   State<_ShakingIcon> createState() => _ShakingIconState();

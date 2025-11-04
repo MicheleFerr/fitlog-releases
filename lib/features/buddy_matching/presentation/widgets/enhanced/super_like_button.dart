@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class SuperLikeButton extends ConsumerWidget {
 
@@ -43,7 +42,7 @@ class SuperLikeButton extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Super Like Button
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: canSuperLike
@@ -282,7 +281,7 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
       animation: _controller,
       builder: (context, child) {
         return Positioned.fill(
-          child: Container(
+          child: ColoredBox(
             color: context.colors.onSurface.withValues(alpha: 0.3 * _fadeAnimation.value),
             child: Center(
               child: Transform.scale(

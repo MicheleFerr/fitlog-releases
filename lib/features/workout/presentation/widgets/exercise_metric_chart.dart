@@ -27,14 +27,14 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_p
 /// - Empty state quando nessun dato
 /// - Responsive a dark/light theme
 class ExerciseMetricChart extends StatelessWidget {
-  final List<ChartDataPoint> dataPoints;
-  final String metric;
 
   const ExerciseMetricChart({
     super.key,
     required this.dataPoints,
     required this.metric,
   });
+  final List<ChartDataPoint> dataPoints;
+  final String metric;
 
   @override
   Widget build(BuildContext context) {

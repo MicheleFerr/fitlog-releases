@@ -284,7 +284,7 @@ class TemplateCarousel extends ConsumerWidget {
         child: InkWell(
           onTap: () => _onTemplateSelected(context, ref, template),
           borderRadius: BorderRadius.circular(16),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,

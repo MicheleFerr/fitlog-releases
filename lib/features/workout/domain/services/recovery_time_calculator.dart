@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_detection_service.dart';
 
 /// Calcola il tempo di recupero ottimale tra allenamenti
 ///
@@ -75,13 +74,10 @@ class RecoveryTimeCalculator {
       // Trova l'ultimo workout di questo tipo
       final lastWorkout = recentWorkouts.firstWhere(
         (w) {
-          if (useExactNames) {
-            // Confronta nomi esatti (case-insensitive)
-            return w.name.trim().toLowerCase() == workoutType.trim().toLowerCase();
-          } else {
-            // Usa normalizzazione per categorie
-            return PatternDetectionService.normalizeWorkoutType(w.name) == workoutType;
-          }
+          // Always use normalized comparison (case-insensitive and trimmed)
+          // This matches the behavior of the new PatternDetectionService
+          return w.name.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ') ==
+                 workoutType.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
         },
         orElse: () => WorkoutModel(
           id: 'dummy',

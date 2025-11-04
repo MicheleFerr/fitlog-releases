@@ -88,7 +88,7 @@ class PatternSelectionStep extends ConsumerWidget {
     WidgetRef ref,
     RoutineEditorState state,
   ) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),

@@ -26,6 +26,8 @@ import 'package:gymbro_flutter_new/features/routine/presentation/screens/equipme
 import 'package:gymbro_flutter_new/features/history/presentation/screens/workout_history_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/quick_start_screen.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -358,12 +360,19 @@ class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
   final rbacService = ref.watch(rbacServiceProvider);
+  // 🔒 CRITICAL FIX: Use .select() to ONLY watch hasCompletedQuickStart
+  // Watching entire onboardingState causes router rebuild on every state change
+  // This created infinite loop: HomeScreen → navigate → startOnboarding() → state change → router rebuild → HomeScreen
+  final hasCompletedQuickStart = ref.watch(
+    onboardingStateProvider.select((state) => state.hasCompletedQuickStart),
+  );
 
   return GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
       final isLoggedIn = authState == AuthState.authenticated;
       final isLoggingIn = state.fullPath == '/login' || state.fullPath == '/register';
+      final isOnQuickStart = state.fullPath == '/quick-start';
       final currentPath = state.fullPath ?? state.path ?? '/';
 
       // ⚠️ CRITICAL FIX: Don't redirect while auth is loading
@@ -386,6 +395,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       // ✅ AUTH CHECK: If logged in and on login page, redirect to home
       if (isLoggedIn && isLoggingIn) {
         return '/';
+      }
+
+      // 🆕 ONBOARDING CHECK: If logged in but hasn't completed Quick Start, redirect there
+      // Skip if already on Quick Start page or old onboarding page
+      if (isLoggedIn &&
+          !hasCompletedQuickStart &&
+          !isOnQuickStart &&
+          currentPath != '/onboarding') {
+        debugPrint('🎯 [ONBOARDING] Redirecting to Quick Start (user has not completed it yet)');
+        return '/quick-start';
       }
 
       // 🔒 RBAC CHECK: Verify user has permission to access route
@@ -525,6 +544,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AdminAnalyticsDashboardScreen(),
       ),
       // ✅ REMOVED: Dead route '/fitness-profile-debug' (0 usage, debug-only screen)
+      GoRoute(
+        path: '/quick-start',
+        name: 'quick-start',
+        builder: (context, state) => const QuickStartScreen(),
+      ),
       GoRoute(
         path: '/onboarding',
         name: 'onboarding',

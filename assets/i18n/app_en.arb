@@ -13592,5 +13592,947 @@
   "versionInformation": "Version Information",
   "@versionInformation": {
     "description": "Database version information section title"
+  },
+  "quickStartTitle": "Welcome to GymBro!",
+  "@quickStartTitle": {
+    "description": "Title for Quick Start screen"
+  },
+  "quickStartSubtitle": "Your personalized fitness journey starts here",
+  "@quickStartSubtitle": {
+    "description": "Subtitle for Quick Start screen"
+  },
+  "quickStartQuestion": "Do you have gym experience?",
+  "@quickStartQuestion": {
+    "description": "Quick Start question asking about user experience"
+  },
+  "quickStartQuestionDescription": "This helps us customize your experience",
+  "@quickStartQuestionDescription": {
+    "description": "Description for Quick Start question"
+  },
+  "quickStartBeginner": "No, I'm new 🌱",
+  "@quickStartBeginner": {
+    "description": "Beginner option in Quick Start"
+  },
+  "quickStartBeginnerDescription": "I'll guide you step-by-step",
+  "@quickStartBeginnerDescription": {
+    "description": "Description for beginner option"
+  },
+  "quickStartExpert": "Yes, I'm experienced 💪",
+  "@quickStartExpert": {
+    "description": "Expert option in Quick Start"
+  },
+  "quickStartExpertDescription": "Get out of my way",
+  "@quickStartExpertDescription": {
+    "description": "Description for expert option"
+  },
+  "quickStartContinue": "Continue",
+  "@quickStartContinue": {
+    "description": "Continue button in Quick Start"
+  },
+  "quickStartSkip": "Skip for now",
+  "@quickStartSkip": {
+    "description": "Skip button in Quick Start"
+  },
+  "homeEmptyBeginnerTitle": "Ready to start your fitness journey? 🌱",
+  "@homeEmptyBeginnerTitle": {
+    "description": "Home empty state title for beginners"
+  },
+  "homeEmptyBeginnerDescription": "Don't worry, I'll guide you through every step. Let's start with your first workout!",
+  "@homeEmptyBeginnerDescription": {
+    "description": "Home empty state description for beginners"
+  },
+  "homeEmptyBeginnerCTA": "Start My First Workout",
+  "@homeEmptyBeginnerCTA": {
+    "description": "Home empty state CTA button for beginners"
+  },
+  "homeEmptyExpertTitle": "No active workout",
+  "@homeEmptyExpertTitle": {
+    "description": "Home empty state title for experts"
+  },
+  "homeEmptyExpertDescription": "Start a quick workout or use a template",
+  "@homeEmptyExpertDescription": {
+    "description": "Home empty state description for experts"
+  },
+  "homeEmptyExpertCTA": "Start Workout",
+  "@homeEmptyExpertCTA": {
+    "description": "Home empty state CTA button for experts"
+  },
+  "useTemplate": "Use Template",
+  "@useTemplate": {
+    "description": "Button to use a workout template"
+  },
+  "bullet": "Bullet point",
+  "@bullet": {
+    "description": "Semantic label for bullet points"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button"
+  },
+  "skipTour": "Skip Tour",
+  "@skipTour": {
+    "description": "Skip tour button"
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Next button"
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Done button"
+  },
+  "autoAdvance": "Auto-advance",
+  "@autoAdvance": {
+    "description": "Auto-advance semantic label"
+  },
+  "autoAdvanceIn": "Auto-advance in {seconds}s",
+  "@autoAdvanceIn": {
+    "description": "Auto-advance countdown",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "tourAiCoachTitle": "AI Coach 👋",
+  "@tourAiCoachTitle": {
+    "description": "Tour step 1 title - AI Coach"
+  },
+  "tourAiCoachDescription": "Hi! I'm your AI Coach.\nI'll give you personalized tips after your first workout!",
+  "@tourAiCoachDescription": {
+    "description": "Tour step 1 description - AI Coach"
+  },
+  "tourFabTitle": "Quick Start ⚡",
+  "@tourFabTitle": {
+    "description": "Tour step 2 title - FAB"
+  },
+  "tourFabDescription": "Press here to start a workout quickly.\nIt's the easiest way to track your progress!",
+  "@tourFabDescription": {
+    "description": "Tour step 2 description - FAB"
+  },
+  "tourSmartWorkoutTitle": "Smart Workout 🧠",
+  "@tourSmartWorkoutTitle": {
+    "description": "Tour step 3 title - Smart Workout"
+  },
+  "tourSmartWorkoutDescription": "Or let me create the perfect workout for you based on your goals!",
+  "@tourSmartWorkoutDescription": {
+    "description": "Tour step 3 description - Smart Workout"
+  },
+  "tourAnalyticsTitle": "Analytics - Your Progress 📊",
+  "@tourAnalyticsTitle": {
+    "description": "Tour step 4 title - Analytics"
+  },
+  "tourAnalyticsDescription": "Here you'll find detailed charts of:",
+  "@tourAnalyticsDescription": {
+    "description": "Tour step 4 description - Analytics"
+  },
+  "tourAnalyticsBullet1": "Total volume per workout",
+  "@tourAnalyticsBullet1": {
+    "description": "Tour step 4 bullet 1"
+  },
+  "tourAnalyticsBullet2": "Strength per exercise (estimated 1RM)",
+  "@tourAnalyticsBullet2": {
+    "description": "Tour step 4 bullet 2"
+  },
+  "tourAnalyticsBullet3": "Personal records and improvements",
+  "@tourAnalyticsBullet3": {
+    "description": "Tour step 4 bullet 3"
+  },
+  "tourHistoryTitle": "Workout History 📅",
+  "@tourHistoryTitle": {
+    "description": "Tour step 5 title - History"
+  },
+  "tourHistoryDescription": "Here you'll find your complete workout history.\nReview past sessions and track your consistency!",
+  "@tourHistoryDescription": {
+    "description": "Tour step 5 description - History"
+  },
+  "tourRoutineCenterTitle": "Routine Center - Advanced Training 🏋️",
+  "@tourRoutineCenterTitle": {
+    "description": "Tour step 6 title - Routine Center"
+  },
+  "tourRoutineCenterDescription": "Create multi-week programs with:",
+  "@tourRoutineCenterDescription": {
+    "description": "Tour step 6 description - Routine Center"
+  },
+  "tourRoutineCenterBullet1": "Periodization (strength → hypertrophy → deload)",
+  "@tourRoutineCenterBullet1": {
+    "description": "Tour step 6 bullet 1"
+  },
+  "tourRoutineCenterBullet2": "Automatic template swapping",
+  "@tourRoutineCenterBullet2": {
+    "description": "Tour step 6 bullet 2"
+  },
+  "tourRoutineCenterBullet3": "Progress tracking for each phase",
+  "@tourRoutineCenterBullet3": {
+    "description": "Tour step 6 bullet 3"
+  },
+  "tourCommunityTitle": "Community 🤝",
+  "@tourCommunityTitle": {
+    "description": "Tour step 7 title - Community"
+  },
+  "tourCommunityDescription": "Connect with other athletes for motivation and support!",
+  "@tourCommunityDescription": {
+    "description": "Tour step 7 description - Community"
+  },
+  "tourNotificationsTitle": "Notifications 🔔",
+  "@tourNotificationsTitle": {
+    "description": "Tour step 8 title - Notifications"
+  },
+  "tourNotificationsDescription": "Notifications will keep you updated on milestones and tips!",
+  "@tourNotificationsDescription": {
+    "description": "Tour step 8 description - Notifications"
+  },
+  "suggestedNextWorkout": "Suggested Next Workout",
+  "@suggestedNextWorkout": {
+    "description": "Title for AI workout suggestion card"
+  },
+  "startThisWorkout": "Start This Workout",
+  "@startThisWorkout": {
+    "description": "Button to start suggested workout"
+  },
+  "alternatives": "Alternatives",
+  "@alternatives": {
+    "description": "Button to show alternative workout suggestions"
+  },
+  "whyThisSuggestion": "Why This Suggestion?",
+  "@whyThisSuggestion": {
+    "description": "Button to explain reasoning behind suggestion"
+  },
+  "confidence": "Confidence",
+  "@confidence": {
+    "description": "Label for suggestion confidence level"
+  },
+  "levelPattern": "Pattern",
+  "@levelPattern": {
+    "description": "Badge for pattern-based suggestion level"
+  },
+  "levelRoutine": "Routine",
+  "@levelRoutine": {
+    "description": "Badge for routine-based suggestion level"
+  },
+  "levelFrequent": "Frequent",
+  "@levelFrequent": {
+    "description": "Badge for frequency-based suggestion level"
+  },
+  "levelDefault": "Default",
+  "@levelDefault": {
+    "description": "Badge for day-based (default) suggestion level"
+  },
+  "levelAlternative": "Alternative",
+  "@levelAlternative": {
+    "description": "Badge when suggesting alternative template"
+  },
+  "notEnoughWorkoutData": "Not enough workout data yet",
+  "@notEnoughWorkoutData": {
+    "description": "Empty state title when user has no workout history"
+  },
+  "completeWorkoutsForSuggestions": "Complete at least 6 workouts to get personalized suggestions",
+  "@completeWorkoutsForSuggestions": {
+    "description": "Empty state message explaining minimum workouts needed"
+  },
+  "createWorkout": "Create Workout",
+  "@createWorkout": {
+    "description": "Button to create new workout from empty state"
+  },
+  "analyzingWorkoutPattern": "Analyzing your workout pattern...",
+  "@analyzingWorkoutPattern": {
+    "description": "Loading message while analyzing workout history"
+  },
+  "workoutSuggestionError": "Failed to generate workout suggestion",
+  "@workoutSuggestionError": {
+    "description": "Error message when suggestion generation fails"
+  },
+  "pauseRoutine": "Pause Routine",
+  "@pauseRoutine": {
+    "description": "Button/title to pause a routine"
+  },
+  "pauseRoutineTitle": "Pause This Routine",
+  "@pauseRoutineTitle": {
+    "description": "Modal title for pause routine dialog"
+  },
+  "pauseRoutineDescription": "Your routine will be paused during this period. You won't receive workout reminders.",
+  "@pauseRoutineDescription": {
+    "description": "Description in pause routine modal"
+  },
+  "pauseReason": "Reason for pause",
+  "@pauseReason": {
+    "description": "Label for pause reason selection"
+  },
+  "pauseReasonInjury": "Injury",
+  "@pauseReasonInjury": {
+    "description": "Pause reason: Injury"
+  },
+  "pauseReasonSick": "Sick/Illness",
+  "@pauseReasonSick": {
+    "description": "Pause reason: Sick or illness"
+  },
+  "pauseReasonVacation": "Vacation",
+  "@pauseReasonVacation": {
+    "description": "Pause reason: Vacation or travel"
+  },
+  "pauseReasonBusy": "Too Busy",
+  "@pauseReasonBusy": {
+    "description": "Pause reason: Work or life busy period"
+  },
+  "pauseReasonBurnout": "Burnout",
+  "@pauseReasonBurnout": {
+    "description": "Pause reason: Mental health or burnout"
+  },
+  "pauseReasonOther": "Other",
+  "@pauseReasonOther": {
+    "description": "Pause reason: Other"
+  },
+  "startDate": "Start Date",
+  "@startDate": {
+    "description": "Label for pause start date picker"
+  },
+  "endDate": "End Date",
+  "@endDate": {
+    "description": "Label for pause end date picker"
+  },
+  "pauseNotes": "Notes (optional)",
+  "@pauseNotes": {
+    "description": "Label for optional pause notes field"
+  },
+  "pauseNotesHint": "E.g., Shoulder injury - avoid overhead pressing",
+  "@pauseNotesHint": {
+    "description": "Hint text for pause notes field"
+  },
+  "confirmPause": "Pause Routine",
+  "@confirmPause": {
+    "description": "Button to confirm pause creation"
+  },
+  "pausedBadge": "Paused",
+  "@pausedBadge": {
+    "description": "Badge showing routine is paused"
+  },
+  "pausedUntil": "Paused until {date}",
+  "@pausedUntil": {
+    "description": "Shows when pause ends",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "Jan 17"
+      }
+    }
+  },
+  "daysRemaining": "{count} days remaining",
+  "@daysRemaining": {
+    "description": "Shows days remaining in pause",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "7"
+      }
+    }
+  },
+  "resumeRoutine": "Resume Routine",
+  "@resumeRoutine": {
+    "description": "Button to manually resume a paused routine"
+  },
+  "routineResumed": "Routine resumed!",
+  "@routineResumed": {
+    "description": "Success message when routine is resumed"
+  },
+  "pauseValidationStartInPast": "Start date cannot be in the past",
+  "@pauseValidationStartInPast": {
+    "description": "Validation error: start date is in past"
+  },
+  "pauseValidationEndBeforeStart": "End date must be after start date",
+  "@pauseValidationEndBeforeStart": {
+    "description": "Validation error: end date before start date"
+  },
+  "pauseValidationTooLong": "Pause duration cannot exceed {maxDays} days",
+  "@pauseValidationTooLong": {
+    "description": "Validation error: pause too long",
+    "placeholders": {
+      "maxDays": {
+        "type": "int",
+        "example": "365"
+      }
+    }
+  },
+  "pauseValidationOverlap": "Routine already paused until {date}",
+  "@pauseValidationOverlap": {
+    "description": "Validation error: overlapping pause exists",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "Jan 17"
+      }
+    }
+  },
+  "conflictingWorkouts": "Scheduled Workouts in Pause Range",
+  "@conflictingWorkouts": {
+    "description": "Dialog title for workout conflicts"
+  },
+  "conflictingWorkoutsMessage": "You have {count} workouts scheduled during this pause. They will be automatically skipped.",
+  "@conflictingWorkoutsMessage": {
+    "description": "Message showing count of conflicting workouts",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "confirmAndPause": "Confirm & Pause",
+  "@confirmAndPause": {
+    "description": "Button to confirm pause despite conflicts"
+  },
+  "selectDate": "Select Date",
+  "@selectDate": {
+    "description": "Placeholder when no date selected"
+  },
+  "pause": "Pause",
+  "@pause": {
+    "description": "Generic pause label"
+  },
+  "routinePaused": "Routine paused successfully",
+  "@routinePaused": {
+    "description": "Success message when routine is paused"
+  },
+  "routineTemplateCreatedSuccess": "Template created! Select it below to continue.",
+  "@routineTemplateCreatedSuccess": {
+    "description": "Success message after creating a template from routine editor empty state"
+  },
+  "duration": "Duration",
+  "@duration": {
+    "description": "Duration label"
+  },
+  "days": "days",
+  "@days": {
+    "description": "Days unit (lowercase)"
+  },
+  "notes": "Notes",
+  "@notes": {
+    "description": "Notes label"
+  },
+  "levelSystem": "Level System",
+  "@levelSystem": {
+    "description": "Level system header"
+  },
+  "currentLevel": "Current Level",
+  "@currentLevel": {
+    "description": "Current level label"
+  },
+  "yourProgress": "Your Progress",
+  "@yourProgress": {
+    "description": "Progress section header"
+  },
+  "toNextLevel": "to next level",
+  "@toNextLevel": {
+    "description": "Progress indicator suffix"
+  },
+  "level": "Level",
+  "@level": {
+    "description": "Level label"
+  },
+  "current": "Current",
+  "@current": {
+    "description": "Current status indicator"
+  },
+  "elite": "Elite",
+  "@elite": {
+    "description": "Default level name"
+  },
+  "novice": "Novice",
+  "@novice": {
+    "description": "Level 2 name"
+  },
+  "expert": "Expert",
+  "@expert": {
+    "description": "Level 5 name"
+  },
+  "master": "Master",
+  "@master": {
+    "description": "Level 6 name"
+  },
+  "grandmaster": "Grandmaster",
+  "@grandmaster": {
+    "description": "Level 7 name"
+  },
+  "champion": "Champion",
+  "@champion": {
+    "description": "Level 8 name"
+  },
+  "legend": "Legend",
+  "@legend": {
+    "description": "Level 9 name"
+  },
+  "titan": "Titan",
+  "@titan": {
+    "description": "Level 10 name"
+  },
+  "levelDesc1": "You're just getting started! Complete your first workouts to level up.",
+  "@levelDesc1": {
+    "description": "Level 1 description"
+  },
+  "levelDesc2": "You've completed your first workouts. Keep the momentum going!",
+  "@levelDesc2": {
+    "description": "Level 2 description"
+  },
+  "levelDesc3": "You're building solid workout habits. Consistency is key!",
+  "@levelDesc3": {
+    "description": "Level 3 description"
+  },
+  "levelDesc4": "Advanced lifter! Your dedication shows in your progress.",
+  "@levelDesc4": {
+    "description": "Level 4 description"
+  },
+  "levelDesc5": "Expert level achieved! You're mastering your training.",
+  "@levelDesc5": {
+    "description": "Level 5 description"
+  },
+  "levelDesc6": "Master of fitness! Your consistency inspires others.",
+  "@levelDesc6": {
+    "description": "Level 6 description"
+  },
+  "levelDesc7": "Grandmaster status! Few reach this level of dedication.",
+  "@levelDesc7": {
+    "description": "Level 7 description"
+  },
+  "levelDesc8": "Champion! You're in the top tier of athletes.",
+  "@levelDesc8": {
+    "description": "Level 8 description"
+  },
+  "levelDesc9": "Legendary status! Your discipline is unmatched.",
+  "@levelDesc9": {
+    "description": "Level 9 description"
+  },
+  "levelDesc10": "Titan! The ultimate level of fitness mastery.",
+  "@levelDesc10": {
+    "description": "Level 10 description"
+  },
+  "benefit1_1": "Track your first workouts",
+  "@benefit1_1": {
+    "description": "Level 1 benefit 1"
+  },
+  "benefit1_2": "Learn the basics of progress tracking",
+  "@benefit1_2": {
+    "description": "Level 1 benefit 2"
+  },
+  "benefit2_1": "Unlock workout analytics",
+  "@benefit2_1": {
+    "description": "Level 2 benefit 1"
+  },
+  "benefit2_2": "Access basic progress charts",
+  "@benefit2_2": {
+    "description": "Level 2 benefit 2"
+  },
+  "benefit3_1": "Advanced exercise library access",
+  "@benefit3_1": {
+    "description": "Level 3 benefit 1"
+  },
+  "benefit3_2": "Workout templates available",
+  "@benefit3_2": {
+    "description": "Level 3 benefit 2"
+  },
+  "benefit3_3": "Custom workout creation",
+  "@benefit3_3": {
+    "description": "Level 3 benefit 3"
+  },
+  "benefit4_1": "Personal records tracking",
+  "@benefit4_1": {
+    "description": "Level 4 benefit 1"
+  },
+  "benefit4_2": "Advanced analytics dashboard",
+  "@benefit4_2": {
+    "description": "Level 4 benefit 2"
+  },
+  "benefit4_3": "Volume and intensity insights",
+  "@benefit4_3": {
+    "description": "Level 4 benefit 3"
+  },
+  "benefit5_1": "Expert workout recommendations",
+  "@benefit5_1": {
+    "description": "Level 5 benefit 1"
+  },
+  "benefit5_2": "Periodization suggestions",
+  "@benefit5_2": {
+    "description": "Level 5 benefit 2"
+  },
+  "benefit5_3": "Recovery optimization",
+  "@benefit5_3": {
+    "description": "Level 5 benefit 3"
+  },
+  "benefit6_1": "Master-level training programs",
+  "@benefit6_1": {
+    "description": "Level 6 benefit 1"
+  },
+  "benefit6_2": "Advanced progression tracking",
+  "@benefit6_2": {
+    "description": "Level 6 benefit 2"
+  },
+  "benefit6_3": "Muscle group balance analysis",
+  "@benefit6_3": {
+    "description": "Level 6 benefit 3"
+  },
+  "benefit7_1": "Elite training protocols",
+  "@benefit7_1": {
+    "description": "Level 7 benefit 1"
+  },
+  "benefit7_2": "Competition preparation tools",
+  "@benefit7_2": {
+    "description": "Level 7 benefit 2"
+  },
+  "benefit7_3": "Performance optimization",
+  "@benefit7_3": {
+    "description": "Level 7 benefit 3"
+  },
+  "benefit8_1": "Champion workout strategies",
+  "@benefit8_1": {
+    "description": "Level 8 benefit 1"
+  },
+  "benefit8_2": "Peak performance planning",
+  "@benefit8_2": {
+    "description": "Level 8 benefit 2"
+  },
+  "benefit8_3": "Advanced recovery protocols",
+  "@benefit8_3": {
+    "description": "Level 8 benefit 3"
+  },
+  "benefit9_1": "Legendary training methods",
+  "@benefit9_1": {
+    "description": "Level 9 benefit 1"
+  },
+  "benefit9_2": "Pro-level analytics",
+  "@benefit9_2": {
+    "description": "Level 9 benefit 2"
+  },
+  "benefit9_3": "Ultimate performance tracking",
+  "@benefit9_3": {
+    "description": "Level 9 benefit 3"
+  },
+  "benefit10_1": "Titan workout mastery",
+  "@benefit10_1": {
+    "description": "Level 10 benefit 1"
+  },
+  "benefit10_2": "Complete training ecosystem",
+  "@benefit10_2": {
+    "description": "Level 10 benefit 2"
+  },
+  "benefit10_3": "Maximum potential unlocked",
+  "@benefit10_3": {
+    "description": "Level 10 benefit 3"
+  },
+  "averageEffortLevel": "Average Effort Level",
+  "@averageEffortLevel": {
+    "description": "Average effort level metric"
+  },
+  "fitnessLevel": "Fitness Level",
+  "@fitnessLevel": {
+    "description": "Fitness level label"
+  },
+  "levelAndXpOnly": "Level & XP Only",
+  "@levelAndXpOnly": {
+    "description": "Display option for level and XP"
+  },
+  "levelRequired": "Level {level} Required",
+  "@levelRequired": {
+    "description": "Level requirement message",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "mon": "Mon",
+  "@mon": {
+    "description": "Monday abbreviation"
+  },
+  "tue": "Tue",
+  "@tue": {
+    "description": "Tuesday abbreviation"
+  },
+  "wed": "Wed",
+  "@wed": {
+    "description": "Wednesday abbreviation"
+  },
+  "thu": "Thu",
+  "@thu": {
+    "description": "Thursday abbreviation"
+  },
+  "fri": "Fri",
+  "@fri": {
+    "description": "Friday abbreviation"
+  },
+  "sat": "Sat",
+  "@sat": {
+    "description": "Saturday abbreviation"
+  },
+  "sun": "Sun",
+  "@sun": {
+    "description": "Sunday abbreviation"
+  },
+  "velocityAnalytics": "Velocity Analytics",
+  "@velocityAnalytics": {
+    "description": "Velocity analytics section title"
+  },
+  "performanceHeatmap": "Performance Heatmap",
+  "@performanceHeatmap": {
+    "description": "Performance heatmap title"
+  },
+  "loadVelocity": "Load-Velocity",
+  "@loadVelocity": {
+    "description": "Load-velocity relationship"
+  },
+  "velocity": "Velocity",
+  "@velocity": {
+    "description": "Velocity metric"
+  },
+  "load": "Load",
+  "@load": {
+    "description": "Load/weight metric"
+  },
+  "minVelocity": "Min Velocity",
+  "@minVelocity": {
+    "description": "Minimum velocity threshold"
+  },
+  "avgVelocityLoss": "Avg Velocity Loss",
+  "@avgVelocityLoss": {
+    "description": "Average velocity loss metric"
+  },
+  "optimalLoad": "Optimal Load",
+  "@optimalLoad": {
+    "description": "Optimal training load"
+  },
+  "executionTime": "Execution Time",
+  "@executionTime": {
+    "description": "Exercise execution time"
+  },
+  "formScore": "Form Score",
+  "@formScore": {
+    "description": "Exercise form quality score"
+  },
+  "quality": "Quality",
+  "@quality": {
+    "description": "Quality metric"
+  },
+  "fatigueIndex": "Fatigue Index",
+  "@fatigueIndex": {
+    "description": "Fatigue accumulation metric"
+  },
+  "explosiveZone": "Explosive Zone",
+  "@explosiveZone": {
+    "description": "Explosive training zone"
+  },
+  "speedZone": "Speed Zone",
+  "@speedZone": {
+    "description": "Speed training zone"
+  },
+  "zones": "Zones",
+  "@zones": {
+    "description": "Training zones"
+  },
+  "analyzingVelocityData": "Analyzing velocity data...",
+  "@analyzingVelocityData": {
+    "description": "Loading message for velocity analysis"
+  },
+  "insufficientVelocityData": "Insufficient velocity data",
+  "@insufficientVelocityData": {
+    "description": "Error message for missing velocity data"
+  },
+  "velocityAnalysisError": "Velocity analysis error",
+  "@velocityAnalysisError": {
+    "description": "Error message for velocity analysis failure"
+  },
+  "noPerformanceData": "No performance data available",
+  "@noPerformanceData": {
+    "description": "Empty state message for performance data"
+  },
+  "startWorkoutToSeeData": "Start a workout to see data",
+  "@startWorkoutToSeeData": {
+    "description": "Empty state instruction"
+  },
+  "keyInsights": "Key Insights",
+  "@keyInsights": {
+    "description": "Key insights section header"
+  },
+  "tapForMoreInfo": "Tap for more info",
+  "@tapForMoreInfo": {
+    "description": "Action hint for expandable content"
+  },
+  "tapToCollapse": "Tap to collapse",
+  "@tapToCollapse": {
+    "description": "Action hint to collapse content"
+  },
+  "whatDoesThisMean": "What does this mean?",
+  "@whatDoesThisMean": {
+    "description": "Help dialog title"
+  },
+  "helpTitle": "Help",
+  "@helpTitle": {
+    "description": "Help section title"
+  },
+  "defaultHelpContent": "More information coming soon",
+  "@defaultHelpContent": {
+    "description": "Default help content placeholder"
+  },
+  "formula": "Formula",
+  "@formula": {
+    "description": "Formula/calculation label"
+  },
+  "example": "Example",
+  "@example": {
+    "description": "Example label"
+  },
+  "generalTip": "General Tip",
+  "@generalTip": {
+    "description": "General tip label"
+  },
+  "volumeExplanation": "Total Volume",
+  "@volumeExplanation": {
+    "description": "Volume metric explanation title"
+  },
+  "volumeExplanationDesc": "Total volume = Sets × Reps × Weight. Measures total training load.",
+  "@volumeExplanationDesc": {
+    "description": "Volume metric explanation description"
+  },
+  "volumeTip": "Gradually increase volume by 5-10% per week to avoid overtraining.",
+  "@volumeTip": {
+    "description": "Volume training tip"
+  },
+  "intensityExplanation": "Training Intensity",
+  "@intensityExplanation": {
+    "description": "Intensity metric explanation title"
+  },
+  "intensityExplanationDesc": "Percentage of your one-rep max (1RM) used in training.",
+  "@intensityExplanationDesc": {
+    "description": "Intensity metric explanation description"
+  },
+  "intensityTip": "Vary intensity: 60-75% for volume, 80-90% for strength, 90%+ for power.",
+  "@intensityTip": {
+    "description": "Intensity training tip"
+  },
+  "setsExplanation": "Total Sets",
+  "@setsExplanation": {
+    "description": "Sets metric explanation title"
+  },
+  "setsExplanationDesc": "Number of sets performed across all exercises.",
+  "@setsExplanationDesc": {
+    "description": "Sets metric explanation description"
+  },
+  "setsTip": "Research suggests 10-20 sets per muscle group per week for hypertrophy.",
+  "@setsTip": {
+    "description": "Sets training tip"
+  },
+  "streakExplanation": "Workout Streak",
+  "@streakExplanation": {
+    "description": "Streak metric explanation title"
+  },
+  "streakExplanationDesc": "Consecutive days with at least one completed workout.",
+  "@streakExplanationDesc": {
+    "description": "Streak metric explanation description"
+  },
+  "streakTip": "Consistency beats intensity. Even light workouts maintain your streak.",
+  "@streakTip": {
+    "description": "Streak training tip"
+  },
+  "oneRmExplanation": "One-Rep Max (1RM)",
+  "@oneRmExplanation": {
+    "description": "1RM explanation title"
+  },
+  "oneRmExplanationDesc": "Maximum weight you can lift for a single repetition.",
+  "@oneRmExplanationDesc": {
+    "description": "1RM explanation description"
+  },
+  "oneRmTip": "Test 1RM every 4-8 weeks to track strength progress safely.",
+  "@oneRmTip": {
+    "description": "1RM training tip"
+  },
+  "whatIsTotalVolume": "What is Total Volume?",
+  "@whatIsTotalVolume": {
+    "description": "Total volume help question"
+  },
+  "totalVolumeExplanation": "Total weight lifted across all sets and reps (Sets × Reps × Weight).",
+  "@totalVolumeExplanation": {
+    "description": "Total volume explanation"
+  },
+  "totalVolumeExample": "Example: 3 sets × 10 reps × 50kg = 1,500kg total volume",
+  "@totalVolumeExample": {
+    "description": "Total volume example"
+  },
+  "whatAreTotalSets": "What are Total Sets?",
+  "@whatAreTotalSets": {
+    "description": "Total sets help question"
+  },
+  "totalSetsExplanation": "Number of sets performed across all exercises in your workout.",
+  "@totalSetsExplanation": {
+    "description": "Total sets explanation"
+  },
+  "totalSetsExample": "Example: 4 sets squats + 3 sets bench press = 7 total sets",
+  "@totalSetsExample": {
+    "description": "Total sets example"
+  },
+  "whatIsWorkoutFrequency": "What is Workout Frequency?",
+  "@whatIsWorkoutFrequency": {
+    "description": "Workout frequency help question"
+  },
+  "workoutFrequencyExplanation": "Number of training sessions per week or muscle group hits per week.",
+  "@workoutFrequencyExplanation": {
+    "description": "Workout frequency explanation"
+  },
+  "workoutFrequencyExample": "Example: Training chest 2× per week = 2× frequency",
+  "@workoutFrequencyExample": {
+    "description": "Workout frequency example"
+  },
+  "whatIsPersonalRecord": "What is a Personal Record (PR)?",
+  "@whatIsPersonalRecord": {
+    "description": "Personal record help question"
+  },
+  "personalRecordExplanation": "Your best performance for a specific exercise (max weight, reps, or volume).",
+  "@personalRecordExplanation": {
+    "description": "Personal record explanation"
+  },
+  "personalRecordExample": "Example: Bench press 100kg × 5 reps beats your previous 95kg × 5 reps",
+  "@personalRecordExample": {
+    "description": "Personal record example"
+  },
+  "whatIsMuscleBalance": "What is Muscle Balance?",
+  "@whatIsMuscleBalance": {
+    "description": "Muscle balance help question"
+  },
+  "muscleBalanceExample": "Example: Training chest 3× per week but back only 1× creates imbalance",
+  "@muscleBalanceExample": {
+    "description": "Muscle balance example"
+  },
+  "nextMilestone": "Next Milestone",
+  "@nextMilestone": {
+    "description": "Next milestone label"
+  },
+  "daysToGo": "days to go",
+  "@daysToGo": {
+    "description": "Days remaining suffix"
+  },
+  "vsLastPeriod": "vs last period",
+  "@vsLastPeriod": {
+    "description": "Comparison to previous period"
+  },
+  "lastYear": "Last Year",
+  "@lastYear": {
+    "description": "Last year time period"
+  },
+  "shade400": "Shade 400",
+  "@shade400": {
+    "description": "Color shade identifier"
+  },
+  "lastNMonths": "Last {n} months",
+  "@lastNMonths": {
+    "description": "Time period - last N months",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "lastNDays": "Last {n} days",
+  "@lastNDays": {
+    "description": "Time period - last N days",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   }
 }

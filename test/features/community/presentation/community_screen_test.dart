@@ -112,7 +112,7 @@ void main() {
 
     Widget createTestWidget() {
       return ProviderScope(
-        overrides: [
+        overrides: const [
           // Mock community provider
         ],
         child: MaterialApp(

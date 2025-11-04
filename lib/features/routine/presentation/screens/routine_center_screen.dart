@@ -39,6 +39,8 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/routi
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/workout_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/workout_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Main screen for managing all flexible routines
@@ -606,14 +608,42 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
       child: suggestionAsync.when(
         data: (suggestion) => WorkoutSuggestionCard(
           suggestion: suggestion,
-          onStartWorkout: (workoutName) {
-            // TODO: Navigate to workout screen with suggested workout name
-            SnackBarService.showSuccess(
-              context,
-              'Starting workout: $workoutName',
-            );
+          onStartWorkout: (workoutName) async {
             // Haptic feedback
-            HapticFeedback.mediumImpact();
+            await HapticFeedback.mediumImpact();
+
+            // Get template by name
+            final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+
+            await templatesAsync.when(
+              data: (templates) async {
+                // Find template by normalized name (case-insensitive)
+                final template = templates.firstWhere(
+                  (t) => t.name.toLowerCase() == workoutName.toLowerCase(),
+                  orElse: () => templates.first, // Fallback to first template if not found
+                );
+
+                // Start workout from template
+                ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+
+                // Navigate to workout screen
+                if (context.mounted) {
+                  context.goNamed('workout');
+                }
+              },
+              loading: () {
+                SnackBarService.showInfo(
+                  context,
+                  'Loading template...',
+                );
+              },
+              error: (error, _) {
+                SnackBarService.showError(
+                  context,
+                  'Failed to load template: $error',
+                );
+              },
+            );
           },
           onShowAlternatives: () {
             // TODO: Show alternatives dialog with other suggestions

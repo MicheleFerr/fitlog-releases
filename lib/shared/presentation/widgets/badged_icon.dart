@@ -31,64 +31,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 /// - [SemanticIcon] for accessible icons
 /// - [AppIconSize] for sizing constants
 class BadgedIcon extends StatelessWidget {
-  /// The icon to display
-  final IconData icon;
-
-  /// Badge text to display (number or custom text)
-  ///
-  /// If null, displays a simple dot indicator.
-  /// For counts > 99, consider showing "99+" for better UX.
-  final String? badge;
-
-  /// Badge background color
-  ///
-  /// Defaults to error color (red) for notifications.
-  final Color? badgeColor;
-
-  /// Badge text color
-  ///
-  /// Defaults to white for contrast.
-  final Color? badgeTextColor;
-
-  /// Whether to show the badge
-  ///
-  /// Useful for conditional badge display without rebuilding widget.
-  final bool showBadge;
-
-  /// Icon size
-  final double iconSize;
-
-  /// Icon color
-  final Color? iconColor;
-
-  /// Badge size
-  ///
-  /// Automatically calculated if null:
-  /// - Dot badge: 8dp
-  /// - Single digit: 16dp
-  /// - Double digit: 20dp
-  final double? badgeSize;
-
-  /// Badge position offset from top-right
-  ///
-  /// Use this to fine-tune badge position for specific icons.
-  final Offset badgeOffset;
-
-  /// Optional semantic label for the entire widget
-  ///
-  /// Should describe both icon and badge state.
-  /// Example: "Notifications, 3 unread"
-  final String? semanticLabel;
-
-  /// Badge border width
-  ///
-  /// Set to 0 to remove border.
-  final double badgeBorderWidth;
-
-  /// Badge border color
-  ///
-  /// Defaults to surface color for separation from background.
-  final Color? badgeBorderColor;
 
   const BadgedIcon({
     super.key,
@@ -158,6 +100,64 @@ class BadgedIcon extends StatelessWidget {
       semanticLabel: semanticLabel,
     );
   }
+  /// The icon to display
+  final IconData icon;
+
+  /// Badge text to display (number or custom text)
+  ///
+  /// If null, displays a simple dot indicator.
+  /// For counts > 99, consider showing "99+" for better UX.
+  final String? badge;
+
+  /// Badge background color
+  ///
+  /// Defaults to error color (red) for notifications.
+  final Color? badgeColor;
+
+  /// Badge text color
+  ///
+  /// Defaults to white for contrast.
+  final Color? badgeTextColor;
+
+  /// Whether to show the badge
+  ///
+  /// Useful for conditional badge display without rebuilding widget.
+  final bool showBadge;
+
+  /// Icon size
+  final double iconSize;
+
+  /// Icon color
+  final Color? iconColor;
+
+  /// Badge size
+  ///
+  /// Automatically calculated if null:
+  /// - Dot badge: 8dp
+  /// - Single digit: 16dp
+  /// - Double digit: 20dp
+  final double? badgeSize;
+
+  /// Badge position offset from top-right
+  ///
+  /// Use this to fine-tune badge position for specific icons.
+  final Offset badgeOffset;
+
+  /// Optional semantic label for the entire widget
+  ///
+  /// Should describe both icon and badge state.
+  /// Example: "Notifications, 3 unread"
+  final String? semanticLabel;
+
+  /// Badge border width
+  ///
+  /// Set to 0 to remove border.
+  final double badgeBorderWidth;
+
+  /// Badge border color
+  ///
+  /// Defaults to surface color for separation from background.
+  final Color? badgeBorderColor;
 
   @override
   Widget build(BuildContext context) {

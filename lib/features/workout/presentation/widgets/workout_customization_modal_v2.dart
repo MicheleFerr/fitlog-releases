@@ -109,7 +109,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
       initialChildSize: 0.7,
       minChildSize: 0.5,
       maxChildSize: 0.95,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -617,7 +617,7 @@ class _WorkoutCustomizationModalV2State extends ConsumerState<WorkoutCustomizati
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: value
             ? theme.colorScheme.primaryContainer.withValues(alpha: 0.1)

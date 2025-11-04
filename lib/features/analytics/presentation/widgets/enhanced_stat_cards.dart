@@ -493,7 +493,7 @@ class EnhancedStreakCard extends StatelessWidget {
             final hasWorkout = workoutDays.contains(day);
             final isToday = day == DateTime.now().day;
             
-            return Container(
+            return DecoratedBox(
               decoration: BoxDecoration(
                 color: hasWorkout
                     ? Colors.green

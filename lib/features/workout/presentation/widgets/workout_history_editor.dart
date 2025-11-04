@@ -140,7 +140,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

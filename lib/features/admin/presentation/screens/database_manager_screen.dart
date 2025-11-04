@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_tab_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/domain/services/exercise_statistics_service.dart';
-import 'package:gymbro_flutter_new/features/admin/domain/models/exercise_statistics.dart';
 import 'package:intl/intl.dart';
 
 /// Complete Database Manager with Tab Structure (PHASE 1-6 COMPLETE)
@@ -131,7 +130,7 @@ class _DatabaseManagerScreenState
     return AppBar(
       title: Row(
         children: [
-          Icon(AppIcons.storage, size: AppIconSize.medium),
+          const Icon(AppIcons.storage, size: AppIconSize.medium),
           const SizedBox(width: 8),
           Text(context.l10n.databaseManager),
         ],
@@ -140,13 +139,13 @@ class _DatabaseManagerScreenState
         controller: _tabController,
         tabs: [
           Tab(text: context.l10n.overview),
-          Tab(text: 'Exercises IT'),
-          Tab(text: 'Exercises EN'),
+          const Tab(text: 'Exercises IT'),
+          const Tab(text: 'Exercises EN'),
         ],
       ),
       actions: [
         IconButton(
-          icon: Icon(AppIcons.refresh, size: AppIconSize.medium),
+          icon: const Icon(AppIcons.refresh, size: AppIconSize.medium),
           onPressed: () {
             ref.invalidate(exercisesITStreamProvider);
             ref.invalidate(exercisesENStreamProvider);
@@ -296,7 +295,7 @@ class _DatabaseManagerScreenState
               children: [
                 Expanded(
                   child: FilledButton.icon(
-                    icon: Icon(AppIcons.upload, size: AppIconSize.small),
+                    icon: const Icon(AppIcons.upload, size: AppIconSize.small),
                     label: Text(context.l10n.publishNewVersion),
                     onPressed: () {
                       SnackBarService.showInfo(context, 'Publish functionality preserved from original');
@@ -306,8 +305,8 @@ class _DatabaseManagerScreenState
                 const SizedBox(width: 8),
                 Expanded(
                   child: OutlinedButton.icon(
-                    icon: Icon(AppIcons.export, size: AppIconSize.small),
-                    label: Text('Export JSON'),
+                    icon: const Icon(AppIcons.export, size: AppIconSize.small),
+                    label: const Text('Export JSON'),
                     onPressed: () {
                       SnackBarService.showInfo(context, 'Export functionality preserved from original');
                     },
@@ -511,7 +510,7 @@ class _DatabaseManagerScreenState
               SizedBox(
                 width: double.infinity,
                 child: TextButton.icon(
-                  icon: Icon(AppIcons.expand, size: AppIconSize.small),
+                  icon: const Icon(AppIcons.expand, size: AppIconSize.small),
                   label: Text('Show All ${sortedEntries.length}'),
                   onPressed: () => _showFullStatsDialog(title, stats, total),
                 ),
@@ -637,10 +636,10 @@ class _DatabaseManagerScreenState
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: context.l10n.searchExercises,
-                prefixIcon: Icon(AppIcons.search),
+                prefixIcon: const Icon(AppIcons.search),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: Icon(AppIcons.close),
+                        icon: const Icon(AppIcons.close),
                         onPressed: () {
                           _searchController.clear();
                           _onSearchChanged('');
@@ -694,7 +693,7 @@ class _DatabaseManagerScreenState
               ),
               const Spacer(),
               TextButton.icon(
-                icon: Icon(AppIcons.edit, size: AppIconSize.small),
+                icon: const Icon(AppIcons.edit, size: AppIconSize.small),
                 label: const Text('Change Equipment'),
                 onPressed: () => _showBulkChangeEquipmentDialog(language, selectedExercises),
               ),
@@ -704,7 +703,7 @@ class _DatabaseManagerScreenState
                 onPressed: () => _confirmBulkDelete(language, selectedExercises),
               ),
               IconButton(
-                icon: Icon(AppIcons.close, size: AppIconSize.small),
+                icon: const Icon(AppIcons.close, size: AppIconSize.small),
                 onPressed: () {
                   if (language == 'it') {
                     ref.read(selectedExercisesITProvider.notifier).state = {};
@@ -751,7 +750,7 @@ class _DatabaseManagerScreenState
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: Icon(AppIcons.edit, size: AppIconSize.small),
+                  icon: const Icon(AppIcons.edit, size: AppIconSize.small),
                   onPressed: () {
                     SnackBarService.showInfo(context, 'Edit: ${exercise.nome}');
                   },
@@ -1001,7 +1000,7 @@ class _DatabaseManagerScreenState
         builder: (context, setState) => AlertDialog(
           title: const Text('Change Equipment'),
           content: DropdownButtonFormField<String>(
-            value: selectedEquipment,
+            initialValue: selectedEquipment,
             decoration: const InputDecoration(
               labelText: 'New Equipment',
               border: OutlineInputBorder(),
@@ -1191,7 +1190,7 @@ class _DatabaseManagerScreenState
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: Icon(AppIcons.chevronLeft),
+            icon: const Icon(AppIcons.chevronLeft),
             onPressed: _currentPage > 0
                 ? () => setState(() => _currentPage--)
                 : null,
@@ -1201,7 +1200,7 @@ class _DatabaseManagerScreenState
             style: context.textTheme.bodyMedium,
           ),
           IconButton(
-            icon: Icon(AppIcons.chevronRight),
+            icon: const Icon(AppIcons.chevronRight),
             onPressed: _currentPage < totalPages - 1
                 ? () => setState(() => _currentPage++)
                 : null,
@@ -1232,7 +1231,7 @@ class _DatabaseManagerScreenState
               _searchController.clear();
               _onSearchChanged('');
             },
-            icon: Icon(AppIcons.clear),
+            icon: const Icon(AppIcons.clear),
             label: Text(context.l10n.clearFilters),
           ),
         ],
@@ -1305,7 +1304,7 @@ class _DatabaseManagerScreenState
                   ref.invalidate(exercisesENStreamProvider);
                   ref.invalidate(metadataStreamProvider);
                 },
-                icon: Icon(AppIcons.refresh),
+                icon: const Icon(AppIcons.refresh),
                 label: Text(context.l10n.retry),
               ),
             ],

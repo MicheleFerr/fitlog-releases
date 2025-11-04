@@ -7,7 +7,6 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_wo
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 
 // Mocks
@@ -512,7 +511,7 @@ void main() {
   group('HybridWorkoutRepositoryImpl - getWorkoutStats', () {
     test('should get workout stats from local storage', () async {
       // Arrange
-      final stats = const WorkoutStats(
+      const stats = WorkoutStats(
         totalWorkouts: 10,
         totalExercises: 50,
         totalSets: 150,

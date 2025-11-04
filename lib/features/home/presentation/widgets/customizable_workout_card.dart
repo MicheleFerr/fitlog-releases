@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CustomizableWorkoutCard extends ConsumerStatefulWidget {
@@ -148,7 +147,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
       builder: (context, child) {
         return Transform.scale(
           scale: _isLongPress ? _scaleAnimation.value : 1.0,
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
@@ -293,7 +292,7 @@ class _CustomizationMenu extends ConsumerWidget {
     final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
     final currentPreferredId = ref.watch(preferredTemplateIdProvider);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

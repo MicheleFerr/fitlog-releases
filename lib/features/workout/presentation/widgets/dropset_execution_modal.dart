@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Modal for executing DropSet exercises during workouts
 ///
@@ -210,13 +209,13 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
       height: MediaQuery.of(context).size.height * 0.85,
       decoration: BoxDecoration(
         color: context.colors.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
           // Handle bar
           Container(
-            margin: EdgeInsets.only(top: 12),
+            margin: const EdgeInsets.only(top: 12),
             width: 40,
             height: 4,
             decoration: BoxDecoration(
@@ -248,14 +247,14 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Row(
             children: [
               // Exercise icon with tertiary color (dropset)
               Container(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: context.colors.tertiary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -266,7 +265,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                   size: 28,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
 
               // Exercise name and stage count
               Expanded(
@@ -279,7 +278,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       context.l10n.dropsetStages(_stages.length),
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -292,7 +291,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
 
               // Timer
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: context.colors.secondaryContainer,
                   borderRadius: BorderRadius.circular(8),
@@ -305,7 +304,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                       size: 16,
                       color: context.colors.onSecondaryContainer,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     StreamBuilder(
                       stream: Stream.periodic(const Duration(seconds: 1)),
                       builder: (context, snapshot) {
@@ -335,7 +334,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
     final progress = _completedStagesCount / _stages.length;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -357,7 +356,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
@@ -374,8 +373,8 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
 
   Widget _buildMotivationalMessage() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: context.colors.tertiaryContainer,
         borderRadius: BorderRadius.circular(12),
@@ -390,7 +389,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
             color: context.colors.onTertiaryContainer,
             size: 20,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               _motivationalMessage,
@@ -407,7 +406,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
 
   Widget _buildStagesList() {
     return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       itemCount: _stages.length,
       itemBuilder: (context, index) {
         final stage = _stages[index];
@@ -416,8 +415,8 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
         final isUpcoming = index > _currentStageIndex;
 
         Widget stageCard = Container(
-          margin: EdgeInsets.only(bottom: 12),
-          padding: EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isCurrent
                 ? context.colors.tertiaryContainer
@@ -464,7 +463,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         ),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
 
               // Stage details
               Expanded(
@@ -482,7 +481,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(
@@ -492,7 +491,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
                           '${stage.weight.toStringAsFixed(1)} kg',
                           style: context.textTheme.titleMedium?.copyWith(
@@ -504,7 +503,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Icon(
                           Icons.repeat,
                           size: 16,
@@ -512,7 +511,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
                           context.l10n.targetReps(stage.reps),
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -530,7 +529,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
               // Status badge
               if (isCompleted)
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: context.colors.tertiary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
@@ -595,7 +594,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 style: FilledButton.styleFrom(
                   backgroundColor: context.colors.tertiary,
                   foregroundColor: context.colors.onTertiary,
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -609,10 +608,10 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                           color: context.colors.surface,
                         ),
                       )
-                    : Icon(Icons.check_circle),
+                    : const Icon(Icons.check_circle),
                 label: Text(
                   context.l10n.completeDropset,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -627,15 +626,15 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 style: FilledButton.styleFrom(
                   backgroundColor: context.colors.tertiary,
                   foregroundColor: context.colors.onTertiary,
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                icon: Icon(Icons.check),
+                icon: const Icon(Icons.check),
                 label: Text(
                   context.l10n.completeStage(_currentStageIndex + 1),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -643,7 +642,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
               ),
             ),
 
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
 
           // Cancel button
           TextButton(

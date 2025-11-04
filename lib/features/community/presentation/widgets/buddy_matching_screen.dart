@@ -210,7 +210,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
     return Card(
       elevation: isTop ? 8 : 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(

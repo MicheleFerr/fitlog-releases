@@ -26,7 +26,6 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/step_feedback_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Fitness questionnaire screen with step-by-step flow
 class FitnessQuestionnaireScreen extends ConsumerStatefulWidget {

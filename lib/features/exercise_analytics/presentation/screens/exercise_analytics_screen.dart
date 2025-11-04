@@ -174,7 +174,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
   }
 
   Widget _buildSearchBar(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
@@ -520,7 +520,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         maxChildSize: 0.9,
         minChildSize: 0.5,
         builder: (context, scrollController) {
-          return Container(
+          return DecoratedBox(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

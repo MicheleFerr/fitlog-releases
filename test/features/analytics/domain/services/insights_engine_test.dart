@@ -7,7 +7,7 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 void main() {
   // Helper to create ExerciseActivity for testing
-  ExerciseActivity _createActivity({
+  ExerciseActivity createActivity({
     required String exerciseId,
     required String exerciseName,
     required List<ExerciseActivitySet> sets,
@@ -26,7 +26,7 @@ void main() {
   }
 
   // Helper to create ExerciseActivitySet
-  ExerciseActivitySet _createSet({
+  ExerciseActivitySet createSet({
     required String weight,
     required String reps,
     bool done = true,
@@ -44,7 +44,7 @@ void main() {
   }
 
   // Helper to create PersonalRecord
-  PersonalRecord _createPR({
+  PersonalRecord createPR({
     required String exerciseName,
     required PRType type,
     required double value,
@@ -181,20 +181,20 @@ void main() {
     test('should calculate volume distribution by muscle group', () {
       // 🐛 BUG PREVENTED: Incorrect muscle group volume tracking
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'bench',
           exerciseName: 'Bench Press',
           sets: [
-            _createSet(weight: '100', reps: '10'),
-            _createSet(weight: '100', reps: '10'),
+            createSet(weight: '100', reps: '10'),
+            createSet(weight: '100', reps: '10'),
           ],
         ),
-        _createActivity(
+        createActivity(
           exerciseId: 'squat',
           exerciseName: 'Squat',
           sets: [
-            _createSet(weight: '150', reps: '10'),
-            _createSet(weight: '150', reps: '10'),
+            createSet(weight: '150', reps: '10'),
+            createSet(weight: '150', reps: '10'),
           ],
         ),
       ];
@@ -209,10 +209,10 @@ void main() {
     test('should calculate imbalance scores (actual/ideal ratio)', () {
       // 🐛 BUG PREVENTED: Can't quantify muscle imbalance severity
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'bench',
           exerciseName: 'Bench Press',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
         ),
       ];
 
@@ -239,16 +239,16 @@ void main() {
     test('should generate insights from activities and PRs', () {
       // 🐛 BUG PREVENTED: No insights generated despite having workout data
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'bench',
           exerciseName: 'Bench Press',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime.now().subtract(const Duration(days: 1)),
         ),
       ];
 
       final prs = [
-        _createPR(
+        createPR(
           exerciseName: 'Bench Press',
           type: PRType.weight,
           value: 105.0,
@@ -282,16 +282,16 @@ void main() {
     test('should sort insights by priority (high > medium > low)', () {
       // 🐛 BUG PREVENTED: Low priority insights shown first, hiding critical warnings
       final activities = List.generate(10, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise-$i',
           exerciseName: 'Exercise $i',
-          sets: [_createSet(weight: '${100 + i * 10}', reps: '10')],
+          sets: [createSet(weight: '${100 + i * 10}', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
 
       final prs = List.generate(5, (i) {
-        return _createPR(
+        return createPR(
           exerciseName: 'Exercise $i',
           type: PRType.weight,
           value: 100.0 + i * 10,
@@ -314,10 +314,10 @@ void main() {
     test('should limit insights to top 10', () {
       // 🐛 BUG PREVENTED: UI overwhelmed with too many insights
       final activities = List.generate(50, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise-$i',
           exerciseName: 'Exercise $i',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
@@ -334,16 +334,16 @@ void main() {
     test('should generate multiple insight types', () {
       // 🐛 BUG PREVENTED: Only one type of insight shown, missing important info
       final activities = List.generate(30, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'bench',
           exerciseName: 'Bench Press',
-          sets: [_createSet(weight: '${100 + i}', reps: '10')],
+          sets: [createSet(weight: '${100 + i}', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
 
       final prs = [
-        _createPR(
+        createPR(
           exerciseName: 'Bench Press',
           type: PRType.weight,
           value: 130.0,
@@ -367,10 +367,10 @@ void main() {
     test('should generate observations from trends and balance', () {
       // 🐛 BUG PREVENTED: No context provided with insights
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'bench',
           exerciseName: 'Bench Press',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
         ),
       ];
 
@@ -448,10 +448,10 @@ void main() {
     test('should generate achievement insight for improving strength', () {
       // 🐛 BUG PREVENTED: User makes progress but no positive feedback
       final activities = List.generate(15, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'bench',
           exerciseName: 'Bench Press',
-          sets: [_createSet(weight: '${100 + i * 2}', reps: '10')],
+          sets: [createSet(weight: '${100 + i * 2}', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
@@ -480,13 +480,13 @@ void main() {
       // Create 50 activities over 50 days with slight weight variations
       final weights = ['150', '152', '150', '151', '150', '149', '150'];
       final activities = List.generate(50, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'squat',
           exerciseName: 'Squat',
           sets: [
-            _createSet(weight: weights[i % weights.length], reps: '10'),
-            _createSet(weight: weights[i % weights.length], reps: '10'),
-            _createSet(weight: weights[i % weights.length], reps: '8'),
+            createSet(weight: weights[i % weights.length], reps: '10'),
+            createSet(weight: weights[i % weights.length], reps: '10'),
+            createSet(weight: weights[i % weights.length], reps: '8'),
           ],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
@@ -507,19 +507,19 @@ void main() {
     test('should detect volume surge (>15% increase)', () {
       // 🐛 BUG PREVENTED: Rapid volume increase not flagged (overtraining risk)
       final lastWeek = List.generate(7, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise-$i',
           exerciseName: 'Exercise $i',
-          sets: [_createSet(weight: '120', reps: '10')],
+          sets: [createSet(weight: '120', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
 
       final previousWeek = List.generate(5, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise-prev-$i',
           exerciseName: 'Exercise $i',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: 7 + i)),
         );
       });
@@ -540,10 +540,10 @@ void main() {
     test('should detect volume plateau', () {
       // 🐛 BUG PREVENTED: Volume stuck at same level for weeks
       final activities = List.generate(20, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise',
           exerciseName: 'Exercise',
-          sets: List.generate(3, (_) => _createSet(weight: '100', reps: '10')),
+          sets: List.generate(3, (_) => createSet(weight: '100', reps: '10')),
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
@@ -566,10 +566,10 @@ void main() {
     test('should detect normal workout frequency', () {
       // 🐛 BUG PREVENTED: No feedback on training consistency
       final activities = List.generate(12, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise-$i',
           exerciseName: 'Exercise $i',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i * 2)),
         );
       });
@@ -591,10 +591,10 @@ void main() {
     test('should detect extended break (>7 days)', () {
       // 🐛 BUG PREVENTED: User takes long break, no welcome back message
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'last-workout',
           exerciseName: 'Last Workout',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime.now().subtract(const Duration(days: 10)),
         ),
       ];
@@ -618,7 +618,7 @@ void main() {
     test('should celebrate recent PRs (<7 days)', () {
       // 🐛 BUG PREVENTED: User hits PR but no celebration/recognition
       final prs = [
-        _createPR(
+        createPR(
           exerciseName: 'Bench Press',
           type: PRType.weight,
           value: 120.0,
@@ -655,7 +655,7 @@ void main() {
     test('should detect PR drought (>30 days)', () {
       // 🐛 BUG PREVENTED: User stuck without PRs for long time, no guidance
       final prs = [
-        _createPR(
+        createPR(
           exerciseName: 'Squat',
           type: PRType.weight,
           value: 180.0,
@@ -682,10 +682,10 @@ void main() {
     test('should celebrate workout streak (>=3 days)', () {
       // 🐛 BUG PREVENTED: User maintains streak but no recognition
       final activities = List.generate(5, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'day-$i',
           exerciseName: 'Workout Day $i',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
@@ -707,10 +707,10 @@ void main() {
     test('should celebrate volume milestone (>50 tons)', () {
       // 🐛 BUG PREVENTED: Major milestone reached but not celebrated
       final activities = List.generate(100, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise-$i',
           exerciseName: 'Exercise $i',
-          sets: List.generate(3, (_) => _createSet(weight: '200', reps: '10')),
+          sets: List.generate(3, (_) => createSet(weight: '200', reps: '10')),
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
@@ -732,7 +732,7 @@ void main() {
     test('should recognize multiple PRs (>=3)', () {
       // 🐛 BUG PREVENTED: Multiple PRs achieved but shown as separate, less impactful
       final prs = List.generate(5, (i) {
-        return _createPR(
+        return createPR(
           exerciseName: 'Exercise $i',
           type: PRType.weight,
           value: 100.0 + i * 10,
@@ -761,22 +761,22 @@ void main() {
       // Cannot test private static methods directly, but tested via integration
       final now = DateTime.now();
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'workout-1',
           exerciseName: 'Workout 1',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: now.subtract(const Duration(days: 5)), // Recent
         ),
-        _createActivity(
+        createActivity(
           exerciseId: 'workout-2',
           exerciseName: 'Workout 2',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: now.subtract(const Duration(days: 3)), // Recent
         ),
-        _createActivity(
+        createActivity(
           exerciseId: 'workout-3',
           exerciseName: 'Workout 3',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: now.subtract(const Duration(days: 1)), // Recent
         ),
       ];
@@ -799,22 +799,22 @@ void main() {
       // 🐛 BUG PREVENTED: Wrong workout time pattern shown
       final now = DateTime.now();
       final morningActivities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'morning-1',
           exerciseName: 'Morning Workout 1',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime(now.year, now.month, now.day - 2, 8, 0), // 8 AM, 2 days ago
         ),
-        _createActivity(
+        createActivity(
           exerciseId: 'morning-2',
           exerciseName: 'Morning Workout 2',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime(now.year, now.month, now.day - 4, 9, 0), // 9 AM, 4 days ago
         ),
-        _createActivity(
+        createActivity(
           exerciseId: 'morning-3',
           exerciseName: 'Morning Workout 3',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime(now.year, now.month, now.day - 6, 7, 30), // 7:30 AM, 6 days ago
         ),
       ];
@@ -835,10 +835,10 @@ void main() {
     test('_findMaxConsecutiveDays should calculate streaks correctly', () {
       // 🐛 BUG PREVENTED: Incorrect streak calculation
       final consecutiveActivities = List.generate(5, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'day-$i',
           exerciseName: 'Day $i',
-          sets: [_createSet(weight: '100', reps: '10')],
+          sets: [createSet(weight: '100', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
@@ -862,13 +862,13 @@ void main() {
     test('should handle activities with warmup sets correctly', () {
       // 🐛 BUG PREVENTED: Warmup sets incorrectly counted in volume insights
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'bench',
           exerciseName: 'Bench Press',
           sets: [
-            _createSet(weight: '60', reps: '10', isWarmup: true),
-            _createSet(weight: '100', reps: '10', isWarmup: false),
-            _createSet(weight: '100', reps: '10', isWarmup: false),
+            createSet(weight: '60', reps: '10', isWarmup: true),
+            createSet(weight: '100', reps: '10', isWarmup: false),
+            createSet(weight: '100', reps: '10', isWarmup: false),
           ],
         ),
       ];
@@ -886,12 +886,12 @@ void main() {
     test('should handle activities with incomplete sets', () {
       // 🐛 BUG PREVENTED: Planned but unexecuted sets counted in analysis
       final activities = [
-        _createActivity(
+        createActivity(
           exerciseId: 'squat',
           exerciseName: 'Squat',
           sets: [
-            _createSet(weight: '150', reps: '10', done: true),
-            _createSet(weight: '150', reps: '10', done: false),
+            createSet(weight: '150', reps: '10', done: true),
+            createSet(weight: '150', reps: '10', done: false),
           ],
         ),
       ];
@@ -909,16 +909,16 @@ void main() {
     test('should handle very large datasets efficiently', () {
       // 🐛 BUG PREVENTED: App freezes when generating insights for power users
       final largeDataset = List.generate(500, (i) {
-        return _createActivity(
+        return createActivity(
           exerciseId: 'exercise-$i',
           exerciseName: 'Exercise ${i % 10}', // 10 different exercises
-          sets: [_createSet(weight: '${100 + (i % 50)}', reps: '10')],
+          sets: [createSet(weight: '${100 + (i % 50)}', reps: '10')],
           createdAt: DateTime.now().subtract(Duration(days: i)),
         );
       });
 
       final largePRs = List.generate(100, (i) {
-        return _createPR(
+        return createPR(
           exerciseName: 'Exercise ${i % 10}',
           type: PRType.values[i % PRType.values.length],
           value: 100.0 + i,

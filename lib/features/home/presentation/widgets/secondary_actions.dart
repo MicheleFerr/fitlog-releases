@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Secondary Actions widget for the optimized homepage
@@ -28,8 +27,19 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 /// - Responsive grid layout
 /// - Performance optimized with const constructors
 /// - Accessibility support
+/// - Onboarding tour support with optional GlobalKeys
 class SecondaryActions extends ConsumerWidget {
-  const SecondaryActions({super.key});
+  /// Optional GlobalKey for Analytics card (for onboarding tour)
+  final GlobalKey? analyticsKey;
+
+  /// Optional GlobalKey for History card (for onboarding tour)
+  final GlobalKey? historyKey;
+
+  const SecondaryActions({
+    super.key,
+    this.analyticsKey,
+    this.historyKey,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,7 +79,7 @@ class SecondaryActions extends ConsumerWidget {
     AppLocalizations l10n,
     WidgetRef ref,
   ) {
-    final actions = _getSecondaryActions(context, l10n, ref);
+    final actions = _getSecondaryActions(context, l10n, ref, analyticsKey, historyKey);
 
     // Use a responsive layout - 3 columns on larger screens, 2 on smaller
     final screenWidth = MediaQuery.of(context).size.width;
@@ -94,10 +104,13 @@ class SecondaryActions extends ConsumerWidget {
     BuildContext context,
     AppLocalizations l10n,
     WidgetRef ref,
+    GlobalKey? analyticsKey,
+    GlobalKey? historyKey,
   ) {
     return [
       // Analytics & Progress
       _SecondaryActionCard(
+        key: analyticsKey,
         icon: AppIcons.analytics,
         activeIcon: Icons.analytics,
         title: l10n.analytics,
@@ -139,6 +152,7 @@ class SecondaryActions extends ConsumerWidget {
 
       // Workout History Database
       _SecondaryActionCard(
+        key: historyKey,
         icon: AppIcons.historyOutlined,
         activeIcon: Icons.history,
         title: l10n.history,
@@ -315,6 +329,7 @@ class SecondaryActions extends ConsumerWidget {
 /// Individual secondary action card with hover and press animations
 class _SecondaryActionCard extends StatefulWidget {
   const _SecondaryActionCard({
+    super.key,
     required this.icon,
     required this.activeIcon,
     required this.title,
@@ -443,7 +458,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
             onTapUp: _onTapUp,
             onTapCancel: _onTapCancel,
             onTap: widget.onTap,
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 // Glassmorphism background
                 gradient: LinearGradient(
@@ -488,7 +503,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard>
                     sigmaX: _isPressed ? 8 : 2,
                     sigmaY: _isPressed ? 8 : 2,
                   ),
-                  child: Container(
+                  child: DecoratedBox(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: context.colors.surface.withValues(

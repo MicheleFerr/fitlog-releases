@@ -691,7 +691,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               // Confirm button - Premium gradient
               Expanded(
                 flex: 2,
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: _selectedRpe != null
                         ? LinearGradient(
@@ -1357,7 +1357,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     final l10n = AppLocalizations.of(context);
 
     // Main content of the bottom sheet
-    final mainContent = Container(
+    final mainContent = DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

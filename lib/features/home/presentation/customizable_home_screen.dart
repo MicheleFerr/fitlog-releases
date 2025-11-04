@@ -148,7 +148,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
             floating: true,
             pinned: true,
             backgroundColor: Colors.transparent,
-            flexibleSpace: Container(
+            flexibleSpace: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -456,7 +456,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
           
           // Edit overlay
           Positioned.fill(
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(12),

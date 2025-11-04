@@ -89,6 +89,29 @@ class WorkoutAnalyticsStats {
     this.lastWorkoutDate,
     this.firstWorkoutDate,
   });
+
+  /// Create from JSON
+  factory WorkoutAnalyticsStats.fromJson(Map<String, dynamic> json) {
+    return WorkoutAnalyticsStats(
+      totalWorkouts: json['totalWorkouts'] as int,
+      totalPRs: json['totalPRs'] as int,
+      averageWorkoutVolume: (json['averageWorkoutVolume'] as num).toDouble(),
+      averageWorkoutDuration: (json['averageWorkoutDuration'] as num).toDouble(),
+      totalVolumeLifted: (json['totalVolumeLifted'] as num).toDouble(),
+      exerciseFrequency: (json['exerciseFrequency'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, value as int),
+      ),
+      exerciseVolumeDistribution: (json['exerciseVolumeDistribution'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(key, (value as num).toDouble()),
+      ),
+      lastWorkoutDate: json['lastWorkoutDate'] != null
+        ? DateTime.parse(json['lastWorkoutDate'] as String)
+        : null,
+      firstWorkoutDate: json['firstWorkoutDate'] != null
+        ? DateTime.parse(json['firstWorkoutDate'] as String)
+        : null,
+    );
+  }
   final int totalWorkouts;
   final int totalPRs;
   final double averageWorkoutVolume;
@@ -126,29 +149,6 @@ class WorkoutAnalyticsStats {
     return exerciseVolumeDistribution.entries
         .reduce((a, b) => a.value > b.value ? a : b)
         .key;
-  }
-
-  /// Create from JSON
-  factory WorkoutAnalyticsStats.fromJson(Map<String, dynamic> json) {
-    return WorkoutAnalyticsStats(
-      totalWorkouts: json['totalWorkouts'] as int,
-      totalPRs: json['totalPRs'] as int,
-      averageWorkoutVolume: (json['averageWorkoutVolume'] as num).toDouble(),
-      averageWorkoutDuration: (json['averageWorkoutDuration'] as num).toDouble(),
-      totalVolumeLifted: (json['totalVolumeLifted'] as num).toDouble(),
-      exerciseFrequency: (json['exerciseFrequency'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, value as int),
-      ),
-      exerciseVolumeDistribution: (json['exerciseVolumeDistribution'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, (value as num).toDouble()),
-      ),
-      lastWorkoutDate: json['lastWorkoutDate'] != null
-        ? DateTime.parse(json['lastWorkoutDate'] as String)
-        : null,
-      firstWorkoutDate: json['firstWorkoutDate'] != null
-        ? DateTime.parse(json['firstWorkoutDate'] as String)
-        : null,
-    );
   }
 
   /// Convert to JSON

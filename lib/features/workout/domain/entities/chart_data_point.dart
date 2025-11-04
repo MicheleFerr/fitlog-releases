@@ -14,13 +14,13 @@ library;
 ///
 /// Immutable value object rappresenta un singolo punto dati per chart
 class ChartDataPoint {
-  final DateTime date;
-  final double value;
 
   const ChartDataPoint({
     required this.date,
     required this.value,
   });
+  final DateTime date;
+  final double value;
 
   @override
   bool operator ==(Object other) =>

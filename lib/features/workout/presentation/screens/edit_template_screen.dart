@@ -469,7 +469,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
 
   Widget _buildSetsEditor(
       int exerciseIndex, ExerciseTemplate exerciseTemplate) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         border: Border(

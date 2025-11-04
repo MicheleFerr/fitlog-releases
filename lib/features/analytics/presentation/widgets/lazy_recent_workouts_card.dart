@@ -471,7 +471,7 @@ class _WorkoutDetailsSheet extends StatelessWidget {
       minChildSize: 0.4,
       expand: false,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

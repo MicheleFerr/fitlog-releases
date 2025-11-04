@@ -282,7 +282,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   }
 
   Widget _buildSearchBar(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),

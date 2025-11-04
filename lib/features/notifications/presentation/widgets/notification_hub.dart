@@ -54,7 +54,7 @@ class NotificationHub extends ConsumerWidget {
             child: Container(
               constraints: const BoxConstraints(minWidth: 20),
               height: 20,
-              padding: EdgeInsets.symmetric(horizontal: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 6),
               decoration: BoxDecoration(
                 color: context.colors.error,
                 borderRadius: BorderRadius.circular(10),
@@ -100,7 +100,7 @@ class NotificationPanel extends ConsumerWidget {
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -108,7 +108,7 @@ class NotificationPanel extends ConsumerWidget {
           Container(
             width: 40,
             height: 4,
-            margin: EdgeInsets.symmetric(vertical: 12),
+            margin: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
               color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
@@ -117,7 +117,7 @@ class NotificationPanel extends ConsumerWidget {
           
           // Header
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
                 Icon(
@@ -125,7 +125,7 @@ class NotificationPanel extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   AppLocalizations.of(context).notifications ?? 'Notifiche',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -150,21 +150,21 @@ class NotificationPanel extends ConsumerWidget {
             ),
           ),
           
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           
           // Quick stats section
           _buildQuickStats(context, ref),
           
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           
           // Notifications list
           Expanded(
             child: notifications.isEmpty
                 ? _buildEmptyState(context)
                 : ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: notifications.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 8),
+                    separatorBuilder: (context, index) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final notification = notifications[index];
                       return NotificationTile(
@@ -200,8 +200,8 @@ class NotificationPanel extends ConsumerWidget {
     final weeklyWorkouts = (frequencyAsync.asData?.value ?? 0.0).round();
     
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -218,11 +218,11 @@ class NotificationPanel extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Text(
+              const Text(
                 '📊',
                 style: TextStyle(fontSize: 20),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context).quickStats ?? 'I tuoi progressi',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -238,9 +238,9 @@ class NotificationPanel extends ConsumerWidget {
                 ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           if (streakAsync.isLoading || quickStatsAsync.isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(strokeWidth: 2),
             )
           else
@@ -274,9 +274,9 @@ class NotificationPanel extends ConsumerWidget {
             ),
           if (quickStatsAsync.hasValue && quickStatsAsync.value != null)
             if (quickStatsAsync.value!.volumeIncrease > 0) ...[
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: context.colors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -292,7 +292,7 @@ class NotificationPanel extends ConsumerWidget {
                       size: 14,
                       color: context.colors.success,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       'Volume +${quickStatsAsync.value!.formattedVolumeIncrease}',
                       style: TextStyle(
@@ -313,11 +313,11 @@ class NotificationPanel extends ConsumerWidget {
   Widget _buildStatItem(BuildContext context, String emoji, String value, String label) {
     return Column(
       children: [
-        Text(emoji, style: TextStyle(fontSize: 20)),
-        SizedBox(height: 4),
+        Text(emoji, style: const TextStyle(fontSize: 20)),
+        const SizedBox(height: 4),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -343,14 +343,14 @@ class NotificationPanel extends ConsumerWidget {
             size: 64,
             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context).noNotifications ?? 'Nessuna notifica',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).notificationsDescription ?? 'Ti terremo aggiornato sui tuoi progressi!',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -396,7 +396,7 @@ class NotificationTile extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
           color: context.colors.error,
           borderRadius: BorderRadius.circular(12),
@@ -407,7 +407,7 @@ class NotificationTile extends StatelessWidget {
         ),
       ),
       onDismissed: (_) => onDismiss(),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: notification.isRead 
               ? Theme.of(context).colorScheme.surface
@@ -423,7 +423,7 @@ class NotificationTile extends StatelessWidget {
             onTap: onTap,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   // Emoji/Icon
@@ -437,12 +437,12 @@ class NotificationTile extends StatelessWidget {
                     child: Center(
                       child: Text(
                         notification.emoji,
-                        style: TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 20),
                       ),
                     ),
                   ),
                   
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   
                   // Content
                   Expanded(
@@ -467,7 +467,7 @@ class NotificationTile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           notification.message,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -477,7 +477,7 @@ class NotificationTile extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         if (notification.action != null) ...[
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               Icon(
@@ -485,7 +485,7 @@ class NotificationTile extends StatelessWidget {
                                 size: 14,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text(
                                 notification.action!.label,
                                 style: TextStyle(

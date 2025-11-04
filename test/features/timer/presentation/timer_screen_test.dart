@@ -65,7 +65,7 @@ void main() {
       }
 
       return ProviderScope(
-        overrides: [
+        overrides: const [
           // timerProvider.overrideWith((ref) => mockTimerNotifier),
         ],
         child: MaterialApp(

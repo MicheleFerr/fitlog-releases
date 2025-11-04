@@ -289,7 +289,7 @@ class _TutSelectorState extends State<TutSelector> {
         const SizedBox(height: 8),
 
         // Value Selector
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.3),

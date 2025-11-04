@@ -274,7 +274,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     final colorScheme = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -1330,7 +1330,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
-    return Container(
+    return ColoredBox(
       color: context.colors.onSurface.withValues(alpha: 0.6),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),

@@ -53,7 +53,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
 
     // Initialize reps for main set + mini sets
     // Rest-pause typically has 1 main set + 3 mini-sets (standard pattern)
-    final totalMiniSets = 1 + 3; // Main set + 3 additional mini sets
+    const totalMiniSets = 1 + 3; // Main set + 3 additional mini sets
     for (int i = 0; i < totalMiniSets; i++) {
       _reps[i] = 0;
       _completedMiniSets[i] = false;
@@ -355,7 +355,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

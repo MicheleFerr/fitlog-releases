@@ -391,7 +391,7 @@ void main() {
       final sets = [
         createSet(weight: '100', reps: '10'), // 1000
       ];
-      final duration = const Duration(minutes: 10);
+      const duration = Duration(minutes: 10);
 
       final result = VolumeCalculator.calculateTrainingDensity(sets, duration);
 
@@ -402,7 +402,7 @@ void main() {
       final sets = [
         createSet(weight: '100', reps: '10'),
       ];
-      final duration = Duration.zero;
+      const duration = Duration.zero;
 
       final result = VolumeCalculator.calculateTrainingDensity(sets, duration);
 
@@ -415,7 +415,7 @@ void main() {
         createSet(weight: '100', reps: '10'),
         createSet(weight: '100', reps: '10'),
       ];
-      final duration = const Duration(minutes: 5);
+      const duration = Duration(minutes: 5);
 
       final result = VolumeCalculator.calculateTrainingDensity(sets, duration);
 

@@ -48,7 +48,7 @@ Exercise createTestExercise({
     nome: nome,
     focus: [focus],
     imageUrl: 'https://example.com/image.jpg',
-    muscoliSecondari: ['DELT', 'TRIC'],
+    muscoliSecondari: const ['DELT', 'TRIC'],
     difficolta: 'Intermedio',
     tipoEsercizio: 'Composto',
     attrezzatura: 'Bilanciere',
@@ -867,9 +867,9 @@ void main() {
       final invalidExercise = Exercise(
         id: '', // Empty ID is invalid
         nome: 'Test',
-        focus: ['PETT'],
+        focus: const ['PETT'],
         imageUrl: '',
-        muscoliSecondari: [],
+        muscoliSecondari: const [],
         difficolta: '',
         tipoEsercizio: '',
         attrezzatura: '',

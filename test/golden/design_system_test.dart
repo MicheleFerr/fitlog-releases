@@ -259,18 +259,18 @@ class _StandardCardTest extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 'This is a standard card with default padding and styling.',
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
               ),
-              SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
                   Icon(Icons.info_outline, size: 16, color: context.colors.primary),
-                  SizedBox(width: AppSpacing.xxs),
+                  const SizedBox(width: AppSpacing.xxs),
                   Text(
                     'Info icon with text',
                     style: context.textTheme.bodySmall,
@@ -296,11 +296,11 @@ class _SemanticColorsTest extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _semanticColorCard(context, 'Success', context.successColor, context.textOnSuccess),
-          SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.xs),
           _semanticColorCard(context, 'Error', context.errorColor, context.textOnError),
-          SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.xs),
           _semanticColorCard(context, 'Warning', context.warningColor, context.textOnWarning),
-          SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.xs),
           _semanticColorCard(context, 'Info', context.infoColor, context.textOnInfo),
         ],
       ),
@@ -317,7 +317,7 @@ class _SemanticColorsTest extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.info, color: fg, size: 20),
-          SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             label,
             style: TextStyle(

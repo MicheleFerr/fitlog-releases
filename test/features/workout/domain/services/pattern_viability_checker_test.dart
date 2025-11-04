@@ -13,7 +13,7 @@ void main() {
   group('PatternViabilityChecker - All Rules Pass', () {
     test('returns viable when all 5 rules pass', () {
       // Arrange: Perfect pattern that passes all rules
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull', 'legs'],
         repetitions: 4, // ≥3 ✅
         confidence: 0.85, // ≥0.70 ✅
@@ -36,7 +36,7 @@ void main() {
 
     test('coverage is exactly 50% (edge case)', () {
       // Arrange: 6 workouts, pattern of length 3 repeated 1 time = 3/6 = 50%
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['a', 'b', 'c'],
         repetitions: 3,
         confidence: 0.75,
@@ -56,7 +56,7 @@ void main() {
   group('PatternViabilityChecker - Rule 1: Confidence', () {
     test('rejects pattern with confidence < 0.70', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.65, // ❌ Below threshold
@@ -77,7 +77,7 @@ void main() {
 
     test('accepts pattern with confidence = 0.70 (edge case)', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.70, // Exactly at threshold
@@ -97,7 +97,7 @@ void main() {
   group('PatternViabilityChecker - Rule 2: Cycles', () {
     test('rejects pattern with < 3 cycles', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull', 'legs'],
         repetitions: 2, // ❌ Only 2 cycles
         confidence: 0.80,
@@ -118,7 +118,7 @@ void main() {
 
     test('accepts pattern with exactly 3 cycles (edge case)', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3, // Exactly 3 cycles
         confidence: 0.75,
@@ -138,7 +138,7 @@ void main() {
   group('PatternViabilityChecker - Rule 3: Days of Data', () {
     test('rejects pattern with < 18 days of data', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.80,
@@ -162,7 +162,7 @@ void main() {
 
     test('accepts pattern with exactly 18 days (edge case)', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.75,
@@ -182,7 +182,7 @@ void main() {
   group('PatternViabilityChecker - Rule 4: Total Workouts', () {
     test('rejects pattern with < 6 total workouts', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.80,
@@ -206,7 +206,7 @@ void main() {
 
     test('accepts pattern with exactly 6 workouts (edge case)', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['a', 'b'],
         repetitions: 3,
         confidence: 0.75,
@@ -228,7 +228,7 @@ void main() {
       // Arrange: 6 workouts, pattern length 2, 2 repetitions = 4/6 = 66%... wait that's >50%
       // Let me recalculate: Need < 50% coverage
       // 10 total workouts, pattern [A,B,C] with 1 repetition = 3/10 = 30% ❌
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['a', 'b', 'c'],
         repetitions: 1, // Only 1 cycle
         confidence: 0.80,
@@ -249,7 +249,7 @@ void main() {
     test('rejects when coverage is low (independent of cycles)', () {
       // Arrange: To test coverage independently, need ≥3 cycles but low coverage
       // 20 total workouts, pattern [A,B] with 3 repetitions = 6/20 = 30% ❌
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['a', 'b'],
         repetitions: 3,
         confidence: 0.80,
@@ -272,7 +272,7 @@ void main() {
   group('PatternViabilityChecker - Convenience Methods', () {
     test('isViableQuick returns boolean only', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.80,
@@ -294,7 +294,7 @@ void main() {
 
     test('getViabilityBreakdown returns all rule checks', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.80,
@@ -325,7 +325,7 @@ void main() {
   group('PatternViabilityChecker - Edge Cases', () {
     test('handles empty workout history', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.80,
@@ -344,7 +344,7 @@ void main() {
 
     test('handles workouts without startTime', () {
       // Arrange
-      final pattern = PatternDetectionResult(
+      const pattern = PatternDetectionResult(
         pattern: ['push', 'pull'],
         repetitions: 3,
         confidence: 0.80,

@@ -178,7 +178,7 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
     return Positioned(
       top: 16,
       right: 16,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),

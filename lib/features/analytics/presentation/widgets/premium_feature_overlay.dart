@@ -63,7 +63,7 @@ class PremiumFeatureOverlay extends StatelessWidget {
                 context.push('/premium');
               },
               borderRadius: BorderRadius.circular(12),
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,

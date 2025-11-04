@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/firebase_workout_template_repository.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// 🧪 FirebaseWorkoutTemplateRepository Tests
 ///

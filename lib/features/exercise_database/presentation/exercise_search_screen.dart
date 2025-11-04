@@ -754,9 +754,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               final temporaryExercise = Exercise(
                 id: exerciseId,
                 nome: exerciseName,
-                focus: ['VARIO'],
+                focus: const ['VARIO'],
                 imageUrl: null,
-                muscoliSecondari: [],
+                muscoliSecondari: const [],
                 difficolta: 'Intermedio',
                 tipoEsercizio: 'Compound',
                 attrezzatura: 'Vario',

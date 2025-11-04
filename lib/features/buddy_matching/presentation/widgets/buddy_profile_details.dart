@@ -38,7 +38,7 @@ class BuddyProfileDetails extends StatelessWidget {
       maxChildSize: 0.95,
       minChildSize: 0.5,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(

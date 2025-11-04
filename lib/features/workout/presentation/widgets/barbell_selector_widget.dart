@@ -59,7 +59,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       color: context.colors.primary,
       description: 'Standard Olympic bar (220cm)',
     ),
-    BarbellType(
+    const BarbellType(
       name: 'Olympic Women\'s',
       category: 'Olympic',
       weight: 15,
@@ -111,7 +111,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       color: context.colors.tertiary,
       description: 'Standard EZ curl bar (1" sleeves)',
     ),
-    BarbellType(
+    const BarbellType(
       name: 'Super EZ Bar',
       category: 'EZ Curl',
       weight: 11,
@@ -119,7 +119,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       color: Colors.indigo,
       description: 'Super EZ with more curve',
     ),
-    BarbellType(
+    const BarbellType(
       name: 'Mini EZ Bar',
       category: 'EZ Curl',
       weight: 5,
@@ -145,7 +145,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       color: context.colors.warning,
       description: 'SSB with shoulder pads',
     ),
-    BarbellType(
+    const BarbellType(
       name: 'Swiss/Football Bar',
       category: 'Specialty',
       weight: 18,
@@ -153,7 +153,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       color: Colors.teal,
       description: 'Multi-grip neutral bar',
     ),
-    BarbellType(
+    const BarbellType(
       name: 'Cambered Bar',
       category: 'Specialty',
       weight: 25,

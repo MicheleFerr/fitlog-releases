@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
@@ -239,7 +238,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Radio<AutoAdjustmentType>(
+                    const Radio<AutoAdjustmentType>(
                       value: AutoAdjustmentType.apre,
                     ),
                   const SizedBox(width: 12),
@@ -287,7 +286,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Radio<AutoAdjustmentType>(
+                  const Radio<AutoAdjustmentType>(
                     value: AutoAdjustmentType.rpe,
                   ),
                   const SizedBox(width: 12),

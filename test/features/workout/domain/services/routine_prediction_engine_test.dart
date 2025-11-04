@@ -291,6 +291,159 @@ void main() {
       expect(suggestion.confidence, greaterThanOrEqualTo(0.30));
       expect(suggestion.confidence, lessThanOrEqualTo(0.50));
     });
+
+    test('BUG: suggests workout name from history even if template no longer exists', () async {
+      // Arrange: Create diverse workouts to avoid pattern detection
+      // But "Legs" on Mondays most frequently
+      final workouts = <Workout>[];
+
+      // Monday "Legs" workouts (3 times)
+      for (int i = 1; i <= 3; i++) {
+        final mondayDate = DateTime.now().subtract(Duration(days: i * 7));
+        final adjustedDate = mondayDate.subtract(Duration(days: mondayDate.weekday - 1));
+        workouts.add(
+          Workout(
+            id: 'monday_$i',
+            name: 'Legs', // ← Template no longer exists
+            startTime: adjustedDate,
+            status: WorkoutStatus.completed,
+          ),
+        );
+      }
+
+      // Add other random workouts to avoid frequency fallback
+      workouts.add(Workout(
+        id: 'other_1',
+        name: 'Push',
+        startTime: DateTime.now().subtract(const Duration(days: 2)),
+        status: WorkoutStatus.completed,
+      ));
+      workouts.add(Workout(
+        id: 'other_2',
+        name: 'Pull',
+        startTime: DateTime.now().subtract(const Duration(days: 5)),
+        status: WorkoutStatus.completed,
+      ));
+      workouts.add(Workout(
+        id: 'other_3',
+        name: 'Arms',
+        startTime: DateTime.now().subtract(const Duration(days: 9)),
+        status: WorkoutStatus.completed,
+      ));
+
+      // Act: Predict next workout (force day-based by having diverse history)
+      final suggestion = await engine.predictNextWorkout(
+        workoutHistory: workouts,
+        useCache: false,
+      );
+
+      // Assert: CURRENT BEHAVIOR (BUG)
+      // System will suggest most frequent workout OR day-based "Legs"
+      // Either way, "Legs" template no longer exists!
+      expect(
+        suggestion.level,
+        anyOf(
+          equals(SuggestionLevel.frequency),
+          equals(SuggestionLevel.dayBased),
+        ),
+      );
+      expect(suggestion.workoutName, equals('legs')); // Normalized from 'Legs'
+
+      // ⚠️ EXPECTED BEHAVIOR (after fix):
+      // System should check if template "Legs" exists
+      // If not, fallback to:
+      // - Next most common workout that EXISTS
+      // - Generic "Workout" fallback
+      // - Or suggest creating "Legs" template
+    });
+
+    test('FIX: validates template exists and fallbacks to available template', () async {
+      // Arrange: Create workouts with "Legs" (doesn't exist) and "Push" (exists)
+      final workouts = <Workout>[];
+
+      // 3 "Legs" workouts (template no longer exists)
+      for (int i = 1; i <= 3; i++) {
+        workouts.add(
+          Workout(
+            id: 'legs_$i',
+            name: 'Legs',
+            startTime: DateTime.now().subtract(Duration(days: i * 7)),
+            status: WorkoutStatus.completed,
+          ),
+        );
+      }
+
+      // 2 "Push" workouts (template EXISTS)
+      for (int i = 1; i <= 2; i++) {
+        workouts.add(
+          Workout(
+            id: 'push_$i',
+            name: 'Push',
+            startTime: DateTime.now().subtract(Duration(days: i * 3)),
+            status: WorkoutStatus.completed,
+          ),
+        );
+      }
+
+      // 1 "Pull" workout (template EXISTS)
+      workouts.add(
+        Workout(
+          id: 'pull_1',
+          name: 'Pull',
+          startTime: DateTime.now().subtract(const Duration(days: 5)),
+          status: WorkoutStatus.completed,
+        ),
+      );
+
+      // Available templates: Push, Pull (NOT Legs!)
+      final availableTemplates = ['Push', 'Pull'];
+
+      // Act: Predict with template validation
+      final suggestion = await engine.predictNextWorkout(
+        workoutHistory: workouts,
+        availableTemplateNames: availableTemplates,
+        useCache: false,
+      );
+
+      // Assert: Should suggest "Push" (most frequent VALID template)
+      // NOT "Legs" even though it's more frequent in history
+      expect(suggestion.workoutName, equals('push')); // Normalized
+      expect(suggestion.reason, contains('push')); // Mentions fallback (normalized)
+      expect(suggestion.reason, contains('not found')); // Explains why fallback
+      expect(suggestion.confidence, lessThan(0.60)); // Lower confidence (fallback)
+    });
+
+    test('FIX: fallbacks to generic "Workout" if no valid templates in history', () async {
+      // Arrange: All workouts use templates that no longer exist
+      final workouts = <Workout>[];
+
+      for (int i = 1; i <= 6; i++) {
+        workouts.add(
+          Workout(
+            id: 'old_$i',
+            name: 'OldTemplate', // Doesn't exist anymore
+            startTime: DateTime.now().subtract(Duration(days: i * 3)),
+            status: WorkoutStatus.completed,
+          ),
+        );
+      }
+
+      // Available templates: completely different
+      final availableTemplates = ['NewWorkout', 'AnotherWorkout'];
+
+      // Act
+      final suggestion = await engine.predictNextWorkout(
+        workoutHistory: workouts,
+        availableTemplateNames: availableTemplates,
+        useCache: false,
+      );
+
+      // Assert: Should fallback to generic "Workout"
+      expect(suggestion.workoutName, equals('Workout'));
+      expect(suggestion.reason, contains('not found'));
+      expect(suggestion.confidence, lessThan(0.30));
+      expect(suggestion.level, equals(SuggestionLevel.dayBased));
+    });
   });
 
   group('RoutinePredictionEngine - Caching', () {

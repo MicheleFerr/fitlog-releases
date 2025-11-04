@@ -15,7 +15,7 @@ void main() {
   });
 
   // Helper function to create ExerciseActivity for testing
-  ExerciseActivity _createActivity({
+  ExerciseActivity createActivity({
     required String userId,
     required String exerciseId,
     required String exerciseName,
@@ -35,7 +35,7 @@ void main() {
   }
 
   // Helper function to create ExerciseActivitySet
-  ExerciseActivitySet _createSet({
+  ExerciseActivitySet createSet({
     required String weight,
     required String reps,
     String? actualReps,
@@ -181,14 +181,14 @@ void main() {
   group('Weight PR Detection', () {
     test('should detect new weight PR when no existing PR', () async {
       // 🐛 BUG PREVENTED: First-time PR not recorded
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'bench-press',
         exerciseName: 'Bench Press',
         sets: [
-          _createSet(weight: '100', reps: '5'),
-          _createSet(weight: '110', reps: '3'),
-          _createSet(weight: '120', reps: '1'),
+          createSet(weight: '100', reps: '5'),
+          createSet(weight: '110', reps: '3'),
+          createSet(weight: '120', reps: '1'),
         ],
       );
 
@@ -212,12 +212,12 @@ void main() {
       });
 
       // New activity with 110kg
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'squat',
         exerciseName: 'Squat',
         sets: [
-          _createSet(weight: '110', reps: '5'),
+          createSet(weight: '110', reps: '5'),
         ],
       );
 
@@ -239,12 +239,12 @@ void main() {
         'achievedAt': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 1))),
       });
 
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'deadlift',
         exerciseName: 'Deadlift',
         sets: [
-          _createSet(weight: '150', reps: '5'),
+          createSet(weight: '150', reps: '5'),
         ],
       );
 
@@ -256,15 +256,15 @@ void main() {
     test('should ignore warmup sets in weight PR detection', () async {
       // 🐛 BUG PREVENTED: Warmup weight incorrectly counted as PR
       // Example: Warmup 60kg, working sets 100kg → PR should be 100kg, not 60kg
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'press',
         exerciseName: 'Overhead Press',
         sets: [
-          _createSet(weight: '40', reps: '10', isWarmup: true),
-          _createSet(weight: '60', reps: '8', isWarmup: true),
-          _createSet(weight: '80', reps: '5'),
-          _createSet(weight: '85', reps: '3'),
+          createSet(weight: '40', reps: '10', isWarmup: true),
+          createSet(weight: '60', reps: '8', isWarmup: true),
+          createSet(weight: '80', reps: '5'),
+          createSet(weight: '85', reps: '3'),
         ],
       );
 
@@ -276,13 +276,13 @@ void main() {
 
     test('should ignore incomplete sets in weight PR detection', () async {
       // 🐛 BUG PREVENTED: Planned but unexecuted sets counted as PRs
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'bench-press',
         exerciseName: 'Bench Press',
         sets: [
-          _createSet(weight: '100', reps: '5', done: true),
-          _createSet(weight: '120', reps: '3', done: false), // Not completed
+          createSet(weight: '100', reps: '5', done: true),
+          createSet(weight: '120', reps: '3', done: false), // Not completed
         ],
       );
 
@@ -307,12 +307,12 @@ void main() {
         'achievedAt': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 7))),
       });
 
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'squat',
         exerciseName: 'Squat',
         sets: [
-          _createSet(weight: '100', reps: '8'),
+          createSet(weight: '100', reps: '8'),
         ],
       );
 
@@ -325,12 +325,12 @@ void main() {
 
     test('should use actualReps over planned reps', () async {
       // 🐛 BUG PREVENTED: User plans 8 reps but only completes 6, PR should reflect actual
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'bench-press',
         exerciseName: 'Bench Press',
         sets: [
-          _createSet(weight: '100', reps: '8', actualReps: '6'),
+          createSet(weight: '100', reps: '8', actualReps: '6'),
         ],
       );
 
@@ -354,12 +354,12 @@ void main() {
         'achievedAt': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 1))),
       });
 
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'deadlift',
         exerciseName: 'Deadlift',
         sets: [
-          _createSet(weight: '80', reps: '10'), // Lower weight, more reps
+          createSet(weight: '80', reps: '10'), // Lower weight, more reps
         ],
       );
 
@@ -375,14 +375,14 @@ void main() {
     test('should detect volume PR (total weight × reps)', () async {
       // 🐛 BUG PREVENTED: User completes more total volume but PR not detected
       // Example: 3×5×100kg = 1500kg total volume
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'squat',
         exerciseName: 'Squat',
         sets: [
-          _createSet(weight: '100', reps: '5'),
-          _createSet(weight: '100', reps: '5'),
-          _createSet(weight: '100', reps: '5'),
+          createSet(weight: '100', reps: '5'),
+          createSet(weight: '100', reps: '5'),
+          createSet(weight: '100', reps: '5'),
         ],
       );
 
@@ -403,12 +403,12 @@ void main() {
         'achievedAt': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 7))),
       });
 
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'bench-press',
         exerciseName: 'Bench Press',
         sets: [
-          _createSet(weight: '100', reps: '10'), // 100×10 = 1000
+          createSet(weight: '100', reps: '10'), // 100×10 = 1000
         ],
       );
 
@@ -422,12 +422,12 @@ void main() {
     test('should detect 1RM PR using OneRMCalculator', () async {
       // 🐛 BUG PREVENTED: User improves estimated 1RM but PR not detected
       // Example: 100kg×5 reps estimates ~115kg 1RM
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'bench-press',
         exerciseName: 'Bench Press',
         sets: [
-          _createSet(weight: '100', reps: '5'),
+          createSet(weight: '100', reps: '5'),
         ],
       );
 
@@ -442,14 +442,14 @@ void main() {
     test('should use best 1RM estimate from multiple sets', () async {
       // 🐛 BUG PREVENTED: Using average instead of best estimate
       // Example: 120kg×1 (120 1RM) vs 100kg×5 (~115 1RM) → 120 should win
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'squat',
         exerciseName: 'Squat',
         sets: [
-          _createSet(weight: '100', reps: '8'),
-          _createSet(weight: '110', reps: '5'),
-          _createSet(weight: '120', reps: '2'),
+          createSet(weight: '100', reps: '8'),
+          createSet(weight: '110', reps: '5'),
+          createSet(weight: '120', reps: '2'),
         ],
       );
 
@@ -464,16 +464,16 @@ void main() {
   group('Total Sets PR Detection', () {
     test('should detect total sets PR', () async {
       // 🐛 BUG PREVENTED: User completes more sets than ever but PR not detected
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'curl',
         exerciseName: 'Bicep Curl',
         sets: [
-          _createSet(weight: '20', reps: '12'),
-          _createSet(weight: '20', reps: '12'),
-          _createSet(weight: '20', reps: '12'),
-          _createSet(weight: '20', reps: '12'),
-          _createSet(weight: '20', reps: '12'),
+          createSet(weight: '20', reps: '12'),
+          createSet(weight: '20', reps: '12'),
+          createSet(weight: '20', reps: '12'),
+          createSet(weight: '20', reps: '12'),
+          createSet(weight: '20', reps: '12'),
         ],
       );
 
@@ -485,17 +485,17 @@ void main() {
 
     test('should exclude warmup and incomplete sets from total', () async {
       // 🐛 BUG PREVENTED: Warmup sets incorrectly counted in total sets PR
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'squat',
         exerciseName: 'Squat',
         sets: [
-          _createSet(weight: '60', reps: '10', isWarmup: true),
-          _createSet(weight: '80', reps: '8', isWarmup: true),
-          _createSet(weight: '100', reps: '5'),
-          _createSet(weight: '100', reps: '5'),
-          _createSet(weight: '100', reps: '5'),
-          _createSet(weight: '100', reps: '5', done: false),
+          createSet(weight: '60', reps: '10', isWarmup: true),
+          createSet(weight: '80', reps: '8', isWarmup: true),
+          createSet(weight: '100', reps: '5'),
+          createSet(weight: '100', reps: '5'),
+          createSet(weight: '100', reps: '5'),
+          createSet(weight: '100', reps: '5', done: false),
         ],
       );
 
@@ -809,16 +809,16 @@ void main() {
     test('should detect multiple PR types in single workout', () async {
       // 🐛 BUG PREVENTED: User achieves multiple PRs but only one is detected
       // Real scenario: 5 sets of 120kg bench press = weight PR + volume PR + sets PR
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'bench-press',
         exerciseName: 'Bench Press',
         sets: [
-          _createSet(weight: '120', reps: '5'),
-          _createSet(weight: '120', reps: '5'),
-          _createSet(weight: '120', reps: '5'),
-          _createSet(weight: '120', reps: '5'),
-          _createSet(weight: '120', reps: '5'),
+          createSet(weight: '120', reps: '5'),
+          createSet(weight: '120', reps: '5'),
+          createSet(weight: '120', reps: '5'),
+          createSet(weight: '120', reps: '5'),
+          createSet(weight: '120', reps: '5'),
         ],
       );
 
@@ -833,12 +833,12 @@ void main() {
 
     test('should persist PRs to Firestore', () async {
       // 🐛 BUG PREVENTED: PRs calculated but not saved, lost after app restart
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'squat',
         exerciseName: 'Squat',
         sets: [
-          _createSet(weight: '150', reps: '5'),
+          createSet(weight: '150', reps: '5'),
         ],
       );
 
@@ -856,13 +856,13 @@ void main() {
     test('should handle complete workflow: detect → save → fetch → stats', () async {
       // 🐛 BUG PREVENTED: End-to-end PR tracking workflow has gaps
       // Step 1: User completes workout
-      final activity = _createActivity(
+      final activity = createActivity(
         userId: 'user-1',
         exerciseId: 'deadlift',
         exerciseName: 'Deadlift',
         sets: [
-          _createSet(weight: '200', reps: '3'),
-          _createSet(weight: '200', reps: '3'),
+          createSet(weight: '200', reps: '3'),
+          createSet(weight: '200', reps: '3'),
         ],
       );
 

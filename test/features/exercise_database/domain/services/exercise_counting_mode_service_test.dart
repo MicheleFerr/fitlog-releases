@@ -361,8 +361,8 @@ void main() {
         final exercise = Exercise(
           id: 'test-1',
           nome: 'Plank',
-          focus: ['CORE'],
-          muscoliSecondari: [],
+          focus: const ['CORE'],
+          muscoliSecondari: const [],
           difficolta: 'Intermedio',
           tipoEsercizio: 'Isometrico',
           attrezzatura: 'Corpo Libero',
@@ -381,8 +381,8 @@ void main() {
         final exercise = Exercise(
           id: 'test-2',
           nome: 'Push-up',
-          focus: ['CHEST'],
-          muscoliSecondari: ['TRIC', 'DELT'],
+          focus: const ['CHEST'],
+          muscoliSecondari: const ['TRIC', 'DELT'],
           difficolta: 'Principiante',
           tipoEsercizio: 'Compound',
           attrezzatura: 'Corpo Libero',
@@ -401,8 +401,8 @@ void main() {
         final exercise = Exercise(
           id: 'test-3',
           nome: 'Bench Press',
-          focus: ['CHEST'],
-          muscoliSecondari: ['TRIC', 'DELT'],
+          focus: const ['CHEST'],
+          muscoliSecondari: const ['TRIC', 'DELT'],
           difficolta: 'Intermedio',
           tipoEsercizio: 'Compound',
           attrezzatura: 'Bilanciere',
@@ -420,8 +420,8 @@ void main() {
         final exercise = Exercise(
           id: 'test-4',
           nome: 'Chin-up',
-          focus: ['BACK'],
-          muscoliSecondari: ['BIC'],
+          focus: const ['BACK'],
+          muscoliSecondari: const ['BIC'],
           difficolta: 'Intermedio',
           tipoEsercizio: 'Compound',
           attrezzatura: 'Bodyweight',
@@ -513,7 +513,7 @@ void main() {
       });
 
       test('should handle very long names', () {
-        final longName =
+        const longName =
             'The Ultimate Super Advanced Modified Progressive '
             'Plank Hold Exercise';
         final result =
@@ -586,8 +586,8 @@ void main() {
         final exercise = Exercise(
           id: 'test-5',
           nome: 'Pull-up',
-          focus: ['BACK'],
-          muscoliSecondari: [],
+          focus: const ['BACK'],
+          muscoliSecondari: const [],
           difficolta: 'Intermedio',
           tipoEsercizio: 'Compound',
           attrezzatura: 'Corpo Libero',

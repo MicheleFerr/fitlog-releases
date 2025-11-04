@@ -67,7 +67,7 @@ void main() {
     });
 
     test('should handle combined sanitization', () {
-      final input = '  <script>alert("test")</script> Hello & <b>World</b>  ';
+      const input = '  <script>alert("test")</script> Hello & <b>World</b>  ';
       final result = InputSanitizer.sanitizeText(input);
       expect(result, contains('Hello'));
       expect(result, contains('&amp;'));
@@ -519,7 +519,7 @@ void main() {
     });
 
     test('should handle URL with suspicious query params', () {
-      final url = 'https://example.com?redirect=javascript:alert(1)';
+      const url = 'https://example.com?redirect=javascript:alert(1)';
       // URL itself is valid HTTPS, parameter values are preserved
       expect(InputSanitizer.sanitizeUrl(url), equals(url));
     });

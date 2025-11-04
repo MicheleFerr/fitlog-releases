@@ -145,7 +145,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
       (value) => value.whenData((stats) => stats.totalPoints),
     ));
     
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(

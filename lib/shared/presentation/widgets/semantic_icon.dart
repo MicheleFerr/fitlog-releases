@@ -32,65 +32,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 /// - [AppIconSize] for semantic sizing constants
 /// - [IconColorContext] for semantic color helpers
 class SemanticIcon extends StatelessWidget {
-  /// The icon to display
-  final IconData icon;
-
-  /// Semantic label for screen readers (REQUIRED)
-  ///
-  /// This text is announced by screen readers like TalkBack (Android)
-  /// and VoiceOver (iOS) when the icon is focused.
-  ///
-  /// **Best practices:**
-  /// - Use localized strings: `context.l10n.workoutLabel`
-  /// - Be descriptive: "Start workout" not just "Workout"
-  /// - Include state if relevant: "Pause workout" vs "Resume workout"
-  final String semanticLabel;
-
-  /// Icon size in logical pixels
-  ///
-  /// Prefer using [AppIconSize] constants for consistency:
-  /// - [AppIconSize.small] (20dp)
-  /// - [AppIconSize.medium] (24dp) - default
-  /// - [AppIconSize.large] (28dp)
-  final double size;
-
-  /// Icon color
-  ///
-  /// Prefer using semantic color helpers:
-  /// - [context.iconPrimary] for main actions
-  /// - [context.iconSuccess] for positive states
-  /// - [context.iconError] for errors
-  ///
-  /// If null, uses theme's default icon color.
-  final Color? color;
-
-  /// Optional semantic hint (additional context for screen readers)
-  ///
-  /// Use this for extra information beyond the label.
-  /// Example: "Double tap to start workout"
-  final String? semanticHint;
-
-  /// Whether this icon represents a button/interactive element
-  ///
-  /// Set to true if the icon is tappable (has onTap handler).
-  /// This helps screen readers announce it as a button.
-  final bool isButton;
-
-  /// Whether the icon is currently enabled/interactive
-  ///
-  /// When false, screen readers will announce "disabled" state.
-  final bool isEnabled;
-
-  /// Text direction for the icon
-  ///
-  /// Rarely needed - only for icons that should flip in RTL languages.
-  final TextDirection? textDirection;
-
-  /// Optional opacity for the icon
-  ///
-  /// If specified, wraps icon in Opacity widget.
-  /// Prefer using semantic colors with opacity instead.
-  final double? opacity;
 
   const SemanticIcon({
     super.key,
@@ -161,6 +102,65 @@ class SemanticIcon extends StatelessWidget {
       isEnabled: true,
     );
   }
+  /// The icon to display
+  final IconData icon;
+
+  /// Semantic label for screen readers (REQUIRED)
+  ///
+  /// This text is announced by screen readers like TalkBack (Android)
+  /// and VoiceOver (iOS) when the icon is focused.
+  ///
+  /// **Best practices:**
+  /// - Use localized strings: `context.l10n.workoutLabel`
+  /// - Be descriptive: "Start workout" not just "Workout"
+  /// - Include state if relevant: "Pause workout" vs "Resume workout"
+  final String semanticLabel;
+
+  /// Icon size in logical pixels
+  ///
+  /// Prefer using [AppIconSize] constants for consistency:
+  /// - [AppIconSize.small] (20dp)
+  /// - [AppIconSize.medium] (24dp) - default
+  /// - [AppIconSize.large] (28dp)
+  final double size;
+
+  /// Icon color
+  ///
+  /// Prefer using semantic color helpers:
+  /// - [context.iconPrimary] for main actions
+  /// - [context.iconSuccess] for positive states
+  /// - [context.iconError] for errors
+  ///
+  /// If null, uses theme's default icon color.
+  final Color? color;
+
+  /// Optional semantic hint (additional context for screen readers)
+  ///
+  /// Use this for extra information beyond the label.
+  /// Example: "Double tap to start workout"
+  final String? semanticHint;
+
+  /// Whether this icon represents a button/interactive element
+  ///
+  /// Set to true if the icon is tappable (has onTap handler).
+  /// This helps screen readers announce it as a button.
+  final bool isButton;
+
+  /// Whether the icon is currently enabled/interactive
+  ///
+  /// When false, screen readers will announce "disabled" state.
+  final bool isEnabled;
+
+  /// Text direction for the icon
+  ///
+  /// Rarely needed - only for icons that should flip in RTL languages.
+  final TextDirection? textDirection;
+
+  /// Optional opacity for the icon
+  ///
+  /// If specified, wraps icon in Opacity widget.
+  /// Prefer using semantic colors with opacity instead.
+  final double? opacity;
 
   @override
   Widget build(BuildContext context) {

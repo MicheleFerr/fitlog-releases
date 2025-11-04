@@ -90,7 +90,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              background: Container(
+              background: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,

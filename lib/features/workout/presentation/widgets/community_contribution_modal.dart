@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/contribution_success_dialog.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CommunityContributionModal extends ConsumerStatefulWidget {
 
@@ -189,13 +188,13 @@ class _CommunityContributionModalState
       height: context.screenHeight * 0.85,
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
           // Handle bar
           Container(
-            margin: EdgeInsets.only(top: 12),
+            margin: const EdgeInsets.only(top: 12),
             width: 40,
             height: 4,
             decoration: BoxDecoration(
@@ -206,7 +205,7 @@ class _CommunityContributionModalState
 
           // Header
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Row(
               children: [
                 Container(
@@ -227,7 +226,7 @@ class _CommunityContributionModalState
                     size: 24,
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,12 +250,12 @@ class _CommunityContributionModalState
             ),
           ),
 
-          Divider(),
+          const Divider(),
 
           // Content
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -267,7 +266,7 @@ class _CommunityContributionModalState
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Wrap(
                     spacing: 8,
                     children: [
@@ -294,7 +293,7 @@ class _CommunityContributionModalState
                     ],
                   ),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Section selector for corrections
                   if (_selectedType == ContributionType.correction && widget.contextType != null)
@@ -305,7 +304,7 @@ class _CommunityContributionModalState
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -330,12 +329,12 @@ class _CommunityContributionModalState
                           );
                         }).toList(),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       // Show current value
                       if (_selectedSection != null && _getCurrentSectionValue(_selectedSection!) != null)
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12),
@@ -353,7 +352,7 @@ class _CommunityContributionModalState
                                     size: 16,
                                     color: theme.colorScheme.error,
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(
                                     'Valore attuale da correggere:',
                                     style: theme.textTheme.labelMedium?.copyWith(
@@ -363,7 +362,7 @@ class _CommunityContributionModalState
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
                                 _getCurrentSectionValue(_selectedSection!) ?? '',
                                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -373,7 +372,7 @@ class _CommunityContributionModalState
                             ],
                           ),
                         ),
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
                     ],
 
                   // Title input
@@ -383,7 +382,7 @@ class _CommunityContributionModalState
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _titleController,
                     decoration: InputDecoration(
@@ -397,7 +396,7 @@ class _CommunityContributionModalState
                     ),
                   ),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Description input
                   Text(
@@ -406,7 +405,7 @@ class _CommunityContributionModalState
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _descriptionController,
                     maxLines: 5,
@@ -421,11 +420,11 @@ class _CommunityContributionModalState
                     ),
                   ),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Info box
                   Container(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
@@ -440,7 +439,7 @@ class _CommunityContributionModalState
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             'Il tuo contributo sarà revisionato dalla community prima di essere approvato',
@@ -457,7 +456,7 @@ class _CommunityContributionModalState
 
           // Submit button
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
               boxShadow: [
@@ -474,7 +473,7 @@ class _CommunityContributionModalState
                 child: FilledButton(
                   onPressed: _isSubmitting ? null : _submitContribution,
                   style: FilledButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -488,7 +487,7 @@ class _CommunityContributionModalState
                             valueColor: AlwaysStoppedAnimation<Color>(context.colors.surface),
                           ),
                         )
-                      : Text(
+                      : const Text(
                           'Invia Contributo',
                           style: TextStyle(
                             fontSize: 16,

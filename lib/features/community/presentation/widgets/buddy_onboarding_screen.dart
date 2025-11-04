@@ -502,7 +502,7 @@ class _LevelAndGoalsPage extends StatelessWidget {
             onGoalsChanged(newGoals);
           } : null,
           borderRadius: BorderRadius.circular(12),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: isSelected 
                 ? context.colors.primary

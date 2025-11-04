@@ -235,7 +235,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
     final currentLevelXP = _displayXP % 500;
     
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -248,7 +248,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
               return Transform.scale(
                 scale: value,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -273,7 +273,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                         color: context.colors.surface,
                         size: 24,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
                         '+${widget.xpGained} XP',
                         style: TextStyle(
@@ -289,7 +289,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
             },
           ),
           
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           
           // Level Badge with animation
           AnimatedBuilder(
@@ -366,7 +366,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
             },
           ),
           
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           
           // XP Counter
           Row(
@@ -377,7 +377,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                 color: theme.colorScheme.primary,
                 size: 28,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0, end: 1),
                 duration: const Duration(milliseconds: 500),
@@ -397,7 +397,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
             ],
           ),
           
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           
           // Progress Bar with particles
           SizedBox(
@@ -454,7 +454,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Container(
                         height: 20,
                         decoration: BoxDecoration(
@@ -540,8 +540,8 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                   child: Opacity(
                     opacity: _levelUpController.value,
                     child: Container(
-                      margin: EdgeInsets.only(top: 20),
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      margin: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [context.colors.tertiary, context.colors.tertiary],

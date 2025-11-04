@@ -196,7 +196,7 @@ class PremiumLockCard extends StatelessWidget {
         ),
         // Lock overlay
         Positioned.fill(
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: theme.colorScheme.surface.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(12),

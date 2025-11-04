@@ -222,7 +222,7 @@ class ExercisePublishService {
   String incrementVersion(String currentVersion) {
     try {
       final parts = currentVersion.split('.').map(int.parse).toList();
-      if (parts.length != 3) throw FormatException('Invalid version format');
+      if (parts.length != 3) throw const FormatException('Invalid version format');
 
       // Increment patch version
       parts[2] += 1;

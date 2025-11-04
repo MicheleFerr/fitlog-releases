@@ -1,4 +1,4 @@
-import 'package:gymbro_flutter_new/features/workout/domain/entities/pattern_detection_result.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
@@ -33,6 +33,12 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_viab
 /// print('Confidence: ${suggestion.displayConfidence}');
 /// ```
 class RoutinePredictionEngine {
+
+  RoutinePredictionEngine({
+    required PatternDetectionService patternService,
+    required PatternViabilityChecker viabilityChecker,
+  })  : _patternService = patternService,
+        _viabilityChecker = viabilityChecker;
   final PatternDetectionService _patternService;
   final PatternViabilityChecker _viabilityChecker;
 
@@ -41,22 +47,21 @@ class RoutinePredictionEngine {
   DateTime? _cacheTimestamp;
   static const _cacheDuration = Duration(minutes: 5);
 
-  RoutinePredictionEngine({
-    required PatternDetectionService patternService,
-    required PatternViabilityChecker viabilityChecker,
-  })  : _patternService = patternService,
-        _viabilityChecker = viabilityChecker;
-
   /// Predict next workout using 4-level fallback hierarchy
   ///
   /// [workoutHistory]: Recent workouts (newest first, 30-50 workouts recommended)
   /// [activeRoutineTemplateId]: Optional active routine ID for Level 2
+  /// [availableTemplateNames]: Optional list of existing template names for validation
   /// [useCache]: Whether to use cached suggestion (default: true)
   ///
   /// Returns: [WorkoutSuggestion] with predicted workout and confidence
+  ///
+  /// If [availableTemplateNames] is provided, the engine will validate suggestions
+  /// against existing templates and fallback to generic "Workout" if template not found.
   Future<WorkoutSuggestion> predictNextWorkout({
     required List<Workout> workoutHistory,
     String? activeRoutineTemplateId,
+    List<String>? availableTemplateNames,
     bool useCache = true,
   }) async {
     // Check cache first
@@ -84,12 +89,22 @@ class RoutinePredictionEngine {
     // Try Level 3: Frequency-Based
     final frequencySuggestion = await _tryFrequencyBased(workoutHistory);
     if (frequencySuggestion != null) {
-      return _cacheAndReturn(frequencySuggestion);
+      final validatedSuggestion = _validateTemplateExists(
+        frequencySuggestion,
+        availableTemplateNames,
+        workoutHistory,
+      );
+      return _cacheAndReturn(validatedSuggestion);
     }
 
     // Fallback Level 4: Day-Based (always succeeds)
     final dayBasedSuggestion = await _tryDayBased(workoutHistory);
-    return _cacheAndReturn(dayBasedSuggestion);
+    final validatedSuggestion = _validateTemplateExists(
+      dayBasedSuggestion,
+      availableTemplateNames,
+      workoutHistory,
+    );
+    return _cacheAndReturn(validatedSuggestion);
   }
 
   /// Clear cached suggestion (force recalculation next time)
@@ -293,6 +308,105 @@ class RoutinePredictionEngine {
   /// Normalize workout name for matching
   String _normalizeWorkoutName(String name) {
     return name.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
+  /// Validate that suggested template exists, fallback to generic if not
+  ///
+  /// If [availableTemplateNames] is null, returns suggestion as-is (no validation)
+  /// If template doesn't exist, finds next best alternative or fallback to "Workout"
+  WorkoutSuggestion _validateTemplateExists(
+    WorkoutSuggestion suggestion,
+    List<String>? availableTemplateNames,
+    List<Workout> workoutHistory,
+  ) {
+    if (kDebugMode || kProfileMode) {
+      debugPrint('🔍 [VALIDATE_TEMPLATE] Called with suggestion: "${suggestion.workoutName}"');
+      debugPrint('🔍 [VALIDATE_TEMPLATE] Available templates: $availableTemplateNames');
+    }
+
+    // Skip validation if no template list provided
+    if (availableTemplateNames == null || availableTemplateNames.isEmpty) {
+      if (kDebugMode || kProfileMode) {
+        debugPrint('🔍 [VALIDATE_TEMPLATE] Skipping validation - no templates provided');
+      }
+      return suggestion;
+    }
+
+    // Normalize available template names for case-insensitive matching
+    final normalizedTemplates = availableTemplateNames
+        .map((name) => _normalizeWorkoutName(name))
+        .toSet();
+
+    if (kDebugMode || kProfileMode) {
+      debugPrint('🔍 [VALIDATE_TEMPLATE] Normalized templates: $normalizedTemplates');
+    }
+
+    // Check if suggested workout exists as template
+    final normalizedSuggestion = _normalizeWorkoutName(suggestion.workoutName);
+
+    if (kDebugMode || kProfileMode) {
+      debugPrint('🔍 [VALIDATE_TEMPLATE] Normalized suggestion: "$normalizedSuggestion"');
+      debugPrint('🔍 [VALIDATE_TEMPLATE] Template exists? ${normalizedTemplates.contains(normalizedSuggestion)}');
+    }
+
+    if (normalizedTemplates.contains(normalizedSuggestion)) {
+      if (kDebugMode || kProfileMode) {
+        debugPrint('🔍 [VALIDATE_TEMPLATE] ✅ Template exists! Returning as-is');
+      }
+      return suggestion; // Template exists, return as-is
+    }
+
+    // Template doesn't exist! Find fallback:
+    if (kDebugMode || kProfileMode) {
+      debugPrint('🔍 [VALIDATE_TEMPLATE] ❌ Template NOT found! Finding alternative...');
+    }
+
+    // 1. Try to find most frequent workout that DOES have a template
+    final frequencies = <String, int>{};
+    for (final workout in workoutHistory) {
+      final name = _normalizeWorkoutName(workout.name ?? 'Unknown');
+      if (normalizedTemplates.contains(name)) {
+        frequencies[name] = (frequencies[name] ?? 0) + 1;
+      }
+    }
+
+    if (kDebugMode || kProfileMode) {
+      debugPrint('🔍 [VALIDATE_TEMPLATE] Frequencies of valid templates: $frequencies');
+    }
+
+    // If found valid alternative, use it
+    if (frequencies.isNotEmpty) {
+      final bestAlternative = frequencies.entries.reduce((a, b) {
+        return a.value > b.value ? a : b;
+      }).key;
+
+      if (kDebugMode || kProfileMode) {
+        debugPrint('🔍 [VALIDATE_TEMPLATE] ✅ Found alternative: "$bestAlternative"');
+      }
+
+      return WorkoutSuggestion(
+        level: suggestion.level,
+        workoutName: bestAlternative,
+        confidence: suggestion.confidence * 0.8, // Lower confidence (alternative)
+        reason:
+            'Template "${suggestion.workoutName}" not found. Suggesting "$bestAlternative" instead',
+        generatedAt: DateTime.now(),
+      );
+    }
+
+    // No valid alternatives found - use generic fallback
+    if (kDebugMode || kProfileMode) {
+      debugPrint('🔍 [VALIDATE_TEMPLATE] ⚠️ No valid alternatives! Using generic "Workout"');
+    }
+
+    return WorkoutSuggestion(
+      level: SuggestionLevel.dayBased,
+      workoutName: 'Workout',
+      confidence: 0.20,
+      reason:
+          'Template "${suggestion.workoutName}" not found. Start with any workout',
+      generatedAt: DateTime.now(),
+    );
   }
 
   /// Get last workout name from history

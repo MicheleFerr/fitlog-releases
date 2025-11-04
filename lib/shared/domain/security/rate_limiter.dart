@@ -197,9 +197,9 @@ class RateLimiter {
       _currentTokens = (_currentTokens + tokensToAdd).clamp(0, maxTokens);
       _lastRefill = now;
 
-      if (kDebugMode && tokensToAdd > 0) {
-        debugPrint('🔄 Rate limit: refilled $tokensToAdd token(s), $_currentTokens total');
-      }
+      // NOTE: Removed verbose refill logging to prevent log spam
+      // The timer refills tokens every 500ms-1000ms, generating thousands of logs
+      // even when the app is idle. Only consume/exceed operations are logged now.
     }
   }
 

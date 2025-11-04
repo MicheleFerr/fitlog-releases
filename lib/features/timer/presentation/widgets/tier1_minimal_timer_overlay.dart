@@ -9,7 +9,6 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_u
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Minimal Timer Overlay - Refactored for Consolidated Provider System
@@ -168,7 +167,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                     onPanStart: _handlePanStart,
                     onPanUpdate: _handlePanUpdate,
                     onPanEnd: _handlePanEnd,
-                    child: Container(
+                    child: DecoratedBox(
                       decoration: _buildDecoration(timerState, progress),
                       child: _buildContent(timerState, remainingSeconds, progress),
                     ),
@@ -279,7 +278,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
           color: context.colors.surface,
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          fontFeatures: [FontFeature.tabularFigures()],
+          fontFeatures: const [FontFeature.tabularFigures()],
           height: 1.0,
           letterSpacing: 0.5,
         ),
@@ -296,7 +295,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
           // Progress indicator - more compact
           _buildProgressIndicator(progress),
           
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           
           // Timer info - more compact layout
           Expanded(
@@ -310,12 +309,12 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                     color: context.colors.surface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    fontFeatures: [FontFeature.tabularFigures()],
+                    fontFeatures: const [FontFeature.tabularFigures()],
                     height: 1.1,
                   ),
                 ),
                 if (timerState.exerciseName != null) ...[
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
                     timerState.exerciseName!,
                     style: TextStyle(
@@ -332,7 +331,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             ),
           ),
           
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           
           // Quick controls - more compact
           _buildQuickControls(timerState),
@@ -389,7 +388,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             ? AppLocalizations.of(context).resume 
             : 'Pause',
         ),
-        SizedBox(width: 6),
+        const SizedBox(width: 6),
         _buildControlButton(
           icon: Icons.skip_next_rounded,
           onPressed: _handleSkip,

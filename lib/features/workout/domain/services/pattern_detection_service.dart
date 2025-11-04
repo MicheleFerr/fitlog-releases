@@ -156,7 +156,7 @@ class PatternDetectionService {
   }) {
     // Base confidence from repetitions
     // 2 reps = 0.70, 3 reps = 0.80, 4 reps = 0.90
-    double baseConfidence = 0.5 + (repetitions * 0.1);
+    final double baseConfidence = 0.5 + (repetitions * 0.1);
 
     // Bonus if pattern covers high % of total workouts
     final coverage = (repetitions * patternLength) / totalWorkouts;

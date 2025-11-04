@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/features/workout/data/providers/preset_servic
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/preset_selection_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class RestTimePickerModal extends ConsumerStatefulWidget {
   const RestTimePickerModal({

@@ -265,8 +265,27 @@ class ExerciseVersionInfo {
   });
 
   factory ExerciseVersionInfo.fromFirestore(Map<String, dynamic> data) {
+    // Parse version field (supports both String and Map formats)
+    String version;
+    final versionField = data['current_version'];
+
+    if (versionField is String) {
+      // Direct string format: "1.0.3"
+      version = versionField;
+    } else if (versionField is Map) {
+      // Map format: {"major": 1, "minor": 0, "patch": 3}
+      final major = versionField['major'] ?? 1;
+      final minor = versionField['minor'] ?? 0;
+      final patch = versionField['patch'] ?? 0;
+      version = '$major.$minor.$patch';
+    } else {
+      // Fallback if format is unexpected
+      version = '1.0.0';
+      debugPrint('⚠️ Unexpected version format in Firestore: $versionField (type: ${versionField.runtimeType})');
+    }
+
     return ExerciseVersionInfo(
-      version: data['current_version'] as String? ?? '1.0.0',
+      version: version,
       lastUpdated: (data['last_updated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       totalExercises: data['total_exercises'] as int? ?? 0,
       changelog: List<String>.from(data['changelog'] as List? ?? []),

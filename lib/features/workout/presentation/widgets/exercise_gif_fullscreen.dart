@@ -13,7 +13,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseGifFullscreen extends StatelessWidget {
 
@@ -64,7 +63,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                           color: colorScheme.error,
                           size: 64,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Text(
                           context.l10n.errorLoadingImage,
                           style: TextStyle(
@@ -118,7 +117,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: Icon(
@@ -162,7 +161,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                         color: context.colors.surface.withValues(alpha: 0.7),
                         size: 16,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
                         context.l10n.tapAnywhereToClose,
                         style: theme.textTheme.bodySmall?.copyWith(

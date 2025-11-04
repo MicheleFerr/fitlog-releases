@@ -20,15 +20,15 @@ import 'package:flutter/foundation.dart';
 /// - ✅ Detailed logging
 /// - ✅ Rollback friendly (V2 is backward compatible)
 class SupersetDataMigrationV1ToV2 {
-  final FirebaseFirestore _firestore;
-  final String userId;
-  final bool dryRun;
 
   SupersetDataMigrationV1ToV2({
     required this.userId,
     FirebaseFirestore? firestore,
     this.dryRun = true, // Safe default: dry-run mode
   }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+  final String userId;
+  final bool dryRun;
 
   /// Public API: Migrate all workouts for a user
   static Future<MigrationResult> migrateUser(
@@ -254,26 +254,19 @@ class SupersetDataMigrationV1ToV2 {
 
 /// Result of migrating a single workout
 class _WorkoutMigrationResult {
-  final bool needsUpdate;
-  final int supersetsUpdated;
-  final int setsUpdated;
 
   _WorkoutMigrationResult({
     required this.needsUpdate,
     this.supersetsUpdated = 0,
     this.setsUpdated = 0,
   });
+  final bool needsUpdate;
+  final int supersetsUpdated;
+  final int setsUpdated;
 }
 
 /// Result of complete migration
 class MigrationResult {
-  final int totalWorkouts;
-  final int workoutsUpdated;
-  final int workoutsSkipped;
-  final int supersetsUpdated;
-  final int setsUpdated;
-  final List<String> updatedWorkoutIds;
-  final List<String> errors;
 
   MigrationResult({
     required this.totalWorkouts,
@@ -284,6 +277,13 @@ class MigrationResult {
     required this.updatedWorkoutIds,
     required this.errors,
   });
+  final int totalWorkouts;
+  final int workoutsUpdated;
+  final int workoutsSkipped;
+  final int supersetsUpdated;
+  final int setsUpdated;
+  final List<String> updatedWorkoutIds;
+  final List<String> errors;
 
   bool get hasErrors => errors.isNotEmpty;
   bool get success => errors.isEmpty && workoutsUpdated > 0;

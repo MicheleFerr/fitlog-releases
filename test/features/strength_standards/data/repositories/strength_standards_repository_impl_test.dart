@@ -14,43 +14,43 @@ void main() {
   late MockStrengthStandardsLocalDataSource mockDataSource;
 
   // Test data
-  final testStandard1 = StrengthStandard(
+  const testStandard1 = StrengthStandard(
     id: 'barbell_bench_press',
     name: 'Barbell Bench Press',
-    keywords: const ['bench press', 'panca piana'],
+    keywords: ['bench press', 'panca piana'],
     equipment: 'Barbell',
-    muscleGroups: const ['PETT', 'Pectorals', 'TRIC', 'Triceps'],
+    muscleGroups: ['PETT', 'Pectorals', 'TRIC', 'Triceps'],
     dataSource: 'exrx_net',
-    bodyweightTable: const {
+    bodyweightTable: {
       '60': {'novice': 57.5, 'intermediate': 70.0},
       '70': {'novice': 67.5, 'intermediate': 82.5},
     },
-    bodyweightMultipliers: const {
+    bodyweightMultipliers: {
       'novice': 0.93,
       'intermediate': 1.13,
     },
     isBodyweightExercise: false,
   );
 
-  final testStandard2 = StrengthStandard(
+  const testStandard2 = StrengthStandard(
     id: 'barbell_squat',
     name: 'Barbell Squat',
-    keywords: const ['squat', 'squat'],
+    keywords: ['squat', 'squat'],
     equipment: 'Barbell',
-    muscleGroups: const ['QUAD', 'Quadriceps', 'GLUT', 'Glutes'],
+    muscleGroups: ['QUAD', 'Quadriceps', 'GLUT', 'Glutes'],
     dataSource: 'exrx_net',
-    bodyweightTable: const {
+    bodyweightTable: {
       '60': {'novice': 75.0, 'intermediate': 97.5},
       '70': {'novice': 87.5, 'intermediate': 113.5},
     },
-    bodyweightMultipliers: const {
+    bodyweightMultipliers: {
       'novice': 1.21,
       'intermediate': 1.58,
     },
     isBodyweightExercise: false,
   );
 
-  final testMapping1 = ExerciseMapping(
+  const testMapping1 = ExerciseMapping(
     gymbroId: 'ex123',
     gymbroName: 'Bench Press',
     gymbroEquipment: 'Barbell',
@@ -64,7 +64,7 @@ void main() {
     fallbackReason: null,
   );
 
-  final testMapping2 = ExerciseMapping(
+  const testMapping2 = ExerciseMapping(
     gymbroId: 'ex456',
     gymbroName: 'Incline Bench',
     gymbroEquipment: 'Barbell',
@@ -78,7 +78,7 @@ void main() {
     fallbackReason: null,
   );
 
-  final testMapping3 = ExerciseMapping(
+  const testMapping3 = ExerciseMapping(
     gymbroId: 'ex789',
     gymbroName: 'Cable Fly',
     gymbroEquipment: 'Cable',
@@ -358,7 +358,7 @@ void main() {
 
     test('should include mappings exactly at threshold', () async {
       // Arrange
-      final exactMapping = ExerciseMapping(
+      const exactMapping = ExerciseMapping(
         gymbroId: 'ex_exact',
         gymbroName: 'Test',
         gymbroEquipment: 'Barbell',

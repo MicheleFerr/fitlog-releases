@@ -188,7 +188,7 @@ class RecentWorkoutsCard extends StatelessWidget {
           minChildSize: 0.4,
           expand: false,
           builder: (context, scrollController) {
-            return Container(
+            return DecoratedBox(
               decoration: BoxDecoration(
                 color: context.colors.surface,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -385,7 +385,7 @@ class RecentWorkoutsCard extends StatelessWidget {
           ),
           children: [
             // Set details table
-            Container(
+            DecoratedBox(
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),

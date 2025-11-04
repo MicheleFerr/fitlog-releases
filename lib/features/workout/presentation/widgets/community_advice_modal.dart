@@ -46,7 +46,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
       initialChildSize: 0.7,
       minChildSize: 0.5,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -73,7 +73,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                     Icons.lightbulb_outline,
                     color: theme.colorScheme.primary,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +137,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                         size: 48,
                         color: theme.colorScheme.error,
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Text(
                         'Errore nel caricamento',
                         style: theme.textTheme.titleMedium,
@@ -165,7 +165,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               size: 64,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               l10n.noAdviceAvailable,
               style: theme.textTheme.titleMedium?.copyWith(
@@ -173,7 +173,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               l10n.beFirstToShare,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -206,7 +206,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             Row(
               children: [
                 _getTypeIcon(contribution.type, theme),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     contribution.title,
@@ -218,7 +218,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               ],
             ),
 
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // Description
             Text(
@@ -226,7 +226,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               style: theme.textTheme.bodyMedium,
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Footer with author and like button
             Row(
@@ -239,7 +239,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                         size: 16,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Text(
                         contribution.userName,
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -271,7 +271,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                           size: 16,
                           color: theme.colorScheme.primary,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
                           contribution.upvotes.toString(),
                           style: theme.textTheme.bodySmall?.copyWith(
@@ -288,7 +288,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
 
             // Helpful text if upvotes > 0
             if (contribution.upvotes > 0) ...[
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 l10n.peopleFoundHelpful(contribution.upvotes),
                 style: theme.textTheme.bodySmall?.copyWith(

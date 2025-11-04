@@ -148,7 +148,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
             widget.onClose();
           });
         },
-        child: Container(
+        child: ColoredBox(
           color: context.colors.onSurface.withValues(alpha: 0.5),
           child: Stack(
             children: [

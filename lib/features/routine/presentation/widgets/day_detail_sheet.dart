@@ -57,7 +57,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
 
     final statsAsync = ref.watch(dayStatsProvider(statsParams));
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

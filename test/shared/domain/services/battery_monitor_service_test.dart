@@ -113,10 +113,10 @@ void main() {
 
     test('should have correct enum values', () {
       // Assert - Verify we can reference all enum values
-      final liveActivities = PowerHungryFeature.liveActivities;
-      final backgroundSync = PowerHungryFeature.backgroundSync;
-      final animations = PowerHungryFeature.animations;
-      final autoRefresh = PowerHungryFeature.autoRefresh;
+      const liveActivities = PowerHungryFeature.liveActivities;
+      const backgroundSync = PowerHungryFeature.backgroundSync;
+      const animations = PowerHungryFeature.animations;
+      const autoRefresh = PowerHungryFeature.autoRefresh;
 
       expect(liveActivities, isNotNull);
       expect(backgroundSync, isNotNull);

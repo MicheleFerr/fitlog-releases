@@ -149,8 +149,8 @@ void main() {
 
     test('should aggregate all 5 formulas correctly', () {
       // ESEMPIO PRATICO: Verifica che tutte le formule contribuiscano
-      final weight = 100.0;
-      final reps = 5;
+      const weight = 100.0;
+      const reps = 5;
       
       final average = OneRMCalculator.calculateAverage(weight, reps);
       final brzycki = OneRMCalculator.calculateBrzycki(weight, reps);
@@ -377,7 +377,7 @@ void main() {
     test('should use strength standards for validation', () {
       // ESEMPIO PRATICO: Standard scientifici per rep ranges
       // 3 reps = max 93% 1RM, 8 reps = max 80% 1RM, etc.
-      final oneRM = 100.0;
+      const oneRM = 100.0;
       
       expect(OneRMCalculator.isRealisticLift(94, 3, oneRM), false); // >93%
       expect(OneRMCalculator.isRealisticLift(81, 8, oneRM), false); // >80%
@@ -477,7 +477,7 @@ void main() {
 
     test('training program generation', () {
       // 🏋️ SCENARIO REALE: Generate 12-week strength program
-      final oneRM = 100.0;
+      const oneRM = 100.0;
 
       // Week 1-4: Hypertrophy (8-12 reps @ 70-75%)
       final week1Weight = OneRMCalculator.calculateWeightForReps(oneRM, 10);

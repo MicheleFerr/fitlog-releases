@@ -755,7 +755,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get reps => 'rip';
 
   @override
-  String get notes => 'Note (opzionale)';
+  String get notes => 'Note';
 
   @override
   String get notesHint => 'Aggiungi note sulla forma, progressione, ecc.';
@@ -1985,7 +1985,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get suggestedForToday => 'Suggerito per oggi';
 
   @override
-  String get yourProgress => 'I tuoi progressi';
+  String get yourProgress => 'I Tuoi Progressi';
 
   @override
   String get pushDay => 'Push Day';
@@ -2311,16 +2311,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get muscleGroupOther => 'Altro';
 
   @override
-  String days(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count giorni',
-      one: '1 giorno',
-      zero: '0 giorni',
-    );
-    return '$_temp0';
-  }
+  String get days => 'giorni';
 
   @override
   String get perWeek => '/settimana';
@@ -11684,4 +11675,664 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get useTemplate => 'Usa Template';
+
+  @override
+  String get bullet => 'Punto elenco';
+
+  @override
+  String get skipTour => 'Salta Tour';
+
+  @override
+  String get autoAdvance => 'Avanzamento automatico';
+
+  @override
+  String autoAdvanceIn(int seconds) {
+    return 'Avanza automaticamente tra ${seconds}s';
+  }
+
+  @override
+  String get tourAiCoachTitle => 'AI Coach 👋';
+
+  @override
+  String get tourAiCoachDescription =>
+      'Ciao! Sono il tuo AI Coach.\nTi darò consigli personalizzati dopo il tuo primo allenamento!';
+
+  @override
+  String get tourFabTitle => 'Avvio Rapido ⚡';
+
+  @override
+  String get tourFabDescription =>
+      'Premi qui per iniziare un allenamento velocemente.\nÈ il modo più semplice per tracciare i tuoi progressi!';
+
+  @override
+  String get tourSmartWorkoutTitle => 'Allenamento Intelligente 🧠';
+
+  @override
+  String get tourSmartWorkoutDescription =>
+      'Oppure lascia che io crei l\'allenamento perfetto per te basato sui tuoi obiettivi!';
+
+  @override
+  String get tourAnalyticsTitle => 'Analytics - I Tuoi Progressi 📊';
+
+  @override
+  String get tourAnalyticsDescription => 'Qui trovi grafici dettagliati di:';
+
+  @override
+  String get tourAnalyticsBullet1 => 'Volume totale per allenamento';
+
+  @override
+  String get tourAnalyticsBullet2 => 'Forza per esercizio (1RM stimato)';
+
+  @override
+  String get tourAnalyticsBullet3 => 'Record personali e miglioramenti';
+
+  @override
+  String get tourHistoryTitle => 'Storico Allenamenti 📅';
+
+  @override
+  String get tourHistoryDescription =>
+      'Qui trovi lo storico completo dei tuoi allenamenti.\nRileggi le sessioni passate e traccia la tua costanza!';
+
+  @override
+  String get tourRoutineCenterTitle => 'Routine Center - Training Avanzato 🏋️';
+
+  @override
+  String get tourRoutineCenterDescription =>
+      'Crea programmi multi-settimana con:';
+
+  @override
+  String get tourRoutineCenterBullet1 =>
+      'Periodizzazione (forza → ipertrofia → deload)';
+
+  @override
+  String get tourRoutineCenterBullet2 => 'Swap automatico tra template';
+
+  @override
+  String get tourRoutineCenterBullet3 => 'Tracking progressi per ogni fase';
+
+  @override
+  String get tourCommunityTitle => 'Community 🤝';
+
+  @override
+  String get tourCommunityDescription =>
+      'Connettiti con altri atleti per motivazione e supporto!';
+
+  @override
+  String get tourNotificationsTitle => 'Notifiche 🔔';
+
+  @override
+  String get tourNotificationsDescription =>
+      'Le notifiche ti terranno aggiornato su traguardi e consigli!';
+
+  @override
+  String get suggestedNextWorkout => 'Prossimo Allenamento Suggerito';
+
+  @override
+  String get startThisWorkout => 'Inizia Questo Allenamento';
+
+  @override
+  String get alternatives => 'Alternative';
+
+  @override
+  String get whyThisSuggestion => 'Perché Questo Suggerimento?';
+
+  @override
+  String get confidence => 'Sicurezza';
+
+  @override
+  String get levelPattern => 'Pattern';
+
+  @override
+  String get levelRoutine => 'Routine';
+
+  @override
+  String get levelFrequent => 'Frequente';
+
+  @override
+  String get levelDefault => 'Predefinito';
+
+  @override
+  String get levelAlternative => 'Alternativo';
+
+  @override
+  String get notEnoughWorkoutData => 'Dati allenamenti insufficienti';
+
+  @override
+  String get completeWorkoutsForSuggestions =>
+      'Completa almeno 6 allenamenti per ricevere suggerimenti personalizzati';
+
+  @override
+  String get createWorkout => 'Crea Allenamento';
+
+  @override
+  String get analyzingWorkoutPattern =>
+      'Analisi del tuo pattern di allenamento...';
+
+  @override
+  String get workoutSuggestionError =>
+      'Impossibile generare suggerimento allenamento';
+
+  @override
+  String get pauseRoutine => 'Metti in Pausa';
+
+  @override
+  String get pauseRoutineTitle => 'Metti in Pausa Questa Routine';
+
+  @override
+  String get pauseRoutineDescription =>
+      'La tua routine sarà in pausa durante questo periodo. Non riceverai promemoria allenamenti.';
+
+  @override
+  String get pauseReason => 'Motivo della pausa';
+
+  @override
+  String get pauseReasonInjury => 'Infortunio';
+
+  @override
+  String get pauseReasonSick => 'Malattia';
+
+  @override
+  String get pauseReasonVacation => 'Vacanza';
+
+  @override
+  String get pauseReasonBusy => 'Troppo Impegnato';
+
+  @override
+  String get pauseReasonBurnout => 'Burnout';
+
+  @override
+  String get pauseReasonOther => 'Altro';
+
+  @override
+  String get startDate => 'Data Inizio';
+
+  @override
+  String get endDate => 'Data Fine';
+
+  @override
+  String get pauseNotes => 'Note (opzionale)';
+
+  @override
+  String get pauseNotesHint =>
+      'Es: Infortunio spalla - evitare pressioni sopra la testa';
+
+  @override
+  String get confirmPause => 'Metti in Pausa';
+
+  @override
+  String get pausedBadge => 'In Pausa';
+
+  @override
+  String pausedUntil(String date) {
+    return 'In pausa fino al $date';
+  }
+
+  @override
+  String daysRemaining(int count) {
+    return '$count giorni rimanenti';
+  }
+
+  @override
+  String get resumeRoutine => 'Riprendi Routine';
+
+  @override
+  String get routineResumed => 'Routine ripresa!';
+
+  @override
+  String get pauseValidationStartInPast =>
+      'La data di inizio non può essere nel passato';
+
+  @override
+  String get pauseValidationEndBeforeStart =>
+      'La data di fine deve essere dopo la data di inizio';
+
+  @override
+  String pauseValidationTooLong(int maxDays) {
+    return 'La pausa non può superare $maxDays giorni';
+  }
+
+  @override
+  String pauseValidationOverlap(String date) {
+    return 'Routine già in pausa fino al $date';
+  }
+
+  @override
+  String get conflictingWorkouts =>
+      'Allenamenti Programmati nel Periodo di Pausa';
+
+  @override
+  String conflictingWorkoutsMessage(int count) {
+    return 'Hai $count allenamenti programmati durante questa pausa. Verranno saltati automaticamente.';
+  }
+
+  @override
+  String get confirmAndPause => 'Conferma e Metti in Pausa';
+
+  @override
+  String get selectDate => 'Seleziona Data';
+
+  @override
+  String get pause => 'Pausa';
+
+  @override
+  String get routinePaused => 'Routine messa in pausa con successo';
+
+  @override
+  String get routineTemplateCreatedSuccess =>
+      'Template creato! Selezionalo qui sotto per continuare.';
+
+  @override
+  String get levelSystem => 'Sistema Livelli';
+
+  @override
+  String get currentLevel => 'Livello Attuale';
+
+  @override
+  String get toNextLevel => 'al prossimo livello';
+
+  @override
+  String get level => 'Livello';
+
+  @override
+  String get current => 'Attuale';
+
+  @override
+  String get elite => 'Élite';
+
+  @override
+  String get novice => 'Principiante';
+
+  @override
+  String get expert => 'Esperto';
+
+  @override
+  String get master => 'Maestro';
+
+  @override
+  String get grandmaster => 'Gran Maestro';
+
+  @override
+  String get champion => 'Campione';
+
+  @override
+  String get legend => 'Leggenda';
+
+  @override
+  String get titan => 'Titano';
+
+  @override
+  String get levelDesc1 =>
+      'Stai appena iniziando! Completa i tuoi primi allenamenti per salire di livello.';
+
+  @override
+  String get levelDesc2 =>
+      'Hai completato i tuoi primi allenamenti. Mantieni lo slancio!';
+
+  @override
+  String get levelDesc3 =>
+      'Stai costruendo solide abitudini di allenamento. La costanza è la chiave!';
+
+  @override
+  String get levelDesc4 =>
+      'Atleta avanzato! La tua dedizione si riflette nei tuoi progressi.';
+
+  @override
+  String get levelDesc5 =>
+      'Livello esperto raggiunto! Stai padroneggiando il tuo allenamento.';
+
+  @override
+  String get levelDesc6 =>
+      'Maestro del fitness! La tua costanza ispira gli altri.';
+
+  @override
+  String get levelDesc7 =>
+      'Status di Gran Maestro! Pochi raggiungono questo livello di dedizione.';
+
+  @override
+  String get levelDesc8 => 'Campione! Sei nel livello più alto degli atleti.';
+
+  @override
+  String get levelDesc9 =>
+      'Status leggendario! La tua disciplina è ineguagliabile.';
+
+  @override
+  String get levelDesc10 =>
+      'Titano! Il livello massimo di maestria nel fitness.';
+
+  @override
+  String get benefit1_1 => 'Traccia i tuoi primi allenamenti';
+
+  @override
+  String get benefit1_2 => 'Impara le basi del monitoraggio progressi';
+
+  @override
+  String get benefit2_1 => 'Sblocca analytics degli allenamenti';
+
+  @override
+  String get benefit2_2 => 'Accedi a grafici progressi base';
+
+  @override
+  String get benefit3_1 => 'Accesso libreria esercizi avanzata';
+
+  @override
+  String get benefit3_2 => 'Template allenamenti disponibili';
+
+  @override
+  String get benefit3_3 => 'Creazione allenamenti personalizzati';
+
+  @override
+  String get benefit4_1 => 'Tracciamento record personali';
+
+  @override
+  String get benefit4_2 => 'Dashboard analytics avanzata';
+
+  @override
+  String get benefit4_3 => 'Insights su volume e intensità';
+
+  @override
+  String get benefit5_1 => 'Raccomandazioni allenamento esperte';
+
+  @override
+  String get benefit5_2 => 'Suggerimenti periodizzazione';
+
+  @override
+  String get benefit5_3 => 'Ottimizzazione recupero';
+
+  @override
+  String get benefit6_1 => 'Programmi allenamento livello maestro';
+
+  @override
+  String get benefit6_2 => 'Tracciamento progressione avanzato';
+
+  @override
+  String get benefit6_3 => 'Analisi bilanciamento gruppi muscolari';
+
+  @override
+  String get benefit7_1 => 'Protocolli allenamento élite';
+
+  @override
+  String get benefit7_2 => 'Strumenti preparazione gare';
+
+  @override
+  String get benefit7_3 => 'Ottimizzazione performance';
+
+  @override
+  String get benefit8_1 => 'Strategie allenamento da campione';
+
+  @override
+  String get benefit8_2 => 'Pianificazione picco performance';
+
+  @override
+  String get benefit8_3 => 'Protocolli recupero avanzati';
+
+  @override
+  String get benefit9_1 => 'Metodi allenamento leggendari';
+
+  @override
+  String get benefit9_2 => 'Analytics livello professionista';
+
+  @override
+  String get benefit9_3 => 'Tracciamento performance definitivo';
+
+  @override
+  String get benefit10_1 => 'Maestria allenamento da titano';
+
+  @override
+  String get benefit10_2 => 'Ecosistema allenamento completo';
+
+  @override
+  String get benefit10_3 => 'Massimo potenziale sbloccato';
+
+  @override
+  String get averageEffortLevel => 'Livello Sforzo Medio';
+
+  @override
+  String get fitnessLevel => 'Livello Fitness';
+
+  @override
+  String get levelAndXpOnly => 'Solo Livello & XP';
+
+  @override
+  String levelRequired(int level) {
+    return 'Richiesto Livello $level';
+  }
+
+  @override
+  String get mon => 'Lun';
+
+  @override
+  String get tue => 'Mar';
+
+  @override
+  String get wed => 'Mer';
+
+  @override
+  String get thu => 'Gio';
+
+  @override
+  String get fri => 'Ven';
+
+  @override
+  String get sat => 'Sab';
+
+  @override
+  String get sun => 'Dom';
+
+  @override
+  String get velocityAnalytics => 'Analytics Velocità';
+
+  @override
+  String get performanceHeatmap => 'Mappa Performance';
+
+  @override
+  String get loadVelocity => 'Carico-Velocità';
+
+  @override
+  String get velocity => 'Velocità';
+
+  @override
+  String get load => 'Carico';
+
+  @override
+  String get minVelocity => 'Velocità Min';
+
+  @override
+  String get avgVelocityLoss => 'Perdita Velocità Media';
+
+  @override
+  String get optimalLoad => 'Carico Ottimale';
+
+  @override
+  String get executionTime => 'Tempo Esecuzione';
+
+  @override
+  String get formScore => 'Punteggio Forma';
+
+  @override
+  String get quality => 'Qualità';
+
+  @override
+  String get fatigueIndex => 'Indice Fatica';
+
+  @override
+  String get explosiveZone => 'Zona Esplosiva';
+
+  @override
+  String get speedZone => 'Zona Velocità';
+
+  @override
+  String get zones => 'Zone';
+
+  @override
+  String get analyzingVelocityData => 'Analisi dati velocità...';
+
+  @override
+  String get insufficientVelocityData => 'Dati velocità insufficienti';
+
+  @override
+  String get velocityAnalysisError => 'Errore analisi velocità';
+
+  @override
+  String get noPerformanceData => 'Nessun dato performance disponibile';
+
+  @override
+  String get startWorkoutToSeeData => 'Inizia un allenamento per vedere i dati';
+
+  @override
+  String get keyInsights => 'Insights Chiave';
+
+  @override
+  String get tapForMoreInfo => 'Tocca per più info';
+
+  @override
+  String get tapToCollapse => 'Tocca per comprimere';
+
+  @override
+  String get whatDoesThisMean => 'Cosa significa?';
+
+  @override
+  String get helpTitle => 'Aiuto';
+
+  @override
+  String get defaultHelpContent => 'Maggiori informazioni in arrivo';
+
+  @override
+  String get formula => 'Formula';
+
+  @override
+  String get example => 'Esempio';
+
+  @override
+  String get generalTip => 'Consiglio Generale';
+
+  @override
+  String get volumeExplanation => 'Volume Totale';
+
+  @override
+  String get volumeExplanationDesc =>
+      'Volume totale = Serie × Ripetizioni × Peso. Misura il carico totale di allenamento.';
+
+  @override
+  String get volumeTip =>
+      'Aumenta gradualmente il volume del 5-10% a settimana per evitare sovrallenamento.';
+
+  @override
+  String get intensityExplanation => 'Intensità Allenamento';
+
+  @override
+  String get intensityExplanationDesc =>
+      'Percentuale del tuo massimale (1RM) usata nell\'allenamento.';
+
+  @override
+  String get intensityTip =>
+      'Varia intensità: 60-75% per volume, 80-90% per forza, 90%+ per potenza.';
+
+  @override
+  String get setsExplanation => 'Serie Totali';
+
+  @override
+  String get setsExplanationDesc =>
+      'Numero di serie eseguite su tutti gli esercizi.';
+
+  @override
+  String get setsTip =>
+      'La ricerca suggerisce 10-20 serie per gruppo muscolare a settimana per ipertrofia.';
+
+  @override
+  String get streakExplanation => 'Serie Allenamenti';
+
+  @override
+  String get streakExplanationDesc =>
+      'Giorni consecutivi con almeno un allenamento completato.';
+
+  @override
+  String get streakTip =>
+      'La costanza batte l\'intensità. Anche allenamenti leggeri mantengono la serie.';
+
+  @override
+  String get oneRmExplanation => 'Massimale (1RM)';
+
+  @override
+  String get oneRmExplanationDesc =>
+      'Peso massimo che puoi sollevare per una singola ripetizione.';
+
+  @override
+  String get oneRmTip =>
+      'Testa il massimale ogni 4-8 settimane per monitorare i progressi in modo sicuro.';
+
+  @override
+  String get whatIsTotalVolume => 'Cos\'è il Volume Totale?';
+
+  @override
+  String get totalVolumeExplanation =>
+      'Peso totale sollevato su tutte le serie e ripetizioni (Serie × Rip × Peso).';
+
+  @override
+  String get totalVolumeExample =>
+      'Esempio: 3 serie × 10 rip × 50kg = 1.500kg volume totale';
+
+  @override
+  String get whatAreTotalSets => 'Cosa sono le Serie Totali?';
+
+  @override
+  String get totalSetsExplanation =>
+      'Numero di serie eseguite su tutti gli esercizi del tuo allenamento.';
+
+  @override
+  String get totalSetsExample =>
+      'Esempio: 4 serie squat + 3 serie panca = 7 serie totali';
+
+  @override
+  String get whatIsWorkoutFrequency => 'Cos\'è la Frequenza Allenamento?';
+
+  @override
+  String get workoutFrequencyExplanation =>
+      'Numero di sessioni di allenamento a settimana o stimoli per gruppo muscolare.';
+
+  @override
+  String get workoutFrequencyExample =>
+      'Esempio: Allenare petto 2 volte a settimana = frequenza 2×';
+
+  @override
+  String get whatIsPersonalRecord => 'Cos\'è un Record Personale (PR)?';
+
+  @override
+  String get personalRecordExplanation =>
+      'La tua migliore performance per un esercizio specifico (peso max, ripetizioni o volume).';
+
+  @override
+  String get personalRecordExample =>
+      'Esempio: Panca 100kg × 5 rip supera il tuo precedente 95kg × 5 rip';
+
+  @override
+  String get whatIsMuscleBalance => 'Cos\'è il Bilanciamento Muscolare?';
+
+  @override
+  String get muscleBalanceExample =>
+      'Esempio: Allenare petto 3 volte a settimana ma schiena solo 1 volta crea squilibrio';
+
+  @override
+  String get nextMilestone => 'Prossimo Traguardo';
+
+  @override
+  String get daysToGo => 'giorni rimanenti';
+
+  @override
+  String get vsLastPeriod => 'vs periodo precedente';
+
+  @override
+  String get lastYear => 'Anno Scorso';
+
+  @override
+  String get shade400 => 'Tonalità 400';
+
+  @override
+  String lastNMonths(int n) {
+    return 'Ultimi $n mesi';
+  }
+
+  @override
+  String lastNDays(int n) {
+    return 'Ultimi $n giorni';
+  }
 }

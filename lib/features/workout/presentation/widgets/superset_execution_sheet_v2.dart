@@ -174,7 +174,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

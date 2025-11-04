@@ -14,7 +14,6 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_dis
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
@@ -904,7 +903,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
+      builder: (context) => DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -962,7 +961,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
+      builder: (context) => DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -1261,7 +1260,7 @@ class _MetricsSelectionSheetState extends ConsumerState<_MetricsSelectionSheet> 
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

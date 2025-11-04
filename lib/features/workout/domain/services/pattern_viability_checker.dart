@@ -99,7 +99,7 @@ class PatternViabilityChecker {
     }
 
     // All rules passed ✅
-    return ViabilityResult(
+    return const ViabilityResult(
       isViable: true,
       reason: 'All viability checks passed',
       passedRules: ['Confidence', 'Cycles', 'Days', 'Workouts', 'Coverage'],
@@ -171,6 +171,13 @@ class PatternViabilityChecker {
 
 /// Result of viability check
 class ViabilityResult {
+
+  const ViabilityResult({
+    required this.isViable,
+    required this.reason,
+    this.failedRule,
+    this.passedRules,
+  });
   /// Whether the pattern is viable for routine suggestions
   final bool isViable;
 
@@ -182,13 +189,6 @@ class ViabilityResult {
 
   /// List of rules that passed (if viable)
   final List<String>? passedRules;
-
-  const ViabilityResult({
-    required this.isViable,
-    required this.reason,
-    this.failedRule,
-    this.passedRules,
-  });
 
   /// Check if pattern is high quality (all rules passed with margin)
   ///

@@ -40,7 +40,7 @@ void main() {
     testWidgets('should show empty state when dataPoints is empty', (tester) async {
       // Arrange
       const widget = ExerciseMetricChart(
-        dataPoints: const [],
+        dataPoints: [],
         metric: 'Peso',
       );
 
@@ -138,7 +138,7 @@ void main() {
     testWidgets('empty state should be centered', (tester) async {
       // Arrange
       const widget = ExerciseMetricChart(
-        dataPoints: const [],
+        dataPoints: [],
         metric: 'Peso',
       );
 

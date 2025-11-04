@@ -27,7 +27,6 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/location_permission_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/screens/edit_buddy_profile_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
@@ -258,7 +257,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
             
             return Positioned.fill(
               child: IgnorePointer(
-                child: Container(
+                child: ColoredBox(
                   color: context.colors.onSurface.withValues(alpha: 0.3 * _celebrationAnimation.value),
                   child: Center(
                     child: Transform.scale(
@@ -420,7 +419,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
   void _handleSuperLike() async {
     unawaited(HapticFeedback.heavyImpact());
     // Super like implementation
-    await _handleLike();
+    _handleLike();
   }
 
   void _showMatchCelebration() {

@@ -821,7 +821,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         ),
         
         // Table content
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.2),

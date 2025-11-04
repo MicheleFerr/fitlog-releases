@@ -74,7 +74,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
       ),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +83,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: context.colors.primary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -94,7 +94,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       size: 24,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,7 +106,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                             color: context.colors.onSurface,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'From ${_formatDate(widget.originalDate)}',
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -119,11 +119,11 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 ],
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Info message
               Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -138,7 +138,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       color: context.colors.primary,
                       size: 20,
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Select a future date to make up for this missed workout. Choose a rest day or add an extra session.',
@@ -151,12 +151,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Suggested dates section
               _buildSuggestedDates(),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Calendar
               Text(
@@ -166,9 +166,9 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   color: context.colors.onSurface,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-              Container(
+              DecoratedBox(
                 decoration: BoxDecoration(
                   color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
@@ -199,7 +199,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                     titleTextStyle: context.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ) ??
-                        TextStyle(),
+                        const TextStyle(),
                   ),
                   calendarBuilders: CalendarBuilders(
                     defaultBuilder: (context, day, focusedDay) {
@@ -211,9 +211,9 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
 
               // Validation error
               if (_validationError != null) ...[
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Container(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: context.colors.errorContainer,
                     borderRadius: BorderRadius.circular(8),
@@ -225,7 +225,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         color: context.colors.error,
                         size: 20,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           _validationError!,
@@ -239,13 +239,13 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 ),
               ],
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Impact preview
               if (_selectedDay != null && _validationError == null)
                 _buildImpactPreview(),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Actions
               Row(
@@ -258,7 +258,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       style: TextStyle(color: context.colors.onSurface),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: (_selectedDay == null || _validationError != null)
                         ? null
@@ -266,7 +266,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.colors.primary,
                       foregroundColor: context.colors.surface,
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 12,
                       ),
@@ -274,7 +274,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text('Recover Workout'),
+                    child: const Text('Recover Workout'),
                   ),
                 ],
               ),
@@ -302,7 +302,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
             color: context.colors.onSurface,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -311,7 +311,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
             return InkWell(
               onTap: () => _onDaySelected(date, date),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? context.colors.primary
@@ -331,7 +331,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       size: 16,
                       color: isSelected ? context.colors.surface : context.colors.primary,
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
                       _formatDateShort(date),
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -339,7 +339,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       '(Rest day)',
                       style: context.textTheme.bodySmall?.copyWith(
@@ -371,7 +371,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
     }
 
     return Container(
-      margin: EdgeInsets.all(4),
+      margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: backgroundColor,
         shape: BoxShape.circle,
@@ -391,7 +391,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
 
   Widget _buildImpactPreview() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.colors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
@@ -409,7 +409,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 color: context.colors.primary,
                 size: 20,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'Recovery impact',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -419,14 +419,14 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _buildImpactRow(
             icon: Icons.trending_up,
             label: 'Adherence Rate',
             value: 'Will improve',
             isPositive: true,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildImpactRow(
             icon: AppIcons.eventAvailable,
             label: 'Recovery Date',
@@ -451,7 +451,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           size: 18,
           color: context.colors.onSurface.withValues(alpha: 0.7),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
@@ -466,7 +466,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
             size: 14,
             color: context.colors.primary,
           ),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Text(
           value,
           style: context.textTheme.bodySmall?.copyWith(

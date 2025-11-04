@@ -214,7 +214,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                       ),
                       title: Text(l10n.useDefaultRestTime),
                       subtitle: const Text('120s'),
-                      trailing: Radio<bool>(
+                      trailing: const Radio<bool>(
                         value: false,
                       ),
                       onTap: () {
@@ -268,7 +268,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                                 : Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           title: Text(l10n.customRestTime),
-                          trailing: Radio<bool>(
+                          trailing: const Radio<bool>(
                             value: true,
                           ),
                           onTap: () {

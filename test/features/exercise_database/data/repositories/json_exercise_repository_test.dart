@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 
 void main() {
   late JsonExerciseRepository repository;

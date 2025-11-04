@@ -10,6 +10,9 @@ final onboardingStateProvider = StateNotifierProvider<OnboardingStateNotifier, O
   return OnboardingStateNotifier(boxManager);
 });
 
+// Alias for convenience (used in quick_start_screen.dart)
+final onboardingProvider = onboardingStateProvider;
+
 class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
 
   OnboardingStateNotifier(this._boxManager) : super(const OnboardingState()) {
@@ -183,6 +186,109 @@ class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
       lastInteraction: DateTime.now(),
     );
     await _saveState();
+  }
+
+  // NEW ONBOARDING SYSTEM METHODS
+
+  /// Complete Quick Start and set user experience level
+  /// @param experienceLevel: 'beginner' or 'expert'
+  ///
+  /// For 'beginner' users:
+  ///   - Does NOT mark global onboarding as seen (allows tour to auto-start)
+  ///   - Tour will start on home screen after Quick Start
+  ///   - Global onboarding is marked complete only after tour completion
+  ///
+  /// For 'expert' users:
+  ///   - Marks global onboarding as seen immediately (skips tour)
+  ///   - Goes straight to main app without guided tour
+  Future<void> completeQuickStart(String experienceLevel) async {
+    final isBeginner = experienceLevel == 'beginner';
+
+    state = state.copyWith(
+      userExperienceLevel: experienceLevel,
+      quickStartCompletedAt: DateTime.now(),
+      // Only mark onboarding as seen for expert users (skip tour)
+      // Beginner users will see the tour on home screen
+      hasSeenGlobalOnboarding: !isBeginner,
+      lastInteraction: DateTime.now(),
+    );
+    await _saveState();
+    debugPrint('✅ Quick Start completed: $experienceLevel (hasSeenGlobal: ${!isBeginner})');
+  }
+
+  /// Mark an overlay as seen
+  /// @param overlayId: identifier for the overlay (e.g., 'createWorkoutCTA')
+  Future<void> markOverlaySeen(String overlayId) async {
+    if (!state.hasSeenOverlay(overlayId)) {
+      final newSeenOverlays = List<String>.from(state.seenOverlays)..add(overlayId);
+      state = state.copyWith(
+        seenOverlays: newSeenOverlays,
+        lastInteraction: DateTime.now(),
+      );
+      await _saveState();
+      debugPrint('👁️ Overlay seen: $overlayId');
+    }
+  }
+
+  /// Mark first workout as completed (triggers Phase 2)
+  Future<void> markFirstWorkoutCompleted() async {
+    if (!state.hasCompletedFirstWorkout) {
+      state = state.copyWith(
+        hasCompletedFirstWorkout: true,
+        lastInteraction: DateTime.now(),
+      );
+      await _saveState();
+      debugPrint('🎉 First workout completed! Phase 2 unlocked');
+    }
+  }
+
+  // PHASE 2: Guided First Workout Methods
+
+  /// Mark when user adds their first exercise
+  Future<void> markFirstExerciseAdded() async {
+    if (state.firstExerciseAddedAt == null) {
+      state = state.copyWith(
+        firstExerciseAddedAt: DateTime.now(),
+        lastInteraction: DateTime.now(),
+      );
+      await _saveState();
+      debugPrint('✅ First exercise added');
+    }
+  }
+
+  /// Mark when user completes their first set
+  Future<void> markFirstSetCompleted() async {
+    if (state.firstSetCompletedAt == null) {
+      state = state.copyWith(
+        firstSetCompletedAt: DateTime.now(),
+        lastInteraction: DateTime.now(),
+      );
+      await _saveState();
+      debugPrint('💪 First set completed!');
+    }
+  }
+
+  /// Mark rest timer explanation as seen
+  Future<void> markRestTimerExplanationSeen() async {
+    if (!state.hasSeenRestTimerExplanation) {
+      state = state.copyWith(
+        hasSeenRestTimerExplanation: true,
+        lastInteraction: DateTime.now(),
+      );
+      await _saveState();
+      debugPrint('⏱️ Rest timer explanation seen');
+    }
+  }
+
+  /// Reset overlay version (for testing/deprecation)
+  Future<void> resetOverlayVersion() async {
+    state = state.copyWith(
+      seenOverlays: [],
+      overlayVersionSeen: state.overlayVersionSeen + 1,
+      lastInteraction: DateTime.now(),
+    );
+    await _saveState();
+    debugPrint('🔄 Overlay version reset to ${state.overlayVersionSeen}');
   }
 
   // Save step-specific data

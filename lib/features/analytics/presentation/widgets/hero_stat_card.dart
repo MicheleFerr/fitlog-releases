@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Large hero card for displaying primary metrics
 class HeroStatCard extends StatelessWidget {

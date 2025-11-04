@@ -294,7 +294,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

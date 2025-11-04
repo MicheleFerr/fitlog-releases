@@ -24,15 +24,15 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 /// }
 /// ```
 class AppIconVariant {
-  final IconData filled;
-  final IconData? outlined;
-  final IconData? rounded;
 
   const AppIconVariant({
     required this.filled,
     this.outlined,
     this.rounded,
   });
+  final IconData filled;
+  final IconData? outlined;
+  final IconData? rounded;
 
   /// Whether this icon has an outlined variant
   bool get hasOutlined => outlined != null;
@@ -227,13 +227,6 @@ extension IconDataVariants on IconData {
 /// Uses AnimatedSwitcher for fluid transitions between active/inactive states.
 /// Includes scale animation (300ms) for polished UX.
 class ToggleIcon extends StatelessWidget {
-  final bool isActive;
-  final AppIconVariant variant;
-  final double? size;
-  final Color? activeColor;
-  final Color? inactiveColor;
-  final Duration duration;
-  final VoidCallback? onTap;
 
   const ToggleIcon({
     super.key,
@@ -245,6 +238,13 @@ class ToggleIcon extends StatelessWidget {
     this.duration = const Duration(milliseconds: 300),
     this.onTap,
   });
+  final bool isActive;
+  final AppIconVariant variant;
+  final double? size;
+  final Color? activeColor;
+  final Color? inactiveColor;
+  final Duration duration;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

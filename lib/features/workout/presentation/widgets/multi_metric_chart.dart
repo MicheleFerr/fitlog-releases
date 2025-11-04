@@ -33,14 +33,14 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_p
 /// - Peso 120 kg vs Reps 4 → normalizzati visivamente
 /// - Tooltip mostra valori reali: "Peso: 120.0 kg", "Reps: 4"
 class MultiMetricChart extends StatefulWidget {
-  final Map<String, List<ChartDataPoint>> dataByMetric;
-  final List<String> selectedMetrics;
 
   const MultiMetricChart({
     super.key,
     required this.dataByMetric,
     required this.selectedMetrics,
   });
+  final Map<String, List<ChartDataPoint>> dataByMetric;
+  final List<String> selectedMetrics;
 
   @override
   State<MultiMetricChart> createState() => _MultiMetricChartState();

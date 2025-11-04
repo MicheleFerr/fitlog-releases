@@ -16,6 +16,7 @@
 /// - Error handling
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
@@ -24,6 +25,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_dete
 import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_viability_checker.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 
 /// Provider for current user ID from Firebase Auth
 final _currentUserIdProvider = Provider<String?>((ref) {
@@ -79,6 +81,14 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
     (workouts) => workouts,
   );
 
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Loaded ${workouts.length} workouts from history');
+    if (workouts.isNotEmpty) {
+      final recentWorkoutNames = workouts.take(5).map((w) => w.name).toList();
+      debugPrint('🔍 [WORKOUT_SUGGESTION] Recent 5 workout names: $recentWorkoutNames');
+    }
+  }
+
   // Get active routine template ID (if any)
   final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
   final activeRoutineTemplateId = activeRoutineAsync.maybeWhen(
@@ -86,15 +96,41 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
     orElse: () => null,
   );
 
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Active routine template ID: $activeRoutineTemplateId');
+  }
+
+  // Get available template names for validation
+  // NOTE: Using customWorkoutTemplatesProvider (combines legacy + unified)
+  // instead of allWorkoutTemplatesProvider (legacy only, returns empty)
+  final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+  final availableTemplateNames = templatesAsync.maybeWhen(
+    data: (templates) => templates.map((t) => t.name).toList(),
+    orElse: () => <String>[],
+  );
+
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Available template names: $availableTemplateNames');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Template count: ${availableTemplateNames.length}');
+  }
+
   // Get prediction engine
   final predictionEngine = ref.watch(_routinePredictionEngineProvider);
 
-  // Predict next workout
+  // Predict next workout (with template validation)
   final suggestion = await predictionEngine.predictNextWorkout(
     workoutHistory: workouts,
     activeRoutineTemplateId: activeRoutineTemplateId,
+    availableTemplateNames: availableTemplateNames,
     useCache: true,
   );
+
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Generated suggestion: ${suggestion.workoutName}');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Suggestion level: ${suggestion.level}');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Confidence: ${suggestion.confidence}');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Reason: ${suggestion.reason}');
+  }
 
   return suggestion;
 });

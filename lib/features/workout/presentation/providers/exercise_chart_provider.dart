@@ -28,15 +28,15 @@ final getExerciseChartDataProvider = Provider<GetExerciseChartData>((ref) {
 
 /// Parameters per chart data request
 class ChartDataParams {
-  final String exerciseName;
-  final String metric;
-  final int days;
 
   const ChartDataParams({
     required this.exerciseName,
     required this.metric,
     this.days = 90,
   });
+  final String exerciseName;
+  final String metric;
+  final int days;
 
   @override
   bool operator ==(Object other) =>
@@ -81,9 +81,9 @@ final exerciseChartCleanProvider = FutureProvider.family<List<ChartDataPoint>, C
 ///
 /// Permette a FutureProvider di catturare errori in AsyncValue.error
 class ChartDataException implements Exception {
-  final ChartFailure failure;
 
   const ChartDataException(this.failure);
+  final ChartFailure failure;
 
   @override
   String toString() => 'ChartDataException: ${failure.message}';

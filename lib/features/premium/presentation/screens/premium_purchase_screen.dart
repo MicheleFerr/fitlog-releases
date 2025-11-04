@@ -577,7 +577,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   Widget _buildLoadingOverlay(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     
-    return Container(
+    return ColoredBox(
       color: Colors.black54,
       child: Center(
         child: Card(

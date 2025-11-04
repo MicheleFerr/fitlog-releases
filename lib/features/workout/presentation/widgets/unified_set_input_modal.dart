@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +29,7 @@ extension UnifiedSetInputModalExtension on BuildContext {
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
           content: const Text('Error: Unable to edit this set'),
-          backgroundColor: this.colors.error,
+          backgroundColor: colors.error,
         ),
       );
       return;
@@ -550,7 +549,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
           offset: Offset(0, MediaQuery.of(context).size.height * _slideAnimation.value),
           child: Opacity(
             opacity: _fadeAnimation.value,
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -673,7 +672,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                               if (widget.isSuperset && widget.supersetExerciseNames != null && _tabController != null)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 12),
-                                  child: Container(
+                                  child: DecoratedBox(
                                     decoration: BoxDecoration(
                                       color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(12),

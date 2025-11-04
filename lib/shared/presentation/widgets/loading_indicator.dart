@@ -108,7 +108,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
 
     // Se overlay, aggiungi sfondo semi-trasparente
     if (overlay) {
-      return Container(
+      return ColoredBox(
         color: context.colors.surface.withValues(alpha: 0.8),
         child: indicator,
       );

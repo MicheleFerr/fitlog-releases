@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_history_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 
 /// 🧪 WorkoutHistoryService Tests
 ///

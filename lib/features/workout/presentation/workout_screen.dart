@@ -38,6 +38,8 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/contextual_overlay_manager.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   const WorkoutScreen({super.key});
@@ -50,6 +52,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
   bool _isReorderMode = false;
   final _interstitialAdService = InterstitialAdService();
 
+  // PHASE 2: GlobalKeys for contextual overlays
+  final GlobalKey _addExerciseFABKey = GlobalKey();
+  final GlobalKey _completeWorkoutButtonKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +64,42 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
 
     // 💾 Add lifecycle observer for force-saving when app goes to background
     WidgetsBinding.instance.addObserver(this);
+
+    // PHASE 2: Show welcome overlay for beginners on first workout
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showFirstWorkoutWelcomeIfNeeded();
+    });
+  }
+
+  /// PHASE 2: Show welcome overlay to guide beginner through first workout
+  Future<void> _showFirstWorkoutWelcomeIfNeeded() async {
+    if (!mounted) return;
+
+    final onboardingState = ref.read(onboardingProvider);
+    final currentWorkout = ref.read(currentWorkoutProvider);
+
+    // Show only if:
+    // 1. User is beginner
+    // 2. In first workout flow (hasn't completed first workout yet)
+    // 3. Workout has no exercises yet (empty state)
+    // 4. Hasn't seen this overlay before
+    if (onboardingState.isInGuidedFirstWorkout &&
+        (currentWorkout == null || currentWorkout.exercises.isEmpty) &&
+        !onboardingState.hasSeenOverlay('firstWorkoutWelcome')) {
+      // Wait a bit for UI to settle
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      if (mounted) {
+        await ContextualOverlayManager.show(
+          context: context,
+          ref: ref,
+          overlayId: 'firstWorkoutWelcome',
+          targetKey: _addExerciseFABKey,
+          message: ContextualOverlayManager.commonOverlays['firstWorkoutWelcome']!.message,
+          actionLabel: ContextualOverlayManager.commonOverlays['firstWorkoutWelcome']!.actionLabel,
+        );
+      }
+    }
   }
 
   @override
@@ -120,6 +162,56 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       currentWorkoutProvider.select((workout) => workout != null),
     );
 
+    // PHASE 2: Listen for first exercise added to show "addFirstSet" overlay
+    ref.listen(
+      currentWorkoutProvider.select((workout) => workout?.exercises.length ?? 0),
+      (previous, current) {
+        final onboardingState = ref.read(onboardingProvider);
+
+        // Show overlay when first exercise is added (0 → 1 transition)
+        if (previous == 0 && current == 1 && onboardingState.shouldShowAddFirstExercise) {
+          // Wait for UI to settle and modal to close
+          Future.delayed(const Duration(milliseconds: 800), () {
+            if (mounted) {
+              ContextualOverlayManager.show(
+                context: context,
+                ref: ref,
+                overlayId: 'addFirstSet',
+                targetKey: _addExerciseFABKey,
+                message: ContextualOverlayManager.commonOverlays['addFirstSet']!.message,
+                actionLabel: ContextualOverlayManager.commonOverlays['addFirstSet']!.actionLabel,
+              );
+            }
+          });
+        }
+      },
+    );
+
+    // PHASE 2: Listen for first set completed to show "completeFirstWorkout" overlay
+    ref.listen(
+      onboardingProvider.select((state) => state.hasCompletedFirstSet),
+      (previous, current) {
+        final onboardingState = ref.read(onboardingProvider);
+
+        // Show overlay when first set is completed AND user should see complete workout overlay
+        if (previous == false && current == true && onboardingState.shouldShowCompleteWorkout) {
+          // Wait for rest timer overlay to dismiss and UI to settle
+          Future.delayed(const Duration(milliseconds: 2500), () {
+            if (mounted) {
+              ContextualOverlayManager.show(
+                context: context,
+                ref: ref,
+                overlayId: 'completeFirstWorkout',
+                targetKey: _completeWorkoutButtonKey,
+                message: ContextualOverlayManager.commonOverlays['completeFirstWorkout']!.message,
+                actionLabel: ContextualOverlayManager.commonOverlays['completeFirstWorkout']!.actionLabel,
+              );
+            }
+          });
+        }
+      },
+    );
+
     if (kDebugMode) {
       debugPrint('🏗️ Current workout: $workoutName, hasExercises: $hasExercises');
     }
@@ -169,6 +261,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   ),
                 if (isActive)
                   IconButton(
+                    key: _completeWorkoutButtonKey, // PHASE 2: GlobalKey for contextual overlay
                     onPressed: () => _completeWorkout(context, ref),
                     icon: const Icon(Icons.check_circle),
                     tooltip: context.l10n.completeWorkout,
@@ -234,6 +327,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               )
             else
               DraggableActionButton(
+                key: _addExerciseFABKey, // PHASE 2: GlobalKey for contextual overlay
                 onPressed: () => _showAddExercise(context, ref),
                 icon: Icons.add,
                 label: AppLocalizations.of(context).addExercise,
@@ -318,7 +412,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tab Bar
-          Container(
+          ColoredBox(
             color: context.colors.surface,
             child: TabBar(
               labelColor: context.colors.primary,
@@ -1264,8 +1358,39 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     );
   }
 
-  void _updateExerciseSet(WidgetRef ref, String exerciseId, ExerciseSet updatedSet) {
+  Future<void> _updateExerciseSet(WidgetRef ref, String exerciseId, ExerciseSet updatedSet) async {
     ref.read(currentWorkoutProvider.notifier).updateExerciseSet(exerciseId, updatedSet);
+
+    // PHASE 2: Track first set completed for beginner guidance
+    if (updatedSet.isCompleted) {
+      final onboardingState = ref.read(onboardingProvider);
+      if (onboardingState.isInGuidedFirstWorkout && !onboardingState.hasCompletedFirstSet) {
+        await ref.read(onboardingProvider.notifier).markFirstSetCompleted();
+
+        // Show rest timer explanation overlay after first set
+        if (mounted) {
+          Future.delayed(const Duration(milliseconds: 500), () async {
+            if (mounted) {
+              await ContextualOverlayManager.show(
+                context: context,
+                ref: ref,
+                overlayId: 'restTimerExplain',
+                targetKey: _addExerciseFABKey, // TODO: Should target timer widget if visible
+                message: ContextualOverlayManager.commonOverlays['restTimerExplain']!.message,
+                actionLabel: ContextualOverlayManager.commonOverlays['restTimerExplain']!.actionLabel,
+              );
+
+              // Mark rest timer explanation as seen
+              await ref.read(onboardingProvider.notifier).markRestTimerExplanationSeen();
+            }
+          });
+        }
+
+        if (kDebugMode) {
+          debugPrint('✅ PHASE 2: First set completed, rest timer explanation shown');
+        }
+      }
+    }
   }
 
   void _updateSupersetSet(WidgetRef ref, String exerciseId, SupersetSet updatedSupersetSet) {
@@ -1298,7 +1423,17 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     }
   }
 
-  void _completeWorkout(BuildContext context, WidgetRef ref) {
+  Future<void> _completeWorkout(BuildContext context, WidgetRef ref) async {
+    // PHASE 2: Track first workout completed for beginner guidance
+    final onboardingState = ref.read(onboardingProvider);
+    if (onboardingState.isInGuidedFirstWorkout) {
+      await ref.read(onboardingProvider.notifier).markFirstWorkoutCompleted();
+
+      if (kDebugMode) {
+        debugPrint('🎉 PHASE 2: First workout completed! Phase 2 complete');
+      }
+    }
+
     // ✅ NEW: Immediate completion without confirmation dialog
     // Save workout immediately
     ref.read(currentWorkoutProvider.notifier).completeWorkout(context);

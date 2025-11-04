@@ -195,7 +195,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
               children: [
                 // Header with success animation
                 Container(
-                  padding: EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -205,7 +205,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                         color.withValues(alpha: 0.05),
                       ],
                     ),
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                   ),
                   child: Column(
                     children: [
@@ -252,7 +252,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                         ],
                       ),
                       
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
                       
                       // Title
                       Text(
@@ -262,7 +262,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                         ),
                       ),
                       
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       
                       // Subtitle
                       Text(
@@ -305,33 +305,33 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                 
                 // Action Buttons
                 Padding(
-                  padding: EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(24),
                   child: Row(
                     children: [
                       Expanded(
                         child: OutlinedButton(
                           onPressed: widget.onViewContribution,
                           style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text('I Miei Contributi'),
+                          child: const Text('I Miei Contributi'),
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: FilledButton(
                           onPressed: widget.onClose,
                           style: FilledButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                             backgroundColor: color,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text('Fantastico!'),
+                          child: const Text('Fantastico!'),
                         ),
                       ),
                     ],

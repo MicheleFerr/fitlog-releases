@@ -32,9 +32,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// FASE 1: Implementazione base
 /// FASE 2: Aggiunto error handling con Either
 class ExerciseChartRepositoryImpl implements ExerciseChartRepository {
-  final Ref _ref;
 
   const ExerciseChartRepositoryImpl(this._ref);
+  final Ref _ref;
 
   @override
   Future<Either<ChartFailure, List<ChartDataPoint>>> getChartData({

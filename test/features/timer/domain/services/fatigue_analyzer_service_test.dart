@@ -216,7 +216,7 @@ void main() {
     });
 
     test('should scale rest time with fatigue levels', () {
-      final exercise = 'bench_press';
+      const exercise = 'bench_press';
 
       final lowFatigue = service.predictOptimalRestTime(10.0, exercise);
       final medFatigue = service.predictOptimalRestTime(50.0, exercise);

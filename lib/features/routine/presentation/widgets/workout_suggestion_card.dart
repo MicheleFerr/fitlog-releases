@@ -20,10 +20,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 /// )
 /// ```
 class WorkoutSuggestionCard extends StatelessWidget {
-  final WorkoutSuggestion suggestion;
-  final void Function(String workoutName)? onStartWorkout;
-  final VoidCallback? onShowAlternatives;
-  final VoidCallback? onWhyThisSuggestion;
 
   const WorkoutSuggestionCard({
     super.key,
@@ -32,6 +28,10 @@ class WorkoutSuggestionCard extends StatelessWidget {
     this.onShowAlternatives,
     this.onWhyThisSuggestion,
   });
+  final WorkoutSuggestion suggestion;
+  final void Function(String workoutName)? onStartWorkout;
+  final VoidCallback? onShowAlternatives;
+  final VoidCallback? onWhyThisSuggestion;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Suggested Next Workout', // TODO: Localize
+                    context.l10n.suggestedNextWorkout,
                     style: context.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -148,7 +148,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
                         ? () => onStartWorkout!(suggestion.workoutName)
                         : null,
                     icon: const Icon(AppIcons.play),
-                    label: const Text('Start This Workout'), // TODO: Localize
+                    label: Text(context.l10n.startThisWorkout),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
@@ -161,7 +161,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Alternatives'), // TODO: Localize
+                    child: Text(context.l10n.alternatives)
                   ),
                 ),
               ],
@@ -173,7 +173,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: onWhyThisSuggestion,
                   icon: const Icon(AppIcons.help, size: 18),
-                  label: const Text('Why This Suggestion?'), // TODO: Localize
+                  label: Text(context.l10n.whyThisSuggestion),
                   style: TextButton.styleFrom(
                     textStyle: context.textTheme.bodySmall,
                   ),
@@ -222,7 +222,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
           Icon(icon, size: 16, color: textColor),
           const SizedBox(width: 6),
           Text(
-            _getLevelDisplayName(suggestion.level),
+            _getLevelDisplayName(context, suggestion.level),
             style: context.textTheme.labelSmall?.copyWith(
               color: textColor,
               fontWeight: FontWeight.bold,
@@ -254,7 +254,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Confidence',
+              context.l10n.confidence,
               style: context.textTheme.labelMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
@@ -288,29 +288,29 @@ class WorkoutSuggestionCard extends StatelessWidget {
     return name[0].toUpperCase() + name.substring(1);
   }
 
-  /// Get level display name (TODO: Localize)
-  String _getLevelDisplayName(SuggestionLevel level) {
+  /// Get level display name
+  String _getLevelDisplayName(BuildContext context, SuggestionLevel level) {
     switch (level) {
       case SuggestionLevel.pattern:
-        return 'Pattern';
+        return context.l10n.levelPattern;
       case SuggestionLevel.routine:
-        return 'Routine';
+        return context.l10n.levelRoutine;
       case SuggestionLevel.frequency:
-        return 'Frequent';
+        return context.l10n.levelFrequent;
       case SuggestionLevel.dayBased:
-        return 'Default';
+        return context.l10n.levelDefault;
     }
   }
 }
 
 /// Empty state widget when no suggestion available
 class WorkoutSuggestionEmptyState extends StatelessWidget {
-  final VoidCallback? onCreateWorkout;
 
   const WorkoutSuggestionEmptyState({
     super.key,
     this.onCreateWorkout,
   });
+  final VoidCallback? onCreateWorkout;
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +329,7 @@ class WorkoutSuggestionEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Not enough workout data yet', // TODO: Localize
+              context.l10n.notEnoughWorkoutData,
               style: context.textTheme.titleMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
@@ -337,7 +337,7 @@ class WorkoutSuggestionEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Complete at least 6 workouts to get personalized suggestions', // TODO: Localize
+              context.l10n.completeWorkoutsForSuggestions,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
               ),
@@ -348,7 +348,7 @@ class WorkoutSuggestionEmptyState extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onCreateWorkout,
                 icon: const Icon(AppIcons.add),
-                label: const Text('Create Workout'), // TODO: Localize
+                label: Text(context.l10n.createWorkout),
               ),
             ],
           ],
@@ -367,15 +367,15 @@ class WorkoutSuggestionLoadingState extends StatelessWidget {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: const Padding(
-        padding: EdgeInsets.all(48),
+      child: Padding(
+        padding: const EdgeInsets.all(48),
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              LoadingIndicator(),
-              SizedBox(height: 16),
-              Text('Analyzing your workout pattern...'), // TODO: Localize
+              const LoadingIndicator(),
+              const SizedBox(height: 16),
+              Text(context.l10n.analyzingWorkoutPattern),
             ],
           ),
         ),

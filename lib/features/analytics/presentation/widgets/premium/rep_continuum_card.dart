@@ -56,7 +56,7 @@ class RepContinuumCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       l10n.repContinuumSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -67,12 +67,12 @@ class RepContinuumCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.info_outline),
+                icon: const Icon(Icons.info_outline),
                 onPressed: () => _showScientificExplanation(context),
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // Total sets counter
           Container(
@@ -89,7 +89,7 @@ class RepContinuumCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Strength Zone
           _buildZoneRow(
@@ -100,7 +100,7 @@ class RepContinuumCard extends StatelessWidget {
             context.colors.error,
             l10n.strengthZoneDesc,
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           // Hypertrophy Zone
           _buildZoneRow(
@@ -111,7 +111,7 @@ class RepContinuumCard extends StatelessWidget {
             theme.colorScheme.primary,
             l10n.hypertrophyZoneDesc,
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           // Endurance Zone
           _buildZoneRow(
@@ -122,15 +122,15 @@ class RepContinuumCard extends StatelessWidget {
             context.colors.success,
             l10n.enduranceZoneDesc,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // Visual stacked bar
           _buildStackedBar(context, data),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Recommendation
           _buildRecommendation(context, data),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Scientific citation
           _buildScientificCitation(context),
@@ -159,7 +159,7 @@ class RepContinuumCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(2),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,7 +309,7 @@ class RepContinuumCard extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: iconColor, size: 20),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               recommendation,
@@ -346,7 +346,7 @@ class RepContinuumCard extends StatelessWidget {
               size: 20,
               color: theme.colorScheme.primary,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -358,7 +358,7 @@ class RepContinuumCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
                     'Schoenfeld et al. (2021) - J Strength Cond Res',
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -418,14 +418,14 @@ class RepContinuumCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       l10n.repContinuumScientificSubtitle,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
                     // Paper info
                     _buildPaperCard(
@@ -435,7 +435,7 @@ class RepContinuumCard extends StatelessWidget {
                       l10n.repContinuumPaperSummary,
                       'https://doi.org/10.1519/JSC.0000000000003932',
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Key findings
                     Text(
@@ -444,7 +444,7 @@ class RepContinuumCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
                     _buildFindingItem(
                       context,
@@ -452,21 +452,21 @@ class RepContinuumCard extends StatelessWidget {
                       Icons.fitness_center,
                       context.colors.error,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding2,
                       Icons.trending_up,
                       theme.colorScheme.primary,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding3,
                       Icons.timer,
                       context.colors.success,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Practical application
                     Text(
@@ -475,7 +475,7 @@ class RepContinuumCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Text(
                       l10n.repContinuumPracticalAdvice,
                       style: theme.textTheme.bodyMedium?.copyWith(
@@ -522,7 +522,7 @@ class RepContinuumCard extends StatelessWidget {
                   Icons.article_outlined,
                   color: theme.colorScheme.primary,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -549,7 +549,7 @@ class RepContinuumCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               summary,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -581,7 +581,7 @@ class RepContinuumCard extends StatelessWidget {
           ),
           child: Icon(icon, size: 20, color: color),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: Text(
             text,

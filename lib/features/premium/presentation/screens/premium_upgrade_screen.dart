@@ -18,7 +18,6 @@ import 'package:gymbro_flutter_new/features/premium/presentation/providers/premi
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -75,7 +74,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     }
     
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -282,7 +281,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(
             color: isPopular ? colorScheme.primary : colorScheme.outline,
