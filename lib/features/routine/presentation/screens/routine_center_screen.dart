@@ -29,9 +29,11 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_onboarding_provider.dart';
+// TODO: Reimplementare onboarding migliore
+// import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/routine_card.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/onboarding/routine_onboarding_screen.dart';
+// TODO: Reimplementare onboarding migliore
+// import 'package:gymbro_flutter_new/features/routine/presentation/widgets/onboarding/routine_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_recovery_dialog.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
@@ -56,31 +58,33 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
   @override
   void initState() {
     super.initState();
+    // TODO: Reimplementare onboarding migliore
     // Check onboarding status after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkOnboarding();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _checkOnboarding();
+    // });
   }
 
-  Future<void> _checkOnboarding() async {
-    final hasSeenOnboarding = ref.read(routineOnboardingProvider);
-
-    if (!hasSeenOnboarding && mounted) {
-      // Show onboarding as fullscreen dialog
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (context) => RoutineOnboardingScreen(
-            onComplete: () {
-              // Mark as completed
-              ref.read(routineOnboardingProvider.notifier).completeOnboarding();
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-      );
-    }
-  }
+  // TODO: Reimplementare onboarding migliore
+  // Future<void> _checkOnboarding() async {
+  //   final hasSeenOnboarding = ref.read(routineOnboardingProvider);
+  //
+  //   if (!hasSeenOnboarding && mounted) {
+  //     // Show onboarding as fullscreen dialog
+  //     await Navigator.of(context).push(
+  //       MaterialPageRoute(
+  //         fullscreenDialog: true,
+  //         builder: (context) => RoutineOnboardingScreen(
+  //           onComplete: () {
+  //             // Mark as completed
+  //             ref.read(routineOnboardingProvider.notifier).completeOnboarding();
+  //             Navigator.of(context).pop();
+  //           },
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -124,26 +128,27 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             iconSize: 28,
             tooltip: 'Create New Routine',
           ),
+          // TODO: Reimplementare onboarding migliore
           // More options menu
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'tutorial') {
-                _showTutorialAgain();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'tutorial',
-                child: Row(
-                  children: [
-                    Icon(AppIcons.education, size: 20),
-                    SizedBox(width: 12),
-                    Text('Show Tutorial'),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          // PopupMenuButton<String>(
+          //   onSelected: (value) {
+          //     if (value == 'tutorial') {
+          //       _showTutorialAgain();
+          //     }
+          //   },
+          //   itemBuilder: (context) => [
+          //     const PopupMenuItem(
+          //       value: 'tutorial',
+          //       child: Row(
+          //         children: [
+          //           Icon(AppIcons.education, size: 20),
+          //           SizedBox(width: 12),
+          //           Text('Show Tutorial'),
+          //         ],
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
       body: routinesAsync.when(
@@ -434,19 +439,20 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     );
   }
 
-  void _showTutorialAgain() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) => RoutineOnboardingScreen(
-          onComplete: () {
-            Navigator.of(context).pop();
-            SnackBarService.showSuccess(context, 'Tutorial completed! 📚');
-          },
-        ),
-      ),
-    );
-  }
+  // TODO: Reimplementare onboarding migliore
+  // void _showTutorialAgain() {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       fullscreenDialog: true,
+  //       builder: (context) => RoutineOnboardingScreen(
+  //         onComplete: () {
+  //           Navigator.of(context).pop();
+  //           SnackBarService.showSuccess(context, 'Tutorial completed! 📚');
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // === NAVIGATION ===
 
