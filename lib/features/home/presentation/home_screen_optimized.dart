@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_hub.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 // import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_pulse_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/enhanced_workout_banner.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
@@ -448,9 +449,14 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                   padding: const EdgeInsets.only(bottom: 8),
                   child: PremiumActionButton(
                     key: quickStartFabKey,
-                    onPressed: () => context.goNamed('workout'),
+                    onPressed: () {
+                      WorkoutAnalytics.trackEvent('fab_tapped', properties: {
+                        'timestamp': DateTime.now().toIso8601String(),
+                      });
+                      context.goNamed('workout');
+                    },
                     icon: Icons.add,
-                    label: l10n.quickStart,
+                    label: l10n.sessioneLibera,
                   ),
                 ),
               ],
@@ -459,9 +465,14 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
               padding: const EdgeInsets.only(bottom: 8),
               child: PremiumActionButton(
                 key: quickStartFabKey,
-                onPressed: () => context.goNamed('workout'),
+                onPressed: () {
+                  WorkoutAnalytics.trackEvent('fab_tapped', properties: {
+                    'timestamp': DateTime.now().toIso8601String(),
+                  });
+                  context.goNamed('workout');
+                },
                 icon: Icons.add,
-                label: l10n.quickStart,
+                label: l10n.sessioneLibera,
               ),
             ),
           ), // End of Scaffold

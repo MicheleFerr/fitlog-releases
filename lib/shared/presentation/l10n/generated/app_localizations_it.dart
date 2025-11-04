@@ -304,6 +304,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get quickWorkoutSubtitle => 'Inizia con allenamento vuoto';
 
   @override
+  String get sessioneLibera => 'Sessione Libera';
+
+  @override
+  String get suggested => 'Suggerito';
+
+  @override
+  String get notWhatYouWanted => '💡 Non è quello che volevi?';
+
+  @override
+  String get browseTemplates => 'Sfoglia Template';
+
+  @override
   String get upperBody => 'Parte Superiore';
 
   @override

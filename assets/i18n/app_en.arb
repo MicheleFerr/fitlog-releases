@@ -367,6 +367,22 @@
   "@quickWorkoutSubtitle": {
     "description": "Quick workout subtitle"
   },
+  "sessioneLibera": "Free Session",
+  "@sessioneLibera": {
+    "description": "Free session button label"
+  },
+  "suggested": "Suggested",
+  "@suggested": {
+    "description": "Suggested label for recommendations"
+  },
+  "notWhatYouWanted": "💡 Not what you wanted?",
+  "@notWhatYouWanted": {
+    "description": "Prompt to browse other options"
+  },
+  "browseTemplates": "Browse Templates",
+  "@browseTemplates": {
+    "description": "Button to browse workout templates"
+  },
   "upperBody": "Upper Body",
   "@upperBody": {
     "description": "Upper body workout template"

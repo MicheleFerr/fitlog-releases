@@ -303,6 +303,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickWorkoutSubtitle => 'Start with empty workout';
 
   @override
+  String get sessioneLibera => 'Free Session';
+
+  @override
+  String get suggested => 'Suggested';
+
+  @override
+  String get notWhatYouWanted => '💡 Not what you wanted?';
+
+  @override
+  String get browseTemplates => 'Browse Templates';
+
+  @override
   String get upperBody => 'Upper Body';
 
   @override

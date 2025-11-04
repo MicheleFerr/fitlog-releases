@@ -614,6 +614,30 @@ abstract class AppLocalizations {
   /// **'Start with empty workout'**
   String get quickWorkoutSubtitle;
 
+  /// Free session button label
+  ///
+  /// In en, this message translates to:
+  /// **'Free Session'**
+  String get sessioneLibera;
+
+  /// Suggested label for recommendations
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get suggested;
+
+  /// Prompt to browse other options
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Not what you wanted?'**
+  String get notWhatYouWanted;
+
+  /// Button to browse workout templates
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Templates'**
+  String get browseTemplates;
+
   /// Upper body workout template
   ///
   /// In en, this message translates to:
