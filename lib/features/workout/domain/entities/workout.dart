@@ -1,5 +1,8 @@
-import 'package:uuid/uuid.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+
+part 'workout.freezed.dart';
+part 'workout.g.dart';
 
 enum WorkoutStatus {
   planned,
@@ -8,59 +11,34 @@ enum WorkoutStatus {
   paused,
 }
 
-class Workout { // ID del template di origine (se creato da template)
+@freezed
+class Workout with _$Workout {
+  const factory Workout({
+    required String id,
+    required String name,
+    @Default([]) List<Exercise> exercises,
+    @Default(WorkoutStatus.planned) WorkoutStatus status,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? notes,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    String? templateId,
 
-  Workout({
-    String? id,
-    required this.name,
-    List<Exercise>? exercises,
-    this.status = WorkoutStatus.planned,
-    this.startTime,
-    this.endTime,
-    this.notes,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    this.templateId,
-  }) :
-    id = id ?? const Uuid().v4(),
-    exercises = exercises ?? [],
-    createdAt = createdAt ?? DateTime.now(),
-    updatedAt = updatedAt ?? DateTime.now();
+    // 🆕 Pre-load management
+    @Default(false) bool isPreloaded,
+    DateTime? preloadExpiry,
+    bool? exercisesModified,
 
-  factory Workout.fromJson(Map<String, dynamic> json) {
-    return Workout(
-      id: json['id'],
-      name: json['name'],
-      exercises: (json['exercises'] as List?)
-          ?.map((exerciseJson) => Exercise.fromJson(exerciseJson))
-          .toList() ?? [],
-      status: WorkoutStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => WorkoutStatus.planned,
-      ),
-      startTime: json['startTime'] != null
-          ? DateTime.parse(json['startTime'])
-          : null,
-      endTime: json['endTime'] != null
-          ? DateTime.parse(json['endTime'])
-          : null,
-      notes: json['notes'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      templateId: json['templateId'],
-    );
-  }
-  final String id;
-  final String name;
-  final List<Exercise> exercises;
-  final WorkoutStatus status;
-  final DateTime? startTime;
-  final DateTime? endTime;
-  final String? notes;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? templateId;
+    // 🆕 Analytics tracking
+    String? sessionId,
+  }) = _Workout;
 
+  const Workout._();
+
+  factory Workout.fromJson(Map<String, dynamic> json) => _$WorkoutFromJson(json);
+
+  // Computed properties
   Duration? get duration {
     if (startTime == null) return null;
     final end = endTime ?? DateTime.now();
@@ -68,8 +46,8 @@ class Workout { // ID del template di origine (se creato da template)
   }
 
   int get completedExercises {
-    return exercises.where((exercise) => 
-      exercise.sets.isNotEmpty && 
+    return exercises.where((exercise) =>
+      exercise.sets.isNotEmpty &&
       exercise.sets.every((set) => set.isCompleted)
     ).length;
   }
@@ -79,7 +57,7 @@ class Workout { // ID del template di origine (se creato da template)
   }
 
   int get completedSets {
-    return exercises.fold(0, (total, exercise) => 
+    return exercises.fold(0, (total, exercise) =>
       total + exercise.sets.where((set) => set.isCompleted).length
     );
   }
@@ -92,30 +70,7 @@ class Workout { // ID del template di origine (se creato da template)
   bool get isActive => status == WorkoutStatus.inProgress;
   bool get isCompleted => status == WorkoutStatus.completed;
 
-  Workout copyWith({
-    String? name,
-    List<Exercise>? exercises,
-    WorkoutStatus? status,
-    DateTime? startTime,
-    DateTime? endTime,
-    String? notes,
-    DateTime? updatedAt,
-    String? templateId,
-  }) {
-    return Workout(
-      id: id,
-      name: name ?? this.name,
-      exercises: exercises ?? this.exercises,
-      status: status ?? this.status,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      notes: notes ?? this.notes,
-      createdAt: createdAt,
-      updatedAt: updatedAt ?? DateTime.now(),
-      templateId: templateId ?? this.templateId,
-    );
-  }
-
+  // Helper methods
   Workout addExercise(Exercise exercise) {
     return copyWith(
       exercises: [...exercises, exercise],
@@ -132,7 +87,7 @@ class Workout { // ID del template di origine (se creato da template)
 
   Workout updateExercise(String exerciseId, Exercise updatedExercise) {
     return copyWith(
-      exercises: exercises.map((e) => 
+      exercises: exercises.map((e) =>
         e.id == exerciseId ? updatedExercise : e
       ).toList(),
       updatedAt: DateTime.now(),
@@ -168,20 +123,13 @@ class Workout { // ID del template di origine (se creato da template)
       updatedAt: DateTime.now(),
     );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'exercises': exercises.map((e) => e.toJson()).toList(),
-      'status': status.name,
-      'startTime': startTime?.toIso8601String(),
-      'endTime': endTime?.toIso8601String(),
-      'notes': notes,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'templateId': templateId,
-    };
+extension WorkoutExtensions on Workout {
+  /// Check if pre-loaded workout has expired
+  bool get isExpired {
+    if (!isPreloaded || preloadExpiry == null) return false;
+    return DateTime.now().isAfter(preloadExpiry!);
   }
 }
 
@@ -252,9 +200,9 @@ class WorkoutTemplate {
     final allExercises = exerciseDatabase.values
         .expand((exercises) => exercises)
         .toList();
-    
+
     return allExercises
-        .where((exercise) => 
+        .where((exercise) =>
             exercise.toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
