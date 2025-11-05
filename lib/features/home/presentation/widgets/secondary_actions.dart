@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/animated_icon_swap.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/pressable_card.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/gradient_action_card.dart';
 
-/// Secondary Actions widget for the optimized homepage - Minimal Flat Redesign
+/// Secondary Actions widget for the optimized homepage - Gradient Card Redesign
 ///
-/// Provides quick access to 4 core features with minimal flat design:
-/// - Analytics dashboard
-/// - Settings and customization
-/// - Exercise progress tracking
-/// - Workout history
+/// Provides quick access to 4 core features with gradient personality:
+/// - Analytics dashboard (Blue → Purple gradient)
+/// - Exercise progress tracking (Green → Teal gradient)
+/// - Workout history (Orange → Pink gradient)
+/// - Settings and customization (Gray → Purple gradient)
 ///
 /// Design:
-/// - 2 columns grid layout (better readability)
-/// - Minimal flat cards (no glassmorphism)
-/// - Standardized press animations via PressableCard
-/// - Icon swap on press (normal → rounded)
-/// - Title only (no subtitle for cleaner look)
+/// - 2 columns grid layout (centered composition)
+/// - Radial gradients with WCAG AA compliance
+/// - Accessibility-first (reduced motion, haptic, semantic)
+/// - Staggered animations (icon 100ms, card 150ms)
+/// - Material Design 3 aligned
 class SecondaryActions extends ConsumerWidget {
   const SecondaryActions({
     super.key,
@@ -89,128 +87,91 @@ class SecondaryActions extends ConsumerWidget {
     BuildContext context,
     AppLocalizations l10n,
   ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return [
-      // Analytics
-      _SecondaryActionCard(
+      // Analytics - Blue → Purple gradient
+      GradientActionCard(
         key: analyticsKey,
         outlinedIcon: AppIcons.analytics,
         filledIcon: AppIcons.analyticsRounded,
         title: l10n.analytics,
-        accentColor: _SecondaryActionColors.analytics(context),
+        gradient: RadialGradient(
+          center: Alignment.center,
+          radius: 1.2,
+          colors: [
+            colorScheme.primary,
+            colorScheme.tertiary.withValues(alpha: 0.7),
+          ],
+          stops: const [0.0, 0.7],
+        ),
+        accentColor: colorScheme.primary,
         onTap: () => context.goNamed('analytics'),
       ),
 
-      // Exercise Progress
-      _SecondaryActionCard(
+      // Exercise Progress - Green → Teal gradient
+      GradientActionCard(
         outlinedIcon: AppIcons.insights,
         filledIcon: AppIcons.insightsRounded,
         title: l10n.exerciseProgress,
-        accentColor: _SecondaryActionColors.exerciseProgress(context),
+        gradient: RadialGradient(
+          center: Alignment.center,
+          radius: 1.2,
+          colors: [
+            colorScheme.success.withValues(alpha: 0.85),
+            Color.lerp(
+              colorScheme.success,
+              colorScheme.primary.withValues(alpha: 0.6),
+              0.5,
+            )!,
+          ],
+          stops: const [0.0, 0.7],
+        ),
+        accentColor: colorScheme.success,
         onTap: () => context.push('/exercise-progress'),
       ),
 
-      // Workout History
-      _SecondaryActionCard(
+      // Workout History - Orange → Pink gradient
+      GradientActionCard(
         key: historyKey,
         outlinedIcon: AppIcons.historyOutlined,
         filledIcon: AppIcons.history,
         title: l10n.history,
-        accentColor: _SecondaryActionColors.history(context),
+        gradient: RadialGradient(
+          center: Alignment.center,
+          radius: 1.2,
+          colors: [
+            colorScheme.secondary,
+            colorScheme.error.withValues(alpha: 0.5),
+          ],
+          stops: const [0.0, 0.7],
+        ),
+        accentColor: colorScheme.secondary,
         onTap: () => context.pushNamed('workout-history'),
       ),
 
-      // Settings
-      _SecondaryActionCard(
+      // Settings - Gray → Purple gradient
+      GradientActionCard(
         outlinedIcon: AppIcons.settings,
         filledIcon: AppIcons.settingsRounded,
         title: l10n.settings,
-        accentColor: _SecondaryActionColors.settings(context),
+        gradient: RadialGradient(
+          center: Alignment.center,
+          radius: 1.2,
+          colors: [
+            Color.lerp(
+              colorScheme.surfaceContainerHighest,
+              colorScheme.tertiary,
+              0.4,
+            )!,
+            colorScheme.tertiary.withValues(alpha: 0.4),
+          ],
+          stops: const [0.0, 0.7],
+        ),
+        accentColor: colorScheme.tertiary,
         onTap: () => context.goNamed('settings'),
       ),
     ];
   }
-}
-
-/// Minimal flat card for secondary actions using PressableCard wrapper
-class _SecondaryActionCard extends StatefulWidget {
-  const _SecondaryActionCard({
-    super.key,
-    required this.outlinedIcon,
-    required this.filledIcon,
-    required this.title,
-    required this.accentColor,
-    required this.onTap,
-  });
-
-  final IconData outlinedIcon;
-  final IconData filledIcon;
-  final String title;
-  final Color accentColor;
-  final VoidCallback onTap;
-
-  @override
-  State<_SecondaryActionCard> createState() => _SecondaryActionCardState();
-}
-
-class _SecondaryActionCardState extends State<_SecondaryActionCard> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      child: PressableCard(
-        accentColor: widget.accentColor,
-        onTap: widget.onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(20), // More breathing room with 2 columns
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Icon with animated swap
-              AnimatedIconSwap(
-                outlinedIcon: widget.outlinedIcon,
-                filledIcon: widget.filledIcon,
-                isPressed: _isPressed,
-                color: _isPressed
-                    ? widget.accentColor
-                    : context.colors.onSurface.withValues(alpha: 0.75),
-                size: AppAnimations.iconSizeLarge, // Larger icon for 2-column layout
-              ),
-
-              const SizedBox(height: 12), // More spacing with 2 columns
-
-              // Title only (no subtitle)
-              Text(
-                widget.title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: context.colors.onSurface,
-                    ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Accent colors for different secondary action categories
-/// Using theme-aware colors instead of hardcoded values
-class _SecondaryActionColors {
-  static Color analytics(BuildContext context) =>
-      context.colors.primary; // Purple - data/insights
-  static Color settings(BuildContext context) =>
-      context.colors.secondary.withValues(alpha: 0.9); // Neutral - customization
-  static Color exerciseProgress(BuildContext context) =>
-      context.colors.tertiary; // Blue - growth/charts
-  static Color history(BuildContext context) =>
-      context.colors.primary.withValues(alpha: 0.8); // Past/heritage
 }

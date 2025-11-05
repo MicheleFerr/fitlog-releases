@@ -9,11 +9,12 @@ import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.
 /// Usage:
 /// ```dart
 /// AnimatedIconSwap(
-///   outlinedIcon: Icons.analytics_outlined,
-///   filledIcon: Icons.analytics,
+///   outlinedIcon: AppIcons.analytics,
+///   filledIcon: AppIcons.analyticsRounded,
 ///   isPressed: _isPressed,
-///   color: Colors.purple,
-///   size: 28,
+///   color: context.iconPrimary,
+///   size: AppIconSize.large,
+///   duration: Duration(milliseconds: 100), // Optional: custom duration
 /// )
 /// ```
 class AnimatedIconSwap extends StatelessWidget {
@@ -24,6 +25,7 @@ class AnimatedIconSwap extends StatelessWidget {
     required this.isPressed,
     this.color,
     this.size,
+    this.duration,
   });
 
   /// Outlined icon variant (shown when not pressed)
@@ -41,10 +43,13 @@ class AnimatedIconSwap extends StatelessWidget {
   /// Icon size (optional, defaults to theme size)
   final double? size;
 
+  /// Animation duration (optional, defaults to AppAnimations.iconSwap)
+  final Duration? duration;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: AppAnimations.iconSwap,
+      duration: duration ?? AppAnimations.iconSwap,
       transitionBuilder: (Widget child, Animation<double> animation) {
         return ScaleTransition(
           scale: animation,
