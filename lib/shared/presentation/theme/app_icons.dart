@@ -462,6 +462,7 @@ class AppIcons {
   static const IconData checkRounded = Icons.check_rounded;
 
   // analytics variants (total: 36 usages)
+  static const IconData analyticsOutlined = Icons.analytics_outlined;
   static const IconData analyticsRounded = Icons.analytics_rounded;
 
   // emoji_events variants (total: 35 usages)
@@ -499,6 +500,7 @@ class AppIcons {
   static const IconData infoOutlined = Icons.info_outlined;
 
   // settings variants (total: 16 usages)
+  static const IconData settingsOutlined = Icons.settings_outlined;
   static const IconData settingsRounded = Icons.settings_rounded;
 
   // rocket_launch variants (total: 15 usages)
@@ -509,6 +511,7 @@ class AppIcons {
   static const IconData calendarMonthRounded = Icons.calendar_month_rounded;
 
   // insights variants (total: 13 usages)
+  static const IconData insightsOutlined = Icons.insights_outlined;
   static const IconData insightsRounded = Icons.insights_rounded;
 
   // whatshot variants (total: 13 usages)
