@@ -2553,6 +2553,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get match => 'corrispondenza';
 
   @override
+  String get linkedTo => 'Collegato a';
+
+  @override
   String get skipExercise => 'Salta Esercizio';
 
   @override

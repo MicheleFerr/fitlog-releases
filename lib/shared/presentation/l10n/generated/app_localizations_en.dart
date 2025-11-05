@@ -2537,6 +2537,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get match => 'match';
 
   @override
+  String get linkedTo => 'Linked to';
+
+  @override
   String get skipExercise => 'Skip Exercise';
 
   @override

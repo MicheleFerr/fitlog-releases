@@ -774,6 +774,7 @@
   "originalExercise": "Esercizio originale",
   "suggestedMatches": "Corrispondenze suggerite",
   "match": "corrispondenza",
+  "linkedTo": "Collegato a",
   "skipExercise": "Salta Esercizio",
   "createNewExercise": "Crea Nuovo",
   "useSelectedExercise": "Usa Selezionato",

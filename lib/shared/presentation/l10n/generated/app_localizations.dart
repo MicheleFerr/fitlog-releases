@@ -4769,6 +4769,12 @@ abstract class AppLocalizations {
   /// **'match'**
   String get match;
 
+  /// Label for workout already linked to another date
+  ///
+  /// In en, this message translates to:
+  /// **'Linked to'**
+  String get linkedTo;
+
   /// Button to skip current exercise
   ///
   /// In en, this message translates to:

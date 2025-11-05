@@ -3333,6 +3333,10 @@
   "@match": {
     "description": "Match percentage label"
   },
+  "linkedTo": "Linked to",
+  "@linkedTo": {
+    "description": "Label for workout already linked to another date"
+  },
   "skipExercise": "Skip Exercise",
   "@skipExercise": {
     "description": "Button to skip current exercise"
