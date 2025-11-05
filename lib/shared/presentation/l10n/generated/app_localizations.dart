@@ -11351,10 +11351,10 @@ abstract class AppLocalizations {
   /// **'Better recovery between sessions and higher quality sets'**
   String get strategyHighvolumeincreasefreqOutcome;
 
-  /// Filter label for recommendation type filter
+  /// Filter label for contribution type
   ///
   /// In en, this message translates to:
-  /// **'Filter by Type'**
+  /// **'Type'**
   String get filterByType;
 
   /// Filter label for recommendation priority filter
@@ -22013,6 +22013,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trending'**
   String get sortByTrending;
+
+  /// Filter label for difficulty level
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get filterByDifficulty;
+
+  /// Filter label for author tier
+  ///
+  /// In en, this message translates to:
+  /// **'Author'**
+  String get filterByAuthorTier;
+
+  /// Filter label for date range
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get filterByDateRange;
+
+  /// Button to reset filters to default
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetFilters;
+
+  /// Label for start date in date range filter
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get dateFrom;
+
+  /// Label for end date in date range filter
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get dateTo;
+
+  /// Contribution type: correction to exercise information
+  ///
+  /// In en, this message translates to:
+  /// **'Correction'**
+  String get contributionTypeCorrection;
+
+  /// Contribution type: helpful tip or advice
+  ///
+  /// In en, this message translates to:
+  /// **'Tip'**
+  String get contributionTypeTip;
+
+  /// Contribution type: safety warning or caution
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get contributionTypeWarning;
+
+  /// Contribution type: exercise variant or alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Variant'**
+  String get contributionTypeVariant;
+
+  /// Contribution type: translation improvement
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get contributionTypeTranslation;
+
+  /// Contribution type: technique advice or form tip
+  ///
+  /// In en, this message translates to:
+  /// **'Technique'**
+  String get contributionTypeTechnique;
+
+  /// Difficulty level: beginner
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get difficultyBeginner;
+
+  /// Difficulty level: intermediate
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get difficultyIntermediate;
+
+  /// Difficulty level: advanced
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get difficultyAdvanced;
+
+  /// Author tier: community member
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get authorTierCommunity;
+
+  /// Author tier: verified expert
+  ///
+  /// In en, this message translates to:
+  /// **'Expert'**
+  String get authorTierExpert;
+
+  /// Author tier: administrator
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get authorTierAdmin;
+
+  /// Label for number of times a contribution was saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saves'**
+  String get saves;
+
+  /// Label for number of views on a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Views'**
+  String get views;
+
+  /// Label for number of comments on a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get comments;
+
+  /// Button to save a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveContribution;
+
+  /// Button to remove a saved contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Unsave'**
+  String get unsaveContribution;
+
+  /// Label indicating a contribution is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get saved;
 }
 
 class _AppLocalizationsDelegate

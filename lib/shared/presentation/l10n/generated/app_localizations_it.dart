@@ -6412,7 +6412,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Miglior recupero tra sessioni e serie di qualità superiore';
 
   @override
-  String get filterByType => 'Filtra per Tipo';
+  String get filterByType => 'Tipo';
 
   @override
   String get filterByPriority => 'Filtra per Priorità';
@@ -12609,4 +12609,76 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sortByTrending => 'Trending';
+
+  @override
+  String get filterByDifficulty => 'Difficoltà';
+
+  @override
+  String get filterByAuthorTier => 'Autore';
+
+  @override
+  String get filterByDateRange => 'Periodo';
+
+  @override
+  String get resetFilters => 'Ripristina';
+
+  @override
+  String get dateFrom => 'Da';
+
+  @override
+  String get dateTo => 'A';
+
+  @override
+  String get contributionTypeCorrection => 'Correzione';
+
+  @override
+  String get contributionTypeTip => 'Consiglio';
+
+  @override
+  String get contributionTypeWarning => 'Avviso';
+
+  @override
+  String get contributionTypeVariant => 'Variante';
+
+  @override
+  String get contributionTypeTranslation => 'Traduzione';
+
+  @override
+  String get contributionTypeTechnique => 'Tecnica';
+
+  @override
+  String get difficultyBeginner => 'Principiante';
+
+  @override
+  String get difficultyIntermediate => 'Intermedio';
+
+  @override
+  String get difficultyAdvanced => 'Avanzato';
+
+  @override
+  String get authorTierCommunity => 'Community';
+
+  @override
+  String get authorTierExpert => 'Esperto';
+
+  @override
+  String get authorTierAdmin => 'Admin';
+
+  @override
+  String get saves => 'Salvati';
+
+  @override
+  String get views => 'Visualizzazioni';
+
+  @override
+  String get comments => 'Commenti';
+
+  @override
+  String get saveContribution => 'Salva';
+
+  @override
+  String get unsaveContribution => 'Rimuovi';
+
+  @override
+  String get saved => 'Salvato';
 }

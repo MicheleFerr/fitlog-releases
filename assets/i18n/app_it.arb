@@ -5443,5 +5443,105 @@
   "sortByTrending": "Trending",
   "@sortByTrending": {
     "description": "Opzione ordinamento per contributi trending"
+  },
+  "filterByDifficulty": "Difficoltà",
+  "@filterByDifficulty": {
+    "description": "Etichetta filtro per livello di difficoltà"
+  },
+  "filterByType": "Tipo",
+  "@filterByType": {
+    "description": "Etichetta filtro per tipo di contributo"
+  },
+  "filterByAuthorTier": "Autore",
+  "@filterByAuthorTier": {
+    "description": "Etichetta filtro per livello autore"
+  },
+  "filterByDateRange": "Periodo",
+  "@filterByDateRange": {
+    "description": "Etichetta filtro per intervallo di date"
+  },
+  "resetFilters": "Ripristina",
+  "@resetFilters": {
+    "description": "Pulsante per ripristinare i filtri ai valori predefiniti"
+  },
+  "dateFrom": "Da",
+  "@dateFrom": {
+    "description": "Etichetta per data di inizio nell'intervallo di date"
+  },
+  "dateTo": "A",
+  "@dateTo": {
+    "description": "Etichetta per data di fine nell'intervallo di date"
+  },
+  "contributionTypeCorrection": "Correzione",
+  "@contributionTypeCorrection": {
+    "description": "Tipo di contributo: correzione di informazioni sull'esercizio"
+  },
+  "contributionTypeTip": "Consiglio",
+  "@contributionTypeTip": {
+    "description": "Tipo di contributo: consiglio utile o suggerimento"
+  },
+  "contributionTypeWarning": "Avviso",
+  "@contributionTypeWarning": {
+    "description": "Tipo di contributo: avviso di sicurezza o attenzione"
+  },
+  "contributionTypeVariant": "Variante",
+  "@contributionTypeVariant": {
+    "description": "Tipo di contributo: variante o alternativa dell'esercizio"
+  },
+  "contributionTypeTranslation": "Traduzione",
+  "@contributionTypeTranslation": {
+    "description": "Tipo di contributo: miglioramento della traduzione"
+  },
+  "contributionTypeTechnique": "Tecnica",
+  "@contributionTypeTechnique": {
+    "description": "Tipo di contributo: consiglio sulla tecnica o forma"
+  },
+  "difficultyBeginner": "Principiante",
+  "@difficultyBeginner": {
+    "description": "Livello di difficoltà: principiante"
+  },
+  "difficultyIntermediate": "Intermedio",
+  "@difficultyIntermediate": {
+    "description": "Livello di difficoltà: intermedio"
+  },
+  "difficultyAdvanced": "Avanzato",
+  "@difficultyAdvanced": {
+    "description": "Livello di difficoltà: avanzato"
+  },
+  "authorTierCommunity": "Community",
+  "@authorTierCommunity": {
+    "description": "Livello autore: membro della community"
+  },
+  "authorTierExpert": "Esperto",
+  "@authorTierExpert": {
+    "description": "Livello autore: esperto verificato"
+  },
+  "authorTierAdmin": "Admin",
+  "@authorTierAdmin": {
+    "description": "Livello autore: amministratore"
+  },
+  "saves": "Salvati",
+  "@saves": {
+    "description": "Etichetta per numero di volte che un contributo è stato salvato"
+  },
+  "views": "Visualizzazioni",
+  "@views": {
+    "description": "Etichetta per numero di visualizzazioni di un contributo"
+  },
+  "comments": "Commenti",
+  "@comments": {
+    "description": "Etichetta per numero di commenti su un contributo"
+  },
+  "saveContribution": "Salva",
+  "@saveContribution": {
+    "description": "Pulsante per salvare un contributo"
+  },
+  "unsaveContribution": "Rimuovi",
+  "@unsaveContribution": {
+    "description": "Pulsante per rimuovere un contributo salvato"
+  },
+  "saved": "Salvato",
+  "@saved": {
+    "description": "Etichetta che indica che un contributo è salvato"
   }
 }

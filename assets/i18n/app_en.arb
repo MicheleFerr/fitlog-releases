@@ -14919,5 +14919,105 @@
   "sortByTrending": "Trending",
   "@sortByTrending": {
     "description": "Sort option for trending contributions"
+  },
+  "filterByDifficulty": "Difficulty",
+  "@filterByDifficulty": {
+    "description": "Filter label for difficulty level"
+  },
+  "filterByType": "Type",
+  "@filterByType": {
+    "description": "Filter label for contribution type"
+  },
+  "filterByAuthorTier": "Author",
+  "@filterByAuthorTier": {
+    "description": "Filter label for author tier"
+  },
+  "filterByDateRange": "Date Range",
+  "@filterByDateRange": {
+    "description": "Filter label for date range"
+  },
+  "resetFilters": "Reset",
+  "@resetFilters": {
+    "description": "Button to reset filters to default"
+  },
+  "dateFrom": "From",
+  "@dateFrom": {
+    "description": "Label for start date in date range filter"
+  },
+  "dateTo": "To",
+  "@dateTo": {
+    "description": "Label for end date in date range filter"
+  },
+  "contributionTypeCorrection": "Correction",
+  "@contributionTypeCorrection": {
+    "description": "Contribution type: correction to exercise information"
+  },
+  "contributionTypeTip": "Tip",
+  "@contributionTypeTip": {
+    "description": "Contribution type: helpful tip or advice"
+  },
+  "contributionTypeWarning": "Warning",
+  "@contributionTypeWarning": {
+    "description": "Contribution type: safety warning or caution"
+  },
+  "contributionTypeVariant": "Variant",
+  "@contributionTypeVariant": {
+    "description": "Contribution type: exercise variant or alternative"
+  },
+  "contributionTypeTranslation": "Translation",
+  "@contributionTypeTranslation": {
+    "description": "Contribution type: translation improvement"
+  },
+  "contributionTypeTechnique": "Technique",
+  "@contributionTypeTechnique": {
+    "description": "Contribution type: technique advice or form tip"
+  },
+  "difficultyBeginner": "Beginner",
+  "@difficultyBeginner": {
+    "description": "Difficulty level: beginner"
+  },
+  "difficultyIntermediate": "Intermediate",
+  "@difficultyIntermediate": {
+    "description": "Difficulty level: intermediate"
+  },
+  "difficultyAdvanced": "Advanced",
+  "@difficultyAdvanced": {
+    "description": "Difficulty level: advanced"
+  },
+  "authorTierCommunity": "Community",
+  "@authorTierCommunity": {
+    "description": "Author tier: community member"
+  },
+  "authorTierExpert": "Expert",
+  "@authorTierExpert": {
+    "description": "Author tier: verified expert"
+  },
+  "authorTierAdmin": "Admin",
+  "@authorTierAdmin": {
+    "description": "Author tier: administrator"
+  },
+  "saves": "Saves",
+  "@saves": {
+    "description": "Label for number of times a contribution was saved"
+  },
+  "views": "Views",
+  "@views": {
+    "description": "Label for number of views on a contribution"
+  },
+  "comments": "Comments",
+  "@comments": {
+    "description": "Label for number of comments on a contribution"
+  },
+  "saveContribution": "Save",
+  "@saveContribution": {
+    "description": "Button to save a contribution"
+  },
+  "unsaveContribution": "Unsave",
+  "@unsaveContribution": {
+    "description": "Button to remove a saved contribution"
+  },
+  "saved": "Saved",
+  "@saved": {
+    "description": "Label indicating a contribution is saved"
   }
 }
