@@ -7,6 +7,7 @@
 /// Workout event tracking helper
 library;
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
@@ -539,6 +540,48 @@ class WorkoutEventTracker {
         success: false,
       );
       rethrow;
+    }
+  }
+
+  // ===== ROUTINE EVENTS =====
+
+  /// Track manual routine day completion
+  ///
+  /// Logs when user manually completes a routine day via the WorkoutSelectorSheet.
+  ///
+  /// Parameters:
+  /// - [routineId] - Routine identifier
+  /// - [date] - Date of the completed day
+  /// - [method] - Completion method: 'manual_with_workout' or 'manual_without_workout'
+  /// - [workoutId] - Optional workout ID if completed with workout
+  static void trackRoutineDayCompleted({
+    required String routineId,
+    required DateTime date,
+    required String method,
+    String? workoutId,
+  }) {
+    try {
+      FirebaseAnalytics.instance.logEvent(
+        name: 'routine_day_completed',
+        parameters: {
+          'routine_id': routineId,
+          'date': date.toIso8601String(),
+          'completion_method': method,
+          'workout_id': workoutId ?? 'none',
+          'timestamp': DateTime.now().toIso8601String(),
+        },
+      );
+
+      if (kDebugMode) {
+        debugPrint('📊 Routine day completed: $routineId on ${date.toIso8601String()} ($method)');
+        if (workoutId != null) {
+          debugPrint('   Linked workout: $workoutId');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error tracking routine day completed: $e');
+      }
     }
   }
 }

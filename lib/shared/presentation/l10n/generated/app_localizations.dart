@@ -21593,6 +21593,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load workouts'**
   String get failedToLoadWorkouts;
+
+  /// Success message when day is completed with a linked workout
+  ///
+  /// In en, this message translates to:
+  /// **'Day completed with workout!'**
+  String get dayCompletedWithWorkout;
+
+  /// Success message when day is completed without a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Day completed manually'**
+  String get dayCompletedManually;
+
+  /// Error message when day completion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete day'**
+  String get failedToCompleteDay;
 }
 
 class _AppLocalizationsDelegate

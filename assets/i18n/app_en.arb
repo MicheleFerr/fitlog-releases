@@ -14567,5 +14567,17 @@
   "failedToLoadWorkouts": "Failed to load workouts",
   "@failedToLoadWorkouts": {
     "description": "Error message when workout loading fails"
+  },
+  "dayCompletedWithWorkout": "Day completed with workout!",
+  "@dayCompletedWithWorkout": {
+    "description": "Success message when day is completed with a linked workout"
+  },
+  "dayCompletedManually": "Day completed manually",
+  "@dayCompletedManually": {
+    "description": "Success message when day is completed without a workout"
+  },
+  "failedToCompleteDay": "Failed to complete day",
+  "@failedToCompleteDay": {
+    "description": "Error message when day completion fails"
   }
 }

@@ -12372,4 +12372,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get failedToLoadWorkouts => 'Impossibile caricare i workout';
+
+  @override
+  String get dayCompletedWithWorkout => 'Giorno completato con workout!';
+
+  @override
+  String get dayCompletedManually => 'Giorno completato manualmente';
+
+  @override
+  String get failedToCompleteDay => 'Impossibile completare il giorno';
 }

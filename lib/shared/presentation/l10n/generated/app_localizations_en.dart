@@ -12233,4 +12233,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToLoadWorkouts => 'Failed to load workouts';
+
+  @override
+  String get dayCompletedWithWorkout => 'Day completed with workout!';
+
+  @override
+  String get dayCompletedManually => 'Day completed manually';
+
+  @override
+  String get failedToCompleteDay => 'Failed to complete day';
 }
