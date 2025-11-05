@@ -103,11 +103,11 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
   // Get available template names for validation
   // NOTE: Using customWorkoutTemplatesProvider (combines legacy + unified)
   // instead of allWorkoutTemplatesProvider (legacy only, returns empty)
-  final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
-  final availableTemplateNames = templatesAsync.maybeWhen(
-    data: (templates) => templates.map((t) => t.name).toList(),
-    orElse: () => <String>[],
-  );
+  // 🔧 FIX: Await template provider to ensure we have loaded templates
+  // BEFORE predicting workout. This prevents validation from being skipped
+  // when template list is empty due to loading/error state.
+  final templates = await ref.watch(customWorkoutTemplatesProvider.future);
+  final availableTemplateNames = templates.map((t) => t.name).toList();
 
   if (kDebugMode || kProfileMode) {
     debugPrint('🔍 [WORKOUT_SUGGESTION] Available template names: $availableTemplateNames');

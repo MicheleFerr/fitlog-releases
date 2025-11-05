@@ -324,12 +324,21 @@ class RoutinePredictionEngine {
       debugPrint('🔍 [VALIDATE_TEMPLATE] Available templates: $availableTemplateNames');
     }
 
-    // Skip validation if no template list provided
+    // 🔧 FIX: If no templates provided, use generic fallback instead of skipping
+    // This prevents returning deleted templates when template list is empty
     if (availableTemplateNames == null || availableTemplateNames.isEmpty) {
       if (kDebugMode || kProfileMode) {
-        debugPrint('🔍 [VALIDATE_TEMPLATE] Skipping validation - no templates provided');
+        debugPrint('🔍 [VALIDATE_TEMPLATE] ⚠️ No templates provided! Using generic fallback');
+        debugPrint('🔍 [VALIDATE_TEMPLATE] Original suggestion was: "${suggestion.workoutName}"');
       }
-      return suggestion;
+      return WorkoutSuggestion(
+        level: SuggestionLevel.dayBased,
+        workoutName: 'Workout',
+        confidence: 0.20,
+        reason:
+            'Could not validate template "${suggestion.workoutName}". Start with any workout',
+        generatedAt: DateTime.now(),
+      );
     }
 
     // Normalize available template names for case-insensitive matching
