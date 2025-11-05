@@ -65,3 +65,7 @@ GoogleService-Info-*.plist
 
 # Script progress files
 .async_warnings_progress.json
+integration_test/smart_cta_preload_test.dart
+
+# Git worktrees (isolated development workspaces)
+.worktrees/
