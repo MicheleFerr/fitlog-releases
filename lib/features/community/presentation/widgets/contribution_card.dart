@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
@@ -6,6 +7,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ContributionCard extends ConsumerWidget {
@@ -32,6 +34,7 @@ class ContributionCard extends ConsumerWidget {
       ),
       child: InkWell(
         onTap: () {
+          HapticFeedback.selectionClick();
           // TODO: Navigate to contribution detail
         },
         borderRadius: BorderRadius.circular(12),
@@ -81,8 +84,9 @@ class ContributionCard extends ConsumerWidget {
               Row(
                 children: [
                   // Upvotes
-                  Icon(
-                    AppIcons.thumbUp,
+                  SemanticIcon(
+                    icon: AppIcons.thumbUp,
+                    semanticLabel: context.l10n.upvotes,
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
@@ -95,8 +99,9 @@ class ContributionCard extends ConsumerWidget {
                   const SizedBox(width: 16),
 
                   // Comments
-                  Icon(
-                    AppIcons.comment,
+                  SemanticIcon(
+                    icon: AppIcons.comment,
+                    semanticLabel: context.l10n.comments,
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
@@ -109,8 +114,9 @@ class ContributionCard extends ConsumerWidget {
                   const SizedBox(width: 16),
 
                   // Saves
-                  Icon(
-                    AppIcons.bookmark,
+                  SemanticIcon(
+                    icon: AppIcons.bookmark,
+                    semanticLabel: context.l10n.saves,
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
@@ -134,12 +140,14 @@ class ContributionCard extends ConsumerWidget {
 
                   // Save button
                   IconButton(
-                    icon: Icon(
-                      isSaved ? AppIcons.bookmarkFilled : AppIcons.bookmark,
+                    icon: SemanticIcon(
+                      icon: isSaved ? AppIcons.bookmarkFilled : AppIcons.bookmark,
+                      semanticLabel: context.l10n.bookmarkContribution,
                       color: isSaved ? context.colors.primary : null,
                       size: AppIconSize.medium,
                     ),
                     onPressed: () {
+                      HapticFeedback.lightImpact();
                       final notifier = ref.read(saveContributionProvider.notifier);
                       if (isSaved) {
                         notifier.unsaveContribution(contribution.id);
@@ -242,7 +250,7 @@ class ContributionCard extends ConsumerWidget {
       case ContributionType.correction:
         return context.colors.warning;
       case ContributionType.translation:
-        return Colors.purple;
+        return context.colors.tertiary;
     }
   }
 

@@ -15008,6 +15008,14 @@
   "@comments": {
     "description": "Label for number of comments on a contribution"
   },
+  "upvotes": "Upvotes",
+  "@upvotes": {
+    "description": "Label for number of upvotes on a contribution"
+  },
+  "bookmarkContribution": "Bookmark contribution",
+  "@bookmarkContribution": {
+    "description": "Semantic label for bookmark contribution button"
+  },
   "saveContribution": "Save",
   "@saveContribution": {
     "description": "Button to save a contribution"

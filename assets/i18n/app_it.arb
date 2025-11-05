@@ -5532,6 +5532,14 @@
   "@comments": {
     "description": "Etichetta per numero di commenti su un contributo"
   },
+  "upvotes": "Mi piace",
+  "@upvotes": {
+    "description": "Etichetta per numero di mi piace su un contributo"
+  },
+  "bookmarkContribution": "Salva contributo",
+  "@bookmarkContribution": {
+    "description": "Etichetta semantica per pulsante salva contributo"
+  },
   "saveContribution": "Salva",
   "@saveContribution": {
     "description": "Pulsante per salvare un contributo"

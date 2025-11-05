@@ -12674,6 +12674,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get comments => 'Commenti';
 
   @override
+  String get upvotes => 'Mi piace';
+
+  @override
+  String get bookmarkContribution => 'Salva contributo';
+
+  @override
   String get saveContribution => 'Salva';
 
   @override

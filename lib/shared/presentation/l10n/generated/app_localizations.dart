@@ -22140,6 +22140,18 @@ abstract class AppLocalizations {
   /// **'Comments'**
   String get comments;
 
+  /// Label for number of upvotes on a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Upvotes'**
+  String get upvotes;
+
+  /// Semantic label for bookmark contribution button
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark contribution'**
+  String get bookmarkContribution;
+
   /// Button to save a contribution
   ///
   /// In en, this message translates to:
