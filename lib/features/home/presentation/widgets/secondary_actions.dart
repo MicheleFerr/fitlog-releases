@@ -176,7 +176,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
         accentColor: widget.accentColor,
         onTap: widget.onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14), // Tighter padding
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -192,13 +192,14 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 size: AppAnimations.iconSizeMedium,
               ),
 
-              const SizedBox(height: 8),
+              const SizedBox(height: 6), // Reduced spacing
 
-              // Title
+              // Title (slightly smaller for more space)
               Text(
                 widget.title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
+                      fontSize: 13, // Reduced from ~14
                       color: context.colors.onSurface,
                     ),
                 textAlign: TextAlign.center,
@@ -206,12 +207,14 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              const SizedBox(height: 4),
+              const SizedBox(height: 2), // Reduced spacing
 
-              // Subtitle
+              // Subtitle (much smaller font for better fit)
               Text(
                 widget.subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 10, // Reduced from ~12 to 10
+                      height: 1.2, // Tighter line height
                       color: context.colors.onSurface.withValues(alpha: 0.65),
                     ),
                 textAlign: TextAlign.center,
