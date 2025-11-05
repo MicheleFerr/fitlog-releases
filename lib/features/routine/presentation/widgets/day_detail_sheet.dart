@@ -27,6 +27,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/workout_selector_sheet.dart';
+import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
 
 class DayDetailSheet extends ConsumerStatefulWidget {
 
@@ -870,29 +872,83 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   }
 
   Future<void> _completeDay(BuildContext context) async {
-    final confirmed = await ModalService.showConfirmDialog(
-      context,
-      title: 'Complete Day',
-      message: 'Mark this day as completed without starting a workout?',
-      confirmText: 'Complete',
+    // Show workout selector sheet
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => WorkoutSelectorSheet(
+        routine: widget.routine,
+        date: widget.date,
+        templateId: widget.dayInfo.templateId,
+
+        // Callback: Complete with workout
+        onWorkoutSelected: (workoutId) async {
+          final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+          final success = await notifier.completeDayWorkout(
+            routineId: widget.routine.id,
+            date: widget.date,
+            workoutId: workoutId,
+          );
+
+          if (context.mounted) {
+            if (success) {
+              Navigator.pop(context); // Close selector
+              Navigator.pop(context); // Close day detail
+              SnackBarService.showSuccess(
+                context,
+                context.l10n.dayCompletedWithWorkout,
+              );
+
+              // Analytics
+              WorkoutEventTracker.trackRoutineDayCompleted(
+                routineId: widget.routine.id,
+                date: widget.date,
+                method: 'manual_with_workout',
+                workoutId: workoutId,
+              );
+            } else {
+              SnackBarService.showError(
+                context,
+                context.l10n.failedToCompleteDay,
+              );
+            }
+          }
+        },
+
+        // Callback: Complete without workout (fallback)
+        onCompleteWithoutWorkout: () async {
+          final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+          final success = await notifier.completeDayManual(
+            routineId: widget.routine.id,
+            date: widget.date,
+          );
+
+          if (context.mounted) {
+            if (success) {
+              Navigator.pop(context); // Close selector
+              Navigator.pop(context); // Close day detail
+              SnackBarService.showSuccess(
+                context,
+                context.l10n.dayCompletedManually,
+              );
+
+              // Analytics
+              WorkoutEventTracker.trackRoutineDayCompleted(
+                routineId: widget.routine.id,
+                date: widget.date,
+                method: 'manual_without_workout',
+              );
+            } else {
+              SnackBarService.showError(
+                context,
+                context.l10n.failedToCompleteDay,
+              );
+            }
+          }
+        },
+      ),
     );
-
-    if (!confirmed || !context.mounted) return;
-
-    final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
-    final success = await notifier.completeDayManual(
-      routineId: widget.routine.id,
-      date: widget.date,
-    );
-
-    if (context.mounted) {
-      if (success) {
-        Navigator.pop(context);
-        SnackBarService.showSuccess(context, 'Day marked as completed');
-      } else {
-        SnackBarService.showError(context, 'Failed to complete day');
-      }
-    }
   }
 
   Future<void> _skipDay(BuildContext context) async {

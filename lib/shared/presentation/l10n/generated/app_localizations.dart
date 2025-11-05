@@ -4769,6 +4769,12 @@ abstract class AppLocalizations {
   /// **'match'**
   String get match;
 
+  /// Label for workout already linked to another date
+  ///
+  /// In en, this message translates to:
+  /// **'Linked to'**
+  String get linkedTo;
+
   /// Button to skip current exercise
   ///
   /// In en, this message translates to:
@@ -21545,6 +21551,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last {n} days'**
   String lastNDays(int n);
+
+  /// Header for workout selector sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Day with Workout'**
+  String get completeDayWithWorkout;
+
+  /// Subtitle for workout selector sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Select workout to link to'**
+  String get selectWorkoutToLinkTo;
+
+  /// Fallback button to complete day without linking a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Complete without workout'**
+  String get completeWithoutWorkout;
+
+  /// Empty state message when no recent workouts available
+  ///
+  /// In en, this message translates to:
+  /// **'No recent workouts found'**
+  String get noRecentWorkoutsFound;
+
+  /// Empty state description for completing without workout
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this day without linking a workout'**
+  String get completeDayWithoutWorkout;
+
+  /// Button to complete day in empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Day'**
+  String get completeDay;
+
+  /// Error message when workout loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load workouts'**
+  String get failedToLoadWorkouts;
+
+  /// Success message when day is completed with a linked workout
+  ///
+  /// In en, this message translates to:
+  /// **'Day completed with workout!'**
+  String get dayCompletedWithWorkout;
+
+  /// Success message when day is completed without a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Day completed manually'**
+  String get dayCompletedManually;
+
+  /// Error message when day completion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete day'**
+  String get failedToCompleteDay;
 }
 
 class _AppLocalizationsDelegate

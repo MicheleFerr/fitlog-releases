@@ -48,6 +48,8 @@ import 'package:gymbro_flutter_new/shared/data/services/snapshot_sync_service.da
 // 📢 Sync Status Toast for user feedback during save flow
 import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast.dart';
 // 🔄 Routine Auto-Completion Service for automatic day completion
+// 💾 Workout Repository for fetching workout data
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
 // 📊 Analytics Tracking for workout events & PR detection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
@@ -172,9 +174,25 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     final workout = state;
     if (workout == null) return;
 
+    // Convert ExerciseTemplate list to Exercise list
+    final exercises = template.exercises.map((templateExercise) {
+      return Exercise(
+        name: templateExercise.exerciseName,
+        type: templateExercise.type,
+        category: templateExercise.category,
+        sets: templateExercise.sets.map((templateSet) {
+          return ExerciseSet(
+            setNumber: templateSet.setNumber,
+            weight: templateSet.targetWeight,
+            reps: templateSet.targetReps,
+          );
+        }).toList(),
+      );
+    }).toList();
+
     state = workout.copyWith(
       name: template.name,
-      exercises: template.exercises,
+      exercises: exercises,
       isPreloaded: false, // No longer pre-loaded
       exercisesModified: true, // Track modification
     );
@@ -221,8 +239,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
         // Crea un nuovo workout dal template
         workout = Workout(
+        id: const Uuid().v4(),
         name: workoutTemplate.name,
         templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         exercises: workoutTemplate.exercises.map((templateExercise) {
           // Crea l'esercizio con i set predefiniti dal template
           var exercise = Exercise(
@@ -1721,3 +1742,29 @@ final selectedExerciseCategoryProvider = StateProvider<ExerciseCategory>((ref) {
 final selectedExerciseTypeProvider = StateProvider<ExerciseType>((ref) {
   return ExerciseType.single;
 });
+
+/// Provider for fetching workouts from the last N days
+///
+/// Usage: ref.watch(recentWorkoutsProvider(7)) → Last 7 days
+///
+/// Returns: List of Workout filtered by:
+/// - startTime is not null
+/// - startTime is after cutoff date (now - N days)
+///
+/// Throws: Exception if repository fetch fails
+final recentWorkoutsProvider = FutureProvider.family<List<Workout>, int>(
+  (ref, days) async {
+    final repository = ref.watch(workoutRepositoryProvider);
+    final cutoffDate = DateTime.now().subtract(Duration(days: days));
+
+    final result = await repository.getWorkouts(limit: 50);
+
+    return result.fold(
+      (failure) => throw Exception('Failed to load workouts: ${failure.message}'),
+      (workouts) => workouts.where((w) =>
+        w.startTime != null &&
+        w.startTime!.isAfter(cutoffDate)
+      ).toList(),
+    );
+  },
+);
