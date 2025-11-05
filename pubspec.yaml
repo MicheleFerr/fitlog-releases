@@ -60,6 +60,7 @@ dependencies:
   intl: ^0.20.2
   package_info_plus: ^9.0.0
   connectivity_plus: ^6.0.5
+  timeago: ^3.7.0  # Relative time formatting
 
   # PDF Generation & Sharing
   pdf: ^3.11.0

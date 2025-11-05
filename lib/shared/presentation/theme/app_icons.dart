@@ -800,7 +800,7 @@ class AppIcons {
   static const IconData settingsApplications = Icons.settings_applications;
   static const IconData tune = Icons.tune;
 
-  // SOCIAL (8 icons)
+  // SOCIAL (11 icons)
   static const IconData favorite = Icons.favorite;
   static const IconData favoriteBorder = Icons.favorite_border;
   static const IconData public = Icons.public;
@@ -809,6 +809,9 @@ class AppIcons {
   static const IconData starsRounded = Icons.stars_rounded;
   static const IconData thumbDownOutlined = Icons.thumb_down_outlined;
   static const IconData thumbUpOutlined = Icons.thumb_up_outlined;
+  static const IconData bookmark = Icons.bookmark_border;
+  static const IconData bookmarkFilled = Icons.bookmark;
+  static const IconData comment = Icons.comment_outlined;
 
   // STATUS (21 icons)
   static const IconData cancel = Icons.cancel;

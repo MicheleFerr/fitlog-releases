@@ -19,6 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/widgets/contribution_card.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/filters_modal.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/sort_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -223,56 +224,8 @@ class _CommunityDiscoveryScreenState
 
     return ListView.builder(
       itemCount: contributions.length,
-      padding: const EdgeInsets.all(16),
       itemBuilder: (context, index) {
-        final contribution = contributions[index];
-        // TODO: Use ContributionCard widget (Task 12)
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          color: context.colors.surfaceContainerHighest,
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(16),
-            title: Text(
-              contribution.title,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                contribution.description,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  AppIcons.thumbUp,
-                  size: 16,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${contribution.upvotes}',
-                  style: context.textTheme.labelMedium?.copyWith(
-                    color: context.colors.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+        return ContributionCard(contribution: contributions[index]);
       },
     );
   }
