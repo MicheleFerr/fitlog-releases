@@ -2400,6 +2400,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get community => 'Community';
 
   @override
+  String get communityComingSoonTitle => 'Funzionalità Community in Arrivo';
+
+  @override
+  String get communityComingSoonDescription =>
+      'Stiamo lavorando per creare una fantastica funzionalità community dove potrai connetterti con altri atleti, condividere i tuoi progressi e imparare gli uni dagli altri. Resta sintonizzato!';
+
+  @override
   String get generalInformation => 'Informazioni Generali';
 
   @override
@@ -2571,6 +2578,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get discover => 'Scopri';
+
+  @override
+  String get searchContributions => 'Cerca contributi...';
+
+  @override
+  String get sort => 'Ordina';
+
+  @override
+  String get noContributionsFound => 'Nessun contributo trovato';
+
+  @override
+  String get tryDifferentSearch => 'Prova a modificare la ricerca o i filtri';
+
+  @override
+  String get errorLoadingContributions => 'Errore caricamento contributi';
 
   @override
   String get trending => 'Tendenze';
@@ -12575,4 +12597,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get undoSuccessful => '✅ Impostazioni ripristinate';
+
+  @override
+  String get sortByHelpful => 'Più Utili';
+
+  @override
+  String get sortByRecent => 'Più Recenti';
+
+  @override
+  String get sortBySaved => 'Più Salvati';
+
+  @override
+  String get sortByTrending => 'Trending';
 }

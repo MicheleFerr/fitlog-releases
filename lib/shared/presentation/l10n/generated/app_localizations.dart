@@ -3575,7 +3575,7 @@ abstract class AppLocalizations {
   /// **'Edit Set {percentage}%'**
   String editSet(String percentage);
 
-  /// Coming soon dialog title
+  /// Coming soon label
   ///
   /// In en, this message translates to:
   /// **'Coming Soon'**
@@ -4493,6 +4493,18 @@ abstract class AppLocalizations {
   /// **'Community'**
   String get community;
 
+  /// Community feature coming soon dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Community Feature Coming Soon'**
+  String get communityComingSoonTitle;
+
+  /// Community feature coming soon dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re working on building an amazing community feature where you can connect with other athletes, share your progress, and learn from each other. Stay tuned!'**
+  String get communityComingSoonDescription;
+
   /// General information section title
   ///
   /// In en, this message translates to:
@@ -4804,6 +4816,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discover'**
   String get discover;
+
+  /// Placeholder text for contribution search in community discovery
+  ///
+  /// In en, this message translates to:
+  /// **'Search contributions...'**
+  String get searchContributions;
+
+  /// Sort button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// Message when no contributions match search/filters
+  ///
+  /// In en, this message translates to:
+  /// **'No contributions found'**
+  String get noContributionsFound;
+
+  /// Hint message when no contributions are found
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search or filters'**
+  String get tryDifferentSearch;
+
+  /// Error message when contributions fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading contributions'**
+  String get errorLoadingContributions;
 
   /// Tab label for trending templates
   ///
@@ -21947,6 +21989,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'✅ Settings restored'**
   String get undoSuccessful;
+
+  /// Sort option for most helpful contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Most Helpful'**
+  String get sortByHelpful;
+
+  /// Sort option for most recent contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Most Recent'**
+  String get sortByRecent;
+
+  /// Sort option for most saved contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Most Saved'**
+  String get sortBySaved;
+
+  /// Sort option for trending contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get sortByTrending;
 }
 
 class _AppLocalizationsDelegate

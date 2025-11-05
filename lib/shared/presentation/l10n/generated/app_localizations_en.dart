@@ -2385,6 +2385,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get community => 'Community';
 
   @override
+  String get communityComingSoonTitle => 'Community Feature Coming Soon';
+
+  @override
+  String get communityComingSoonDescription =>
+      'We\'re working on building an amazing community feature where you can connect with other athletes, share your progress, and learn from each other. Stay tuned!';
+
+  @override
   String get generalInformation => 'General Information';
 
   @override
@@ -2555,6 +2562,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discover => 'Discover';
+
+  @override
+  String get searchContributions => 'Search contributions...';
+
+  @override
+  String get sort => 'Sort';
+
+  @override
+  String get noContributionsFound => 'No contributions found';
+
+  @override
+  String get tryDifferentSearch => 'Try adjusting your search or filters';
+
+  @override
+  String get errorLoadingContributions => 'Error loading contributions';
 
   @override
   String get trending => 'Trending';
@@ -12432,4 +12454,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get undoSuccessful => '✅ Settings restored';
+
+  @override
+  String get sortByHelpful => 'Most Helpful';
+
+  @override
+  String get sortByRecent => 'Most Recent';
+
+  @override
+  String get sortBySaved => 'Most Saved';
+
+  @override
+  String get sortByTrending => 'Trending';
 }

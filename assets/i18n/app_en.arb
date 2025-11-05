@@ -3364,6 +3364,26 @@
   "@discover": {
     "description": "Tab label for discovering public templates"
   },
+  "searchContributions": "Search contributions...",
+  "@searchContributions": {
+    "description": "Placeholder text for contribution search in community discovery"
+  },
+  "sort": "Sort",
+  "@sort": {
+    "description": "Sort button label"
+  },
+  "noContributionsFound": "No contributions found",
+  "@noContributionsFound": {
+    "description": "Message when no contributions match search/filters"
+  },
+  "tryDifferentSearch": "Try adjusting your search or filters",
+  "@tryDifferentSearch": {
+    "description": "Hint message when no contributions are found"
+  },
+  "errorLoadingContributions": "Error loading contributions",
+  "@errorLoadingContributions": {
+    "description": "Error message when contributions fail to load"
+  },
   "trending": "Trending",
   "@trending": {
     "description": "Tab label for trending templates"
