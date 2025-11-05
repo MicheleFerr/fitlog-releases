@@ -60,6 +60,7 @@ class PressableCard extends StatefulWidget {
 class _PressableCardState extends State<PressableCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late CurvedAnimation _curvedAnimation;
   late Animation<double> _scaleAnimation;
 
   bool _isPressed = false;
@@ -74,19 +75,20 @@ class _PressableCardState extends State<PressableCard>
       vsync: this,
     );
 
+    _curvedAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: AppAnimations.standard,
+    );
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: AppAnimations.cardPressScale,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: AppAnimations.standard,
-      ),
-    );
+    ).animate(_curvedAnimation);
   }
 
   @override
   void dispose() {
+    _curvedAnimation.dispose();
     _controller.dispose();
     super.dispose();
   }
