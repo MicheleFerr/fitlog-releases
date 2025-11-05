@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/community/data/repositories/community_repository.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -247,6 +248,98 @@ final exerciseStatsProvider = FutureProvider.family<ExerciseStats, String>((ref,
       : null,
   );
 });
+
+// ============================================================================
+// DISCOVERY & SEARCH PROVIDERS
+// ============================================================================
+
+// Provider 1: Search Query State
+final searchQueryProvider = StateProvider<String>((ref) => '');
+
+// Provider 2: Active Filters State
+final activeFiltersProvider = StateProvider<ContributionFilters>((ref) {
+  return const ContributionFilters(); // Default empty filters
+});
+
+// Provider 3: Search Results Stream
+final searchResultsProvider = StreamProvider<List<CommunityContribution>>((ref) {
+  final query = ref.watch(searchQueryProvider);
+  final filters = ref.watch(activeFiltersProvider);
+  final repository = ref.watch(communityRepositoryProvider);
+
+  // If query is empty, use filter-only search
+  if (query.isEmpty) {
+    return repository.filterContributions(filters: filters, limit: 50);
+  }
+
+  // Otherwise, search with filters
+  return repository.searchContributionsStream(
+    query: query,
+    filters: filters,
+    limit: 50,
+  );
+});
+
+// Provider 4: Saved Contribution IDs
+final savedContributionIdsProvider = FutureProvider<List<String>>((ref) async {
+  final userAsync = await ref.watch(currentUserProvider.future);
+  if (userAsync == null) return [];
+
+  final repository = ref.read(communityRepositoryProvider);
+  return repository.getSavedContributionIds(userAsync.uid);
+});
+
+// Provider 5: Save/Unsave Notifier
+class SaveContributionNotifier extends StateNotifier<AsyncValue<void>> {
+  SaveContributionNotifier(this._ref) : super(const AsyncValue.data(null));
+
+  final Ref _ref;
+
+  Future<void> saveContribution(String contributionId) async {
+    state = const AsyncValue.loading();
+
+    try {
+      final userAsync = await _ref.read(currentUserProvider.future);
+      if (userAsync == null) throw Exception('User not authenticated');
+
+      final repository = _ref.read(communityRepositoryProvider);
+      await repository.saveContribution(contributionId, userAsync.uid);
+
+      // Invalidate saved IDs to refresh
+      _ref.invalidate(savedContributionIdsProvider);
+
+      state = const AsyncValue.data(null);
+    } catch (error, stack) {
+      state = AsyncValue.error(error, stack);
+    }
+  }
+
+  Future<void> unsaveContribution(String contributionId) async {
+    state = const AsyncValue.loading();
+
+    try {
+      final userAsync = await _ref.read(currentUserProvider.future);
+      if (userAsync == null) throw Exception('User not authenticated');
+
+      final repository = _ref.read(communityRepositoryProvider);
+      await repository.unsaveContribution(contributionId, userAsync.uid);
+
+      // Invalidate saved IDs to refresh
+      _ref.invalidate(savedContributionIdsProvider);
+
+      state = const AsyncValue.data(null);
+    } catch (error, stack) {
+      state = AsyncValue.error(error, stack);
+    }
+  }
+}
+
+final saveContributionProvider =
+    StateNotifierProvider<SaveContributionNotifier, AsyncValue<void>>((ref) {
+  return SaveContributionNotifier(ref);
+});
+
+// ============================================================================
 
 // Model per statistiche exercise
 class ExerciseStats {
