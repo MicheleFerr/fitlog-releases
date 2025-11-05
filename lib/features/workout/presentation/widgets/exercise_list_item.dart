@@ -332,10 +332,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       // - Already auto-collapsed before
       // - User manually expanded
       if (_areAllSetsCompleted() &&
-          _expansionState.isExpanded &&
+          _isExpanded && // FIX: Use ref.watch() instead of ref.read()
           !_autoCollapseInProgress &&
-          !_expansionState.hasAutoCollapsed &&
-          !_expansionState.userManuallyExpanded) {
+          !_hasAutoCollapsed && // FIX: Use ref.watch() instead of ref.read()
+          !_userManuallyExpanded) { // FIX: Use ref.watch() instead of ref.read()
         if (kDebugMode) {
           debugPrint('✅ AUTO-COLLAPSE TRIGGERED for ${widget.exercise.name}');
         }
@@ -634,13 +634,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
     return Card(
       elevation: 2,
-      color: isCompleted && !_expansionState.isExpanded
+      color: isCompleted && !_isExpanded // FIX: Use ref.watch() instead of ref.read()
           ? context.successContainer
           : null,
       child: InkWell(
         onTap: widget.isReorderMode
             ? null // Disable tap in reorder mode
-            : !_expansionState.isExpanded
+            : !_isExpanded // FIX: Use ref.watch() instead of ref.read()
             ? () {
                 // EXPAND: Card is collapsed, expand it
                 _cancelAutoCollapse();
@@ -711,7 +711,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                   ),
                                 ),
                                 Icon(
-                                  Icons.info_outline,
+                                  AppIcons.info,
                                   size: 18,
                                   color: context.colors.primary.withOpacity(
                                     0.7,
@@ -757,7 +757,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          Icons.auto_awesome,
+                                          AppIcons.autoAwesome,
                                           size: 14,
                                           color: context.colors.primary,
                                         ),
@@ -836,7 +836,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                         ),
                                         const SizedBox(width: 2),
                                         Icon(
-                                          Icons.edit,
+                                          AppIcons.edit,
                                           size: 10,
                                           color:
                                               widget.exercise.restTime != null
@@ -892,7 +892,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                         ),
                                         const SizedBox(width: 2),
                                         Icon(
-                                          Icons.close,
+                                          AppIcons.close,
                                           size: 10,
                                           color: context.colors.tertiary
                                               .withValues(alpha: 0.7),
@@ -912,7 +912,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               if (config.showQuickInfoIcon ?? isProMode) ...[
                                 _buildQuickActionIcon(
                                   context: context,
-                                  icon: Icons.info_outline,
+                                  icon: AppIcons.info,
                                   color: context.infoColor,
                                   onTap: () async {
                                     final data =
@@ -928,7 +928,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               if (config.showWarmupIcon ?? isProMode) ...[
                                 _buildQuickActionIcon(
                                   context: context,
-                                  icon: Icons.whatshot,
+                                  icon: AppIcons.whatshot,
                                   color: context.warningColor,
                                   onTap: () async {
                                     final data =
@@ -946,7 +946,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               if (config.showPreventionIcon ?? isProMode) ...[
                                 _buildQuickActionIcon(
                                   context: context,
-                                  icon: Icons.shield_outlined,
+                                  icon: AppIcons.shieldOutlined,
                                   color: context.successColor,
                                   onTap: () async {
                                     final data =
@@ -1014,7 +1014,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.auto_awesome,
+                                AppIcons.autoAwesome,
                                 size: 20,
                                 color:
                                     widget.exercise.autoAdjustmentType != null
@@ -1067,7 +1067,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(Icons.delete, size: 20, color: context.errorColor),
+                              Icon(AppIcons.delete, size: 20, color: context.errorColor),
                               const SizedBox(width: 8),
                               Text(
                                 'Delete',
@@ -1084,7 +1084,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(Icons.edit, size: 20),
+                                Icon(AppIcons.edit, size: 20),
                                 SizedBox(width: 8),
                                 Text('Edit'),
                               ],
@@ -1094,7 +1094,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'change_exercise',
                             child: Row(
                               children: [
-                                const Icon(Icons.swap_horiz, size: 20),
+                                const Icon(AppIcons.swapHoriz, size: 20),
                                 const SizedBox(width: 8),
                                 Text(context.l10n.exerciseChangeVariation),
                               ],
@@ -1104,7 +1104,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'duplicate',
                             child: Row(
                               children: [
-                                Icon(Icons.copy, size: 20),
+                                Icon(AppIcons.copy, size: 20),
                                 SizedBox(width: 8),
                                 Text('Duplicate'),
                               ],
@@ -1118,7 +1118,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'insight',
                             child: Row(
                               children: [
-                                Icon(Icons.insights, size: 20),
+                                Icon(AppIcons.insights, size: 20),
                                 SizedBox(width: 8),
                                 Text('Insight'),
                               ],
@@ -1132,7 +1132,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         //     value: 'counting_mode',
                         //     child: Row(
                         //       children: [
-                        //         Icon(Icons.format_list_numbered, size: 20),
+                        //         Icon(AppIcons.formatListNumbered, size: 20),
                         //         SizedBox(width: 8),
                         //         Text(context.l10n.changeCountingMode),
                         //       ],
@@ -1145,7 +1145,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'community_advice',
                             child: Row(
                               children: [
-                                const Icon(Icons.lightbulb_outline, size: 20),
+                                const Icon(AppIcons.tip, size: 20),
                                 const SizedBox(width: 8),
                                 Text(context.l10n.communityAdvice),
                               ],
@@ -1188,7 +1188,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               ? 0.125
                               : 0, // 45 degree rotation
                           child: Icon(
-                            _isEditingNotes ? Icons.edit : Icons.note,
+                            _isEditingNotes ? AppIcons.edit : AppIcons.note,
                             size: 16,
                             color: _isEditingNotes
                                 ? context.colors.primary
@@ -1317,7 +1317,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         color: context.colors.onSurfaceVariant,
                         size: 16,
                       ),
@@ -1344,7 +1344,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ],
                   ),
                 )
-              else if (_expansionState.isExpanded || !isCompleted)
+              else if (_isExpanded || !isCompleted) // FIX: Use ref.watch() instead of ref.read()
                 _buildSetsSection(context, config)
               else
                 // Show compact summary when collapsed
@@ -1353,7 +1353,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.check_circle,
+                        AppIcons.complete,
                         color: context.successColor,
                         size: 16,
                       ),
@@ -1425,7 +1425,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             shape: BoxShape.circle,
           ),
           child: Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             color: colorScheme.primary,
             size: 20,
           ),
@@ -1439,11 +1439,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
     switch (widget.exercise.type) {
       case ExerciseType.superset:
-        icon = Icons.repeat;
+        icon = AppIcons.repeat;
         color = colorScheme.secondary;
         break;
       case ExerciseType.dropset:
-        icon = Icons.trending_down;
+        icon = AppIcons.trendDown;
         color = colorScheme.tertiary;
         break;
       case ExerciseType.restPause:
@@ -1451,7 +1451,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         color = colorScheme.error;
         break;
       case ExerciseType.single:
-        icon = Icons.fitness_center;
+        icon = AppIcons.workout;
         color = colorScheme.primary;
         break;
     }
@@ -1470,13 +1470,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   IconData _getSuggestionIcon(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return Icons.lightbulb_outline;
+        return AppIcons.tip;
       case ContributionType.warning:
         return AppIcons.warningAmberRounded;
       case ContributionType.correction:
         return AppIcons.editNote;
       case ContributionType.technique:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       default:
         return AppIcons.tipsAndUpdates;
     }
@@ -1558,7 +1558,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.speed,
+              AppIcons.speed,
               size: 14,
               color: isDefault
                   ? context.colors.onSurfaceVariant
@@ -1659,7 +1659,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   size: 14,
                   color: context.colors.tertiary,
                 ),
@@ -1702,7 +1702,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   size: 14,
                   color: context.colors.primary,
                 ),
@@ -1725,7 +1725,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         child: Row(
           children: [
             Icon(
-              Icons.add_circle_outline,
+              AppIcons.addCircleOutline,
               size: 18,
               color: context.colors.onSurfaceVariant,
             ),
@@ -1789,7 +1789,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               child: FadeTransition(opacity: animation, child: child),
             );
           },
-          child: _areAllSetsCompleted() && _expansionState.isExpanded
+          child: _areAllSetsCompleted() && _isExpanded // FIX: Use ref.watch() instead of ref.read()
               ? Row(
                   key: const ValueKey('buttons_with_collapse'),
                   children: [
@@ -1815,7 +1815,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.add_circle_outline,
+                                AppIcons.addCircleOutline,
                                 size: 20,
                                 color: context.colors.primary,
                               ),
@@ -1915,7 +1915,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.add_circle_outline,
+                          AppIcons.addCircleOutline,
                           size: 20,
                           color: context.colors.primary,
                         ),
@@ -1955,7 +1955,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           color: context.errorColor,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 24),
+        child: const Icon(AppIcons.deleteOutline, color: Colors.white, size: 24),
       ),
       confirmDismiss: (direction) async {
         // Show smooth animated confirmation dialog
@@ -2055,7 +2055,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 child: Center(
                   child: isWarmup
                       ? Icon(
-                          Icons.local_fire_department,
+                          AppIcons.streak,
                           size: 14,
                           color: context.warningColor,
                         )
@@ -2170,7 +2170,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     duration: const Duration(milliseconds: 200),
                     child: set.isCompleted
                         ? Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             key: const ValueKey('completed'),
                             size: 20,
                             color: context.colors.tertiary,
@@ -2348,7 +2348,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: const EdgeInsets.only(bottom: 20),
                   children: [
                     ListTile(
-                      leading: const Icon(Icons.edit),
+                      leading: const Icon(AppIcons.edit),
                       title: const Text('Modifica nome e note'),
                       subtitle: const Text(
                         'Personalizza nome esercizio e aggiungi note',
@@ -2359,7 +2359,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.info_outline),
+                      leading: const Icon(AppIcons.info),
                       title: const Text('Info esercizio'),
                       subtitle: const Text('Muscoli coinvolti e tecnica'),
                       onTap: () async {
@@ -2375,7 +2375,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       },
                     ),
                     ListTile(
-                      leading: Icon(Icons.whatshot, color: context.warningColor),
+                      leading: Icon(AppIcons.whatshot, color: context.warningColor),
                       title: const Text('Info riscaldamento'),
                       subtitle: const Text('Consigli per il warmup'),
                       onTap: () async {
@@ -2393,7 +2393,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     ListTile(
                       leading: Icon(
-                        Icons.shield_outlined,
+                        AppIcons.shieldOutlined,
                         color: context.successColor,
                       ),
                       title: const Text('Prevenzione infortuni'),
@@ -2416,7 +2416,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     const Divider(),
                     ListTile(
-                      leading: const Icon(Icons.history),
+                      leading: const Icon(AppIcons.history),
                       title: const Text('Storico'),
                       onTap: () {
                         Navigator.pop(context);
@@ -2424,7 +2424,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.copy),
+                      leading: const Icon(AppIcons.copy),
                       title: const Text('Duplica esercizio'),
                       onTap: () {
                         Navigator.pop(context);
@@ -2453,7 +2453,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     const Divider(),
                     ListTile(
-                      leading: Icon(Icons.delete, color: context.colors.error),
+                      leading: Icon(AppIcons.delete, color: context.colors.error),
                       title: Text(
                         'Elimina esercizio',
                         style: TextStyle(color: context.colors.error),
@@ -2523,7 +2523,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.edit, color: context.colors.primary),
+                    Icon(AppIcons.edit, color: context.colors.primary),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -2535,7 +2535,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                     ),
                   ],
                 ),
@@ -2704,7 +2704,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               // Title
               Row(
                 children: [
-                  Icon(Icons.timer, color: context.colors.primary),
+                  Icon(AppIcons.timer, color: context.colors.primary),
                   const SizedBox(width: 12),
                   Text(
                     'Rest Timer Settings',
@@ -2740,7 +2740,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.timer_off,
+                          AppIcons.timerOff,
                           color: selectedTime == null
                               ? context.colors.primary
                               : context.colors.onSurfaceVariant,
@@ -2771,7 +2771,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         ),
                         if (selectedTime == null)
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: context.colors.primary,
                           ),
                       ],
@@ -2922,7 +2922,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     });
                   }
                 },
-                icon: const Icon(Icons.edit, size: 18),
+                icon: const Icon(AppIcons.edit, size: 18),
                 label: Text(
                   selectedTime != null &&
                           ![
@@ -3881,7 +3881,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   return Transform.scale(
                     scale: 0.8 + (0.2 * value),
                     child: Icon(
-                      Icons.insights,
+                      AppIcons.insights,
                       size: 14,
                       color: context.colors.primary,
                     ),
@@ -3898,7 +3898,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ),
               const SizedBox(width: 4),
               Icon(
-                Icons.chevron_right,
+                AppIcons.chevronRight,
                 size: 14,
                 color: context.colors.primary.withValues(alpha: 0.7),
               ),
@@ -4035,7 +4035,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Icon(Icons.history, color: context.colors.primary),
+                    Icon(AppIcons.history, color: context.colors.primary),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -4070,7 +4070,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.fitness_center,
+                              AppIcons.workout,
                               size: 48,
                               color: context.colors.outline,
                             ),
@@ -4472,7 +4472,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.preWorkoutMobility,
           value: data['mobilitaPre'],
-          icon: Icons.accessibility_new,
+          icon: AppIcons.accessibility,
         ),
       );
     }
@@ -4481,7 +4481,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.muscleActivation,
           value: data['attivazionePre'],
-          icon: Icons.flash_on,
+          icon: AppIcons.flashOn,
         ),
       );
     }
@@ -4489,7 +4489,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.preparation,
-          groupIcon: Icons.accessibility_new,
+          groupIcon: AppIcons.accessibility,
           items: preparationItems,
           accentColor: context.warningColor,
         ),
@@ -4503,7 +4503,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.warmupSets,
           value: data['warmupSets'].toString(),
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
         ),
       );
     }
@@ -4512,7 +4512,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.warmupDuration,
           value: data['tempoWarmup'],
-          icon: Icons.timer,
+          icon: AppIcons.timer,
         ),
       );
     }
@@ -4520,7 +4520,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.specificWarmup,
-          groupIcon: Icons.whatshot,
+          groupIcon: AppIcons.whatshot,
           items: warmupItems,
           accentColor: context.warningColor,
         ),
@@ -4534,7 +4534,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
         title: context.l10n.warmupAndMobility,
-        icon: Icons.whatshot,
+        icon: AppIcons.whatshot,
         color: context.warningColor,
         groups: groups,
         onCorrection: () {
@@ -4563,7 +4563,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.primaryMuscles,
           value: data['focus'],
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
         ),
       );
     }
@@ -4580,7 +4580,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.targetMuscles,
-          groupIcon: Icons.fitness_center,
+          groupIcon: AppIcons.workout,
           items: muscleItems,
           accentColor: context.colors.primary,
         ),
@@ -4594,7 +4594,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.difficultyLevel,
           value: data['difficolta'],
-          icon: Icons.trending_up,
+          icon: AppIcons.trendUp,
         ),
       );
     }
@@ -4603,7 +4603,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.exerciseType,
           value: data['tipoEsercizio'],
-          icon: Icons.category,
+          icon: AppIcons.category,
         ),
       );
     }
@@ -4621,7 +4621,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.movementPattern,
           value: data['patternMovimento'],
-          icon: Icons.repeat,
+          icon: AppIcons.repeat,
         ),
       );
     }
@@ -4629,7 +4629,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.exerciseDetails,
-          groupIcon: Icons.info_outline,
+          groupIcon: AppIcons.info,
           items: detailItems,
           accentColor: context.infoColor,
         ),
@@ -4641,7 +4641,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.repRange,
-          groupIcon: Icons.format_list_numbered,
+          groupIcon: AppIcons.formatListNumbered,
           items: [_ModalItem(label: '', value: data['rangeRipetizioni'])],
           accentColor: context.colors.primary,
         ),
@@ -4655,7 +4655,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
         title: context.l10n.exerciseInformation,
-        icon: Icons.info,
+        icon: AppIcons.info,
         color: context.colors.primary,
         groups: groups,
         onCorrection: () {
@@ -4690,7 +4690,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.injuryPrevention,
           value: data['prevenzioneInfortuni'],
-          icon: Icons.shield,
+          icon: AppIcons.shield,
         ),
       );
     }
@@ -4699,7 +4699,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.technicalNotes,
           value: data['noteTecniche'],
-          icon: Icons.note,
+          icon: AppIcons.note,
         ),
       );
     }
@@ -4716,7 +4716,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.safetyAndTechnique,
-          groupIcon: Icons.health_and_safety,
+          groupIcon: AppIcons.healthAndSafety,
           items: safetyItems,
           accentColor: context.errorColor,
         ),
@@ -4728,12 +4728,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.recovery,
-          groupIcon: Icons.ac_unit,
+          groupIcon: AppIcons.acUnit,
           items: [
             _ModalItem(
               label: context.l10n.recommendedCooldown,
               value: data['cooldownConsigliato'],
-              icon: Icons.ac_unit,
+              icon: AppIcons.acUnit,
             ),
           ],
           accentColor: context.colors.tertiary,
@@ -4748,7 +4748,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
         title: context.l10n.safetyAndPrevention,
-        icon: Icons.health_and_safety,
+        icon: AppIcons.healthAndSafety,
         color: context.errorColor,
         groups: groups,
         onCorrection: () {
@@ -4872,7 +4872,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             .withValues(alpha: 0.5),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, size: 20),
+                      child: const Icon(AppIcons.close, size: 20),
                     ),
                   ),
                 ],
@@ -5058,7 +5058,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: onAddTip,
-                          icon: const Icon(Icons.lightbulb_outline, size: 18),
+                          icon: const Icon(AppIcons.tip, size: 18),
                           label: const Text('Aggiungi tip'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(0, 40),
@@ -5167,7 +5167,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             .withValues(alpha: 0.5),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, size: 20),
+                      child: const Icon(AppIcons.close, size: 20),
                     ),
                   ),
                 ],
