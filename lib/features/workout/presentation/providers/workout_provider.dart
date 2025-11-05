@@ -48,6 +48,8 @@ import 'package:gymbro_flutter_new/shared/data/services/snapshot_sync_service.da
 // 📢 Sync Status Toast for user feedback during save flow
 import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast.dart';
 // 🔄 Routine Auto-Completion Service for automatic day completion
+// 💾 Workout Repository for fetching workout data
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
 // 📊 Analytics Tracking for workout events & PR detection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
@@ -1721,3 +1723,29 @@ final selectedExerciseCategoryProvider = StateProvider<ExerciseCategory>((ref) {
 final selectedExerciseTypeProvider = StateProvider<ExerciseType>((ref) {
   return ExerciseType.single;
 });
+
+/// Provider for fetching workouts from the last N days
+///
+/// Usage: ref.watch(recentWorkoutsProvider(7)) → Last 7 days
+///
+/// Returns: List of Workout filtered by:
+/// - startTime is not null
+/// - startTime is after cutoff date (now - N days)
+///
+/// Throws: Exception if repository fetch fails
+final recentWorkoutsProvider = FutureProvider.family<List<Workout>, int>(
+  (ref, days) async {
+    final repository = ref.watch(workoutRepositoryProvider);
+    final cutoffDate = DateTime.now().subtract(Duration(days: days));
+
+    final result = await repository.getWorkouts(limit: 50);
+
+    return result.fold(
+      (failure) => throw Exception('Failed to load workouts: ${failure.message}'),
+      (workouts) => workouts.where((w) =>
+        w.startTime != null &&
+        w.startTime!.isAfter(cutoffDate)
+      ).toList(),
+    );
+  },
+);
