@@ -11254,6 +11254,10 @@
   "@exerciseProgress": {
     "description": "Exercise progress feature title"
   },
+  "trackExerciseGrowth": "Track your exercise gains",
+  "@trackExerciseGrowth": {
+    "description": "Subtitle for exercise progress card describing functionality"
+  },
   "exerciseProgressTitle": "Exercise Progress",
   "@exerciseProgressTitle": {
     "description": "Exercise progress screen title"

@@ -3771,6 +3771,10 @@
   "@exerciseProgress": {
     "description": "Exercise progress feature title"
   },
+  "trackExerciseGrowth": "Monitora i tuoi miglioramenti",
+  "@trackExerciseGrowth": {
+    "description": "Sottotitolo per la card progressi esercizi che descrive la funzionalità"
+  },
   "exerciseProgressTitle": "Progressi Esercizi",
   "@exerciseProgressTitle": {
     "description": "Exercise progress screen title"

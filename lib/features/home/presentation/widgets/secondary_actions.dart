@@ -121,7 +121,7 @@ class SecondaryActions extends ConsumerWidget {
         outlinedIcon: AppIcons.insightsOutlined,
         filledIcon: AppIcons.insights,
         title: l10n.exerciseProgress,
-        subtitle: l10n.trackProgress, // Will be updated to trackExerciseGrowth in Task 5
+        subtitle: l10n.trackExerciseGrowth,
         accentColor: _SecondaryActionColors.exerciseProgress,
         onTap: () => context.push('/exercise-progress'),
       ),

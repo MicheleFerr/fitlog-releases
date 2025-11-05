@@ -16824,6 +16824,12 @@ abstract class AppLocalizations {
   /// **'Exercise Progress'**
   String get exerciseProgress;
 
+  /// Subtitle for exercise progress card describing functionality
+  ///
+  /// In en, this message translates to:
+  /// **'Track your exercise gains'**
+  String get trackExerciseGrowth;
+
   /// Exercise progress screen title
   ///
   /// In en, this message translates to:

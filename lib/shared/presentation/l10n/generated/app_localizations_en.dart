@@ -9503,6 +9503,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exerciseProgress => 'Exercise Progress';
 
   @override
+  String get trackExerciseGrowth => 'Track your exercise gains';
+
+  @override
   String get exerciseProgressTitle => 'Exercise Progress';
 
   @override
