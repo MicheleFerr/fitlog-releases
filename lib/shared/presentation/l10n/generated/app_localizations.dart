@@ -21551,6 +21551,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last {n} days'**
   String lastNDays(int n);
+
+  /// Header for workout selector sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Day with Workout'**
+  String get completeDayWithWorkout;
+
+  /// Subtitle for workout selector sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Select workout to link to'**
+  String get selectWorkoutToLinkTo;
+
+  /// Fallback button to complete day without linking a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Complete without workout'**
+  String get completeWithoutWorkout;
+
+  /// Empty state message when no recent workouts available
+  ///
+  /// In en, this message translates to:
+  /// **'No recent workouts found'**
+  String get noRecentWorkoutsFound;
+
+  /// Empty state description for completing without workout
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this day without linking a workout'**
+  String get completeDayWithoutWorkout;
+
+  /// Button to complete day in empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Day'**
+  String get completeDay;
+
+  /// Error message when workout loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load workouts'**
+  String get failedToLoadWorkouts;
 }
 
 class _AppLocalizationsDelegate

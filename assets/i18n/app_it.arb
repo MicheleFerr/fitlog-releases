@@ -231,7 +231,7 @@
   "addSet": "Aggiungi Serie",
   "weight": "Peso",
   "reps": "rip",
-  "notes": "Note (opzionale)",
+  "notes": "Note",
   "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
   "exerciseTypeSingle": "Singolo",
   "exerciseTypeSuperset": "Superset",
@@ -425,7 +425,7 @@
   "progressTracking": "Tracciamento Progressi",
   "detailedAnalytics": "Analisi Dettagliate",
   "thisWeek": "Questa settimana",
-  "totalVolume": "totale",
+  "totalVolume": "Volume Totale",
   "consistency": "Consistenza",
   "totalWorkouts": "Allenamenti Totali",
   "completedSessions": "Sessioni Completate",
@@ -613,7 +613,7 @@
   "volume": "Volume",
   "startWorkoutQuick": "INIZIA ALLENAMENTO",
   "suggestedForToday": "Suggerito per oggi",
-  "yourProgress": "I tuoi progressi",
+  "yourProgress": "I Tuoi Progressi",
   "pushDay": "Push Day",
   "pullDay": "Pull Day",
   "legDay": "Leg Day",
@@ -705,7 +705,7 @@
   "muscleGroupShoulders": "Spalle",
   "muscleGroupArms": "Braccia",
   "muscleGroupOther": "Altro",
-  "days": "{count, plural, =0{0 giorni} =1{1 giorno} other{{count} giorni}}",
+  "days": "giorni",
   "perWeek": "/settimana",
   "target": "Target",
   "frequency": "Frequenza",
@@ -1029,7 +1029,7 @@
   "setsCount": "{count} serie",
   "setLabel": "Serie {number}",
   "weightLabel": "Peso (kg)",
-  "repsLabel": "Ripetizioni",
+  "repsLabel": "rip",
   "effortLabel": "Sforzo",
   "importedTemplate": "Template Importato",
   "noExercisesFoundInJSON": "Nessun esercizio trovato nel JSON",
@@ -1196,7 +1196,7 @@
   "perfectEffort": "Sforzo perfetto",
   "tooHeavy": "Troppo pesante",
   "editTemplate": "Modifica Template",
-  "useTemplate": "Usa Questa Scheda",
+  "useTemplate": "Usa Template",
   "saveAsTemplate": "Salva come Template",
   "templateName": "Nome Template",
   "templateDescription": "Descrizione Scheda",
@@ -1406,7 +1406,6 @@
   "status": "Stato",
   "databaseManager": "Gestione Database",
   "publishNewVersion": "Pubblica Nuova Versione",
-  "currentVersion": "Versione Attuale",
   "lastPublished": "Ultima Pubblicazione",
   "totalExercisesInDb": "Esercizi Totali nel Database",
   "versionHistory": "Cronologia Versioni",
@@ -2342,7 +2341,7 @@
   "coreMuscle": "Core",
   "cancelButton": "Annulla",
   "remappingComingSoon": "Funzionalità in arrivo: salveremo \"{exerciseName}\" come {muscleGroup}",
-  "exerciseCategorizedSuccess": "✅ \"{exerciseName}\" categorizzato come {muscleGroup}",
+  "exerciseCategorizedSuccess": "\"{exerciseName}\" categorizzato come {muscleGroupName}",
   "undo": "Annulla",
   "categorizationUndone": "Categorizzazione rimossa",
   "setsPerWeek": "serie/sett",
@@ -2829,9 +2828,6 @@
   "categoryAbs": "Addominali",
   "categoryCardio": "Cardio",
   "categoryOther": "Altro",
-  "exerciseCategorizedSuccess": "\"{exerciseName}\" categorizzato come {muscleGroupName}",
-  "undo": "Annulla",
-  "categorizationUndone": "Categorizzazione rimossa",
   "exerciseEditingComingSoon": "Modifica esercizio in arrivo!",
   "exerciseReplacementComingSoon": "Sostituzione esercizio in arrivo!",
   "errorUserNotAuthenticated": "Utente non autenticato",
@@ -3806,7 +3802,7 @@
   "@averageRPE": {
     "description": "Average RPE label"
   },
-  "totalSessions": "Sessioni",
+  "totalSessions": "Sessioni Totali",
   "@totalSessions": {
     "description": "Total sessions label"
   },
@@ -4947,13 +4943,8 @@
   "editFunctionalityComingSoon": "Funzionalità di modifica in arrivo",
   "deleteRecordTitle": "Elimina Record",
   "deleteRecordConfirmation": "Sei sicuro di voler eliminare questo record personale?",
-  "totalSessions": "Sessioni Totali",
-  "totalSets": "Serie Totali",
-  "avgWeight": "Peso Medio",
-  "totalVolume": "Volume Totale",
   "bodyweightMultiplier": "Moltiplicatore Peso Corporeo",
   "estimatedOneRM": "1RM Stimato",
-  "volume": "Volume",
   "relativeToBodyweight": "Relativo a {weight} kg di peso corporeo",
   "usingBrzyckiFormula": "Usando formula Brzycki",
   "totalWeightReps": "Peso totale × ripetizioni",
@@ -4961,15 +4952,12 @@
   "timeRangeLabel30D": "30G",
   "timeRangeLabel90D": "90G",
   "timeRangeLabelAll": "Tutto",
-  "today": "Oggi",
-  "yesterday": "Ieri",
   "daysAgo": "{days} giorni fa",
   "weeksAgo": "{weeks} settimane fa",
   "monthsAgo": "{months} mesi fa",
   "dAgo": "{days}g fa",
   "setsCountShort": "{count} serie",
   "volumeInTons": "{value}t volume",
-  "repsLabel": "rip",
   "kgLabel": "kg",
   "debugLogsTitle": "Log di Debug",
   "debugLogsSubtitle": "Configura categorie di log",
@@ -5003,12 +4991,8 @@
   "homeEmptyExpertTitle": "Nessun allenamento attivo",
   "homeEmptyExpertDescription": "Inizia un allenamento veloce o usa un template",
   "homeEmptyExpertCTA": "Inizia Allenamento",
-  "useTemplate": "Usa Template",
   "bullet": "Punto elenco",
-  "back": "Indietro",
   "skipTour": "Salta Tour",
-  "next": "Avanti",
-  "done": "Fatto",
   "autoAdvance": "Avanzamento automatico",
   "autoAdvanceIn": "Avanza automaticamente tra {seconds}s",
   "tourAiCoachTitle": "AI Coach 👋",
@@ -5076,15 +5060,10 @@
   "conflictingWorkoutsMessage": "Hai {count} allenamenti programmati durante questa pausa. Verranno saltati automaticamente.",
   "confirmAndPause": "Conferma e Metti in Pausa",
   "selectDate": "Seleziona Data",
-  "pause": "Pausa",
   "routinePaused": "Routine messa in pausa con successo",
   "routineTemplateCreatedSuccess": "Template creato! Selezionalo qui sotto per continuare.",
-  "duration": "Durata",
-  "days": "giorni",
-  "notes": "Note",
   "levelSystem": "Sistema Livelli",
   "currentLevel": "Livello Attuale",
-  "yourProgress": "I Tuoi Progressi",
   "toNextLevel": "al prossimo livello",
   "level": "Livello",
   "current": "Attuale",
@@ -5209,5 +5188,33 @@
   "lastYear": "Anno Scorso",
   "shade400": "Tonalità 400",
   "lastNMonths": "Ultimi {n} mesi",
-  "lastNDays": "Ultimi {n} giorni"
+  "lastNDays": "Ultimi {n} giorni",
+  "completeDayWithWorkout": "Completa Giorno con Workout",
+  "@completeDayWithWorkout": {
+    "description": "Header for workout selector sheet"
+  },
+  "selectWorkoutToLinkTo": "Seleziona workout da collegare a",
+  "@selectWorkoutToLinkTo": {
+    "description": "Subtitle for workout selector sheet"
+  },
+  "completeWithoutWorkout": "Completa senza workout",
+  "@completeWithoutWorkout": {
+    "description": "Fallback button to complete day without linking a workout"
+  },
+  "noRecentWorkoutsFound": "Nessun workout recente trovato",
+  "@noRecentWorkoutsFound": {
+    "description": "Empty state message when no recent workouts available"
+  },
+  "completeDayWithoutWorkout": "Completa questo giorno senza collegare un workout",
+  "@completeDayWithoutWorkout": {
+    "description": "Empty state description for completing without workout"
+  },
+  "completeDay": "Completa Giorno",
+  "@completeDay": {
+    "description": "Button to complete day in empty state"
+  },
+  "failedToLoadWorkouts": "Impossibile caricare i workout",
+  "@failedToLoadWorkouts": {
+    "description": "Error message when workout loading fails"
+  }
 }

@@ -553,7 +553,7 @@
   },
   "done": "Done",
   "@done": {
-    "description": "Generic done/complete button label"
+    "description": "Done button"
   },
   "hiitTraining": "HIIT Training",
   "@hiitTraining": {
@@ -953,9 +953,9 @@
   "@reps": {
     "description": "Label for repetitions (lowercase)"
   },
-  "notes": "Notes (optional)",
+  "notes": "Notes",
   "@notes": {
-    "description": "Notes input label"
+    "description": "Notes label"
   },
   "notesHint": "Add form cues, progression notes, etc.",
   "@notesHint": {
@@ -1725,9 +1725,9 @@
   "@thisWeek": {
     "description": "This week label for workout count"
   },
-  "totalVolume": "total",
+  "totalVolume": "Total Volume",
   "@totalVolume": {
-    "description": "Label for total volume"
+    "description": "Label for total training volume"
   },
   "consistency": "Consistency",
   "@consistency": {
@@ -2573,7 +2573,7 @@
   },
   "volume": "Volume",
   "@volume": {
-    "description": "Volume metric label"
+    "description": "Label for volume calculation"
   },
   "startWorkoutQuick": "START WORKOUT",
   "@startWorkoutQuick": {
@@ -2583,9 +2583,9 @@
   "@suggestedForToday": {
     "description": "Suggested workout subtitle"
   },
-  "yourProgress": "Your progress",
+  "yourProgress": "Your Progress",
   "@yourProgress": {
-    "description": "Progress section title"
+    "description": "Progress section header"
   },
   "pushDay": "Push Day",
   "@pushDay": {
@@ -3040,14 +3040,9 @@
   "@muscleGroupOther": {
     "description": "Muscle group name for other"
   },
-  "days": "{count, plural, =0{0 days} =1{1 day} other{{count} days}}",
+  "days": "days",
   "@days": {
-    "description": "Days plural",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
+    "description": "Days unit (lowercase)"
   },
   "perWeek": "/week",
   "@perWeek": {
@@ -3702,7 +3697,7 @@
   },
   "totalSets": "Total Sets",
   "@totalSets": {
-    "description": "Total sets statistic"
+    "description": "Label for total number of sets"
   },
   "avgVolumePerWorkout": "Avg Volume Per Workout",
   "@avgVolumePerWorkout": {
@@ -3726,7 +3721,7 @@
   },
   "back": "Back",
   "@back": {
-    "description": "Back button accessibility label"
+    "description": "Back button"
   },
   "shoulders": "Shoulders",
   "@shoulders": {
@@ -4447,9 +4442,9 @@
   "@weightLabel": {
     "description": "Weight input field label"
   },
-  "repsLabel": "Reps",
+  "repsLabel": "reps",
   "@repsLabel": {
-    "description": "Reps input field label"
+    "description": "Short label for repetitions"
   },
   "effortLabel": "Effort",
   "@effortLabel": {
@@ -4720,7 +4715,7 @@
   },
   "next": "Next",
   "@next": {
-    "description": "Next button text"
+    "description": "Next button"
   },
   "single": "Single",
   "@single": {
@@ -4846,7 +4841,7 @@
   },
   "avgWeight": "Avg Weight",
   "@avgWeight": {
-    "description": "Average weight statistic label"
+    "description": "Label for average weight lifted"
   },
   "firstWorkout": "First Workout",
   "@firstWorkout": {
@@ -4862,11 +4857,11 @@
   },
   "today": "Today",
   "@today": {
-    "description": "Today label"
+    "description": "Label for today's date"
   },
   "yesterday": "Yesterday",
   "@yesterday": {
-    "description": "Yesterday date label"
+    "description": "Label for yesterday's date"
   },
   "workoutDatabase": "Workout Database",
   "@workoutDatabase": {
@@ -5073,7 +5068,7 @@
   },
   "currentVersion": "Current Version",
   "@currentVersion": {
-    "description": "Current version label"
+    "description": "Current database version label"
   },
   "notAvailable": "Not Available",
   "@notAvailable": {
@@ -5519,10 +5514,6 @@
   "publishNewVersion": "Publish New Version",
   "@publishNewVersion": {
     "description": "Button to publish new exercise database version"
-  },
-  "currentVersion": "Current Version",
-  "@currentVersion": {
-    "description": "Current database version label"
   },
   "lastPublished": "Last Published",
   "@lastPublished": {
@@ -11290,9 +11281,9 @@
   "@averageRPE": {
     "description": "Average RPE label"
   },
-  "totalSessions": "Sessions",
+  "totalSessions": "Total Sessions",
   "@totalSessions": {
-    "description": "Total sessions label"
+    "description": "Label for total number of workout sessions"
   },
   "exerciseStats": "Exercise Statistics",
   "@exerciseStats": {
@@ -12928,7 +12919,9 @@
   "migrationWizardAffectedExercises": "{count, plural, =1{1 exercise affected} other{{count} exercises affected}}",
   "@migrationWizardAffectedExercises": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardWithAlternatives": "with alternatives",
@@ -12936,13 +12929,17 @@
   "migrationWizardAffectedRoutines": "{count, plural, =1{1 routine} other{{count} routines}}",
   "@migrationWizardAffectedRoutines": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardAffectedTemplates": "{count, plural, =1{1 template} other{{count} templates}}",
   "@migrationWizardAffectedTemplates": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardReviewChanges": "Review Changes",
@@ -12952,8 +12949,12 @@
   "migrationWizardExerciseProgress": "Exercise {current} of {total}",
   "@migrationWizardExerciseProgress": {
     "placeholders": {
-      "current": {"type": "int"},
-      "total": {"type": "int"}
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardRequiredEquipment": "Required",
@@ -12980,19 +12981,25 @@
   "migrationWizardExercisesReplaced": "{count, plural, =1{1 exercise replaced} other{{count} exercises replaced}}",
   "@migrationWizardExercisesReplaced": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardExercisesKept": "{count, plural, =1{1 exercise kept} other{{count} exercises kept}}",
   "@migrationWizardExercisesKept": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardExercisesRemoved": "{count, plural, =1{1 exercise removed} other{{count} exercises removed}}",
   "@migrationWizardExercisesRemoved": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardUpdated": "Updated",
@@ -13006,13 +13013,17 @@
   "migrationWizardExercisesWithAlternatives": "{count, plural, =1{1 with alternatives} other{{count} with alternatives}}",
   "@migrationWizardExercisesWithAlternatives": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardExercisesWithoutAlternatives": "{count, plural, =1{1 without alternatives} other{{count} without alternatives}}",
   "@migrationWizardExercisesWithoutAlternatives": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardImpactLabel": "Impact:",
@@ -13022,8 +13033,12 @@
   "migrationWizardExerciseXOfY": "Exercise {current} of {total}",
   "@migrationWizardExerciseXOfY": {
     "placeholders": {
-      "current": {"type": "int"},
-      "total": {"type": "int"}
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardNoAlternativesFound": "No compatible alternatives found",
@@ -13033,20 +13048,28 @@
   "migrationWizardReplaceAction": "Replace: {original} → {replacement}",
   "@migrationWizardReplaceAction": {
     "placeholders": {
-      "original": {"type": "String"},
-      "replacement": {"type": "String"}
+      "original": {
+        "type": "String"
+      },
+      "replacement": {
+        "type": "String"
+      }
     }
   },
   "migrationWizardKeepAction": "Keep: {exercise}",
   "@migrationWizardKeepAction": {
     "placeholders": {
-      "exercise": {"type": "String"}
+      "exercise": {
+        "type": "String"
+      }
     }
   },
   "migrationWizardRemoveAction": "Remove: {exercise}",
   "@migrationWizardRemoveAction": {
     "placeholders": {
-      "exercise": {"type": "String"}
+      "exercise": {
+        "type": "String"
+      }
     }
   },
   "migrationWizardBackToReview": "Back to Review",
@@ -13054,19 +13077,25 @@
   "migrationWizardRoutinesUpdated": "{count, plural, =1{1 routine updated} other{{count} routines updated}}",
   "@migrationWizardRoutinesUpdated": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardTemplatesUpdated": "{count, plural, =1{1 template updated} other{{count} templates updated}}",
   "@migrationWizardTemplatesUpdated": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardProfileSwitched": "Profile switched to: {profileName}",
   "@migrationWizardProfileSwitched": {
     "placeholders": {
-      "profileName": {"type": "String"}
+      "profileName": {
+        "type": "String"
+      }
     }
   },
   "migrationWizardDone": "Done",
@@ -13076,13 +13105,17 @@
   "migrationWizardProgress": "Progress: {percent}%",
   "@migrationWizardProgress": {
     "placeholders": {
-      "percent": {"type": "int"}
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "migrationWizardError": "Error during migration: {error}",
   "@migrationWizardError": {
     "placeholders": {
-      "error": {"type": "String"}
+      "error": {
+        "type": "String"
+      }
     }
   },
   "migrationWizardRetry": "Retry",
@@ -13094,8 +13127,12 @@
   "@routineShiftMessage": {
     "description": "Message explaining the auto-shift",
     "placeholders": {
-      "workoutName": {"type": "String"},
-      "date": {"type": "String"}
+      "workoutName": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
     }
   },
   "routineShiftConfirm": "OK, keep shift",
@@ -13134,9 +13171,15 @@
   "@routineDateFormat": {
     "description": "Date format for routine shift banner",
     "placeholders": {
-      "day": {"type": "int"},
-      "month": {"type": "int"},
-      "year": {"type": "int"}
+      "day": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "year": {
+        "type": "int"
+      }
     }
   },
   "exerciseRotationTitle": "Exercise Variation Rotation",
@@ -13179,7 +13222,9 @@
   "@rotationInWeeks": {
     "description": "Shows weeks until rotation",
     "placeholders": {
-      "weeks": {"type": "int"}
+      "weeks": {
+        "type": "int"
+      }
     }
   },
   "rotationApplyConfirmMessage": "This will change all exercise variations in your routine. This action cannot be undone. Continue?",
@@ -13400,22 +13445,6 @@
   "@deleteRecordConfirmation": {
     "description": "Confirmation message for deleting a personal record"
   },
-  "totalSessions": "Total Sessions",
-  "@totalSessions": {
-    "description": "Label for total number of workout sessions"
-  },
-  "totalSets": "Total Sets",
-  "@totalSets": {
-    "description": "Label for total number of sets"
-  },
-  "avgWeight": "Avg Weight",
-  "@avgWeight": {
-    "description": "Label for average weight lifted"
-  },
-  "totalVolume": "Total Volume",
-  "@totalVolume": {
-    "description": "Label for total training volume"
-  },
   "bodyweightMultiplier": "Bodyweight Multiplier",
   "@bodyweightMultiplier": {
     "description": "Label for weight relative to bodyweight"
@@ -13423,10 +13452,6 @@
   "estimatedOneRM": "Estimated 1RM",
   "@estimatedOneRM": {
     "description": "Label for estimated one-rep max"
-  },
-  "volume": "Volume",
-  "@volume": {
-    "description": "Label for volume calculation"
   },
   "relativeToBodyweight": "Relative to {weight} kg bodyweight",
   "@relativeToBodyweight": {
@@ -13460,14 +13485,6 @@
   "timeRangeLabelAll": "All",
   "@timeRangeLabelAll": {
     "description": "Label for all time range"
-  },
-  "today": "Today",
-  "@today": {
-    "description": "Label for today's date"
-  },
-  "yesterday": "Yesterday",
-  "@yesterday": {
-    "description": "Label for yesterday's date"
   },
   "daysAgo": "{days} days ago",
   "@daysAgo": {
@@ -13522,10 +13539,6 @@
         "type": "String"
       }
     }
-  },
-  "repsLabel": "reps",
-  "@repsLabel": {
-    "description": "Short label for repetitions"
   },
   "kgLabel": "kg",
   "@kgLabel": {
@@ -13685,21 +13698,9 @@
   "@bullet": {
     "description": "Semantic label for bullet points"
   },
-  "back": "Back",
-  "@back": {
-    "description": "Back button"
-  },
   "skipTour": "Skip Tour",
   "@skipTour": {
     "description": "Skip tour button"
-  },
-  "next": "Next",
-  "@next": {
-    "description": "Next button"
-  },
-  "done": "Done",
-  "@done": {
-    "description": "Done button"
   },
   "autoAdvance": "Auto-advance",
   "@autoAdvance": {
@@ -14016,18 +14017,6 @@
   "@routineTemplateCreatedSuccess": {
     "description": "Success message after creating a template from routine editor empty state"
   },
-  "duration": "Duration",
-  "@duration": {
-    "description": "Duration label"
-  },
-  "days": "days",
-  "@days": {
-    "description": "Days unit (lowercase)"
-  },
-  "notes": "Notes",
-  "@notes": {
-    "description": "Notes label"
-  },
   "levelSystem": "Level System",
   "@levelSystem": {
     "description": "Level system header"
@@ -14035,10 +14024,6 @@
   "currentLevel": "Current Level",
   "@currentLevel": {
     "description": "Current level label"
-  },
-  "yourProgress": "Your Progress",
-  "@yourProgress": {
-    "description": "Progress section header"
   },
   "toNextLevel": "to next level",
   "@toNextLevel": {
@@ -14554,5 +14539,33 @@
         "type": "int"
       }
     }
+  },
+  "completeDayWithWorkout": "Complete Day with Workout",
+  "@completeDayWithWorkout": {
+    "description": "Header for workout selector sheet"
+  },
+  "selectWorkoutToLinkTo": "Select workout to link to",
+  "@selectWorkoutToLinkTo": {
+    "description": "Subtitle for workout selector sheet"
+  },
+  "completeWithoutWorkout": "Complete without workout",
+  "@completeWithoutWorkout": {
+    "description": "Fallback button to complete day without linking a workout"
+  },
+  "noRecentWorkoutsFound": "No recent workouts found",
+  "@noRecentWorkoutsFound": {
+    "description": "Empty state message when no recent workouts available"
+  },
+  "completeDayWithoutWorkout": "Complete this day without linking a workout",
+  "@completeDayWithoutWorkout": {
+    "description": "Empty state description for completing without workout"
+  },
+  "completeDay": "Complete Day",
+  "@completeDay": {
+    "description": "Button to complete day in empty state"
+  },
+  "failedToLoadWorkouts": "Failed to load workouts",
+  "@failedToLoadWorkouts": {
+    "description": "Error message when workout loading fails"
   }
 }

@@ -12211,4 +12211,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String lastNDays(int n) {
     return 'Last $n days';
   }
+
+  @override
+  String get completeDayWithWorkout => 'Complete Day with Workout';
+
+  @override
+  String get selectWorkoutToLinkTo => 'Select workout to link to';
+
+  @override
+  String get completeWithoutWorkout => 'Complete without workout';
+
+  @override
+  String get noRecentWorkoutsFound => 'No recent workouts found';
+
+  @override
+  String get completeDayWithoutWorkout =>
+      'Complete this day without linking a workout';
+
+  @override
+  String get completeDay => 'Complete Day';
+
+  @override
+  String get failedToLoadWorkouts => 'Failed to load workouts';
 }
