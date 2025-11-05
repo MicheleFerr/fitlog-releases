@@ -199,10 +199,17 @@ class RoutinePredictionEngine {
     if (recentWorkouts.length < 3) return null;
 
     // Count workout frequencies
+    // 🔧 FIX: Preserve original capitalization by mapping normalized → original
     final frequencies = <String, int>{};
+    final normalizedToOriginal = <String, String>{}; // Map lowercase → original
+
     for (final workout in recentWorkouts) {
-      final name = _normalizeWorkoutName(workout.name ?? 'Unknown');
-      frequencies[name] = (frequencies[name] ?? 0) + 1;
+      final originalName = workout.name ?? 'Unknown';
+      final normalizedName = _normalizeWorkoutName(originalName);
+
+      frequencies[normalizedName] = (frequencies[normalizedName] ?? 0) + 1;
+      // Keep the first occurrence's capitalization as canonical
+      normalizedToOriginal[normalizedName] ??= originalName;
     }
 
     if (frequencies.isEmpty) return null;
@@ -211,27 +218,30 @@ class RoutinePredictionEngine {
     final sortedEntries = frequencies.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    final mostFrequent = sortedEntries.first;
+    final mostFrequentNormalized = sortedEntries.first;
     final secondMostFrequent =
         sortedEntries.length > 1 ? sortedEntries[1] : null;
 
     // Require clear leader (>2x more frequent)
     if (secondMostFrequent != null &&
-        mostFrequent.value < secondMostFrequent.value * 2) {
+        mostFrequentNormalized.value < secondMostFrequent.value * 2) {
       return null; // No clear winner
     }
 
+    // 🔧 FIX: Use original capitalization instead of normalized lowercase
+    final mostFrequentOriginal = normalizedToOriginal[mostFrequentNormalized.key] ?? mostFrequentNormalized.key;
+
     // Calculate confidence based on frequency ratio
     final totalWorkouts = recentWorkouts.length;
-    final frequencyRatio = mostFrequent.value / totalWorkouts;
+    final frequencyRatio = mostFrequentNormalized.value / totalWorkouts;
     final confidence = 0.50 + (frequencyRatio * 0.20); // 0.50 - 0.70
 
     return WorkoutSuggestion(
       level: SuggestionLevel.frequency,
-      workoutName: mostFrequent.key,
+      workoutName: mostFrequentOriginal,
       confidence: confidence,
-      reason: 'You do ${mostFrequent.key} most often',
-      frequencyData: '${mostFrequent.value} times in last 30 days',
+      reason: 'You do $mostFrequentOriginal most often',
+      frequencyData: '${mostFrequentNormalized.value} times in last 30 days',
       generatedAt: DateTime.now(),
     );
   }
@@ -371,26 +381,37 @@ class RoutinePredictionEngine {
     }
 
     // 1. Try to find most frequent workout that DOES have a template
+    // 🔧 FIX: Preserve original capitalization by mapping normalized → original
     final frequencies = <String, int>{};
+    final normalizedToOriginal = <String, String>{}; // Map lowercase → original
+
     for (final workout in workoutHistory) {
-      final name = _normalizeWorkoutName(workout.name ?? 'Unknown');
-      if (normalizedTemplates.contains(name)) {
-        frequencies[name] = (frequencies[name] ?? 0) + 1;
+      final originalName = workout.name ?? 'Unknown';
+      final normalizedName = _normalizeWorkoutName(originalName);
+
+      if (normalizedTemplates.contains(normalizedName)) {
+        frequencies[normalizedName] = (frequencies[normalizedName] ?? 0) + 1;
+        // Keep the first occurrence's capitalization as canonical
+        normalizedToOriginal[normalizedName] ??= originalName;
       }
     }
 
     if (kDebugMode || kProfileMode) {
       debugPrint('🔍 [VALIDATE_TEMPLATE] Frequencies of valid templates: $frequencies');
+      debugPrint('🔍 [VALIDATE_TEMPLATE] Original names mapping: $normalizedToOriginal');
     }
 
     // If found valid alternative, use it
     if (frequencies.isNotEmpty) {
-      final bestAlternative = frequencies.entries.reduce((a, b) {
+      final normalizedBest = frequencies.entries.reduce((a, b) {
         return a.value > b.value ? a : b;
       }).key;
 
+      // 🔧 FIX: Use original capitalization instead of normalized lowercase
+      final bestAlternative = normalizedToOriginal[normalizedBest] ?? normalizedBest;
+
       if (kDebugMode || kProfileMode) {
-        debugPrint('🔍 [VALIDATE_TEMPLATE] ✅ Found alternative: "$bestAlternative"');
+        debugPrint('🔍 [VALIDATE_TEMPLATE] ✅ Found alternative: "$bestAlternative" (normalized: "$normalizedBest")');
       }
 
       return WorkoutSuggestion(
