@@ -13,6 +13,7 @@ import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
@@ -131,7 +132,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     required String routineName,
     required List<Exercise> exercises,
     required String sessionId,
+    String? templateId, // ✅ FIX #6: Accept templateId for auto-save
   }) async {
+    // ✅ FIX #6: Store template ID for auto-save functionality
+    _currentTemplateId = templateId;
+
     final workout = Workout(
       id: const Uuid().v4(),
       name: routineName,
@@ -142,6 +147,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       isPreloaded: true, // Flag to identify pre-loaded state
       preloadExpiry: DateTime.now().add(const Duration(minutes: 15)), // 15-min timeout
       sessionId: sessionId, // Analytics tracking
+      templateId: templateId, // ✅ FIX #6: Link workout to template
     );
 
     state = workout;
@@ -241,6 +247,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         workout = Workout(
         id: const Uuid().v4(),
         name: workoutTemplate.name,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -401,6 +409,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         completionRate: totalSetsCount > 0
             ? ((completedSets / totalSetsCount) * 100).round()
             : 0,
+        sessionId: workout.sessionId, // ✅ FIX #8: Add sessionId for funnel correlation
       );
 
       state = state!.completeWorkout();
@@ -1081,6 +1090,77 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating exercise: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
+      }
+      // Don't rethrow - silently fail to avoid disrupting user experience
+    }
+  }
+
+  /// Check if an exercise has completed sets
+  /// Returns number of completed sets
+  int getCompletedSetsCount(String exerciseId) {
+    if (state == null) return 0;
+
+    try {
+      final exercise = state!.exercises.firstWhere(
+        (e) => e.id == exerciseId,
+        orElse: () => throw Exception('Exercise not found'),
+      );
+
+      return exercise.sets.where((set) => set.isCompleted).length;
+    } catch (e) {
+      if (kDebugMode) {
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error checking completed sets: $e');
+      }
+      return 0;
+    }
+  }
+
+  /// Change the counting mode of an exercise (weighted/reps/time)
+  /// Used when user needs to fix template counting format during workout
+  void changeExerciseCountingMode(
+    String exerciseId,
+    ExerciseCountingMode newMode,
+  ) {
+    if (state == null) return;
+
+    try {
+      // Find exercise
+      final exercise = state!.exercises.firstWhere(
+        (e) => e.id == exerciseId,
+        orElse: () => throw Exception('Exercise not found'),
+      );
+
+      // Create updated exercise with new counting mode
+      final updatedExercise = exercise.copyWith(
+        countingMode: newMode,
+        updatedAt: DateTime.now(),
+      );
+
+      // Update exercise in state
+      updateExercise(exerciseId, updatedExercise);
+
+      // 📊 Track counting mode changed
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackExerciseCustomized(
+        workoutId: state!.id,
+        exerciseId: exerciseId,
+        fieldChanged: 'counting_mode',
+        oldValue: exercise.countingMode.name,
+        newValue: newMode.name,
+      );
+
+      if (kDebugMode) {
+        debugLog(
+          LogCategory.workout,
+          '✅ [WorkoutProvider] Counting mode changed: ${exercise.name} → ${newMode.name}',
+        );
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error changing counting mode: $e');
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience

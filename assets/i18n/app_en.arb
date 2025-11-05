@@ -4709,9 +4709,9 @@
   "@restTimeAfterRound": {
     "description": "Rest time after round description"
   },
-  "setCompleted": "Set completed!",
+  "setCompleted": "Set completed",
   "@setCompleted": {
-    "description": "Message shown when a set is completed"
+    "description": "Label for set completion status (used in toggle and messages)"
   },
   "next": "Next",
   "@next": {
@@ -6561,6 +6561,42 @@
   "enableRpeTooltip": "RPE (Rate of Perceived Exertion) helps you track how hard each set feels, enabling smart auto-regulation based on your fatigue level.",
   "@enableRpeTooltip": {
     "description": "Enable RPE tooltip"
+  },
+  "attentionRequired": "Attention",
+  "@attentionRequired": {
+    "description": "V4 dialog title for dependency warning"
+  },
+  "enable": "Enable",
+  "@enable": {
+    "description": "V4 dialog button to enable feature"
+  },
+  "essentialsSection": "Essentials",
+  "@essentialsSection": {
+    "description": "V4 essentials section title"
+  },
+  "essentialsSectionDesc": "Core settings to get started",
+  "@essentialsSectionDesc": {
+    "description": "V4 essentials section description"
+  },
+  "advancedSection": "Advanced",
+  "@advancedSection": {
+    "description": "V4 advanced section title"
+  },
+  "advancedSectionDesc": "Customizations for experienced users",
+  "@advancedSectionDesc": {
+    "description": "V4 advanced section description"
+  },
+  "visualizationCategory": "Visualization",
+  "@visualizationCategory": {
+    "description": "V4 visualization subcategory title"
+  },
+  "autoRegulationCategory": "Auto-regulation",
+  "@autoRegulationCategory": {
+    "description": "V4 auto-regulation subcategory title"
+  },
+  "interfaceCategory": "Interface",
+  "@interfaceCategory": {
+    "description": "V4 interface subcategory title"
   },
   "enableTutTitle": "Enable TUT Tracking",
   "@enableTutTitle": {
@@ -14579,5 +14615,261 @@
   "failedToCompleteDay": "Failed to complete day",
   "@failedToCompleteDay": {
     "description": "Error message when day completion fails"
+  },
+  "changeCountingFormat": "Change counting format",
+  "@changeCountingFormat": {
+    "description": "Button to change exercise counting format during workout"
+  },
+  "currentFormat": "Current format",
+  "@currentFormat": {
+    "description": "Label showing the current counting format"
+  },
+  "countingModeWeighted": "Weight + Reps",
+  "@countingModeWeighted": {
+    "description": "Counting mode for weighted exercises"
+  },
+  "countingModeWeightedDesc": "Input: Weight (kg/lb) + Reps",
+  "@countingModeWeightedDesc": {
+    "description": "Description for weighted counting mode"
+  },
+  "countingModeWeightedExample": "Example: 80kg × 10 reps",
+  "@countingModeWeightedExample": {
+    "description": "Example for weighted counting mode"
+  },
+  "countingModeReps": "Reps Only",
+  "@countingModeReps": {
+    "description": "Counting mode for bodyweight exercises"
+  },
+  "countingModeRepsDesc": "Input: Reps only (no weight)",
+  "@countingModeRepsDesc": {
+    "description": "Description for reps-only counting mode"
+  },
+  "countingModeRepsExample": "Example: 15 reps",
+  "@countingModeRepsExample": {
+    "description": "Example for reps-only counting mode"
+  },
+  "countingModeTime": "Time-based",
+  "@countingModeTime": {
+    "description": "Counting mode for time-based exercises"
+  },
+  "countingModeTimeDesc": "Input: Duration (mm:ss)",
+  "@countingModeTimeDesc": {
+    "description": "Description for time-based counting mode"
+  },
+  "countingModeTimeExample": "Example: 1:30 (90 seconds)",
+  "@countingModeTimeExample": {
+    "description": "Example for time-based counting mode"
+  },
+  "confirmChange": "Confirm change",
+  "@confirmChange": {
+    "description": "Button to confirm a change action"
+  },
+  "current": "Current",
+  "@current": {
+    "description": "Badge label indicating current selection"
+  },
+  "warning": "Warning",
+  "@warning": {
+    "description": "Warning dialog title"
+  },
+  "countingModeWarningTitle": "Warning",
+  "@countingModeWarningTitle": {
+    "description": "Title for counting mode change warning dialog"
+  },
+  "countingModeWarningMessage": "You have {count} completed sets with format \"{fromMode}\".\n\nChanging to \"{toMode}\" may invalidate existing data.",
+  "@countingModeWarningMessage": {
+    "description": "Warning message when changing counting mode with completed sets",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of completed sets"
+      },
+      "fromMode": {
+        "type": "String",
+        "description": "Current counting mode name"
+      },
+      "toMode": {
+        "type": "String",
+        "description": "New counting mode name"
+      }
+    }
+  },
+  "countingModeWarningInfo": "Changing format during a workout is not recommended. Consider finishing the workout first.",
+  "@countingModeWarningInfo": {
+    "description": "Additional info in counting mode warning dialog"
+  },
+  "keepData": "Keep data",
+  "@keepData": {
+    "description": "Button to keep existing data when changing format"
+  },
+  "resetAll": "Reset all",
+  "@resetAll": {
+    "description": "Button to reset all data when changing format"
+  },
+  "countingModeChanged": "Counting format updated!",
+  "@countingModeChanged": {
+    "description": "Success message after counting mode change"
+  },
+  "analyticsFeedbackThankYou": "Thank you for your feedback!",
+  "@analyticsFeedbackThankYou": {
+    "description": "Thank you message after submitting analytics feedback"
+  },
+  "analyticsFeedbackThankYouSubtitle": "Your feedback helps us improve the analytics experience",
+  "@analyticsFeedbackThankYouSubtitle": {
+    "description": "Subtitle for thank you message"
+  },
+  "analyticsFeedbackQuestion": "Is this analytics view helpful?",
+  "@analyticsFeedbackQuestion": {
+    "description": "Question asking if analytics is helpful"
+  },
+  "analyticsFeedbackHelpful": "Helpful",
+  "@analyticsFeedbackHelpful": {
+    "description": "Button for positive feedback"
+  },
+  "analyticsFeedbackNotHelpful": "Not helpful",
+  "@analyticsFeedbackNotHelpful": {
+    "description": "Button for negative feedback"
+  },
+  "analyticsFeedbackCommentPlaceholder": "Tell us more (optional)",
+  "@analyticsFeedbackCommentPlaceholder": {
+    "description": "Placeholder for comment text field"
+  },
+  "analyticsFeedbackSubmitting": "Submitting...",
+  "@analyticsFeedbackSubmitting": {
+    "description": "Button text while submitting feedback"
+  },
+  "analyticsFeedbackSubmit": "Submit feedback",
+  "@analyticsFeedbackSubmit": {
+    "description": "Button text to submit feedback"
+  },
+  "analyticsFeedbackError": "Could not submit feedback. Please try again.",
+  "@analyticsFeedbackError": {
+    "description": "Error message when feedback submission fails"
+  },
+  "analyticsFeedbackSuccess": "Feedback submitted successfully!",
+  "@analyticsFeedbackSuccess": {
+    "description": "Success message after feedback submission"
+  },
+  "autoEnabledMaster": "✅ {masterName} auto-enabled (required for this feature)",
+  "@autoEnabledMaster": {
+    "description": "Snackbar message when master toggle is auto-enabled",
+    "placeholders": {
+      "masterName": {
+        "type": "String",
+        "description": "Name of the master toggle that was enabled"
+      }
+    }
+  },
+  "dependentsDisabled": "⚠️ {count} dependent features auto-disabled",
+  "@dependentsDisabled": {
+    "description": "Snackbar message when dependent toggles are auto-disabled",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of dependent features disabled"
+      }
+    }
+  },
+  "quickInfoIconTitle": "Quick Info Icon",
+  "@quickInfoIconTitle": {
+    "description": "Title for quick info icon toggle"
+  },
+  "quickInfoIconDescription": "Tap for exercise details",
+  "@quickInfoIconDescription": {
+    "description": "Description for quick info icon toggle"
+  },
+  "quickInfoIconTooltip": "Shows exercise information modal with form cues and tips",
+  "@quickInfoIconTooltip": {
+    "description": "Tooltip for quick info icon toggle"
+  },
+  "quickWarmupIconTitle": "Warmup Icon",
+  "@quickWarmupIconTitle": {
+    "description": "Title for warmup icon toggle"
+  },
+  "quickWarmupIconDescription": "Tap for warmup suggestions",
+  "@quickWarmupIconDescription": {
+    "description": "Description for warmup icon toggle"
+  },
+  "quickWarmupIconTooltip": "Displays warmup sets recommendation based on working weight",
+  "@quickWarmupIconTooltip": {
+    "description": "Tooltip for warmup icon toggle"
+  },
+  "quickPreventionIconTitle": "Prevention Icon",
+  "@quickPreventionIconTitle": {
+    "description": "Title for prevention icon toggle"
+  },
+  "quickPreventionIconDescription": "Tap for injury prevention tips",
+  "@quickPreventionIconDescription": {
+    "description": "Description for prevention icon toggle"
+  },
+  "quickPreventionIconTooltip": "Shows injury prevention advice and mobility exercises",
+  "@quickPreventionIconTooltip": {
+    "description": "Tooltip for prevention icon toggle"
+  },
+  "exerciseNotesTitle": "Exercise Notes",
+  "@exerciseNotesTitle": {
+    "description": "Title for exercise notes toggle"
+  },
+  "exerciseNotesDescription": "Add notes about form and cues",
+  "@exerciseNotesDescription": {
+    "description": "Description for exercise notes toggle"
+  },
+  "exerciseNotesTooltip": "Personal notes visible only to you during workouts",
+  "@exerciseNotesTooltip": {
+    "description": "Tooltip for exercise notes toggle"
+  },
+  "exerciseInsightsTitle": "Exercise Insights",
+  "@exerciseInsightsTitle": {
+    "description": "Title for exercise insights toggle"
+  },
+  "exerciseInsightsDescription": "View charts and statistics",
+  "@exerciseInsightsDescription": {
+    "description": "Description for exercise insights toggle"
+  },
+  "exerciseInsightsTooltip": "Analytics charts showing volume, PRs, and progress trends",
+  "@exerciseInsightsTooltip": {
+    "description": "Tooltip for exercise insights toggle"
+  },
+  "insightsPerformanceWarning": "ℹ️ Charts may slow down on older devices",
+  "@insightsPerformanceWarning": {
+    "description": "Performance warning for insights charts"
+  },
+  "modeSwitchWarningTitle": "Switch to {mode} Mode?",
+  "@modeSwitchWarningTitle": {
+    "description": "Title for mode switch confirmation dialog",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Mode name (Base or Pro)"
+      }
+    }
+  },
+  "modeSwitchWarningMessage": "This will reset your custom settings to {mode} defaults.",
+  "@modeSwitchWarningMessage": {
+    "description": "Message for mode switch confirmation dialog",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Mode name (Base or Pro)"
+      }
+    }
+  },
+  "modeSwitchUndoHint": "You'll have 5 seconds to undo after confirming.",
+  "@modeSwitchUndoHint": {
+    "description": "Hint about undo feature in mode switch dialog"
+  },
+  "resetToDefaults": "Reset to {mode} Defaults",
+  "@resetToDefaults": {
+    "description": "Button text to reset to mode defaults",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Mode name (Base or Pro)"
+      }
+    }
+  },
+  "undoSuccessful": "✅ Settings restored",
+  "@undoSuccessful": {
+    "description": "Snackbar message when undo is successful"
   }
 }

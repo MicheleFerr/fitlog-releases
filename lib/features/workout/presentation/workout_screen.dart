@@ -23,7 +23,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_exp
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_header.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_card.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
@@ -170,6 +170,25 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     // Check if this is a pre-loaded workout
     final isPreloaded = ref.watch(
       currentWorkoutProvider.select((workout) => workout?.isPreloaded ?? false),
+    );
+
+    // ✅ FIX #7: Track workout_screen_viewed when workout is loaded
+    ref.listen(
+      currentWorkoutProvider,
+      (previous, next) {
+        // Track when workout first appears (null → non-null transition)
+        if (previous == null && next != null) {
+          WorkoutAnalytics.trackEvent(
+            'workout_screen_viewed',
+            properties: {
+              'sessionId': sessionId ?? next.sessionId ?? _generateSessionId(),
+              'sourceFlow': next.isPreloaded ? 'smart_cta' : 'fab',
+              'exerciseCount': next.exercises.length,
+              'timestamp': DateTime.now().toIso8601String(),
+            },
+          );
+        }
+      },
     );
 
     // PHASE 2: Listen for first exercise added to show "addFirstSet" overlay
@@ -1815,7 +1834,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             subtitle: Text(context.l10n.rpeTimerMore),
             onTap: () {
               Navigator.pop(context);
-              WorkoutCustomizationModalV2.show(context);
+              WorkoutCustomizationModalV3.show(context);
             },
           ),
           ListTile(

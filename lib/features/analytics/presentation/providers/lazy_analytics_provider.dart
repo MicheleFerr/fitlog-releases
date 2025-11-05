@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
@@ -8,6 +9,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_anal
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/activity_to_workout_converter.dart';
 
 /// Loading phase for progressive data loading
 enum LoadingPhase {
@@ -62,6 +64,9 @@ class LazyAnalyticsState {
   final bool hasMoreData;
   final String? error;
   final DateTime? lastFetchDate;
+
+  /// Computed property: Convert activities to workouts
+  List<Workout> get workouts => ActivityToWorkoutConverter.convert(activities);
   
   LazyAnalyticsState copyWith({
     List<ExerciseActivity>? activities,

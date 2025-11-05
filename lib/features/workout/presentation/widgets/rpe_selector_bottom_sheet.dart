@@ -115,12 +115,14 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   int? _selectedRpe;
   int? _calculatedRir;
   bool _showWeightAndReps = true;
-  
+  bool _isSetCompleted = false; // ✅ Toggle state for set completion
+  bool _originallyCompleted = false; // ✅ Track original completion state for button logic
+
   // Superset navigation state
   PageController? _pageController;
   int _currentExerciseIndex = 0;
   late ExerciseSet _currentExerciseSet;
-  
+
   // Superset batch completion data
   final Map<int, SupersetExerciseCompleteData> _supersetCompleteData = {};
 
@@ -148,11 +150,16 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       _actualReps = storedData.actualReps;
       _actualWeight = storedData.actualWeight;
       _selectedRpe = storedData.rpe;
+      // ✅ For superset batch data, assume completion if data exists
+      _isSetCompleted = true; // Data exists = was completed
+      _originallyCompleted = true;
     } else {
       // Load from exercise set
       _actualReps = exerciseSet.actualReps ?? widget.targetReps;
       _actualWeight = exerciseSet.weight ?? 0.0;
       _selectedRpe = exerciseSet.rpe;
+      _isSetCompleted = exerciseSet.isCompleted; // ✅ Initialize from set state
+      _originallyCompleted = exerciseSet.isCompleted; // ✅ Track original state (set once)
     }
     _updateRir();
   }
@@ -519,7 +526,73 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           child: _showWeightAndReps ? _buildWeightAndRepsSection(context, theme, colorScheme) : const SizedBox.shrink(),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
+
+        // ✅ NEW: Set Completion Toggle
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: _isSetCompleted
+                ? colorScheme.tertiaryContainer.withValues(alpha: 0.3)
+                : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: _isSetCompleted
+                  ? colorScheme.tertiary.withValues(alpha: 0.4)
+                  : colorScheme.outline.withValues(alpha: 0.2),
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    _isSetCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+                    size: 20,
+                    color: _isSetCompleted ? colorScheme.tertiary : colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    l10n.setCompleted,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: _isSetCompleted ? colorScheme.tertiary : colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              Transform.scale(
+                scale: 0.9,
+                child: Switch(
+                  value: _isSetCompleted,
+                  onChanged: (value) {
+                    setState(() {
+                      _isSetCompleted = value;
+                    });
+                    HapticFeedback.lightImpact();
+                  },
+                  thumbColor: WidgetStateProperty.resolveWith((states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return colorScheme.tertiary;
+                    }
+                    return colorScheme.outline;
+                  }),
+                  trackColor: WidgetStateProperty.resolveWith((states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return colorScheme.tertiaryContainer;
+                    }
+                    return colorScheme.surfaceContainerHighest;
+                  }),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 16),
 
         // RPE Section
         Container(
@@ -652,20 +725,26 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: Row(
             children: [
-              // Skip button
+              // ✅ Context-aware left button (Skip RPE / Cancel)
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    if (widget.isPartOfSuperset) {
-                      _saveCurrentExerciseData(0);
-                      if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
-                        Navigator.of(context).pop();
-                        widget.onSupersetCompleteAll!(_supersetCompleteData);
-                      }
-                      // Don't close modal until all exercises are completed
-                    } else {
+                    if (_originallyCompleted) {
+                      // Set was already completed → "Cancel" button (safe exit)
                       Navigator.of(context).pop();
-                      widget.onConfirm(_actualReps, _actualWeight, 0);
+                      // Don't call onConfirm - just close without changes
+                    } else {
+                      // Set was NOT completed → "Skip RPE" button (complete with rpe=0)
+                      if (widget.isPartOfSuperset) {
+                        _saveCurrentExerciseData(0);
+                        if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
+                          Navigator.of(context).pop();
+                          widget.onSupersetCompleteAll!(_supersetCompleteData);
+                        }
+                      } else {
+                        Navigator.of(context).pop();
+                        widget.onConfirm(_actualReps, _actualWeight, 0);
+                      }
                     }
                   },
                   style: OutlinedButton.styleFrom(
@@ -679,7 +758,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     ),
                   ),
                   child: Text(
-                    l10n.skipRpe,
+                    _originallyCompleted ? l10n.cancel : l10n.skipRpe,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: colorScheme.onSurfaceVariant,
@@ -715,11 +794,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         : [],
                   ),
                   child: FilledButton(
-                    onPressed: _selectedRpe != null
+                    // ✅ Enable button if RPE selected OR user unchecked completion toggle (unmarca)
+                    onPressed: (_selectedRpe != null || !_isSetCompleted)
                         ? () {
                             HapticFeedback.mediumImpact();
                             if (widget.isPartOfSuperset) {
-                              _saveCurrentExerciseData(_selectedRpe!);
+                              _saveCurrentExerciseData(_selectedRpe ?? 0);
                               if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
                                 // Tutti gli esercizi completati → chiudi e callback
                                 Navigator.of(context).pop();
@@ -736,7 +816,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                               }
                             } else {
                               Navigator.of(context).pop();
-                              widget.onConfirm(_actualReps, _actualWeight, _selectedRpe!);
+                              // ✅ Pass rpe = -1 if user toggled OFF (unmarca set)
+                              // rpe = 0 if user skipped RPE but kept toggle ON
+                              // rpe > 0 if user selected RPE
+                              final rpeToSend = !_isSetCompleted ? -1 : (_selectedRpe ?? 0);
+                              widget.onConfirm(_actualReps, _actualWeight, rpeToSend);
                             }
                           }
                         : null,

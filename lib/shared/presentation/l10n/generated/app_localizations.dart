@@ -2239,11 +2239,11 @@ abstract class AppLocalizations {
   /// **'Load settings from JSON file'**
   String get importSettingsDesc;
 
-  /// Reset settings to default values
+  /// Button text to reset to mode defaults
   ///
   /// In en, this message translates to:
-  /// **'Reset to Defaults'**
-  String get resetToDefaults;
+  /// **'Reset to {mode} Defaults'**
+  String resetToDefaults(String mode);
 
   /// Reset to defaults description
   ///
@@ -6671,10 +6671,10 @@ abstract class AppLocalizations {
   /// **'Rest time after completing all exercises'**
   String get restTimeAfterRound;
 
-  /// Message shown when a set is completed
+  /// Label for set completion status (used in toggle and messages)
   ///
   /// In en, this message translates to:
-  /// **'Set completed!'**
+  /// **'Set completed'**
   String get setCompleted;
 
   /// Next button
@@ -7751,7 +7751,7 @@ abstract class AppLocalizations {
   /// **'Tip'**
   String get tip;
 
-  /// Warning type filter option
+  /// Warning dialog title
   ///
   /// In en, this message translates to:
   /// **'Warning'**
@@ -9244,6 +9244,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'RPE (Rate of Perceived Exertion) helps you track how hard each set feels, enabling smart auto-regulation based on your fatigue level.'**
   String get enableRpeTooltip;
+
+  /// V4 dialog title for dependency warning
+  ///
+  /// In en, this message translates to:
+  /// **'Attention'**
+  String get attentionRequired;
+
+  /// V4 dialog button to enable feature
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enable;
+
+  /// V4 essentials section title
+  ///
+  /// In en, this message translates to:
+  /// **'Essentials'**
+  String get essentialsSection;
+
+  /// V4 essentials section description
+  ///
+  /// In en, this message translates to:
+  /// **'Core settings to get started'**
+  String get essentialsSectionDesc;
+
+  /// V4 advanced section title
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advancedSection;
+
+  /// V4 advanced section description
+  ///
+  /// In en, this message translates to:
+  /// **'Customizations for experienced users'**
+  String get advancedSectionDesc;
+
+  /// V4 visualization subcategory title
+  ///
+  /// In en, this message translates to:
+  /// **'Visualization'**
+  String get visualizationCategory;
+
+  /// V4 auto-regulation subcategory title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-regulation'**
+  String get autoRegulationCategory;
+
+  /// V4 interface subcategory title
+  ///
+  /// In en, this message translates to:
+  /// **'Interface'**
+  String get interfaceCategory;
 
   /// Enable TUT toggle title
   ///
@@ -20226,22 +20280,22 @@ abstract class AppLocalizations {
   /// **'{category} disabled'**
   String debugLogsCategoryDisabled(String category);
 
-  /// Exercise counting mode for weighted exercises (with weight)
+  /// Counting mode for weighted exercises
   ///
   /// In en, this message translates to:
-  /// **'Weighted'**
+  /// **'Weight + Reps'**
   String get countingModeWeighted;
 
-  /// Exercise counting mode for bodyweight exercises (reps only)
+  /// Counting mode for bodyweight exercises
   ///
   /// In en, this message translates to:
-  /// **'Reps'**
+  /// **'Reps Only'**
   String get countingModeReps;
 
-  /// Exercise counting mode for time-based exercises
+  /// Counting mode for time-based exercises
   ///
   /// In en, this message translates to:
-  /// **'Time'**
+  /// **'Time-based'**
   String get countingModeTime;
 
   /// Data refreshed successfully status message
@@ -20814,7 +20868,7 @@ abstract class AppLocalizations {
   /// **'Level'**
   String get level;
 
-  /// Current status indicator
+  /// Badge label indicating current selection
   ///
   /// In en, this message translates to:
   /// **'Current'**
@@ -21611,6 +21665,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to complete day'**
   String get failedToCompleteDay;
+
+  /// Button to change exercise counting format during workout
+  ///
+  /// In en, this message translates to:
+  /// **'Change counting format'**
+  String get changeCountingFormat;
+
+  /// Label showing the current counting format
+  ///
+  /// In en, this message translates to:
+  /// **'Current format'**
+  String get currentFormat;
+
+  /// Description for weighted counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Input: Weight (kg/lb) + Reps'**
+  String get countingModeWeightedDesc;
+
+  /// Example for weighted counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 80kg × 10 reps'**
+  String get countingModeWeightedExample;
+
+  /// Description for reps-only counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Input: Reps only (no weight)'**
+  String get countingModeRepsDesc;
+
+  /// Example for reps-only counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 15 reps'**
+  String get countingModeRepsExample;
+
+  /// Description for time-based counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Input: Duration (mm:ss)'**
+  String get countingModeTimeDesc;
+
+  /// Example for time-based counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 1:30 (90 seconds)'**
+  String get countingModeTimeExample;
+
+  /// Button to confirm a change action
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm change'**
+  String get confirmChange;
+
+  /// Title for counting mode change warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get countingModeWarningTitle;
+
+  /// Warning message when changing counting mode with completed sets
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} completed sets with format \"{fromMode}\".\n\nChanging to \"{toMode}\" may invalidate existing data.'**
+  String countingModeWarningMessage(int count, String fromMode, String toMode);
+
+  /// Additional info in counting mode warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Changing format during a workout is not recommended. Consider finishing the workout first.'**
+  String get countingModeWarningInfo;
+
+  /// Button to keep existing data when changing format
+  ///
+  /// In en, this message translates to:
+  /// **'Keep data'**
+  String get keepData;
+
+  /// Button to reset all data when changing format
+  ///
+  /// In en, this message translates to:
+  /// **'Reset all'**
+  String get resetAll;
+
+  /// Success message after counting mode change
+  ///
+  /// In en, this message translates to:
+  /// **'Counting format updated!'**
+  String get countingModeChanged;
+
+  /// Thank you message after submitting analytics feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your feedback!'**
+  String get analyticsFeedbackThankYou;
+
+  /// Subtitle for thank you message
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback helps us improve the analytics experience'**
+  String get analyticsFeedbackThankYouSubtitle;
+
+  /// Question asking if analytics is helpful
+  ///
+  /// In en, this message translates to:
+  /// **'Is this analytics view helpful?'**
+  String get analyticsFeedbackQuestion;
+
+  /// Button for positive feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Helpful'**
+  String get analyticsFeedbackHelpful;
+
+  /// Button for negative feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Not helpful'**
+  String get analyticsFeedbackNotHelpful;
+
+  /// Placeholder for comment text field
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us more (optional)'**
+  String get analyticsFeedbackCommentPlaceholder;
+
+  /// Button text while submitting feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting...'**
+  String get analyticsFeedbackSubmitting;
+
+  /// Button text to submit feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Submit feedback'**
+  String get analyticsFeedbackSubmit;
+
+  /// Error message when feedback submission fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not submit feedback. Please try again.'**
+  String get analyticsFeedbackError;
+
+  /// Success message after feedback submission
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback submitted successfully!'**
+  String get analyticsFeedbackSuccess;
+
+  /// Snackbar message when master toggle is auto-enabled
+  ///
+  /// In en, this message translates to:
+  /// **'✅ {masterName} auto-enabled (required for this feature)'**
+  String autoEnabledMaster(String masterName);
+
+  /// Snackbar message when dependent toggles are auto-disabled
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ {count} dependent features auto-disabled'**
+  String dependentsDisabled(int count);
+
+  /// Title for quick info icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Info Icon'**
+  String get quickInfoIconTitle;
+
+  /// Description for quick info icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for exercise details'**
+  String get quickInfoIconDescription;
+
+  /// Tooltip for quick info icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Shows exercise information modal with form cues and tips'**
+  String get quickInfoIconTooltip;
+
+  /// Title for warmup icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Icon'**
+  String get quickWarmupIconTitle;
+
+  /// Description for warmup icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for warmup suggestions'**
+  String get quickWarmupIconDescription;
+
+  /// Tooltip for warmup icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Displays warmup sets recommendation based on working weight'**
+  String get quickWarmupIconTooltip;
+
+  /// Title for prevention icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Prevention Icon'**
+  String get quickPreventionIconTitle;
+
+  /// Description for prevention icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for injury prevention tips'**
+  String get quickPreventionIconDescription;
+
+  /// Tooltip for prevention icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Shows injury prevention advice and mobility exercises'**
+  String get quickPreventionIconTooltip;
+
+  /// Title for exercise notes toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Notes'**
+  String get exerciseNotesTitle;
+
+  /// Description for exercise notes toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes about form and cues'**
+  String get exerciseNotesDescription;
+
+  /// Tooltip for exercise notes toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Personal notes visible only to you during workouts'**
+  String get exerciseNotesTooltip;
+
+  /// Title for exercise insights toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Insights'**
+  String get exerciseInsightsTitle;
+
+  /// Description for exercise insights toggle
+  ///
+  /// In en, this message translates to:
+  /// **'View charts and statistics'**
+  String get exerciseInsightsDescription;
+
+  /// Tooltip for exercise insights toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics charts showing volume, PRs, and progress trends'**
+  String get exerciseInsightsTooltip;
+
+  /// Performance warning for insights charts
+  ///
+  /// In en, this message translates to:
+  /// **'ℹ️ Charts may slow down on older devices'**
+  String get insightsPerformanceWarning;
+
+  /// Title for mode switch confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to {mode} Mode?'**
+  String modeSwitchWarningTitle(String mode);
+
+  /// Message for mode switch confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset your custom settings to {mode} defaults.'**
+  String modeSwitchWarningMessage(String mode);
+
+  /// Hint about undo feature in mode switch dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll have 5 seconds to undo after confirming.'**
+  String get modeSwitchUndoHint;
+
+  /// Snackbar message when undo is successful
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Settings restored'**
+  String get undoSuccessful;
 }
 
 class _AppLocalizationsDelegate

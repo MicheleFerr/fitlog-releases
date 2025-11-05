@@ -5,6 +5,8 @@ import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Smart workout CTA button that pre-loads workouts from active routines
@@ -247,27 +249,49 @@ class SmartWorkoutCTA extends ConsumerWidget {
       return;
     }
 
-    // Analytics: CTA tapped
-    // Note: WorkoutAnalytics import removed - analytics will be tracked in workout screen
-    // await WorkoutAnalytics.trackEvent(
-    //   'smart_cta_tapped',
-    //   properties: {
-    //     'sessionId': sessionId,
-    //     'templateName': templateName,
-    //     'timestamp': DateTime.now().toIso8601String(),
-    //   },
-    // );
+    // Fetch template to get exercises
+    final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+    if (templatesAsync is! AsyncData) {
+      if (context.mounted) {
+        context.goNamed('workout', queryParameters: {'templateId': templateId});
+      }
+      return;
+    }
 
-    // Navigate to workout screen with template ID and session ID
-    // The workout screen will handle loading the template and creating the workout
+    final templates = templatesAsync.value ?? [];
+    final template = templates.where((t) => t.id == templateId).firstOrNull;
+    if (template == null) {
+      if (context.mounted) {
+        context.goNamed('workout', queryParameters: {'templateId': templateId});
+      }
+      return;
+    }
+
+    // ✅ FIX #2: Re-enable analytics tracking
+    await WorkoutAnalytics.trackEvent(
+      'smart_cta_tapped',
+      properties: {
+        'sessionId': sessionId,
+        'templateName': templateName,
+        'templateId': templateId,
+        'exerciseCount': template.exercises.length,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+    );
+
+    // ✅ FIX #1: Pre-load workout with exercises from template
+    await ref.read(currentWorkoutProvider.notifier).createWorkoutFromRoutine(
+      routineName: template.name,
+      exercises: template.toWorkoutExercises(), // Convert ExerciseTemplate to Exercise
+      sessionId: sessionId,
+      templateId: template.id, // ✅ FIX #6: Pass template ID for auto-save
+    );
+
+    // Navigate to workout screen with session ID in extras
     if (context.mounted) {
       context.goNamed(
         'workout',
-        queryParameters: {
-          'templateId': templateId,
-          'sessionId': sessionId,
-          'fromSmartCTA': 'true',
-        },
+        extra: {'sessionId': sessionId},
       );
     }
   }

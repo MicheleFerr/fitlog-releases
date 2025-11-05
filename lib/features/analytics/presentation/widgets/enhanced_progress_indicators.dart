@@ -479,7 +479,7 @@ class GoalProgressWidget extends StatelessWidget {
                       color: context.colors.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.check_circle,
                       color: context.colors.success,
                       size: 20,

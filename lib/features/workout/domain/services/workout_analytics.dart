@@ -11,7 +11,7 @@ class WorkoutAnalytics {
       // Send to Firebase Analytics
       await FirebaseAnalytics.instance.logEvent(
         name: eventName,
-        parameters: properties,
+        parameters: properties ?? {}, // ✅ FIX #5: Fallback to empty map
       );
 
       // Log in debug mode

@@ -164,6 +164,7 @@ class WorkoutEventTracker {
   /// - [totalWeight] - Optional total weight lifted (in kg)
   /// - [completionRate] - Percentage of planned workout completed (0-100)
   /// - [workoutType] - Type of workout
+  /// - [sessionId] - Optional session ID for funnel correlation
   Future<void> trackWorkoutCompleted({
     required String workoutId,
     required int duration,
@@ -173,6 +174,7 @@ class WorkoutEventTracker {
     double? totalWeight,
     int? completionRate,
     String? workoutType,
+    String? sessionId, // ✅ FIX #8: Add sessionId for funnel correlation
   }) async {
     try {
       await analytics.logEvent(
@@ -186,6 +188,7 @@ class WorkoutEventTracker {
           if (totalWeight != null) AnalyticsParameters.totalWeight: totalWeight,
           if (completionRate != null) AnalyticsParameters.completionRate: completionRate,
           if (workoutType != null) AnalyticsParameters.workoutType: workoutType,
+          if (sessionId != null) AnalyticsParameters.sessionId: sessionId, // ✅ FIX #8: Include sessionId
         },
       );
 

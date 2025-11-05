@@ -1170,7 +1170,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importSettingsDesc => 'Carica le impostazioni da file JSON';
 
   @override
-  String get resetToDefaults => 'Ripristina Predefiniti';
+  String resetToDefaults(String mode) {
+    return 'Resetta a Default $mode';
+  }
 
   @override
   String get resetToDefaultsDesc =>
@@ -3616,7 +3618,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tempo di riposo dopo aver completato tutti gli esercizi';
 
   @override
-  String get setCompleted => 'Serie completata!';
+  String get setCompleted => 'Serie completata';
 
   @override
   String get next => 'Avanti';
@@ -4191,7 +4193,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tip => 'Suggerimento';
 
   @override
-  String get warning => 'Avviso';
+  String get warning => 'Attenzione';
 
   @override
   String get variant => 'Variante';
@@ -5043,6 +5045,33 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get enableRpeTooltip =>
       'RPE (Rate of Perceived Exertion) ti aiuta a tracciare quanto è impegnativa ogni serie, permettendo un\'auto-regolazione intelligente basata sul tuo livello di affaticamento.';
+
+  @override
+  String get attentionRequired => 'Attenzione';
+
+  @override
+  String get enable => 'Abilita';
+
+  @override
+  String get essentialsSection => 'Essenziali';
+
+  @override
+  String get essentialsSectionDesc => 'Impostazioni fondamentali per iniziare';
+
+  @override
+  String get advancedSection => 'Avanzate';
+
+  @override
+  String get advancedSectionDesc => 'Personalizzazioni per utenti esperti';
+
+  @override
+  String get visualizationCategory => 'Visualizzazione';
+
+  @override
+  String get autoRegulationCategory => 'Auto-regolazione';
+
+  @override
+  String get interfaceCategory => 'Interfaccia';
 
   @override
   String get enableTutTitle => 'Abilita Monitoraggio TUT';
@@ -11621,13 +11650,13 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get countingModeWeighted => 'Con Peso';
+  String get countingModeWeighted => 'Peso + Reps';
 
   @override
-  String get countingModeReps => 'Ripetizioni';
+  String get countingModeReps => 'Solo Reps';
 
   @override
-  String get countingModeTime => 'Tempo';
+  String get countingModeTime => 'Basato su tempo';
 
   @override
   String get refreshed => 'Aggiornato';
@@ -12381,4 +12410,169 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get failedToCompleteDay => 'Impossibile completare il giorno';
+
+  @override
+  String get changeCountingFormat => 'Cambia formato counting';
+
+  @override
+  String get currentFormat => 'Formato attuale';
+
+  @override
+  String get countingModeWeightedDesc => 'Input: Peso (kg/lb) + Ripetizioni';
+
+  @override
+  String get countingModeWeightedExample => 'Esempio: 80kg × 10 rip';
+
+  @override
+  String get countingModeRepsDesc => 'Input: Solo ripetizioni (senza peso)';
+
+  @override
+  String get countingModeRepsExample => 'Esempio: 15 rip';
+
+  @override
+  String get countingModeTimeDesc => 'Input: Durata (mm:ss)';
+
+  @override
+  String get countingModeTimeExample => 'Esempio: 1:30 (90 secondi)';
+
+  @override
+  String get confirmChange => 'Conferma cambio';
+
+  @override
+  String get countingModeWarningTitle => 'Attenzione';
+
+  @override
+  String countingModeWarningMessage(int count, String fromMode, String toMode) {
+    return 'Hai $count serie completate con formato \"$fromMode\".\n\nCambiare in \"$toMode\" potrebbe invalidare i dati esistenti.';
+  }
+
+  @override
+  String get countingModeWarningInfo =>
+      'Cambiare formato durante un workout non è consigliato. Considera di finire prima il workout.';
+
+  @override
+  String get keepData => 'Mantieni dati';
+
+  @override
+  String get resetAll => 'Resetta tutto';
+
+  @override
+  String get countingModeChanged => 'Formato counting aggiornato!';
+
+  @override
+  String get analyticsFeedbackThankYou => 'Grazie per il tuo feedback!';
+
+  @override
+  String get analyticsFeedbackThankYouSubtitle =>
+      'Il tuo feedback ci aiuta a migliorare l\'esperienza delle analitiche';
+
+  @override
+  String get analyticsFeedbackQuestion =>
+      'Questa vista delle analitiche è utile?';
+
+  @override
+  String get analyticsFeedbackHelpful => 'Utile';
+
+  @override
+  String get analyticsFeedbackNotHelpful => 'Non utile';
+
+  @override
+  String get analyticsFeedbackCommentPlaceholder =>
+      'Raccontaci di più (opzionale)';
+
+  @override
+  String get analyticsFeedbackSubmitting => 'Invio in corso...';
+
+  @override
+  String get analyticsFeedbackSubmit => 'Invia feedback';
+
+  @override
+  String get analyticsFeedbackError =>
+      'Impossibile inviare il feedback. Riprova.';
+
+  @override
+  String get analyticsFeedbackSuccess => 'Feedback inviato con successo!';
+
+  @override
+  String autoEnabledMaster(String masterName) {
+    return '✅ $masterName auto-abilitato (richiesto per questa funzione)';
+  }
+
+  @override
+  String dependentsDisabled(int count) {
+    return '⚠️ $count funzioni dipendenti auto-disabilitate';
+  }
+
+  @override
+  String get quickInfoIconTitle => 'Icona Info Rapida';
+
+  @override
+  String get quickInfoIconDescription => 'Tocca per dettagli esercizio';
+
+  @override
+  String get quickInfoIconTooltip =>
+      'Mostra modal con informazioni esercizio, cues e suggerimenti';
+
+  @override
+  String get quickWarmupIconTitle => 'Icona Riscaldamento';
+
+  @override
+  String get quickWarmupIconDescription =>
+      'Tocca per suggerimenti riscaldamento';
+
+  @override
+  String get quickWarmupIconTooltip =>
+      'Mostra raccomandazioni serie di riscaldamento basate sul peso di lavoro';
+
+  @override
+  String get quickPreventionIconTitle => 'Icona Prevenzione';
+
+  @override
+  String get quickPreventionIconDescription =>
+      'Tocca per consigli prevenzione infortuni';
+
+  @override
+  String get quickPreventionIconTooltip =>
+      'Mostra consigli prevenzione infortuni ed esercizi mobilità';
+
+  @override
+  String get exerciseNotesTitle => 'Note Esercizio';
+
+  @override
+  String get exerciseNotesDescription => 'Aggiungi note su tecnica e cues';
+
+  @override
+  String get exerciseNotesTooltip =>
+      'Note personali visibili solo a te durante allenamenti';
+
+  @override
+  String get exerciseInsightsTitle => 'Analisi Esercizio';
+
+  @override
+  String get exerciseInsightsDescription => 'Visualizza grafici e statistiche';
+
+  @override
+  String get exerciseInsightsTooltip =>
+      'Grafici analytics con volume, PR e trend progresso';
+
+  @override
+  String get insightsPerformanceWarning =>
+      'ℹ️ I grafici potrebbero rallentare su dispositivi meno recenti';
+
+  @override
+  String modeSwitchWarningTitle(String mode) {
+    return 'Passare a Modalità $mode?';
+  }
+
+  @override
+  String modeSwitchWarningMessage(String mode) {
+    return 'Questo resetterà le tue impostazioni personalizzate ai default $mode.';
+  }
+
+  @override
+  String get modeSwitchUndoHint =>
+      'Avrai 5 secondi per annullare dopo la conferma.';
+
+  @override
+  String get undoSuccessful => '✅ Impostazioni ripristinate';
 }

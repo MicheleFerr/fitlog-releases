@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_start_button.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_suggestion_card.dart';
@@ -39,6 +38,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/counting_mode_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/counting_mode_warning_dialog.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_contribution_modal.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_advice_modal.dart';
@@ -75,7 +77,6 @@ class ExerciseListItem extends ConsumerStatefulWidget {
 }
 
 class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
-  bool _exerciseStarted = false;
   ExerciseActivity? _lastActivity;
   bool _loadingHistory = false;
   bool _warmupSuggestionDismissed = false;
@@ -1261,22 +1262,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
               const SizedBox(height: 12),
 
-              // Start button for first set duration tracking
-              if ((config.setDurationTracking ?? false) &&
-                  !_exerciseStarted &&
-                  widget.exercise.sets.isNotEmpty &&
-                  widget.exercise.sets.where((s) => s.isCompleted).isEmpty)
-                ExerciseStartButton(
-                  exerciseId: widget.exercise.id,
-                  exerciseName: widget.exercise.name,
-                  onStarted: () {
-                    setState(() {
-                      _exerciseStarted = true;
-                    });
-                  },
-                  isFirstSet: true,
-                ),
-
               // Warmup suggestion (smart display logic)
               if (_shouldShowWarmupSuggestion())
                 WarmupSuggestionCard(
@@ -2314,163 +2299,64 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   void _showExerciseOptions(BuildContext context) {
-    HapticFeedback.mediumImpact();
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.5,
-        minChildSize: 0.3,
-        maxChildSize: 0.7,
-        builder: (context, scrollController) => DecoratedBox(
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 16),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: context.colors.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Scrollable content
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.only(bottom: 20),
-                  children: [
-                    ListTile(
-                      leading: const Icon(AppIcons.edit),
-                      title: const Text('Modifica nome e note'),
-                      subtitle: const Text(
-                        'Personalizza nome esercizio e aggiungi note',
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showExerciseEditor(context);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(AppIcons.info),
-                      title: const Text('Info esercizio'),
-                      subtitle: const Text('Muscoli coinvolti e tecnica'),
-                      onTap: () async {
-                        // Cattura il context prima di chiudere il menu
-                        final scaffoldContext = context;
-                        Navigator.pop(context);
-                        final exerciseData = await _loadExerciseDataFromJson();
-                        if (exerciseData != null &&
-                            mounted &&
-                            scaffoldContext.mounted) {
-                          _showExerciseInfoModal(scaffoldContext, exerciseData);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(AppIcons.whatshot, color: context.warningColor),
-                      title: const Text('Info riscaldamento'),
-                      subtitle: const Text('Consigli per il warmup'),
-                      onTap: () async {
-                        // Cattura il context prima di chiudere il menu
-                        final scaffoldContext = context;
-                        Navigator.pop(context);
-                        final exerciseData = await _loadExerciseDataFromJson();
-                        if (exerciseData != null &&
-                            _hasWarmupData(exerciseData) &&
-                            mounted &&
-                            scaffoldContext.mounted) {
-                          _showWarmupModal(scaffoldContext, exerciseData);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        AppIcons.shieldOutlined,
-                        color: context.successColor,
-                      ),
-                      title: const Text('Prevenzione infortuni'),
-                      subtitle: const Text('Consigli per evitare infortuni'),
-                      onTap: () async {
-                        // Cattura il context prima di chiudere il menu
-                        final scaffoldContext = context;
-                        Navigator.pop(context);
-                        final exerciseData = await _loadExerciseDataFromJson();
-                        if (exerciseData != null &&
-                            _hasInjuryPreventionData(exerciseData) &&
-                            mounted &&
-                            scaffoldContext.mounted) {
-                          _showInjuryPreventionModal(
-                            scaffoldContext,
-                            exerciseData,
-                          );
-                        }
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(AppIcons.history),
-                      title: const Text('Storico'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showExerciseHistory(context);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(AppIcons.copy),
-                      title: const Text('Duplica esercizio'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _duplicateExercise();
-                      },
-                    ),
-                    const Divider(),
-                    // 🆕 Segnala problema
-                    ListTile(
-                      leading: Icon(
-                        AppIcons.flagOutlined,
-                        color: context.warningColor,
-                      ),
-                      title: const Text('Segnala problema'),
-                      subtitle: const Text('Bug, errori o suggerimenti'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        // Show feedback dialog
-                        ExerciseFeedbackButton.showFeedbackDialog(
-                          context,
-                          exerciseId: widget.exercise.id,
-                          exerciseName: widget.exercise.name,
-                          version: '1.0.0',
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: Icon(AppIcons.delete, color: context.colors.error),
-                      title: Text(
-                        'Elimina esercizio',
-                        style: TextStyle(color: context.colors.error),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showDeleteConfirmation(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    ExerciseOptionsModal.show(
+      context,
+      widget.exercise,
+      onEdit: () => _showExerciseEditor(context),
+      onHistory: () => _showExerciseHistory(context),
+      onDuplicate: () => _duplicateExercise(),
+      onDelete: () => _showDeleteConfirmation(context),
+      onChangeCountingMode: () => _handleCountingModeChange(context),
     );
+  }
+
+  Future<void> _handleCountingModeChange(BuildContext context) async {
+    // Show counting mode picker
+    final newMode = await CountingModePickerModal.show(
+      context,
+      currentMode: widget.exercise.countingMode,
+    );
+
+    // User cancelled
+    if (newMode == null || !mounted) return;
+
+    // Check if there are completed sets
+    final completedSetsCount = ref.read(currentWorkoutProvider.notifier).getCompletedSetsCount(widget.exercise.id);
+
+    if (completedSetsCount > 0) {
+      // Show warning dialog
+      final action = await CountingModeWarningDialog.show(
+        context,
+        completedSetsCount: completedSetsCount,
+        fromMode: widget.exercise.countingMode.getDisplayName(context.l10n),
+        toMode: newMode.getDisplayName(context.l10n),
+      );
+
+      // User cancelled
+      if (action == CountingModeWarningAction.cancelled || !mounted) return;
+
+      // TODO: Handle reset action if user chose reset
+      // For now, we always keep data (action == keep || action == reset)
+    }
+
+    // Change counting mode in provider
+    if (mounted) {
+      ref.read(currentWorkoutProvider.notifier).changeExerciseCountingMode(
+        widget.exercise.id,
+        newMode,
+      );
+
+      // Show success feedback
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.countingModeChanged),
+            duration: const Duration(seconds: 2),
+            backgroundColor: context.colors.primary,
+          ),
+        );
+      }
+    }
   }
 
   void _openContributionModal(ContributionType type, {String? contextType}) {
@@ -3700,15 +3586,44 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           _handleRPESuggestion(suggestedWeight);
         },
         onConfirm: (actualReps, actualWeight, rpe) {
-          if (rpe == 0) {
-            // User chose to mark as incomplete
+          // ✅ NEW: Handle toggle state via rpe special codes
+          // rpe = -1 → User toggled OFF completion (unmarca)
+          // rpe = 0  → User skipped RPE but kept completion
+          // rpe > 0  → Normal RPE value
+
+          if (rpe == -1) {
+            // ✅ User toggled OFF completion → unmarca set
             _toggleSetCompletion(set);
             SnackBarService.showInfo(
               context,
               '↩️ Set ${set.setNumber} marked as incomplete',
             );
+          } else if (rpe == 0) {
+            // ✅ User skipped RPE but kept completion → update without RPE
+            final updatedSet = set.copyWith(
+              actualReps: actualReps,
+              weight: actualWeight,
+              rpe: null, // Remove RPE if skipped
+              isCompleted: true,
+            );
+
+            widget.onSetToggleComplete!(updatedSet);
+
+            // Haptic feedback for set update
+            try {
+              HapticFeedbackService.setCompletion(ref);
+            } catch (e) {
+              if (kDebugMode) {
+                debugPrint('Haptic feedback error: $e');
+              }
+            }
+
+            SnackBarService.showInfo(
+              context,
+              '✅ Set ${set.setNumber} updated',
+            );
           } else {
-            // Update set with new RPE values - preserve existing duration if present
+            // ✅ Normal RPE value → update set with RPE
             final updatedSet = set.copyWith(
               actualReps: actualReps,
               weight: actualWeight,

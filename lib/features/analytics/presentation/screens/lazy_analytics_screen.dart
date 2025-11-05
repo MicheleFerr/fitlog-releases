@@ -206,14 +206,14 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 // Workout Frequency
                 _buildSectionTitle(context, localizations.workoutFrequency),
                 const SizedBox(height: 8),
-                WorkoutFrequencyChart(activities: analyticsState.activities),
+                WorkoutFrequencyChart(workouts: analyticsState.workouts),
                 const SizedBox(height: 16),
 
                 // Top Exercises
                 _buildSectionTitle(context, localizations.topExercises),
                 const SizedBox(height: 8),
                 ExerciseStatsCard(
-                  activities: analyticsState.activities,
+                  workouts: analyticsState.workouts,
                 ),
               ]),
             ),

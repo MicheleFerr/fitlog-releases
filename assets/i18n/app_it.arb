@@ -1091,7 +1091,7 @@
   "restTimeBetweenExercises": "Tempo di riposo tra ogni esercizio in un round",
   "afterRound": "Dopo Round",
   "restTimeAfterRound": "Tempo di riposo dopo aver completato tutti gli esercizi",
-  "setCompleted": "Serie completata!",
+  "setCompleted": "Serie completata",
   "next": "Avanti",
   "single": "Singolo",
   "superset": "Superset",
@@ -1850,6 +1850,15 @@
   "enableRpeTitle": "Abilita Monitoraggio RPE",
   "enableRpeDescription": "Richiedi lo sforzo percepito dopo ogni serie",
   "enableRpeTooltip": "RPE (Rate of Perceived Exertion) ti aiuta a tracciare quanto è impegnativa ogni serie, permettendo un'auto-regolazione intelligente basata sul tuo livello di affaticamento.",
+  "attentionRequired": "Attenzione",
+  "enable": "Abilita",
+  "essentialsSection": "Essenziali",
+  "essentialsSectionDesc": "Impostazioni fondamentali per iniziare",
+  "advancedSection": "Avanzate",
+  "advancedSectionDesc": "Personalizzazioni per utenti esperti",
+  "visualizationCategory": "Visualizzazione",
+  "autoRegulationCategory": "Auto-regolazione",
+  "interfaceCategory": "Interfaccia",
   "enableTutTitle": "Abilita Monitoraggio TUT",
   "enableTutDescription": "Traccia il Tempo Sotto Tensione per ogni serie",
   "enableTutTooltip": "TUT (Tempo Sotto Tensione) misura quanto dura ogni serie, aiutandoti a ottimizzare la crescita muscolare tracciando velocità di esecuzione e tempi di riposo.",
@@ -5228,5 +5237,187 @@
   "failedToCompleteDay": "Impossibile completare il giorno",
   "@failedToCompleteDay": {
     "description": "Error message when day completion fails"
+  },
+  "changeCountingFormat": "Cambia formato counting",
+  "currentFormat": "Formato attuale",
+  "countingModeWeighted": "Peso + Reps",
+  "countingModeWeightedDesc": "Input: Peso (kg/lb) + Ripetizioni",
+  "countingModeWeightedExample": "Esempio: 80kg × 10 rip",
+  "countingModeReps": "Solo Reps",
+  "countingModeRepsDesc": "Input: Solo ripetizioni (senza peso)",
+  "countingModeRepsExample": "Esempio: 15 rip",
+  "countingModeTime": "Basato su tempo",
+  "countingModeTimeDesc": "Input: Durata (mm:ss)",
+  "countingModeTimeExample": "Esempio: 1:30 (90 secondi)",
+  "confirmChange": "Conferma cambio",
+  "current": "Attuale",
+  "warning": "Attenzione",
+  "countingModeWarningTitle": "Attenzione",
+  "countingModeWarningMessage": "Hai {count} serie completate con formato \"{fromMode}\".\n\nCambiare in \"{toMode}\" potrebbe invalidare i dati esistenti.",
+  "countingModeWarningInfo": "Cambiare formato durante un workout non è consigliato. Considera di finire prima il workout.",
+  "keepData": "Mantieni dati",
+  "resetAll": "Resetta tutto",
+  "countingModeChanged": "Formato counting aggiornato!",
+  "analyticsFeedbackThankYou": "Grazie per il tuo feedback!",
+  "@analyticsFeedbackThankYou": {
+    "description": "Messaggio di ringraziamento dopo l'invio del feedback"
+  },
+  "analyticsFeedbackThankYouSubtitle": "Il tuo feedback ci aiuta a migliorare l'esperienza delle analitiche",
+  "@analyticsFeedbackThankYouSubtitle": {
+    "description": "Sottotitolo per il messaggio di ringraziamento"
+  },
+  "analyticsFeedbackQuestion": "Questa vista delle analitiche è utile?",
+  "@analyticsFeedbackQuestion": {
+    "description": "Domanda se le analitiche sono utili"
+  },
+  "analyticsFeedbackHelpful": "Utile",
+  "@analyticsFeedbackHelpful": {
+    "description": "Pulsante per feedback positivo"
+  },
+  "analyticsFeedbackNotHelpful": "Non utile",
+  "@analyticsFeedbackNotHelpful": {
+    "description": "Pulsante per feedback negativo"
+  },
+  "analyticsFeedbackCommentPlaceholder": "Raccontaci di più (opzionale)",
+  "@analyticsFeedbackCommentPlaceholder": {
+    "description": "Placeholder per il campo di testo del commento"
+  },
+  "analyticsFeedbackSubmitting": "Invio in corso...",
+  "@analyticsFeedbackSubmitting": {
+    "description": "Testo del pulsante durante l'invio del feedback"
+  },
+  "analyticsFeedbackSubmit": "Invia feedback",
+  "@analyticsFeedbackSubmit": {
+    "description": "Testo del pulsante per inviare il feedback"
+  },
+  "analyticsFeedbackError": "Impossibile inviare il feedback. Riprova.",
+  "@analyticsFeedbackError": {
+    "description": "Messaggio di errore quando l'invio del feedback fallisce"
+  },
+  "analyticsFeedbackSuccess": "Feedback inviato con successo!",
+  "@analyticsFeedbackSuccess": {
+    "description": "Messaggio di successo dopo l'invio del feedback"
+  },
+  "autoEnabledMaster": "✅ {masterName} auto-abilitato (richiesto per questa funzione)",
+  "@autoEnabledMaster": {
+    "description": "Messaggio snackbar quando il toggle master viene auto-abilitato",
+    "placeholders": {
+      "masterName": {
+        "type": "String",
+        "description": "Nome del toggle master che è stato abilitato"
+      }
+    }
+  },
+  "dependentsDisabled": "⚠️ {count} funzioni dipendenti auto-disabilitate",
+  "@dependentsDisabled": {
+    "description": "Messaggio snackbar quando i toggle dipendenti vengono auto-disabilitati",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di funzioni dipendenti disabilitate"
+      }
+    }
+  },
+  "quickInfoIconTitle": "Icona Info Rapida",
+  "@quickInfoIconTitle": {
+    "description": "Titolo per toggle icona info rapida"
+  },
+  "quickInfoIconDescription": "Tocca per dettagli esercizio",
+  "@quickInfoIconDescription": {
+    "description": "Descrizione per toggle icona info rapida"
+  },
+  "quickInfoIconTooltip": "Mostra modal con informazioni esercizio, cues e suggerimenti",
+  "@quickInfoIconTooltip": {
+    "description": "Tooltip per toggle icona info rapida"
+  },
+  "quickWarmupIconTitle": "Icona Riscaldamento",
+  "@quickWarmupIconTitle": {
+    "description": "Titolo per toggle icona riscaldamento"
+  },
+  "quickWarmupIconDescription": "Tocca per suggerimenti riscaldamento",
+  "@quickWarmupIconDescription": {
+    "description": "Descrizione per toggle icona riscaldamento"
+  },
+  "quickWarmupIconTooltip": "Mostra raccomandazioni serie di riscaldamento basate sul peso di lavoro",
+  "@quickWarmupIconTooltip": {
+    "description": "Tooltip per toggle icona riscaldamento"
+  },
+  "quickPreventionIconTitle": "Icona Prevenzione",
+  "@quickPreventionIconTitle": {
+    "description": "Titolo per toggle icona prevenzione"
+  },
+  "quickPreventionIconDescription": "Tocca per consigli prevenzione infortuni",
+  "@quickPreventionIconDescription": {
+    "description": "Descrizione per toggle icona prevenzione"
+  },
+  "quickPreventionIconTooltip": "Mostra consigli prevenzione infortuni ed esercizi mobilità",
+  "@quickPreventionIconTooltip": {
+    "description": "Tooltip per toggle icona prevenzione"
+  },
+  "exerciseNotesTitle": "Note Esercizio",
+  "@exerciseNotesTitle": {
+    "description": "Titolo per toggle note esercizio"
+  },
+  "exerciseNotesDescription": "Aggiungi note su tecnica e cues",
+  "@exerciseNotesDescription": {
+    "description": "Descrizione per toggle note esercizio"
+  },
+  "exerciseNotesTooltip": "Note personali visibili solo a te durante allenamenti",
+  "@exerciseNotesTooltip": {
+    "description": "Tooltip per toggle note esercizio"
+  },
+  "exerciseInsightsTitle": "Analisi Esercizio",
+  "@exerciseInsightsTitle": {
+    "description": "Titolo per toggle analisi esercizio"
+  },
+  "exerciseInsightsDescription": "Visualizza grafici e statistiche",
+  "@exerciseInsightsDescription": {
+    "description": "Descrizione per toggle analisi esercizio"
+  },
+  "exerciseInsightsTooltip": "Grafici analytics con volume, PR e trend progresso",
+  "@exerciseInsightsTooltip": {
+    "description": "Tooltip per toggle analisi esercizio"
+  },
+  "insightsPerformanceWarning": "ℹ️ I grafici potrebbero rallentare su dispositivi meno recenti",
+  "@insightsPerformanceWarning": {
+    "description": "Avviso performance per grafici analisi"
+  },
+  "modeSwitchWarningTitle": "Passare a Modalità {mode}?",
+  "@modeSwitchWarningTitle": {
+    "description": "Titolo per dialog conferma cambio modalità",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Nome modalità (Base o Pro)"
+      }
+    }
+  },
+  "modeSwitchWarningMessage": "Questo resetterà le tue impostazioni personalizzate ai default {mode}.",
+  "@modeSwitchWarningMessage": {
+    "description": "Messaggio per dialog conferma cambio modalità",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Nome modalità (Base o Pro)"
+      }
+    }
+  },
+  "modeSwitchUndoHint": "Avrai 5 secondi per annullare dopo la conferma.",
+  "@modeSwitchUndoHint": {
+    "description": "Suggerimento sulla funzione annulla nel dialog cambio modalità"
+  },
+  "resetToDefaults": "Resetta a Default {mode}",
+  "@resetToDefaults": {
+    "description": "Testo pulsante per resettare ai default della modalità",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Nome modalità (Base o Pro)"
+      }
+    }
+  },
+  "undoSuccessful": "✅ Impostazioni ripristinate",
+  "@undoSuccessful": {
+    "description": "Messaggio snackbar quando l'annullamento ha successo"
   }
 }

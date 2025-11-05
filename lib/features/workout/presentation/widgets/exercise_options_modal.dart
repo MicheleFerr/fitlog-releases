@@ -16,6 +16,7 @@ class ExerciseOptionsModal extends StatelessWidget {
     this.onHistory,
     this.onDuplicate,
     this.onDelete,
+    this.onChangeCountingMode,
     this.imageUrl,
     this.languageCode = 'en',
   });
@@ -24,6 +25,7 @@ class ExerciseOptionsModal extends StatelessWidget {
   final VoidCallback? onHistory;
   final VoidCallback? onDuplicate;
   final VoidCallback? onDelete;
+  final VoidCallback? onChangeCountingMode;
   final String? imageUrl;
   final String languageCode;
 
@@ -279,7 +281,19 @@ class ExerciseOptionsModal extends StatelessWidget {
                       },
                     ),
                   ],
-                  
+
+                  if (onChangeCountingMode != null) ...[
+                    ListTile(
+                      leading: Icon(AppIcons.swapHoriz),
+                      title: const Text('Cambia formato counting'),
+                      subtitle: const Text('Passa tra peso/reps/tempo'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        onChangeCountingMode!();
+                      },
+                    ),
+                  ],
+
                   if (onDuplicate != null) ...[
                     ListTile(
                       leading: const Icon(Icons.copy),
@@ -730,6 +744,7 @@ class ExerciseOptionsModal extends StatelessWidget {
     VoidCallback? onHistory,
     VoidCallback? onDuplicate,
     VoidCallback? onDelete,
+    VoidCallback? onChangeCountingMode,
     String? imageUrl,
     String languageCode = 'en',
   }) {
@@ -744,6 +759,7 @@ class ExerciseOptionsModal extends StatelessWidget {
         onHistory: onHistory,
         onDuplicate: onDuplicate,
         onDelete: onDelete,
+        onChangeCountingMode: onChangeCountingMode,
         imageUrl: imageUrl,
         languageCode: languageCode,
       ),

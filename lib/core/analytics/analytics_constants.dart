@@ -263,6 +263,9 @@ class AnalyticsParameters {
   /// Workout completion percentage (0-100)
   static const String completionRate = 'completion_rate';
 
+  /// Session ID for analytics funnel correlation
+  static const String sessionId = 'session_id';
+
   // ===== EXERCISE PARAMETERS =====
 
   /// Exercise ID

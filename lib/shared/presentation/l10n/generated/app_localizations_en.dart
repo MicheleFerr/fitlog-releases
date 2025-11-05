@@ -1160,7 +1160,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importSettingsDesc => 'Load settings from JSON file';
 
   @override
-  String get resetToDefaults => 'Reset to Defaults';
+  String resetToDefaults(String mode) {
+    return 'Reset to $mode Defaults';
+  }
 
   @override
   String get resetToDefaultsDesc => 'Restore all settings to default';
@@ -3589,7 +3591,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restTimeAfterRound => 'Rest time after completing all exercises';
 
   @override
-  String get setCompleted => 'Set completed!';
+  String get setCompleted => 'Set completed';
 
   @override
   String get next => 'Next';
@@ -5002,6 +5004,33 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get enableRpeTooltip =>
       'RPE (Rate of Perceived Exertion) helps you track how hard each set feels, enabling smart auto-regulation based on your fatigue level.';
+
+  @override
+  String get attentionRequired => 'Attention';
+
+  @override
+  String get enable => 'Enable';
+
+  @override
+  String get essentialsSection => 'Essentials';
+
+  @override
+  String get essentialsSectionDesc => 'Core settings to get started';
+
+  @override
+  String get advancedSection => 'Advanced';
+
+  @override
+  String get advancedSectionDesc => 'Customizations for experienced users';
+
+  @override
+  String get visualizationCategory => 'Visualization';
+
+  @override
+  String get autoRegulationCategory => 'Auto-regulation';
+
+  @override
+  String get interfaceCategory => 'Interface';
 
   @override
   String get enableTutTitle => 'Enable TUT Tracking';
@@ -11488,13 +11517,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get countingModeWeighted => 'Weighted';
+  String get countingModeWeighted => 'Weight + Reps';
 
   @override
-  String get countingModeReps => 'Reps';
+  String get countingModeReps => 'Reps Only';
 
   @override
-  String get countingModeTime => 'Time';
+  String get countingModeTime => 'Time-based';
 
   @override
   String get refreshed => 'Refreshed';
@@ -12242,4 +12271,165 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToCompleteDay => 'Failed to complete day';
+
+  @override
+  String get changeCountingFormat => 'Change counting format';
+
+  @override
+  String get currentFormat => 'Current format';
+
+  @override
+  String get countingModeWeightedDesc => 'Input: Weight (kg/lb) + Reps';
+
+  @override
+  String get countingModeWeightedExample => 'Example: 80kg × 10 reps';
+
+  @override
+  String get countingModeRepsDesc => 'Input: Reps only (no weight)';
+
+  @override
+  String get countingModeRepsExample => 'Example: 15 reps';
+
+  @override
+  String get countingModeTimeDesc => 'Input: Duration (mm:ss)';
+
+  @override
+  String get countingModeTimeExample => 'Example: 1:30 (90 seconds)';
+
+  @override
+  String get confirmChange => 'Confirm change';
+
+  @override
+  String get countingModeWarningTitle => 'Warning';
+
+  @override
+  String countingModeWarningMessage(int count, String fromMode, String toMode) {
+    return 'You have $count completed sets with format \"$fromMode\".\n\nChanging to \"$toMode\" may invalidate existing data.';
+  }
+
+  @override
+  String get countingModeWarningInfo =>
+      'Changing format during a workout is not recommended. Consider finishing the workout first.';
+
+  @override
+  String get keepData => 'Keep data';
+
+  @override
+  String get resetAll => 'Reset all';
+
+  @override
+  String get countingModeChanged => 'Counting format updated!';
+
+  @override
+  String get analyticsFeedbackThankYou => 'Thank you for your feedback!';
+
+  @override
+  String get analyticsFeedbackThankYouSubtitle =>
+      'Your feedback helps us improve the analytics experience';
+
+  @override
+  String get analyticsFeedbackQuestion => 'Is this analytics view helpful?';
+
+  @override
+  String get analyticsFeedbackHelpful => 'Helpful';
+
+  @override
+  String get analyticsFeedbackNotHelpful => 'Not helpful';
+
+  @override
+  String get analyticsFeedbackCommentPlaceholder => 'Tell us more (optional)';
+
+  @override
+  String get analyticsFeedbackSubmitting => 'Submitting...';
+
+  @override
+  String get analyticsFeedbackSubmit => 'Submit feedback';
+
+  @override
+  String get analyticsFeedbackError =>
+      'Could not submit feedback. Please try again.';
+
+  @override
+  String get analyticsFeedbackSuccess => 'Feedback submitted successfully!';
+
+  @override
+  String autoEnabledMaster(String masterName) {
+    return '✅ $masterName auto-enabled (required for this feature)';
+  }
+
+  @override
+  String dependentsDisabled(int count) {
+    return '⚠️ $count dependent features auto-disabled';
+  }
+
+  @override
+  String get quickInfoIconTitle => 'Quick Info Icon';
+
+  @override
+  String get quickInfoIconDescription => 'Tap for exercise details';
+
+  @override
+  String get quickInfoIconTooltip =>
+      'Shows exercise information modal with form cues and tips';
+
+  @override
+  String get quickWarmupIconTitle => 'Warmup Icon';
+
+  @override
+  String get quickWarmupIconDescription => 'Tap for warmup suggestions';
+
+  @override
+  String get quickWarmupIconTooltip =>
+      'Displays warmup sets recommendation based on working weight';
+
+  @override
+  String get quickPreventionIconTitle => 'Prevention Icon';
+
+  @override
+  String get quickPreventionIconDescription => 'Tap for injury prevention tips';
+
+  @override
+  String get quickPreventionIconTooltip =>
+      'Shows injury prevention advice and mobility exercises';
+
+  @override
+  String get exerciseNotesTitle => 'Exercise Notes';
+
+  @override
+  String get exerciseNotesDescription => 'Add notes about form and cues';
+
+  @override
+  String get exerciseNotesTooltip =>
+      'Personal notes visible only to you during workouts';
+
+  @override
+  String get exerciseInsightsTitle => 'Exercise Insights';
+
+  @override
+  String get exerciseInsightsDescription => 'View charts and statistics';
+
+  @override
+  String get exerciseInsightsTooltip =>
+      'Analytics charts showing volume, PRs, and progress trends';
+
+  @override
+  String get insightsPerformanceWarning =>
+      'ℹ️ Charts may slow down on older devices';
+
+  @override
+  String modeSwitchWarningTitle(String mode) {
+    return 'Switch to $mode Mode?';
+  }
+
+  @override
+  String modeSwitchWarningMessage(String mode) {
+    return 'This will reset your custom settings to $mode defaults.';
+  }
+
+  @override
+  String get modeSwitchUndoHint =>
+      'You\'ll have 5 seconds to undo after confirming.';
+
+  @override
+  String get undoSuccessful => '✅ Settings restored';
 }
