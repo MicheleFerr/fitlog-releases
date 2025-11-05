@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/foundation.dart';
 
@@ -31,6 +32,26 @@ abstract class CommunityRepository {
 
   Future<List<CommunityContribution>> searchContributions(String query);
   Future<UserContributionStats> calculateUserStats(String userId);
+
+  // Discovery & Search (Task 3)
+  Stream<List<CommunityContribution>> searchContributionsStream({
+    required String query,
+    ContributionFilters? filters,
+    int limit = 20,
+  });
+
+  Stream<List<CommunityContribution>> filterContributions({
+    required ContributionFilters filters,
+    int limit = 20,
+  });
+
+  // Save/unsave contributions
+  Future<void> saveContribution(String contributionId, String userId);
+  Future<void> unsaveContribution(String contributionId, String userId);
+  Future<List<String>> getSavedContributionIds(String userId);
+
+  // Analytics
+  Future<void> incrementViewCount(String contributionId);
 }
 
 class FirestoreCommunityRepository implements CommunityRepository {
