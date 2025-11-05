@@ -160,13 +160,14 @@ class _GradientActionCardState extends State<GradientActionCard>
               highlightColor: widget.accentColor.withValues(alpha: 0.1),
               child: Stack(
                 children: [
-                  // Content
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+                  // Content - Positioned.fill ensures proper centering
+                  Positioned.fill(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
                         // Icon with staggered animation (100ms)
                         AnimatedIconSwap(
                           outlinedIcon: widget.outlinedIcon,
@@ -197,6 +198,7 @@ class _GradientActionCardState extends State<GradientActionCard>
                       ],
                     ),
                   ),
+                ),
 
                   // Overlay when pressed
                   if (_isPressed)
