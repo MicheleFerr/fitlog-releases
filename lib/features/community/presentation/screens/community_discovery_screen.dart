@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/filters_modal.dart';
+import 'package:gymbro_flutter_new/features/community/presentation/widgets/sort_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -165,9 +166,7 @@ class _CommunityDiscoveryScreenState
 
           // Sort Button
           OutlinedButton.icon(
-            onPressed: () {
-              // TODO: Open sort modal (Task 11)
-            },
+            onPressed: () => SortModal.show(context),
             icon: Icon(
               AppIcons.sort,
               size: 20,
