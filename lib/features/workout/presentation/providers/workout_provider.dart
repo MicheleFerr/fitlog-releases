@@ -174,9 +174,25 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     final workout = state;
     if (workout == null) return;
 
+    // Convert ExerciseTemplate list to Exercise list
+    final exercises = template.exercises.map((templateExercise) {
+      return Exercise(
+        name: templateExercise.exerciseName,
+        type: templateExercise.type,
+        category: templateExercise.category,
+        sets: templateExercise.sets.map((templateSet) {
+          return ExerciseSet(
+            setNumber: templateSet.setNumber,
+            weight: templateSet.targetWeight,
+            reps: templateSet.targetReps,
+          );
+        }).toList(),
+      );
+    }).toList();
+
     state = workout.copyWith(
       name: template.name,
-      exercises: template.exercises,
+      exercises: exercises,
       isPreloaded: false, // No longer pre-loaded
       exercisesModified: true, // Track modification
     );
@@ -223,8 +239,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
         // Crea un nuovo workout dal template
         workout = Workout(
+        id: const Uuid().v4(),
         name: workoutTemplate.name,
         templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         exercises: workoutTemplate.exercises.map((templateExercise) {
           // Crea l'esercizio con i set predefiniti dal template
           var exercise = Exercise(
