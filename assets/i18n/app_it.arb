@@ -728,6 +728,9 @@
   "weeklyFrequencyInfo": "Numero medio di giorni di allenamento per settimana nelle ultime 4 settimane.",
   "retry": "Riprova",
   "community": "Community",
+  "comingSoon": "Prossimamente",
+  "communityComingSoonTitle": "Funzionalità Community in Arrivo",
+  "communityComingSoonDescription": "Stiamo lavorando per creare una fantastica funzionalità community dove potrai connetterti con altri atleti, condividere i tuoi progressi e imparare gli uni dagli altri. Resta sintonizzato!",
   "generalInformation": "Informazioni Generali",
   "technicalNotesAndTut": "Note Tecniche & TuT",
   "warmupAndPreparation": "Riscaldamento & Preparazione",
@@ -5419,5 +5422,21 @@
   "undoSuccessful": "✅ Impostazioni ripristinate",
   "@undoSuccessful": {
     "description": "Messaggio snackbar quando l'annullamento ha successo"
+  },
+  "sortByHelpful": "Più Utili",
+  "@sortByHelpful": {
+    "description": "Opzione ordinamento per contributi più utili"
+  },
+  "sortByRecent": "Più Recenti",
+  "@sortByRecent": {
+    "description": "Opzione ordinamento per contributi più recenti"
+  },
+  "sortBySaved": "Più Salvati",
+  "@sortBySaved": {
+    "description": "Opzione ordinamento per contributi più salvati"
+  },
+  "sortByTrending": "Trending",
+  "@sortByTrending": {
+    "description": "Opzione ordinamento per contributi trending"
   }
 }

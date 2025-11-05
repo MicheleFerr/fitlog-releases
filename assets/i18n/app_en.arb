@@ -3132,6 +3132,18 @@
   "@community": {
     "description": "Community section title"
   },
+  "comingSoon": "Coming Soon",
+  "@comingSoon": {
+    "description": "Coming soon label"
+  },
+  "communityComingSoonTitle": "Community Feature Coming Soon",
+  "@communityComingSoonTitle": {
+    "description": "Community feature coming soon dialog title"
+  },
+  "communityComingSoonDescription": "We're working on building an amazing community feature where you can connect with other athletes, share your progress, and learn from each other. Stay tuned!",
+  "@communityComingSoonDescription": {
+    "description": "Community feature coming soon dialog description"
+  },
   "generalInformation": "General Information",
   "@generalInformation": {
     "description": "General information section title"
@@ -14871,5 +14883,21 @@
   "undoSuccessful": "✅ Settings restored",
   "@undoSuccessful": {
     "description": "Snackbar message when undo is successful"
+  },
+  "sortByHelpful": "Most Helpful",
+  "@sortByHelpful": {
+    "description": "Sort option for most helpful contributions"
+  },
+  "sortByRecent": "Most Recent",
+  "@sortByRecent": {
+    "description": "Sort option for most recent contributions"
+  },
+  "sortBySaved": "Most Saved",
+  "@sortBySaved": {
+    "description": "Sort option for most saved contributions"
+  },
+  "sortByTrending": "Trending",
+  "@sortByTrending": {
+    "description": "Sort option for trending contributions"
   }
 }
