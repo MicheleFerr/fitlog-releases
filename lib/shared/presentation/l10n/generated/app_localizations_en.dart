@@ -13577,4 +13577,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get keepScreenOn => 'Keep screen on';
+
+  @override
+  String get recoveryWorkout => 'Recover Workout';
+
+  @override
+  String get recoverNow => 'Recover Now';
+
+  @override
+  String completedOn(String date) {
+    return 'Completed on $date';
+  }
+
+  @override
+  String get doWorkoutNow => 'Do Workout Now';
+
+  @override
+  String get extendRoutine => 'Extend Routine';
+
+  @override
+  String get addToEndOfRoutine => 'Add to end of routine';
+
+  @override
+  String get skipPermanently => 'Skip Permanently';
+
+  @override
+  String get skipThisWorkout => 'Skip this workout';
+
+  @override
+  String get manageUncompletedWorkout => 'Manage missed workout';
+
+  @override
+  String get chooseHowToProceed => 'Choose how to proceed';
+
+  @override
+  String get routineExtendedSuccessfully => 'Routine extended successfully';
+
+  @override
+  String get workoutSkipped => 'Workout skipped';
+
+  @override
+  String get recoveryComplete => 'Recovery complete';
+
+  @override
+  String get workoutCompletedSuccessfully => 'Workout completed successfully';
+
+  @override
+  String get missedWorkoutRecovered => 'Missed workout recovered';
 }

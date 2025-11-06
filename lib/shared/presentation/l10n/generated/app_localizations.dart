@@ -24125,6 +24125,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep screen on'**
   String get keepScreenOn;
+
+  /// Title for missed workout recovery feature
+  ///
+  /// In en, this message translates to:
+  /// **'Recover Workout'**
+  String get recoveryWorkout;
+
+  /// Button to start recovery of missed workout
+  ///
+  /// In en, this message translates to:
+  /// **'Recover Now'**
+  String get recoverNow;
+
+  /// Display when a workout was completed
+  ///
+  /// In en, this message translates to:
+  /// **'Completed on {date}'**
+  String completedOn(String date);
+
+  /// Button to start a workout immediately
+  ///
+  /// In en, this message translates to:
+  /// **'Do Workout Now'**
+  String get doWorkoutNow;
+
+  /// Option to extend routine by adding day
+  ///
+  /// In en, this message translates to:
+  /// **'Extend Routine'**
+  String get extendRoutine;
+
+  /// Description for extending routine
+  ///
+  /// In en, this message translates to:
+  /// **'Add to end of routine'**
+  String get addToEndOfRoutine;
+
+  /// Option to permanently skip a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Permanently'**
+  String get skipPermanently;
+
+  /// Confirm skipping the current workout
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this workout'**
+  String get skipThisWorkout;
+
+  /// Title for managing uncompleted workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Manage missed workout'**
+  String get manageUncompletedWorkout;
+
+  /// Prompt for user to choose action
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how to proceed'**
+  String get chooseHowToProceed;
+
+  /// Success message when routine is extended
+  ///
+  /// In en, this message translates to:
+  /// **'Routine extended successfully'**
+  String get routineExtendedSuccessfully;
+
+  /// Confirmation that workout was skipped
+  ///
+  /// In en, this message translates to:
+  /// **'Workout skipped'**
+  String get workoutSkipped;
+
+  /// Success message when recovery is finished
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery complete'**
+  String get recoveryComplete;
+
+  /// Confirmation that workout was completed
+  ///
+  /// In en, this message translates to:
+  /// **'Workout completed successfully'**
+  String get workoutCompletedSuccessfully;
+
+  /// Message confirming missed workout has been recovered
+  ///
+  /// In en, this message translates to:
+  /// **'Missed workout recovered'**
+  String get missedWorkoutRecovered;
 }
 
 class _AppLocalizationsDelegate

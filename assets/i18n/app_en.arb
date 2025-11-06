@@ -16377,5 +16377,71 @@
   "keepScreenOn": "Keep screen on",
   "@keepScreenOn": {
     "description": "Setting to keep screen on during workouts"
+  },
+  "recoveryWorkout": "Recover Workout",
+  "@recoveryWorkout": {
+    "description": "Title for missed workout recovery feature"
+  },
+  "recoverNow": "Recover Now",
+  "@recoverNow": {
+    "description": "Button to start recovery of missed workout"
+  },
+  "completedOn": "Completed on {date}",
+  "@completedOn": {
+    "description": "Display when a workout was completed",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "description": "Formatted date"
+      }
+    }
+  },
+  "doWorkoutNow": "Do Workout Now",
+  "@doWorkoutNow": {
+    "description": "Button to start a workout immediately"
+  },
+  "extendRoutine": "Extend Routine",
+  "@extendRoutine": {
+    "description": "Option to extend routine by adding day"
+  },
+  "addToEndOfRoutine": "Add to end of routine",
+  "@addToEndOfRoutine": {
+    "description": "Description for extending routine"
+  },
+  "skipPermanently": "Skip Permanently",
+  "@skipPermanently": {
+    "description": "Option to permanently skip a workout"
+  },
+  "skipThisWorkout": "Skip this workout",
+  "@skipThisWorkout": {
+    "description": "Confirm skipping the current workout"
+  },
+  "manageUncompletedWorkout": "Manage missed workout",
+  "@manageUncompletedWorkout": {
+    "description": "Title for managing uncompleted workouts"
+  },
+  "chooseHowToProceed": "Choose how to proceed",
+  "@chooseHowToProceed": {
+    "description": "Prompt for user to choose action"
+  },
+  "routineExtendedSuccessfully": "Routine extended successfully",
+  "@routineExtendedSuccessfully": {
+    "description": "Success message when routine is extended"
+  },
+  "workoutSkipped": "Workout skipped",
+  "@workoutSkipped": {
+    "description": "Confirmation that workout was skipped"
+  },
+  "recoveryComplete": "Recovery complete",
+  "@recoveryComplete": {
+    "description": "Success message when recovery is finished"
+  },
+  "workoutCompletedSuccessfully": "Workout completed successfully",
+  "@workoutCompletedSuccessfully": {
+    "description": "Confirmation that workout was completed"
+  },
+  "missedWorkoutRecovered": "Missed workout recovered",
+  "@missedWorkoutRecovered": {
+    "description": "Message confirming missed workout has been recovered"
   }
 }

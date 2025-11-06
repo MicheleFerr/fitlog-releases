@@ -6068,5 +6068,20 @@
   "trustScore": "Punteggio di fiducia: {score}",
   "workoutStartedFromTemplate": "Allenamento avviato dal template: {name}",
   "xpPoints": "{count} XP",
-  "keepScreenOn": "Mantieni schermo acceso"
+  "keepScreenOn": "Mantieni schermo acceso",
+  "recoveryWorkout": "Recupera Allenamento",
+  "recoverNow": "Recupera Ora",
+  "completedOn": "Completato il {date}",
+  "doWorkoutNow": "Fai Allenamento Ora",
+  "extendRoutine": "Estendi Routine",
+  "addToEndOfRoutine": "Aggiungi alla fine della routine",
+  "skipPermanently": "Salta Permanentemente",
+  "skipThisWorkout": "Salta questo allenamento",
+  "manageUncompletedWorkout": "Gestisci allenamento mancato",
+  "chooseHowToProceed": "Scegli come procedere",
+  "routineExtendedSuccessfully": "Routine estesa con successo",
+  "workoutSkipped": "Allenamento saltato",
+  "recoveryComplete": "Recupero completato",
+  "workoutCompletedSuccessfully": "Allenamento completato con successo",
+  "missedWorkoutRecovered": "Allenamento mancato recuperato"
 }

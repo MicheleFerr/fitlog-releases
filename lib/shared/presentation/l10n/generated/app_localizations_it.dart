@@ -13726,4 +13726,52 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get keepScreenOn => 'Mantieni schermo acceso';
+
+  @override
+  String get recoveryWorkout => 'Recupera Allenamento';
+
+  @override
+  String get recoverNow => 'Recupera Ora';
+
+  @override
+  String completedOn(String date) {
+    return 'Completato il $date';
+  }
+
+  @override
+  String get doWorkoutNow => 'Fai Allenamento Ora';
+
+  @override
+  String get extendRoutine => 'Estendi Routine';
+
+  @override
+  String get addToEndOfRoutine => 'Aggiungi alla fine della routine';
+
+  @override
+  String get skipPermanently => 'Salta Permanentemente';
+
+  @override
+  String get skipThisWorkout => 'Salta questo allenamento';
+
+  @override
+  String get manageUncompletedWorkout => 'Gestisci allenamento mancato';
+
+  @override
+  String get chooseHowToProceed => 'Scegli come procedere';
+
+  @override
+  String get routineExtendedSuccessfully => 'Routine estesa con successo';
+
+  @override
+  String get workoutSkipped => 'Allenamento saltato';
+
+  @override
+  String get recoveryComplete => 'Recupero completato';
+
+  @override
+  String get workoutCompletedSuccessfully =>
+      'Allenamento completato con successo';
+
+  @override
+  String get missedWorkoutRecovered => 'Allenamento mancato recuperato';
 }
