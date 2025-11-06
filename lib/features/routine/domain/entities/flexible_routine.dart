@@ -671,4 +671,104 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
       int.parse(parts[2]),
     );
   }
+
+  // ✅ NEW: Missed Workout Recovery Methods
+
+  /// Check if should show recovery CTA
+  /// Returns true if: yesterday had scheduled workout, and today has no completed workout
+  bool shouldShowRecoveryCTA() {
+    final now = DateTime.now();
+    final nowUtc = now.toUtc();
+    final todayNormalized = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
+    final yesterdayNormalized = todayNormalized.subtract(const Duration(days: 1));
+
+    // Don't show if it's before today (happens before midnight)
+    if (nowUtc.isBefore(todayNormalized)) return false;
+
+    final yesterdayKey = _dateKeyUtc(yesterdayNormalized);
+    final todayKey = _dateKeyUtc(todayNormalized);
+
+    final yesterdayDay = schedule[yesterdayKey];
+    final todayDay = schedule[todayKey];
+
+    // Yesterday must have been scheduled (not rest, not completed)
+    final yesterdayWasScheduled =
+        yesterdayDay?.status == DayStatus.scheduled &&
+        yesterdayDay?.templateId != null;
+
+    // Today must not be completed yet
+    final todayNotCompleted = todayDay == null ||
+        (todayDay.status != DayStatus.completed &&
+            todayDay.status != DayStatus.rest);
+
+    return yesterdayWasScheduled && todayNotCompleted;
+  }
+
+  /// Get yesterday's missed workout (if any)
+  ScheduledDay? getYesterdayMissedWorkout() {
+    final now = DateTime.now();
+    final yesterday = now.subtract(const Duration(days: 1));
+    final yesterdayKey = _dateKeyUtc(yesterday.toUtc());
+
+    final yesterdayDay = schedule[yesterdayKey];
+    if (yesterdayDay?.status == DayStatus.scheduled &&
+        yesterdayDay?.templateId != null) {
+      return yesterdayDay;
+    }
+    return null;
+  }
+
+  /// Check if a workout was completed today
+  bool hasCompletedWorkoutToday() {
+    final todayKey = _dateKeyUtc(DateTime.now().toUtc());
+    final todayDay = schedule[todayKey];
+    return todayDay?.status == DayStatus.completed;
+  }
+
+  /// Apply missed workout recovery: skip yesterday, mark today as completed recovery
+  FlexibleRoutine performMissedWorkoutRecovery(String workoutId) {
+    final now = DateTime.now();
+    final yesterday = now.subtract(const Duration(days: 1));
+
+    final yesterdayKey = _dateKeyUtc(yesterday.toUtc());
+    final todayKey = _dateKeyUtc(now.toUtc());
+
+    final updatedSchedule = Map<String, ScheduledDay>.from(schedule);
+
+    // Update yesterday: mark as skipped
+    if (updatedSchedule.containsKey(yesterdayKey)) {
+      final yesterdayDay = updatedSchedule[yesterdayKey]!;
+      updatedSchedule[yesterdayKey] = yesterdayDay.copyWith(
+        status: DayStatus.skipped,
+        skipReason: 'Recovered next day',
+      );
+    }
+
+    // Update today: mark as completed recovery
+    final today = updatedSchedule[todayKey] ??
+        ScheduledDay(
+          date: now,
+          status: DayStatus.completed,
+        );
+
+    updatedSchedule[todayKey] = today.copyWith(
+      status: DayStatus.completed,
+      workoutId: workoutId,
+      isRecovery: true,
+      originalMissedDate: yesterday,
+    );
+
+    // Return updated routine
+    return copyWith(
+      schedule: updatedSchedule,
+      completedDays: completedDays + 1,
+      lastWorkoutDate: DateTime.now(),
+    );
+  }
+
+  /// Generate UTC-normalized date key for Firestore
+  String _dateKeyUtc(DateTime date) {
+    final normalized = DateTime.utc(date.year, date.month, date.day);
+    return normalized.toIso8601String().split('T')[0];
+  }
 }
