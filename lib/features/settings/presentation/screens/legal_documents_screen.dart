@@ -70,7 +70,7 @@ class LegalDocumentsScreen extends StatelessWidget {
             ),
             title: Text(context.l10n.legalDisclaimerTitle),
             subtitle: Text(context.l10n.disclaimerSubtitle),
-            trailing: Icon(
+            trailing: const Icon(
               AppIcons.chevronRight,
               size: AppIconSize.small,
             ),
