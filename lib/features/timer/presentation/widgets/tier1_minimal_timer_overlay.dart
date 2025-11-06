@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_ui_state_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Minimal Timer Overlay - Refactored for Consolidated Provider System
 /// 
@@ -365,7 +366,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
           // Center icon
           const Center(
             child: Icon(
-              Icons.timer_outlined,
+              AppIcons.timerOffOutlined,
               color: Colors.white,
               size: 14,
             ),
@@ -380,7 +381,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildControlButton(
-          icon: timerState.isPaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
+          icon: timerState.isPaused ? AppIcons.playArrowRounded : AppIcons.pauseRounded,
           onPressed: () => _handlePauseResume(timerState),
           semanticLabel: timerState.isPaused 
             ? AppLocalizations.of(context).resume 
@@ -388,7 +389,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
         ),
         const SizedBox(width: 6),
         _buildControlButton(
-          icon: Icons.skip_next_rounded,
+          icon: AppIcons.skipNextRounded,
           onPressed: _handleSkip,
           semanticLabel: 'Skip',
         ),

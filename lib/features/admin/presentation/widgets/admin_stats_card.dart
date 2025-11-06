@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminStatsCard extends ConsumerWidget {
   const AdminStatsCard({super.key});
@@ -31,7 +32,7 @@ class AdminStatsCard extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.analytics,
+                  AppIcons.analytics,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -47,7 +48,7 @@ class AdminStatsCard extends ConsumerWidget {
                     ref.invalidate(collectionStatsProvider);
                     ref.invalidate(adminStatsProvider);
                   },
-                  icon: const Icon(Icons.refresh),
+                  icon: const Icon(AppIcons.refresh),
                   tooltip: l10n.refresh,
                 ),
               ],
@@ -96,7 +97,7 @@ class AdminStatsCard extends ConsumerWidget {
           children: [
             Expanded(
               child: _StatItem(
-                icon: Icons.fitness_center,
+                icon: AppIcons.workout,
                 title: l10n.exerciseCountLabel,
                 value: exerciseCount.toString(),
                 color: exerciseCount > 0 ? Colors.green : Colors.orange,
@@ -104,7 +105,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: Icons.info,
+                icon: AppIcons.infoIcon,
                 title: l10n.versionMetadata,
                 value: hasVersionMetadata ? l10n.present : l10n.missing,
                 color: hasVersionMetadata ? Colors.green : Colors.red,
@@ -112,7 +113,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: Icons.search,
+                icon: AppIcons.search,
                 title: l10n.searchIndex,
                 value: hasSearchIndex ? l10n.present : l10n.missing,
                 color: hasSearchIndex ? Colors.green : Colors.red,
@@ -144,7 +145,7 @@ class AdminStatsCard extends ConsumerWidget {
           children: [
             Expanded(
               child: _StatItem(
-                icon: Icons.feedback,
+                icon: AppIcons.feedback,
                 title: l10n.pendingCorrections,
                 value: stats.pendingCorrections.toString(),
                 color: stats.pendingCorrections > 0 ? Colors.orange : Colors.green,
@@ -152,7 +153,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: Icons.check_circle,
+                icon: AppIcons.complete,
                 title: l10n.approvedCorrections,
                 value: stats.approvedCorrections.toString(),
                 color: Colors.green,
@@ -160,7 +161,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: Icons.cancel,
+                icon: AppIcons.cancel,
                 title: l10n.rejectedCorrections,
                 value: stats.rejectedCorrections.toString(),
                 color: Colors.red,
@@ -173,7 +174,7 @@ class AdminStatsCard extends ConsumerWidget {
           children: [
             Expanded(
               child: _StatItem(
-                icon: Icons.people,
+                icon: AppIcons.people,
                 title: l10n.totalUsers,
                 value: stats.totalUsers.toString(),
                 color: Colors.blue,
@@ -181,7 +182,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: Icons.update,
+                icon: AppIcons.updateIcon,
                 title: l10n.lastUpdate,
                 value: _formatDate(stats.lastUpdate),
                 color: Colors.purple,
@@ -214,7 +215,7 @@ class AdminStatsCard extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.error,
+            AppIcons.error,
             color: Theme.of(context).colorScheme.error,
           ),
           const SizedBox(width: 8),
@@ -345,7 +346,7 @@ class _VersionInfoCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.info,
+                AppIcons.infoIcon,
                 size: 16,
                 color: Theme.of(context).colorScheme.primary,
               ),

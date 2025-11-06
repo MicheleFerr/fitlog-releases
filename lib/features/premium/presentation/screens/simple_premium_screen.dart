@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Simple premium screen that works without crashes
 class SimplePremiumScreen extends ConsumerWidget {
@@ -42,7 +43,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     Icon(
-                      Icons.star,
+                      AppIcons.star,
                       size: 60,
                       color: theme.colorScheme.onPrimary,
                     ),
@@ -81,49 +82,49 @@ class SimplePremiumScreen extends ConsumerWidget {
               
               _buildFeatureItem(
                 context,
-                Icons.analytics,
+                AppIcons.analytics,
                 'Volume Progress',
                 'Track your workout volume over time',
                 theme,
               ),
               _buildFeatureItem(
                 context,
-                Icons.dashboard,
+                AppIcons.dashboard,
                 'Weekly Dashboard',
                 'Comprehensive weekly workout analytics',
                 theme,
               ),
               _buildFeatureItem(
                 context,
-                Icons.balance,
+                AppIcons.balance,
                 'Muscle Balance',
                 'Analyze muscle group balance',
                 theme,
               ),
               _buildFeatureItem(
                 context,
-                Icons.insights,
+                AppIcons.insights,
                 'Advanced Analytics',
                 'Deep insights into your performance',
                 theme,
               ),
               _buildFeatureItem(
                 context,
-                Icons.history,
+                AppIcons.history,
                 'Detailed History',
                 'Complete workout history with details',
                 theme,
               ),
               _buildFeatureItem(
                 context,
-                Icons.cloud_sync,
+                AppIcons.cloudSync,
                 'Cloud Sync',
                 'Sync across all your devices',
                 theme,
               ),
               _buildFeatureItem(
                 context,
-                Icons.block,
+                AppIcons.block,
                 'No Ads',
                 'Enjoy ad-free experience',
                 theme,
@@ -185,7 +186,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.info,
                         color: theme.colorScheme.onPrimaryContainer,
                       ),
                       const SizedBox(width: 12),
@@ -211,7 +212,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.check_circle,
+                        AppIcons.complete,
                         size: 48,
                         color: theme.colorScheme.primary,
                       ),
@@ -285,7 +286,7 @@ class SimplePremiumScreen extends ConsumerWidget {
             ),
           ),
           Icon(
-            Icons.check_circle,
+            AppIcons.complete,
             color: theme.colorScheme.primary,
             size: 20,
           ),

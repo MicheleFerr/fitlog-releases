@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WarmupSuggestionCard extends ConsumerStatefulWidget {
   
@@ -213,7 +214,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                 child: Row(
                   children: [
                     Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       size: 20,
                       color: theme.colorScheme.primary,
                     ),
@@ -239,7 +240,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                       ),
                     ),
                     Icon(
-                      _isExpanded ? Icons.expand_less : Icons.expand_more,
+                      _isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                       color: theme.colorScheme.onSurfaceVariant,
                       size: 24,
                     ),
@@ -287,7 +288,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                             widget.onDismiss?.call();
                           },
                           icon: Icon(
-                            Icons.close,
+                            AppIcons.close,
                             size: 18,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -354,7 +355,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                     padding: const EdgeInsets.all(16),
                     child: FilledButton.icon(
                       onPressed: _addAllWarmupSets,
-                      icon: const Icon(Icons.add, size: 16),
+                      icon: const Icon(AppIcons.add, size: 16),
                       label: Text(l10n.addAll),
                       style: FilledButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),

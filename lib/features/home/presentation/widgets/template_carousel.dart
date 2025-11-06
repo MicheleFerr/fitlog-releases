@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 // UNIFIED SYSTEM IMPORT
 import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart';
 import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Debug logger for template carousel widget (TEMPORARY FOR DEBUGGING)
 class _CarouselLogger {
@@ -112,7 +113,7 @@ class TemplateCarousel extends ConsumerWidget {
               TextButton.icon(
                 onPressed: () => _navigateToTemplates(context),
                 icon: Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   size: 16,
                   color: colorScheme.primary,
                 ),
@@ -171,7 +172,7 @@ class TemplateCarousel extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               color: colorScheme.error,
               size: 32,
             ),
@@ -236,7 +237,7 @@ class TemplateCarousel extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: colorScheme.primary,
               size: 48,
             ),
@@ -314,7 +315,7 @@ class TemplateCarousel extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           color: colorScheme.primary,
                           size: 20,
                         ),
@@ -353,7 +354,7 @@ class TemplateCarousel extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.schedule,
+                        AppIcons.schedule,
                         size: 16,
                         color: colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
@@ -367,7 +368,7 @@ class TemplateCarousel extends ConsumerWidget {
                       ),
                       const Spacer(),
                       Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         size: 16,
                         color: colorScheme.onSurface.withValues(alpha: 0.7),
                       ),

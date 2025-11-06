@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tooltip overlay showing exercises in a superset with detailed info
 class SupersetExercisesTooltip extends ConsumerStatefulWidget {
@@ -126,7 +127,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
           child: Row(
             children: [
               Icon(
-                Icons.info_outline,
+                AppIcons.info,
                 size: 18,
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -154,7 +155,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
           child: Row(
             children: [
               Icon(
-                Icons.healing,
+                AppIcons.healing,
                 size: 18,
                 color: Theme.of(context).colorScheme.secondary,
               ),
@@ -182,7 +183,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
           child: Row(
             children: [
               Icon(
-                Icons.school,
+                AppIcons.education,
                 size: 18,
                 color: Theme.of(context).colorScheme.tertiary,
               ),
@@ -279,7 +280,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
-                                    Icons.link,
+                                    AppIcons.link,
                                     color: colorScheme.secondary,
                                     size: 24,
                                   ),
@@ -306,7 +307,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                                 ),
                                 IconButton(
                                   onPressed: () => Navigator.of(context).pop(),
-                                  icon: const Icon(Icons.close),
+                                  icon: const Icon(AppIcons.close),
                                   style: IconButton.styleFrom(
                                     backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                   ),
@@ -330,7 +331,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                             child: Row(
                               children: [
                                 Icon(
-                                  Icons.info_outline,
+                                  AppIcons.info,
                                   size: 18,
                                   color: colorScheme.primary,
                                 ),
@@ -381,7 +382,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                                 Row(
                                   children: [
                                     Icon(
-                                      Icons.tips_and_updates,
+                                      AppIcons.tipsAndUpdates,
                                       size: 18,
                                       color: colorScheme.tertiary,
                                     ),
@@ -521,7 +522,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 // Info button
                 IconButton(
                   onPressed: () => widget.onExerciseInfo?.call(exercise),
-                  icon: const Icon(Icons.info_outline),
+                  icon: const Icon(AppIcons.info),
                   style: IconButton.styleFrom(
                     backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.3),
                   ),
@@ -546,7 +547,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                     Row(
                       children: [
                         Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           size: 16,
                           color: colorScheme.primary,
                         ),
@@ -566,7 +567,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                   Row(
                     children: [
                       Icon(
-                        Icons.accessible,
+                        AppIcons.accessible,
                         size: 16,
                         color: colorScheme.secondary,
                       ),
@@ -588,7 +589,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                   Row(
                     children: [
                       Icon(
-                        Icons.touch_app,
+                        AppIcons.touchApp,
                         size: 14,
                         color: colorScheme.tertiary,
                       ),

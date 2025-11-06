@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class PremiumPurchaseScreen extends ConsumerStatefulWidget {
   const PremiumPurchaseScreen({super.key});
@@ -180,7 +181,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
       ),
       child: Column(
         children: [
-          const Icon(Icons.star, size: 48, color: Colors.amber),
+          const Icon(AppIcons.star, size: 48, color: Colors.amber),
           const SizedBox(height: 16),
           Text(
             'Unlock GymBro Premium',
@@ -515,7 +516,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                 child: Row(
                   children: [
                     Icon(
-                      Icons.error_outline,
+                      AppIcons.error,
                       color: colorScheme.onErrorContainer,
                     ),
                     const SizedBox(width: 8),
@@ -529,7 +530,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                     ),
                     IconButton(
                       onPressed: () => ref.read(premiumUpgradeProvider.notifier).clearError(),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       color: colorScheme.onErrorContainer,
                     ),
                   ],
@@ -617,7 +618,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.check_circle,
+                AppIcons.complete,
                 size: 80,
                 color: colorScheme.primary,
               ),
@@ -645,7 +646,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                         context,
                         'Cloud Sync',
                         'Active',
-                        Icons.cloud_done,
+                        AppIcons.cloudDone,
                         Colors.green,
                       ),
                       const Divider(),
@@ -653,7 +654,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                         context,
                         'Backup',
                         'Automatic',
-                        Icons.backup,
+                        AppIcons.backup,
                         Colors.green,
                       ),
                       const Divider(),
@@ -661,7 +662,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                         context,
                         'Community',
                         'Full Access',
-                        Icons.people,
+                        AppIcons.people,
                         Colors.green,
                       ),
                     ],

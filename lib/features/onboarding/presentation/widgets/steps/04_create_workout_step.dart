@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CreateWorkoutStep extends StatefulWidget {
 
@@ -98,7 +99,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.add_circle_outline,
+            AppIcons.addCircleOutline,
             size: 80,
             color: colorScheme.primary,
           ),
@@ -138,7 +139,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.video_library_outlined,
+                  AppIcons.videoLibraryOutlined,
                   size: 64,
                   color: colorScheme.onSurface.withOpacity(0.4),
                 ),
@@ -250,7 +251,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: colorScheme.primary,
                             size: 20,
                           ),
@@ -291,7 +292,7 @@ class _MockFab extends StatelessWidget {
       onPressed: onTap,
       backgroundColor: colorScheme.primary,
       foregroundColor: colorScheme.onPrimary,
-      child: const Icon(Icons.add),
+      child: const Icon(AppIcons.add),
     );
   }
 }
@@ -318,7 +319,7 @@ class _MockExpandedFab extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         _FabOption(
-          icon: Icons.flash_on,
+          icon: AppIcons.flashOn,
           label: isItalian ? 'Allenamento Rapido' : 'Quick Workout',
           colorScheme: colorScheme,
           theme: theme,
@@ -326,7 +327,7 @@ class _MockExpandedFab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         _FabOption(
-          icon: Icons.library_books,
+          icon: AppIcons.libraryBooks,
           label: isItalian ? 'Da Template' : 'From Template',
           colorScheme: colorScheme,
           theme: theme,
@@ -334,7 +335,7 @@ class _MockExpandedFab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         _FabOption(
-          icon: Icons.add_circle,
+          icon: AppIcons.addCircle,
           label: isItalian ? 'Nuovo Allenamento' : 'New Workout',
           colorScheme: colorScheme,
           theme: theme,
@@ -345,7 +346,7 @@ class _MockExpandedFab extends StatelessWidget {
           onPressed: () {},
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
-          child: const Icon(Icons.close),
+          child: const Icon(AppIcons.close),
         ),
       ],
     );
@@ -453,7 +454,7 @@ class _MockWorkoutCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: colorScheme.primary,
                     size: 20,
                   ),
@@ -483,7 +484,7 @@ class _MockWorkoutCard extends StatelessWidget {
                 ),
                 if (isCompleted)
                   Icon(
-                    Icons.check_circle,
+                    AppIcons.complete,
                     color: colorScheme.primary,
                     size: 24,
                   ),
@@ -493,7 +494,7 @@ class _MockWorkoutCard extends StatelessWidget {
             Row(
               children: [
                 _InfoChip(
-                  icon: Icons.timer_outlined,
+                  icon: AppIcons.timerOffOutlined,
                   label: '45 min',
                   colorScheme: colorScheme,
                   theme: theme,
@@ -501,7 +502,7 @@ class _MockWorkoutCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 _InfoChip(
-                  icon: Icons.trending_up,
+                  icon: AppIcons.trendUp,
                   label: isItalian ? '4 esercizi' : '4 exercises',
                   colorScheme: colorScheme,
                   theme: theme,

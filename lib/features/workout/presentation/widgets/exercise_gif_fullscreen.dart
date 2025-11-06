@@ -13,6 +13,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseGifFullscreen extends StatelessWidget {
 
@@ -59,7 +60,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.error_outline,
+                          AppIcons.error,
                           color: colorScheme.error,
                           size: 64,
                         ),
@@ -121,7 +122,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: const Icon(
-                          Icons.close,
+                          AppIcons.close,
                           color: Colors.white,
                           size: 28,
                         ),
@@ -157,7 +158,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.touch_app,
+                        AppIcons.touchApp,
                         color: Colors.white.withValues(alpha: 0.7),
                         size: 16,
                       ),

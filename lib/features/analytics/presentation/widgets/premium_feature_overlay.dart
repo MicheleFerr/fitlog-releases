@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// A widget that overlays a blur effect on premium features for free users
 class PremiumFeatureOverlay extends StatelessWidget {
@@ -85,7 +86,7 @@ class PremiumFeatureOverlay extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          Icons.lock_outline,
+                          AppIcons.lockOutline,
                           size: 40,
                           color: theme.colorScheme.primary,
                         ),
@@ -119,7 +120,7 @@ class PremiumFeatureOverlay extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.star,
+                              AppIcons.star,
                               color: theme.colorScheme.onPrimary,
                               size: 20,
                             ),

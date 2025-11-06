@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/community_corrections_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/correction_review_card.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityCorrectionsScreen extends ConsumerWidget {
   const CommunityCorrectionsScreen({super.key});
@@ -27,7 +28,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.rate_review,
+              AppIcons.rateReview,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -37,7 +38,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => ref.refresh(communityCorrectionsProvider),
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             tooltip: l10n.refresh,
           ),
         ],
@@ -98,7 +99,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
               _buildSectionHeader(
                 context,
                 l10n.pendingCorrections,
-                Icons.pending,
+                AppIcons.pending,
                 Colors.orange,
                 pendingCorrections.length,
               ),
@@ -117,7 +118,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
               _buildSectionHeader(
                 context,
                 l10n.reviewedCorrections,
-                Icons.check_circle,
+                AppIcons.complete,
                 Colors.green,
                 reviewedCorrections.length,
               ),
@@ -146,7 +147,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.pending,
             value: pending.toString(),
-            icon: Icons.pending,
+            icon: AppIcons.pending,
             color: Colors.orange,
           ),
         ),
@@ -155,7 +156,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.approved,
             value: approved.toString(),
-            icon: Icons.check_circle,
+            icon: AppIcons.complete,
             color: Colors.green,
           ),
         ),
@@ -164,7 +165,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.rejected,
             value: rejected.toString(),
-            icon: Icons.cancel,
+            icon: AppIcons.cancel,
             color: Colors.red,
           ),
         ),
@@ -228,7 +229,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error,
+            AppIcons.error,
             size: 64,
             color: Theme.of(context).colorScheme.error,
           ),
@@ -254,7 +255,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.inbox,
+            AppIcons.inbox,
             size: 64,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),

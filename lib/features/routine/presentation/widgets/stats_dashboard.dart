@@ -57,7 +57,7 @@ class StatsDashboard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.analytics,
+                AppIcons.analytics,
                 color: context.colors.primary,
                 size: 24,
               ),
@@ -127,7 +127,7 @@ class StatsDashboard extends StatelessWidget {
               Expanded(
                 child: _buildStatCard(
                   context,
-                  icon: Icons.trending_up,
+                  icon: AppIcons.trendUp,
                   label: 'Adherence',
                   value: '${routine.adherenceRate.toInt()}%',
                   color: _getAdherenceColor(routine.adherenceRate, context),
@@ -137,7 +137,7 @@ class StatsDashboard extends StatelessWidget {
               Expanded(
                 child: _buildStatCard(
                   context,
-                  icon: Icons.local_fire_department,
+                  icon: AppIcons.streak,
                   label: 'Streak',
                   value: '${routine.currentStreak}',
                   color: context.colors.secondary,
@@ -163,7 +163,7 @@ class StatsDashboard extends StatelessWidget {
               Expanded(
                 child: _buildStatCard(
                   context,
-                  icon: Icons.refresh,
+                  icon: AppIcons.refresh,
                   label: 'Recovered',
                   value: '${routine.skipTracker.totalRecoveries}',
                   color: context.colors.primary,

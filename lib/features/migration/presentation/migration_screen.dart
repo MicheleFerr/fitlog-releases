@@ -16,6 +16,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/migration/presentation/providers/migration_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class MigrationScreen extends ConsumerWidget {
   const MigrationScreen({super.key});
@@ -103,7 +104,7 @@ class MigrationScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.sync_alt,
+                  AppIcons.syncAlt,
                   color: colorScheme.onPrimaryContainer,
                   size: 24,
                 ),
@@ -263,20 +264,20 @@ class MigrationScreen extends ConsumerWidget {
               context,
               l10n.totalExercises,
               '${result.totalExercises}',
-              Icons.fitness_center,
+              AppIcons.workout,
             ),
             _buildStatRow(
               context,
               l10n.workoutsFound,
               '${result.totalWorkouts}',
-              Icons.event_note,
+              AppIcons.eventNote,
             ),
             if (state.isCompleted) ...[
               _buildStatRow(
                 context,
                 l10n.migratedWorkouts,
                 '${result.migratedWorkouts}',
-                Icons.check_circle,
+                AppIcons.complete,
                 color: colorScheme.primary,
               ),
               if (result.skippedExercises > 0)
@@ -284,7 +285,7 @@ class MigrationScreen extends ConsumerWidget {
                   context,
                   l10n.skippedExercises,
                   '${result.skippedExercises}',
-                  Icons.skip_next,
+                  AppIcons.skipNext,
                   color: colorScheme.outline,
                 ),
             ],
@@ -337,7 +338,7 @@ class MigrationScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
                         leading: Icon(
-                          Icons.event_note,
+                          AppIcons.eventNote,
                           color: colorScheme.primary,
                         ),
                         title: Text(group.schedaName),
@@ -459,7 +460,7 @@ class MigrationScreen extends ConsumerWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: state.isLoading ? null : () => notifier.previewMigration(),
-              icon: const Icon(Icons.search),
+              icon: const Icon(AppIcons.search),
               label: Text(l10n.analyzeData),
             ),
           ),
@@ -471,7 +472,7 @@ class MigrationScreen extends ConsumerWidget {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: () => _showConfirmationDialog(context, notifier),
-              icon: const Icon(Icons.sync),
+              icon: const Icon(AppIcons.syncIcon),
               label: Text(l10n.startMigration),
             ),
           ),
@@ -484,7 +485,7 @@ class MigrationScreen extends ConsumerWidget {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () => notifier.reset(),
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(AppIcons.refresh),
               label: Text(l10n.reset),
             ),
           ),

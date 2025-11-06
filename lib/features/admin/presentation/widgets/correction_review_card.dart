@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/community_corrections_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CorrectionReviewCard extends StatelessWidget {
 
@@ -54,7 +55,7 @@ class CorrectionReviewCard extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            Icons.person,
+                            AppIcons.person,
                             size: 16,
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
@@ -67,7 +68,7 @@ class CorrectionReviewCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 12),
                           Icon(
-                            Icons.access_time,
+                            AppIcons.clock,
                             size: 16,
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
@@ -208,7 +209,7 @@ class CorrectionReviewCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => onAction!(CorrectionAction.view),
-                      icon: const Icon(Icons.visibility),
+                      icon: const Icon(AppIcons.visibility),
                       label: Text(l10n.viewDetails),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.primary,
@@ -219,7 +220,7 @@ class CorrectionReviewCard extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () => onAction!(CorrectionAction.approve),
-                      icon: const Icon(Icons.check),
+                      icon: const Icon(AppIcons.check),
                       label: Text(l10n.approve),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -231,7 +232,7 @@ class CorrectionReviewCard extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () => onAction!(CorrectionAction.reject),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       label: Text(l10n.reject),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.error,
@@ -255,7 +256,7 @@ class CorrectionReviewCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.admin_panel_settings,
+                      AppIcons.admin,
                       size: 16,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -284,22 +285,22 @@ class CorrectionReviewCard extends StatelessWidget {
     switch (status) {
       case 'pending':
         color = Colors.orange;
-        icon = Icons.pending;
+        icon = AppIcons.pending;
         label = AppLocalizations.of(context).pending;
         break;
       case 'approved':
         color = Colors.green;
-        icon = Icons.check_circle;
+        icon = AppIcons.complete;
         label = AppLocalizations.of(context).approved;
         break;
       case 'rejected':
         color = Colors.red;
-        icon = Icons.cancel;
+        icon = AppIcons.cancel;
         label = AppLocalizations.of(context).rejected;
         break;
       default:
         color = Colors.grey;
-        icon = Icons.help;
+        icon = AppIcons.iconHelp;
         label = status;
     }
 

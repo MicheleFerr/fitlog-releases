@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout
 import 'package:gymbro_flutter_new/shared/presentation/providers/history_view_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Database completo e modificabile per la cronologia degli allenamenti
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {
@@ -129,7 +130,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(AppIcons.arrowBackIos),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -152,11 +153,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
               },
             ),
           IconButton(
-            icon: Icon(_isSearchActive ? Icons.close : Icons.search),
+            icon: Icon(_isSearchActive ? AppIcons.close : AppIcons.search),
             onPressed: _toggleSearch,
           ),
           PopupMenuButton<WorkoutSortOption>(
-            icon: const Icon(Icons.sort),
+            icon: const Icon(AppIcons.sort),
             onSelected: (value) {
               final currentFilter = ref.read(workoutHistoryFilterProvider);
               ref.read(workoutHistoryFilterProvider.notifier).state =
@@ -179,7 +180,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           ),
           IconButton(
             icon: Icon(
-              syncStatus == SyncStatus.syncing ? Icons.sync : Icons.refresh,
+              syncStatus == SyncStatus.syncing ? AppIcons.syncIcon : AppIcons.refresh,
               color: syncStatus == SyncStatus.syncing ? colorScheme.primary : null,
             ),
             onPressed: syncStatus == SyncStatus.syncing ? null : () {
@@ -299,13 +300,13 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             decoration: InputDecoration(
               hintText: l10n.searchWorkouts,
               prefixIcon: Icon(
-                Icons.search,
+                AppIcons.search,
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
                       icon: Icon(
-                        Icons.clear,
+                        AppIcons.clear,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       onPressed: () {
@@ -351,7 +352,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 64,
               color: colorScheme.error,
             ),
@@ -394,7 +395,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.history,
+              AppIcons.history,
               size: 64,
               color: colorScheme.primary.withValues(alpha: 0.6),
             ),
@@ -495,7 +496,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                     borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Icon(
-                                    Icons.fitness_center,
+                                    AppIcons.workout,
                                     color: colorScheme.onPrimary,
                                     size: 24,
                                   ),
@@ -524,7 +525,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                 ),
                                 PopupMenuButton<String>(
                                   icon: Icon(
-                                    Icons.more_vert,
+                                    AppIcons.moreVert,
                                     color: colorScheme.onSurface.withValues(alpha: 0.6),
                                   ),
                                   onSelected: (action) {
@@ -542,7 +543,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                       value: 'edit',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.edit, size: 20, color: colorScheme.primary),
+                                          Icon(AppIcons.edit, size: 20, color: colorScheme.primary),
                                           const SizedBox(width: 12),
                                           Text(l10n.editWorkout),
                                         ],
@@ -552,7 +553,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                       value: 'delete',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.delete, size: 20, color: colorScheme.error),
+                                          Icon(AppIcons.delete, size: 20, color: colorScheme.error),
                                           const SizedBox(width: 12),
                                           Text(l10n.deleteWorkout),
                                         ],
@@ -570,7 +571,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                               children: [
                                 Expanded(
                                   child: _StatItem(
-                                    icon: Icons.schedule,
+                                    icon: AppIcons.schedule,
                                     label: l10n.duration,
                                     value: _formatDuration(workout.duration),
                                     color: colorScheme.tertiary,
@@ -579,7 +580,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: _StatItem(
-                                    icon: Icons.fitness_center,
+                                    icon: AppIcons.workout,
                                     label: l10n.totalVolume,
                                     value: '${workout.totalVolume.toInt()}kg',
                                     color: colorScheme.secondary,
@@ -588,7 +589,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: _StatItem(
-                                    icon: Icons.list,
+                                    icon: AppIcons.list,
                                     label: 'Esercizi',
                                     value: '${workout.exercises.length}',
                                     color: colorScheme.primary,
@@ -719,13 +720,13 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   IconData _getViewModeIcon(HistoryViewMode mode) {
     switch (mode) {
       case HistoryViewMode.list:
-        return Icons.view_list;
+        return AppIcons.viewList;
       case HistoryViewMode.compact:
-        return Icons.view_agenda;
+        return AppIcons.viewAgenda;
       case HistoryViewMode.calendar:
-        return Icons.calendar_month;
+        return AppIcons.calendarMonth;
       case HistoryViewMode.stats:
-        return Icons.bar_chart;
+        return AppIcons.barChart;
     }
   }
 
@@ -886,7 +887,7 @@ class WorkoutDetailModal extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                 ),
               ],
             ),

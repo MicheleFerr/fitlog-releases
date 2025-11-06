@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feedback_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog for submitting feedback
 class FeedbackDialog extends ConsumerStatefulWidget {
@@ -72,7 +73,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        Icons.feedback,
+                        AppIcons.feedback,
                         color: context.colors.primary,
                         size: 24,
                       ),
@@ -151,8 +152,8 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                       },
                       icon: Icon(
                         _rating != null && starValue <= _rating!
-                            ? Icons.star
-                            : Icons.star_border,
+                            ? AppIcons.star
+                            : AppIcons.starOutline,
                         color: Colors.amber,
                         size: 32,
                       ),
@@ -211,7 +212,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                     const SizedBox(width: 12),
                     ElevatedButton.icon(
                       onPressed: _submitFeedback,
-                      icon: const Icon(Icons.send),
+                      icon: const Icon(AppIcons.send),
                       label: const Text('Submit'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: context.colors.primary,

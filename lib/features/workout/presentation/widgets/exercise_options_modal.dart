@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'dart:convert';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🚀 TIER-1: Modal condiviso per opzioni esercizio sia per single che superset
 class ExerciseOptionsModal extends StatelessWidget {
@@ -93,7 +94,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                           errorBuilder: (context, error, stackTrace) {
                             return Center(
                               child: Icon(
-                                Icons.image_not_supported,
+                                AppIcons.imageNotSupported,
                                 size: 48,
                                 color: Theme.of(context).colorScheme.outline,
                               ),
@@ -115,7 +116,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.zoom_out_map,
+                                AppIcons.zoomOutMap,
                                 size: 16,
                                 color: Colors.white.withOpacity(0.9),
                               ),
@@ -144,7 +145,7 @@ class ExerciseOptionsModal extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 12),
@@ -170,7 +171,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 children: [
                   // Info Esercizio
                   ListTile(
-                    leading: const Icon(Icons.info_outline),
+                    leading: const Icon(AppIcons.info),
                     title: const Text('Info esercizio'),
                     subtitle: const Text('Muscoli coinvolti e tecnica'),
                     onTap: () async {
@@ -191,7 +192,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // Info Riscaldamento
                   ListTile(
-                    leading: const Icon(Icons.whatshot, color: Colors.orange),
+                    leading: const Icon(AppIcons.whatshot, color: Colors.orange),
                     title: const Text('Info riscaldamento'),
                     subtitle: const Text('Consigli per il warmup'),
                     onTap: () async {
@@ -214,7 +215,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // Prevenzione infortuni
                   ListTile(
-                    leading: const Icon(Icons.shield_outlined, color: Colors.green),
+                    leading: const Icon(AppIcons.shieldOutlined, color: Colors.green),
                     title: const Text('Prevenzione infortuni'),
                     subtitle: const Text('Consigli per evitare infortuni'),
                     onTap: () async {
@@ -239,7 +240,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // 🆕 Segnala problema
                   ListTile(
-                    leading: const Icon(Icons.flag_outlined, color: Colors.orange),
+                    leading: const Icon(AppIcons.flagOutlined, color: Colors.orange),
                     title: const Text('Segnala problema'),
                     subtitle: const Text('Bug, errori o suggerimenti'),
                     onTap: () {
@@ -258,7 +259,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                   
                   // Storico
                   ListTile(
-                    leading: const Icon(Icons.history),
+                    leading: const Icon(AppIcons.history),
                     title: const Text('Storico'),
                     onTap: () {
                       Navigator.pop(context);
@@ -269,7 +270,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                   // Show other options only if callbacks are provided
                   if (onEdit != null) ...[
                     ListTile(
-                      leading: const Icon(Icons.edit),
+                      leading: const Icon(AppIcons.edit),
                       title: const Text('Modifica nome e note'),
                       subtitle: const Text('Personalizza nome esercizio e aggiungi note'),
                       onTap: () {
@@ -281,7 +282,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                   
                   if (onDuplicate != null) ...[
                     ListTile(
-                      leading: const Icon(Icons.copy),
+                      leading: const Icon(AppIcons.iconCopy),
                       title: const Text('Duplica esercizio'),
                       onTap: () {
                         Navigator.pop(context);
@@ -294,7 +295,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     const Divider(),
                     ListTile(
                       leading: Icon(
-                        Icons.delete,
+                        AppIcons.delete,
                         color: Theme.of(context).colorScheme.error,
                       ),
                       title: Text(
@@ -397,7 +398,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: Theme.of(context).colorScheme.primary),
+                    Icon(AppIcons.info, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -424,7 +425,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Muscoli Primari',
                         exerciseData['focus'],
-                        Icons.fitness_center,
+                        AppIcons.workout,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -434,7 +435,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Muscoli Secondari',
                         exerciseData['muscoliSecondari'],
-                        Icons.sports,
+                        AppIcons.sports,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -444,7 +445,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Attrezzatura',
                         exerciseData['attrezzatura'],
-                        Icons.build,
+                        AppIcons.build,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -454,7 +455,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Livello Difficoltà',
                         exerciseData['difficolta'],
-                        Icons.trending_up,
+                        AppIcons.trendUp,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -501,7 +502,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    const Icon(Icons.whatshot, color: Colors.orange),
+                    const Icon(AppIcons.whatshot, color: Colors.orange),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -528,7 +529,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Mobilità Pre-Workout',
                         exerciseData['mobilitaPre'],
-                        Icons.accessibility_new,
+                        AppIcons.accessibility,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -538,7 +539,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Attivazione Pre-Workout',
                         exerciseData['attivazionePre'],
-                        Icons.flash_on,
+                        AppIcons.flashOn,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -548,7 +549,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Serie di Riscaldamento',
                         exerciseData['warmupSets'],
-                        Icons.repeat,
+                        AppIcons.repeat,
                       ),
                     ],
                   ],
@@ -594,7 +595,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    const Icon(Icons.shield_outlined, color: Colors.green),
+                    const Icon(AppIcons.shieldOutlined, color: Colors.green),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -621,7 +622,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Prevenzione Infortuni',
                         exerciseData['prevenzioneInfortuni'],
-                        Icons.warning_amber,
+                        AppIcons.warningAmber,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -631,7 +632,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Defaticamento Consigliato',
                         exerciseData['cooldownConsigliato'],
-                        Icons.spa,
+                        AppIcons.spa,
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -641,7 +642,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         context,
                         'Suggerimenti Tecnici',
                         exerciseData['noteTecniche'],
-                        Icons.lightbulb_outline,
+                        AppIcons.tip,
                       ),
                     ],
                   ],

@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/providers/feedback_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Feedback Settings Screen
 ///
@@ -29,7 +30,7 @@ class FeedbackSettingsScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.error_outline,
+                AppIcons.error,
                 size: 64,
                 color: context.colors.error,
               ),
@@ -59,7 +60,7 @@ class FeedbackSettingsScreen extends ConsumerWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.vibration,
+                    AppIcons.vibration,
                     color: context.colors.onPrimaryContainer,
                     size: 28,
                   ),
@@ -136,17 +137,17 @@ class FeedbackSettingsScreen extends ConsumerWidget {
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.light,
                       label: Text(context.l10n.intensityLight),
-                      icon: const Icon(Icons.circle, size: 12),
+                      icon: const Icon(AppIcons.circle, size: 12),
                     ),
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.medium,
                       label: Text(context.l10n.intensityMedium),
-                      icon: const Icon(Icons.circle, size: 16),
+                      icon: const Icon(AppIcons.circle, size: 16),
                     ),
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.heavy,
                       label: Text(context.l10n.intensityHeavy),
-                      icon: const Icon(Icons.circle, size: 20),
+                      icon: const Icon(AppIcons.circle, size: 20),
                     ),
                   ],
                   selected: {settings.hapticIntensity},

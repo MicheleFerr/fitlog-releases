@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/providers/weight_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Weight Settings Screen
 ///
@@ -47,7 +48,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
         title: Text(context.l10n.weightSettings),
         actions: [
           IconButton(
-            icon: const Icon(Icons.restore),
+            icon: const Icon(AppIcons.restore),
             tooltip: context.l10n.resetToDefaults,
             onPressed: () => _showResetConfirmation(),
           ),
@@ -61,7 +62,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.error_outline,
+                AppIcons.error,
                 size: 64,
                 color: context.colors.error,
               ),
@@ -91,7 +92,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
       children: [
         // Section 1: Quick Increments
         _buildSectionHeader(
-          icon: Icons.add_circle_outline,
+          icon: AppIcons.addCircleOutline,
           title: context.l10n.quickIncrements,
           subtitle: context.l10n.quickIncrementsDescription,
         ),
@@ -101,7 +102,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
 
         // Section 2: Custom Increment
         _buildSectionHeader(
-          icon: Icons.tune,
+          icon: AppIcons.tune,
           title: context.l10n.customIncrement,
           subtitle: context.l10n.customIncrementDescription,
         ),
@@ -111,7 +112,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
 
         // Section 3: Plate Calculator
         _buildSectionHeader(
-          icon: Icons.calculate_outlined,
+          icon: AppIcons.calculateOutlined,
           title: context.l10n.plateCalculator,
           subtitle: context.l10n.plateCalculatorDescription,
         ),
@@ -121,7 +122,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
 
         // Section 4: Available Plates
         _buildSectionHeader(
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           title: context.l10n.availablePlates,
           subtitle: context.l10n.availablePlatesDescription,
         ),
@@ -243,7 +244,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                 suffixText: unitLabel,
                 helperText: context.l10n.customIncrementHint,
                 border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.add),
+                prefixIcon: const Icon(AppIcons.add),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -264,7 +265,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
           const SizedBox(height: 16),
           FilledButton.icon(
             onPressed: _saveCustomIncrement,
-            icon: const Icon(Icons.save),
+            icon: const Icon(AppIcons.save),
             label: Text(context.l10n.saveCustomIncrement),
           ),
         ],
@@ -325,7 +326,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
           const SizedBox(height: 16),
           FilledButton.icon(
             onPressed: () => _calculatePlates(settings),
-            icon: const Icon(Icons.calculate),
+            icon: const Icon(AppIcons.calculate),
             label: Text(context.l10n.calculate),
           ),
         ],
@@ -401,7 +402,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                   context.l10n.featureComingSoon,
                 );
               },
-              icon: const Icon(Icons.edit),
+              icon: const Icon(AppIcons.edit),
               label: Text(context.l10n.editPlates),
             ),
           ],
@@ -464,7 +465,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
         title: Row(
           children: [
             Icon(
-              result.isExact ? Icons.check_circle : Icons.info,
+              result.isExact ? AppIcons.complete : AppIcons.infoIcon,
               color: result.isExact ? context.colors.primary : context.colors.tertiary,
             ),
             const SizedBox(width: 12),

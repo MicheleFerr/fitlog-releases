@@ -52,7 +52,7 @@ class TemplateSelectionStep extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.error_outline,
+                AppIcons.error,
                 size: 64,
                 color: context.colors.error,
               ),
@@ -172,7 +172,7 @@ class TemplateSelectionStep extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     color: context.colors.primary,
                     size: 20,
                   ),
@@ -242,7 +242,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  template.isCustom ? Icons.person : Icons.star,
+                  template.isCustom ? AppIcons.person : AppIcons.star,
                   color: template.isCustom
                       ? context.colors.onPrimaryContainer
                       : context.colors.onSecondaryContainer,
@@ -266,7 +266,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           size: 14,
                           color:
                               context.colors.onSurface.withValues(alpha: 0.6),
@@ -282,7 +282,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                         if (template.estimatedDuration > 0) ...[
                           const SizedBox(width: 12),
                           Icon(
-                            Icons.schedule,
+                            AppIcons.schedule,
                             size: 14,
                             color:
                                 context.colors.onSurface.withValues(alpha: 0.6),

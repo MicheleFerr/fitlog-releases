@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// GitHub-style heatmap showing workout volume over time
 class VolumeHeatmap extends StatefulWidget {
@@ -73,7 +74,7 @@ class _VolumeHeatmapState extends State<VolumeHeatmap> {
     return Row(
       children: [
         Icon(
-          Icons.calendar_view_month,
+          AppIcons.calendarViewMonth,
           color: colorScheme.primary,
           size: 24,
         ),
@@ -282,7 +283,7 @@ class _VolumeHeatmapState extends State<VolumeHeatmap> {
           Row(
             children: [
               Icon(
-                Icons.calendar_today,
+                AppIcons.calendar,
                 size: 16,
                 color: Theme.of(context).colorScheme.primary,
               ),

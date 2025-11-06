@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exerc
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -23,7 +24,7 @@ class AnalyticsScreen extends ConsumerWidget {
         title: const Text('📊 Analytics'),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -34,7 +35,7 @@ class AnalyticsScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             onPressed: () {
               ref.invalidate(historicalWorkoutsProvider);
             },
@@ -128,7 +129,7 @@ class _AnalyticsContent extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.trending_up,
+                  AppIcons.trendUp,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -148,8 +149,8 @@ class _AnalyticsContent extends StatelessWidget {
               '📅 This Month',
               '${_getThisMonthWorkouts(workouts)} workouts',
               _getThisMonthWorkouts(workouts) > _getLastMonthWorkouts(workouts)
-                  ? Icons.trending_up
-                  : Icons.trending_down,
+                  ? AppIcons.trendUp
+                  : AppIcons.trendDown,
               _getThisMonthWorkouts(workouts) > _getLastMonthWorkouts(workouts)
                   ? Colors.green
                   : Colors.red,
@@ -159,7 +160,7 @@ class _AnalyticsContent extends StatelessWidget {
               context,
               '💪 Total Volume',
               '${_getTotalVolume(workouts).toStringAsFixed(0)} kg',
-              Icons.fitness_center,
+              AppIcons.workout,
               Theme.of(context).colorScheme.secondary,
             ),
             
@@ -167,7 +168,7 @@ class _AnalyticsContent extends StatelessWidget {
               context,
               '🎯 Consistency',
               '${_getConsistencyPercentage(workouts)}% this month',
-              Icons.calendar_today,
+              AppIcons.calendar,
               Theme.of(context).colorScheme.tertiary,
             ),
           ],
@@ -289,7 +290,7 @@ class _NotAuthenticatedView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.lock, size: 64, color: Colors.grey),
+          Icon(AppIcons.lock, size: 64, color: Colors.grey),
           SizedBox(height: 16),
           Text(
             'Please log in to view your analytics',
@@ -330,7 +331,7 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error, size: 64, color: Colors.red),
+          const Icon(AppIcons.error, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Text(
             'Error loading analytics',
@@ -357,7 +358,7 @@ class _EmptyStateView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.fitness_center, size: 80, color: Colors.grey),
+          const Icon(AppIcons.workout, size: 80, color: Colors.grey),
           const SizedBox(height: 24),
           Text(
             'No workout data yet',
@@ -374,7 +375,7 @@ class _EmptyStateView extends StatelessWidget {
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => context.go('/workout'),
-            icon: const Icon(Icons.play_arrow),
+            icon: const Icon(AppIcons.play),
             label: const Text('Start Your First Workout'),
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_analyzer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Scientific Muscle Balance Widget with clear bar chart visualization
 ///
@@ -43,7 +44,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.bar_chart,
+                  AppIcons.barChart,
                   color: colorScheme.primary,
                   size: 24,
                 ),
@@ -69,7 +70,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(
-                    Icons.help_outline,
+                    AppIcons.help,
                     color: colorScheme.primary,
                   ),
                   onPressed: () => _showHelpDialog(context, l10n),
@@ -102,7 +103,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
               // Push:Pull Ratio
               _buildRatioCard(
                 context,
-                icon: Icons.sync_alt,
+                icon: AppIcons.syncAlt,
                 title: l10n.pushPullRatio,
                 ratio: pushPull.ratio,
                 targetRange: '0.8-1.2',
@@ -116,7 +117,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
               // Quad:Ham Ratio
               _buildRatioCard(
                 context,
-                icon: Icons.directions_run,
+                icon: AppIcons.cardio,
                 title: l10n.quadHamstringRatio,
                 ratio: quadHam.ratio,
                 targetRange: '0.6-1.0',
@@ -306,7 +307,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.bar_chart,
+                AppIcons.barChart,
                 size: 48,
                 color: Colors.grey.withOpacity(0.5),
               ),

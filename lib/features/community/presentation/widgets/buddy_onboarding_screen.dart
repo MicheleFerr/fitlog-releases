@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/buddy_preferences.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyOnboardingScreen extends ConsumerStatefulWidget {
   const BuddyOnboardingScreen({super.key});
@@ -207,13 +208,13 @@ class _WelcomePage extends StatelessWidget {
             ),
             child: Column(
               children: [
-                _buildFeature(context, Icons.location_on, 'Match basato sulla zona'),
+                _buildFeature(context, AppIcons.location, 'Match basato sulla zona'),
                 const SizedBox(height: 12),
-                _buildFeature(context, Icons.schedule, 'Orari compatibili'),
+                _buildFeature(context, AppIcons.schedule, 'Orari compatibili'),
                 const SizedBox(height: 12),
-                _buildFeature(context, Icons.fitness_center, 'Stesso livello fitness'),
+                _buildFeature(context, AppIcons.workout, 'Stesso livello fitness'),
                 const SizedBox(height: 12),
-                _buildFeature(context, Icons.camera_alt, 'Connetti Instagram (opzionale)'),
+                _buildFeature(context, AppIcons.camera, 'Connetti Instagram (opzionale)'),
               ],
             ),
           ),
@@ -338,7 +339,7 @@ class _SchedulePage extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Icon(
-            isSelected ? Icons.check : Icons.access_time,
+            isSelected ? AppIcons.check : AppIcons.clock,
             color: isSelected ? Colors.white : null,
             size: 20,
           ),
@@ -563,7 +564,7 @@ class _LocationPage extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Zona/Quartiere',
               hintText: 'es. Milano Centro, Porta Romana',
-              prefixIcon: const Icon(Icons.location_on),
+              prefixIcon: const Icon(AppIcons.location),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -594,7 +595,7 @@ class _LocationPage extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.info_outline,
+                  AppIcons.info,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 12),
@@ -705,7 +706,7 @@ class _PersonalityPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 if (isSelected)
-                  const Icon(Icons.check_circle, color: Colors.green),
+                  const Icon(AppIcons.complete, color: Colors.green),
               ],
             ),
             const SizedBox(height: 8),
@@ -767,7 +768,7 @@ class _SocialPage extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Instagram Username',
               hintText: '@tuousername',
-              prefixIcon: const Icon(Icons.camera_alt),
+              prefixIcon: const Icon(AppIcons.camera),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -806,7 +807,7 @@ class _SocialPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
-                  Icons.lock_outline,
+                  AppIcons.lockOutline,
                   color: context.colors.primary,
                   size: 20,
                 ),

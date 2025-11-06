@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_initializer.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
   
@@ -169,7 +170,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                         turns: _isExpanded ? 0.5 : 0,
                         duration: const Duration(milliseconds: 300),
                         child: Icon(
-                          Icons.expand_more,
+                          AppIcons.expandMore,
                           color: theme.colorScheme.onPrimaryContainer,
                         ),
                       ),
@@ -246,25 +247,25 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _StatItem(
-          icon: Icons.local_fire_department,
+          icon: AppIcons.streak,
           value: stats.currentStreak.toString(),
           label: 'Streak',
           color: Colors.orange,
         ),
         _StatItem(
-          icon: Icons.star,
+          icon: AppIcons.star,
           value: stats.totalPoints.toString(),
           label: 'Punti',
           color: Colors.amber,
         ),
         _StatItem(
-          icon: Icons.check_circle,
+          icon: AppIcons.complete,
           value: stats.approvedContributions.toString(),
           label: 'Approvati',
           color: Colors.green,
         ),
         _StatItem(
-          icon: Icons.emoji_events,
+          icon: AppIcons.achievement,
           value: '#${stats.weeklyRank > 0 ? stats.weeklyRank : '-'}',
           label: 'Rank',
           color: theme.colorScheme.primary,
@@ -301,7 +302,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                 _isExpanded = true;
               });
             },
-            icon: const Icon(Icons.how_to_vote),
+            icon: const Icon(AppIcons.howToVote),
             label: Text('Review $count contributi'),
             style: FilledButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
@@ -315,7 +316,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
         const SizedBox(width: 12),
         IconButton.filled(
           onPressed: widget.onViewAll,
-          icon: const Icon(Icons.arrow_forward),
+          icon: const Icon(AppIcons.forward),
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.primary.withOpacity(0.2),
             foregroundColor: theme.colorScheme.primary,
@@ -330,7 +331,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: widget.onViewAll,
-        icon: const Icon(Icons.explore),
+        icon: const Icon(AppIcons.explore),
         label: const Text('Esplora Community'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimaryContainer,
@@ -419,7 +420,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       child: Column(
         children: [
           Icon(
-            Icons.celebration,
+            AppIcons.celebration,
             size: 48,
             color: theme.colorScheme.onPrimaryContainer,
           ),
@@ -492,7 +493,7 @@ class _AnimatedIconState extends State<_AnimatedIcon>
             ),
           ),
           child: const Icon(
-            Icons.people,
+            AppIcons.people,
             color: Colors.white,
             size: 24,
           ),
@@ -613,7 +614,7 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(false);
                 },
-                icon: const Icon(Icons.close),
+                icon: const Icon(AppIcons.close),
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.red.withOpacity(0.1),
                   foregroundColor: Colors.red,
@@ -624,7 +625,7 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(true);
                 },
-                icon: const Icon(Icons.check),
+                icon: const Icon(AppIcons.check),
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.green.withOpacity(0.1),
                   foregroundColor: Colors.green,
@@ -643,23 +644,23 @@ class _MiniContributionCard extends StatelessWidget {
     
     switch (type) {
       case ContributionType.tip:
-        icon = Icons.lightbulb;
+        icon = AppIcons.lightbulb;
         color = Colors.amber;
         break;
       case ContributionType.warning:
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         color = Colors.orange;
         break;
       case ContributionType.correction:
-        icon = Icons.edit;
+        icon = AppIcons.edit;
         color = Colors.blue;
         break;
       case ContributionType.technique:
-        icon = Icons.fitness_center;
+        icon = AppIcons.workout;
         color = Colors.purple;
         break;
       default:
-        icon = Icons.info;
+        icon = AppIcons.infoIcon;
         color = Colors.grey;
     }
     

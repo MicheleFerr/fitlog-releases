@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 // Use cached provider for better performance and correct workout counting
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/cached_progress_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Debug logger for widget
 class _WidgetLogger {
@@ -164,7 +165,7 @@ class ProgressDashboard extends ConsumerWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.trending_up,
+                  AppIcons.trendUp,
                   color: theme.colorScheme.onPrimary,
                   size: 20,
                 ),
@@ -191,7 +192,7 @@ class ProgressDashboard extends ConsumerWidget {
                 ),
               ),
               Icon(
-                Icons.arrow_forward_ios,
+                AppIcons.forwardIos,
                 size: 16,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -286,7 +287,7 @@ class ProgressDashboard extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.error,
             color: theme.colorScheme.error,
             size: 32,
           ),
@@ -326,7 +327,7 @@ class ProgressDashboard extends ConsumerWidget {
                 context: context,
                 l10n: l10n,
                 theme: theme,
-                icon: Icons.local_fire_department,
+                icon: AppIcons.streak,
                 label: l10n.streak,
                 value: '${stats.currentStreak}',
                 subtitle: stats.currentStreak == 1 ? l10n.day : l10n.days(stats.currentStreak),
@@ -340,7 +341,7 @@ class ProgressDashboard extends ConsumerWidget {
                 context: context,
                 l10n: l10n,
                 theme: theme,
-                icon: Icons.fitness_center,
+                icon: AppIcons.workout,
                 label: l10n.totalWorkouts,
                 value: '${stats.totalWorkouts}',
                 subtitle: l10n.workouts,
@@ -354,7 +355,7 @@ class ProgressDashboard extends ConsumerWidget {
                 context: context,
                 l10n: l10n,
                 theme: theme,
-                icon: Icons.schedule,
+                icon: AppIcons.schedule,
                 label: l10n.weeklyFrequency,
                 value: stats.weeklyFrequency.toStringAsFixed(1),
                 subtitle: l10n.perWeek,
@@ -449,8 +450,8 @@ class ProgressDashboard extends ConsumerWidget {
       theme.colorScheme.primary : 
       theme.colorScheme.tertiary;
     final summaryIcon = isImproving ? 
-      Icons.trending_up : 
-      Icons.trending_flat;
+      AppIcons.trendUp : 
+      AppIcons.trendFlat;
     
     return Container(
       padding: const EdgeInsets.all(16),

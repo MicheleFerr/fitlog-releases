@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TutSelector extends StatefulWidget {
   const TutSelector({
@@ -61,7 +62,7 @@ class _TutSelectorState extends State<TutSelector> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.timer_outlined,
+              AppIcons.timerOffOutlined,
               size: 14,
               color: theme.colorScheme.primary,
             ),
@@ -76,7 +77,7 @@ class _TutSelectorState extends State<TutSelector> {
             ),
             const SizedBox(width: 4),
             Icon(
-              Icons.expand_more,
+              AppIcons.expandMore,
               size: 12,
               color: theme.colorScheme.primary.withValues(alpha: 0.7),
             ),
@@ -111,7 +112,7 @@ class _TutSelectorState extends State<TutSelector> {
           Row(
             children: [
               Icon(
-                Icons.timer_outlined,
+                AppIcons.timerOffOutlined,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
@@ -132,7 +133,7 @@ class _TutSelectorState extends State<TutSelector> {
                     });
                   },
                   icon: Icon(
-                    Icons.close,
+                    AppIcons.close,
                     size: 18,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

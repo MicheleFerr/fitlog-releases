@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutHeader extends StatefulWidget {
 
@@ -150,7 +151,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 context,
                 'Exercises',
                 '${widget.workout.completedExercises}/${widget.workout.exercises.length}',
-                Icons.fitness_center,
+                AppIcons.workout,
                 Theme.of(context).colorScheme.primary,
               ),
             ),
@@ -160,7 +161,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 context,
                 'Sets',
                 '${widget.workout.completedSets}/${widget.workout.totalSets}',
-                Icons.format_list_numbered,
+                AppIcons.formatListNumbered,
                 Theme.of(context).colorScheme.secondary,
               ),
             ),
@@ -170,7 +171,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 context,
                 'Progress',
                 '${(widget.workout.progressPercentage * 100).round()}%',
-                Icons.trending_up,
+                AppIcons.trendUp,
                 Theme.of(context).colorScheme.tertiary,
               ),
             ),
@@ -195,7 +196,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 Tooltip(
                   message: '💡 Set Gestures:\n• Tap = Complete\n• Double-tap = Quick Edit\n• Long press = Full Edit',
                   child: Icon(
-                    Icons.help_outline,
+                    AppIcons.help,
                     size: 16,
                     color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
@@ -233,7 +234,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
               _buildCompactStat(
                 'Exercises',
                 '${widget.workout.completedExercises}/${widget.workout.exercises.length}',
-                Icons.fitness_center,
+                AppIcons.workout,
                 Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(width: 16),
@@ -241,7 +242,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
               _buildCompactStat(
                 'Sets',
                 '${widget.workout.completedSets}/${widget.workout.totalSets}',
-                Icons.format_list_numbered,
+                AppIcons.formatListNumbered,
                 Theme.of(context).colorScheme.secondary,
               ),
               const SizedBox(width: 16),
@@ -249,13 +250,13 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
               _buildCompactStat(
                 'Volume',
                 '${_calculateTotalVolume().toInt()}kg',
-                Icons.bar_chart,
+                AppIcons.barChart,
                 Theme.of(context).colorScheme.tertiary,
               ),
               const Spacer(),
               // Expand indicator
               Icon(
-                Icons.expand_more,
+                AppIcons.expandMore,
                 size: 20,
                 color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
               ),
@@ -320,25 +321,25 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
       case WorkoutStatus.planned:
         backgroundColor = Theme.of(context).colorScheme.surfaceContainerHighest;
         textColor = Theme.of(context).colorScheme.onSurface;
-        icon = Icons.schedule;
+        icon = AppIcons.schedule;
         text = 'Planned';
         break;
       case WorkoutStatus.inProgress:
         backgroundColor = Theme.of(context).colorScheme.primary.withValues(alpha: 0.1);
         textColor = Theme.of(context).colorScheme.primary;
-        icon = Icons.play_arrow;
+        icon = AppIcons.play;
         text = 'In Progress';
         break;
       case WorkoutStatus.completed:
         backgroundColor = Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.1);
         textColor = Theme.of(context).colorScheme.tertiary;
-        icon = Icons.check_circle;
+        icon = AppIcons.complete;
         text = 'Completed';
         break;
       case WorkoutStatus.paused:
         backgroundColor = Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1);
         textColor = Theme.of(context).colorScheme.secondary;
-        icon = Icons.pause;
+        icon = AppIcons.pause;
         text = 'Paused';
         break;
     }

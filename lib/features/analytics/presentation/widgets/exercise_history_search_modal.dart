@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseHistorySearchModal extends StatefulWidget {
 
@@ -120,7 +121,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                   Row(
                     children: [
                       Icon(
-                        Icons.search,
+                        AppIcons.search,
                         color: theme.colorScheme.primary,
                         size: 28,
                       ),
@@ -149,10 +150,10 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     },
                     decoration: InputDecoration(
                       hintText: 'Cerca un esercizio...',
-                      prefixIcon: const Icon(Icons.fitness_center),
+                      prefixIcon: const Icon(AppIcons.workout),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear),
+                              icon: const Icon(AppIcons.clear),
                               onPressed: () {
                                 setState(() {
                                   _searchController.clear();
@@ -193,7 +194,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.search_off,
+              AppIcons.searchOff,
               size: 64,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
@@ -269,7 +270,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                         Row(
                           children: [
                             Icon(
-                              Icons.calendar_today,
+                              AppIcons.calendar,
                               size: 14,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -282,7 +283,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                             ),
                             const SizedBox(width: 12),
                             Icon(
-                              Icons.access_time,
+                              AppIcons.clock,
                               size: 14,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -307,7 +308,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     ),
                   ),
                   Icon(
-                    Icons.chevron_right,
+                    AppIcons.chevronRight,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ],
@@ -335,7 +336,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     _selectedExercise = null;
                   });
                 },
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(AppIcons.back),
               ),
               Expanded(
                 child: Text(
@@ -417,28 +418,28 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
           _buildStatItem(
             'Max Weight',
             '${maxWeight.toStringAsFixed(1)} kg',
-            Icons.fitness_center,
+            AppIcons.workout,
             theme.colorScheme.primary,
             theme,
           ),
           _buildStatItem(
             'Total Sets',
             totalSets.toString(),
-            Icons.format_list_numbered,
+            AppIcons.formatListNumbered,
             Colors.orange,
             theme,
           ),
           _buildStatItem(
             'Total Reps',
             totalReps.toString(),
-            Icons.repeat,
+            AppIcons.repeat,
             Colors.green,
             theme,
           ),
           _buildStatItem(
             'Total Volume',
             '${(totalVolume / 1000).toStringAsFixed(1)}k',
-            Icons.bar_chart,
+            AppIcons.barChart,
             Colors.blue,
             theme,
           ),
@@ -651,7 +652,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                       child: Row(
                         children: [
                           Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             size: 16,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -662,7 +663,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                           ),
                           const SizedBox(width: 12),
                           Icon(
-                            Icons.repeat,
+                            AppIcons.repeat,
                             size: 16,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -728,13 +729,13 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
   
   IconData _getExerciseIcon(String exerciseName) {
     final name = exerciseName.toLowerCase();
-    if (name.contains('squat') || name.contains('leg')) return Icons.airline_seat_recline_normal;
-    if (name.contains('bench') || name.contains('chest')) return Icons.airline_seat_flat;
-    if (name.contains('deadlift') || name.contains('stacco')) return Icons.fitness_center;
-    if (name.contains('curl') || name.contains('bicep')) return Icons.sports_gymnastics;
-    if (name.contains('shoulder') || name.contains('spalle')) return Icons.accessibility_new;
-    if (name.contains('back') || name.contains('dorso')) return Icons.rowing;
-    return Icons.fitness_center;
+    if (name.contains('squat') || name.contains('leg')) return AppIcons.airlineSeatRecline;
+    if (name.contains('bench') || name.contains('chest')) return AppIcons.airlineSeatFlat;
+    if (name.contains('deadlift') || name.contains('stacco')) return AppIcons.workout;
+    if (name.contains('curl') || name.contains('bicep')) return AppIcons.gymnastics;
+    if (name.contains('shoulder') || name.contains('spalle')) return AppIcons.accessibility;
+    if (name.contains('back') || name.contains('dorso')) return AppIcons.rowing;
+    return AppIcons.workout;
   }
   
   Color _getEffortColor(int effort) {

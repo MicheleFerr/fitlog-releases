@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_stats_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/lazy_chart_wrapper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsProgressTab extends ConsumerWidget {
   
@@ -32,7 +33,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.calendar_month,
+                      AppIcons.calendarMonth,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -79,7 +80,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.show_chart,
+                      AppIcons.lineChart,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -102,7 +103,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.lock,
+                              AppIcons.lock,
                               size: 12,
                               color: theme.colorScheme.primary,
                             ),
@@ -157,7 +158,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.emoji_events,
+                  AppIcons.achievement,
                   color: Colors.amber,
                   size: 24,
                 ),
@@ -178,7 +179,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.emoji_events_outlined,
+                        AppIcons.emojiEventsOutlined,
                         size: 48,
                         color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
@@ -237,7 +238,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.whatshot,
+                  AppIcons.whatshot,
                   size: 16,
                   color: Colors.white,
                 ),
@@ -250,7 +251,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   size: 16,
                   color: theme.colorScheme.primary,
                 ),
@@ -397,7 +398,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.calendar_month,
+                  AppIcons.calendarMonth,
                   color: theme.colorScheme.primary,
                   size: 28,
                 ),
@@ -432,7 +433,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   context,
                   'Workouts',
                   count.toString(),
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 16),
@@ -440,7 +441,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   context,
                   'Total Sets',
                   totalSets.toString(),
-                  Icons.repeat,
+                  AppIcons.repeat,
                   theme.colorScheme.secondary,
                 ),
               ],
@@ -452,7 +453,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   context,
                   'Volume',
                   '${(totalVolume / 1000).toStringAsFixed(1)}k kg',
-                  Icons.analytics,
+                  AppIcons.analytics,
                   theme.colorScheme.tertiary,
                 ),
                 const SizedBox(width: 16),
@@ -460,7 +461,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   context,
                   'Avg Duration',
                   '$avgDuration min',
-                  Icons.timer,
+                  AppIcons.timer,
                   Colors.orange,
                 ),
               ],
@@ -549,7 +550,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 color: theme.colorScheme.primary,
                 size: 20,
               ),
@@ -575,7 +576,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
               ),
             ),
             Icon(
-              Icons.chevron_right,
+              AppIcons.chevronRight,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ],

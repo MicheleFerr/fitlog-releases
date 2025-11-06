@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Skip Recovery Dialog
 class SkipRecoveryDialog extends ConsumerStatefulWidget {
@@ -160,7 +161,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
             Row(
               children: [
                 Icon(
-                  Icons.restore,
+                  AppIcons.restore,
                   color: context.colors.primary,
                   size: 28,
                 ),
@@ -174,7 +175,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                 ),
               ],
             ),
@@ -199,7 +200,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.error_outline,
+                        AppIcons.error,
                         size: 48,
                         color: context.colors.error,
                       ),
@@ -220,7 +221,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.check_circle_outline,
+                        AppIcons.completeOutline,
                         size: 64,
                         color: context.colors.primary,
                       ),
@@ -354,7 +355,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
               Row(
                 children: [
                   Icon(
-                    isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                    isSelected ? AppIcons.radioButtonChecked : AppIcons.radioButtonUnchecked,
                     size: 20,
                     color: isSelected
                         ? context.colors.primary
@@ -399,7 +400,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
           child: Row(
             children: [
               Icon(
-                Icons.event_available,
+                AppIcons.eventAvailable,
                 size: 20,
                 color: context.colors.primary,
               ),
@@ -413,7 +414,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                 ),
               ),
               Icon(
-                Icons.arrow_forward,
+                AppIcons.forward,
                 size: 18,
                 color: context.colors.onSurface.withValues(alpha: 0.5),
               ),

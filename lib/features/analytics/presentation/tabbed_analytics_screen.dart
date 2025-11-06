@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/sync_
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/skeleton_loader.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TabbedAnalyticsScreen extends ConsumerStatefulWidget {
   const TabbedAnalyticsScreen({super.key});
@@ -65,7 +66,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -102,7 +103,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
               showInitialAnimation: true,
             ),
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             onPressed: () {
               HapticFeedback.lightImpact();
               ref.invalidate(historicalWorkoutsProvider);
@@ -123,23 +124,23 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
               tabs: const [
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.dashboard_outlined, size: 24),
+                  icon: Icon(AppIcons.dashboardOutlined, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.trending_up_outlined, size: 24),
+                  icon: Icon(AppIcons.trendingUpOutlined, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.insights_outlined, size: 24),
+                  icon: Icon(AppIcons.insightsOutlined, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.calendar_month_outlined, size: 24),
+                  icon: Icon(AppIcons.calendarMonthOutlined, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(Icons.auto_awesome_outlined, size: 24),
+                  icon: Icon(AppIcons.autoAwesomeOutlined, size: 24),
                 ),
               ],
             ),
@@ -195,7 +196,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.lock_outline,
+              AppIcons.lockOutline,
               size: 80,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
@@ -235,7 +236,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 80,
               color: theme.colorScheme.error,
             ),
@@ -269,7 +270,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 80,
               color: theme.colorScheme.error,
             ),
@@ -289,7 +290,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             const SizedBox(height: 32),
             OutlinedButton.icon(
               onPressed: () => ref.invalidate(historicalWorkoutsProvider),
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(AppIcons.refresh),
               label: Text(l10n.retry),
             ),
           ],
@@ -325,13 +326,13 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
 
     return EnhancedEmptyState(
       type: EmptyStateType.motivational,
-      icon: Icons.fitness_center,
+      icon: AppIcons.workout,
       title: l10n.noWorkoutsYet,
       description: l10n.startYourFirstWorkoutDesc,
       motivationalQuote: l10n.fitnessQuoteEmptyState,
       proTip: l10n.proTipFirstWorkout,
       primaryActionLabel: l10n.startWorkout,
-      primaryActionIcon: Icons.add,
+      primaryActionIcon: AppIcons.add,
       onPrimaryAction: () => context.push('/workout'),
     );
   }

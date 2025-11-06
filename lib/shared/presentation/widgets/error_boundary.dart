@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget che cattura e gestisce errori nei suoi figli
 class ErrorBoundary extends StatefulWidget {
@@ -75,7 +76,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.error,
             color: Colors.red.shade700,
             size: 48,
           ),

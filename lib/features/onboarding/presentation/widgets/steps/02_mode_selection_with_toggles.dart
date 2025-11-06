@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ModeSelectionWithTogglesStep extends ConsumerStatefulWidget {
 
@@ -137,7 +138,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       context,
                       title: l10n.onboardingBaseMode,
                       description: l10n.onboardingBaseModeDescription,
-                      icon: Icons.play_arrow_rounded,
+                      icon: AppIcons.playArrowRounded,
                       isSelected: _selectedMode == false,
                       onTap: () => _selectMode(false),
                       features: [
@@ -178,7 +179,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       context,
                       title: l10n.onboardingProMode,
                       description: l10n.onboardingProModeDescription,
-                      icon: Icons.stars_rounded,
+                      icon: AppIcons.starsRounded,
                       isSelected: _selectedMode == true,
                       onTap: () => _selectMode(true),
                       features: [
@@ -236,7 +237,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       child: Row(
                         children: [
                           Icon(
-                            Icons.info_outline,
+                            AppIcons.info,
                             color: colorScheme.primary,
                             size: 20,
                           ),
@@ -377,7 +378,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                 ),
                 if (isSelected)
                   Icon(
-                    Icons.check_circle,
+                    AppIcons.complete,
                     color: color,
                     size: 24,
                   ),
@@ -392,7 +393,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
               child: Row(
                 children: [
                   Icon(
-                    feature.startsWith('✓') ? Icons.check : Icons.close,
+                    feature.startsWith('✓') ? AppIcons.check : AppIcons.close,
                     color: feature.startsWith('✓') ? color : Colors.grey,
                     size: 16,
                   ),
@@ -429,7 +430,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                 padding: const EdgeInsets.symmetric(vertical: 1),
                 child: Row(
                   children: [
-                    Icon(Icons.toggle_on, color: color, size: 16),
+                    Icon(AppIcons.toggleOn, color: color, size: 16),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -457,7 +458,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                   padding: const EdgeInsets.symmetric(vertical: 1),
                   child: Row(
                     children: [
-                      const Icon(Icons.toggle_off, color: Colors.grey, size: 16),
+                      const Icon(AppIcons.toggleOff, color: Colors.grey, size: 16),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(

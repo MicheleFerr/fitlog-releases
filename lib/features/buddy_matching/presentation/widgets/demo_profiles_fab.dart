@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DemoProfilesFab extends ConsumerStatefulWidget {
   const DemoProfilesFab({super.key});
@@ -46,7 +47,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
     //             valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.onSecondary),
     //           ),
     //         )
-    //       : const Icon(Icons.science),
+    //       : const Icon(AppIcons.science),
     //   label: Text(_isLoading ? 'Loading...' : 'Demo'),
     // );
   }
@@ -74,7 +75,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
               Row(
                 children: [
                   Icon(
-                    Icons.science,
+                    AppIcons.science,
                     color: theme.colorScheme.primary,
                     size: 28,
                   ),
@@ -101,7 +102,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
                 context: context,
                 title: 'Carica Profili Demo',
                 subtitle: 'Carica 10 profili demo nella tua area',
-                icon: Icons.people,
+                icon: AppIcons.people,
                 onPressed: _loadDemoProfiles,
                 color: theme.colorScheme.primary,
               ),
@@ -113,7 +114,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
                 context: context,
                 title: 'Profili Nella Tua Città',
                 subtitle: 'Carica profili demo vicino a te',
-                icon: Icons.location_on,
+                icon: AppIcons.location,
                 onPressed: _loadDemoProfilesNearMe,
                 color: theme.colorScheme.tertiary,
               ),
@@ -125,7 +126,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
                 context: context,
                 title: 'Ricarica Demo',
                 subtitle: 'Pulisce e ricarica tutti i profili demo',
-                icon: Icons.refresh,
+                icon: AppIcons.refresh,
                 onPressed: _reloadDemoProfiles,
                 color: theme.colorScheme.secondary,
               ),
@@ -137,7 +138,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
                 context: context,
                 title: 'Pulisci Demo',
                 subtitle: 'Rimuove tutti i profili demo',
-                icon: Icons.delete_outline,
+                icon: AppIcons.deleteOutline,
                 onPressed: _clearDemoProfiles,
                 color: theme.colorScheme.error,
               ),
@@ -213,7 +214,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
                 ),
               ),
               Icon(
-                Icons.arrow_forward_ios,
+                AppIcons.forwardIos,
                 size: 16,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),

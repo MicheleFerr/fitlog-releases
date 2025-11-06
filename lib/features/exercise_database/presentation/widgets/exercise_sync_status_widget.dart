@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseSyncStatusWidget extends ConsumerWidget {
   const ExerciseSyncStatusWidget({super.key});
@@ -32,7 +33,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.sync,
+                  AppIcons.syncIcon,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -81,27 +82,27 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
       case SyncStatus.idle:
         text = AppLocalizations.of(context).syncIdle;
         color = Theme.of(context).colorScheme.onSurface;
-        icon = Icons.check_circle_outline;
+        icon = AppIcons.completeOutline;
         break;
       case SyncStatus.loading:
         text = AppLocalizations.of(context).syncLoading;
         color = Theme.of(context).colorScheme.primary;
-        icon = Icons.download;
+        icon = AppIcons.download;
         break;
       case SyncStatus.syncing:
         text = AppLocalizations.of(context).syncSyncing;
         color = Theme.of(context).colorScheme.primary;
-        icon = Icons.sync;
+        icon = AppIcons.syncIcon;
         break;
       case SyncStatus.success:
         text = AppLocalizations.of(context).syncSuccess;
         color = Colors.green;
-        icon = Icons.check_circle;
+        icon = AppIcons.complete;
         break;
       case SyncStatus.error:
         text = AppLocalizations.of(context).syncError;
         color = Theme.of(context).colorScheme.error;
-        icon = Icons.error;
+        icon = AppIcons.error;
         break;
     }
 
@@ -146,7 +147,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
     return Row(
       children: [
         Icon(
-          Icons.error_outline,
+          AppIcons.error,
           color: Theme.of(context).colorScheme.error,
           size: 20,
         ),
@@ -179,7 +180,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                Icons.info_outline,
+                AppIcons.info,
                 size: 16,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
@@ -231,7 +232,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.new_releases,
+                    AppIcons.newReleases,
                     size: 16,
                     color: Colors.orange,
                   ),
@@ -284,7 +285,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.warning_outlined,
+            AppIcons.warningOutlined,
             size: 16,
             color: Theme.of(context).colorScheme.error,
           ),
@@ -309,7 +310,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: () => _forceSync(ref),
-            icon: const Icon(Icons.refresh, size: 18),
+            icon: const Icon(AppIcons.refresh, size: 18),
             label: Text(AppLocalizations.of(context).forceSync),
           ),
         ),
@@ -317,7 +318,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: () => _showSyncSettings(context, ref),
-            icon: const Icon(Icons.settings, size: 18),
+            icon: const Icon(AppIcons.settings, size: 18),
             label: Text(AppLocalizations.of(context).syncSettings),
           ),
         ),
@@ -424,7 +425,7 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
               ListTile(
                 title: Text(AppLocalizations.of(context).syncFrequency),
                 subtitle: Text(_getSyncFrequencyText()),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: const Icon(AppIcons.chevronRight),
                 onTap: _showFrequencySelector,
               ),
 
@@ -442,7 +443,7 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
                     child: OutlinedButton.icon(
                       onPressed: _clearCache,
                       icon: Icon(
-                        Icons.delete_outline,
+                        AppIcons.deleteOutline,
                         color: Theme.of(context).colorScheme.error,
                       ),
                       label: Text(

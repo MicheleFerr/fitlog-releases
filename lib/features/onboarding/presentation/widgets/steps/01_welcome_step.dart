@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WelcomeStep extends StatefulWidget {
 
@@ -143,7 +144,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                     ],
                   ),
                   child: Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     size: 80,
                     color: colorScheme.onPrimary,
                   ),
@@ -229,7 +230,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                     Row(
                       children: [
                         Icon(
-                          Icons.favorite,
+                          AppIcons.favorite,
                           color: colorScheme.primary,
                           size: 28,
                         ),
@@ -258,7 +259,7 @@ class _WelcomeStepState extends State<WelcomeStep>
               const SizedBox(height: 32),
               _buildAnimatedFeature(
                 0,
-                Icons.psychology,
+                AppIcons.ai,
                 l10n.onboardingWelcomeFeature1Title,
                 l10n.onboardingWelcomeFeature1Description,
                 colorScheme.primary,
@@ -266,7 +267,7 @@ class _WelcomeStepState extends State<WelcomeStep>
               const SizedBox(height: 16),
               _buildAnimatedFeature(
                 1,
-                Icons.tune,
+                AppIcons.tune,
                 l10n.onboardingWelcomeFeature2Title,
                 l10n.onboardingWelcomeFeature2Description,
                 colorScheme.secondary,
@@ -274,7 +275,7 @@ class _WelcomeStepState extends State<WelcomeStep>
               const SizedBox(height: 16),
               _buildAnimatedFeature(
                 2,
-                Icons.fitness_center,
+                AppIcons.workout,
                 l10n.onboardingWelcomeFeature3Title,
                 l10n.onboardingWelcomeFeature3Description,
                 colorScheme.tertiary,
@@ -282,7 +283,7 @@ class _WelcomeStepState extends State<WelcomeStep>
               const SizedBox(height: 16),
               _buildAnimatedFeature(
                 3,
-                Icons.rocket_launch,
+                AppIcons.rocket,
                 l10n.onboardingWelcomeFeature4Title,
                 l10n.onboardingWelcomeFeature4Description,
                 Colors.orange,
@@ -317,7 +318,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                   child: Row(
                     children: [
                       Icon(
-                        Icons.lightbulb,
+                        AppIcons.lightbulb,
                         color: colorScheme.primary,
                         size: 28,
                       ),

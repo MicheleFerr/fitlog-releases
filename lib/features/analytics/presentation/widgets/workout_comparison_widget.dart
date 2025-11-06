@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing comparison with previous similar workout
 class WorkoutComparisonWidget extends ConsumerWidget {
@@ -129,7 +130,7 @@ class WorkoutComparisonWidget extends ConsumerWidget {
           l10n.volume,
           comparison.formattedVolumeChange,
           comparison.volumeChangePercentage,
-          Icons.fitness_center,
+          AppIcons.workout,
         ),
         
         const SizedBox(height: 6),
@@ -143,7 +144,7 @@ class WorkoutComparisonWidget extends ConsumerWidget {
             l10n.intensity,
             comparison.formattedIntensityChange,
             comparison.intensityChangePercentage,
-            Icons.whatshot,
+            AppIcons.whatshot,
           ),
         
         const SizedBox(height: 6),
@@ -157,7 +158,7 @@ class WorkoutComparisonWidget extends ConsumerWidget {
             l10n.duration,
             comparison.formattedDurationChange,
             comparison.durationChange.inMinutes.toDouble(),
-            Icons.timer,
+            AppIcons.timer,
           ),
       ],
     );
@@ -289,21 +290,21 @@ class WorkoutComparisonWidget extends ConsumerWidget {
 
   IconData _getComparisonIcon(WorkoutComparison comparison) {
     if (comparison.isImprovement) {
-      return Icons.trending_up;
+      return AppIcons.trendUp;
     } else if (comparison.isRegression) {
-      return Icons.trending_down;
+      return AppIcons.trendDown;
     } else {
-      return Icons.trending_flat;
+      return AppIcons.trendFlat;
     }
   }
 
   IconData _getStatusIcon(WorkoutComparison comparison) {
     if (comparison.isImprovement) {
-      return Icons.thumb_up;
+      return AppIcons.thumbUp;
     } else if (comparison.isRegression) {
-      return Icons.thumb_down;
+      return AppIcons.thumbDown;
     } else {
-      return Icons.remove;
+      return AppIcons.remove;
     }
   }
 
@@ -350,7 +351,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.analytics_outlined,
+              AppIcons.analyticsOutlined,
               color: colorScheme.onSurfaceVariant,
               size: 48,
             ),
@@ -429,7 +430,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
             l10n.volume,
             comparison.formattedVolumeChange,
             comparison.volumeChangePercentage,
-            Icons.fitness_center,
+            AppIcons.workout,
             l10n.totalWeightLifted,
           ),
 
@@ -442,7 +443,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
             l10n.intensity,
             comparison.formattedIntensityChange,
             comparison.intensityChangePercentage,
-            Icons.whatshot,
+            AppIcons.whatshot,
             l10n.averageEffortLevel,
           ),
 
@@ -455,7 +456,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
             l10n.duration,
             comparison.formattedDurationChange,
             comparison.durationChange.inMinutes.toDouble(),
-            Icons.timer,
+            AppIcons.timer,
             l10n.workoutDuration,
           ),
 
@@ -562,10 +563,10 @@ class DetailedWorkoutComparison extends ConsumerWidget {
                 const Spacer(),
                 Icon(
                   isPositive
-                      ? Icons.arrow_upward
+                      ? AppIcons.arrowUpward
                       : isNegative
-                          ? Icons.arrow_downward
-                          : Icons.remove,
+                          ? AppIcons.arrowDownward
+                          : AppIcons.remove,
                   color: color,
                   size: 16,
                 ),
@@ -644,21 +645,21 @@ class DetailedWorkoutComparison extends ConsumerWidget {
 
   IconData _getComparisonIcon(WorkoutComparison comparison) {
     if (comparison.isImprovement) {
-      return Icons.trending_up;
+      return AppIcons.trendUp;
     } else if (comparison.isRegression) {
-      return Icons.trending_down;
+      return AppIcons.trendDown;
     } else {
-      return Icons.trending_flat;
+      return AppIcons.trendFlat;
     }
   }
 
   IconData _getStatusIcon(WorkoutComparison comparison) {
     if (comparison.isImprovement) {
-      return Icons.thumb_up;
+      return AppIcons.thumbUp;
     } else if (comparison.isRegression) {
-      return Icons.thumb_down;
+      return AppIcons.thumbDown;
     } else {
-      return Icons.remove;
+      return AppIcons.remove;
     }
   }
 

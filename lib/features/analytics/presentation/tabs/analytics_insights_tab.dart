@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/lazy_
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsInsightsTab extends ConsumerStatefulWidget {
 
@@ -59,7 +60,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 Row(
                   children: [
                     Icon(
-                      Icons.dashboard,
+                      AppIcons.dashboard,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -96,7 +97,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 Row(
                   children: [
                     Icon(
-                      Icons.balance,
+                      AppIcons.balance,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -136,7 +137,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 Row(
                   children: [
                     Icon(
-                      Icons.calendar_view_month,
+                      AppIcons.calendarViewMonth,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -193,7 +194,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.admin_panel_settings,
+                    AppIcons.admin,
                     size: 16,
                     color: theme.colorScheme.onPrimary,
                   ),
@@ -228,7 +229,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.lock,
+                AppIcons.lock,
                 size: 64,
                 color: theme.colorScheme.primary,
               ),
@@ -252,32 +253,32 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
             // Feature list
             _buildFeatureItem(
               context,
-              Icons.dashboard,
+              AppIcons.dashboard,
               l10n.weeklyPerformanceDashboard,
               theme,
             ),
             _buildFeatureItem(
               context,
-              Icons.balance,
+              AppIcons.balance,
               l10n.muscleGroupBalanceAnalysis,
               theme,
             ),
             _buildFeatureItem(
               context,
-              Icons.calendar_month,
+              AppIcons.calendarMonth,
               l10n.workoutConsistencyTracking,
               theme,
             ),
             _buildFeatureItem(
               context,
-              Icons.psychology,
+              AppIcons.ai,
               l10n.personalizedRecommendations,
               theme,
             ),
             const SizedBox(height: 32),
             FilledButton.icon(
               onPressed: () => context.push('/premium'),
-              icon: const Icon(Icons.star),
+              icon: const Icon(AppIcons.star),
               label: Text(l10n.unlockPremium),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -340,7 +341,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
             Row(
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.ai,
                   color: theme.colorScheme.secondary,
                   size: 24,
                 ),
@@ -362,7 +363,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                       });
                       HapticFeedback.lightImpact();
                     },
-                    icon: const Icon(Icons.clear_all, size: 18),
+                    icon: const Icon(AppIcons.clearAll, size: 18),
                     label: Text(l10n.clearFilters),
                   ),
               ],
@@ -381,7 +382,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.filter_alt_off,
+                        AppIcons.filterAltOff,
                         size: 48,
                         color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
@@ -523,9 +524,9 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
-    final icon = type == 'warning' ? Icons.warning_amber_rounded
-                : type == 'success' ? Icons.check_circle_outline
-                : Icons.info_outline;
+    final icon = type == 'warning' ? AppIcons.warningAmberRounded
+                : type == 'success' ? AppIcons.completeOutline
+                : AppIcons.info;
 
     final color = type == 'warning' ? Colors.orange
                  : type == 'success' ? Colors.green
@@ -584,7 +585,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.science_outlined,
+                              AppIcons.experiment,
                               size: 14,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -604,7 +605,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
               ),
               if (reason != null)
                 Icon(
-                  Icons.chevron_right,
+                  AppIcons.chevronRight,
                   size: 20,
                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
@@ -629,7 +630,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.science, color: color),
+            Icon(AppIcons.science, color: color),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -730,27 +731,27 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                     theme,
                     l10n.total,
                     '${(data.totalVolume / 1000).toStringAsFixed(1)}k kg',
-                    Icons.fitness_center,
+                    AppIcons.workout,
                   ),
                   _buildStatChip(
                     theme,
                     l10n.primary,
                     '${(data.primaryVolume / 1000).toStringAsFixed(1)}k kg',
-                    Icons.star,
+                    AppIcons.star,
                     color: theme.colorScheme.primary,
                   ),
                   _buildStatChip(
                     theme,
                     l10n.secondary,
                     '${(data.secondaryVolume / 1000).toStringAsFixed(1)}k kg',
-                    Icons.star_half,
+                    AppIcons.starHalfIcon,
                     color: theme.colorScheme.primary.withValues(alpha: 0.6),
                   ),
                   _buildStatChip(
                     theme,
                     l10n.target,
                     '${data.targetStrength.toStringAsFixed(0)}%',
-                    Icons.flag,
+                    AppIcons.flag,
                     color: theme.colorScheme.tertiary,
                   ),
                 ],

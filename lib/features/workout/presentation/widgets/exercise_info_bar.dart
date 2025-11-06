@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_selector.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Info bar minimalista e professionale per mostrare categoria, tipo e TUT
 class ExerciseInfoBar extends StatefulWidget {
@@ -202,7 +203,7 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                   children: [
                     Flexible(
                       child: _buildInfoItem(
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timerOffOutlined,
                         text: _formatTut(tut!),
                         color: theme.colorScheme.primary,
                         theme: theme,
@@ -217,10 +218,10 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                           angle: _rotateAnimation.value * 3.14159,
                           child: Icon(
                             _showTutSelector
-                              ? Icons.close
+                              ? AppIcons.close
                               : (widget.onTutChanged != null
-                                  ? Icons.expand_more
-                                  : Icons.info_outline),
+                                  ? AppIcons.expandMore
+                                  : AppIcons.info),
                             size: 14,
                             color: _isPressed || _showTutSelector
                               ? theme.colorScheme.primary
@@ -376,21 +377,21 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
   IconData? _getCategoryIcon(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case ExerciseCategory.shoulders:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case ExerciseCategory.back:
-        return Icons.sports_gymnastics;
+        return AppIcons.gymnastics;
       case ExerciseCategory.arms:
-        return Icons.sports_mma;
+        return AppIcons.sportsMma;
       case ExerciseCategory.legs:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case ExerciseCategory.abs:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
       case ExerciseCategory.cardio:
-        return Icons.favorite;
+        return AppIcons.favorite;
       case ExerciseCategory.other:
-        return Icons.fitness_center;
+        return AppIcons.workout;
     }
   }
   
@@ -399,11 +400,11 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
       case ExerciseType.single:
         return null; // Nessuna icona per standard
       case ExerciseType.superset:
-        return Icons.link;
+        return AppIcons.link;
       case ExerciseType.dropset:
-        return Icons.trending_down;
+        return AppIcons.trendDown;
       case ExerciseType.restPause:
-        return Icons.pause;
+        return AppIcons.pause;
     }
   }
   

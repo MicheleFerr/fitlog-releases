@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutGoalsChips extends StatelessWidget {
 
@@ -131,17 +132,17 @@ class WorkoutGoalsChips extends StatelessWidget {
   IconData _getGoalIcon(WorkoutGoal goal) {
     switch (goal) {
       case WorkoutGoal.weightLoss:
-        return Icons.trending_down;
+        return AppIcons.trendDown;
       case WorkoutGoal.muscleGain:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case WorkoutGoal.strength:
-        return Icons.sports_gymnastics;
+        return AppIcons.gymnastics;
       case WorkoutGoal.endurance:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case WorkoutGoal.flexibility:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
       case WorkoutGoal.general:
-        return Icons.sports;
+        return AppIcons.sports;
     }
   }
 }

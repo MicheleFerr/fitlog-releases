@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/streak_tra
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/recent_workouts_widget.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_goals_widget.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Factory class to build home widgets based on configuration
 class HomeWidgetFactory {
@@ -154,7 +155,7 @@ class HomeWidgetFactory {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.add_circle_outline,
+                    AppIcons.addCircleOutline,
                     color: theme.colorScheme.primary,
                     size: 24,
                   ),
@@ -182,7 +183,7 @@ class HomeWidgetFactory {
                   ),
                 ),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   color: theme.colorScheme.primary.withValues(alpha: 0.5),
                   size: 16,
                 ),
@@ -230,7 +231,7 @@ class HomeWidgetFactory {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            workout.isActive ? Icons.play_arrow : Icons.pause,
+                            workout.isActive ? AppIcons.play : AppIcons.pause,
                             color: Colors.white,
                             size: 20,
                           ),
@@ -258,7 +259,7 @@ class HomeWidgetFactory {
                           ),
                         ),
                         Icon(
-                          Icons.arrow_forward_ios,
+                          AppIcons.forwardIos,
                           color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.5),
                           size: 16,
                         ),
@@ -269,9 +270,9 @@ class HomeWidgetFactory {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildCompactStat(Icons.timer, '$minutes min', theme.colorScheme.onPrimaryContainer),
-                        _buildCompactStat(Icons.fitness_center, '$exerciseCount esercizi', theme.colorScheme.onPrimaryContainer),
-                        _buildCompactStat(Icons.repeat, '$totalSets serie', theme.colorScheme.onPrimaryContainer),
+                        _buildCompactStat(AppIcons.timer, '$minutes min', theme.colorScheme.onPrimaryContainer),
+                        _buildCompactStat(AppIcons.workout, '$exerciseCount esercizi', theme.colorScheme.onPrimaryContainer),
+                        _buildCompactStat(AppIcons.repeat, '$totalSets serie', theme.colorScheme.onPrimaryContainer),
                       ],
                     ),
                   ],
@@ -288,7 +289,7 @@ class HomeWidgetFactory {
                 Expanded(
                   child: _buildActionButton(
                     context,
-                    icon: Icons.play_arrow,
+                    icon: AppIcons.play,
                     label: 'Riprendi',
                     color: theme.colorScheme.primary,
                     onTap: () => context.push('/workout'),
@@ -298,7 +299,7 @@ class HomeWidgetFactory {
                 Expanded(
                   child: _buildActionButton(
                     context,
-                    icon: Icons.check_circle,
+                    icon: AppIcons.complete,
                     label: 'Termina',
                     color: Colors.green,
                     onTap: () => _showCompleteDialog(context, ref, workout),
@@ -307,7 +308,7 @@ class HomeWidgetFactory {
                 const SizedBox(width: 8),
                 _buildActionButton(
                   context,
-                  icon: Icons.delete_outline,
+                  icon: AppIcons.deleteOutline,
                   label: '',
                   color: Colors.red,
                   onTap: () => _showDiscardDialog(context, ref),
@@ -521,7 +522,7 @@ class HomeWidgetFactory {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.psychology,
+                    AppIcons.ai,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -571,7 +572,7 @@ class HomeWidgetFactory {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.psychology,
+                        AppIcons.ai,
                         color: Colors.white,
                         size: 20,
                       ),
@@ -612,7 +613,7 @@ class HomeWidgetFactory {
                       Row(
                         children: [
                           const Icon(
-                            Icons.trending_up,
+                            AppIcons.trendUp,
                             color: Colors.green,
                             size: 16,
                           ),
@@ -650,7 +651,7 @@ class HomeWidgetFactory {
                     ),
                     const SizedBox(width: 4),
                     Icon(
-                      Icons.arrow_forward,
+                      AppIcons.forward,
                       size: 14,
                       color: theme.colorScheme.primary.withValues(alpha: 0.7),
                     ),
@@ -686,7 +687,7 @@ class HomeWidgetFactory {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.psychology,
+                        AppIcons.ai,
                         color: Colors.white,
                         size: 24,
                       ),
@@ -742,21 +743,21 @@ class HomeWidgetFactory {
   static List<Widget> _buildInsightsList(ThemeData theme) {
     final insights = [
       {
-        'icon': Icons.trending_up,
+        'icon': AppIcons.trendUp,
         'title': 'Progressione Carico',
         'message': 'Squat: incremento del 2-5% consigliato',
         'detail': 'Basato su 4 settimane di progressi costanti',
         'color': Colors.green,
       },
       {
-        'icon': Icons.schedule,
+        'icon': AppIcons.schedule,
         'title': 'Recupero Ottimale',
         'message': 'Considera 48-72h tra sessioni intense',
         'detail': 'Il tuo volume è aumentato del 15% questo mese',
         'color': Colors.orange,
       },
       {
-        'icon': Icons.fitness_center,
+        'icon': AppIcons.workout,
         'title': 'Bilanciamento Muscolare',
         'message': 'Rapporto push/pull equilibrato',
         'detail': 'Mantieni il volume attuale per i prossimi 2 microcicli',
@@ -896,7 +897,7 @@ class HomeWidgetFactory {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.psychology,
+                        AppIcons.ai,
                         color: Colors.white,
                         size: 24,
                       ),
@@ -925,7 +926,7 @@ class HomeWidgetFactory {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
+                      icon: const Icon(AppIcons.close, color: Colors.white),
                       onPressed: () => Navigator.of(context).pop(),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -968,7 +969,7 @@ class HomeWidgetFactory {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.info_outline,
+                              AppIcons.info,
                               size: 16,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
@@ -1195,7 +1196,7 @@ class HomeWidgetFactory {
                     Row(
                       children: [
                         Icon(
-                          group['type'] == 'Push' ? Icons.north : Icons.south,
+                          group['type'] == 'Push' ? AppIcons.north : AppIcons.south,
                           size: 16,
                           color: theme.colorScheme.primary,
                         ),
@@ -1262,7 +1263,7 @@ class HomeWidgetFactory {
   static List<Widget> _buildDetailedInsightsList(ThemeData theme) {
     final insights = [
       {
-        'icon': Icons.trending_up,
+        'icon': AppIcons.trendUp,
         'title': 'Progressione Carico',
         'message': 'Squat: incremento del 2-5% consigliato',
         'detail': null, // Will be built as widget
@@ -1280,7 +1281,7 @@ class HomeWidgetFactory {
         'color': Colors.green,
       },
       {
-        'icon': Icons.schedule,
+        'icon': AppIcons.schedule,
         'title': 'Recupero Ottimale',
         'message': 'Tempi di riposo analizzati',
         'detail': null,
@@ -1298,7 +1299,7 @@ class HomeWidgetFactory {
         'color': Colors.orange,
       },
       {
-        'icon': Icons.fitness_center,
+        'icon': AppIcons.workout,
         'title': 'Bilanciamento Muscolare',
         'message': 'Rapporto push/pull analizzato',
         'detail': null,
@@ -1401,7 +1402,7 @@ class HomeWidgetFactory {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.lightbulb_outline,
+                          AppIcons.tip,
                           size: 14,
                           color: insight['color'] as Color,
                         ),
@@ -1461,7 +1462,7 @@ class HomeWidgetFactory {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -1488,7 +1489,7 @@ class HomeWidgetFactory {
                   ),
                 ),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   color: theme.colorScheme.primary,
                   size: 16,
                 ),
@@ -1526,7 +1527,7 @@ class HomeWidgetFactory {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: Colors.white,
                     size: 28,
                   ),
@@ -1560,7 +1561,7 @@ class HomeWidgetFactory {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.arrow_forward,
+                    AppIcons.forward,
                     color: theme.colorScheme.primary,
                     size: 20,
                   ),
@@ -1600,7 +1601,7 @@ class HomeWidgetFactory {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: Colors.white,
                     size: 36,
                   ),
@@ -1623,11 +1624,11 @@ class HomeWidgetFactory {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildQuickStatSmall('12', 'Template', Icons.assignment, theme),
+                    _buildQuickStatSmall('12', 'Template', AppIcons.assignment, theme),
                     const SizedBox(width: 32),
-                    _buildQuickStatSmall('45', 'Min medi', Icons.timer, theme),
+                    _buildQuickStatSmall('45', 'Min medi', AppIcons.timer, theme),
                     const SizedBox(width: 32),
-                    _buildQuickStatSmall('3.2k', 'kg/settimana', Icons.fitness_center, theme),
+                    _buildQuickStatSmall('3.2k', 'kg/settimana', AppIcons.workout, theme),
                   ],
                 ),
               ],
@@ -1670,10 +1671,10 @@ class HomeWidgetFactory {
     final theme = Theme.of(context);
 
     final actions = [
-      {'icon': Icons.assignment, 'label': 'Template', 'route': '/workout-templates'},
-      {'icon': Icons.history, 'label': 'Cronologia', 'route': '/history'},
-      {'icon': Icons.analytics, 'label': 'Analytics', 'route': '/analytics'},
-      {'icon': Icons.settings, 'label': 'Impostazioni', 'route': '/settings'},
+      {'icon': AppIcons.assignment, 'label': 'Template', 'route': '/workout-templates'},
+      {'icon': AppIcons.history, 'label': 'Cronologia', 'route': '/history'},
+      {'icon': AppIcons.analytics, 'label': 'Analytics', 'route': '/analytics'},
+      {'icon': AppIcons.settings, 'label': 'Impostazioni', 'route': '/settings'},
     ];
 
     return Card(
@@ -1741,7 +1742,7 @@ class HomeWidgetFactory {
           children: [
             Row(
               children: [
-                Icon(Icons.history, color: theme.colorScheme.primary),
+                Icon(AppIcons.history, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'Allenamenti Recenti',
@@ -1776,7 +1777,7 @@ class HomeWidgetFactory {
           children: [
             Row(
               children: [
-                Icon(Icons.flag, color: theme.colorScheme.primary, size: 20),
+                Icon(AppIcons.flag, color: theme.colorScheme.primary, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   'Obiettivi',
@@ -1824,7 +1825,7 @@ class HomeWidgetFactory {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.format_quote,
+              AppIcons.misc.formatQuote,
               color: theme.colorScheme.primary.withValues(alpha: 0.5),
               size: 24,
             ),
@@ -1860,7 +1861,7 @@ class HomeWidgetFactory {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: Colors.orange,
                   size: 24,
                 ),
@@ -1970,7 +1971,7 @@ class _AICoachDialog extends ConsumerWidget {
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
-                      Icons.psychology,
+                      AppIcons.ai,
                       color: Colors.white,
                       size: 24,
                     ),
@@ -1999,7 +2000,7 @@ class _AICoachDialog extends ConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
+                    icon: const Icon(AppIcons.close, color: Colors.white),
                     onPressed: () => Navigator.of(context).pop(),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -2169,7 +2170,7 @@ class _AICoachDialog extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.trending_up,
+                    AppIcons.trendUp,
                     color: Colors.green,
                     size: 20,
                   ),
@@ -2275,7 +2276,7 @@ class _AICoachDialog extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
-                        Icons.lightbulb_outline,
+                        AppIcons.tip,
                         size: 14,
                         color: Colors.green,
                       ),

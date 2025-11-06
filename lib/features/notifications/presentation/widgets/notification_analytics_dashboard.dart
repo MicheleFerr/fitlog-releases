@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_analytics_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dashboard widget for displaying notification analytics
 class NotificationAnalyticsDashboard extends ConsumerWidget {
@@ -66,7 +67,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
         _buildMetricCard(
           title: 'Scheduled',
           value: metrics.totalScheduled.toString(),
-          icon: Icons.schedule,
+          icon: AppIcons.schedule,
           color: theme.colorScheme.primary,
           theme: theme,
         ),
@@ -74,7 +75,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           title: 'Delivered',
           value: '${metrics.totalDelivered}',
           subtitle: '${(metrics.deliveryRate * 100).toStringAsFixed(1)}%',
-          icon: Icons.check_circle,
+          icon: AppIcons.complete,
           color: Colors.green,
           theme: theme,
         ),
@@ -82,7 +83,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           title: 'Clicked',
           value: '${metrics.totalClicked}',
           subtitle: '${(metrics.clickRate * 100).toStringAsFixed(1)}% CTR',
-          icon: Icons.touch_app,
+          icon: AppIcons.touchApp,
           color: Colors.blue,
           theme: theme,
         ),
@@ -90,7 +91,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           title: 'Failed',
           value: '${metrics.totalFailed}',
           subtitle: '${(metrics.failureRate * 100).toStringAsFixed(1)}%',
-          icon: Icons.error,
+          icon: AppIcons.error,
           color: Colors.red,
           theme: theme,
         ),
@@ -405,7 +406,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.error_outline,
+                  AppIcons.error,
                   color: theme.colorScheme.onErrorContainer,
                 ),
                 const SizedBox(width: 8),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import '../providers/exercise_review_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin screen for viewing monthly exercise review reports
 class ExerciseReviewScreen extends ConsumerWidget {
@@ -36,7 +37,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.error,
             size: 64,
             color: context.colors.error,
           ),
@@ -68,7 +69,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.assignment_outlined,
+            AppIcons.assignmentOutlined,
             size: 64,
             color: context.colors.onSurfaceVariant,
           ),
@@ -189,7 +190,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
           children: [
             _buildStatCard(
               context,
-              icon: Icons.schedule_outlined,
+              icon: AppIcons.scheduleOutlined,
               label: 'Esercizi Obsoleti',
               value: staleCount.toString(),
               color: Colors.orange,
@@ -197,7 +198,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: Icons.flag_outlined,
+              icon: AppIcons.flagOutlined,
               label: 'Esercizi Flaggati',
               value: flaggedCount.toString(),
               color: Colors.amber,
@@ -205,7 +206,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: Icons.comment_outlined,
+              icon: AppIcons.commentOutlined,
               label: 'Feedback Totali',
               value: totalFeedback.toString(),
               color: Colors.blue,
@@ -213,7 +214,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: Icons.error_outline,
+              icon: AppIcons.error,
               label: 'Problemi Critici',
               value: criticalCount.toString(),
               color: Colors.red,
@@ -349,7 +350,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
             ),
             Icon(
-              Icons.schedule_outlined,
+              AppIcons.scheduleOutlined,
               color: Colors.orange,
               size: 20,
             ),
@@ -372,7 +373,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     'Modificato ${exercise['lastModifiedDaysAgo'] ?? 0} giorni fa',
-                icon: Icons.schedule,
+                icon: AppIcons.schedule,
                 color: Colors.orange,
               );
             },
@@ -404,7 +405,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
             ),
             Icon(
-              Icons.flag_outlined,
+              AppIcons.flagOutlined,
               color: Colors.amber,
               size: 20,
             ),
@@ -430,7 +431,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     '$feedbackCount feedback${criticalCount > 0 ? ' ($criticalCount critici)' : ''}',
-                icon: Icons.flag,
+                icon: AppIcons.flag,
                 color: criticalCount > 0 ? Colors.red : Colors.amber,
               );
             },
@@ -453,7 +454,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
       title: Text(exerciseName),
       subtitle: Text(subtitle),
       trailing: Icon(
-        Icons.chevron_right,
+        AppIcons.chevronRight,
         color: context.colors.onSurfaceVariant,
       ),
     );

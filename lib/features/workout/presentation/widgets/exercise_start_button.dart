@@ -19,6 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseStartButton extends ConsumerStatefulWidget {
   
@@ -168,7 +169,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
                 ),
                 child: Center(
                   child: Icon(
-                    Icons.play_arrow,
+                    AppIcons.play,
                     size: 14,
                     color: colorScheme.primary,
                   ),

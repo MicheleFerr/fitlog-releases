@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_pi
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
 
@@ -125,7 +126,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                           Row(
                             children: [
                               Icon(
-                                _isPublic ? Icons.public : Icons.lock,
+                                _isPublic ? AppIcons.public : AppIcons.lock,
                                 size: 20,
                                 color: _isPublic
                                     ? context.colors.primary
@@ -179,7 +180,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.info_outline,
+                                    AppIcons.info,
                                     size: 16,
                                     color: context.colors.primary,
                                   ),
@@ -225,7 +226,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: _showAddExercise,
-          child: const Icon(Icons.add),
+          child: const Icon(AppIcons.add),
         ),
 
       ),
@@ -238,7 +239,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.fitness_center_outlined,
+            AppIcons.fitnessCenterOutlined,
             size: 64,
             color: context.colors.onSurface.withOpacity(0.3),
           ),
@@ -259,7 +260,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _showAddExercise,
-            icon: const Icon(Icons.add),
+            icon: const Icon(AppIcons.add),
             label: Text(context.l10n.addExercise),
           ),
         ],
@@ -287,7 +288,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.delete, color: Colors.white, size: 28),
+              const Icon(AppIcons.delete, color: Colors.white, size: 28),
               const SizedBox(height: 4),
               Text(
                 context.l10n.delete,
@@ -325,7 +326,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       ReorderableDragStartListener(
                         index: index,
                         child: Icon(
-                          Icons.drag_handle,
+                          AppIcons.dragHandle,
                           color: context.colors.onSurface.withOpacity(0.5),
                         ),
                       ),
@@ -369,7 +370,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          Icons.timer,
+                                          AppIcons.timer,
                                           size: 12,
                                           color: context.colors.primary,
                                         ),
@@ -395,14 +396,14 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       // Rest timer button
                       IconButton.filledTonal(
                         onPressed: () => _showRestTimePicker(index),
-                        icon: const Icon(Icons.timer),
+                        icon: const Icon(AppIcons.timer),
                         iconSize: 20,
                         tooltip: 'Timer Recupero',
                       ),
                       const SizedBox(width: 8),
                       // Expand/collapse icon
                       Icon(
-                        isExpanded ? Icons.expand_less : Icons.expand_more,
+                        isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                         color: context.colors.primary,
                       ),
                     ],
@@ -522,7 +523,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         value: set.targetWeight == 0
                             ? '-'
                             : '${set.targetWeight?.toStringAsFixed(1)} kg',
-                        icon: Icons.fitness_center,
+                        icon: AppIcons.workout,
                         color: context.colors.primary,
                         onTap: () async {
                           final newWeight = await WeightPickerModal.show(
@@ -543,7 +544,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       child: _buildPickerButton(
                         label: context.l10n.reps,
                         value: '${set.targetReps ?? 0}',
-                        icon: Icons.repeat,
+                        icon: AppIcons.repeat,
                         color: context.colors.secondary,
                         onTap: () async {
                           final newReps = await RepsPickerModal.show(
@@ -561,7 +562,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     if (exerciseTemplate.sets.length > 1)
                       IconButton(
                         onPressed: () => _removeSet(exerciseIndex, setIndex),
-                        icon: const Icon(Icons.remove_circle_outline),
+                        icon: const Icon(AppIcons.removeCircleOutline),
                         color: Colors.red,
                         iconSize: 20,
                         tooltip: context.l10n.removeSet,
@@ -576,7 +577,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: OutlinedButton.icon(
               onPressed: () => _addSet(exerciseIndex),
-              icon: const Icon(Icons.add),
+              icon: const Icon(AppIcons.add),
               label: Text(context.l10n.addSet),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 40),

@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EmptyMatchesView extends StatelessWidget {
 
@@ -53,7 +54,7 @@ class EmptyMatchesView extends StatelessWidget {
                 ),
               ),
               child: Icon(
-                Icons.people_outline,
+                AppIcons.peopleOutline,
                 size: 60,
                 color: theme.colorScheme.primary,
               ),
@@ -93,7 +94,7 @@ class EmptyMatchesView extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: onSetupProfile,
-                      icon: const Icon(Icons.person_add),
+                      icon: const Icon(AppIcons.personAdd),
                       label: Text(l10n.getStarted),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.primary,
@@ -117,7 +118,7 @@ class EmptyMatchesView extends StatelessWidget {
                     width: double.infinity,
                     child: OutlinedButton.icon(
                       onPressed: onRefresh,
-                      icon: const Icon(Icons.refresh),
+                      icon: const Icon(AppIcons.refresh),
                       label: Text(l10n.refreshMatches),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: theme.colorScheme.primary,
@@ -155,7 +156,7 @@ class EmptyMatchesView extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.lightbulb_outline,
+                        AppIcons.tip,
                         size: 20,
                         color: theme.colorScheme.primary,
                       ),
@@ -174,7 +175,7 @@ class EmptyMatchesView extends StatelessWidget {
                   _buildTip(
                     context,
                     theme,
-                    Icons.location_on,
+                    AppIcons.location,
                     'Abilita la posizione per trovare partner vicini',
                   ),
                   
@@ -183,7 +184,7 @@ class EmptyMatchesView extends StatelessWidget {
                   _buildTip(
                     context,
                     theme,
-                    Icons.photo_camera,
+                    AppIcons.photoCamera,
                     'Aggiungi una foto profilo per più match',
                   ),
                   
@@ -192,7 +193,7 @@ class EmptyMatchesView extends StatelessWidget {
                   _buildTip(
                     context,
                     theme,
-                    Icons.description,
+                    AppIcons.template,
                     'Scrivi una bio interessante sui tuoi obiettivi',
                   ),
                 ],

@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exerc
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Secondary Actions widget for the optimized homepage
 ///
@@ -89,8 +90,8 @@ class SecondaryActions extends ConsumerWidget {
     return [
       // Analytics & Progress
       _SecondaryActionCard(
-        icon: Icons.analytics_outlined,
-        activeIcon: Icons.analytics,
+        icon: AppIcons.analyticsOutlined,
+        activeIcon: AppIcons.analytics,
         title: l10n.analytics,
         subtitle: l10n.trackProgress,
         color: _SecondaryActionColors.analytics,
@@ -99,8 +100,8 @@ class SecondaryActions extends ConsumerWidget {
 
       // Settings & Customization
       _SecondaryActionCard(
-        icon: Icons.settings_outlined,
-        activeIcon: Icons.settings,
+        icon: AppIcons.settingsOutlined,
+        activeIcon: AppIcons.settings,
         title: l10n.settings,
         subtitle: l10n.customizeApp,
         color: _SecondaryActionColors.settings,
@@ -110,8 +111,8 @@ class SecondaryActions extends ConsumerWidget {
 
       // Exercise Database
       _SecondaryActionCard(
-        icon: Icons.search_outlined,
-        activeIcon: Icons.search,
+        icon: AppIcons.searchOutlined,
+        activeIcon: AppIcons.search,
         title: l10n.exercises,
         subtitle: l10n.searchExercises,
         color: _SecondaryActionColors.exercises,
@@ -120,8 +121,8 @@ class SecondaryActions extends ConsumerWidget {
 
       // Community Hub
       _SecondaryActionCard(
-        icon: Icons.people_outline,
-        activeIcon: Icons.people,
+        icon: AppIcons.peopleOutline,
+        activeIcon: AppIcons.people,
         title: l10n
             .community, // This key exists in the router but may need to be added to ARB
         subtitle: l10n.community, // Reusing community for now
@@ -131,8 +132,8 @@ class SecondaryActions extends ConsumerWidget {
 
       // Workout History Database
       _SecondaryActionCard(
-        icon: Icons.history_outlined,
-        activeIcon: Icons.history,
+        icon: AppIcons.historyOutlined,
+        activeIcon: AppIcons.history,
         title: l10n.history,
         subtitle: l10n.viewPastWorkouts,
         color: _SecondaryActionColors.history,
@@ -141,8 +142,8 @@ class SecondaryActions extends ConsumerWidget {
 
       // Notifications Center
       _SecondaryActionCard(
-        icon: Icons.notifications_outlined,
-        activeIcon: Icons.notifications,
+        icon: AppIcons.notificationsOutlined,
+        activeIcon: AppIcons.notifications,
         title: l10n.notifications,
         subtitle: l10n.notifications, // Reusing for subtitle
         color: _SecondaryActionColors.notifications,
@@ -151,8 +152,8 @@ class SecondaryActions extends ConsumerWidget {
 
       // Exercise Import Tool (developer/admin feature)
       _SecondaryActionCard(
-        icon: Icons.file_upload_outlined,
-        activeIcon: Icons.file_upload,
+        icon: AppIcons.fileUploadOutlined,
+        activeIcon: AppIcons.fileUpload,
         title: l10n.importExercises,
         subtitle: l10n.loadFromJson,
         color: _SecondaryActionColors.import,
@@ -170,7 +171,7 @@ class SecondaryActions extends ConsumerWidget {
           child: Wrap(
             children: <Widget>[
               ListTile(
-                leading: const Icon(Icons.history),
+                leading: const Icon(AppIcons.history),
                 title: Text(l10n.exerciseHistory),
                 onTap: () async {
                   Navigator.pop(context); // Close the bottom sheet
@@ -199,7 +200,7 @@ class SecondaryActions extends ConsumerWidget {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.search),
+                leading: const Icon(AppIcons.search),
                 title: Text(l10n.searchExercises),
                 onTap: () {
                   Navigator.pop(context); // Close the bottom sheet
@@ -207,7 +208,7 @@ class SecondaryActions extends ConsumerWidget {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.insights),
+                leading: const Icon(AppIcons.insights),
                 title: Text(l10n.exerciseProgress),
                 onTap: () {
                   Navigator.pop(context); // Close the bottom sheet
@@ -227,7 +228,7 @@ class SecondaryActions extends ConsumerWidget {
         content: Row(
           children: [
             Icon(
-              Icons.construction,
+              AppIcons.construction,
               color: Theme.of(context).colorScheme.onInverseSurface,
             ),
             const SizedBox(width: 8),
@@ -257,7 +258,7 @@ class SecondaryActions extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.notifications,
+              AppIcons.notifications,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 12),
@@ -268,7 +269,7 @@ class SecondaryActions extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.notifications_off_outlined,
+              AppIcons.notificationsOffOutlined,
               size: 64,
               color:
                   Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),

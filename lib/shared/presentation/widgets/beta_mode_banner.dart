@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget to display a banner when Beta Mode is active
 class BetaModeBanner extends ConsumerWidget {
@@ -42,7 +43,7 @@ class BetaModeBanner extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.science,
+                  AppIcons.science,
                   size: 16,
                   color: Theme.of(context).colorScheme.onTertiary,
                 ),
@@ -57,7 +58,7 @@ class BetaModeBanner extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 Icon(
-                  Icons.science,
+                  AppIcons.science,
                   size: 16,
                   color: Theme.of(context).colorScheme.onTertiary,
                 ),
@@ -92,7 +93,7 @@ class BetaModeIndicator extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.science,
+            AppIcons.science,
             size: 14,
             color: Theme.of(context).colorScheme.onTertiaryContainer,
           ),

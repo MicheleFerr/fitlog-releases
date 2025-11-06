@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DropSetExecutionSheet extends ConsumerStatefulWidget {
 
@@ -361,7 +362,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                       ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(AppIcons.close),
                       ),
                     ],
                   ),
@@ -467,8 +468,8 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 onPressed: () => _toggleDropCompletion(index),
                                 icon: Icon(
                                   isCompleted 
-                                      ? Icons.check_circle 
-                                      : Icons.radio_button_unchecked,
+                                      ? AppIcons.complete 
+                                      : AppIcons.radioButtonUnchecked,
                                   color: isCompleted
                                       ? Theme.of(context).colorScheme.secondary
                                       : null,
@@ -500,7 +501,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     child: Row(
                                       children: [
                                         Icon(
-                                          Icons.fitness_center,
+                                          AppIcons.workout,
                                           size: 20,
                                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                                         ),
@@ -515,7 +516,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         ),
                                         if (!isCompleted)
                                           Icon(
-                                            Icons.arrow_drop_down,
+                                            AppIcons.arrowDropDown,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                       ],
@@ -542,7 +543,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     child: Row(
                                       children: [
                                         Icon(
-                                          Icons.repeat,
+                                          AppIcons.repeat,
                                           size: 20,
                                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                                         ),
@@ -567,7 +568,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         ),
                                         if (!isCompleted)
                                           Icon(
-                                            Icons.arrow_drop_down,
+                                            AppIcons.arrowDropDown,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                       ],
@@ -642,7 +643,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.warning_amber_rounded,
+                                    AppIcons.warningAmberRounded,
                                     size: 16,
                                     color: Theme.of(context).colorScheme.error,
                                   ),
@@ -676,7 +677,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: _canComplete ? _completeDropSet : null,
-                  icon: const Icon(Icons.check),
+                  icon: const Icon(AppIcons.check),
                   label: const Text('Completa Dropset'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.error,

@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/location_step.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/profile_step.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/complete_step.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyOnboardingScreen extends ConsumerStatefulWidget {
   const BuddyOnboardingScreen({super.key});
@@ -179,7 +180,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
               if (_currentStep > 0)
                 IconButton(
                   onPressed: _previousStep,
-                  icon: const Icon(Icons.arrow_back),
+                  icon: const Icon(AppIcons.back),
                 ),
               const Spacer(),
               if (_currentStep < _stepTitles.length - 1)

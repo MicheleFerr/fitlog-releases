@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_e
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Analytics screen with lazy loading and optimized performance
 class LazyAnalyticsScreen extends ConsumerStatefulWidget {
@@ -92,7 +93,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         ),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -103,20 +104,20 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             onPressed: () {
               ref.read(lazyAnalyticsProvider.notifier).refresh();
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(AppIcons.moreVert),
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'export',
                 child: Row(
                   children: [
-                    const Icon(Icons.download),
+                    const Icon(AppIcons.download),
                     const SizedBox(width: 8),
                     Text(localizations.exportData),
                   ],
@@ -126,7 +127,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 value: 'settings',
                 child: Row(
                   children: [
-                    const Icon(Icons.settings),
+                    const Icon(AppIcons.settings),
                     const SizedBox(width: 8),
                     Text(localizations.settings),
                   ],
@@ -426,19 +427,19 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                   context,
                   'Workouts',
                   analyticsState.activities.length.toString(),
-                  Icons.fitness_center,
+                  AppIcons.workout,
                 ),
                 _buildStatItem(
                   context,
                   'PRs',
                   analyticsState.personalRecords.length.toString(),
-                  Icons.emoji_events,
+                  AppIcons.achievement,
                 ),
                 _buildStatItem(
                   context,
                   'Volume',
                   '${(analyticsState.volumeProgression.currentMonthVolume / 1000).toStringAsFixed(1)}t',
-                  Icons.trending_up,
+                  AppIcons.trendUp,
                 ),
               ],
             ),
@@ -497,7 +498,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
               ),
             ),
             Icon(
-              isImproving ? Icons.trending_up : Icons.trending_flat,
+              isImproving ? AppIcons.trendUp : AppIcons.trendFlat,
               color: isImproving ? Colors.green : Colors.orange,
             ),
           ],
@@ -568,7 +569,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+              isPositive ? AppIcons.arrowUpward : AppIcons.arrowDownward,
               color: isPositive ? Colors.green : Colors.red,
               size: 16,
             ),
@@ -624,15 +625,15 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   IconData _getInsightIcon(InsightType type) {
     switch (type) {
       case InsightType.improvement:
-        return Icons.trending_up;
+        return AppIcons.trendUp;
       case InsightType.warning:
-        return Icons.warning;
+        return AppIcons.warning;
       case InsightType.achievement:
-        return Icons.emoji_events;
+        return AppIcons.achievement;
       case InsightType.suggestion:
-        return Icons.lightbulb;
+        return AppIcons.lightbulb;
       default:
-        return Icons.info;
+        return AppIcons.infoIcon;
     }
   }
   
@@ -660,7 +661,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.lock, size: 64),
+            const Icon(AppIcons.lock, size: 64),
             const SizedBox(height: 16),
             Text(localizations.signInRequired),
             const SizedBox(height: 16),
@@ -679,7 +680,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error, size: 64, color: Colors.red),
+          const Icon(AppIcons.error, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Text(error),
           const SizedBox(height: 16),
@@ -697,7 +698,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.fitness_center, size: 64),
+          const Icon(AppIcons.workout, size: 64),
           const SizedBox(height: 16),
           Text(localizations.noWorkoutsYet),
           const SizedBox(height: 16),

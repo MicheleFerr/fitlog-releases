@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/utils/impor
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/import_progress_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
@@ -124,19 +125,19 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _buildStat(
-                            icon: Icons.folder_outlined,
+                            icon: AppIcons.folderOutlined,
                             value: '${templateState.userTemplates.length}',
                             label: l10n.myTemplates,
                             colorScheme: colorScheme,
                           ),
                           _buildStat(
-                            icon: Icons.public,
+                            icon: AppIcons.public,
                             value: '${templateState.publicTemplates.length}',
                             label: l10n.discover,
                             colorScheme: colorScheme,
                           ),
                           _buildStat(
-                            icon: Icons.star,
+                            icon: AppIcons.star,
                             value: '4.8',
                             label: l10n.avgRating,
                             colorScheme: colorScheme,
@@ -152,7 +153,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               // Show view toggle button only on "My Templates" tab
               if (_tabController.index == 0)
                 IconButton(
-                  icon: Icon(_isGridView ? Icons.view_list : Icons.grid_view),
+                  icon: Icon(_isGridView ? AppIcons.viewList : AppIcons.gridView),
                   tooltip: _isGridView ? l10n.listView : l10n.gridView,
                   onPressed: () {
                     setState(() {
@@ -167,15 +168,15 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               indicatorWeight: 3,
               tabs: [
                 Tab(
-                  icon: const Icon(Icons.person),
+                  icon: const Icon(AppIcons.person),
                   text: l10n.myTemplates,
                 ),
                 Tab(
-                  icon: const Icon(Icons.explore),
+                  icon: const Icon(AppIcons.explore),
                   text: l10n.discover,
                 ),
                 Tab(
-                  icon: const Icon(Icons.trending_up),
+                  icon: const Icon(AppIcons.trendUp),
                   text: l10n.trending,
                 ),
               ],
@@ -194,7 +195,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       floatingActionButton: _tabController.index == 0
           ? FloatingActionButton.extended(
               onPressed: () => _createNewTemplate(context),
-              icon: const Icon(Icons.add),
+              icon: const Icon(AppIcons.add),
               label: Text(l10n.newTemplate),
               backgroundColor: colorScheme.primary,
             )
@@ -270,7 +271,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       size: 80,
                       color: colorScheme.onSurfaceVariant.withOpacity(0.5),
                     ),
@@ -291,7 +292,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     const SizedBox(height: 24),
                     FilledButton.icon(
                       onPressed: () => _createNewTemplate(context),
-                      icon: const Icon(Icons.add),
+                      icon: const Icon(AppIcons.add),
                       label: Text(l10n.createTemplate),
                     ),
                   ],
@@ -349,7 +350,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               child: ListTile(
                 leading: CircleAvatar(
                   child: Icon(
-                    Icons.fitness_center, // Default icon - TemplateCategory.icon doesn't exist
+                    AppIcons.workout, // Default icon - TemplateCategory.icon doesn't exist
                     size: 20,
                   ),
                 ),
@@ -369,11 +370,11 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                     PopupMenuItem<String>(
                       value: 'edit',
-                      child: ListTile(leading: const Icon(Icons.edit), title: Text(l10n.edit)),
+                      child: ListTile(leading: const Icon(AppIcons.edit), title: Text(l10n.edit)),
                     ),
                     PopupMenuItem<String>(
                       value: 'delete',
-                      child: ListTile(leading: const Icon(Icons.delete), title: Text(l10n.delete)),
+                      child: ListTile(leading: const Icon(AppIcons.delete), title: Text(l10n.delete)),
                     ),
                   ],
                 ),
@@ -404,7 +405,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               child: TextField(
                 decoration: InputDecoration(
                   hintText: l10n.searchTemplates,
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Icon(AppIcons.search),
                   filled: true,
                   fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.5),
                   border: OutlineInputBorder(
@@ -412,7 +413,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     borderSide: BorderSide.none,
                   ),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.tune),
+                    icon: const Icon(AppIcons.tune),
                     onPressed: () => _showFilters(context),
                   ),
                 ),
@@ -531,7 +532,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             ),
             const SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.edit, color: colorScheme.primary),
+              leading: Icon(AppIcons.edit, color: colorScheme.primary),
               title: Text(l10n.createManually),
               subtitle: Text(l10n.buildFromScratch),
               onTap: () {
@@ -544,7 +545,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             // Uncomment when ready to enable: import from JSON and file picker features
             /* const Divider(),
             ListTile(
-              leading: Icon(Icons.upload_file, color: colorScheme.secondary),
+              leading: Icon(AppIcons.uploadFile, color: colorScheme.secondary),
               title: Text(l10n.importFromJSON),
               subtitle: Text(l10n.importJSONDescription),
               onTap: () {
@@ -554,7 +555,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.file_upload, color: colorScheme.tertiary),
+              leading: Icon(AppIcons.fileUpload, color: colorScheme.tertiary),
               title: Text(l10n.importFromFile),
               subtitle: Text(l10n.importFileDescription),
               onTap: () {
@@ -702,7 +703,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         right: 4,
                         child: IconButton(
                           icon: Icon(
-                            Icons.copy,
+                            AppIcons.iconCopy,
                             size: 18,
                             color: colorScheme.primary,
                           ),
@@ -1313,7 +1314,7 @@ class PublicTemplateCard extends StatelessWidget {
                         ? NetworkImage(template.authorPhotoUrl!)
                         : null,
                     child: template.authorPhotoUrl == null
-                        ? const Icon(Icons.person)
+                        ? const Icon(AppIcons.person)
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -1338,7 +1339,7 @@ class PublicTemplateCard extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: onDownload,
-                    icon: const Icon(Icons.download),
+                    icon: const Icon(AppIcons.download),
                     style: IconButton.styleFrom(
                       backgroundColor: colorScheme.primaryContainer,
                     ),
@@ -1357,7 +1358,7 @@ class PublicTemplateCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Icon(Icons.star, size: 16, color: Colors.amber),
+                  const Icon(AppIcons.star, size: 16, color: Colors.amber),
                   const SizedBox(width: 4),
                   Text(
                     template.averageRating.toStringAsFixed(1),
@@ -1373,14 +1374,14 @@ class PublicTemplateCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Icon(Icons.download, size: 16, color: colorScheme.onSurfaceVariant),
+                  Icon(AppIcons.download, size: 16, color: colorScheme.onSurfaceVariant),
                   const SizedBox(width: 4),
                   Text(
                     '${template.downloadCount}',
                     style: theme.textTheme.bodySmall,
                   ),
                   const SizedBox(width: 16),
-                  Icon(Icons.fitness_center, size: 16, color: colorScheme.onSurfaceVariant),
+                  Icon(AppIcons.workout, size: 16, color: colorScheme.onSurfaceVariant),
                   const SizedBox(width: 4),
                   Text(
                     l10n.exercisesCount(template.exercises.length),

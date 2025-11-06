@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Shows TUT (Time Under Tension) information in a bottom sheet modal
 void showTutInfoBottomSheet(BuildContext context, String tutValue) {
@@ -56,7 +57,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.timer_outlined,
+                        AppIcons.timerOffOutlined,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -73,7 +74,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: Icon(
-                          Icons.close,
+                          AppIcons.close,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
                         padding: EdgeInsets.zero,
@@ -147,7 +148,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   _buildPhaseInfo(
                     theme: theme,
                     l10n: l10n,
-                    icon: Icons.arrow_downward,
+                    icon: AppIcons.arrowDownward,
                     label: l10n.tutEccentricPhase,
                     description: l10n.tutEccentricFullDescription,
                     value: phases.eccentric,
@@ -159,7 +160,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   _buildPhaseInfo(
                     theme: theme,
                     l10n: l10n,
-                    icon: Icons.pause,
+                    icon: AppIcons.pause,
                     label: l10n.tutBottomPausePhase,
                     description: l10n.tutBottomPauseFullDescription,
                     value: phases.bottomPause,
@@ -171,7 +172,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   _buildPhaseInfo(
                     theme: theme,
                     l10n: l10n,
-                    icon: Icons.arrow_upward,
+                    icon: AppIcons.arrowUpward,
                     label: l10n.tutConcentricPhase,
                     description: l10n.tutConcentricFullDescription,
                     value: phases.concentric,
@@ -183,7 +184,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   _buildPhaseInfo(
                     theme: theme,
                     l10n: l10n,
-                    icon: Icons.stop,
+                    icon: AppIcons.stop,
                     label: l10n.tutTopPausePhase,
                     description: l10n.tutTopPauseFullDescription,
                     value: phases.topPause,

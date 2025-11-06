@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/progress/presentation/providers/opti
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/home/utils/xp_calculator.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// OPTIMIZED VERSION - Fixed animation loops and excessive rebuilds
 class OptimizedUnifiedStatsCard extends ConsumerStatefulWidget {
@@ -219,7 +220,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.auto_awesome,
+                    AppIcons.autoAwesome,
                     color: Colors.white,
                     size: 16,
                   ),
@@ -501,7 +502,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   if (isMilestone)
                     Icon(
-                      Icons.star,
+                      AppIcons.star,
                       color: Colors.white.withValues(alpha: 0.9),
                       size: 12,
                     ),
@@ -518,7 +519,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.bolt,
+              AppIcons.bolt,
               color: theme.colorScheme.primary,
               size: 24,
             ),
@@ -577,7 +578,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.people,
+                icon: AppIcons.people,
                 label: 'Community',
                 value: '$communityXP XP',
                 color: Colors.blue,
@@ -587,7 +588,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.emoji_events,
+                icon: AppIcons.achievement,
                 label: 'Achievement',
                 value: '$achievementXP XP',
                 color: Colors.orange,
@@ -597,7 +598,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.local_fire_department,
+                icon: AppIcons.streak,
                 label: 'Streak',
                 value: '${stats.currentStreak}',
                 color: Colors.red,
@@ -729,7 +730,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               color: theme.colorScheme.error,
               size: 48,
             ),

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Real-time set execution timer widget with TIER-1 visualization
 class SetExecutionTimerWidget extends ConsumerStatefulWidget {
@@ -185,7 +186,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                     children: [
                       if (widget.isTracking)
                         Icon(
-                          Icons.timer,
+                          AppIcons.timer,
                           color: _getTimerColor(),
                           size: 20,
                         ),
@@ -214,7 +215,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                         if (_personalBest != null) ...[
                           if (_hasExceededPB) ...[
                             const Icon(
-                              Icons.trending_up,
+                              AppIcons.trendUp,
                               color: Colors.red,
                               size: 16,
                             ),
@@ -229,7 +230,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                             ),
                           ] else if (_isApproachingPB) ...[
                             const Icon(
-                              Icons.bolt,
+                              AppIcons.bolt,
                               color: Colors.orange,
                               size: 16,
                             ),
@@ -244,7 +245,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                             ),
                           ] else ...[
                             Icon(
-                              Icons.access_time,
+                              AppIcons.clock,
                               color: Theme.of(context).colorScheme.outline,
                               size: 14,
                             ),

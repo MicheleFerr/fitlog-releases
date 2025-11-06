@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AddExerciseStep extends StatefulWidget {
 
@@ -176,7 +177,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             size: 80,
             color: colorScheme.primary,
           ),
@@ -204,7 +205,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
           if (!_showDemo) ...[
             FilledButton.icon(
               onPressed: _startDemo,
-              icon: const Icon(Icons.play_arrow),
+              icon: const Icon(AppIcons.play),
               label: Text(l10n.onboardingTryItOut),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -309,7 +310,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: colorScheme.primary,
                             size: 20,
                           ),
@@ -379,7 +380,7 @@ class _MockSearchBarState extends State<_MockSearchBar> {
         decoration: InputDecoration(
           hintText: widget.l10n.onboardingSearchExercises,
           prefixIcon: Icon(
-            Icons.search,
+            AppIcons.search,
             color: widget.colorScheme.onSurface.withOpacity(0.6),
           ),
           suffixIcon: widget.isSearching
@@ -502,7 +503,7 @@ class _ExerciseResultCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 color: colorScheme.primary,
                 size: 16,
               ),
@@ -540,13 +541,13 @@ class _ExerciseResultCard extends StatelessWidget {
             ),
             if (isCompleted)
               Icon(
-                Icons.check_circle,
+                AppIcons.complete,
                 color: colorScheme.primary,
                 size: 20,
               )
             else
               Icon(
-                Icons.add_circle_outline,
+                AppIcons.addCircleOutline,
                 color: colorScheme.primary,
                 size: 20,
               ),

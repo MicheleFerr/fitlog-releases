@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
 import 'package:gymbro_flutter_new/features/workout/presentation/utils/weight_rounding_utils.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal for picking weight in DropSet exercises with smart rounding
 ///
@@ -181,7 +182,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             child: Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 12),
@@ -209,7 +210,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                 ),
               ],
             ),
@@ -273,10 +274,10 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
           children: [
             Icon(
               _effectiveEquipmentType == EquipmentType.barbell
-                  ? Icons.fitness_center
+                  ? AppIcons.workout
                   : _effectiveEquipmentType == EquipmentType.machine
-                      ? Icons.settings
-                      : Icons.sports_gymnastics,
+                      ? AppIcons.settings
+                      : AppIcons.gymnastics,
               color: context.colors.primary,
             ),
             const SizedBox(width: 12),
@@ -347,7 +348,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 Expanded(
                   child: _buildEquipmentCard(
                     type: EquipmentType.barbell,
-                    icon: Icons.fitness_center,
+                    icon: AppIcons.workout,
                     title: context.l10n.barbell,
                     subtitle: context.l10n.barbellRoundingInfo,
                   ),
@@ -356,7 +357,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 Expanded(
                   child: _buildEquipmentCard(
                     type: EquipmentType.dumbbell,
-                    icon: Icons.sports_gymnastics,
+                    icon: AppIcons.gymnastics,
                     title: context.l10n.dumbbell,
                     subtitle: '2.5kg',
                   ),
@@ -365,7 +366,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 Expanded(
                   child: _buildEquipmentCard(
                     type: EquipmentType.machine,
-                    icon: Icons.settings,
+                    icon: AppIcons.settings,
                     title: 'Machine',
                     subtitle: '5kg',
                   ),
@@ -459,7 +460,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             Row(
               children: [
                 Icon(
-                  Icons.trending_down,
+                  AppIcons.trendDown,
                   color: context.colors.secondary,
                 ),
                 const SizedBox(width: 8),
@@ -506,7 +507,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.calculate,
+                      AppIcons.calculate,
                       color: context.colors.primary,
                     ),
                     const SizedBox(width: 12),
@@ -622,7 +623,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             labelText: context.l10n.weight,
             hintText: '100.0',
             suffixText: 'kg',
-            prefixIcon: const Icon(Icons.fitness_center),
+            prefixIcon: const Icon(AppIcons.workout),
             border: const OutlineInputBorder(),
           ),
           onChanged: (value) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_optimization_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🎯 TIER-1 PREMIUM GESTURES & ANIMATIONS
 /// Advanced interaction patterns for professional fitness app
@@ -280,8 +281,8 @@ class _SwipeBackground extends StatelessWidget {
         ),
         child: Icon(
           direction == SwipeDirection.left
-              ? Icons.delete_outline
-              : Icons.check_circle_outline,
+              ? AppIcons.deleteOutline
+              : AppIcons.completeOutline,
           color: theme.colorScheme.onError,
           size: 28,
         ),
@@ -412,7 +413,7 @@ class _DraggableExerciseItem extends ConsumerWidget {
               ),
             ),
             child: Icon(
-              Icons.drag_indicator,
+              AppIcons.dragIndicator,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
@@ -547,7 +548,7 @@ class _QuickActionMenuState extends ConsumerState<QuickActionMenu>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       _QuickActionButton(
-                        icon: Icons.done_all,
+                        icon: AppIcons.allDone,
                         color: theme.colorScheme.primary,
                         onTap: () {
                           batchOps.completeAllSets(widget.exerciseId);
@@ -557,7 +558,7 @@ class _QuickActionMenuState extends ConsumerState<QuickActionMenu>
                       ),
                       const SizedBox(width: 8),
                       _QuickActionButton(
-                        icon: Icons.content_copy,
+                        icon: AppIcons.copy,
                         color: theme.colorScheme.secondary,
                         onTap: () {
                           batchOps.copySetsFromHistory(widget.exerciseId);
@@ -567,7 +568,7 @@ class _QuickActionMenuState extends ConsumerState<QuickActionMenu>
                       ),
                       const SizedBox(width: 8),
                       _QuickActionButton(
-                        icon: Icons.trending_up,
+                        icon: AppIcons.trendUp,
                         color: theme.colorScheme.tertiary,
                         onTap: () {
                           batchOps.applyProgressiveOverload(widget.exerciseId);
@@ -577,7 +578,7 @@ class _QuickActionMenuState extends ConsumerState<QuickActionMenu>
                       ),
                       const SizedBox(width: 8),
                       _QuickActionButton(
-                        icon: Icons.clear_all,
+                        icon: AppIcons.clearAll,
                         color: theme.colorScheme.error,
                         onTap: () {
                           batchOps.clearAllSets(widget.exerciseId);

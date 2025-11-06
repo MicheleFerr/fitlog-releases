@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/exercise_replacement_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
 
@@ -75,7 +76,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               ),
               child: Row(
                 children: [
-                  Icon(Icons.swap_horiz, color: colorScheme.onPrimaryContainer),
+                  Icon(AppIcons.swapHoriz, color: colorScheme.onPrimaryContainer),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -87,7 +88,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close, color: colorScheme.onPrimaryContainer),
+                    icon: Icon(AppIcons.close, color: colorScheme.onPrimaryContainer),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -252,9 +253,9 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
           child: Row(
             children: [
               if (isSelected)
-                Icon(Icons.check_circle, color: colorScheme.primary)
+                Icon(AppIcons.complete, color: colorScheme.primary)
               else
-                Icon(Icons.radio_button_unchecked, color: colorScheme.onSurfaceVariant),
+                Icon(AppIcons.radioButtonUnchecked, color: colorScheme.onSurfaceVariant),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

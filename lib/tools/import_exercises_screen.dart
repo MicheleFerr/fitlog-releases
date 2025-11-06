@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/tools/firebase_exercise_importer.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ImportExercisesScreen extends StatefulWidget {
   const ImportExercisesScreen({super.key});
@@ -26,7 +27,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Icon(
-              Icons.cloud_upload,
+              AppIcons.cloudUpload,
               size: 80,
               color: Colors.blue,
             ),

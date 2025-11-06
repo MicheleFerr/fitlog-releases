@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal showing user's feedback history on AI Coach insights
 class FeedbackHistoryModal extends ConsumerWidget {
@@ -41,7 +42,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.history,
+                  AppIcons.history,
                   color: colorScheme.primary,
                   size: 28,
                 ),
@@ -73,7 +74,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.error_outline,
+                        AppIcons.error,
                         size: 64,
                         color: colorScheme.error.withValues(alpha: 0.6),
                       ),
@@ -108,7 +109,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.feedback_outlined,
+            AppIcons.feedbackOutlined,
             size: 80,
             color: colorScheme.outline.withValues(alpha: 0.6),
           ),
@@ -141,7 +142,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Icon(
-                  Icons.thumb_up_outlined,
+                  AppIcons.thumbUpOutlined,
                   color: Colors.green,
                   size: 32,
                 ),
@@ -154,7 +155,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Icon(
-                  Icons.thumb_down_outlined,
+                  AppIcons.thumbDownOutlined,
                   color: Colors.red,
                   size: 32,
                 ),
@@ -232,7 +233,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
-                  isHelpful ? Icons.thumb_up : Icons.thumb_down,
+                  isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
                   color: cardColor,
                   size: 20,
                 ),
@@ -274,7 +275,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.ai,
                   size: 14,
                   color: colorScheme.primary,
                 ),

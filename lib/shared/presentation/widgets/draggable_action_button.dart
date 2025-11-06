@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Opzione aggiuntiva per il menu del long press
 class DraggableActionOption {
@@ -227,7 +228,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.history,
+                    AppIcons.history,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
@@ -276,7 +277,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               child: Row(
                 children: [
                   Icon(
-                    Icons.swipe,
+                    AppIcons.swipe,
                     size: 18,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),

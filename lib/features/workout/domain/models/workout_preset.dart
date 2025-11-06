@@ -14,6 +14,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Rep range preset for different training goals
 ///
@@ -68,24 +69,24 @@ class RepRangePreset {
 
   /// Parse icon from name
   IconData get icon {
-    return _iconMap[iconName] ?? Icons.fitness_center;
+    return _iconMap[iconName] ?? AppIcons.workout;
   }
 
   /// Icon name to IconData mapping
   static const Map<String, IconData> _iconMap = {
-    'fitness_center': Icons.fitness_center,
-    'bolt': Icons.bolt,
-    'trending_up': Icons.trending_up,
-    'bubble_chart': Icons.bubble_chart,
-    'timer': Icons.timer,
-    'all_inclusive': Icons.all_inclusive,
-    'speed': Icons.speed,
-    'flash_on': Icons.flash_on,
-    'schedule': Icons.schedule,
-    'access_time': Icons.access_time,
-    'hourglass_empty': Icons.hourglass_empty,
-    'timer_off': Icons.timer_off,
-    'repeat': Icons.repeat,
+    'fitness_center': AppIcons.workout,
+    'bolt': AppIcons.bolt,
+    'trending_up': AppIcons.trendUp,
+    'bubble_chart': AppIcons.bubbleChart,
+    'timer': AppIcons.timer,
+    'all_inclusive': AppIcons.allInclusive,
+    'speed': AppIcons.speed,
+    'flash_on': AppIcons.flashOn,
+    'schedule': AppIcons.schedule,
+    'access_time': AppIcons.clock,
+    'hourglass_empty': AppIcons.hourglassEmpty,
+    'timer_off': AppIcons.timerOff,
+    'repeat': AppIcons.repeat,
   };
 
   /// Create from JSON
@@ -237,7 +238,7 @@ class RestTimePreset {
 
   /// Parse icon from name
   IconData get icon {
-    return RepRangePreset._iconMap[iconName] ?? Icons.timer;
+    return RepRangePreset._iconMap[iconName] ?? AppIcons.timer;
   }
 
   /// Create from JSON

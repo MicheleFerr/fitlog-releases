@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseHistoryTestWidget extends ConsumerStatefulWidget {
   
@@ -152,7 +153,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
                             ),
                           ),
                           leading: Icon(
-                            isCurrentExercise ? Icons.check_circle : Icons.fitness_center,
+                            isCurrentExercise ? AppIcons.complete : AppIcons.workout,
                             color: isCurrentExercise ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
                             size: 16,
                           ),
@@ -186,7 +187,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
                     child: Column(
                       children: [
                         Icon(
-                          Icons.warning,
+                          AppIcons.warning,
                           color: theme.colorScheme.onErrorContainer,
                           size: 48,
                         ),
@@ -226,7 +227,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
                       Row(
                         children: [
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: theme.colorScheme.onPrimaryContainer,
                           ),
                           const SizedBox(width: 8),
@@ -280,7 +281,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
                 child: Column(
                   children: [
                     Icon(
-                      Icons.error,
+                      AppIcons.error,
                       color: theme.colorScheme.onErrorContainer,
                       size: 48,
                     ),
@@ -312,7 +313,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
                 ref.invalidate(exerciseHistoryProvider(widget.exerciseName));
                 _loadDebugData();
               },
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(AppIcons.refresh),
               label: const Text('Refresh Data'),
             ),
           ],

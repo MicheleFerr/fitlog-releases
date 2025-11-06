@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_history_editor.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {
   const WorkoutHistoryScreen({super.key});
@@ -73,7 +74,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             // Navigate back to home using Go Router
             context.go('/');
@@ -82,7 +83,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
         title: Text(l10n.workoutHistory),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: const Icon(AppIcons.filter),
             onPressed: _showFilterDialog,
           ),
           PopupMenuButton<String>(
@@ -92,7 +93,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
                 value: 'export',
                 child: Row(
                   children: [
-                    const Icon(Icons.download),
+                    const Icon(AppIcons.download),
                     const SizedBox(width: 8),
                     Text(l10n.exportData),
                   ],
@@ -102,7 +103,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
                 value: 'stats',
                 child: Row(
                   children: [
-                    const Icon(Icons.analytics),
+                    const Icon(AppIcons.analytics),
                     const SizedBox(width: 8),
                     Text(l10n.statistics),
                   ],
@@ -151,10 +152,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
         controller: _searchController,
         decoration: InputDecoration(
           hintText: l10n.searchWorkouts,
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: const Icon(AppIcons.search),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear),
+                  icon: const Icon(AppIcons.clear),
                   onPressed: () {
                     _searchController.clear();
                     _updateSearch('');
@@ -213,7 +214,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
       padding: const EdgeInsets.only(right: 8),
       child: Chip(
         label: Text(label),
-        deleteIcon: const Icon(Icons.close, size: 16),
+        deleteIcon: const Icon(AppIcons.close, size: 16),
         onDeleted: onDeleted,
         backgroundColor: theme.colorScheme.primaryContainer,
         deleteIconColor: theme.colorScheme.onPrimaryContainer,
@@ -270,7 +271,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.fitness_center_outlined,
+            AppIcons.fitnessCenterOutlined,
             size: 64,
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -305,7 +306,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.error,
             size: 64,
             color: theme.colorScheme.error,
           ),

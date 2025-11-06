@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/export_ser
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog for exporting analytics data
 class ExportDialog extends ConsumerStatefulWidget {
@@ -27,7 +28,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.download, color: colorScheme.primary),
+          Icon(AppIcons.download, color: colorScheme.primary),
           const SizedBox(width: 12),
           Text(localizations.exportData),
         ],
@@ -47,7 +48,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
               ExportFormat.pdf,
               'PDF Report',
               'Complete analytics report with charts and insights',
-              Icons.picture_as_pdf,
+              AppIcons.pictureAsPdf,
             ),
             const SizedBox(height: 8),
             _buildFormatOption(
@@ -55,7 +56,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
               ExportFormat.csv,
               'CSV Spreadsheet',
               'Raw data for analysis in Excel or Google Sheets',
-              Icons.table_chart,
+              AppIcons.tableChart,
             ),
             if (_selectedFormat == ExportFormat.csv) ...[
               const SizedBox(height: 16),
@@ -77,7 +78,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.error_outline,
+                      AppIcons.error,
                       color: colorScheme.onErrorContainer,
                       size: 20,
                     ),
@@ -114,7 +115,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                     color: colorScheme.onPrimary,
                   ),
                 )
-              : const Icon(Icons.download),
+              : const Icon(AppIcons.download),
           label: Text(_isExporting ? localizations.exporting : localizations.export),
         ),
       ],
@@ -338,7 +339,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white),
+            const Icon(AppIcons.complete, color: Colors.white),
             const SizedBox(width: 12),
             Text(localizations.exportSuccess),
           ],

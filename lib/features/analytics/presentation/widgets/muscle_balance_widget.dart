@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing muscle group balance analysis
 class MuscleBalanceWidget extends StatelessWidget {
@@ -30,7 +31,7 @@ class MuscleBalanceWidget extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.equalizer,
+                  AppIcons.equalizer,
                   color: colorScheme.primary,
                   size: 24,
                 ),
@@ -78,7 +79,7 @@ class MuscleBalanceWidget extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            isBalanced ? Icons.check_circle : Icons.warning,
+            isBalanced ? AppIcons.complete : AppIcons.warning,
             size: 16,
             color: isBalanced ? Colors.green : Colors.orange,
           ),
@@ -160,7 +161,7 @@ class MuscleBalanceWidget extends StatelessWidget {
       child: Row(
         children: [
           const Icon(
-            Icons.warning_amber,
+            AppIcons.warningAmber,
             color: Colors.orange,
             size: 20,
           ),
@@ -197,7 +198,7 @@ class MuscleBalanceWidget extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.equalizer,
+                AppIcons.equalizer,
                 size: 48,
                 color: Colors.grey.withValues(alpha: 0.5),
               ),

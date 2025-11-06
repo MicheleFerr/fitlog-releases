@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EditExerciseModal extends ConsumerStatefulWidget {
 
@@ -118,7 +119,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
             Row(
               children: [
                 Icon(
-                  Icons.edit,
+                  AppIcons.edit,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -132,7 +133,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                 ),
               ],
             ),
@@ -144,7 +145,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 labelText: l10n.exerciseName,
-                prefixIcon: const Icon(Icons.fitness_center),
+                prefixIcon: const Icon(AppIcons.workout),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -159,7 +160,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               decoration: InputDecoration(
                 labelText: l10n.notes,
                 hintText: l10n.notesHint,
-                prefixIcon: const Icon(Icons.note),
+                prefixIcon: const Icon(AppIcons.note),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -187,7 +188,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
             Card(
               child: ListTile(
                 leading: Icon(
-                  Icons.timer_outlined,
+                  AppIcons.timerOffOutlined,
                   color: !_useCustomRestTime && _selectedRestTime == null
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.onSurfaceVariant,
@@ -249,7 +250,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 children: [
                   ListTile(
                     leading: Icon(
-                      Icons.tune,
+                      AppIcons.tune,
                       color: _useCustomRestTime
                           ? Theme.of(context).colorScheme.secondary
                           : Theme.of(context).colorScheme.onSurfaceVariant,
@@ -360,7 +361,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error, color: Colors.red, size: 48),
+              const Icon(AppIcons.error, color: Colors.red, size: 48),
               const SizedBox(height: 16),
               Text(context.l10n.errorLoadingEditor),
               Text('Error: $e', style: const TextStyle(fontSize: 12)),
@@ -390,7 +391,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
             Row(
               children: [
                 Icon(
-                  Icons.trending_up,
+                  AppIcons.trendUp,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -456,7 +457,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   ButtonSegment<int>(
                     value: 10,
                     label: Text('APRE 10'),
-                    icon: Icon(Icons.looks),
+                    icon: Icon(AppIcons.looks),
                   ),
                 ],
                 selected: {_apreProtocol},
@@ -478,7 +479,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.info_outline,
+                      AppIcons.info,
                       size: 16,
                       color: Theme.of(context).colorScheme.onTertiaryContainer,
                     ),
@@ -502,7 +503,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 decoration: InputDecoration(
                   labelText: l10n.apreBaseWeight,
                   hintText: l10n.apreBaseWeightHint,
-                  prefixIcon: const Icon(Icons.fitness_center),
+                  prefixIcon: const Icon(AppIcons.workout),
                   suffixText: 'kg',
                   helperText: _getBaseWeightHelper(l10n),
                   border: OutlineInputBorder(

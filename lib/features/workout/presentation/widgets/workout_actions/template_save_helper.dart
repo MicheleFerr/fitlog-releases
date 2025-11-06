@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplateSaveHelper {
   static void showSaveAsTemplateDialog(BuildContext context, WidgetRef ref) async {
@@ -71,7 +72,7 @@ class TemplateSaveHelper {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.inventory_2,
+              AppIcons.package,
               size: 48,
               color: Theme.of(context).colorScheme.error,
             ),
@@ -146,7 +147,7 @@ class TemplateSaveHelper {
               descriptionController.text.trim(),
               currentWorkout,
             ),
-            icon: const Icon(Icons.cloud_upload),
+            icon: const Icon(AppIcons.cloudUpload),
             label: Text(AppLocalizations.of(context).saveToFirebase),
           ),
         ],
@@ -190,7 +191,7 @@ class TemplateSaveHelper {
       child: Row(
         children: [
           Icon(
-            Icons.warning_amber_rounded,
+            AppIcons.warningAmberRounded,
             color: Theme.of(context).colorScheme.secondary,
             size: 20,
           ),
@@ -216,7 +217,7 @@ class TemplateSaveHelper {
         labelText: AppLocalizations.of(context).templateName,
         hintText: AppLocalizations.of(context).templateNameHint,
         border: const OutlineInputBorder(),
-        prefixIcon: const Icon(Icons.fitness_center),
+        prefixIcon: const Icon(AppIcons.workout),
       ),
       textCapitalization: TextCapitalization.words,
     );
@@ -229,7 +230,7 @@ class TemplateSaveHelper {
         labelText: AppLocalizations.of(context).description,
         hintText: AppLocalizations.of(context).descriptionHint,
         border: const OutlineInputBorder(),
-        prefixIcon: const Icon(Icons.description),
+        prefixIcon: const Icon(AppIcons.template),
       ),
       maxLines: 3,
       textCapitalization: TextCapitalization.sentences,
@@ -249,7 +250,7 @@ class TemplateSaveHelper {
       child: Row(
         children: [
           Icon(
-            Icons.cloud_upload,
+            AppIcons.cloudUpload,
             color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(width: 12),
@@ -326,7 +327,7 @@ class TemplateSaveHelper {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                Icons.inventory_2,
+                AppIcons.package,
                 size: 48,
                 color: Theme.of(context).colorScheme.secondary,
               ),

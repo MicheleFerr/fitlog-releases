@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/expor
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced analytics screen with advanced features
 class EnhancedAnalyticsScreen extends ConsumerStatefulWidget {
@@ -54,7 +55,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         title: Text(localizations.analytics),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -65,20 +66,20 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             onPressed: () {
               ref.read(analyticsProvider.notifier).refresh();
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(AppIcons.moreVert),
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'export',
                 child: Row(
                   children: [
-                    const Icon(Icons.download),
+                    const Icon(AppIcons.download),
                     const SizedBox(width: 8),
                     Text(localizations.exportData),
                   ],
@@ -88,7 +89,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 value: 'settings',
                 child: Row(
                   children: [
-                    const Icon(Icons.settings),
+                    const Icon(AppIcons.settings),
                     const SizedBox(width: 8),
                     Text(localizations.settings),
                   ],
@@ -311,20 +312,20 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 context,
                 localizations.totalWorkouts,
                 state.activities.length.toString(),
-                Icons.fitness_center,
+                AppIcons.workout,
               ),
               _buildStatItem(
                 context,
                 localizations.currentStreak,
                 '${frequencyStats['currentStreak'] ?? 0}',
-                Icons.local_fire_department,
+                AppIcons.streak,
                 color: Colors.orange,
               ),
               _buildStatItem(
                 context,
                 localizations.thisWeek,
                 '${frequencyStats['daysInLast7'] ?? 0}',
-                Icons.calendar_today,
+                AppIcons.calendar,
               ),
             ],
           ),
@@ -336,7 +337,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 context,
                 localizations.totalPRs,
                 state.personalRecords.length.toString(),
-                Icons.emoji_events,
+                AppIcons.achievement,
                 color: Colors.amber,
               ),
               _buildStatItem(
@@ -344,8 +345,8 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 localizations.volumeChange,
                 '${state.volumeProgression.weeklyChange > 0 ? '+' : ''}${state.volumeProgression.weeklyChange.toStringAsFixed(0)}%',
                 state.volumeProgression.weeklyChange > 0 
-                    ? Icons.trending_up 
-                    : Icons.trending_down,
+                    ? AppIcons.trendUp 
+                    : AppIcons.trendDown,
                 color: state.volumeProgression.weeklyChange > 0 
                     ? Colors.green 
                     : Colors.red,
@@ -467,7 +468,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: ListTile(
         title: Text(exercise.name),
         subtitle: Text('${exercise.count} sessions'),
-        trailing: const Icon(Icons.arrow_forward_ios),
+        trailing: const Icon(AppIcons.forwardIos),
         onTap: onTap,
       ),
     );
@@ -533,7 +534,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         Row(
           children: [
             Icon(
-              isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+              isPositive ? AppIcons.arrowUpward : AppIcons.arrowDownward,
               color: color,
               size: 16,
             ),
@@ -585,7 +586,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   Widget _buildRecommendationCard(BuildContext context, String recommendation) {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.lightbulb_outline, color: Colors.amber),
+        leading: const Icon(AppIcons.tip, color: Colors.amber),
         title: Text(recommendation),
       ),
     );
@@ -606,10 +607,10 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
             subtitle: Text(trend.recommendation),
             trailing: Icon(
               trend.type == TrendType.improving
-                  ? Icons.trending_up
+                  ? AppIcons.trendUp
                   : trend.type == TrendType.declining
-                      ? Icons.trending_down
-                      : Icons.trending_flat,
+                      ? AppIcons.trendDown
+                      : AppIcons.trendFlat,
               color: trend.type == TrendType.improving
                   ? Colors.green
                   : trend.type == TrendType.declining
@@ -631,7 +632,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.lock, size: 64, color: Colors.grey),
+            const Icon(AppIcons.lock, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
               localizations.pleaseLogin,
@@ -661,7 +662,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error, size: 64, color: Colors.red),
+          const Icon(AppIcons.error, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Text(
             'Error loading analytics',
@@ -690,7 +691,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.fitness_center, size: 80, color: Colors.grey),
+          const Icon(AppIcons.workout, size: 80, color: Colors.grey),
           const SizedBox(height: 24),
           Text(
             localizations.noWorkoutData,
@@ -707,7 +708,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => context.go('/workout'),
-            icon: const Icon(Icons.play_arrow),
+            icon: const Icon(AppIcons.play),
             label: Text(localizations.startWorkout),
           ),
         ],

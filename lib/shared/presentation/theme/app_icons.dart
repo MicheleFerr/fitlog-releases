@@ -62,6 +62,204 @@ class AppIcons {
   static const IconData template = Icons.description;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🔧 COMMONLY MISSING ICONS (Legacy Support)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /// 🌐 Translate
+  static const IconData translate = Icons.translate;
+
+  /// 📱 Phone iPhone
+  static const IconData phoneIphone = Icons.phone_iphone;
+
+  /// ⚙️ Settings applications
+  static const IconData settingsApplications = Icons.settings_applications;
+
+  /// 🖼️ Picture in picture
+  static const IconData pictureInPictureAlt = Icons.picture_in_picture_alt;
+
+  /// 🐛 Bug report
+  static const IconData bugReport = Icons.bug_report;
+
+  /// 🎓 School outlined
+  static const IconData schoolOutlined = Icons.school_outlined;
+
+  /// 🔄 Sync alternative
+  static const IconData syncAlt = Icons.sync_alt;
+
+  /// 📝 Format size
+  static const IconData formatSize = Icons.format_size;
+
+  /// 🌗 Auto mode
+  static const IconData autoMode = Icons.auto_mode;
+
+  /// ⬅️ Arrow back iOS new
+  static const IconData arrowBackIosNew = Icons.arrow_back_ios_new;
+
+  /// ☁️ Cloud off
+  static const IconData cloudOff = Icons.cloud_off;
+
+  /// 🧩 Apps
+  static const IconData apps = Icons.apps;
+
+  /// 🧩 Widgets
+  static const IconData widgets = Icons.widgets;
+
+  // Additional commonly used icons
+  static const IconData acUnit = Icons.ac_unit;
+  static const IconData accessibilityIcon = Icons.accessibility;
+  static const IconData accessible = Icons.accessible;
+  static const IconData addCircle = Icons.add_circle;
+  static const IconData airlineSeatFlat = Icons.airline_seat_flat;
+  static const IconData airlineSeatRecline = Icons.airline_seat_recline_normal;
+  static const IconData allInclusive = Icons.all_inclusive;
+  static const IconData altRoute = Icons.alt_route;
+  static const IconData animation = Icons.animation;
+  static const IconData apple = Icons.apple;
+  static const IconData architecture = Icons.architecture;
+  static const IconData arrowDropDown = Icons.arrow_drop_down;
+  static const IconData article = Icons.article;
+  static const IconData articleOutlined = Icons.article_outlined;
+  static const IconData assignmentOutlined = Icons.assignment_outlined;
+  static const IconData autoFixHigh = Icons.auto_fix_high;
+  static const IconData badge = Icons.badge;
+  static const IconData balance = Icons.balance;
+  static const IconData batteryAlert = Icons.battery_alert;
+  static const IconData batteryChargingFull = Icons.battery_charging_full;
+  static const IconData bed = Icons.bed;
+  static const IconData bedtime = Icons.bedtime;
+  static const IconData block = Icons.block;
+  static const IconData bolt = Icons.bolt;
+  static const IconData buildCircle = Icons.build_circle;
+  static const IconData calculateRounded = Icons.calculate_rounded;
+  static const IconData calendarViewDay = Icons.calendar_view_day;
+  static const IconData calendarViewMonth = Icons.calendar_view_month;
+  static const IconData calendarViewWeek = Icons.calendar_view_week;
+  static const IconData centerFocusStrong = Icons.center_focus_strong;
+  static const IconData checkCircleOutlineRounded = Icons.check_circle_outline_rounded;
+  static const IconData checklist = Icons.checklist;
+  static const IconData circle = Icons.circle;
+  static const IconData clearAll = Icons.clear_all;
+  static const IconData cloudDoneRounded = Icons.cloud_done_rounded;
+  static const IconData cloudDownload = Icons.cloud_download;
+  static const IconData cloudSyncRounded = Icons.cloud_sync_rounded;
+  static const IconData code = Icons.code;
+  static const IconData construction = Icons.construction;
+  static const IconData cropPortrait = Icons.crop_portrait;
+  static const IconData cropSquare = Icons.crop_square;
+  static const IconData dashboardCustomize = Icons.dashboard_customize;
+  static const IconData dashboardOutlined = Icons.dashboard_outlined;
+  static const IconData dateRangeRounded = Icons.date_range_rounded;
+  static const IconData developerMode = Icons.developer_mode;
+  static const IconData diamond = Icons.diamond;
+  static const IconData directionsWalk = Icons.directions_walk;
+  static const IconData donutLarge = Icons.donut_large;
+  static const IconData doubleArrow = Icons.double_arrow;
+  static const IconData downloadDone = Icons.download_done;
+  static const IconData downloadForOffline = Icons.download_for_offline;
+  static const IconData equalizer = Icons.equalizer;
+  static const IconData eventAvailable = Icons.event_available;
+  static const IconData eventBusy = Icons.event_busy;
+  static const IconData eventNote = Icons.event_note;
+  static const IconData expandIcon = Icons.expand;
+  static const IconData explore = Icons.explore;
+  static const IconData exploreOff = Icons.explore_off;
+  static const IconData feedbackOutlined = Icons.feedback_outlined;
+  static const IconData female = Icons.female;
+  static const IconData fiberManualRecord = Icons.fiber_manual_record;
+  static const IconData flagCircle = Icons.flag_circle;
+  static const IconData flagOutlined = Icons.flag_outlined;
+  static const IconData flight = Icons.flight;
+  static const IconData formatListNumbered = Icons.format_list_numbered;
+  static const IconData functions = Icons.functions;
+  static const IconData gridView = Icons.grid_view;
+  static const IconData healing = Icons.healing;
+  static const IconData hexagonOutlined = Icons.hexagon_outlined;
+  static const IconData horizontalRule = Icons.horizontal_rule;
+  static const IconData hotel = Icons.hotel;
+  static const IconData hourglassEmpty = Icons.hourglass_empty;
+  static const IconData howToVote = Icons.how_to_vote;
+  static const IconData iconCopy = Icons.copy;
+  static const IconData iconHelp = Icons.help;
+  static const IconData inbox = Icons.inbox;
+  static const IconData infoIcon = Icons.info;
+  static const IconData keyboard = Icons.keyboard;
+  static const IconData keyboardArrowDownRounded = Icons.keyboard_arrow_down_rounded;
+  static const IconData keyboardHide = Icons.keyboard_hide;
+  static const IconData labelOutline = Icons.label_outline;
+  static const IconData layers = Icons.layers;
+  static const IconData leaderboard = Icons.leaderboard;
+  static const IconData libraryBooks = Icons.library_books;
+  static const IconData listAlt = Icons.list_alt;
+  static const IconData lockClock = Icons.lock_clock;
+  static const IconData lockOutline = Icons.lock_outline;
+  static const IconData looks = Icons.looks;
+  static const IconData looksOne = Icons.looks_one;
+  static const IconData male = Icons.male;
+  static const IconData mobileOff = Icons.mobile_off;
+  static const IconData monitorWeightOutlined = Icons.monitor_weight_outlined;
+  static const IconData newReleases = Icons.new_releases;
+  static const IconData nightlightRound = Icons.nightlight_round;
+  static const IconData north = Icons.north;
+  static const IconData noteAlt = Icons.note_alt;
+  static const IconData openInNew = Icons.open_in_new;
+  static const IconData pendingActions = Icons.pending_actions;
+  static const IconData percent = Icons.percent;
+  static const IconData phoneAndroid = Icons.phone_android;
+  static const IconData pictureAsPdf = Icons.picture_as_pdf;
+  static const IconData preview = Icons.preview;
+  static const IconData privacyTipRounded = Icons.privacy_tip_rounded;
+  static const IconData public = Icons.public;
+  static const IconData rateReview = Icons.rate_review;
+  static const IconData recommend = Icons.recommend;
+  static const IconData reportProblem = Icons.report_problem;
+  static const IconData reportProblemOutlined = Icons.report_problem_outlined;
+  static const IconData rowing = Icons.rowing;
+  static const IconData scale = Icons.scale;
+  static const IconData security = Icons.security;
+  static const IconData securityRounded = Icons.security_rounded;
+  static const IconData selectAll = Icons.select_all;
+  static const IconData shield = Icons.shield;
+  static const IconData shieldOutlined = Icons.shield_outlined;
+  static const IconData shuffle = Icons.shuffle;
+  static const IconData sick = Icons.sick;
+  static const IconData south = Icons.south;
+  static const IconData spa = Icons.spa;
+  static const IconData starHalfIcon = Icons.star_half;
+  static const IconData starOutlineIcon = Icons.star_outline;
+  static const IconData starsRounded = Icons.stars_rounded;
+  static const IconData storage = Icons.storage;
+  static const IconData straighten = Icons.straighten;
+  static const IconData supportAgent = Icons.support_agent;
+  static const IconData swipe = Icons.swipe;
+  static const IconData syncIcon = Icons.sync;
+  static const IconData systemUpdate = Icons.system_update;
+  static const IconData textFields = Icons.text_fields;
+  static const IconData thumbDownOutlined = Icons.thumb_down_outlined;
+  static const IconData thumbUpOutlined = Icons.thumb_up_outlined;
+  static const IconData timeline = Icons.timeline;
+  static const IconData timerOffOutlined = Icons.timer_off_outlined;
+  static const IconData tipsAndUpdates = Icons.tips_and_updates;
+  static const IconData titleIcon = Icons.title;
+  static const IconData todayRounded = Icons.today_rounded;
+  static const IconData toggleOff = Icons.toggle_off;
+  static const IconData toggleOn = Icons.toggle_on;
+  static const IconData touchApp = Icons.touch_app;
+  static const IconData trendingUpOutlined = Icons.trending_up_outlined;
+  static const IconData unfoldLess = Icons.unfold_less;
+  static const IconData updateIcon = Icons.update;
+  static const IconData verifiedUserOutlined = Icons.verified_user_outlined;
+  static const IconData vibration = Icons.vibration;
+  static const IconData viewAgenda = Icons.view_agenda;
+  static const IconData viewList = Icons.view_list;
+  static const IconData warningAmber = Icons.warning_amber;
+  static const IconData warningOutlined = Icons.warning_outlined;
+  static const IconData waves = Icons.waves;
+  static const IconData wavingHand = Icons.waving_hand;
+  static const IconData wbSunny = Icons.wb_sunny;
+  static const IconData wbSunnyOutlined = Icons.wb_sunny_outlined;
+  static const IconData whatshot = Icons.whatshot;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ⏱️ TIMER & SCHEDULING
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -892,6 +1090,9 @@ class IconGroups {
 
   /// 📊 Chart types
   static const _ChartIcons chart = _ChartIcons();
+
+  /// 🔧 Miscellaneous icons
+  static const _MiscIcons misc = _MiscIcons();
 }
 
 class _TimerIcons {
@@ -979,4 +1180,509 @@ class _ChartIcons {
 
   /// 📊 Donut chart
   IconData get donut => Icons.donut_large;
+}
+
+class _MiscIcons {
+  const _MiscIcons();
+
+  /// 🌐 Translate/Language
+  IconData get translate => Icons.translate;
+
+  /// 📱 Phone iPhone
+  IconData get phoneIphone => Icons.phone_iphone;
+
+  /// ⚙️ Settings applications
+  IconData get settingsApplications => Icons.settings_applications;
+
+  /// 🖼️ Picture in picture
+  IconData get pictureInPictureAlt => Icons.picture_in_picture_alt;
+
+  /// 🐛 Bug report
+  IconData get bugReport => Icons.bug_report;
+
+  /// 🎓 School outlined
+  IconData get schoolOutlined => Icons.school_outlined;
+
+  /// 🔄 Sync alternative
+  IconData get syncAlt => Icons.sync_alt;
+
+  /// 📝 Format size
+  IconData get formatSize => Icons.format_size;
+
+  /// 🌗 Auto mode
+  IconData get autoMode => Icons.auto_mode;
+
+  /// ⬅️ Arrow back iOS new
+  IconData get arrowBackIosNew => Icons.arrow_back_ios_new;
+
+  /// ☁️ Cloud off
+  IconData get cloudOff => Icons.cloud_off;
+
+  /// 🎁 Support
+  IconData get support => Icons.support;
+
+  /// 🧩 Apps
+  IconData get apps => Icons.apps;
+
+  /// 🚩 Flag
+  IconData get flag => Icons.flag;
+
+  /// 💬 Format quote
+  IconData get formatQuote => Icons.format_quote;
+
+  /// 🧩 Widgets
+  IconData get widgets => Icons.widgets;
+
+  /// ❄️ AC unit
+  IconData get acUnit => Icons.ac_unit;
+
+  /// ♿ Accessibility
+  IconData get accessible => Icons.accessible;
+
+  /// ➕ Add circle
+  IconData get addCircle => Icons.add_circle;
+
+  /// 💺 Airline seat flat
+  IconData get airlineSeatFlat => Icons.airline_seat_flat;
+
+  /// 💺 Airline seat recline normal
+  IconData get airlineSeatReclinet => Icons.airline_seat_recline_normal;
+
+  /// ♾️ All inclusive
+  IconData get allInclusive => Icons.all_inclusive;
+
+  /// 🛣️ Alt route
+  IconData get altRoute => Icons.alt_route;
+
+  /// 🎬 Animation
+  IconData get animation => Icons.animation;
+
+  /// 🍎 Apple
+  IconData get apple => Icons.apple;
+
+  /// 🏛️ Architecture
+  IconData get architecture => Icons.architecture;
+
+  /// ⬇️ Arrow drop down
+  IconData get arrowDropDown => Icons.arrow_drop_down;
+
+  /// 📄 Article
+  IconData get article => Icons.article;
+
+  /// 📄 Article outlined
+  IconData get articleOutlined => Icons.article_outlined;
+
+  /// 📋 Assignment outlined
+  IconData get assignmentOutlined => Icons.assignment_outlined;
+
+  /// ✨ Auto fix high
+  IconData get autoFixHigh => Icons.auto_fix_high;
+
+  /// 🎖️ Badge
+  IconData get badge => Icons.badge;
+
+  /// ⚖️ Balance
+  IconData get balance => Icons.balance;
+
+  /// 🔋 Battery alert
+  IconData get batteryAlert => Icons.battery_alert;
+
+  /// 🔋 Battery charging full
+  IconData get batteryChargingFull => Icons.battery_charging_full;
+
+  /// 🛏️ Bed
+  IconData get bed => Icons.bed;
+
+  /// 🌙 Bedtime
+  IconData get bedtime => Icons.bedtime;
+
+  /// 🚫 Block
+  IconData get block => Icons.block;
+
+  /// ⚡ Bolt
+  IconData get bolt => Icons.bolt;
+
+  /// 🔧 Build circle
+  IconData get buildCircle => Icons.build_circle;
+
+  /// 🔢 Calculate rounded
+  IconData get calculateRounded => Icons.calculate_rounded;
+
+  /// 📅 Calendar view day
+  IconData get calendarViewDay => Icons.calendar_view_day;
+
+  /// 📅 Calendar view month
+  IconData get calendarViewMonth => Icons.calendar_view_month;
+
+  /// 📅 Calendar view week
+  IconData get calendarViewWeek => Icons.calendar_view_week;
+
+  /// 🎯 Center focus strong
+  IconData get centerFocusStrong => Icons.center_focus_strong;
+
+  /// ✅ Check circle outline rounded
+  IconData get checkCircleOutlineRounded => Icons.check_circle_outline_rounded;
+
+  /// ✅ Checklist
+  IconData get checklist => Icons.checklist;
+
+  /// ⭕ Circle
+  IconData get circle => Icons.circle;
+
+  /// 🗑️ Clear all
+  IconData get clearAll => Icons.clear_all;
+
+  /// ☁️ Cloud done rounded
+  IconData get cloudDoneRounded => Icons.cloud_done_rounded;
+
+  /// ⬇️ Cloud download
+  IconData get cloudDownload => Icons.cloud_download;
+
+  /// ☁️ Cloud sync rounded
+  IconData get cloudSyncRounded => Icons.cloud_sync_rounded;
+
+  /// 💻 Code
+  IconData get code => Icons.code;
+
+  /// 🚧 Construction
+  IconData get construction => Icons.construction;
+
+  /// 📋 Copy
+  IconData get copy => Icons.copy;
+
+  /// 📱 Crop portrait
+  IconData get cropPortrait => Icons.crop_portrait;
+
+  /// ⬜ Crop square
+  IconData get cropSquare => Icons.crop_square;
+
+  /// 📊 Dashboard customize
+  IconData get dashboardCustomize => Icons.dashboard_customize;
+
+  /// 📊 Dashboard outlined
+  IconData get dashboardOutlined => Icons.dashboard_outlined;
+
+  /// 📅 Date range rounded
+  IconData get dateRangeRounded => Icons.date_range_rounded;
+
+  /// 👨‍💻 Developer mode
+  IconData get developerMode => Icons.developer_mode;
+
+  /// 💎 Diamond
+  IconData get diamond => Icons.diamond;
+
+  /// 🚶 Directions walk
+  IconData get directionsWalk => Icons.directions_walk;
+
+  /// ⬇️ Double arrow
+  IconData get doubleArrow => Icons.double_arrow;
+
+  /// ✅ Download done
+  IconData get downloadDone => Icons.download_done;
+
+  /// ⬇️ Download for offline
+  IconData get downloadForOffline => Icons.download_for_offline;
+
+  /// 📊 Equalizer
+  IconData get equalizer => Icons.equalizer;
+
+  /// ❌ Error
+  IconData get iconError => Icons.error;
+
+  /// 📅 Event available
+  IconData get eventAvailable => Icons.event_available;
+
+  /// 📅 Event busy
+  IconData get eventBusy => Icons.event_busy;
+
+  /// 📅 Event note
+  IconData get eventNote => Icons.event_note;
+
+  /// 🔍 Explore
+  IconData get explore => Icons.explore;
+
+  /// 🔍 Explore off
+  IconData get exploreOff => Icons.explore_off;
+
+  /// 💬 Feedback outlined
+  IconData get feedbackOutlined => Icons.feedback_outlined;
+
+  /// ♀️ Female
+  IconData get female => Icons.female;
+
+  /// ⭕ Fiber manual record
+  IconData get fiberManualRecord => Icons.fiber_manual_record;
+
+  /// 🚩 Flag circle
+  IconData get flagCircle => Icons.flag_circle;
+
+  /// 🚩 Flag outlined
+  IconData get flagOutlined => Icons.flag_outlined;
+
+  /// ✈️ Flight
+  IconData get flight => Icons.flight;
+
+  /// 🔢 Format list numbered
+  IconData get formatListNumbered => Icons.format_list_numbered;
+
+  /// 🔢 Functions
+  IconData get functions => Icons.functions;
+
+  /// 🔲 Grid view
+  IconData get gridView => Icons.grid_view;
+
+  /// 💊 Healing
+  IconData get healing => Icons.healing;
+
+  /// ❓ Help
+  IconData get iconHelp => Icons.help;
+
+  /// ⬡ Hexagon outlined
+  IconData get hexagonOutlined => Icons.hexagon_outlined;
+
+  /// ➖ Horizontal rule
+  IconData get horizontalRule => Icons.horizontal_rule;
+
+  /// 🏨 Hotel
+  IconData get hotel => Icons.hotel;
+
+  /// ⏳ Hourglass empty
+  IconData get hourglassEmpty => Icons.hourglass_empty;
+
+  /// 🗳️ How to vote
+  IconData get howToVote => Icons.how_to_vote;
+
+  /// 📥 Inbox
+  IconData get inbox => Icons.inbox;
+
+  /// ℹ️ Info icon
+  IconData get infoIcon => Icons.info;
+
+  /// ⌨️ Keyboard
+  IconData get keyboard => Icons.keyboard;
+
+  /// ⬇️ Keyboard arrow down rounded
+  IconData get keyboardArrowDownRounded => Icons.keyboard_arrow_down_rounded;
+
+  /// ⌨️ Keyboard hide
+  IconData get keyboardHide => Icons.keyboard_hide;
+
+  /// 🏷️ Label outline
+  IconData get labelOutline => Icons.label_outline;
+
+  /// 📚 Layers
+  IconData get layers => Icons.layers;
+
+  /// 🏆 Leaderboard
+  IconData get leaderboard => Icons.leaderboard;
+
+  /// 📚 Library books
+  IconData get libraryBooks => Icons.library_books;
+
+  /// 📋 List alt
+  IconData get listAlt => Icons.list_alt;
+
+  /// 🔒 Lock clock
+  IconData get lockClock => Icons.lock_clock;
+
+  /// 🔒 Lock outline
+  IconData get lockOutline => Icons.lock_outline;
+
+  /// 👀 Looks
+  IconData get looks => Icons.looks;
+
+  /// 1️⃣ Looks one
+  IconData get looksOne => Icons.looks_one;
+
+  /// ♂️ Male
+  IconData get male => Icons.male;
+
+  /// 📱 Mobile off
+  IconData get mobileOff => Icons.mobile_off;
+
+  /// ⚖️ Monitor weight outlined
+  IconData get monitorWeightOutlined => Icons.monitor_weight_outlined;
+
+  /// 🆕 New releases
+  IconData get newReleases => Icons.new_releases;
+
+  /// 🌙 Nightlight round
+  IconData get nightlightRound => Icons.nightlight_round;
+
+  /// ⬆️ North
+  IconData get north => Icons.north;
+
+  /// 📝 Note alt
+  IconData get noteAlt => Icons.note_alt;
+
+  /// 🔗 Open in new
+  IconData get openInNew => Icons.open_in_new;
+
+  /// ⏳ Pending actions
+  IconData get pendingActions => Icons.pending_actions;
+
+  /// % Percent
+  IconData get percent => Icons.percent;
+
+  /// 📱 Phone Android
+  IconData get phoneAndroid => Icons.phone_android;
+
+  /// 📄 Picture as PDF
+  IconData get pictureAsPdf => Icons.picture_as_pdf;
+
+  /// 👁️ Preview
+  IconData get preview => Icons.preview;
+
+  /// 🔒 Privacy tip rounded
+  IconData get privacyTipRounded => Icons.privacy_tip_rounded;
+
+  /// 🌐 Public
+  IconData get public => Icons.public;
+
+  /// ⭐ Rate review
+  IconData get rateReview => Icons.rate_review;
+
+  /// 👍 Recommend
+  IconData get recommend => Icons.recommend;
+
+  /// ⚠️ Report problem
+  IconData get reportProblem => Icons.report_problem;
+
+  /// ⚠️ Report problem outlined
+  IconData get reportProblemOutlined => Icons.report_problem_outlined;
+
+  /// 🚣 Rowing
+  IconData get rowing => Icons.rowing;
+
+  /// ⚖️ Scale
+  IconData get scale => Icons.scale;
+
+  /// 🔒 Security
+  IconData get security => Icons.security;
+
+  /// 🔒 Security rounded
+  IconData get securityRounded => Icons.security_rounded;
+
+  /// ☑️ Select all
+  IconData get selectAll => Icons.select_all;
+
+  /// 🛡️ Shield
+  IconData get shield => Icons.shield;
+
+  /// 🛡️ Shield outlined
+  IconData get shieldOutlined => Icons.shield_outlined;
+
+  /// 🔀 Shuffle
+  IconData get shuffle => Icons.shuffle;
+
+  /// 🤒 Sick
+  IconData get sick => Icons.sick;
+
+  /// ⬇️ South
+  IconData get south => Icons.south;
+
+  /// 🧖 Spa
+  IconData get spa => Icons.spa;
+
+  /// ⭐ Star half
+  IconData get starHalf => Icons.star_half;
+
+  /// ⭐ Star outline
+  IconData get starOutline => Icons.star_outline;
+
+  /// ⭐ Stars rounded
+  IconData get starsRounded => Icons.stars_rounded;
+
+  /// 💾 Storage
+  IconData get storage => Icons.storage;
+
+  /// 📏 Straighten
+  IconData get straighten => Icons.straighten;
+
+  /// 🎧 Support agent
+  IconData get supportAgent => Icons.support_agent;
+
+  /// 👆 Swipe
+  IconData get swipe => Icons.swipe;
+
+  /// 🔄 Sync
+  IconData get sync => Icons.sync;
+
+  /// 🔄 System update
+  IconData get systemUpdate => Icons.system_update;
+
+  /// 📝 Text fields
+  IconData get textFields => Icons.text_fields;
+
+  /// 👎 Thumb down outlined
+  IconData get thumbDownOutlined => Icons.thumb_down_outlined;
+
+  /// 👍 Thumb up outlined
+  IconData get thumbUpOutlined => Icons.thumb_up_outlined;
+
+  /// ⏱️ Timeline
+  IconData get timeline => Icons.timeline;
+
+  /// ⏱️ Timer off outlined
+  IconData get timerOffOutlined => Icons.timer_off_outlined;
+
+  /// 💡 Tips and updates
+  IconData get tipsAndUpdates => Icons.tips_and_updates;
+
+  /// 📝 Title
+  IconData get title => Icons.title;
+
+  /// 📅 Today rounded
+  IconData get todayRounded => Icons.today_rounded;
+
+  /// ⭕ Toggle off
+  IconData get toggleOff => Icons.toggle_off;
+
+  /// ⭕ Toggle on
+  IconData get toggleOn => Icons.toggle_on;
+
+  /// 👆 Touch app
+  IconData get touchApp => Icons.touch_app;
+
+  /// 📈 Trending up outlined
+  IconData get trendingUpOutlined => Icons.trending_up_outlined;
+
+  /// 🔼 Unfold less
+  IconData get unfoldLess => Icons.unfold_less;
+
+  /// 🔄 Update
+  IconData get update => Icons.update;
+
+  /// ✅ Verified user outlined
+  IconData get verifiedUserOutlined => Icons.verified_user_outlined;
+
+  /// 📳 Vibration
+  IconData get vibration => Icons.vibration;
+
+  /// 📋 View agenda
+  IconData get viewAgenda => Icons.view_agenda;
+
+  /// 📋 View list
+  IconData get viewList => Icons.view_list;
+
+  /// ⚠️ Warning amber
+  IconData get warningAmber => Icons.warning_amber;
+
+  /// ⚠️ Warning outlined
+  IconData get warningOutlined => Icons.warning_outlined;
+
+  /// 🌊 Waves
+  IconData get waves => Icons.waves;
+
+  /// 👋 Waving hand
+  IconData get wavingHand => Icons.waving_hand;
+
+  /// ☀️ WB sunny
+  IconData get wbSunny => Icons.wb_sunny;
+
+  /// ☀️ WB sunny outlined
+  IconData get wbSunnyOutlined => Icons.wb_sunny_outlined;
+
+  /// 🔥 Whatshot
+  IconData get whatshot => Icons.whatshot;
 }

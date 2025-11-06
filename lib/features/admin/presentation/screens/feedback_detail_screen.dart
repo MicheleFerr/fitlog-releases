@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FeedbackDetailScreen extends ConsumerStatefulWidget {
   final ExerciseFeedback feedback;
@@ -143,7 +144,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                         Expanded(
                           child: _buildInfoChip(
                             context,
-                            icon: Icons.category,
+                            icon: AppIcons.category,
                             label: widget.feedback.feedbackType,
                             color: context.colors.primary,
                           ),
@@ -152,7 +153,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                         Expanded(
                           child: _buildInfoChip(
                             context,
-                            icon: Icons.priority_high,
+                            icon: AppIcons.priorityHigh,
                             label: severityLabel,
                             color: severityColor,
                           ),
@@ -164,7 +165,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     // User Info
                     _buildInfoRow(
                       context,
-                      icon: Icons.person,
+                      icon: AppIcons.person,
                       label: l10n.feedbackDetailInfoUser,
                       value: widget.feedback.userEmail,
                     ),
@@ -173,7 +174,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     // Date
                     _buildInfoRow(
                       context,
-                      icon: Icons.calendar_today,
+                      icon: AppIcons.calendar,
                       label: l10n.feedbackDetailInfoCreated,
                       value: _formatDate(widget.feedback.createdAt),
                     ),
@@ -182,7 +183,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     // Version
                     _buildInfoRow(
                       context,
-                      icon: Icons.code,
+                      icon: AppIcons.code,
                       label: l10n.feedbackDetailInfoVersion,
                       value: widget.feedback.version,
                     ),
@@ -202,7 +203,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     Row(
                       children: [
                         Icon(
-                          Icons.message,
+                          AppIcons.message,
                           size: 20,
                           color: context.colors.primary,
                         ),
@@ -236,7 +237,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     Row(
                       children: [
                         Icon(
-                          Icons.admin_panel_settings,
+                          AppIcons.admin,
                           size: 20,
                           color: context.colors.secondary,
                         ),
@@ -272,7 +273,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                                 height: 16,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : const Icon(Icons.save),
+                            : const Icon(AppIcons.save),
                         label: Text(l10n.feedbackDetailSaveNotes),
                       ),
                     ),
@@ -300,7 +301,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   _buildActionButton(
                     context,
                     label: l10n.feedbackActionStartReview,
-                    icon: Icons.rate_review,
+                    icon: AppIcons.rateReview,
                     color: Colors.blue,
                     onTap: () => _updateStatus('REVIEWING'),
                   ),
@@ -308,7 +309,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   _buildActionButton(
                     context,
                     label: l10n.feedbackActionMarkResolved,
-                    icon: Icons.check_circle,
+                    icon: AppIcons.complete,
                     color: Colors.green,
                     onTap: () => _updateStatus('RESOLVED'),
                   ),
@@ -316,7 +317,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   _buildActionButton(
                     context,
                     label: l10n.feedbackActionDismiss,
-                    icon: Icons.cancel,
+                    icon: AppIcons.cancel,
                     color: Colors.grey,
                     onTap: () => _updateStatus('DISMISSED'),
                   ),
@@ -324,7 +325,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   _buildActionButton(
                     context,
                     label: l10n.feedbackActionReopen,
-                    icon: Icons.undo,
+                    icon: AppIcons.undo,
                     color: Colors.orange,
                     onTap: () => _updateStatus('OPEN'),
                   ),

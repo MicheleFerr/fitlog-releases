@@ -156,7 +156,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                          const Icon(AppIcons.complete, color: Colors.green, size: 20),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -184,7 +184,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.info_outline, color: context.colors.secondary, size: 20),
+                              Icon(AppIcons.info, color: context.colors.secondary, size: 20),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
@@ -203,7 +203,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                             Expanded(
                               child: ElevatedButton.icon(
                                 onPressed: () => _showSubstitutionDialog(context, ref, routine, date, status),
-                                icon: const Icon(Icons.swap_horiz, size: 20),
+                                icon: const Icon(AppIcons.swapHoriz, size: 20),
                                 label: const Text('Substitute'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: context.colors.secondary,
@@ -243,7 +243,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: onComplete,
-                          icon: const Icon(Icons.check_circle, size: 20),
+                          icon: const Icon(AppIcons.complete, size: 20),
                           label: const Text('Complete'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
@@ -280,7 +280,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: onComplete,
-                        icon: const Icon(Icons.check_circle, size: 20),
+                        icon: const Icon(AppIcons.complete, size: 20),
                         label: const Text('Complete'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
@@ -317,7 +317,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: onComplete,
-                      icon: const Icon(Icons.check_circle, size: 20),
+                      icon: const Icon(AppIcons.complete, size: 20),
                       label: const Text('Complete'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -374,7 +374,7 @@ class DailyWorkoutCard extends ConsumerWidget {
 
     switch (status) {
       case DayStatus.completed:
-        icon = Icons.check_circle;
+        icon = AppIcons.complete;
         color = Colors.green;
         break;
       case DayStatus.skipped:
@@ -382,15 +382,15 @@ class DailyWorkoutCard extends ConsumerWidget {
         color = context.colors.error;
         break;
       case DayStatus.recovered:
-        icon = Icons.refresh;
+        icon = AppIcons.refresh;
         color = Colors.blue;
         break;
       case DayStatus.rest:
-        icon = Icons.bed;
+        icon = AppIcons.bed;
         color = context.colors.secondary;
         break;
       case DayStatus.scheduled:
-        icon = Icons.schedule;
+        icon = AppIcons.schedule;
         color = context.colors.primary;
         break;
     }
@@ -415,7 +415,7 @@ class DailyWorkoutCard extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.spa,
+            AppIcons.spa,
             color: context.colors.secondary,
             size: 32,
           ),
@@ -470,7 +470,7 @@ class DailyWorkoutCard extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             color: context.colors.primary,
             size: 32,
           ),
@@ -499,7 +499,7 @@ class DailyWorkoutCard extends ConsumerWidget {
             ),
           ),
           Icon(
-            Icons.arrow_forward_ios,
+            AppIcons.forwardIos,
             color: context.colors.primary,
             size: 16,
           ),
@@ -518,7 +518,7 @@ class DailyWorkoutCard extends ConsumerWidget {
       child: Row(
         children: [
           const Icon(
-            Icons.celebration,
+            AppIcons.celebration,
             color: Colors.green,
             size: 32,
           ),

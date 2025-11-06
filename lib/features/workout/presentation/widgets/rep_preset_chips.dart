@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/providers/preset_service_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Rep preset chips widget for quick selection
 ///
@@ -64,7 +65,7 @@ class RepPresetChips extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.speed,
+                  AppIcons.speed,
                   size: 18,
                   color: context.colors.primary,
                 ),
@@ -216,7 +217,7 @@ class SetCountPresetChips extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.repeat,
+                  AppIcons.repeat,
                   size: 18,
                   color: context.colors.primary,
                 ),

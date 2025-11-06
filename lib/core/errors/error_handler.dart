@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Error types for categorization
 enum ErrorType {
@@ -167,7 +168,7 @@ class ErrorHandler {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.error_outline,
+                  AppIcons.error,
                   size: 48,
                   color: Theme.of(context).colorScheme.error,
                 ),
@@ -292,7 +293,7 @@ class ErrorScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.error_outline,
+                AppIcons.error,
                 size: 80,
                 color: Theme.of(context).colorScheme.error,
               ),

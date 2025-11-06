@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutShareSummary extends ConsumerStatefulWidget {
   
@@ -180,7 +181,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                     ),
                   ],
                 ),
@@ -265,7 +266,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                             child: const Icon(
-                                              Icons.fitness_center,
+                                              AppIcons.workout,
                                               color: Colors.blue,
                                               size: 30,
                                             ),
@@ -323,17 +324,17 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           _buildStatColumn(
-                                            icon: Icons.fitness_center,
+                                            icon: AppIcons.workout,
                                             value: totalExercises.toString(),
                                             label: 'Exercises',
                                           ),
                                           _buildStatColumn(
-                                            icon: Icons.monitor_weight,
+                                            icon: AppIcons.weight,
                                             value: (totalVolume / 1000).toStringAsFixed(1),
                                             label: 'Tons',
                                           ),
                                           _buildStatColumn(
-                                            icon: Icons.timer,
+                                            icon: AppIcons.timer,
                                             value: workoutDuration,
                                             label: 'Duration',
                                           ),
@@ -347,7 +348,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                         child: Column(
                                           children: [
                                             Icon(
-                                              Icons.format_quote,
+                                              AppIcons.misc.formatQuote,
                                               color: Colors.white.withValues(alpha: 0.5),
                                               size: 30,
                                             ),
@@ -402,13 +403,13 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildImageButton(
-                              icon: Icons.camera_alt,
+                              icon: AppIcons.camera,
                               label: 'Take Selfie',
                               onTap: () => _pickImage(ImageSource.camera),
                               theme: theme,
                             ),
                             _buildImageButton(
-                              icon: Icons.photo_library,
+                              icon: AppIcons.photoLibrary,
                               label: 'Choose Photo',
                               onTap: () => _pickImage(ImageSource.gallery),
                               theme: theme,
@@ -427,7 +428,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                               _showSelfieOption = true;
                             });
                           },
-                          icon: const Icon(Icons.refresh),
+                          icon: const Icon(AppIcons.refresh),
                           label: const Text('Change Background'),
                         ),
                         const SizedBox(height: 16),
@@ -447,7 +448,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Icon(Icons.share),
+                              : const Icon(AppIcons.share),
                           label: Text(_isGenerating ? 'Generating...' : 'Share Achievement'),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.all(16),

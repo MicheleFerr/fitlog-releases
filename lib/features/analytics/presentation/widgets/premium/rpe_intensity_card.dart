@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/rpe_analyz
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// RPE & Intensity Distribution Card
 ///
@@ -51,7 +52,7 @@ class RPEIntensityCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  Icons.speed,
+                  AppIcons.speed,
                   color: theme.colorScheme.primary,
                   size: 24,
                 ),
@@ -77,7 +78,7 @@ class RPEIntensityCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.info_outline),
+                icon: const Icon(AppIcons.info),
                 onPressed: () => _showInfoDialog(context),
               ),
             ],
@@ -158,7 +159,7 @@ class RPEIntensityCard extends StatelessWidget {
       child: Column(
         children: [
           Icon(
-            Icons.speed_outlined,
+            AppIcons.speedOutlined,
             size: 64,
             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
@@ -356,35 +357,35 @@ class RPEIntensityCard extends StatelessWidget {
         title = l10n.intensityZoneTooEasy;
         description = l10n.intensityZoneTooEasyDesc;
         advice = l10n.intensityZoneTooEasyAdvice;
-        icon = Icons.trending_down;
+        icon = AppIcons.trendDown;
         color = Colors.grey;
         break;
       case IntensityZone.optimalHypertrophy:
         title = l10n.intensityZoneOptimalHypertrophy;
         description = l10n.intensityZoneOptimalHypertrophyDesc;
         advice = l10n.intensityZoneOptimalHypertrophyAdvice;
-        icon = Icons.trending_up;
+        icon = AppIcons.trendUp;
         color = Colors.green;
         break;
       case IntensityZone.optimalStrength:
         title = l10n.intensityZoneOptimalStrength;
         description = l10n.intensityZoneOptimalStrengthDesc;
         advice = l10n.intensityZoneOptimalStrengthAdvice;
-        icon = Icons.fitness_center;
+        icon = AppIcons.workout;
         color = Colors.blue;
         break;
       case IntensityZone.balanced:
         title = l10n.intensityZoneBalanced;
         description = l10n.intensityZoneBalancedDesc;
         advice = l10n.intensityZoneBalancedAdvice;
-        icon = Icons.balance;
+        icon = AppIcons.balance;
         color = Colors.amber;
         break;
       case IntensityZone.tooHard:
         title = l10n.intensityZoneTooHard;
         description = l10n.intensityZoneTooHardDesc;
         advice = l10n.intensityZoneTooHardAdvice;
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         color = Colors.red;
         break;
     }
@@ -434,7 +435,7 @@ class RPEIntensityCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
-                  Icons.lightbulb_outline,
+                  AppIcons.tip,
                   color: color,
                   size: 20,
                 ),
@@ -564,7 +565,7 @@ class RPEIntensityCard extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              Icons.science_outlined,
+              AppIcons.experiment,
               color: theme.colorScheme.primary,
             ),
             const SizedBox(width: 12),
@@ -590,7 +591,7 @@ class RPEIntensityCard extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.open_in_new,
+              AppIcons.openInNew,
               color: theme.colorScheme.primary,
               size: 20,
             ),
@@ -609,7 +610,7 @@ class RPEIntensityCard extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.info_outline, color: theme.colorScheme.primary),
+            Icon(AppIcons.info, color: theme.colorScheme.primary),
             const SizedBox(width: 12),
             Text(l10n.rpeInfoTitle),
           ],

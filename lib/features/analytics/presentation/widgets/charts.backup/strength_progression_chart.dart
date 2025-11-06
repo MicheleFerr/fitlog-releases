@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Chart showing strength progression over time
 class StrengthProgressionChart extends StatefulWidget {
@@ -84,7 +85,7 @@ class _StrengthProgressionChartState extends State<StrengthProgressionChart> {
     return Row(
       children: [
         Icon(
-          Icons.trending_up,
+          AppIcons.trendUp,
           color: colorScheme.primary,
           size: 24,
         ),
@@ -97,7 +98,7 @@ class _StrengthProgressionChartState extends State<StrengthProgressionChart> {
         ),
         const Spacer(),
         IconButton(
-          icon: const Icon(Icons.info_outline),
+          icon: const Icon(AppIcons.info),
           onPressed: () => _showInfoDialog(context),
         ),
       ],
@@ -412,19 +413,19 @@ class _StrengthProgressionChartState extends State<StrengthProgressionChart> {
             context,
             localizations.current1RM,
             '${data.last.y.toStringAsFixed(1)}kg',
-            Icons.fitness_center,
+            AppIcons.workout,
           ),
           _buildStatItem(
             context,
             localizations.bestEver,
             '${currentMax.toStringAsFixed(1)}kg',
-            Icons.emoji_events,
+            AppIcons.achievement,
           ),
           _buildStatItem(
             context,
             localizations.improvement,
             '${improvementPercent > 0 ? '+' : ''}${improvementPercent.toStringAsFixed(1)}%',
-            improvementPercent > 0 ? Icons.trending_up : Icons.trending_down,
+            improvementPercent > 0 ? AppIcons.trendUp : AppIcons.trendDown,
             color: improvementPercent > 0 ? Colors.green : Colors.red,
           ),
         ],
@@ -466,7 +467,7 @@ class _StrengthProgressionChartState extends State<StrengthProgressionChart> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.trending_up,
+            AppIcons.trendUp,
             size: 48,
             color: Colors.grey.withValues(alpha: 0.5),
           ),

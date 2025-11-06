@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DailyLoginBonusWidget extends ConsumerWidget {
   const DailyLoginBonusWidget({super.key});
@@ -74,8 +75,8 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                 ),
                 child: Icon(
                   loginState.bonusClaimedToday 
-                    ? Icons.check_circle
-                    : Icons.card_giftcard,
+                    ? AppIcons.complete
+                    : AppIcons.gift,
                   color: Colors.white,
                   size: 24,
                 ),
@@ -155,7 +156,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                 Column(
                   children: [
                     const Icon(
-                      Icons.touch_app,
+                      AppIcons.touchApp,
                       color: Colors.amber,
                       size: 20,
                     ),
@@ -188,7 +189,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.celebration, color: Colors.white),
+                const Icon(AppIcons.celebration, color: Colors.white),
                 const SizedBox(width: 12),
                 Text('Hai guadagnato +${bonusInfo.currentDayBonus} XP!'),
               ],
@@ -276,7 +277,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                     child: Center(
                       child: isCompleted
                         ? const Icon(
-                            Icons.check,
+                            AppIcons.check,
                             color: Colors.white,
                             size: 20,
                           )
@@ -327,7 +328,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
               child: Row(
                 children: [
                   const Icon(
-                    Icons.star,
+                    AppIcons.star,
                     color: Colors.green,
                     size: 16,
                   ),

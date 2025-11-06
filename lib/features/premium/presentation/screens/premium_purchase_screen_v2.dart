@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class PremiumPurchaseScreenV2 extends ConsumerStatefulWidget {
   const PremiumPurchaseScreenV2({super.key});
@@ -215,7 +216,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
-            Icons.arrow_back,
+            AppIcons.back,
             color: colorScheme.onSurface,
             size: 20,
           ),
@@ -244,7 +245,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.refresh,
+                      AppIcons.refresh,
                       size: 16,
                       color: colorScheme.primary,
                     ),
@@ -396,7 +397,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               ],
             ),
             child: const Icon(
-              Icons.workspace_premium,
+              AppIcons.premium,
               size: 40,
               color: Colors.white,
             ),
@@ -435,28 +436,28 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     
     final features = [
       _FeatureData(
-        icon: Icons.cloud_sync_rounded,
+        icon: AppIcons.cloudSyncRounded,
         title: 'Cloud Sync',
         description: 'Access your workouts on any device',
         gradient: [colorScheme.primary, colorScheme.secondary],
         delay: 0,
       ),
       _FeatureData(
-        icon: Icons.backup_rounded,
+        icon: AppIcons.backupRounded,
         title: 'Auto Backup',
         description: 'Never lose your progress again',
         gradient: [colorScheme.secondary, colorScheme.tertiary],
         delay: 200,
       ),
       _FeatureData(
-        icon: Icons.analytics_rounded,
+        icon: AppIcons.analyticsRounded,
         title: 'Advanced Analytics',
         description: 'Detailed insights & progress tracking',
         gradient: [colorScheme.tertiary, colorScheme.primary],
         delay: 400,
       ),
       _FeatureData(
-        icon: Icons.people_rounded,
+        icon: AppIcons.peopleRounded,
         title: 'Community Access',
         description: 'Connect with other athletes',
         gradient: [colorScheme.primary, colorScheme.tertiary],
@@ -559,7 +560,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     
                     Icon(
-                      Icons.check_circle,
+                      AppIcons.complete,
                       color: colorScheme.primary,
                       size: 20,
                     ),
@@ -593,7 +594,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             children: [
               ...List.generate(5, (index) => 
                 const Icon(
-                  Icons.star_rounded,
+                  AppIcons.starRounded,
                   color: Colors.amber,
                   size: 20,
                 )
@@ -681,7 +682,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 ),
                 const SizedBox(width: 8),
                 const Icon(
-                  Icons.arrow_forward_rounded,
+                  AppIcons.arrowForwardRounded,
                   color: Colors.white,
                   size: 20,
                 ),
@@ -871,7 +872,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                           ),
                           child: isSelected
                               ? Icon(
-                                  Icons.check,
+                                  AppIcons.check,
                                   size: 16,
                                   color: colorScheme.onPrimary,
                                 )
@@ -1017,7 +1018,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Expanded(
                 child: _buildTrustBadge(
                   context,
-                  Icons.security_rounded,
+                  AppIcons.securityRounded,
                   'Secure Payment',
                   '256-bit SSL',
                 ),
@@ -1030,7 +1031,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Expanded(
                 child: _buildTrustBadge(
                   context,
-                  Icons.cancel_rounded,
+                  AppIcons.cancelRounded,
                   'Easy Cancel',
                   'Anytime',
                 ),
@@ -1043,7 +1044,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Expanded(
                 child: _buildTrustBadge(
                   context,
-                  Icons.privacy_tip_rounded,
+                  AppIcons.privacyTipRounded,
                   'Privacy First',
                   'No tracking',
                 ),
@@ -1190,7 +1191,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 child: Row(
                   children: [
                     Icon(
-                      Icons.error_outline_rounded,
+                      AppIcons.errorOutlineRounded,
                       color: colorScheme.onErrorContainer,
                     ),
                     const SizedBox(width: 12),
@@ -1205,7 +1206,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     IconButton(
                       onPressed: () => ref.read(premiumUpgradeProvider.notifier).clearError(),
-                      icon: const Icon(Icons.close_rounded),
+                      icon: const Icon(AppIcons.closeRounded),
                       color: colorScheme.onErrorContainer,
                     ),
                   ],
@@ -1272,7 +1273,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Icon(
-                                Icons.rocket_launch_rounded,
+                                AppIcons.rocketLaunchRounded,
                                 color: Colors.white,
                                 size: 24,
                               ),
@@ -1429,7 +1430,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   ],
                 ),
                 child: const Icon(
-                  Icons.check_circle_outline_rounded,
+                  AppIcons.checkCircleOutlineRounded,
                   size: 60,
                   color: Colors.white,
                 ),
@@ -1472,7 +1473,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       context,
                       'Cloud Sync',
                       'Active',
-                      Icons.cloud_done_rounded,
+                      AppIcons.cloudDoneRounded,
                       Colors.green,
                     ),
                     const Divider(height: 24),
@@ -1480,7 +1481,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       context,
                       'Auto Backup',
                       'Enabled',
-                      Icons.backup_rounded,
+                      AppIcons.backupRounded,
                       Colors.blue,
                     ),
                     const Divider(height: 24),
@@ -1488,7 +1489,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       context,
                       'Community Access',
                       'Full Access',
-                      Icons.people_rounded,
+                      AppIcons.peopleRounded,
                       Colors.orange,
                     ),
                   ],
@@ -1503,7 +1504,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.settings_rounded,
+                      AppIcons.settingsRounded,
                       color: colorScheme.primary,
                       size: 20,
                     ),
@@ -1602,7 +1603,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             SnackBar(
               content: const Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.white),
+                  Icon(AppIcons.complete, color: Colors.white),
                   SizedBox(width: 8),
                   Text('Premium restored successfully!'),
                 ],

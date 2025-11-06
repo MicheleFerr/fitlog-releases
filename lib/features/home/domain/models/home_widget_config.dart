@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Rappresenta un widget configurabile nella home screen
 class HomeWidgetConfig {
@@ -19,16 +20,16 @@ class HomeWidgetConfig {
   factory HomeWidgetConfig.fromJson(Map<String, dynamic> json) {
     // Use a map to get the correct IconData constant
     final iconMap = {
-      Icons.fitness_center.codePoint: Icons.fitness_center,
-      Icons.emoji_events.codePoint: Icons.emoji_events,
-      Icons.psychology.codePoint: Icons.psychology,
-      Icons.play_arrow.codePoint: Icons.play_arrow,
-      Icons.trending_up.codePoint: Icons.trending_up,
-      Icons.people.codePoint: Icons.people,
-      Icons.apps.codePoint: Icons.apps,
-      Icons.history.codePoint: Icons.history,
-      Icons.flag.codePoint: Icons.flag,
-      Icons.format_quote.codePoint: Icons.format_quote,
+      AppIcons.workout.codePoint: AppIcons.workout,
+      AppIcons.achievement.codePoint: AppIcons.achievement,
+      AppIcons.ai.codePoint: AppIcons.ai,
+      AppIcons.play.codePoint: AppIcons.play,
+      AppIcons.trendUp.codePoint: AppIcons.trendUp,
+      AppIcons.people.codePoint: AppIcons.people,
+      AppIcons.apps.codePoint: AppIcons.apps,
+      AppIcons.history.codePoint: AppIcons.history,
+      AppIcons.flag.codePoint: AppIcons.flag,
+      AppIcons.misc.formatQuote.codePoint: AppIcons.misc.formatQuote,
       // Add more icons as needed
     };
     
@@ -36,7 +37,7 @@ class HomeWidgetConfig {
       id: json['id'],
       type: json['type'],
       title: json['title'],
-      icon: iconMap[json['icon']] ?? Icons.widgets, // Fallback to Icons.widgets
+      icon: iconMap[json['icon']] ?? AppIcons.widgets, // Fallback to AppIcons.widgets
       isVisible: json['isVisible'] ?? true,
       order: json['order'],
       settings: json['settings'],
@@ -133,7 +134,7 @@ class DefaultHomeWidgets {
       id: 'active_workout',
       type: HomeWidgetType.activeWorkout,
       title: 'Allenamento Attivo',
-      icon: Icons.fitness_center,
+      icon: AppIcons.workout,
       order: 0,
       isRequired: true, // Can't be hidden
       size: WidgetSize.medium,
@@ -142,7 +143,7 @@ class DefaultHomeWidgets {
       id: 'stats_card',
       type: HomeWidgetType.statsCard,
       title: 'Progressi & Achievement',
-      icon: Icons.emoji_events,
+      icon: AppIcons.achievement,
       order: 1,
       size: WidgetSize.large,
     ),
@@ -157,7 +158,7 @@ class DefaultHomeWidgets {
       id: 'ai_coach',
       type: HomeWidgetType.aiCoach,
       title: 'AI Coach Insights',
-      icon: Icons.psychology,
+      icon: AppIcons.ai,
       order: 2,
       isVisible: false, // DISABILITATO - Fix scientifici necessari
       allowResize: false,
@@ -167,7 +168,7 @@ class DefaultHomeWidgets {
       id: 'quick_start',
       type: HomeWidgetType.quickStart,
       title: 'Avvia Allenamento',
-      icon: Icons.play_arrow,
+      icon: AppIcons.play,
       order: 3,
       allowResize: false, // Cannot be resized
       size: WidgetSize.medium,
@@ -177,7 +178,7 @@ class DefaultHomeWidgets {
     //   id: 'progress_dashboard',
     //   type: HomeWidgetType.progressDashboard,
     //   title: 'Dashboard Progressi',
-    //   icon: Icons.trending_up,
+    //   icon: AppIcons.trendUp,
     //   order: 4,
     //   allowResize: false, // Cannot be resized
     //   size: WidgetSize.large,
@@ -186,7 +187,7 @@ class DefaultHomeWidgets {
       id: 'community_pulse',
       type: HomeWidgetType.communityPulse,
       title: 'Community',
-      icon: Icons.people,
+      icon: AppIcons.people,
       order: 4,
       allowResize: false, // Cannot be resized
       size: WidgetSize.large,
@@ -195,7 +196,7 @@ class DefaultHomeWidgets {
       id: 'quick_actions',
       type: HomeWidgetType.quickActions,
       title: 'Azioni Rapide',
-      icon: Icons.apps,
+      icon: AppIcons.apps,
       order: 5,
       allowResize: false, // Cannot be resized
       size: WidgetSize.large,
@@ -204,7 +205,7 @@ class DefaultHomeWidgets {
       id: 'recent_workouts',
       type: HomeWidgetType.recentWorkouts,
       title: 'Allenamenti Recenti',
-      icon: Icons.history,
+      icon: AppIcons.history,
       order: 6,
       isVisible: false, // Hidden by default
       size: WidgetSize.medium,
@@ -213,7 +214,7 @@ class DefaultHomeWidgets {
       id: 'weekly_goals',
       type: HomeWidgetType.weeklyGoals,
       title: 'Obiettivi Settimanali',
-      icon: Icons.flag,
+      icon: AppIcons.flag,
       order: 7,
       isVisible: false,
       size: WidgetSize.small,
@@ -223,7 +224,7 @@ class DefaultHomeWidgets {
       id: 'real_progress_stats',
       type: HomeWidgetType.realProgressStats,
       title: 'Analisi Progressi',
-      icon: Icons.analytics,
+      icon: AppIcons.analytics,
       order: 8,
       isVisible: true,
       size: WidgetSize.medium,
@@ -232,7 +233,7 @@ class DefaultHomeWidgets {
       id: 'streak_tracker',
       type: HomeWidgetType.streakTracker,
       title: 'Streak Tracker',
-      icon: Icons.local_fire_department,
+      icon: AppIcons.streak,
       order: 9,
       isVisible: true,
       size: WidgetSize.small,
@@ -241,7 +242,7 @@ class DefaultHomeWidgets {
       id: 'recent_workouts_new',
       type: HomeWidgetType.recentWorkoutsNew,
       title: 'Workout Recenti',
-      icon: Icons.history,
+      icon: AppIcons.history,
       order: 10,
       isVisible: true,
       size: WidgetSize.medium,
@@ -250,7 +251,7 @@ class DefaultHomeWidgets {
       id: 'weekly_goals_new',
       type: HomeWidgetType.weeklyGoalsNew,
       title: 'Obiettivi',
-      icon: Icons.flag,
+      icon: AppIcons.flag,
       order: 11,
       isVisible: true,
       size: WidgetSize.small,
@@ -259,7 +260,7 @@ class DefaultHomeWidgets {
       id: 'motivational_quote',
       type: HomeWidgetType.motivationalQuote,
       title: 'Quote del Giorno',
-      icon: Icons.format_quote,
+      icon: AppIcons.misc.formatQuote,
       order: 12,
       isVisible: false,
       size: WidgetSize.small,
@@ -268,7 +269,7 @@ class DefaultHomeWidgets {
       id: 'exercise_of_day',
       type: HomeWidgetType.exerciseOfTheDay,
       title: 'Esercizio del Giorno',
-      icon: Icons.fitness_center,
+      icon: AppIcons.workout,
       order: 13,
       isVisible: false,
       size: WidgetSize.medium,

@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class InsightExplainerCard extends StatelessWidget {
   const InsightExplainerCard({
@@ -33,7 +34,7 @@ class InsightExplainerCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.ai,
                   size: 20,
                   color: context.colors.primary,
                 ),
@@ -93,7 +94,7 @@ class InsightExplainerCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.check_circle,
+                    AppIcons.complete,
                     size: 16,
                     color: context.colors.primary.withValues(alpha: 0.7),
                   ),
@@ -127,7 +128,7 @@ class InsightExplainerCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.lightbulb,
+                AppIcons.lightbulb,
                 size: 16,
                 color: context.colors.primary,
               ),
@@ -164,7 +165,7 @@ class InsightExplainerCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.science,
+                AppIcons.science,
                 size: 16,
                 color: context.colors.secondary,
               ),

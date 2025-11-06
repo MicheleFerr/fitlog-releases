@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 enum WeightRecoveryOption {
   exact,        // Si (esatti)
@@ -84,7 +85,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.history,
+                  AppIcons.history,
                   color: theme.colorScheme.primary,
                   size: 24,
                 ),
@@ -127,7 +128,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
             child: Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -138,7 +139,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                 ),
                 const SizedBox(width: 16),
                 Icon(
-                  Icons.calendar_today,
+                  AppIcons.calendar,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -162,7 +163,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
             children: [
               _buildOptionCard(
                 theme,
-                icon: Icons.trending_up,
+                icon: AppIcons.trendUp,
                 label: 'Si +2.5%',
                 subtitle: 'Progressive overload',
                 color: Colors.green,
@@ -170,7 +171,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
               ),
               _buildOptionCard(
                 theme,
-                icon: Icons.check_circle,
+                icon: AppIcons.complete,
                 label: 'Si (esatti)',
                 subtitle: 'Stessi pesi',
                 color: theme.colorScheme.primary,
@@ -178,7 +179,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
               ),
               _buildOptionCard(
                 theme,
-                icon: Icons.trending_down,
+                icon: AppIcons.trendDown,
                 label: 'Si -2.5%',
                 subtitle: 'Deload',
                 color: Colors.orange,
@@ -186,7 +187,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
               ),
               _buildOptionCard(
                 theme,
-                icon: Icons.close,
+                icon: AppIcons.close,
                 label: 'No',
                 subtitle: 'Inizia vuoto',
                 color: theme.colorScheme.outline,
@@ -365,7 +366,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                     HapticFeedback.mediumImpact();
                     Navigator.of(context).pop(_selectedOption);
                   },
-                  icon: const Icon(Icons.check),
+                  icon: const Icon(AppIcons.check),
                   label: const Text('Conferma'),
                 ),
               ),
@@ -410,7 +411,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
             if (hasChange) ...[
               const SizedBox(width: 8),
               Icon(
-                Icons.arrow_forward,
+                AppIcons.forward,
                 size: 16,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -536,13 +537,13 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
   IconData _getOptionIcon(WeightRecoveryOption option) {
     switch (option) {
       case WeightRecoveryOption.increase:
-        return Icons.trending_up;
+        return AppIcons.trendUp;
       case WeightRecoveryOption.exact:
-        return Icons.check_circle;
+        return AppIcons.complete;
       case WeightRecoveryOption.decrease:
-        return Icons.trending_down;
+        return AppIcons.trendDown;
       case WeightRecoveryOption.none:
-        return Icons.close;
+        return AppIcons.close;
     }
   }
 

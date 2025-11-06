@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExecuteSetStep extends StatefulWidget {
 
@@ -137,7 +138,7 @@ class _ExecuteSetStepState extends State<ExecuteSetStep> with TickerProviderStat
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.check_circle_outline,
+            AppIcons.completeOutline,
             size: 80,
             color: colorScheme.primary,
           ),
@@ -165,7 +166,7 @@ class _ExecuteSetStepState extends State<ExecuteSetStep> with TickerProviderStat
           if (!_showDemo) ...[
             FilledButton.icon(
               onPressed: _startDemo,
-              icon: const Icon(Icons.play_arrow),
+              icon: const Icon(AppIcons.play),
               label: Text(l10n.onboardingTryItOut),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -197,7 +198,7 @@ class _ExecuteSetStepState extends State<ExecuteSetStep> with TickerProviderStat
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             color: colorScheme.primary,
                             size: 20,
                           ),
@@ -283,7 +284,7 @@ class _ExecuteSetStepState extends State<ExecuteSetStep> with TickerProviderStat
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: colorScheme.primary,
                             size: 20,
                           ),
@@ -377,7 +378,7 @@ class _MockSetRow extends StatelessWidget {
             child: Row(
               children: [
                 _SetValueChip(
-                  icon: Icons.fitness_center,
+                  icon: AppIcons.workout,
                   value: '${set['weight'].toStringAsFixed(0)} kg',
                   colorScheme: colorScheme,
                   theme: theme,
@@ -385,7 +386,7 @@ class _MockSetRow extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 _SetValueChip(
-                  icon: Icons.repeat,
+                  icon: AppIcons.repeat,
                   value: '${set['reps']} / ${set['targetReps']}',
                   colorScheme: colorScheme,
                   theme: theme,
@@ -394,7 +395,7 @@ class _MockSetRow extends StatelessWidget {
                 const SizedBox(width: 8),
                 if (set['rpe'] != null)
                   _SetValueChip(
-                    icon: Icons.psychology,
+                    icon: AppIcons.ai,
                     value: 'RPE ${set['rpe']}',
                     colorScheme: colorScheme,
                     theme: theme,
@@ -409,7 +410,7 @@ class _MockSetRow extends StatelessWidget {
             IconButton(
               onPressed: onToggleEdit,
               icon: Icon(
-                Icons.edit,
+                AppIcons.edit,
                 size: 18,
                 color: colorScheme.primary,
               ),
@@ -426,7 +427,7 @@ class _MockSetRow extends StatelessWidget {
                 IconButton(
                   onPressed: onToggleEdit,
                   icon: Icon(
-                    Icons.check,
+                    AppIcons.check,
                     size: 18,
                     color: colorScheme.primary,
                   ),
@@ -439,7 +440,7 @@ class _MockSetRow extends StatelessWidget {
                 IconButton(
                   onPressed: onToggleEdit,
                   icon: Icon(
-                    Icons.close,
+                    AppIcons.close,
                     size: 18,
                     color: colorScheme.error,
                   ),
@@ -471,7 +472,7 @@ class _MockSetRow extends StatelessWidget {
                 ),
               ),
               child: Icon(
-                isCompleted ? Icons.check : Icons.check_box_outline_blank,
+                isCompleted ? AppIcons.check : AppIcons.checkBoxOutlineBlank,
                 color: isCompleted
                   ? colorScheme.onPrimary
                   : colorScheme.onSurface.withOpacity(0.6),
@@ -536,7 +537,7 @@ class _MockQuickEditV2 extends StatelessWidget {
               const Spacer(),
               IconButton(
                 onPressed: onCancel,
-                icon: const Icon(Icons.close, size: 20),
+                icon: const Icon(AppIcons.close, size: 20),
                 style: IconButton.styleFrom(
                   minimumSize: const Size(32, 32),
                   padding: EdgeInsets.zero,
@@ -573,7 +574,7 @@ class _MockQuickEditV2 extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () {},
-                            icon: const Icon(Icons.remove, size: 16),
+                            icon: const Icon(AppIcons.remove, size: 16),
                             style: IconButton.styleFrom(minimumSize: const Size(32, 32)),
                           ),
                           Expanded(
@@ -588,7 +589,7 @@ class _MockQuickEditV2 extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () {},
-                            icon: const Icon(Icons.add, size: 16),
+                            icon: const Icon(AppIcons.add, size: 16),
                             style: IconButton.styleFrom(minimumSize: const Size(32, 32)),
                           ),
                         ],
@@ -622,7 +623,7 @@ class _MockQuickEditV2 extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () {},
-                            icon: const Icon(Icons.remove, size: 16),
+                            icon: const Icon(AppIcons.remove, size: 16),
                             style: IconButton.styleFrom(minimumSize: const Size(32, 32)),
                           ),
                           Expanded(
@@ -637,7 +638,7 @@ class _MockQuickEditV2 extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () {},
-                            icon: const Icon(Icons.add, size: 16),
+                            icon: const Icon(AppIcons.add, size: 16),
                             style: IconButton.styleFrom(minimumSize: const Size(32, 32)),
                           ),
                         ],
@@ -689,7 +690,7 @@ class _MockQuickEditV2 extends StatelessWidget {
               // Notes button
               IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.note_add, size: 20),
+                icon: const Icon(AppIcons.noteAdd, size: 20),
                 style: IconButton.styleFrom(
                   backgroundColor: colorScheme.secondary.withOpacity(0.1),
                   foregroundColor: colorScheme.secondary,

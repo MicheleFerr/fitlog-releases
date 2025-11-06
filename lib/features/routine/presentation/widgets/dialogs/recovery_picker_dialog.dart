@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog for selecting recovery date for a skipped workout
 class RecoveryPickerDialog extends StatefulWidget {
@@ -87,7 +88,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
-                      Icons.refresh,
+                      AppIcons.refresh,
                       color: Colors.blue,
                       size: 24,
                     ),
@@ -132,7 +133,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 child: Row(
                   children: [
                     const Icon(
-                      Icons.info_outline,
+                      AppIcons.info,
                       color: Colors.blue,
                       size: 20,
                     ),
@@ -219,7 +220,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.error_outline,
+                        AppIcons.error,
                         color: context.colors.error,
                         size: 20,
                       ),
@@ -325,7 +326,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.calendar_today,
+                      AppIcons.calendar,
                       size: 16,
                       color: isSelected ? Colors.white : context.colors.primary,
                     ),
@@ -403,7 +404,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           Row(
             children: [
               const Icon(
-                Icons.check_circle_outline,
+                AppIcons.completeOutline,
                 color: Colors.blue,
                 size: 20,
               ),
@@ -419,14 +420,14 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           ),
           const SizedBox(height: 12),
           _buildImpactRow(
-            icon: Icons.trending_up,
+            icon: AppIcons.trendUp,
             label: 'Adherence Rate',
             value: 'Will improve',
             isPositive: true,
           ),
           const SizedBox(height: 8),
           _buildImpactRow(
-            icon: Icons.event_available,
+            icon: AppIcons.eventAvailable,
             label: 'Recovery Date',
             value: _formatDate(_selectedDay!),
             isPositive: true,
@@ -460,7 +461,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
         ),
         if (isPositive)
           const Icon(
-            Icons.arrow_upward,
+            AppIcons.arrowUpward,
             size: 14,
             color: Colors.blue,
           ),

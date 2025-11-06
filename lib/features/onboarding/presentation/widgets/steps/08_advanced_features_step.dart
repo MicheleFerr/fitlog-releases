@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdvancedFeaturesStep extends StatelessWidget {
 
@@ -20,7 +21,7 @@ class AdvancedFeaturesStep extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.auto_awesome,
+            AppIcons.autoAwesome,
             size: 80,
             color: colorScheme.primary,
           ),
@@ -57,7 +58,7 @@ class AdvancedFeaturesStep extends StatelessWidget {
             child: Column(
               children: [
                 Icon(
-                  Icons.celebration,
+                  AppIcons.celebration,
                   color: colorScheme.tertiary,
                   size: 32,
                 ),

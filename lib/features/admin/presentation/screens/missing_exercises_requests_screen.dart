@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/missing_exercise_request.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class MissingExercisesRequestsScreen extends ConsumerStatefulWidget {
   const MissingExercisesRequestsScreen({super.key});
@@ -28,7 +29,7 @@ class _MissingExercisesRequestsScreenState
         title: Row(
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -41,7 +42,7 @@ class _MissingExercisesRequestsScreenState
               ref.invalidate(requestsByStatusProvider);
               ref.invalidate(requestCountsProvider);
             },
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             tooltip: l10n.refresh,
           ),
         ],
@@ -157,7 +158,7 @@ class _MissingExercisesRequestsScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.check_circle_outline,
+              AppIcons.completeOutline,
               size: 64,
               color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
             ),
@@ -274,7 +275,7 @@ class _MissingExercisesRequestsScreenState
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _rejectRequest(request),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       label: const Text('Rifiuta'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.error,
@@ -285,7 +286,7 @@ class _MissingExercisesRequestsScreenState
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () => _approveRequest(request),
-                      icon: const Icon(Icons.check),
+                      icon: const Icon(AppIcons.check),
                       label: const Text('Approva'),
                     ),
                   ),
@@ -302,7 +303,7 @@ class _MissingExercisesRequestsScreenState
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: () => _markAsCompleted(request),
-                  icon: const Icon(Icons.done_all),
+                  icon: const Icon(AppIcons.allDone),
                   label: const Text('Segna come Completato'),
                 ),
               ),
@@ -319,7 +320,7 @@ class _MissingExercisesRequestsScreenState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+          const Icon(AppIcons.error, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Text('Errore: $error'),
           const SizedBox(height: 16),
@@ -501,13 +502,13 @@ class _MissingExercisesRequestsScreenState
   IconData _getStatusIcon(RequestStatus status) {
     switch (status) {
       case RequestStatus.pending:
-        return Icons.hourglass_empty;
+        return AppIcons.hourglassEmpty;
       case RequestStatus.approved:
-        return Icons.check_circle_outline;
+        return AppIcons.completeOutline;
       case RequestStatus.rejected:
-        return Icons.cancel_outlined;
+        return AppIcons.cancelOutlined;
       case RequestStatus.completed:
-        return Icons.done_all;
+        return AppIcons.allDone;
     }
   }
 

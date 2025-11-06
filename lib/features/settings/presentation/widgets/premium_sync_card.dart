@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// State for sync operation
 class SyncState {
@@ -263,7 +264,7 @@ class PremiumSyncCard extends ConsumerWidget {
             child: Column(
               children: [
                 Icon(
-                  Icons.cloud_off,
+                  AppIcons.cloudOff,
                   size: 48,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -311,7 +312,7 @@ class PremiumSyncCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    Icons.cloud_sync,
+                    AppIcons.cloudSync,
                     color: theme.colorScheme.onPrimaryContainer,
                   ),
                 ),
@@ -344,8 +345,8 @@ class PremiumSyncCard extends ConsumerWidget {
                 else if (syncState.lastResult != null)
                   Icon(
                     syncState.lastResult!.success 
-                        ? Icons.check_circle 
-                        : Icons.error,
+                        ? AppIcons.complete 
+                        : AppIcons.error,
                     color: syncState.lastResult!.success 
                         ? Colors.green 
                         : theme.colorScheme.error,
@@ -379,7 +380,7 @@ class PremiumSyncCard extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.access_time,
+                      AppIcons.clock,
                       size: 16,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -458,7 +459,7 @@ class PremiumSyncCard extends ConsumerWidget {
                                 .performRetroactiveSync();
                           }
                         },
-                  icon: const Icon(Icons.cloud_upload),
+                  icon: const Icon(AppIcons.cloudUpload),
                   label: Text(AppLocalizations.of(context).syncAllWorkouts),
                 ),
               ),
@@ -479,7 +480,7 @@ class PremiumSyncCard extends ConsumerWidget {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.info_outline,
+                      AppIcons.info,
                       size: 20,
                       color: theme.colorScheme.primary,
                     ),
@@ -554,11 +555,11 @@ class PremiumSyncCard extends ConsumerWidget {
           children: [
             Text('Premium features include:'),
             SizedBox(height: 12),
-            _FeatureItem(icon: Icons.cloud_sync, text: 'Cloud sync across devices'),
-            _FeatureItem(icon: Icons.backup, text: 'Automatic backups'),
-            _FeatureItem(icon: Icons.insights, text: 'Advanced analytics'),
-            _FeatureItem(icon: Icons.timer, text: 'Unlimited workout history'),
-            _FeatureItem(icon: Icons.support, text: 'Priority support'),
+            _FeatureItem(icon: AppIcons.cloudSync, text: 'Cloud sync across devices'),
+            _FeatureItem(icon: AppIcons.backup, text: 'Automatic backups'),
+            _FeatureItem(icon: AppIcons.insights, text: 'Advanced analytics'),
+            _FeatureItem(icon: AppIcons.timer, text: 'Unlimited workout history'),
+            _FeatureItem(icon: AppIcons.support, text: 'Priority support'),
           ],
         ),
         actions: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Premium animated progress ring per Tier 1 apps
 class AnimatedProgressRing extends StatefulWidget {
@@ -430,8 +431,8 @@ class _AnimatedStatCardState extends State<AnimatedStatCard>
                     children: [
                       Icon(
                         widget.isPositive
-                            ? Icons.trending_up
-                            : Icons.trending_down,
+                            ? AppIcons.trendUp
+                            : AppIcons.trendDown,
                         size: 16,
                         color: widget.isPositive ? Colors.green : Colors.red,
                       ),
@@ -550,7 +551,7 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
                             borderRadius: BorderRadius.circular(28),
                           ),
                           child: const Icon(
-                            Icons.play_arrow,
+                            AppIcons.play,
                             color: Colors.white,
                             size: 28,
                           ),
@@ -600,7 +601,7 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
                           turns: _isHovered ? 0.25 : 0,
                           duration: const Duration(milliseconds: 200),
                           child: const Icon(
-                            Icons.arrow_forward,
+                            AppIcons.forward,
                             color: Colors.white,
                             size: 20,
                           ),

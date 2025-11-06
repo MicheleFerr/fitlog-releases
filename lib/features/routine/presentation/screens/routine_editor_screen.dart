@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/template_selection_step.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/template_rotation_step.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/review_step.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Main wizard screen for creating/editing flexible routines
 class RoutineEditorScreen extends ConsumerWidget { // For editing existing routines
@@ -67,7 +68,7 @@ class RoutineEditorScreen extends ConsumerWidget { // For editing existing routi
           backgroundColor: context.colors.surface,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(AppIcons.close),
             onPressed: () => _handleBackPress(context, ref),
           ),
         ),
@@ -198,7 +199,7 @@ class RoutineEditorScreen extends ConsumerWidget { // For editing existing routi
           child: Center(
             child: isCompleted
                 ? Icon(
-                    Icons.check,
+                    AppIcons.check,
                     color: context.colors.onPrimary,
                     size: 20,
                   )

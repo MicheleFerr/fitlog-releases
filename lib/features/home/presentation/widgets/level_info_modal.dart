@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class LevelInfoModal extends ConsumerWidget {
   
@@ -83,7 +84,7 @@ class LevelInfoModal extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -200,7 +201,7 @@ class LevelInfoModal extends ConsumerWidget {
                               size: 24,
                             )
                           : Icon(
-                              Icons.lock_outline,
+                              AppIcons.lockOutline,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                               size: 20,
                             ),
@@ -234,7 +235,7 @@ class LevelInfoModal extends ConsumerWidget {
                             child: Row(
                               children: [
                                 Icon(
-                                  isUnlocked ? Icons.check_circle : Icons.circle_outlined,
+                                  isUnlocked ? AppIcons.complete : Icons.circle_outlined,
                                   size: 16,
                                   color: isUnlocked
                                     ? Colors.green
@@ -292,11 +293,11 @@ class LevelInfoModal extends ConsumerWidget {
   }
   
   IconData _getLevelIcon(int level) {
-    if (level <= 2) return Icons.fitness_center;
-    if (level <= 4) return Icons.trending_up;
-    if (level <= 6) return Icons.star;
-    if (level <= 8) return Icons.emoji_events;
-    return Icons.diamond;
+    if (level <= 2) return AppIcons.workout;
+    if (level <= 4) return AppIcons.trendUp;
+    if (level <= 6) return AppIcons.star;
+    if (level <= 8) return AppIcons.achievement;
+    return AppIcons.diamond;
   }
   
   String _getLevelName(int level, AppLocalizations l10n) {

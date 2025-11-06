@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/notifications/presentation/providers
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class NotificationHub extends ConsumerWidget {
   const NotificationHub({super.key});
@@ -35,7 +36,7 @@ class NotificationHub extends ConsumerWidget {
               onTap: () => _showNotificationPanel(context, ref),
               borderRadius: BorderRadius.circular(22),
               child: const Icon(
-                Icons.notifications_outlined,
+                AppIcons.notificationsOutlined,
                 color: Colors.white,
                 size: 22,
               ),
@@ -118,7 +119,7 @@ class NotificationPanel extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.notifications,
+                  AppIcons.notifications,
                   color: Theme.of(context).colorScheme.primary,
                   size: 24,
                 ),
@@ -229,7 +230,7 @@ class NotificationPanel extends ConsumerWidget {
               const Spacer(),
               if (user != null)
                 Icon(
-                  Icons.verified_user,
+                  AppIcons.verifiedUser,
                   size: 16,
                   color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
                 ),
@@ -285,7 +286,7 @@ class NotificationPanel extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
-                      Icons.trending_up,
+                      AppIcons.trendUp,
                       size: 14,
                       color: Colors.green,
                     ),
@@ -336,7 +337,7 @@ class NotificationPanel extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.notifications_none,
+            AppIcons.notificationsNone,
             size: 64,
             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
           ),
@@ -399,7 +400,7 @@ class NotificationTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: const Icon(
-          Icons.delete,
+          AppIcons.delete,
           color: Colors.white,
         ),
       ),
@@ -478,7 +479,7 @@ class NotificationTile extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                Icons.arrow_forward,
+                                AppIcons.forward,
                                 size: 14,
                                 color: Theme.of(context).colorScheme.primary,
                               ),

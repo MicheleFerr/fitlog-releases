@@ -33,6 +33,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen di riepilogo workout completato
 class WorkoutCompletionSummaryScreen extends ConsumerWidget {
@@ -100,7 +101,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
             children: [
               // 🎉 Success Icon
               Icon(
-                Icons.check_circle,
+                AppIcons.complete,
                 size: 80,
                 color: context.colors.primary,
               ),
@@ -134,7 +135,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                     children: [
                       // Durata
                       _StatCard(
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timerOffOutlined,
                         label: context.l10n.duration,
                         value: durationText,
                         color: context.colors.primary,
@@ -146,7 +147,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: _StatCard(
-                              icon: Icons.fitness_center,
+                              icon: AppIcons.workout,
                               label: context.l10n.exercises,
                               value: totalExercises.toString(),
                               color: context.colors.secondary,
@@ -155,7 +156,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                           const SizedBox(width: 16),
                           Expanded(
                             child: _StatCard(
-                              icon: Icons.repeat,
+                              icon: AppIcons.repeat,
                               label: context.l10n.totalSets,
                               value: totalSets.toString(),
                               color: context.colors.tertiary,
@@ -167,7 +168,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
 
                       // Volume Totale
                       _StatCard(
-                        icon: Icons.monitor_weight_outlined,
+                        icon: AppIcons.monitorWeightOutlined,
                         label: context.l10n.totalVolume,
                         value: '${totalVolume.toStringAsFixed(0)} kg',
                         color: const Color(0xFF4CAF50), // Verde
@@ -177,7 +178,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                       // RPE Medio (se disponibile)
                       if (averageRpe > 0)
                         _StatCard(
-                          icon: Icons.speed,
+                          icon: AppIcons.speed,
                           label: context.l10n.averageRpe,
                           value: averageRpe.toStringAsFixed(1),
                           color: const Color(0xFFFF9800), // Arancione
@@ -198,7 +199,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                       // TODO: Navigate to workout history detail
                       context.pop();
                     },
-                    icon: const Icon(Icons.analytics_outlined),
+                    icon: const Icon(AppIcons.analyticsOutlined),
                     label: Text(context.l10n.viewDetails),
                   ),
                   const SizedBox(height: 12),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Premium Lock Card
 ///
@@ -25,7 +26,7 @@ class PremiumLockCard extends StatelessWidget {
           context,
           l10n.repContinuum,
           l10n.repContinuumPreview,
-          Icons.analytics_outlined,
+          AppIcons.analyticsOutlined,
         ),
         const SizedBox(height: 16),
 
@@ -33,7 +34,7 @@ class PremiumLockCard extends StatelessWidget {
           context,
           l10n.volumeLandmarks,
           l10n.volumeLandmarksPreview,
-          Icons.show_chart,
+          AppIcons.lineChart,
         ),
         const SizedBox(height: 24),
 
@@ -61,7 +62,7 @@ class PremiumLockCard extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.auto_awesome,
+                AppIcons.autoAwesome,
                 size: 48,
                 color: theme.colorScheme.primary,
               ),
@@ -87,25 +88,25 @@ class PremiumLockCard extends StatelessWidget {
               // Features list
               _buildFeatureItem(
                 context,
-                Icons.analytics,
+                AppIcons.analytics,
                 l10n.repContinuumFeature,
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 context,
-                Icons.timeline,
+                AppIcons.timeline,
                 l10n.volumeLandmarksFeature,
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 context,
-                Icons.speed,
+                AppIcons.speed,
                 l10n.tutVelocityFeature,
               ),
               const SizedBox(height: 12),
               _buildFeatureItem(
                 context,
-                Icons.verified,
+                AppIcons.verified,
                 l10n.dataConfidenceFeature,
               ),
               const SizedBox(height: 24),
@@ -120,7 +121,7 @@ class PremiumLockCard extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.lock_open),
+                icon: const Icon(AppIcons.unlock),
                 label: Text(l10n.unlockPremium),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -202,7 +203,7 @@ class PremiumLockCard extends StatelessWidget {
             ),
             child: Center(
               child: Icon(
-                Icons.lock,
+                AppIcons.lock,
                 size: 48,
                 color: theme.colorScheme.primary.withValues(alpha: 0.5),
               ),
@@ -223,7 +224,7 @@ class PremiumLockCard extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          Icons.check_circle,
+          AppIcons.complete,
           size: 20,
           color: theme.colorScheme.primary,
         ),

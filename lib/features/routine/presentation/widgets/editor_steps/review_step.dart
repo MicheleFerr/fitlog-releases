@@ -87,7 +87,7 @@ class ReviewStep extends ConsumerWidget {
           // Duration
           _buildDetailSection(
             context,
-            icon: Icons.calendar_today,
+            icon: AppIcons.calendar,
             title: 'Duration',
             children: [
               _buildDetailRow(
@@ -140,7 +140,7 @@ class ReviewStep extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.check_circle,
+                  AppIcons.complete,
                   color: context.colors.primary,
                   size: 32,
                 ),
@@ -299,7 +299,7 @@ class ReviewStep extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: context.colors.primary,
                   size: 20,
                 ),
@@ -372,7 +372,7 @@ class ReviewStep extends ConsumerWidget {
                     ),
                     const SizedBox(width: 4),
                     Icon(
-                      isRest ? Icons.bed : Icons.fitness_center,
+                      isRest ? AppIcons.bed : AppIcons.workout,
                       size: 14,
                       color: isRest
                           ? context.colors.secondary

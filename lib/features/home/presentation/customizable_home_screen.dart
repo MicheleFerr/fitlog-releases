@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/data/services/rewarded_ad_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CustomizableHomeScreen extends ConsumerStatefulWidget {
   const CustomizableHomeScreen({super.key});
@@ -186,12 +187,12 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
             actions: [
               if (!isEditing) ...[
                 IconButton(
-                  icon: const Icon(Icons.edit),
+                  icon: const Icon(AppIcons.edit),
                   onPressed: _startEditMode,
                   tooltip: 'Personalizza',
                 ),
                 IconButton(
-                  icon: const Icon(Icons.notifications_outlined),
+                  icon: const Icon(AppIcons.notificationsOutlined),
                   onPressed: () {
                     // Open notifications
                   },
@@ -307,7 +308,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
-                              Icons.flag_circle,
+                              AppIcons.flagCircle,
                               color: Colors.white,
                               size: 32,
                             ),
@@ -337,7 +338,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                             ),
                           ),
                           const Icon(
-                            Icons.arrow_forward_ios,
+                            AppIcons.forwardIos,
                             color: Colors.white,
                             size: 20,
                           ),
@@ -376,7 +377,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
       // floatingActionButton: !isEditing
       //     ? FloatingActionButton.extended(
       //         onPressed: () => context.push('/workout'),
-      //         icon: const Icon(Icons.fitness_center),
+      //         icon: const Icon(AppIcons.workout),
       //         label: Text(AppLocalizations.of(context)!.iniziaAllenamento),
       //       )
       //     : null,
@@ -471,7 +472,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                     width: 40,
                     alignment: Alignment.center,
                     child: Icon(
-                      Icons.drag_indicator,
+                      AppIcons.dragIndicator,
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
@@ -545,7 +546,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                     
                     // Hide button
                     IconButton(
-                      icon: const Icon(Icons.visibility_off),
+                      icon: const Icon(AppIcons.visibilityOff),
                       onPressed: () {
                         ref.read(homeCustomizationProvider.notifier)
                             .toggleWidgetVisibility(widget.id);
@@ -593,7 +594,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.add_circle_outline,
+                AppIcons.addCircleOutline,
                 color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(width: 12),
@@ -634,11 +635,11 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
   IconData _getSizeIcon(WidgetSize size) {
     switch (size) {
       case WidgetSize.small:
-        return Icons.crop_square;
+        return AppIcons.cropSquare;
       case WidgetSize.medium:
         return Icons.crop_16_9;
       case WidgetSize.large:
-        return Icons.crop_portrait;
+        return AppIcons.cropPortrait;
     }
   }
   
@@ -790,7 +791,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
         Row(
           children: [
             const Icon(
-              Icons.workspace_premium,
+              AppIcons.premium,
               color: Colors.white,
               size: 32,
             ),
@@ -836,7 +837,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
           Row(
             children: [
               const Icon(
-                Icons.card_giftcard,
+                AppIcons.gift,
                 color: Colors.white,
                 size: 32,
               ),
@@ -865,7 +866,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                 ),
               ),
               const Icon(
-                Icons.play_circle_filled,
+                AppIcons.playCircleFilled,
                 color: Colors.white,
                 size: 40,
               ),

@@ -19,6 +19,7 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Real-time volume chart showing muscle group breakdown
 class VolumeChartWidget extends ConsumerWidget {
@@ -56,7 +57,7 @@ class VolumeChartWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.pie_chart,
+                  AppIcons.pieChart,
                   color: colorScheme.primary,
                   size: 18,
                 ),

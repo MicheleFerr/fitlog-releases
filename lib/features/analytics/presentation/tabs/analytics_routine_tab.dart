@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_analytics.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tab displaying routine-specific analytics
 class AnalyticsRoutineTab extends ConsumerWidget {
@@ -56,7 +57,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.calendar_today_outlined,
+              AppIcons.calendarTodayOutlined,
               size: 80,
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
             ),
@@ -79,7 +80,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
               onPressed: () {
                 // TODO: Navigate to routine creation
               },
-              icon: const Icon(Icons.add),
+              icon: const Icon(AppIcons.add),
               label: const Text('Create Routine'),
             ),
           ],
@@ -96,7 +97,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 80,
               color: context.colors.error,
             ),
@@ -183,7 +184,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                Icons.calendar_month,
+                AppIcons.calendarMonth,
                 color: context.colors.onPrimaryContainer,
                 size: 28,
               ),
@@ -236,7 +237,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 context,
                 title: 'Adherence',
                 value: '${(metrics.adherenceRate * 100).toStringAsFixed(1)}%',
-                icon: Icons.check_circle,
+                icon: AppIcons.complete,
                 color: _getAdherenceColor(context, metrics.adherenceRate),
                 subtitle: '${metrics.completedDays}/${metrics.totalPlannedDays} days',
               ),
@@ -247,7 +248,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 context,
                 title: 'Skip Rate',
                 value: '${(metrics.skipRate * 100).toStringAsFixed(1)}%',
-                icon: Icons.event_busy,
+                icon: AppIcons.eventBusy,
                 color: _getSkipRateColor(context, metrics.skipRate),
                 subtitle: '${metrics.skippedDays} skipped',
               ),
@@ -262,7 +263,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 context,
                 title: 'Recovery',
                 value: '${(metrics.recoveryRate * 100).toStringAsFixed(1)}%',
-                icon: Icons.replay,
+                icon: AppIcons.replay,
                 color: _getRecoveryColor(context, metrics.recoveryRate),
                 subtitle: '${metrics.recoveredDays} recovered',
               ),
@@ -273,7 +274,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 context,
                 title: 'Avg Gap',
                 value: '${metrics.avgDaysBetweenWorkouts.toStringAsFixed(1)}d',
-                icon: Icons.trending_neutral,
+                icon: AppIcons.trendingNeutral,
                 color: context.colors.secondary,
                 subtitle: 'between workouts',
               ),
@@ -345,7 +346,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
               child: Column(
                 children: [
                   Icon(
-                    Icons.local_fire_department,
+                    AppIcons.streak,
                     color: context.colors.onPrimaryContainer,
                     size: 32,
                   ),
@@ -377,7 +378,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
               child: Column(
                 children: [
                   Icon(
-                    Icons.emoji_events,
+                    AppIcons.achievement,
                     color: context.colors.onSecondaryContainer,
                     size: 32,
                   ),
@@ -492,7 +493,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.pie_chart,
+                  AppIcons.pieChart,
                   color: context.colors.primary,
                   size: 20,
                 ),
@@ -568,7 +569,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.calendar_view_week,
+                  AppIcons.calendarViewWeek,
                   color: context.colors.primary,
                   size: 20,
                 ),
@@ -637,7 +638,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.show_chart,
+                  AppIcons.lineChart,
                   color: context.colors.primary,
                   size: 20,
                 ),

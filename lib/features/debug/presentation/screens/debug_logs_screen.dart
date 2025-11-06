@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/core/utils/persistent_logger.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DebugLogsScreen extends StatefulWidget {
   const DebugLogsScreen({super.key});
@@ -59,7 +60,7 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
         title: const Text('Debug Logs'),
         actions: [
           IconButton(
-            icon: Icon(_autoRefresh ? Icons.pause : Icons.play_arrow),
+            icon: Icon(_autoRefresh ? AppIcons.pause : AppIcons.play),
             onPressed: () {
               setState(() {
                 _autoRefresh = !_autoRefresh;
@@ -67,15 +68,15 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             onPressed: _loadLogs,
           ),
           IconButton(
-            icon: const Icon(Icons.share),
+            icon: const Icon(AppIcons.share),
             onPressed: _shareLogs,
           ),
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: const Icon(AppIcons.delete),
             onPressed: _clearLogs,
           ),
         ],
@@ -116,7 +117,7 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
       //       SnackBar(content: Text(AppLocalizations.of(context)!.logsCopiedToClipboard)),
       //     );
       //   },
-      //   child: const Icon(Icons.copy),
+      //   child: const Icon(AppIcons.iconCopy),
       // ),
     );
   }

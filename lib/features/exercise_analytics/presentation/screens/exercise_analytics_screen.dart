@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Schermata per analizzare le statistiche di singoli esercizi
 class ExerciseAnalyticsScreen extends ConsumerStatefulWidget {
@@ -132,12 +133,12 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(AppIcons.arrowBackIos),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: const Icon(AppIcons.filter),
             onPressed: () => _showFilterOptions(context),
           ),
         ],
@@ -196,13 +197,13 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             decoration: InputDecoration(
               hintText: 'Cerca esercizi o categorie...',
               prefixIcon: Icon(
-                Icons.search,
+                AppIcons.search,
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
                       icon: Icon(
-                        Icons.clear,
+                        AppIcons.clear,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       onPressed: () {
@@ -250,7 +251,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             child: _buildStatCard(
               'Esercizi Tracciati',
               _mockExercises.length.toString(),
-              Icons.fitness_center,
+              AppIcons.workout,
               colorScheme.primary,
             ),
           ),
@@ -259,7 +260,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             child: _buildStatCard(
               'Volume Totale',
               '${_mockExercises.fold<double>(0, (sum, ex) => sum + ex.totalVolume).toInt()}kg',
-              Icons.trending_up,
+              AppIcons.trendUp,
               colorScheme.secondary,
             ),
           ),
@@ -268,7 +269,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             child: _buildStatCard(
               'Sessioni',
               _mockExercises.fold<int>(0, (sum, ex) => sum + ex.sessionsCount).toString(),
-              Icons.history,
+              AppIcons.history,
               colorScheme.tertiary,
             ),
           ),
@@ -319,7 +320,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.search_off,
+              AppIcons.searchOff,
               size: 64,
               color: colorScheme.onSurface.withValues(alpha: 0.3),
             ),
@@ -460,15 +461,15 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
 
     switch (trend) {
       case _Trend.increasing:
-        icon = Icons.trending_up;
+        icon = AppIcons.trendUp;
         color = Colors.green;
         break;
       case _Trend.decreasing:
-        icon = Icons.trending_down;
+        icon = AppIcons.trendDown;
         color = Colors.red;
         break;
       case _Trend.stable:
-        icon = Icons.trending_flat;
+        icon = AppIcons.trendFlat;
         color = colorScheme.onSurface.withValues(alpha: 0.6);
         break;
     }

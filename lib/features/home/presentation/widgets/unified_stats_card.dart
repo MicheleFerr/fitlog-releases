@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class UnifiedStatsCard extends ConsumerStatefulWidget {
 
@@ -127,7 +128,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
-                              Icons.auto_awesome,
+                              AppIcons.autoAwesome,
                               color: Colors.white,
                               size: 20,
                             ),
@@ -257,7 +258,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.bolt,
+                              AppIcons.bolt,
                               color: theme.colorScheme.primary,
                               size: 24,
                             ),
@@ -326,7 +327,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                             Expanded(
                               child: _buildStatItem(
                                 context,
-                                icon: Icons.people,
+                                icon: AppIcons.people,
                                 label: 'Community',
                                 value: '$communityXP XP',
                                 color: Colors.blue,
@@ -336,7 +337,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                             Expanded(
                               child: _buildStatItem(
                                 context,
-                                icon: Icons.emoji_events,
+                                icon: AppIcons.achievement,
                                 label: 'Achievement',
                                 value: '$achievementXP XP',
                                 color: Colors.orange,
@@ -346,7 +347,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                             Expanded(
                               child: _buildStatItem(
                                 context,
-                                icon: Icons.local_fire_department,
+                                icon: AppIcons.streak,
                                 label: 'Streak',
                                 value: '${streakAsync.asData?.value ?? 0}',
                                 color: Colors.red,
@@ -364,7 +365,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                           Row(
                             children: [
                               Icon(
-                                Icons.star,
+                                AppIcons.star,
                                 size: 16,
                                 color: theme.colorScheme.primary,
                               ),
@@ -534,7 +535,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
             alignment: Alignment.center,
             children: [
               Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 size: 40,
                 color: Colors.white.withValues(alpha: 0.3),
               ),
@@ -569,7 +570,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.bolt, color: theme.colorScheme.primary, size: 24),
+            Icon(AppIcons.bolt, color: theme.colorScheme.primary, size: 24),
             const SizedBox(width: 8),
             Text(
               '0 XP',
@@ -620,7 +621,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.people,
+                icon: AppIcons.people,
                 label: 'Community',
                 value: '0 XP',
                 color: Colors.blue,
@@ -630,7 +631,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.emoji_events,
+                icon: AppIcons.achievement,
                 label: 'Achievement',
                 value: '0 XP',
                 color: Colors.orange,
@@ -640,7 +641,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.local_fire_department,
+                icon: AppIcons.streak,
                 label: 'Streak',
                 value: '0',
                 color: Colors.red,
@@ -671,10 +672,10 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
   }
 
   IconData _getLevelIcon(int level) {
-    if (level >= 20) return Icons.diamond;
-    if (level >= 15) return Icons.military_tech;
-    if (level >= 10) return Icons.emoji_events;
-    if (level >= 5) return Icons.star;
-    return Icons.fitness_center;
+    if (level >= 20) return AppIcons.diamond;
+    if (level >= 15) return AppIcons.expert;
+    if (level >= 10) return AppIcons.achievement;
+    if (level >= 5) return AppIcons.star;
+    return AppIcons.workout;
   }
 }

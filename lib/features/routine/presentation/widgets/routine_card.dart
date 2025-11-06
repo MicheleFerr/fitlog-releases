@@ -122,7 +122,7 @@ class RoutineCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.check_circle,
+                        AppIcons.complete,
                         size: 14,
                         color: context.colors.onPrimary,
                       ),
@@ -158,7 +158,7 @@ class RoutineCard extends StatelessWidget {
         color = context.colors.primary;
         break;
       case RoutineType.monthly:
-        icon = Icons.calendar_month;
+        icon = AppIcons.calendarMonth;
         color = context.colors.secondary;
         break;
       case RoutineType.bimonthly:
@@ -197,13 +197,13 @@ class RoutineCard extends StatelessWidget {
       children: [
         _buildInfoChip(
           context,
-          icon: Icons.category,
+          icon: AppIcons.category,
           label: typeLabel,
           color: context.colors.primary,
         ),
         _buildInfoChip(
           context,
-          icon: Icons.access_time,
+          icon: AppIcons.clock,
           label: '$remaining days left',
           color: context.colors.secondary,
         ),
@@ -293,7 +293,7 @@ class RoutineCard extends StatelessWidget {
         Expanded(
           child: _buildStatChip(
             context,
-            icon: Icons.trending_up,
+            icon: AppIcons.trendUp,
             label: 'Adherence',
             value: '${adherence.toInt()}%',
             color: _getAdherenceColor(context, adherence),
@@ -313,7 +313,7 @@ class RoutineCard extends StatelessWidget {
         Expanded(
           child: _buildStatChip(
             context,
-            icon: Icons.check_circle,
+            icon: AppIcons.complete,
             label: 'Completed',
             value: '${routine.completedDays}/${routine.totalWorkoutDays}',
             color: context.colors.success,
@@ -371,7 +371,7 @@ class RoutineCard extends StatelessWidget {
         // View button
         TextButton.icon(
           onPressed: onTap,
-          icon: const Icon(Icons.visibility, size: 16),
+          icon: const Icon(AppIcons.visibility, size: 16),
           label: const Text('View'),
           style: TextButton.styleFrom(
             foregroundColor: context.colors.primary,
@@ -383,7 +383,7 @@ class RoutineCard extends StatelessWidget {
           // Activate button
           ElevatedButton.icon(
             onPressed: onActivate,
-            icon: const Icon(Icons.play_arrow, size: 16),
+            icon: const Icon(AppIcons.play, size: 16),
             label: const Text('Activate'),
             style: ElevatedButton.styleFrom(
               backgroundColor: context.colors.primary,
@@ -429,7 +429,7 @@ class RoutineCard extends StatelessWidget {
             if (onArchive != null)
               ListTile(
                 leading: Icon(
-                  routine.isArchived ? Icons.unarchive : Icons.archive,
+                  routine.isArchived ? Icons.unarchive : AppIcons.archive,
                   color: context.colors.secondary,
                 ),
                 title: Text(
@@ -445,7 +445,7 @@ class RoutineCard extends StatelessWidget {
             if (onDelete != null)
               ListTile(
                 leading: Icon(
-                  Icons.delete,
+                  AppIcons.delete,
                   color: context.colors.error,
                 ),
                 title: Text(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Heatmap calendario stile GitHub contributions per visualizzare
 /// l'intensità e frequenza degli allenamenti
@@ -148,21 +149,21 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _buildStatCard(
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           value: totalWorkouts.toString(),
           label: 'Allenamenti',
           color: theme.colorScheme.primary,
           theme: theme,
         ),
         _buildStatCard(
-          icon: Icons.local_fire_department,
+          icon: AppIcons.streak,
           value: currentStreak.toString(),
           label: 'Streak attuale',
           color: Colors.orange,
           theme: theme,
         ),
         _buildStatCard(
-          icon: Icons.emoji_events,
+          icon: AppIcons.achievement,
           value: longestStreak.toString(),
           label: 'Record',
           color: Colors.amber,
@@ -439,7 +440,7 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
                     ),
                   )
                 : Icon(
-                    Icons.close,
+                    AppIcons.close,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                   ),
           ),
@@ -477,7 +478,7 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.add_circle_outline),
+            icon: const Icon(AppIcons.addCircleOutline),
             onPressed: () {
               // Navigate to add workout for this date
             },

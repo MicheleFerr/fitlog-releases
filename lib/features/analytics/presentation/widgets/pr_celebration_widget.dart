@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget for celebrating personal record achievements
 class PRCelebrationWidget extends ConsumerWidget {
@@ -61,7 +62,7 @@ class PRCelebrationWidget extends ConsumerWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.celebration,
+                    AppIcons.celebration,
                     color: colorScheme.secondary,
                     size: 20,
                   ),
@@ -199,17 +200,17 @@ class PRCelebrationWidget extends ConsumerWidget {
   IconData _getPRIcon(PRType type) {
     switch (type) {
       case PRType.weight:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case PRType.reps:
-        return Icons.repeat;
+        return AppIcons.repeat;
       case PRType.volume:
-        return Icons.trending_up;
+        return AppIcons.trendUp;
       case PRType.oneRM:
-        return Icons.stars;
+        return AppIcons.stars;
       case PRType.totalSets:
-        return Icons.format_list_numbered;
+        return AppIcons.formatListNumbered;
       case PRType.duration:
-        return Icons.timer;
+        return AppIcons.timer;
     }
   }
 
@@ -280,7 +281,7 @@ class PRCelebrationDialog extends ConsumerWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.celebration,
+                  AppIcons.celebration,
                   color: colorScheme.onSecondary,
                   size: 40,
                 ),
@@ -343,7 +344,7 @@ class PRCelebrationDialog extends ConsumerWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.share, size: 16),
+                          const Icon(AppIcons.share, size: 16),
                           const SizedBox(width: 8),
                           Text(l10n.share),
                         ],
@@ -532,7 +533,7 @@ class _FloatingPRNotificationState extends ConsumerState<FloatingPRNotification>
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.celebration,
+                  AppIcons.celebration,
                   color: colorScheme.onSecondary,
                   size: 20,
                 ),
@@ -565,7 +566,7 @@ class _FloatingPRNotificationState extends ConsumerState<FloatingPRNotification>
               IconButton(
                 onPressed: _dismiss,
                 icon: Icon(
-                  Icons.close,
+                  AppIcons.close,
                   color: colorScheme.onSecondaryContainer,
                 ),
                 constraints: const BoxConstraints(minWidth: 32, minHeight: 32),

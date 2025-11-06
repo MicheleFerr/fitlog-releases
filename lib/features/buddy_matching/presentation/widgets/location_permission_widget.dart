@@ -17,6 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/data/services/location_service.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class LocationPermissionWidget extends ConsumerStatefulWidget {
 
@@ -111,7 +112,7 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
             Row(
               children: [
                 Icon(
-                  Icons.location_on,
+                  AppIcons.location,
                   color: theme.colorScheme.primary,
                   size: 24,
                 ),
@@ -211,7 +212,7 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.gps_fixed,
+                            AppIcons.gpsFixed,
                             size: 12,
                             color: theme.colorScheme.primary,
                           ),
@@ -245,7 +246,7 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
                       ),
                     )
                   : Icon(
-                      Icons.my_location,
+                      AppIcons.myLocation,
                       color: theme.colorScheme.primary,
                       size: 20,
                     ),

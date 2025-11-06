@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// ⚠️ DEPRECATED: Use SupersetSequentialExecutionSheet instead
 ///
@@ -171,7 +172,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
               child: Row(
                 children: [
                   Icon(
-                    Icons.repeat,
+                    AppIcons.repeat,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                   const SizedBox(width: 12),
@@ -195,7 +196,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                   const Spacer(),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
+                    icon: const Icon(AppIcons.close),
                   ),
                 ],
               ),
@@ -244,7 +245,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                 child: Center(
                                   child: isCompleted
                                     ? Icon(
-                                        Icons.check,
+                                        AppIcons.check,
                                         size: 18,
                                         color: Theme.of(context).colorScheme.onSecondary,
                                       )
@@ -379,7 +380,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                 });
                                 HapticFeedback.lightImpact();
                               },
-                              icon: Icon(isCompleted ? Icons.check : Icons.fitness_center),
+                              icon: Icon(isCompleted ? AppIcons.check : AppIcons.workout),
                               label: Text(isCompleted ? 'Completato' : 'Completa Esercizio'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: isCompleted 
@@ -438,7 +439,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                       widget.onComplete(_actualReps, _rpes, _weights);
                       Navigator.pop(context);
                     } : null,
-                    icon: const Icon(Icons.check_circle),
+                    icon: const Icon(AppIcons.complete),
                     label: const Text('Completa Superset'),
                   ),
                 ],

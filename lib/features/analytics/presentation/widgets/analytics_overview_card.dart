@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsOverviewCard extends StatelessWidget {
 
@@ -21,7 +22,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.dashboard,
+                  AppIcons.dashboard,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),

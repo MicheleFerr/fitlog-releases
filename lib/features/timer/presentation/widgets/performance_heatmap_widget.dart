@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// TIER-1 Performance Heatmap Widget
 /// Visualizes performance data as an interactive heatmap with drill-down capabilities
@@ -393,7 +394,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
                   theme,
                   l10n.sets,
                   selectedCell.setCount.toString(),
-                  Icons.fitness_center,
+                  AppIcons.workout,
                 ),
               ),
               Expanded(
@@ -409,7 +410,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
                   theme,
                   l10n.quality,
                   '${(selectedCell.qualityScore * 100).toInt()}%',
-                  Icons.star,
+                  AppIcons.star,
                 ),
               ),
             ],
@@ -452,7 +453,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         child: Column(
           children: [
             Icon(
-              Icons.grid_view,
+              AppIcons.gridView,
               size: 64,
               color: theme.colorScheme.onSurface.withOpacity(0.3),
             ),
@@ -502,15 +503,15 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
   IconData _getMetricIcon(HeatmapMetric metric) {
     switch (metric) {
       case HeatmapMetric.executionTime:
-        return Icons.timer;
+        return AppIcons.timer;
       case HeatmapMetric.formScore:
-        return Icons.star;
+        return AppIcons.star;
       case HeatmapMetric.fatigueIndex:
-        return Icons.battery_alert;
+        return AppIcons.batteryAlert;
       case HeatmapMetric.velocity:
-        return Icons.speed;
+        return AppIcons.speed;
       case HeatmapMetric.consistency:
-        return Icons.trending_up;
+        return AppIcons.trendUp;
     }
   }
 

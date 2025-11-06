@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SmartSuggestionChip extends StatefulWidget {
   
@@ -202,7 +203,7 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                       ),
                       const SizedBox(width: 4),
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.info,
                         size: 16,
                         color: widget.isMinimal
                           ? theme.colorScheme.primary.withOpacity(0.7)

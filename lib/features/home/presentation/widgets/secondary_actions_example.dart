@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/secondary_actions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Example integration in a home screen
 class HomeScreenWithSecondaryActions extends ConsumerWidget {
@@ -64,7 +65,7 @@ class _SecondaryActionsThemePreviewState extends State<SecondaryActionsThemePrev
           actions: [
             IconButton(
               onPressed: () => setState(() => isDarkMode = !isDarkMode),
-              icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
+              icon: Icon(isDarkMode ? AppIcons.lightMode : AppIcons.darkMode),
             ),
           ],
         ),

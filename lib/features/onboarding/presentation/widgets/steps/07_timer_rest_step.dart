@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TimerRestStep extends StatefulWidget {
 
@@ -102,7 +103,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.timer_outlined,
+            AppIcons.timerOffOutlined,
             size: 80,
             color: colorScheme.primary,
           ),
@@ -130,7 +131,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
           if (!_showDemo) ...[
             FilledButton.icon(
               onPressed: _startDemo,
-              icon: const Icon(Icons.play_arrow),
+              icon: const Icon(AppIcons.play),
               label: Text(l10n.onboardingTryItOut),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -201,7 +202,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
                     if (!_timerRunning && !_isCompleted) ...[
                       FilledButton.icon(
                         onPressed: _startTimer,
-                        icon: const Icon(Icons.play_arrow),
+                        icon: const Icon(AppIcons.play),
                         label: Text(
                           Localizations.localeOf(context).languageCode == 'it'
                               ? 'Avvia Timer Riposo'
@@ -226,7 +227,7 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: colorScheme.primary,
                             size: 20,
                           ),
@@ -304,7 +305,7 @@ class _MockTimerOverlay extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isCompleted ? Icons.check_circle : Icons.timer,
+            isCompleted ? AppIcons.complete : AppIcons.timer,
             size: 16,
             color: isCompleted ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
           ),
@@ -319,7 +320,7 @@ class _MockTimerOverlay extends StatelessWidget {
           if (!isCompleted) ...[
             const SizedBox(width: 6),
             Icon(
-              Icons.pause,
+              AppIcons.pause,
               size: 12,
               color: colorScheme.onSurfaceVariant,
             ),

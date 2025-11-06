@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RecentWorkoutsCard extends StatelessWidget {
 
@@ -28,7 +29,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.history,
+                      AppIcons.history,
                       color: context.colors.secondary,
                     ),
                     const SizedBox(width: 8),
@@ -119,7 +120,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 color: context.colors.primary,
                 size: 20,
               ),
@@ -237,7 +238,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                               IconButton(
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
-                                  Icons.close,
+                                  AppIcons.close,
                                   color: context.colors.onSurface.withOpacity(0.6),
                                 ),
                               ),
@@ -351,12 +352,12 @@ class RecentWorkoutsCard extends StatelessWidget {
                       activity.exerciseImage!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         color: context.colors.primary,
                       ),
                     )
                   : Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       color: context.colors.primary,
                     ),
             ),

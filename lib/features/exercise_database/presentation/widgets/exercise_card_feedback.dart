@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget button per segnalare problemi su esercizi
 class ExerciseFeedbackButton extends ConsumerStatefulWidget {
@@ -204,7 +205,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.send),
+                  : const Icon(AppIcons.send),
               label: const Text('Invia'),
             ),
           ],
@@ -235,7 +236,7 @@ class _ExerciseFeedbackButtonState
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.flag_outlined),
+      icon: const Icon(AppIcons.flagOutlined),
       tooltip: context.l10n.reportExerciseIssue,
       onPressed: _showFeedbackDialog,
     );
@@ -371,7 +372,7 @@ class _ExerciseFeedbackButtonState
                       ),
                     ),
                   )
-                : const Icon(Icons.send),
+                : const Icon(AppIcons.send),
             label: Text(context.l10n.sendFeedback),
           ),
         ],

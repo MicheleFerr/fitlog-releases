@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
 
@@ -347,7 +348,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           Row(
             children: [
               Icon(
-                widget.isSuperset ? Icons.fitness_center : Icons.edit_note_rounded,
+                widget.isSuperset ? AppIcons.workout : AppIcons.editNoteRounded,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
@@ -367,7 +368,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               if (widget.previousSet != null && !widget.isSuperset)
                 TextButton.icon(
                   onPressed: _copyFromPreviousSet,
-                  icon: const Icon(Icons.content_copy_rounded, size: 16),
+                  icon: const Icon(AppIcons.contentCopyRounded, size: 16),
                   label: Text(AppLocalizations.of(context).copy, style: const TextStyle(fontSize: 12)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -438,7 +439,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       children: [
         Row(
           children: [
-            Icon(Icons.fitness_center, size: 14, color: theme.colorScheme.primary),
+            Icon(AppIcons.workout, size: 14, color: theme.colorScheme.primary),
             const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context).weightKg.replaceAll('kg', measurementUnit),
@@ -450,7 +451,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             const Spacer(),
             IconButton(
               icon: Icon(
-                _isManualWeightEntry ? Icons.dialpad : Icons.keyboard,
+                _isManualWeightEntry ? Icons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {
@@ -533,7 +534,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       IconButton(
                         onPressed: _confirmManualWeight,
                         icon: Icon(
-                          Icons.check_circle,
+                          AppIcons.complete,
                           color: theme.colorScheme.primary,
                         ),
                         padding: const EdgeInsets.all(4),
@@ -593,7 +594,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       children: [
         Row(
           children: [
-            Icon(Icons.repeat, size: 14, color: theme.colorScheme.secondary),
+            Icon(AppIcons.repeat, size: 14, color: theme.colorScheme.secondary),
             const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context).reps,
@@ -605,7 +606,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             const Spacer(),
             IconButton(
               icon: Icon(
-                _isManualRepsEntry ? Icons.dialpad : Icons.keyboard,
+                _isManualRepsEntry ? Icons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {
@@ -682,7 +683,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       IconButton(
                         onPressed: _confirmManualReps,
                         icon: Icon(
-                          Icons.check_circle,
+                          AppIcons.complete,
                           color: theme.colorScheme.secondary,
                         ),
                         padding: const EdgeInsets.all(4),
@@ -758,7 +759,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 Row(
                   children: [
                     Icon(
-                      Icons.history,
+                      AppIcons.history,
                       size: 14,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -987,7 +988,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                Icons.calculate_rounded,
+                AppIcons.calculateRounded,
                 size: 16,
                 color: hasWeight 
                   ? theme.colorScheme.onSecondary 
@@ -1075,7 +1076,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Expanded(
           child: OutlinedButton.icon(
             onPressed: _cancel,
-            icon: const Icon(Icons.close_rounded, size: 18),
+            icon: const Icon(AppIcons.closeRounded, size: 18),
             label: Text(AppLocalizations.of(context).cancel),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1091,7 +1092,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           flex: 2,
           child: FilledButton.icon(
             onPressed: _save,
-            icon: const Icon(Icons.check_rounded, size: 18),
+            icon: const Icon(AppIcons.checkRounded, size: 18),
             label: Text(AppLocalizations.of(context).save),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1252,7 +1253,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: _isWeightAppliedToAll
             ? FilledButton.icon(
                 onPressed: _applyWeightToAll,
-                icon: const Icon(Icons.fitness_center, size: 16),
+                icon: const Icon(AppIcons.workout, size: 16),
                 label: const Text('Weight to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1262,7 +1263,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               )
             : OutlinedButton.icon(
                 onPressed: _applyWeightToAll,
-                icon: const Icon(Icons.fitness_center, size: 16),
+                icon: const Icon(AppIcons.workout, size: 16),
                 label: const Text('Weight to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1279,7 +1280,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: _isRepsAppliedToAll
             ? FilledButton.icon(
                 onPressed: _applyRepsToAll,
-                icon: const Icon(Icons.repeat, size: 16),
+                icon: const Icon(AppIcons.repeat, size: 16),
                 label: const Text('Reps to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1289,7 +1290,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               )
             : OutlinedButton.icon(
                 onPressed: _applyRepsToAll,
-                icon: const Icon(Icons.repeat, size: 16),
+                icon: const Icon(AppIcons.repeat, size: 16),
                 label: const Text('Reps to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1457,7 +1458,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 Row(
                   children: [
                     Icon(
-                      Icons.calculate_rounded,
+                      AppIcons.calculateRounded,
                       color: theme.colorScheme.secondary,
                       size: 24,
                     ),
@@ -1470,7 +1471,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     ),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],

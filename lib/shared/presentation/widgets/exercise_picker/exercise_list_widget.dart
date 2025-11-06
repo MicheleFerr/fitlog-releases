@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget base che mostra una lista di esercizi filtrabili
 /// Usato come componente riutilizzabile da vari picker
@@ -150,9 +151,9 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
         ),
         trailing: widget.config.strategy.showSelectionIndicator
             ? (isSelected
-                ? Icon(Icons.check_circle,
+                ? Icon(AppIcons.complete,
                     color: Theme.of(context).colorScheme.primary)
-                : const Icon(Icons.radio_button_unchecked))
+                : const Icon(AppIcons.radioButtonUnchecked))
             : null,
         onTap: () => widget.config.strategy.onExerciseTap(context, exercise),
       ),
@@ -163,7 +164,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
     if (isSelected && widget.config.strategy.showSelectionIndicator) {
       return CircleAvatar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.check, color: Colors.white),
+        child: const Icon(AppIcons.check, color: Colors.white),
       );
     }
 
@@ -230,7 +231,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.search_off,
+            AppIcons.searchOff,
             size: 64,
             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
           ),

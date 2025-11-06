@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/compa
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/memoized_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsOverviewTab extends ConsumerStatefulWidget {
 
@@ -67,7 +68,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             title: _getPeriodTitle(context, _selectedPeriod),
             value: '${stats.totalWorkouts}',
             subtitle: '${stats.totalVolume.round()} kg total volume',
-            icon: Icons.fitness_center,
+            icon: AppIcons.workout,
             gradientColors: [
               theme.colorScheme.primary,
               theme.colorScheme.primary.withValues(alpha: 0.7),
@@ -90,7 +91,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               CompactStatCard(
                 value: '${stats.totalWorkouts}',
                 label: l10n.totalWorkouts,
-                icon: Icons.calendar_today,
+                icon: AppIcons.calendar,
                 color: Colors.blue,
                 subtitle: _getPeriodSubtitle(context, _selectedPeriod),
                 trend: _buildTrend(stats.workoutTrend),
@@ -100,7 +101,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               CompactStatCard(
                 value: _formatVolume(stats.totalVolume),
                 label: l10n.totalVolume,
-                icon: Icons.fitness_center,
+                icon: AppIcons.workout,
                 color: Colors.orange,
                 subtitle: _getPeriodSubtitle(context, _selectedPeriod),
                 trend: _buildTrend(stats.volumeTrend),
@@ -110,7 +111,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               CompactStatCard(
                 value: '${stats.currentStreak}',
                 label: l10n.dayStreak,
-                icon: Icons.local_fire_department,
+                icon: AppIcons.streak,
                 color: Colors.red,
                 subtitle: stats.currentStreak > 0 ? l10n.keepItUp : l10n.startToday,
                 tooltipTitle: l10n.dayStreak,
@@ -119,7 +120,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               CompactStatCard(
                 value: '${stats.consistency}%',
                 label: l10n.consistency,
-                icon: Icons.insights,
+                icon: AppIcons.insights,
                 color: Colors.green,
                 subtitle: l10n.last30Days,
                 tooltipTitle: l10n.consistency,
@@ -212,7 +213,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             child: Column(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   size: 48,
                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
@@ -329,7 +330,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             onPressed: () {
               Navigator.pushNamed(context, '/workout');
             },
-            icon: const Icon(Icons.add),
+            icon: const Icon(AppIcons.add),
             label: Text(l10n.startWorkout),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -345,7 +346,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             onPressed: () {
               // Navigate to detailed stats
             },
-            icon: const Icon(Icons.bar_chart),
+            icon: const Icon(AppIcons.barChart),
             label: Text(l10n.viewStats),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -361,7 +362,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   
   Widget _buildTrend(double value) {
     final color = value > 0 ? Colors.green : value < 0 ? Colors.red : Colors.grey;
-    final icon = value > 0 ? Icons.trending_up : value < 0 ? Icons.trending_down : Icons.remove;
+    final icon = value > 0 ? AppIcons.trendUp : value < 0 ? AppIcons.trendDown : AppIcons.remove;
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -853,7 +854,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                     ),
                   ],
                 ),
@@ -934,7 +935,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.fitness_center,
+                                  AppIcons.workout,
                                   size: 48,
                                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                                 ),
@@ -1025,9 +1026,9 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
               spacing: 12,
               runSpacing: 8,
               children: [
-                _buildStatChip(Icons.fitness_center, l10n.exercisesCount(stats.exercises.length), theme),
-                _buildStatChip(Icons.format_list_numbered, l10n.setsCount(stats.totalSets), theme),
-                _buildStatChip(Icons.monitor_weight, '${stats.totalVolume.toStringAsFixed(0)} kg', theme),
+                _buildStatChip(AppIcons.workout, l10n.exercisesCount(stats.exercises.length), theme),
+                _buildStatChip(AppIcons.formatListNumbered, l10n.setsCount(stats.totalSets), theme),
+                _buildStatChip(AppIcons.weight, '${stats.totalVolume.toStringAsFixed(0)} kg', theme),
               ],
             ),
             if (stats.exercises.isNotEmpty) ...[
@@ -1058,7 +1059,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           leading: Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             color: theme.colorScheme.primary,
           ),
           title: Text(
@@ -1173,7 +1174,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                 Row(
                                   children: [
                                     Icon(
-                                      Icons.fitness_center,
+                                      AppIcons.workout,
                                       size: 16,
                                       color: theme.colorScheme.onSurfaceVariant,
                                     ),
@@ -1186,7 +1187,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                     ),
                                     const SizedBox(width: 8),
                                     Icon(
-                                      Icons.repeat,
+                                      AppIcons.repeat,
                                       size: 16,
                                       color: theme.colorScheme.onSurfaceVariant,
                                     ),
@@ -1220,7 +1221,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Icon(
-                                            Icons.speed,
+                                            AppIcons.speed,
                                             size: 12,
                                             color: theme.colorScheme.onSecondaryContainer,
                                           ),
@@ -1257,17 +1258,17 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildSummaryItem(
-                        Icons.format_list_numbered,
+                        AppIcons.formatListNumbered,
                         AppLocalizations.of(context).setsCount(activity.sets.length),
                         theme,
                       ),
                       _buildSummaryItem(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         AppLocalizations.of(context).kgMax(_getMaxWeight(activity).toStringAsFixed(0)),
                         theme,
                       ),
                       _buildSummaryItem(
-                        Icons.repeat,
+                        AppIcons.repeat,
                         AppLocalizations.of(context).repsCount(_getTotalReps(activity)),
                         theme,
                       ),

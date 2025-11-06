@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Extension for easy modal showing
 extension UnifiedSetInputModalExtension on BuildContext {
@@ -547,7 +548,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          widget.isSuperset ? Icons.repeat : Icons.fitness_center,
+                                          widget.isSuperset ? AppIcons.repeat : AppIcons.workout,
                                           size: 16,
                                           color: colorScheme.onPrimaryContainer,
                                         ),
@@ -588,8 +589,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             },
                                             icon: Icon(
                                               _isCompleted 
-                                                ? Icons.check_circle 
-                                                : Icons.radio_button_unchecked,
+                                                ? AppIcons.complete 
+                                                : AppIcons.radioButtonUnchecked,
                                               color: _isCompleted 
                                                 ? colorScheme.tertiary 
                                                 : colorScheme.outline,
@@ -649,7 +650,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             children: [
                                               if (isCompleted) ...[
                                                 Icon(
-                                                  Icons.check_circle,
+                                                  AppIcons.complete,
                                                   size: 16,
                                                   color: colorScheme.tertiary,
                                                 ),
@@ -695,7 +696,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.content_copy,
+                                      AppIcons.copy,
                                       size: 16,
                                       color: colorScheme.secondary,
                                     ),
@@ -727,7 +728,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     Row(
                                       children: [
                                         Icon(
-                                          Icons.history,
+                                          AppIcons.history,
                                           size: 14,
                                           color: colorScheme.onSurfaceVariant,
                                         ),
@@ -815,7 +816,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          Icons.fitness_center,
+                                          AppIcons.workout,
                                           size: 18,
                                           color: colorScheme.primary,
                                         ),
@@ -958,7 +959,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          Icons.repeat,
+                                          AppIcons.repeat,
                                           size: 18,
                                           color: colorScheme.secondary,
                                         ),
@@ -1110,7 +1111,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                 Row(
                                   children: [
                                     Icon(
-                                      Icons.speed,
+                                      AppIcons.speed,
                                       size: 18,
                                       color: colorScheme.tertiary,
                                     ),
@@ -1211,7 +1212,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     child: Row(
                                       children: [
                                         Icon(
-                                          Icons.info_outline,
+                                          AppIcons.info,
                                           size: 16,
                                           color: colorScheme.primary,
                                         ),
@@ -1248,7 +1249,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.calculate,
+                                AppIcons.calculate,
                                 size: 16,
                                 color: colorScheme.tertiary,
                               ),
@@ -1295,8 +1296,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                   children: [
                                     Icon(
                                       _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                        ? Icons.trending_up
-                                        : Icons.trending_down,
+                                        ? AppIcons.trendUp
+                                        : AppIcons.trendDown,
                                       color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
                                         ? Colors.orange
                                         : Colors.green,
@@ -1337,7 +1338,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         style: theme.textTheme.bodySmall,
                                       ),
                                     ),
-                                    Icon(Icons.arrow_forward, size: 16, color: colorScheme.onSurfaceVariant),
+                                    Icon(AppIcons.forward, size: 16, color: colorScheme.onSurfaceVariant),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
@@ -1378,7 +1379,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         HapticFeedback.mediumImpact();
                                         Navigator.of(context).pop();
                                       },
-                                      icon: const Icon(Icons.check, size: 18),
+                                      icon: const Icon(AppIcons.check, size: 18),
                                       label: Text(l10n.accept),
                                       style: FilledButton.styleFrom(
                                         backgroundColor: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
@@ -1435,7 +1436,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        _isCompleted ? Icons.check_circle : Icons.save,
+                                        _isCompleted ? AppIcons.complete : AppIcons.save,
                                         size: 20,
                                       ),
                                       const SizedBox(width: 8),

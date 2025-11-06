@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_list_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal semplificato per quick pick di esercizi
 /// Usato in Community per "Contribuisci"
@@ -84,7 +85,7 @@ class _QuickExercisePickerState extends ConsumerState<QuickExercisePicker> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                 ),
               ],
             ),
@@ -99,10 +100,10 @@ class _QuickExercisePickerState extends ConsumerState<QuickExercisePicker> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: l10n.searchExercisesHint,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(AppIcons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear),
+                        icon: const Icon(AppIcons.clear),
                         onPressed: () {
                           _searchController.clear();
                           setState(() => _searchQuery = '');
@@ -142,7 +143,7 @@ class _QuickExercisePickerState extends ConsumerState<QuickExercisePicker> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(AppIcons.error, size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     Text('${l10n.errorLoadingData}: $error'),
                     const SizedBox(height: 16),

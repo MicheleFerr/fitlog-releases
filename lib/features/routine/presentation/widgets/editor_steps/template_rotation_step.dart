@@ -49,7 +49,7 @@ class TemplateRotationStep extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.info_outline,
+                AppIcons.info,
                 size: 64,
                 color: context.colors.primary.withValues(alpha: 0.5),
               ),
@@ -141,7 +141,7 @@ class TemplateRotationStep extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 color: context.colors.primary,
                 size: 20,
               ),
@@ -234,7 +234,7 @@ class TemplateRotationStep extends ConsumerWidget {
         ),
         trailing: IconButton(
           icon: Icon(
-            Icons.close,
+            AppIcons.close,
             color: context.colors.error,
           ),
           onPressed: () {
@@ -300,7 +300,7 @@ class TemplateRotationStep extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                Icons.preview,
+                AppIcons.preview,
                 color: context.colors.primary,
                 size: 20,
               ),
@@ -372,7 +372,7 @@ class TemplateRotationStep extends ConsumerWidget {
                         ? Row(
                             children: [
                               Icon(
-                                Icons.bed,
+                                AppIcons.bed,
                                 size: 16,
                                 color: context.colors.secondary,
                               ),
@@ -389,7 +389,7 @@ class TemplateRotationStep extends ConsumerWidget {
                         : Row(
                             children: [
                               Icon(
-                                Icons.fitness_center,
+                                AppIcons.workout,
                                 size: 16,
                                 color: context.colors.primary,
                               ),

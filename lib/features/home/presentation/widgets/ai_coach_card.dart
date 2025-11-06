@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_servic
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// AI Coach card with modern design and animations
 class AICoachCard extends ConsumerStatefulWidget {
@@ -182,7 +183,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
             ],
           ),
           child: Icon(
-            Icons.psychology,
+            AppIcons.ai,
             color: colorScheme.onPrimary,
             size: 24,
           ),
@@ -195,7 +196,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
               Row(
                 children: [
                   Icon(
-                    Icons.auto_awesome,
+                    AppIcons.autoAwesome,
                     size: 20,
                     color: colorScheme.primary,
                   ),
@@ -252,7 +253,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
       child: Row(
         children: [
           Icon(
-            Icons.lightbulb_outline,
+            AppIcons.tip,
             color: colorScheme.tertiary,
             size: 20,
           ),
@@ -293,7 +294,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
       children: [
         Expanded(
           child: _StaticAIInsight(
-            icon: Icons.trending_up,
+            icon: AppIcons.trendUp,
             value: quickStatsAsync.asData?.value?.formattedVolumeIncrease ?? '--',
             label: l10n.volume,
             color: colorScheme.primary,
@@ -302,7 +303,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
         const SizedBox(width: 12),
         Expanded(
           child: _StaticAIInsight(
-            icon: Icons.track_changes,
+            icon: AppIcons.trackChanges,
             value: frequencyAsync.asData != null
                 ? '${_calculateConsistency(frequencyAsync.asData!.value)}%'
                 : '--',
@@ -313,7 +314,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
         const SizedBox(width: 12),
         Expanded(
           child: _StaticAIInsight(
-            icon: Icons.local_fire_department,
+            icon: AppIcons.streak,
             value: '${streakAsync.asData?.value ?? 0}',
             label: l10n.streak,
             color: colorScheme.tertiary,
@@ -329,7 +330,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          Icons.touch_app,
+          AppIcons.touchApp,
           size: 16,
           color: colorScheme.outline,
         ),
@@ -469,13 +470,13 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
   IconData _getSeverityIcon(InsightSeverity severity) {
     switch (severity) {
       case InsightSeverity.critical:
-        return Icons.error;
+        return AppIcons.error;
       case InsightSeverity.warning:
-        return Icons.warning_amber;
+        return AppIcons.warningAmber;
       case InsightSeverity.info:
-        return Icons.info;
+        return AppIcons.infoIcon;
       case InsightSeverity.success:
-        return Icons.check_circle;
+        return AppIcons.complete;
     }
   }
 
@@ -523,7 +524,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             child: Row(
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.ai,
                   color: colorScheme.primary,
                   size: 28,
                 ),
@@ -546,7 +547,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     );
                   },
                   icon: Icon(
-                    Icons.history,
+                    AppIcons.history,
                     color: colorScheme.primary,
                   ),
                   tooltip: l10n.viewMyFeedback,
@@ -575,7 +576,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.analytics_outlined,
+            AppIcons.analyticsOutlined,
             size: 64,
             color: colorScheme.outline.withValues(alpha: 0.6),
           ),
@@ -611,7 +612,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.info,
                         color: colorScheme.error,
                         size: 18,
                       ),
@@ -626,7 +627,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                         ),
                       ),
                       Icon(
-                        Icons.close,
+                        AppIcons.close,
                         size: 16,
                         color: colorScheme.onSurface.withValues(alpha: 0.4),
                       ),
@@ -656,28 +657,28 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     IconData icon;
     switch (insight.type.toString()) {
       case 'InsightType.muscleGroupBalance':
-        icon = Icons.balance;
+        icon = AppIcons.balance;
         break;
       case 'InsightType.progressOverload':
-        icon = Icons.trending_up;
+        icon = AppIcons.trendUp;
         break;
       case 'InsightType.recoveryPattern':
-        icon = Icons.bedtime;
+        icon = AppIcons.bedtime;
         break;
       case 'InsightType.volumeOptimization':
-        icon = Icons.tune;
+        icon = AppIcons.tune;
         break;
       case 'InsightType.frequencyRecommendation':
-        icon = Icons.schedule;
+        icon = AppIcons.schedule;
         break;
       case 'InsightType.plateauBreaker':
-        icon = Icons.trending_flat;
+        icon = AppIcons.trendFlat;
         break;
       case 'InsightType.formWarning':
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         break;
       case 'InsightType.motivational':
-        icon = Icons.celebration;
+        icon = AppIcons.celebration;
         break;
       default:
         icon = severityIcon; // Fallback to severity icon
@@ -748,7 +749,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
-                      Icons.warning_amber,
+                      AppIcons.warningAmber,
                       size: 12,
                       color: Colors.black87,
                     ),
@@ -780,7 +781,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.recommend, size: 16, color: cardColor),
+                      Icon(AppIcons.recommend, size: 16, color: cardColor),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -802,7 +803,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   const SizedBox(height: 16),
                   _ExpandableSubsection(
                     title: l10n.whyThisMatters,
-                    icon: Icons.analytics,
+                    icon: AppIcons.analytics,
                     iconColor: cardColor,
                     theme: theme,
                     colorScheme: colorScheme,
@@ -821,7 +822,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   const SizedBox(height: 12),
                   _ExpandableSubsection(
                     title: l10n.yourData,
-                    icon: Icons.bar_chart,
+                    icon: AppIcons.barChart,
                     iconColor: cardColor,
                     theme: theme,
                     colorScheme: colorScheme,
@@ -833,7 +834,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Row(
                           children: [
-                            Icon(Icons.fiber_manual_record, size: 8, color: cardColor),
+                            Icon(AppIcons.fiberManualRecord, size: 8, color: cardColor),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -856,7 +857,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   const SizedBox(height: 12),
                   _ExpandableSubsection(
                     title: '🎯 ${l10n.evidenceBasedSolutions}',
-                    icon: Icons.psychology,
+                    icon: AppIcons.ai,
                     iconColor: cardColor,
                     theme: theme,
                     colorScheme: colorScheme,
@@ -880,7 +881,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 const SizedBox(height: 12),
                 _ExpandableSubsection(
                   title: '🔍 Come l\'AI calcola',  // TODO: Localize
-                  icon: Icons.science,
+                  icon: AppIcons.science,
                   iconColor: colorScheme.secondary,
                   theme: theme,
                   colorScheme: colorScheme,
@@ -968,7 +969,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.science, size: 16, color: colorScheme.primary),
+                          Icon(AppIcons.science, size: 16, color: colorScheme.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -980,7 +981,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                               ),
                             ),
                           ),
-                          Icon(Icons.open_in_new, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
+                          Icon(AppIcons.openInNew, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
                         ],
                       ),
                     ),
@@ -1017,28 +1018,28 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     IconData icon;
     switch (insight.type.toString()) {
       case 'InsightType.muscleGroupBalance':
-        icon = Icons.balance;
+        icon = AppIcons.balance;
         break;
       case 'InsightType.progressOverload':
-        icon = Icons.trending_up;
+        icon = AppIcons.trendUp;
         break;
       case 'InsightType.recoveryPattern':
-        icon = Icons.bedtime;
+        icon = AppIcons.bedtime;
         break;
       case 'InsightType.volumeOptimization':
-        icon = Icons.tune;
+        icon = AppIcons.tune;
         break;
       case 'InsightType.frequencyRecommendation':
-        icon = Icons.schedule;
+        icon = AppIcons.schedule;
         break;
       case 'InsightType.plateauBreaker':
-        icon = Icons.trending_flat;
+        icon = AppIcons.trendFlat;
         break;
       case 'InsightType.formWarning':
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         break;
       case 'InsightType.motivational':
-        icon = Icons.celebration;
+        icon = AppIcons.celebration;
         break;
       default:
         icon = severityIcon; // Fallback to severity icon
@@ -1118,7 +1119,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
-                      Icons.warning_amber,
+                      AppIcons.warningAmber,
                       size: 12,
                       color: Colors.black87,
                     ),
@@ -1217,7 +1218,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
-                      Icons.warning_amber,
+                      AppIcons.warningAmber,
                       size: 12,
                       color: Colors.black87,
                     ),
@@ -1242,7 +1243,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             ),
             child: Row(
               children: [
-                Icon(Icons.recommend, size: 16, color: cardColor),
+                Icon(AppIcons.recommend, size: 16, color: cardColor),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -1283,7 +1284,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.analytics, size: 18, color: cardColor),
+                    Icon(AppIcons.analytics, size: 18, color: cardColor),
                     const SizedBox(width: 8),
                     Text(
                       l10n.whyThisMatters,
@@ -1324,7 +1325,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.bar_chart, size: 18, color: cardColor),
+                    Icon(AppIcons.barChart, size: 18, color: cardColor),
                     const SizedBox(width: 8),
                     Text(
                       l10n.yourData,
@@ -1340,7 +1341,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Row(
                     children: [
-                      Icon(Icons.fiber_manual_record, size: 8, color: cardColor),
+                      Icon(AppIcons.fiberManualRecord, size: 8, color: cardColor),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -1463,7 +1464,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.science, size: 16, color: colorScheme.primary),
+                  Icon(AppIcons.science, size: 16, color: colorScheme.primary),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -1475,7 +1476,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                       ),
                     ),
                   ),
-                  Icon(Icons.open_in_new, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
+                  Icon(AppIcons.openInNew, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
                 ],
               ),
             ),
@@ -1557,7 +1558,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.play_arrow, size: 16, color: cardColor),
+                    Icon(AppIcons.play, size: 16, color: cardColor),
                     const SizedBox(width: 6),
                     Text(
                       l10n.howToImplement,
@@ -1585,7 +1586,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.timeline, size: 16, color: Colors.green),
+              const Icon(AppIcons.timeline, size: 16, color: Colors.green),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -1692,7 +1693,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 height: 16,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : const Icon(Icons.swap_horiz),
+            : const Icon(AppIcons.swapHoriz),
         label: Text(_isReplacingExercise ? l10n.processing : buttonText),
         style: FilledButton.styleFrom(
           backgroundColor: cardColor,
@@ -1794,7 +1795,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  existingFeedback.isHelpful ? Icons.thumb_up : Icons.thumb_down,
+                  existingFeedback.isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
                   size: 16,
                   color: colorScheme.primary,
                 ),
@@ -1829,7 +1830,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ref: ref,
                 insight: insight,
                 isHelpful: true,
-                icon: Icons.thumb_up_outlined,
+                icon: AppIcons.thumbUpOutlined,
                 label: l10n.feedbackHelpful,
                 theme: theme,
                 colorScheme: colorScheme,
@@ -1841,7 +1842,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 ref: ref,
                 insight: insight,
                 isHelpful: false,
-                icon: Icons.thumb_down_outlined,
+                icon: AppIcons.thumbDownOutlined,
                 label: l10n.feedbackNotHelpful,
                 theme: theme,
                 colorScheme: colorScheme,
@@ -1968,7 +1969,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             child: Row(
               children: [
                 Icon(
-                  Icons.verified_outlined,
+                  AppIcons.verifiedOutlined,
                   size: 16,
                   color: colorScheme.primary,
                 ),

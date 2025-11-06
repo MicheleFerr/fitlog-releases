@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing personal records timeline
 class PRTimelineWidget extends StatelessWidget {
@@ -34,7 +35,7 @@ class PRTimelineWidget extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.emoji_events,
+                  AppIcons.achievement,
                   color: Colors.amber,
                   size: 24,
                 ),
@@ -165,7 +166,7 @@ class PRTimelineWidget extends StatelessWidget {
               if (pr.isSignificant) ...[
                 const SizedBox(width: 4),
                 const Icon(
-                  Icons.trending_up,
+                  AppIcons.trendUp,
                   size: 12,
                   color: Colors.green,
                 ),
@@ -193,7 +194,7 @@ class PRTimelineWidget extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.emoji_events,
+                AppIcons.achievement,
                 size: 48,
                 color: Colors.grey.withValues(alpha: 0.5),
               ),
@@ -214,17 +215,17 @@ class PRTimelineWidget extends StatelessWidget {
   IconData _getIconForPRType(PRType type) {
     switch (type) {
       case PRType.weight:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case PRType.reps:
-        return Icons.repeat;
+        return AppIcons.repeat;
       case PRType.volume:
-        return Icons.bar_chart;
+        return AppIcons.barChart;
       case PRType.oneRM:
-        return Icons.looks_one;
+        return AppIcons.looksOne;
       case PRType.totalSets:
-        return Icons.format_list_numbered;
+        return AppIcons.formatListNumbered;
       case PRType.duration:
-        return Icons.timer;
+        return AppIcons.timer;
     }
   }
   

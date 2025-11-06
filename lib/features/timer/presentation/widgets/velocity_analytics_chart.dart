@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// TIER-1 Velocity Analytics Chart Widget
 /// Advanced velocity-based training visualization with load-velocity profiling
@@ -211,7 +212,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 64,
               color: theme.colorScheme.error,
             ),
@@ -517,7 +518,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
                   l10n.avgVelocityLoss,
                   '${_vbtData!.averageVelocityLoss.toStringAsFixed(1)}%',
                   _getVelocityLossColor(_vbtData!.averageVelocityLoss, theme),
-                  Icons.trending_down,
+                  AppIcons.trendDown,
                 ),
               ),
               const SizedBox(width: 8),
@@ -527,7 +528,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
                   l10n.optimalLoad,
                   '${_vbtData!.optimalLoads.maxPower.toInt()}kg',
                   theme.colorScheme.secondary,
-                  Icons.fitness_center,
+                  AppIcons.workout,
                 ),
               ),
               const SizedBox(width: 8),
@@ -537,7 +538,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
                   l10n.minVelocity,
                   '${_vbtData!.recommendedVelocityThresholds.minVelocity.toStringAsFixed(2)}m/s',
                   theme.colorScheme.tertiary,
-                  Icons.speed,
+                  AppIcons.speed,
                 ),
               ),
             ],
@@ -584,7 +585,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.bar_chart_outlined,
+            AppIcons.barChartOutlined,
             size: 48,
             color: theme.colorScheme.onSurface.withOpacity(0.3),
           ),

@@ -13,6 +13,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_analytics_sync_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminAnalyticsScreen extends ConsumerStatefulWidget {
   const AdminAnalyticsScreen({super.key});
@@ -59,7 +60,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.lock_outline,
+                AppIcons.lockOutline,
                 size: 64,
                 color: theme.colorScheme.outline,
               ),
@@ -88,10 +89,10 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
           controller: _tabController,
           isScrollable: true,
           tabs: const [
-            Tab(text: 'Overview', icon: Icon(Icons.dashboard)),
-            Tab(text: 'Users', icon: Icon(Icons.people)),
-            Tab(text: 'Exercises', icon: Icon(Icons.fitness_center)),
-            Tab(text: 'Trends', icon: Icon(Icons.trending_up)),
+            Tab(text: 'Overview', icon: Icon(AppIcons.dashboard)),
+            Tab(text: 'Users', icon: Icon(AppIcons.people)),
+            Tab(text: 'Exercises', icon: Icon(AppIcons.workout)),
+            Tab(text: 'Trends', icon: Icon(AppIcons.trendUp)),
           ],
         ),
       ),
@@ -129,7 +130,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
           Row(
             children: [
               Icon(
-                Icons.sync,
+                AppIcons.syncIcon,
                 color: state.isSyncing 
                     ? theme.colorScheme.primary 
                     : theme.colorScheme.onSurfaceVariant,
@@ -216,7 +217,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                               .triggerReverseSync();
                         }
                       },
-                      icon: const Icon(Icons.sync),
+                      icon: const Icon(AppIcons.syncIcon),
                       label: Text(state.isSyncing ? 'Syncing...' : 'Sync Analytics'),
                     ),
                   ),
@@ -230,7 +231,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                         await ref.read(adminAnalyticsSyncProvider.notifier)
                             .triggerCloudAnalyticsCollection();
                       },
-                      icon: const Icon(Icons.cloud_download),
+                      icon: const Icon(AppIcons.cloudDownload),
                       label: Text(state.isCollecting ? 'Collecting...' : 'Cloud Collect'),
                     ),
                   ),
@@ -261,7 +262,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                           ),
                           FilledButton.icon(
                             onPressed: () => Navigator.pop(context, true),
-                            icon: const Icon(Icons.download),
+                            icon: const Icon(AppIcons.download),
                             label: const Text('Download Exercises'),
                           ),
                         ],
@@ -283,7 +284,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                       }
                     }
                   },
-                  icon: const Icon(Icons.download_for_offline),
+                  icon: const Icon(AppIcons.downloadForOffline),
                   label: Text(
                     state.isCollecting ? 'Downloading...' : 'Download Exercises from Cloud',
                   ),
@@ -308,7 +309,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
               child: Row(
                 children: [
                   Icon(
-                    Icons.error_outline,
+                    AppIcons.error,
                     color: theme.colorScheme.onErrorContainer,
                     size: 16,
                   ),
@@ -341,7 +342,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.analytics_outlined,
+              AppIcons.analyticsOutlined,
               size: 64,
               color: theme.colorScheme.outline,
             ),
@@ -376,7 +377,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
           children: [
             _buildMetricCard(
               context,
-              icon: Icons.people,
+              icon: AppIcons.people,
               title: 'Total Users',
               value: aggregates.totalUsers.toString(),
               subtitle: '${aggregates.activeUsers} active',
@@ -384,7 +385,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
             ),
             _buildMetricCard(
               context,
-              icon: Icons.fitness_center,
+              icon: AppIcons.workout,
               title: 'Total Workouts',
               value: _formatNumber(aggregates.totalWorkouts),
               subtitle: 'All time',
@@ -392,7 +393,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
             ),
             _buildMetricCard(
               context,
-              icon: Icons.monitor_weight,
+              icon: AppIcons.weight,
               title: 'Total Volume',
               value: _formatVolume(aggregates.totalVolume),
               subtitle: 'Lifted',
@@ -400,7 +401,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
             ),
             _buildMetricCard(
               context,
-              icon: Icons.bar_chart,
+              icon: AppIcons.barChart,
               title: 'Avg Duration',
               value: _calculateAvgDuration(state),
               subtitle: 'Per workout',
@@ -843,7 +844,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                 ),
               ),
               Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 size: 16,
                 color: theme.colorScheme.outline,
               ),

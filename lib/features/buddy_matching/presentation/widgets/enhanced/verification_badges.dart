@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VerificationBadges extends ConsumerWidget {
 
@@ -40,7 +41,7 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.isVerified) {
       badges.add(_buildBadge(
         context,
-        icon: Icons.verified,
+        icon: AppIcons.verified,
         color: const Color(0xFF1DA1F2), // Twitter blue
         text: AppLocalizations.of(context).verified,
         tooltip: 'Profilo verificato dal team GymBro',
@@ -51,7 +52,7 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.hasInstagramVerification) {
       badges.add(_buildBadge(
         context,
-        icon: Icons.camera_alt,
+        icon: AppIcons.camera,
         color: const Color(0xFFE4405F), // Instagram pink
         text: AppLocalizations.of(context).instagramVerified,
         tooltip: 'Account Instagram collegato e verificato',
@@ -62,7 +63,7 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.isPhotoVerified) {
       badges.add(_buildBadge(
         context,
-        icon: Icons.photo_camera,
+        icon: AppIcons.photoCamera,
         color: const Color(0xFF4CAF50), // Green
         text: AppLocalizations.of(context).photoVerified,
         tooltip: 'Foto del profilo verificata',
@@ -73,7 +74,7 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.isCurrentlyBoosted) {
       badges.add(_buildBadge(
         context,
-        icon: Icons.rocket_launch,
+        icon: AppIcons.rocket,
         color: const Color(0xFFFF9800), // Orange
         text: AppLocalizations.of(context).boosted,
         tooltip: 'Profilo in evidenza',
@@ -201,10 +202,10 @@ class TrustScoreIndicator extends ConsumerWidget {
     }
 
     IconData getScoreIcon() {
-      if (trustScore >= 80) return Icons.shield_outlined;
-      if (trustScore >= 60) return Icons.verified_user_outlined;
-      if (trustScore >= 40) return Icons.security;
-      return Icons.report_problem_outlined;
+      if (trustScore >= 80) return AppIcons.shieldOutlined;
+      if (trustScore >= 60) return AppIcons.verifiedUserOutlined;
+      if (trustScore >= 40) return AppIcons.security;
+      return AppIcons.reportProblemOutlined;
     }
 
     final color = getScoreColor();

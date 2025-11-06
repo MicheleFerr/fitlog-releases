@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CityPickerWidget extends ConsumerStatefulWidget {
 
@@ -135,7 +136,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                 decoration: InputDecoration(
                   hintText: l10n.searchCity,
                   prefixIcon: Icon(
-                    Icons.search,
+                    AppIcons.search,
                     color: colorScheme.onSurfaceVariant,
                   ),
                   border: OutlineInputBorder(
@@ -186,7 +187,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                       style: TextStyle(color: colorScheme.onSurfaceVariant),
                     ),
                     trailing: isSelected
-                        ? Icon(Icons.check_circle, color: colorScheme.primary)
+                        ? Icon(AppIcons.complete, color: colorScheme.primary)
                         : null,
                     onTap: () => _selectCity(city),
                   );
@@ -206,7 +207,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                         _tempSelectedCity = null;
                       });
                     },
-                    icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+                    icon: Icon(AppIcons.back, color: colorScheme.onSurface),
                   ),
                   Expanded(
                     child: Text(
@@ -230,7 +231,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                   // No specific zone option
                   ListTile(
                     leading: Icon(
-                      Icons.location_city,
+                      AppIcons.locationCity,
                       color: colorScheme.primary,
                     ),
                     title: Text(
@@ -243,7 +244,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                       ),
                     ),
                     trailing: widget.selectedZone == null
-                        ? Icon(Icons.check_circle, color: colorScheme.primary)
+                        ? Icon(AppIcons.complete, color: colorScheme.primary)
                         : null,
                     onTap: () => _selectZone(null),
                   ),
@@ -256,7 +257,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                     
                     return ListTile(
                       leading: Icon(
-                        Icons.location_on,
+                        AppIcons.location,
                         color: colorScheme.onSurfaceVariant,
                       ),
                       title: Text(
@@ -269,7 +270,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
                         ),
                       ),
                       trailing: isSelected
-                          ? Icon(Icons.check_circle, color: colorScheme.primary)
+                          ? Icon(AppIcons.complete, color: colorScheme.primary)
                           : null,
                       onTap: () => _selectZone(zone),
                     );

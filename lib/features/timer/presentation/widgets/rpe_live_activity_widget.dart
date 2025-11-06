@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget per RPE Live Activity senza ombreggiature
 class RPELiveActivityWidget extends ConsumerStatefulWidget {
@@ -113,7 +114,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildRepsButton(
-                icon: Icons.remove,
+                icon: AppIcons.remove,
                 onPressed: _actualReps != null && _actualReps! > 1
                     ? () => setState(() => _actualReps = _actualReps! - 1)
                     : null,
@@ -139,7 +140,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
               ),
               const SizedBox(width: 20),
               _buildRepsButton(
-                icon: Icons.add,
+                icon: AppIcons.add,
                 onPressed: _actualReps != null && _actualReps! < 50
                     ? () => setState(() => _actualReps = _actualReps! + 1)
                     : null,
@@ -265,7 +266,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
         Expanded(
           child: _buildActionButton(
             label: 'Annulla',
-            icon: Icons.close,
+            icon: AppIcons.close,
             color: Colors.white.withOpacity(0.2),
             textColor: Colors.white,
             onPressed: _isLoading ? null : _handleCancel,
@@ -276,7 +277,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           flex: 2,
           child: _buildActionButton(
             label: _isLoading ? 'Salvando...' : 'Conferma Set',
-            icon: _isLoading ? null : Icons.check,
+            icon: _isLoading ? null : AppIcons.check,
             color: canConfirm 
                 ? Colors.white.withOpacity(0.9)
                 : Colors.white.withOpacity(0.3),

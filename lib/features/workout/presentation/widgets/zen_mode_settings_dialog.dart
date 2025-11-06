@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/zen_mode_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ZenModeSettingsDialog extends ConsumerWidget {
   const ZenModeSettingsDialog({super.key});
@@ -32,7 +33,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.self_improvement,
+                    AppIcons.flexibility,
                     color: theme.colorScheme.primary,
                     size: 28,
                   ),
@@ -79,7 +80,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Suggerimenti Community',
                         subtitle: 'Nasconde i suggerimenti dalla community',
-                        icon: Icons.people_outline,
+                        icon: AppIcons.peopleOutline,
                         value: zenState.config.hideCommunitySuggestions,
                         onChanged: (value) => zenNotifier.updateConfigField('hideCommunitySuggestions', value),
                       ),
@@ -87,7 +88,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Card Riscaldamento',
                         subtitle: 'Nasconde i suggerimenti di warmup',
-                        icon: Icons.whatshot_outlined,
+                        icon: AppIcons.whatshotOutlined,
                         value: zenState.config.hideWarmupCards,
                         onChanged: (value) => zenNotifier.updateConfigField('hideWarmupCards', value),
                       ),
@@ -95,7 +96,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Chips Muscoli',
                         subtitle: 'Nasconde chips come "Shoulders", "Chest"',
-                        icon: Icons.label_outline,
+                        icon: AppIcons.labelOutline,
                         value: zenState.config.hideExerciseChips,
                         onChanged: (value) => zenNotifier.updateConfigField('hideExerciseChips', value),
                       ),
@@ -103,7 +104,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Animazioni XP',
                         subtitle: 'Nasconde le barre XP animate',
-                        icon: Icons.auto_awesome_outlined,
+                        icon: AppIcons.autoAwesomeOutlined,
                         value: zenState.config.hideXPAnimations,
                         onChanged: (value) => zenNotifier.updateConfigField('hideXPAnimations', value),
                       ),
@@ -111,7 +112,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Tutorial',
                         subtitle: 'Nasconde overlay tutorial',
-                        icon: Icons.help_outline,
+                        icon: AppIcons.help,
                         value: zenState.config.hideTutorials,
                         onChanged: (value) => zenNotifier.updateConfigField('hideTutorials', value),
                       ),
@@ -124,7 +125,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Schermo Sempre Attivo',
                         subtitle: 'Mantiene lo schermo acceso durante il workout',
-                        icon: Icons.mobile_screen_share,
+                        icon: AppIcons.mobileScreenShare,
                         value: zenState.config.keepScreenOn,
                         onChanged: (value) => zenNotifier.updateConfigField('keepScreenOn', value),
                         isHighlighted: true,
@@ -138,7 +139,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Time Under Tension (TUT)',
                         subtitle: 'Mostra tempo sotto tensione per set',
-                        icon: Icons.timer_outlined,
+                        icon: AppIcons.timerOffOutlined,
                         value: zenState.config.showTUT,
                         onChanged: (value) => zenNotifier.updateConfigField('showTUT', value),
                         isComingSoon: true,
@@ -147,7 +148,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Velocity Tracking',
                         subtitle: 'Mostra velocità di esecuzione',
-                        icon: Icons.speed,
+                        icon: AppIcons.speed,
                         value: zenState.config.showVelocity,
                         onChanged: (value) => zenNotifier.updateConfigField('showVelocity', value),
                         isComingSoon: true,
@@ -156,7 +157,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Volume Totale',
                         subtitle: 'Mostra volume totale allenamento',
-                        icon: Icons.analytics_outlined,
+                        icon: AppIcons.analyticsOutlined,
                         value: zenState.config.showVolume,
                         onChanged: (value) => zenNotifier.updateConfigField('showVolume', value),
                       ),
@@ -167,7 +168,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         child: Column(
                           children: [
                             Icon(
-                              Icons.self_improvement,
+                              AppIcons.flexibility,
                               size: 64,
                               color: theme.colorScheme.primary.withValues(alpha: 0.3),
                             ),

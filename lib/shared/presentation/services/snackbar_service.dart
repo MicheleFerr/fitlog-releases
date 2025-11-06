@@ -32,6 +32,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 enum SnackBarType {
   success,
@@ -250,13 +251,13 @@ class SnackBarService {
   static IconData? _getIconForType(SnackBarType type) {
     switch (type) {
       case SnackBarType.success:
-        return Icons.check_circle;
+        return AppIcons.complete;
       case SnackBarType.error:
-        return Icons.error;
+        return AppIcons.error;
       case SnackBarType.warning:
-        return Icons.warning;
+        return AppIcons.warning;
       case SnackBarType.info:
-        return Icons.info;
+        return AppIcons.infoIcon;
       case SnackBarType.custom:
         return null;
     }

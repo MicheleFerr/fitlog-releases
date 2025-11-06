@@ -9,6 +9,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class QuickStartCard extends StatelessWidget {
 
@@ -72,7 +73,7 @@ class QuickStartCard extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.arrow_forward_ios,
+                AppIcons.forwardIos,
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                 size: 16,
               ),

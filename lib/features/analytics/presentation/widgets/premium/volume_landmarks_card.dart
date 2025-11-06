@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_ana
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Volume Landmarks Dashboard
 ///
@@ -70,7 +71,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.info_outline),
+                icon: const Icon(AppIcons.info),
                 onPressed: () => _showScientificExplanation(context),
               ),
             ],
@@ -373,35 +374,35 @@ class VolumeLandmarksCard extends StatelessWidget {
         message = l10n.volumeZoneBelowMaintenance;
         explanation = l10n.volumeBelowMaintenanceExplanation(currentSets, landmarks.mv);
         advice = l10n.volumeBelowMaintenanceAdvice(landmarks.mv - currentSets);
-        icon = Icons.trending_down;
+        icon = AppIcons.trendDown;
         color = Colors.grey;
         break;
       case VolumeZone.maintenance:
         message = l10n.volumeZoneMaintenance;
         explanation = l10n.volumeMaintenanceExplanation(currentSets, landmarks.mv, landmarks.mev);
         advice = l10n.volumeMaintenanceAdvice(landmarks.mev - currentSets);
-        icon = Icons.pause_circle_outline;
+        icon = AppIcons.pauseCircleOutline;
         color = Colors.grey;
         break;
       case VolumeZone.effective:
         message = l10n.volumeZoneEffective;
         explanation = l10n.volumeEffectiveExplanation(currentSets, landmarks.mev, landmarks.mav);
         advice = l10n.volumeEffectiveAdvice(landmarks.mav - currentSets);
-        icon = Icons.trending_up;
+        icon = AppIcons.trendUp;
         color = Colors.orange;
         break;
       case VolumeZone.optimal:
         message = l10n.volumeZoneOptimal;
         explanation = l10n.volumeOptimalExplanation(currentSets, landmarks.mav, landmarks.mrv);
         advice = l10n.volumeOptimalAdvice;
-        icon = Icons.check_circle;
+        icon = AppIcons.complete;
         color = Colors.green;
         break;
       case VolumeZone.excessive:
         message = l10n.volumeZoneExcessive;
         explanation = l10n.volumeExcessiveExplanation(currentSets, landmarks.mrv);
         advice = l10n.volumeExcessiveAdvice(currentSets - landmarks.mrv);
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         color = Colors.red;
         break;
     }
@@ -431,7 +432,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Icon(
-                Icons.keyboard_arrow_down,
+                AppIcons.keyboardArrowDown,
                 size: 16,
                 color: color,
               ),
@@ -456,7 +457,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      Icons.info_outline,
+                      AppIcons.info,
                       size: 16,
                       color: color,
                     ),
@@ -478,7 +479,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      Icons.lightbulb_outline,
+                      AppIcons.tip,
                       size: 16,
                       color: color,
                     ),
@@ -503,7 +504,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         size: 16,
                         color: color,
                       ),
@@ -629,7 +630,7 @@ class VolumeLandmarksCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.warning_amber_rounded,
+                AppIcons.warningAmberRounded,
                 color: theme.colorScheme.error,
                 size: 24,
               ),
@@ -671,7 +672,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         color: theme.colorScheme.error,
                         size: 20,
                       ),
@@ -696,7 +697,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         ),
                       ),
                       Icon(
-                        Icons.edit,
+                        AppIcons.edit,
                         color: theme.colorScheme.primary,
                         size: 20,
                       ),
@@ -730,7 +731,7 @@ class VolumeLandmarksCard extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              Icons.science_outlined,
+              AppIcons.experiment,
               size: 20,
               color: theme.colorScheme.primary,
             ),
@@ -757,7 +758,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.open_in_new,
+              AppIcons.openInNew,
               size: 16,
               color: theme.colorScheme.primary.withValues(alpha: 0.7),
             ),
@@ -914,7 +915,7 @@ class VolumeLandmarksCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.article_outlined,
+                  AppIcons.articleOutlined,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
@@ -938,7 +939,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  Icons.open_in_new,
+                  AppIcons.openInNew,
                   size: 20,
                   color: theme.colorScheme.primary,
                 ),
@@ -1002,12 +1003,12 @@ class VolumeLandmarksCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     final muscleGroups = [
-      (MuscleGroup.chest, l10n.chestMuscle, Icons.favorite),
+      (MuscleGroup.chest, l10n.chestMuscle, AppIcons.favorite),
       (MuscleGroup.back, l10n.backMuscle, Icons.grid_4x4),
-      (MuscleGroup.shoulders, l10n.shouldersMuscle, Icons.north),
-      (MuscleGroup.arms, l10n.armsMuscle, Icons.sports_martial_arts),
-      (MuscleGroup.legs, l10n.legsMuscle, Icons.directions_run),
-      (MuscleGroup.core, l10n.coreMuscle, Icons.favorite_border),
+      (MuscleGroup.shoulders, l10n.shouldersMuscle, AppIcons.north),
+      (MuscleGroup.arms, l10n.armsMuscle, AppIcons.sportsMartialArts),
+      (MuscleGroup.legs, l10n.legsMuscle, AppIcons.cardio),
+      (MuscleGroup.core, l10n.coreMuscle, AppIcons.favoriteBorder),
     ];
 
     await showDialog(
@@ -1015,7 +1016,7 @@ class VolumeLandmarksCard extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.edit, color: theme.colorScheme.primary),
+            Icon(AppIcons.edit, color: theme.colorScheme.primary),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -1040,7 +1041,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: theme.colorScheme.primary,
                   ),
                   const SizedBox(width: 12),

@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/models/sear
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/providers/exercise_search_service_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Autocomplete widget for exercise name with ML-enhanced fuzzy search
 ///
@@ -252,7 +253,7 @@ class _ExerciseNameAutocompleteState
                           if (fuzzyResult.wasAutoCorrected) ...[
                             const SizedBox(width: 4),
                             Icon(
-                              Icons.auto_fix_high,
+                              AppIcons.autoFixHigh,
                               size: 14,
                               color: context.colors.secondary,
                             ),
@@ -288,10 +289,10 @@ class _ExerciseNameAutocompleteState
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       )
-                    : const Icon(Icons.fitness_center),
+                    : const Icon(AppIcons.workout),
                 suffixIcon: widget.controller.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear, size: 20),
+                        icon: const Icon(AppIcons.clear, size: 20),
                         onPressed: () {
                           widget.controller.clear();
                           setState(() {
@@ -315,7 +316,7 @@ class _ExerciseNameAutocompleteState
                         ),
                       )
                     : widget.decoration?.prefixIcon ??
-                        const Icon(Icons.fitness_center),
+                        const Icon(AppIcons.workout),
               ),
           textCapitalization: TextCapitalization.words,
           onChanged: (value) {

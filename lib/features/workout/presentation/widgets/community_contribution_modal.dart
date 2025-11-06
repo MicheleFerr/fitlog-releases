@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/contribution_success_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityContributionModal extends ConsumerStatefulWidget {
 
@@ -221,7 +222,7 @@ class _CommunityContributionModalState
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.people_outline,
+                    AppIcons.peopleOutline,
                     color: Colors.white,
                     size: 24,
                   ),
@@ -348,7 +349,7 @@ class _CommunityContributionModalState
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.info_outline,
+                                    AppIcons.info,
                                     size: 16,
                                     color: theme.colorScheme.error,
                                   ),
@@ -435,7 +436,7 @@ class _CommunityContributionModalState
                     child: Row(
                       children: [
                         Icon(
-                          Icons.info_outline,
+                          AppIcons.info,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),

@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_sequential_execution_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
@@ -74,7 +75,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           children: [
             _buildSwipeAction(
               context,
-              icon: Icons.swap_horiz,
+              icon: AppIcons.swapHoriz,
               label: l10n.replace,
               color: Colors.green,
               onTap: () {
@@ -85,7 +86,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             const SizedBox(width: 8),
             _buildSwipeAction(
               context,
-              icon: Icons.edit,
+              icon: AppIcons.edit,
               label: l10n.edit,
               color: Colors.blue,
               onTap: () {
@@ -96,7 +97,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             const SizedBox(width: 8),
             _buildSwipeAction(
               context,
-              icon: Icons.delete,
+              icon: AppIcons.delete,
               label: l10n.delete,
               color: context.colors.error,
               onTap: () {
@@ -219,7 +220,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             shape: BoxShape.circle,
           ),
           child: const Icon(
-            Icons.link,
+            AppIcons.link,
             color: Colors.white,
             size: 20,
           ),
@@ -285,7 +286,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         // Menu button
         IconButton(
           onPressed: () => _showSupersetOptions(context),
-          icon: const Icon(Icons.more_vert),
+          icon: const Icon(AppIcons.moreVert),
           tooltip: 'Options',
         ),
       ],
@@ -308,7 +309,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           Row(
             children: [
               Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 size: 16,
                 color: context.colors.primary,
               ),
@@ -343,7 +344,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       ),
                       const SizedBox(width: 4),
                       Icon(
-                        _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        _isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
                         size: 16,
                         color: context.colors.primary,
                       ),
@@ -430,7 +431,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             
             // Icona per indicare che è cliccabile
             Icon(
-              Icons.info_outline,
+              AppIcons.info,
               size: 16,
               color: context.colors.primary.withValues(alpha: 0.7),
             ),
@@ -503,7 +504,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         Row(
           children: [
             Icon(
-              Icons.repeat,
+              AppIcons.repeat,
               size: 16,
               color: context.colors.primary,
             ),
@@ -546,7 +547,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           Row(
             children: [
               Icon(
-                Icons.note,
+                AppIcons.note,
                 size: 16,
                 color: context.colors.onSurface,
               ),
@@ -580,7 +581,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.edit),
+              leading: const Icon(AppIcons.edit),
               title: const Text('Edit Superset'),
               onTap: () {
                 Navigator.pop(context);
@@ -588,7 +589,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.copy),
+              leading: const Icon(AppIcons.iconCopy),
               title: const Text('Duplicate'),
               onTap: () {
                 Navigator.pop(context);
@@ -596,7 +597,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.delete, color: context.colors.error),
+              leading: Icon(AppIcons.delete, color: context.colors.error),
               title: Text(
                 'Delete Superset',
                 style: TextStyle(color: context.colors.error),
@@ -647,7 +648,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 ),
                 child: Center(
                   child: isFullyCompleted
-                      ? const Icon(Icons.check, color: Colors.white, size: 16)
+                      ? const Icon(AppIcons.check, color: Colors.white, size: 16)
                       : Text(
                           '$setNumber',
                           style: TextStyle(
@@ -821,7 +822,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                     : Colors.transparent,
               ),
               child: exerciseData.isCompleted 
-                  ? const Icon(Icons.check, size: 14, color: Colors.white)
+                  ? const Icon(AppIcons.check, size: 14, color: Colors.white)
                   : null,
             ),
           ],

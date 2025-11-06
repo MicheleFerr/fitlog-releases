@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class LanguageSelectionScreen extends ConsumerStatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -151,7 +152,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                       ],
                     ),
                     child: Icon(
-                      Icons.language,
+                      AppIcons.language,
                       size: 60,
                       color: colorScheme.onPrimary,
                     ),
@@ -305,7 +306,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
             // Selection indicator
             if (isSelected)
               Icon(
-                Icons.check_circle,
+                AppIcons.complete,
                 color: colorScheme.primary,
                 size: 28,
               ),

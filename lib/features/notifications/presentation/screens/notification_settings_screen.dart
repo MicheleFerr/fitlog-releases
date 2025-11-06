@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
@@ -31,7 +32,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.notifications_active, color: context.colors.primary),
+            Icon(AppIcons.notificationsActive, color: context.colors.primary),
             const SizedBox(width: 8),
             const Text('Notification Settings'),
           ],
@@ -171,7 +172,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
             Center(
               child: ElevatedButton.icon(
                 onPressed: () => _sendTestNotification(context, ref),
-                icon: const Icon(Icons.send),
+                icon: const Icon(AppIcons.send),
                 label: const Text('Send Test Notification'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.primary,
@@ -203,7 +204,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                Icons.warning_rounded,
+                AppIcons.warningRounded,
                 color: context.colors.onErrorContainer,
               ),
               const SizedBox(width: 12),
@@ -259,7 +260,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.schedule,
+            AppIcons.schedule,
             color: context.colors.onPrimaryContainer,
           ),
           const SizedBox(width: 12),

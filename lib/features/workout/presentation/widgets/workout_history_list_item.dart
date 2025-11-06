@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutHistoryListItem extends StatelessWidget {
 
@@ -62,7 +63,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -86,7 +87,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         Row(
                           children: [
                             Icon(
-                              Icons.calendar_today,
+                              AppIcons.calendar,
                               size: 14,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -100,7 +101,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                             if (workout.duration != null) ...[
                               const SizedBox(width: 12),
                               Icon(
-                                Icons.access_time,
+                                AppIcons.clock,
                                 size: 14,
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -141,7 +142,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'view',
                         child: Row(
                           children: [
-                            Icon(Icons.visibility, size: 18, color: theme.colorScheme.primary),
+                            Icon(AppIcons.visibility, size: 18, color: theme.colorScheme.primary),
                             const SizedBox(width: 8),
                             Text(l10n.viewWorkout),
                           ],
@@ -151,7 +152,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'edit',
                         child: Row(
                           children: [
-                            Icon(Icons.edit, size: 18, color: theme.colorScheme.secondary),
+                            Icon(AppIcons.edit, size: 18, color: theme.colorScheme.secondary),
                             const SizedBox(width: 8),
                             Text(l10n.editWorkout),
                           ],
@@ -161,7 +162,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'duplicate',
                         child: Row(
                           children: [
-                            Icon(Icons.copy, size: 18, color: theme.colorScheme.tertiary),
+                            Icon(AppIcons.iconCopy, size: 18, color: theme.colorScheme.tertiary),
                             const SizedBox(width: 8),
                             Text(l10n.duplicateWorkout),
                           ],
@@ -172,7 +173,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(Icons.delete, size: 18, color: theme.colorScheme.error),
+                            Icon(AppIcons.delete, size: 18, color: theme.colorScheme.error),
                             const SizedBox(width: 8),
                             Text(l10n.deleteWorkout),
                           ],
@@ -186,7 +187,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
-                        Icons.more_vert,
+                        AppIcons.moreVert,
                         size: 18,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -290,21 +291,21 @@ class WorkoutHistoryListItem extends StatelessWidget {
     return Row(
       children: [
         _buildStatItem(
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           label: l10n.exercises,
           value: workout.exercises.length.toString(),
           theme: theme,
         ),
         const SizedBox(width: 16),
         _buildStatItem(
-          icon: Icons.repeat,
+          icon: AppIcons.repeat,
           label: l10n.sets,
           value: totalSets.toString(),
           theme: theme,
         ),
         const SizedBox(width: 16),
         _buildStatItem(
-          icon: Icons.monitor_weight,
+          icon: AppIcons.weight,
           label: l10n.volume,
           value: '${totalVolume.round()}kg',
           theme: theme,
@@ -364,7 +365,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: onEdit,
-            icon: const Icon(Icons.edit, size: 16),
+            icon: const Icon(AppIcons.edit, size: 16),
             label: Text(l10n.edit),
             style: OutlinedButton.styleFrom(
               foregroundColor: theme.colorScheme.secondary,
@@ -376,7 +377,7 @@ class WorkoutHistoryListItem extends StatelessWidget {
         Expanded(
           child: FilledButton.icon(
             onPressed: onDuplicate,
-            icon: const Icon(Icons.copy, size: 16),
+            icon: const Icon(AppIcons.iconCopy, size: 16),
             label: Text(l10n.duplicate),
             style: FilledButton.styleFrom(
               backgroundColor: theme.colorScheme.tertiary,

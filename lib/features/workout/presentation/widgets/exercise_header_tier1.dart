@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Exercise Header Widget with category icons, badges, and TUT timer
 class ExerciseHeaderTier1 extends StatelessWidget {
@@ -71,7 +72,7 @@ class ExerciseHeaderTier1 extends StatelessWidget {
             
             // Chevron
             Icon(
-              Icons.chevron_right_rounded,
+              AppIcons.chevronRightRounded,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               size: 24,
             ),
@@ -87,35 +88,35 @@ class ExerciseHeaderTier1 extends StatelessWidget {
     
     switch (exercise.category.name.toLowerCase()) {
       case 'chest':
-        icon = Icons.fitness_center;
+        icon = AppIcons.workout;
         color = theme.colorScheme.primary;
         break;
       case 'back':
-        icon = Icons.accessibility_new;
+        icon = AppIcons.accessibility;
         color = theme.colorScheme.secondary;
         break;
       case 'shoulders':
-        icon = Icons.sports_gymnastics;
+        icon = AppIcons.gymnastics;
         color = theme.colorScheme.tertiary;
         break;
       case 'arms':
-        icon = Icons.sports_martial_arts;
+        icon = AppIcons.sportsMartialArts;
         color = Colors.orange;
         break;
       case 'legs':
-        icon = Icons.directions_run;
+        icon = AppIcons.cardio;
         color = Colors.green;
         break;
       case 'core':
-        icon = Icons.self_improvement;
+        icon = AppIcons.flexibility;
         color = Colors.purple;
         break;
       case 'cardio':
-        icon = Icons.favorite;
+        icon = AppIcons.favorite;
         color = Colors.red;
         break;
       default:
-        icon = Icons.fitness_center;
+        icon = AppIcons.workout;
         color = theme.colorScheme.primary;
     }
     

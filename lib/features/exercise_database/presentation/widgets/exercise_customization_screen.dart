@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/providers/weight_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: Add callback parameter
 
@@ -51,7 +52,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         title: Text('Personalizza Esercizi (${_customizations.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -138,7 +139,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 ),
                 IconButton(
                   onPressed: () => _showExerciseDetails(customization.exercise),
-                  icon: const Icon(Icons.info_outline),
+                  icon: const Icon(AppIcons.info),
                   tooltip: 'Dettagli Esercizio',
                 ),
               ],
@@ -158,7 +159,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 const Spacer(),
                 TextButton.icon(
                   onPressed: () => _addSet(exerciseIndex),
-                  icon: const Icon(Icons.add, size: 18),
+                  icon: const Icon(AppIcons.add, size: 18),
                   label: const Text('Aggiungi Set'),
                 ),
               ],
@@ -184,7 +185,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: () => _addSingleExercise(exerciseIndex),
-                  icon: const Icon(Icons.add),
+                  icon: const Icon(AppIcons.add),
                   label: const Text('Aggiungi Solo Questo Esercizio'),
                 ),
               ),
@@ -245,7 +246,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             value: setCustomization.weight == 0
                 ? '-'
                 : setCustomization.weight.toStringAsFixed(1),
-            icon: Icons.fitness_center,
+            icon: AppIcons.workout,
             color: Theme.of(context).colorScheme.primary,
             onTap: () => _showWeightPicker(
               exerciseIndex,
@@ -264,7 +265,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
           child: _buildPickerButton(
             label: AppLocalizations.of(context).reps,
             value: '${setCustomization.reps}',
-            icon: Icons.repeat,
+            icon: AppIcons.repeat,
             color: Theme.of(context).colorScheme.secondary,
             onTap: () => _showRepsPicker(exerciseIndex, setIndex, setCustomization),
           ),
@@ -276,7 +277,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         if (_customizations[exerciseIndex].sets.length > 1)
           IconButton(
             onPressed: () => _removeSet(exerciseIndex, setIndex),
-            icon: const Icon(Icons.remove_circle_outline, size: 20),
+            icon: const Icon(AppIcons.removeCircleOutline, size: 20),
             tooltip: 'Rimuovi Set',
           ),
       ],
@@ -671,7 +672,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           minimumSize: const Size(80, 36),
                           foregroundColor: theme.colorScheme.error,
                         ),
-                        icon: const Icon(Icons.remove, size: 16),
+                        icon: const Icon(AppIcons.remove, size: 16),
                         label: Text(
                           increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1),
                           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -693,7 +694,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           minimumSize: const Size(80, 36),
                         ),
-                        icon: const Icon(Icons.add, size: 16),
+                        icon: const Icon(AppIcons.add, size: 16),
                         label: Text(
                           '+${increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1)}',
                           style: const TextStyle(fontWeight: FontWeight.bold),

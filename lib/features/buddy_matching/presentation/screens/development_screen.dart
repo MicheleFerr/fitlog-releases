@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/ice_breaker_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/report_user_dialog.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/super_like_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DevelopmentScreen extends ConsumerStatefulWidget {
   const DevelopmentScreen({super.key});
@@ -96,7 +97,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.developer_mode, color: colorScheme.primary),
+            Icon(AppIcons.developerMode, color: colorScheme.primary),
             const SizedBox(width: 8),
             Text(l10n.developmentMode),
           ],
@@ -116,14 +117,14 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                 _buildSectionCard(
                   context,
                   title: l10n.demoProfiles,
-                  icon: Icons.people,
+                  icon: AppIcons.people,
                   children: [
                     Row(
                       children: [
                         Expanded(
                           child: ElevatedButton.icon(
                             onPressed: _loadDemoProfiles,
-                            icon: const Icon(Icons.refresh),
+                            icon: const Icon(AppIcons.refresh),
                             label: Text(l10n.seedDemoData),
                           ),
                         ),
@@ -131,7 +132,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                         Expanded(
                           child: OutlinedButton.icon(
                             onPressed: _clearDemoData,
-                            icon: const Icon(Icons.clear),
+                            icon: const Icon(AppIcons.clear),
                             label: Text(l10n.clearDemoData),
                           ),
                         ),
@@ -151,7 +152,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                 _buildSectionCard(
                   context,
                   title: 'Super Like Testing',
-                  icon: Icons.star,
+                  icon: AppIcons.star,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -183,7 +184,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                 _buildSectionCard(
                   context,
                   title: 'City Picker Testing',
-                  icon: Icons.location_city,
+                  icon: AppIcons.locationCity,
                   children: [
                     ElevatedButton.icon(
                       onPressed: () {
@@ -200,7 +201,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                           },
                         );
                       },
-                      icon: const Icon(Icons.location_on),
+                      icon: const Icon(AppIcons.location),
                       label: Text(AppLocalizations.of(context).openCityPicker),
                     ),
                   ],
@@ -211,7 +212,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                 _buildSectionCard(
                   context,
                   title: 'Ice Breaker Testing',
-                  icon: Icons.message,
+                  icon: AppIcons.message,
                   children: [
                     ElevatedButton.icon(
                       onPressed: () {
@@ -229,7 +230,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                           },
                         );
                       },
-                      icon: const Icon(Icons.ac_unit),
+                      icon: const Icon(AppIcons.acUnit),
                       label: Text(AppLocalizations.of(context).openIceBreakers),
                     ),
                   ],
@@ -240,7 +241,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                 _buildSectionCard(
                   context,
                   title: 'Feature Status',
-                  icon: Icons.checklist,
+                  icon: AppIcons.checklist,
                   children: [
                     _buildFeatureStatus('Multi-purpose Matching', true),
                     _buildFeatureStatus('Italian Cities System', true),
@@ -348,7 +349,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
                         ? NetworkImage(profile.photoURL!)
                         : null,
                     child: profile.photoURL == null
-                        ? Icon(Icons.person, color: colorScheme.onSurfaceVariant)
+                        ? Icon(AppIcons.person, color: colorScheme.onSurfaceVariant)
                         : null,
                   ),
                   Positioned(
@@ -463,7 +464,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
       child: Row(
         children: [
           Icon(
-            isImplemented ? Icons.check_circle : Icons.radio_button_unchecked,
+            isImplemented ? AppIcons.complete : AppIcons.radioButtonUnchecked,
             size: 16,
             color: isImplemented ? const Color(0xFF4CAF50) : colorScheme.onSurfaceVariant,
           ),

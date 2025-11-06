@@ -41,6 +41,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Helper per feedback UI durante workout save flow
 class SyncStatusToast {
@@ -172,7 +173,7 @@ class SyncStatusToast {
       context,
       title: context.l10n.localSaveFailed,
       message: context.l10n.retryOrExport,
-      icon: Icons.error,
+      icon: AppIcons.error,
       actions: [
         DialogAction(
           label: 'RETRY',

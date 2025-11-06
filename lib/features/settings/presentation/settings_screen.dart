@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart' show isAdminCachedProvider;
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -35,7 +36,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -138,7 +139,7 @@ class SettingsScreen extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.analytics_outlined,
+                    AppIcons.analyticsOutlined,
                     size: 32,
                     color: context.colors.primary,
                   ),
@@ -170,7 +171,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   color: context.colors.onPrimaryContainer,
                 ),
               ],
@@ -191,7 +192,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.person,
+                  AppIcons.person,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -216,7 +217,7 @@ class SettingsScreen extends ConsumerWidget {
                                   ? NetworkImage(user.photoURL!)
                                   : null,
                               child: user.photoURL == null
-                                  ? const Icon(Icons.person)
+                                  ? const Icon(AppIcons.person)
                                   : null,
                             ),
                             const SizedBox(width: 12),
@@ -247,7 +248,7 @@ class SettingsScreen extends ConsumerWidget {
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             onPressed: () => context.pushNamed('admin'),
-                            icon: const Icon(Icons.admin_panel_settings),
+                            icon: const Icon(AppIcons.admin),
                             label: Text(context.l10n.adminDashboard),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: context.colors.primary,
@@ -279,7 +280,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -339,7 +340,7 @@ class SettingsScreen extends ConsumerWidget {
                       ref.invalidate(userFitnessQuestionnaireProvider);
                     }
                   },
-                  icon: const Icon(Icons.edit),
+                  icon: const Icon(AppIcons.edit),
                   label: const Text('Update Profile'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.primary,
@@ -370,7 +371,7 @@ class SettingsScreen extends ConsumerWidget {
                       ref.invalidate(userFitnessQuestionnaireProvider);
                     }
                   },
-                  icon: const Icon(Icons.add),
+                  icon: const Icon(AppIcons.add),
                   label: Text(l10n.fitnessQuestionnaireWelcomeStart),
                 ),
               ),
@@ -391,7 +392,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.palette,
+                  AppIcons.theme,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -427,7 +428,7 @@ class SettingsScreen extends ConsumerWidget {
               title: 'Accent Color',
               subtitle: config.primaryColor.toUpperCase(),
               leading: Icon(
-                Icons.color_lens,
+                AppIcons.colorLens,
                 color: _getPrimaryColor(config.primaryColor),
               ),
               onTap: () => _showColorDialog(context, ref, config.primaryColor),
@@ -448,7 +449,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -480,7 +481,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Default Rest Time',
               subtitle: '${config.defaultRestTime}s',
-              leading: const Icon(Icons.timer),
+              leading: const Icon(AppIcons.timer),
               onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
             ),
 
@@ -512,7 +513,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.language,
+                  AppIcons.language,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -531,7 +532,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Language',
               subtitle: _getLanguageText(config.languageCode),
-              leading: const Icon(Icons.translate),
+              leading: const Icon(AppIcons.translate),
               onTap: () => _showLanguageDialog(context, ref, config.languageCode),
             ),
 
@@ -542,7 +543,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Weight Units',
               subtitle: config.measurementUnit.toUpperCase(),
-              leading: const Icon(Icons.monitor_weight),
+              leading: const Icon(AppIcons.weight),
               onTap: () => _showUnitsDialog(context, ref, config.measurementUnit),
             ),
           ],
@@ -561,7 +562,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.phone_iphone,
+                  AppIcons.phoneIphone,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -614,7 +615,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.volume_up,
+                  AppIcons.volumeUp,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -659,10 +660,10 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.timerSound,
               subtitle: TimerSound.fromFileName(config.timerSound).getLocalizedName(),
-              leading: const Icon(Icons.notifications_active),
+              leading: const Icon(AppIcons.notificationsActive),
               onTap: () => _showTimerSoundDialog(context, ref, config.timerSound),
               trailing: IconButton(
-                icon: const Icon(Icons.play_circle_outline),
+                icon: const Icon(AppIcons.playCircleOutline),
                 tooltip: 'Test Sounds',
                 onPressed: () => showTimerSoundTestDialog(context),
               ),
@@ -683,7 +684,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.settings_applications,
+                  AppIcons.settingsApplications,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
@@ -702,7 +703,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Export Settings',
               subtitle: 'Save settings as JSON file',
-              leading: const Icon(Icons.file_download),
+              leading: const Icon(AppIcons.fileDownload),
               onTap: () => _exportSettings(context, ref),
             ),
 
@@ -713,7 +714,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Import Settings',
               subtitle: 'Load settings from JSON file',
-              leading: const Icon(Icons.file_upload),
+              leading: const Icon(AppIcons.fileUpload),
               onTap: () => _importSettings(context, ref),
             ),
 
@@ -724,7 +725,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Reset Timer Position',
               subtitle: 'Reset draggable timer to default position',
-              leading: const Icon(Icons.picture_in_picture_alt),
+              leading: const Icon(AppIcons.pictureInPictureAlt),
               onTap: () => _resetTimerPosition(context, ref),
             ),
 
@@ -742,7 +743,7 @@ class SettingsScreen extends ConsumerWidget {
                       context,
                       title: 'Fitness Profile Debug',
                       subtitle: 'View fitness profile and weight suggestions status',
-                      leading: const Icon(Icons.bug_report),
+                      leading: const Icon(AppIcons.bugReport),
                       onTap: () => context.pushNamed('fitness-profile-debug'),
                     ),
                     const Divider(),
@@ -763,7 +764,7 @@ class SettingsScreen extends ConsumerWidget {
                       context,
                       title: context.l10n.resetOnboarding,
                       subtitle: context.l10n.resetOnboardingDesc,
-                      leading: const Icon(Icons.school_outlined),
+                      leading: const Icon(AppIcons.schoolOutlined),
                       onTap: () => _resetOnboarding(context, ref),
                     ),
                     const Divider(),
@@ -783,7 +784,7 @@ class SettingsScreen extends ConsumerWidget {
                     ? 'Hai dati da migrare dalla versione precedente'
                     : 'Migrazione completata o non necessaria',
                   leading: Icon(
-                    Icons.sync_alt,
+                    AppIcons.syncAlt,
                     color: migrationState.hasDataToMigrate
                       ? context.colors.primary
                       : context.colors.outline,
@@ -818,7 +819,7 @@ class SettingsScreen extends ConsumerWidget {
                   title: Row(
                     children: [
                       Icon(
-                        Icons.science,
+                        AppIcons.science,
                         color: betaModeEnabled
                           ? context.colors.tertiary
                           : context.colors.outline,
@@ -877,7 +878,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Reset to Defaults',
               subtitle: 'Restore all settings to default',
-              leading: const Icon(Icons.restore, color: Colors.red),
+              leading: const Icon(AppIcons.restore, color: Colors.red),
               onTap: () => _showResetDialog(context, ref),
             ),
           ],
@@ -896,7 +897,7 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.logout,
+                  AppIcons.logout,
                   color: Colors.red,
                 ),
                 const SizedBox(width: 8),
@@ -915,7 +916,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Sign Out',
               subtitle: 'Sign out of your account',
-              leading: const Icon(Icons.logout, color: Colors.red),
+              leading: const Icon(AppIcons.logout, color: Colors.red),
               onTap: () => _showSignOutDialog(context, ref),
             ),
           ],
@@ -936,7 +937,7 @@ class SettingsScreen extends ConsumerWidget {
       title: Text(title),
       subtitle: Text(subtitle),
       leading: leading,
-      trailing: trailing ?? const Icon(Icons.chevron_right),
+      trailing: trailing ?? const Icon(AppIcons.chevronRight),
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
     );
@@ -964,7 +965,7 @@ class SettingsScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.format_size),
+            const Icon(AppIcons.formatSize),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -1153,7 +1154,7 @@ class SettingsScreen extends ConsumerWidget {
                     : null,
               ),
               child: currentColor == color
-                  ? const Icon(Icons.check, color: Colors.white)
+                  ? const Icon(AppIcons.check, color: Colors.white)
                   : null,
             ),
           )).toList(),
@@ -1360,11 +1361,11 @@ class SettingsScreen extends ConsumerWidget {
   IconData _getThemeModeIcon(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:
-        return Icons.light_mode;
+        return AppIcons.lightMode;
       case ThemeMode.dark:
-        return Icons.dark_mode;
+        return AppIcons.darkMode;
       case ThemeMode.system:
-        return Icons.auto_mode;
+        return AppIcons.autoMode;
     }
   }
 

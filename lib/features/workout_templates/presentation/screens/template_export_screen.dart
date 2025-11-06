@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/provi
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/export_options_widget.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_selection_widget.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/premium_export_features_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen for exporting workout templates
 class TemplateExportScreen extends ConsumerStatefulWidget {
@@ -72,7 +73,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           if (user.accountTier != AccountTier.free)
             IconButton(
               onPressed: () => _showExportLimits(context, l10n),
-              icon: const Icon(Icons.info_outline),
+              icon: const Icon(AppIcons.info),
             ),
         ],
       ),
@@ -159,7 +160,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
         child: Row(
           children: [
             Icon(
-              isFreeTier ? Icons.lock : Icons.workspace_premium,
+              isFreeTier ? AppIcons.lock : AppIcons.premium,
               color: isFreeTier 
                   ? theme.colorScheme.onErrorContainer
                   : theme.colorScheme.onPrimaryContainer,
@@ -252,7 +253,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           Expanded(
             child: ElevatedButton.icon(
               onPressed: () => _exportTemplates(ExportAction.download),
-              icon: const Icon(Icons.download),
+              icon: const Icon(AppIcons.download),
               label: Text(l10n.downloadJson),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
@@ -264,7 +265,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           const SizedBox(width: 12),
           ElevatedButton.icon(
             onPressed: () => _exportTemplates(ExportAction.share),
-            icon: const Icon(Icons.share),
+            icon: const Icon(AppIcons.share),
             label: Text(l10n.share),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.secondary,
@@ -275,7 +276,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           const SizedBox(width: 12),
           ElevatedButton.icon(
             onPressed: () => _exportTemplates(ExportAction.copy),
-            icon: const Icon(Icons.copy),
+            icon: const Icon(AppIcons.iconCopy),
             label: Text(l10n.copy),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.tertiary,

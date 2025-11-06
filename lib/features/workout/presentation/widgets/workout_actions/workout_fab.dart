@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Floating Action Button modulare per WorkoutScreen
 /// Gestisce le azioni principali: start workout, add exercise, timer
@@ -25,7 +26,7 @@ class WorkoutFAB extends ConsumerWidget {
       onPressed: hasWorkout
           ? () => _showAddExercise(context, ref)
           : () => _startNewWorkout(context, ref),
-      icon: hasWorkout ? Icons.add : Icons.play_arrow,
+      icon: hasWorkout ? AppIcons.add : AppIcons.play,
       label: hasWorkout
           ? AppLocalizations.of(context).addExercise
           : AppLocalizations.of(context).startWorkout,
@@ -33,7 +34,7 @@ class WorkoutFAB extends ConsumerWidget {
       additionalOptions: hasWorkout
           ? [
               DraggableActionOption(
-                icon: Icons.timer,
+                icon: AppIcons.timer,
                 label: 'Rest Timer', // Simplified for now
                 onTap: () => _startRestTimer(context, ref),
               ),

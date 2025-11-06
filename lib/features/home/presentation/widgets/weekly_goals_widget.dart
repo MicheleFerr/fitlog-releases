@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WeeklyGoalsWidget extends ConsumerWidget {
   
@@ -76,7 +77,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
-                          Icons.flag,
+                          AppIcons.flag,
                           color: Colors.green,
                           size: 20,
                         ),
@@ -193,7 +194,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
-                          Icons.flag,
+                          AppIcons.flag,
                           color: Colors.white,
                           size: 24,
                         ),
@@ -264,7 +265,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             child: Center(
                               child: hasWorkout
                                   ? const Icon(
-                                      Icons.check,
+                                      AppIcons.check,
                                       color: Colors.white,
                                       size: 18,
                                     )
@@ -393,7 +394,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: const Icon(
-                      Icons.track_changes,
+                      AppIcons.trackChanges,
                       color: Colors.white,
                       size: 28,
                     ),
@@ -437,7 +438,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: Icons.fitness_center,
+                              icon: AppIcons.workout,
                               label: 'Completati',
                               value: '$count',
                               color: Colors.blue,
@@ -447,7 +448,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: Icons.flag,
+                              icon: AppIcons.flag,
                               label: 'Obiettivo',
                               value: '$goal',
                               color: Colors.green,
@@ -457,7 +458,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: Icons.calendar_today,
+                              icon: AppIcons.calendar,
                               label: 'Giorni rimasti',
                               value: '${7 - DateTime.now().weekday}',
                               color: Colors.orange,
@@ -483,7 +484,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.lightbulb_outline,
+                                    AppIcons.tip,
                                     color: theme.colorScheme.primary,
                                     size: 20,
                                   ),
@@ -523,7 +524,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           child: Row(
                             children: [
                               const Icon(
-                                Icons.emoji_events,
+                                AppIcons.achievement,
                                 color: Colors.green,
                                 size: 32,
                               ),

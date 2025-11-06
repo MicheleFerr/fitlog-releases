@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dynamic greeting widget that shows time-appropriate greetings
 class DynamicGreeting extends ConsumerWidget {
@@ -17,13 +18,13 @@ class DynamicGreeting extends ConsumerWidget {
 
     if (hour < 12) {
       greeting = l10n.goodMorning;
-      icon = Icons.wb_sunny;
+      icon = AppIcons.wbSunny;
     } else if (hour < 17) {
       greeting = l10n.goodAfternoon;
-      icon = Icons.wb_sunny_outlined;
+      icon = AppIcons.wbSunnyOutlined;
     } else {
       greeting = l10n.goodEvening;
-      icon = Icons.nightlight_round;
+      icon = AppIcons.nightlightRound;
     }
 
     return Column(

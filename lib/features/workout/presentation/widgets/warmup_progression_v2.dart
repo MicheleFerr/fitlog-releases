@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WarmupSet {
 
@@ -201,7 +202,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
-                    Icons.whatshot,
+                    AppIcons.whatshot,
                     color: Colors.orange,
                     size: 24,
                   ),
@@ -227,7 +228,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -344,7 +345,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                           if (!set.completed) ...[
                                             const SizedBox(width: 4),
                                             Icon(
-                                              Icons.edit,
+                                              AppIcons.edit,
                                               size: 14,
                                               color: theme.colorScheme.onPrimaryContainer
                                                 .withOpacity(0.5),
@@ -385,7 +386,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                         // Action button
                         if (set.completed)
                           const Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: Colors.green,
                             size: 32,
                           )
@@ -416,7 +417,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
             child: Row(
               children: [
                 Icon(
-                  Icons.info_outline,
+                  AppIcons.info,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

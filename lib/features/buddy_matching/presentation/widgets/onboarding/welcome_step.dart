@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WelcomeStep extends StatelessWidget {
 
@@ -51,7 +52,7 @@ class WelcomeStep extends StatelessWidget {
               ),
             ),
             child: Icon(
-              Icons.handshake,
+              AppIcons.handshake,
               size: 80,
               color: theme.colorScheme.primary,
             ),
@@ -88,7 +89,7 @@ class WelcomeStep extends StatelessWidget {
           _buildFeature(
             context,
             theme,
-            Icons.location_on,
+            AppIcons.location,
             'Trova partner vicini',
             'Basato sulla tua posizione',
           ),
@@ -98,7 +99,7 @@ class WelcomeStep extends StatelessWidget {
           _buildFeature(
             context,
             theme,
-            Icons.fitness_center,
+            AppIcons.workout,
             'Matching intelligente',
             'Basato su obiettivi e livello',
           ),
@@ -108,7 +109,7 @@ class WelcomeStep extends StatelessWidget {
           _buildFeature(
             context,
             theme,
-            Icons.chat,
+            AppIcons.chat,
             'Chat integrata',
             'Organizza i tuoi allenamenti',
           ),
@@ -138,7 +139,7 @@ class WelcomeStep extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(Icons.arrow_forward),
+                  const Icon(AppIcons.forward),
                 ],
               ),
             ),

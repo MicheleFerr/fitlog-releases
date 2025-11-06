@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -112,7 +113,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       builder: (context) => AlertDialog(
         title: const Row(
           children: [
-            Icon(Icons.feedback_outlined, size: 24),
+            Icon(AppIcons.feedbackOutlined, size: 24),
             SizedBox(width: 12),
             Expanded(child: Text('Feedback Esercizio')),
           ],
@@ -141,12 +142,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
-            icon: const Icon(Icons.arrow_downward, size: 18),
+            icon: const Icon(AppIcons.arrowDownward, size: 18),
             label: const Text('Riduci priorità'),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop('remove'),
-            icon: const Icon(Icons.delete_outline, size: 18),
+            icon: const Icon(AppIcons.deleteOutline, size: 18),
             label: const Text('Rimuovi'),
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.errorContainer,
@@ -347,7 +348,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -359,12 +360,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         actions: [
           if (_selectedExercises.isNotEmpty)
             IconButton(
-              icon: Icon(widget.multiSelectMode ? Icons.check : Icons.add),
+              icon: Icon(widget.multiSelectMode ? AppIcons.check : AppIcons.add),
               onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
               tooltip: widget.multiSelectMode ? 'Select Exercises' : l10n.addToWorkout,
             ),
           IconButton(
-            icon: Icon(_showFilters ? Icons.filter_list : Icons.filter_list_outlined),
+            icon: Icon(_showFilters ? AppIcons.filter : AppIcons.filterListOutlined),
             onPressed: () => setState(() => _showFilters = !_showFilters),
             tooltip: l10n.filters,
           ),
@@ -388,10 +389,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       )
-                    : const Icon(Icons.search),
+                    : const Icon(AppIcons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear),
+                        icon: const Icon(AppIcons.clear),
                         onPressed: () {
                           _searchController.clear();
                           setState(() {
@@ -511,7 +512,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                     FilledButton.icon(
                       onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
-                      icon: Icon(widget.multiSelectMode ? Icons.check : Icons.add),
+                      icon: Icon(widget.multiSelectMode ? AppIcons.check : AppIcons.add),
                       label: Text(widget.multiSelectMode ? l10n.confirm : l10n.add),
                     ),
                   ],
@@ -572,7 +573,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           child: Row(
             children: [
               Icon(
-                Icons.auto_awesome,
+                AppIcons.autoAwesome,
                 size: 16,
                 color: context.colors.primary,
               ),
@@ -643,7 +644,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           Row(
             children: [
               Icon(
-                Icons.help_outline,
+                AppIcons.help,
                 color: context.colors.primary,
                 size: 28,
               ),
@@ -671,7 +672,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: _showAddTemporaryExerciseDialog,
-              icon: const Icon(Icons.add_circle_outline),
+              icon: const Icon(AppIcons.addCircleOutline),
               label: Text(l10n.addTemporaryExercise),
               style: FilledButton.styleFrom(
                 backgroundColor: context.colors.primaryContainer,
@@ -695,7 +696,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         title: Row(
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: context.colors.primary,
             ),
             const SizedBox(width: 12),
@@ -722,7 +723,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 labelText: l10n.enterExerciseName,
                 hintText: 'es. Bulgarian Split Squat',
                 border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.edit),
+                prefixIcon: const Icon(AppIcons.edit),
               ),
               textCapitalization: TextCapitalization.words,
             ),
@@ -801,7 +802,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 ),
               );
             },
-            icon: const Icon(Icons.check),
+            icon: const Icon(AppIcons.check),
             label: Text(l10n.add),
           ),
         ],
@@ -836,7 +837,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+          const Icon(AppIcons.error, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Text('${l10n.errorLoadingData}: $error'),
           const SizedBox(height: 16),
@@ -963,7 +964,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             child: Row(
               children: [
                 Icon(
-                  _showMuscleGroupsFilter ? Icons.expand_more : Icons.chevron_right,
+                  _showMuscleGroupsFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -1030,7 +1031,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             child: Row(
               children: [
                 Icon(
-                  _showDifficultyFilter ? Icons.expand_more : Icons.chevron_right,
+                  _showDifficultyFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -1094,7 +1095,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             child: Row(
               children: [
                 Icon(
-                  _showEquipmentFilter ? Icons.expand_more : Icons.chevron_right,
+                  _showEquipmentFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -1156,7 +1157,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     if (isSelected) {
       return CircleAvatar(
         backgroundColor: context.colors.primary,
-        child: const Icon(Icons.check, color: Colors.white),
+        child: const Icon(AppIcons.check, color: Colors.white),
       );
     }
     
@@ -1259,8 +1260,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ],
         ),
         trailing: isSelected
-            ? Icon(Icons.check_circle, color: context.colors.primary)
-            : (widget.selectionMode ? const Icon(Icons.arrow_forward_ios, size: 16) : const Icon(Icons.radio_button_unchecked)),
+            ? Icon(AppIcons.complete, color: context.colors.primary)
+            : (widget.selectionMode ? const Icon(AppIcons.forwardIos, size: 16) : const Icon(AppIcons.radioButtonUnchecked)),
         onTap: () {
           // Selection mode: return exercise and close
           if (widget.selectionMode) {
@@ -1356,7 +1357,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             if (wasAutoCorrected) ...[
               const SizedBox(width: 4),
               Icon(
-                Icons.auto_fix_high,
+                AppIcons.autoFixHigh,
                 size: 16,
                 color: context.colors.secondary,
               ),
@@ -1470,7 +1471,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(4),
                     child: Icon(
-                      Icons.close,
+                      AppIcons.close,
                       size: 16,
                       color: context.colors.error.withOpacity(0.7),
                     ),
@@ -1480,10 +1481,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               if (!isSelected && !widget.selectionMode) const SizedBox(width: 4),
               // Selection icon
               isSelected
-                  ? Icon(Icons.check_circle, color: context.colors.primary)
+                  ? Icon(AppIcons.complete, color: context.colors.primary)
                   : (widget.selectionMode
-                      ? const Icon(Icons.arrow_forward_ios, size: 16)
-                      : const Icon(Icons.radio_button_unchecked)),
+                      ? const Icon(AppIcons.forwardIos, size: 16)
+                      : const Icon(AppIcons.radioButtonUnchecked)),
             ],
           ),
         ),
@@ -1519,7 +1520,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       children: [
         const SizedBox(height: 64),
         Icon(
-          Icons.search_off,
+          AppIcons.searchOff,
           size: 64,
           color: context.colors.onSurface.withOpacity(0.5),
         ),

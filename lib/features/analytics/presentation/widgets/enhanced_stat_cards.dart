@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/enhanced_statistics_dashboard.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Stat Card with Material 3 styling
 class EnhancedStatCard extends StatelessWidget {
@@ -98,15 +99,15 @@ class EnhancedStatCard extends StatelessWidget {
 
     switch (trend) {
       case StatTrend.positive:
-        trendIcon = Icons.trending_up;
+        trendIcon = AppIcons.trendUp;
         trendColor = Colors.green;
         break;
       case StatTrend.negative:
-        trendIcon = Icons.trending_down;
+        trendIcon = AppIcons.trendDown;
         trendColor = Colors.red;
         break;
       case StatTrend.neutral:
-        trendIcon = Icons.trending_flat;
+        trendIcon = AppIcons.trendFlat;
         trendColor = Colors.grey;
         break;
     }
@@ -158,7 +159,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.emoji_events,
+                  AppIcons.achievement,
                   color: colorScheme.primary,
                   size: 24,
                 ),
@@ -278,7 +279,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
         child: Column(
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               size: 48,
               color: Colors.grey.withOpacity(0.5),
             ),
@@ -363,7 +364,7 @@ class EnhancedStreakCard extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.local_fire_department,
+                  AppIcons.streak,
                   color: Colors.orange,
                   size: 24,
                 ),
@@ -413,21 +414,21 @@ class EnhancedStreakCard extends StatelessWidget {
                 context,
                 '${streakData.currentStreak}',
                 'Current Streak',
-                Icons.local_fire_department,
+                AppIcons.streak,
                 Colors.orange,
               ),
               _buildStreakStat(
                 context,
                 '${streakData.longestStreak}',
                 'Best Streak',
-                Icons.emoji_events,
+                AppIcons.achievement,
                 Colors.amber,
               ),
               _buildStreakStat(
                 context,
                 '${streakData.weeklyGoal}/${streakData.weeklyGoalTarget}',
                 'Weekly Goal',
-                Icons.flag,
+                AppIcons.flag,
                 Colors.green,
               ),
             ],

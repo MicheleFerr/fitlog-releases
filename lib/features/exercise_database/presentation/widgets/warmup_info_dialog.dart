@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog that explains the 3 phases of proper warmup protocol
 class WarmupInfoDialog extends StatelessWidget {
@@ -106,7 +107,7 @@ class WarmupInfoDialog extends StatelessWidget {
                       child: Row(
                         children: [
                           const Icon(
-                            Icons.auto_awesome,
+                            AppIcons.autoAwesome,
                             color: Colors.green,
                             size: 18,
                           ),
@@ -144,7 +145,7 @@ class WarmupInfoDialog extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.info_outline,
+                          AppIcons.info,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),

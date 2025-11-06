@@ -5,6 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/timer_sound.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TimerSoundSelector extends ConsumerWidget {
   
@@ -51,7 +52,7 @@ class TimerSoundSelector extends ConsumerWidget {
       },
       secondary: IconButton(
         onPressed: () => _playPreview(context, sound),
-        icon: const Icon(Icons.play_arrow, size: 20),
+        icon: const Icon(AppIcons.play, size: 20),
         tooltip: AppLocalizations.of(context).playPreview,
       ),
     );

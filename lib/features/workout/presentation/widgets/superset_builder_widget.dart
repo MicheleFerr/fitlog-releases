@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_con
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 UX widget for creating supersets with professional fitness app design
 class SupersetBuilderWidget extends ConsumerStatefulWidget {
@@ -124,7 +125,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.link,
+              AppIcons.link,
               color: theme.colorScheme.primary,
               size: 24,
             ),
@@ -232,7 +233,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
             HapticFeedback.lightImpact();
           },
           icon: Icon(
-            Icons.close,
+            AppIcons.close,
             color: theme.colorScheme.error,
           ),
         ),
@@ -252,7 +253,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.add_circle_outline,
+                AppIcons.addCircleOutline,
                 color: theme.colorScheme.primary,
               ),
               const SizedBox(width: 8),
@@ -286,7 +287,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
             if (_rounds.length < 5)
               TextButton.icon(
                 onPressed: _addRound,
-                icon: const Icon(Icons.add, size: 16),
+                icon: const Icon(AppIcons.add, size: 16),
                 label: const Text('Add Round'),
               ),
           ],
@@ -346,7 +347,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                   IconButton(
                     onPressed: () => _removeRound(index),
                     icon: Icon(
-                      Icons.delete_outline,
+                      AppIcons.deleteOutline,
                       color: theme.colorScheme.error,
                       size: 20,
                     ),
@@ -419,7 +420,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                             theme: theme,
                             label: AppLocalizations.of(context).reps,
                             value: '${exerciseConfig?.targetReps ?? 12}',
-                            icon: Icons.repeat,
+                            icon: AppIcons.repeat,
                             color: theme.colorScheme.secondary,
                             onTap: () => _showRepsPicker(
                               context,
@@ -436,7 +437,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                             theme: theme,
                             label: AppLocalizations.of(context).weight,
                             value: exerciseConfig?.targetWeight?.toStringAsFixed(1) ?? '-',
-                            icon: Icons.fitness_center,
+                            icon: AppIcons.workout,
                             color: theme.colorScheme.primary,
                             onTap: () => _showWeightPicker(
                               context,
@@ -489,7 +490,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.info,
                         size: 20,
                         color: theme.colorScheme.primary,
                       ),
@@ -578,7 +579,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
       width: double.infinity,
       child: FilledButton.icon(
         onPressed: config.isValid ? () => _createSuperset(config) : null,
-        icon: const Icon(Icons.fitness_center),
+        icon: const Icon(AppIcons.workout),
         label: Text(l10n.createSuperset),
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -731,7 +732,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                 ],
               ),
             ),
-            Icon(Icons.edit, size: 14, color: color.withValues(alpha: 0.7)),
+            Icon(AppIcons.edit, size: 14, color: color.withValues(alpha: 0.7)),
           ],
         ),
       ),

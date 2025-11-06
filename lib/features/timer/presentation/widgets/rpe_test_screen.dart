@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/rpe_live_activity_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen di test per il sistema RPE Live Activities
 class RPETestScreen extends ConsumerWidget {
@@ -77,7 +78,7 @@ class RPETestScreen extends ConsumerWidget {
             // Test button
             ElevatedButton.icon(
               onPressed: () => _testRPESystem(context, ref),
-              icon: const Icon(Icons.play_arrow),
+              icon: const Icon(AppIcons.play),
               label: const Text('🧪 Testa Sistema RPE'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),

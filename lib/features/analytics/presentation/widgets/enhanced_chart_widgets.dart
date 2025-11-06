@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Volume Chart with Material 3 styling
 class EnhancedVolumeChart extends StatelessWidget {
@@ -27,7 +28,7 @@ class EnhancedVolumeChart extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.bar_chart,
+                  AppIcons.barChart,
                   color: colorScheme.primary,
                   size: 24,
                 ),
@@ -40,14 +41,14 @@ class EnhancedVolumeChart extends StatelessWidget {
                 ),
                 const Spacer(),
                 PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert, color: colorScheme.outline),
+                  icon: Icon(AppIcons.moreVert, color: colorScheme.outline),
                   onSelected: (value) => _handleChartAction(value),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'export',
                       child: Row(
                         children: [
-                          const Icon(Icons.download),
+                          const Icon(AppIcons.download),
                           const SizedBox(width: 8),
                           Text(localizations.exportData),
                         ],
@@ -57,7 +58,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                       value: 'details',
                       child: Row(
                         children: [
-                          const Icon(Icons.info_outlined),
+                          const Icon(AppIcons.infoOutlined),
                           const SizedBox(width: 8),
                           Text(localizations.viewDetails),
                         ],
@@ -225,7 +226,7 @@ class EnhancedVolumeChart extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            isImproving ? Icons.trending_up : Icons.trending_down,
+            isImproving ? AppIcons.trendUp : AppIcons.trendDown,
             color: isImproving ? Colors.green : Colors.red,
             size: 20,
           ),
@@ -285,7 +286,7 @@ class EnhancedVolumeChart extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.bar_chart,
+            AppIcons.barChart,
             size: 48,
             color: Colors.grey.withOpacity(0.5),
           ),
@@ -330,7 +331,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.calendar_today,
+                  AppIcons.calendar,
                   color: colorScheme.secondary,
                   size: 24,
                 ),
@@ -465,7 +466,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.emoji_events,
+                AppIcons.achievement,
                 color: colorScheme.secondary,
                 size: 16,
               ),
@@ -480,7 +481,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.analytics,
+                AppIcons.analytics,
                 color: colorScheme.outline,
                 size: 16,
               ),
@@ -518,7 +519,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.calendar_today,
+            AppIcons.calendar,
             size: 48,
             color: Colors.grey.withOpacity(0.5),
           ),
@@ -585,7 +586,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.donut_large,
+                  AppIcons.donutLarge,
                   color: colorScheme.tertiary,
                   size: 24,
                 ),
@@ -736,7 +737,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.donut_large,
+            AppIcons.donutLarge,
             size: 48,
             color: Colors.grey.withOpacity(0.5),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RadialContributionMenu extends StatefulWidget {
   
@@ -38,25 +39,25 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
     
     _menuItems.addAll([
       _MenuItem(
-        icon: Icons.lightbulb,
+        icon: AppIcons.lightbulb,
         label: 'Consiglio',
         color: Colors.amber,
         onTap: widget.onTip,
       ),
       _MenuItem(
-        icon: Icons.warning_amber_rounded,
+        icon: AppIcons.warningAmberRounded,
         label: 'Avviso',
         color: Colors.orange,
         onTap: widget.onWarning,
       ),
       _MenuItem(
-        icon: Icons.edit_note,
+        icon: AppIcons.editNote,
         label: 'Correzione',
         color: Colors.blue,
         onTap: widget.onCorrection,
       ),
       _MenuItem(
-        icon: Icons.fitness_center,
+        icon: AppIcons.workout,
         label: 'Tecnica',
         color: Colors.purple,
         onTap: widget.onTechnique,
@@ -219,7 +220,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                         });
                       },
                       icon: const Icon(
-                        Icons.close,
+                        AppIcons.close,
                         color: Colors.white,
                         size: 32,
                       ),

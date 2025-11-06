@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/widgets/exercise_
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DatabaseManagerScreen extends ConsumerStatefulWidget {
   const DatabaseManagerScreen({super.key});
@@ -84,7 +85,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
       title: Row(
         children: [
           Icon(
-            Icons.storage,
+            AppIcons.storage,
             color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(width: 8),
@@ -101,21 +102,21 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             }
           },
           icon: Icon(
-            _isMultiSelectMode ? Icons.check_box : Icons.check_box_outline_blank,
+            _isMultiSelectMode ? AppIcons.checkBox : AppIcons.checkBoxOutlineBlank,
           ),
           tooltip: l10n.multiSelectMode,
         ),
 
         // Export menu
         PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert),
+          icon: const Icon(AppIcons.moreVert),
           onSelected: (value) => _handleMenuAction(value, context, l10n),
           itemBuilder: (context) => [
             PopupMenuItem(
               value: 'export_all',
               child: Row(
                 children: [
-                  const Icon(Icons.download),
+                  const Icon(AppIcons.download),
                   const SizedBox(width: 8),
                   Text(l10n.exportAllJson),
                 ],
@@ -126,7 +127,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
               enabled: state.hasSelection,
               child: Row(
                 children: [
-                  const Icon(Icons.download_done),
+                  const Icon(AppIcons.downloadDone),
                   const SizedBox(width: 8),
                   Text(l10n.exportSelectedJson),
                 ],
@@ -137,7 +138,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
               value: 'import',
               child: Row(
                 children: [
-                  const Icon(Icons.upload),
+                  const Icon(AppIcons.export),
                   const SizedBox(width: 8),
                   Text(l10n.importJson),
                 ],
@@ -148,7 +149,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
               value: 'refresh',
               child: Row(
                 children: [
-                  const Icon(Icons.refresh),
+                  const Icon(AppIcons.refresh),
                   const SizedBox(width: 8),
                   Text(l10n.refresh),
                 ],
@@ -175,18 +176,18 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             _StatChip(
               label: l10n.totalExercises,
               value: data['totalExercises']?.toString() ?? '0',
-              icon: Icons.fitness_center,
+              icon: AppIcons.workout,
             ),
             _StatChip(
               label: l10n.bodyweight,
               value: data['bodyweightCount']?.toString() ?? '0',
-              icon: Icons.accessibility,
+              icon: AppIcons.accessibilityIcon,
               color: Theme.of(context).colorScheme.secondary,
             ),
             _StatChip(
               label: l10n.uniqueMuscles,
               value: data['uniqueMuscles']?.toString() ?? '0',
-              icon: Icons.category,
+              icon: AppIcons.category,
             ),
           ],
         ),
@@ -222,10 +223,10 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             controller: _searchController,
             decoration: InputDecoration(
               hintText: l10n.searchExercises,
-              prefixIcon: const Icon(Icons.search),
+              prefixIcon: const Icon(AppIcons.search),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.clear),
+                      icon: const Icon(AppIcons.clear),
                       onPressed: () {
                         _searchController.clear();
                         _applySearch();
@@ -283,7 +284,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                       state.selectedExerciseType != null)
                     ActionChip(
                       label: Text(l10n.clearFilters),
-                      avatar: const Icon(Icons.clear_all, size: 18),
+                      avatar: const Icon(AppIcons.clearAll, size: 18),
                       onPressed: () {
                         _searchController.clear();
                         ref.read(databaseManagerProvider.notifier).resetFilters();
@@ -319,14 +320,14 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           // Bulk actions
           TextButton.icon(
             onPressed: () => _showBulkEditDialog(context, l10n),
-            icon: const Icon(Icons.edit, size: 18),
+            icon: const Icon(AppIcons.edit, size: 18),
             label: Text(l10n.bulkEdit),
           ),
           const SizedBox(width: 8),
 
           TextButton.icon(
             onPressed: () => _confirmBulkDelete(context, l10n),
-            icon: const Icon(Icons.delete, size: 18, color: Colors.red),
+            icon: const Icon(AppIcons.delete, size: 18, color: Colors.red),
             label: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
@@ -349,7 +350,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error,
+              AppIcons.error,
               size: 64,
               color: Theme.of(context).colorScheme.error,
             ),
@@ -358,7 +359,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () => ref.read(databaseManagerProvider.notifier).loadExercises(),
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(AppIcons.refresh),
               label: Text(l10n.retry),
             ),
           ],
@@ -371,7 +372,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.search_off, size: 64),
+            const Icon(AppIcons.searchOff, size: 64),
             const SizedBox(height: 16),
             Text(l10n.noExercisesFound),
             const SizedBox(height: 8),
@@ -381,7 +382,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                   _searchController.clear();
                   ref.read(databaseManagerProvider.notifier).resetFilters();
                 },
-                icon: const Icon(Icons.clear),
+                icon: const Icon(AppIcons.clear),
                 label: Text(l10n.clearFilters),
               ),
           ],
@@ -430,7 +431,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   Widget _buildFAB(BuildContext context, AppLocalizations l10n) {
     return FloatingActionButton.extended(
       onPressed: () => _openExerciseEditor(context, null),
-      icon: const Icon(Icons.add),
+      icon: const Icon(AppIcons.add),
       label: Text(l10n.addExercise),
     );
   }
@@ -761,7 +762,7 @@ class _FilterChip extends StatelessWidget {
               onChanged: onChanged,
               isDense: true,
               icon: value == null
-                  ? const Icon(Icons.arrow_drop_down, size: 18)
+                  ? const Icon(AppIcons.arrowDropDown, size: 18)
                   : const SizedBox.shrink(),
             ),
           ),
@@ -778,7 +779,7 @@ class _FilterChip extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.clear,
+                  AppIcons.clear,
                   size: 14,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),

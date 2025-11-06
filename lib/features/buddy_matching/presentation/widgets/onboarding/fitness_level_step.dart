@@ -16,6 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FitnessLevelStep extends StatelessWidget {
 
@@ -169,13 +170,13 @@ class FitnessLevelStep extends StatelessWidget {
                 // Selection indicator
                 if (isSelected)
                   Icon(
-                    Icons.check_circle,
+                    AppIcons.complete,
                     color: theme.colorScheme.primary,
                     size: 24,
                   )
                 else
                   Icon(
-                    Icons.radio_button_unchecked,
+                    AppIcons.radioButtonUnchecked,
                     color: theme.colorScheme.outline.withValues(alpha: 0.5),
                     size: 24,
                   ),
@@ -203,13 +204,13 @@ class FitnessLevelStep extends StatelessWidget {
   IconData _getLevelIcon(FitnessLevel level) {
     switch (level) {
       case FitnessLevel.beginner:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case FitnessLevel.intermediate:
-        return Icons.trending_up;
+        return AppIcons.trendUp;
       case FitnessLevel.advanced:
-        return Icons.local_fire_department;
+        return AppIcons.streak;
       case FitnessLevel.expert:
-        return Icons.emoji_events;
+        return AppIcons.achievement;
     }
   }
 

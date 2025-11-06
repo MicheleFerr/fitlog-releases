@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/community/data/services/demo_profiles_loader.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
   const BuddyMatchingScreen({super.key});
@@ -47,7 +48,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
       // floatingActionButton: FloatingActionButton.extended(
       //   onPressed: () => _loadDemoProfiles(context),
       //   backgroundColor: theme.colorScheme.tertiary,
-      //   icon: const Icon(Icons.science),
+      //   icon: const Icon(AppIcons.science),
       //   label: const Text('Demo Profiles'),
       //   tooltip: 'Carica 10 Profili Demo per Testing',
       // ),
@@ -57,7 +58,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const Icon(AppIcons.error, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               Text('Errore: $error'),
               const SizedBox(height: 16),
@@ -177,7 +178,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                     //   heroTag: 'skip',
                     //   backgroundColor: Colors.grey.shade200,
                     //   onPressed: profiles.isNotEmpty ? () => _handleSwipe(profiles.first, false) : null,
-                    //   child: const Icon(Icons.close, color: Colors.red, size: 32),
+                    //   child: const Icon(AppIcons.close, color: Colors.red, size: 32),
                     // ),
                     
                     // Super like button (future feature) - COMMENTED OUT
@@ -185,7 +186,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                     //   heroTag: 'super',
                     //   backgroundColor: Colors.blue.shade100,
                     //   onPressed: null, // Disabled for now
-                    //   child: const Icon(Icons.star, color: Colors.blue, size: 32),
+                    //   child: const Icon(AppIcons.star, color: Colors.blue, size: 32),
                     // ),
                     
                     // Like button - COMMENTED OUT
@@ -193,7 +194,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                     //   heroTag: 'like',
                     //   backgroundColor: Colors.green.shade100,
                     //   onPressed: profiles.isNotEmpty ? () => _handleSwipe(profiles.first, true) : null,
-                    //   child: const Icon(Icons.favorite, color: Colors.green, size: 32),
+                    //   child: const Icon(AppIcons.favorite, color: Colors.green, size: 32),
                     // ),
                   ],
                 ),
@@ -267,7 +268,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.location_on, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+                        Icon(AppIcons.location, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
                         const SizedBox(width: 4),
                         Text(
                           profile.location!,
@@ -294,7 +295,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+                            const Icon(AppIcons.camera, color: Colors.white, size: 16),
                             const SizedBox(width: 6),
                             Text(
                               '@${profile.instagramHandle}',
@@ -331,7 +332,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                     // Fitness level
                     _buildInfoChip(
                       context,
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       _getLevelLabel(profile.preferences.fitnessLevel),
                       theme.colorScheme.primary,
                     ),
@@ -384,7 +385,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                     // Personality
                     _buildInfoChip(
                       context,
-                      Icons.psychology,
+                      AppIcons.ai,
                       _getPersonalityLabel(profile.preferences.personalityType),
                       theme.colorScheme.secondary,
                     ),
@@ -429,7 +430,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.explore_off,
+            AppIcons.exploreOff,
             size: 80,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
@@ -448,7 +449,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
           const SizedBox(height: 32),
           OutlinedButton.icon(
             onPressed: () => ref.refresh(potentialMatchesProvider),
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             label: const Text('Ricarica'),
           ),
         ],

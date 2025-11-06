@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insight_localizer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Carousel widget for displaying training insights
 class InsightsCarousel extends StatefulWidget {
@@ -55,7 +56,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
           child: Row(
             children: [
               Icon(
-                Icons.info_outline,
+                AppIcons.info,
                 size: 16,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -176,7 +177,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.lightbulb_outline,
+                      AppIcons.tip,
                       size: 16,
                       color: colorScheme.onPrimaryContainer,
                     ),
@@ -240,15 +241,15 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
   IconData _getIconForInsight(TrainingInsight insight) {
     switch (insight.type) {
       case InsightType.achievement:
-        return Icons.check_circle;
+        return AppIcons.complete;
       case InsightType.warning:
-        return Icons.warning;
+        return AppIcons.warning;
       case InsightType.suggestion:
-        return Icons.lightbulb;
+        return AppIcons.lightbulb;
       case InsightType.info:
-        return Icons.info;
+        return AppIcons.infoIcon;
       case InsightType.motivation:
-        return Icons.local_fire_department;
+        return AppIcons.streak;
     }
   }
 
@@ -344,7 +345,7 @@ class _InsightDetailsSheet extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.lightbulb,
+                  AppIcons.lightbulb,
                   color: colorScheme.onPrimaryContainer,
                 ),
                 const SizedBox(width: 12),

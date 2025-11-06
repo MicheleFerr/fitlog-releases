@@ -16,6 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SuperLikeButton extends ConsumerWidget {
 
@@ -76,7 +77,7 @@ class SuperLikeButton extends ConsumerWidget {
                   scale: canSuperLike ? 1.0 : 0.8,
                   duration: const Duration(milliseconds: 150),
                   child: Icon(
-                    Icons.star,
+                    AppIcons.star,
                     size: 28,
                     color: canSuperLike 
                         ? Colors.white 
@@ -308,7 +309,7 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(
-                          Icons.star,
+                          AppIcons.star,
                           size: 64,
                           color: Colors.white,
                         ),

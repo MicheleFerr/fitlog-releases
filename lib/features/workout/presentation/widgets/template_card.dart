@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplateCard extends StatelessWidget {
 
@@ -84,7 +85,7 @@ class TemplateCard extends StatelessWidget {
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(Icons.edit, size: 20),
+                                Icon(AppIcons.edit, size: 20),
                                 SizedBox(width: 8),
                                 Text('Modifica'),
                               ],
@@ -95,7 +96,7 @@ class TemplateCard extends StatelessWidget {
                             value: 'delete',
                             child: Row(
                               children: [
-                                Icon(Icons.delete, size: 20, color: Colors.red),
+                                Icon(AppIcons.delete, size: 20, color: Colors.red),
                                 SizedBox(width: 8),
                                 Text('Elimina', style: TextStyle(color: Colors.red)),
                               ],
@@ -113,14 +114,14 @@ class TemplateCard extends StatelessWidget {
                 children: [
                   _buildStat(
                     context,
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     '${template.exercises.length}',
                     'esercizi',
                   ),
                   const SizedBox(width: 24),
                   _buildStat(
                     context,
-                    Icons.schedule,
+                    AppIcons.schedule,
                     '${template.estimatedDuration}',
                     'min',
                   ),
@@ -128,7 +129,7 @@ class TemplateCard extends StatelessWidget {
                     const SizedBox(width: 24),
                     _buildStat(
                       context,
-                      Icons.trending_up,
+                      AppIcons.trendUp,
                       '${template.usageCount}',
                       'utilizzi',
                     ),
@@ -159,7 +160,7 @@ class TemplateCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          template.isCustom ? Icons.person : Icons.star,
+                          template.isCustom ? AppIcons.person : AppIcons.star,
                           size: 12,
                           color: template.isCustom 
                               ? Theme.of(context).colorScheme.primary
@@ -338,7 +339,7 @@ class TemplateCard extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  template.isCustom ? Icons.person : Icons.star,
+                  template.isCustom ? AppIcons.person : AppIcons.star,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
@@ -370,7 +371,7 @@ class TemplateCard extends StatelessWidget {
           // Opzioni menu
           ListTile(
             leading: Icon(
-              Icons.play_arrow,
+              AppIcons.play,
               color: Theme.of(context).colorScheme.primary,
             ),
             title: Text(AppLocalizations.of(context).startWorkout),
@@ -385,7 +386,7 @@ class TemplateCard extends StatelessWidget {
 
           if (onEdit != null)
             ListTile(
-              leading: const Icon(Icons.edit),
+              leading: const Icon(AppIcons.edit),
               title: Text(AppLocalizations.of(context).edit),
               subtitle: Text(AppLocalizations.of(context).customizeTemplate),
               onTap: () {
@@ -396,7 +397,7 @@ class TemplateCard extends StatelessWidget {
 
           if (onDelete != null)
             ListTile(
-              leading: const Icon(Icons.delete, color: Colors.red),
+              leading: const Icon(AppIcons.delete, color: Colors.red),
               title: Text(
                 AppLocalizations.of(context).delete,
                 style: const TextStyle(color: Colors.red),

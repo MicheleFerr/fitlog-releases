@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Large hero card for displaying primary metrics
 class HeroStatCard extends StatelessWidget {
@@ -57,7 +58,7 @@ class HeroStatCard extends StatelessWidget {
                 right: -20,
                 bottom: -20,
                 child: Icon(
-                  icon ?? Icons.show_chart,
+                  icon ?? AppIcons.lineChart,
                   size: 120,
                   color: Colors.white.withValues(alpha: 0.1),
                 ),

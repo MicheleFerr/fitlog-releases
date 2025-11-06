@@ -62,3 +62,9 @@ google-services-*.json
 !google-services.json  # Allow the default one
 GoogleService-Info-*.plist
 !GoogleService-Info.plist  # Allow the default one
+
+# Git worktrees
+.worktrees/
+
+# Test artifacts
+test/.hive_test/

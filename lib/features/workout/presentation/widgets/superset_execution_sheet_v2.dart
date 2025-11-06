@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// ⚠️ DEPRECATED: Use SupersetSequentialExecutionSheet instead
 ///
@@ -209,7 +210,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                           }
                         : null,
                     icon: Icon(
-                      Icons.arrow_back_ios,
+                      AppIcons.arrowBackIos,
                       color: _currentPage > 0 
                           ? context.colors.primary
                           : context.colors.outline.withOpacity(0.3),
@@ -249,7 +250,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                           }
                         : null,
                     icon: Icon(
-                      Icons.arrow_forward_ios,
+                      AppIcons.forwardIos,
                       color: _currentPage < widget.superset.exercises.length - 1
                           ? context.colors.primary
                           : context.colors.outline.withOpacity(0.3),
@@ -308,7 +309,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.fitness_center, 
+                                      Icon(AppIcons.workout, 
                                         color: context.colors.primary, 
                                         size: 20
                                       ),
@@ -328,7 +329,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                     children: [
                                       IconButton(
                                         onPressed: () => _quickAdjustWeight(-2.5),
-                                        icon: Icon(Icons.remove, 
+                                        icon: Icon(AppIcons.remove, 
                                           color: context.colors.error),
                                         style: IconButton.styleFrom(
                                           backgroundColor: context.colors.errorContainer,
@@ -361,7 +362,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       const SizedBox(width: 16),
                                       IconButton(
                                         onPressed: () => _quickAdjustWeight(2.5),
-                                        icon: Icon(Icons.add, 
+                                        icon: Icon(AppIcons.add, 
                                           color: context.colors.primary),
                                         style: IconButton.styleFrom(
                                           backgroundColor: context.colors.primaryContainer,
@@ -382,7 +383,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.repeat, 
+                                      Icon(AppIcons.repeat, 
                                         color: context.colors.primary, 
                                         size: 20
                                       ),
@@ -402,7 +403,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                     children: [
                                       IconButton(
                                         onPressed: () => _quickAdjustReps(-1),
-                                        icon: Icon(Icons.remove, 
+                                        icon: Icon(AppIcons.remove, 
                                           color: context.colors.error),
                                         style: IconButton.styleFrom(
                                           backgroundColor: context.colors.errorContainer,
@@ -436,7 +437,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       const SizedBox(width: 16),
                                       IconButton(
                                         onPressed: () => _quickAdjustReps(1),
-                                        icon: Icon(Icons.add, 
+                                        icon: Icon(AppIcons.add, 
                                           color: context.colors.primary),
                                         style: IconButton.styleFrom(
                                           backgroundColor: context.colors.primaryContainer,
@@ -465,7 +466,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                Icon(Icons.info_outline, 
+                                Icon(AppIcons.info, 
                                   color: context.colors.outline, 
                                   size: 20
                                 ),

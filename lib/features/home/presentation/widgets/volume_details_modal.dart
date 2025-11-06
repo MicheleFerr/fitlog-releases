@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VolumeDetailsModal extends ConsumerWidget {
   
@@ -89,7 +90,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: Colors.white,
                     size: 28,
                   ),
@@ -116,7 +117,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -173,7 +174,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        percentageChange >= 0 ? Icons.trending_up : Icons.trending_down,
+                        percentageChange >= 0 ? AppIcons.trendUp : AppIcons.trendDown,
                         color: percentageChange >= 0 ? Colors.green : Colors.red,
                         size: 20,
                       ),
@@ -210,7 +211,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     label: l10n.dailyAverage,
                     value: '${(settings.convertWeight(avgDailyVolume) / 1000).toStringAsFixed(1)}k',
                     unit: unitSymbol,
-                    icon: Icons.equalizer,
+                    icon: AppIcons.equalizer,
                     color: Colors.blue,
                   ),
                 ),
@@ -220,7 +221,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     label: l10n.bestDay,
                     value: '${(settings.convertWeight(maxDailyVolume) / 1000).toStringAsFixed(1)}k',
                     unit: unitSymbol,
-                    icon: Icons.emoji_events,
+                    icon: AppIcons.achievement,
                     color: Colors.orange,
                   ),
                 ),
@@ -426,7 +427,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.lightbulb_outline,
+                        AppIcons.tip,
                         color: theme.colorScheme.tertiary,
                         size: 20,
                       ),

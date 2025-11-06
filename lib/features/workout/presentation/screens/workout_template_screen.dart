@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_rep
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Schermata semplificata per gestione template di workout
 class WorkoutTemplateScreen extends ConsumerStatefulWidget {
@@ -85,12 +86,12 @@ class _WorkoutTemplateScreenState extends ConsumerState<WorkoutTemplateScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(AppIcons.arrowBackIos),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(AppIcons.add),
             onPressed: () => _showCreateTemplateDialog(context),
           ),
         ],
@@ -158,13 +159,13 @@ class _WorkoutTemplateScreenState extends ConsumerState<WorkoutTemplateScreen>
             decoration: InputDecoration(
               hintText: l10n.searchTemplates,
               prefixIcon: Icon(
-                Icons.search,
+                AppIcons.search,
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
                       icon: Icon(
-                        Icons.clear,
+                        AppIcons.clear,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       onPressed: () {
@@ -210,7 +211,7 @@ class _WorkoutTemplateScreenState extends ConsumerState<WorkoutTemplateScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 64,
               color: colorScheme.error,
             ),
@@ -279,7 +280,7 @@ class _WorkoutTemplateScreenState extends ConsumerState<WorkoutTemplateScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               size: 64,
               color: colorScheme.primary.withValues(alpha: 0.6),
             ),
@@ -309,7 +310,7 @@ class _WorkoutTemplateScreenState extends ConsumerState<WorkoutTemplateScreen>
               const SizedBox(height: 24),
               ElevatedButton.icon(
                 onPressed: () => _showCreateTemplateDialog(context),
-                icon: const Icon(Icons.add),
+                icon: const Icon(AppIcons.add),
                 label: Text(l10n.createTemplate),
               ),
             ],
@@ -367,7 +368,7 @@ class _WorkoutTemplateScreenState extends ConsumerState<WorkoutTemplateScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             color: colorScheme.primary,
                             size: 24,
                           ),
@@ -403,7 +404,7 @@ class _WorkoutTemplateScreenState extends ConsumerState<WorkoutTemplateScreen>
                         IconButton(
                           onPressed: () => _startWorkoutFromTemplate(template),
                           icon: Icon(
-                            Icons.play_arrow,
+                            AppIcons.play,
                             color: colorScheme.primary,
                           ),
                         ),

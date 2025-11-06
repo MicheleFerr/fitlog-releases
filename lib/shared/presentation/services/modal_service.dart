@@ -37,6 +37,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ModalService {
   /// Mostra bottom sheet standard (altezza ~50-90% schermo)
@@ -200,7 +201,7 @@ class ModalService {
       title: title,
       message: message,
       buttonText: buttonText ?? 'OK',
-      icon: Icons.error,
+      icon: AppIcons.error,
     );
   }
 
@@ -255,7 +256,7 @@ class ModalService {
   ///   context,
   ///   title: 'Error',
   ///   message: 'Failed to save. Retry or export?',
-  ///   icon: Icons.error,
+  ///   icon: AppIcons.error,
   ///   actions: [
   ///     DialogAction(
   ///       label: 'RETRY',

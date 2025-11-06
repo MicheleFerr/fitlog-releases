@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseSelectionDialog extends StatefulWidget {
 
@@ -102,7 +103,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: l10n.searchExercises,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(AppIcons.search),
                 border: const OutlineInputBorder(),
               ),
             ),
@@ -130,7 +131,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.search_off,
+                            AppIcons.searchOff,
                             size: 48,
                             color: colorScheme.onSurfaceVariant,
                           ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class StreakTrackerWidget extends ConsumerWidget {
   
@@ -59,7 +60,7 @@ class StreakTrackerWidget extends ConsumerWidget {
               right: -20,
               bottom: -20,
               child: Icon(
-                Icons.local_fire_department,
+                AppIcons.streak,
                 size: 120,
                 color: Colors.orange.withValues(alpha: 0.1),
               ),
@@ -78,7 +79,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
-                      Icons.local_fire_department,
+                      AppIcons.streak,
                       color: Colors.white,
                       size: 20,
                     ),
@@ -190,7 +191,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       ],
                     ),
                     child: const Icon(
-                      Icons.local_fire_department,
+                      AppIcons.streak,
                       color: Colors.white,
                       size: 24,
                     ),
@@ -278,7 +279,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       ],
                     ),
                     child: const Icon(
-                      Icons.local_fire_department,
+                      AppIcons.streak,
                       color: Colors.white,
                       size: 28,
                     ),
@@ -314,7 +315,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       context,
                       label: 'Streak Attuale',
                       value: '$streak',
-                      icon: Icons.local_fire_department,
+                      icon: AppIcons.streak,
                       color: Colors.orange,
                     ),
                   ),
@@ -324,7 +325,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       context,
                       label: 'Allenamenti Totali',
                       value: '${analyticsState.activities.length}',
-                      icon: Icons.fitness_center,
+                      icon: AppIcons.workout,
                       color: Colors.blue,
                     ),
                   ),
@@ -334,7 +335,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       context,
                       label: 'Questo Mese',
                       value: '${frequencyStats['daysInLast30'] ?? 0}',
-                      icon: Icons.calendar_today,
+                      icon: AppIcons.calendar,
                       color: Colors.green,
                     ),
                   ),
@@ -408,7 +409,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Icon(
-                                Icons.check,
+                                AppIcons.check,
                                 color: Colors.white,
                                 size: 16,
                               ),
@@ -659,7 +660,7 @@ class StreakTrackerWidget extends ConsumerWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.calendar_today,
+                    AppIcons.calendar,
                     color: theme.colorScheme.primary,
                   ),
                   const SizedBox(width: 12),
@@ -705,7 +706,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.fitness_center,
+                                AppIcons.workout,
                                 size: 16,
                                 color: theme.colorScheme.primary,
                               ),

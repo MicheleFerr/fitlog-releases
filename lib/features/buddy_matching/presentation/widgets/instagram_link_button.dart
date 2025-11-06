@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class InstagramLinkButton extends StatelessWidget {
 
@@ -67,7 +68,7 @@ class InstagramLinkButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.camera_alt,
+              AppIcons.camera,
               size: compact ? 16 : 20,
               color: Colors.white,
             ),

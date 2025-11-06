@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FitnessLevelBadge extends StatelessWidget {
 
@@ -86,13 +87,13 @@ class FitnessLevelBadge extends StatelessWidget {
   IconData _getLevelIcon(FitnessLevel level) {
     switch (level) {
       case FitnessLevel.beginner:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case FitnessLevel.intermediate:
-        return Icons.trending_up;
+        return AppIcons.trendUp;
       case FitnessLevel.advanced:
-        return Icons.local_fire_department;
+        return AppIcons.streak;
       case FitnessLevel.expert:
-        return Icons.emoji_events;
+        return AppIcons.achievement;
     }
   }
 }

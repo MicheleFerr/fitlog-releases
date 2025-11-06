@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplateCard extends StatelessWidget {
   
@@ -98,7 +99,7 @@ class TemplateCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(
-                            Icons.public,
+                            AppIcons.public,
                             size: 12,
                             color: Colors.white,
                           ),
@@ -149,21 +150,21 @@ class TemplateCard extends StatelessWidget {
                     Row(
                       children: [
                         _buildStat(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           '${template.exercises.length}',
                           colorScheme,
                         ),
                         const SizedBox(width: 12),
                         if (template.estimatedDurationMinutes != null)
                           _buildStat(
-                            Icons.timer,
+                            AppIcons.timer,
                             '${template.estimatedDurationMinutes}m',
                             colorScheme,
                           ),
                         if (template.visibility == TemplateVisibility.public) ...[
                           const SizedBox(width: 12),
                           _buildStat(
-                            Icons.star,
+                            AppIcons.star,
                             template.averageRating.toStringAsFixed(1),
                             colorScheme,
                           ),
@@ -193,7 +194,7 @@ class TemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onEdit!();
                       },
-                      icon: const Icon(Icons.edit, size: 18),
+                      icon: const Icon(AppIcons.edit, size: 18),
                       tooltip: 'Edit',
                     ),
                   if (onShare != null)
@@ -202,7 +203,7 @@ class TemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onShare!();
                       },
-                      icon: const Icon(Icons.share, size: 18),
+                      icon: const Icon(AppIcons.share, size: 18),
                       tooltip: 'Share',
                     ),
                   if (onDelete != null)
@@ -212,7 +213,7 @@ class TemplateCard extends StatelessWidget {
                         onDelete!();
                       },
                       icon: Icon(
-                        Icons.delete,
+                        AppIcons.delete,
                         size: 18,
                         color: colorScheme.error,
                       ),
@@ -277,25 +278,25 @@ class TemplateCard extends StatelessWidget {
   IconData _getCategoryIcon(TemplateCategory category) {
     switch (category) {
       case TemplateCategory.strength:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case TemplateCategory.hypertrophy:
-        return Icons.expand;
+        return AppIcons.expandIcon;
       case TemplateCategory.endurance:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case TemplateCategory.powerlifting:
-        return Icons.sports_martial_arts;
+        return AppIcons.sportsMartialArts;
       case TemplateCategory.bodybuilding:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case TemplateCategory.crossfit:
-        return Icons.sports;
+        return AppIcons.sports;
       case TemplateCategory.calisthenics:
-        return Icons.accessibility;
+        return AppIcons.accessibilityIcon;
       case TemplateCategory.cardio:
-        return Icons.favorite;
+        return AppIcons.favorite;
       case TemplateCategory.mixed:
-        return Icons.shuffle;
+        return AppIcons.shuffle;
       case TemplateCategory.custom:
-        return Icons.tune;
+        return AppIcons.tune;
     }
   }
 }

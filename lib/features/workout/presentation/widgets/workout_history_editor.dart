@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutHistoryEditor extends ConsumerStatefulWidget {
 
@@ -180,7 +181,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
                 // Close button
                 IconButton(
                   onPressed: _onClosePressed,
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                   style: IconButton.styleFrom(
                     backgroundColor: theme.colorScheme.surfaceContainerHighest,
                   ),
@@ -223,7 +224,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
                             ),
                           ),
                         )
-                      : const Icon(Icons.save, size: 18),
+                      : const Icon(AppIcons.save, size: 18),
                   label: Text(l10n.save),
                 ),
               ],
@@ -286,7 +287,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            prefixIcon: const Icon(Icons.fitness_center),
+            prefixIcon: const Icon(AppIcons.workout),
           ),
           textCapitalization: TextCapitalization.sentences,
         ),
@@ -318,7 +319,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
             child: Row(
               children: [
                 Icon(
-                  Icons.calendar_today,
+                  AppIcons.calendar,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
@@ -328,7 +329,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
                 ),
                 const Spacer(),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -344,7 +345,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
     return Row(
       children: [
         Icon(
-          Icons.fitness_center,
+          AppIcons.workout,
           color: theme.colorScheme.primary,
         ),
         const SizedBox(width: 8),
@@ -522,7 +523,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
             child: Container(
               padding: const EdgeInsets.all(4),
               child: Icon(
-                set.isCompleted ? Icons.check_box : Icons.check_box_outline_blank,
+                set.isCompleted ? AppIcons.checkBox : AppIcons.checkBoxOutlineBlank,
                 color: set.isCompleted 
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,

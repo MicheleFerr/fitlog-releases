@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Schermata profilo utente community
 class UserProfileScreen extends ConsumerStatefulWidget { // Null = current user
@@ -93,7 +94,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.error_outline,
+                      AppIcons.error,
                       size: 64,
                       color: theme.colorScheme.error,
                     ),
@@ -212,7 +213,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(
-                        Icons.stars,
+                        AppIcons.stars,
                         color: Colors.amber,
                         size: 20,
                       ),
@@ -242,25 +243,25 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildStatItem(
-                    icon: Icons.article,
+                    icon: AppIcons.article,
                     label: 'Contributi',
                     value: stats.totalContributions.toString(),
                     theme: theme,
                   ),
                   _buildStatItem(
-                    icon: Icons.check_circle,
+                    icon: AppIcons.complete,
                     label: 'Approvati',
                     value: stats.approvedContributions.toString(),
                     theme: theme,
                   ),
                   _buildStatItem(
-                    icon: Icons.local_fire_department,
+                    icon: AppIcons.streak,
                     label: 'Streak',
                     value: '${stats.currentStreak}d',
                     theme: theme,
                   ),
                   _buildStatItem(
-                    icon: Icons.percent,
+                    icon: AppIcons.percent,
                     label: 'Approval',
                     value: '${(stats.approvalRate * 100).toStringAsFixed(0)}%',
                     theme: theme,
@@ -336,7 +337,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, color: Colors.white, size: 48),
+            const Icon(AppIcons.error, color: Colors.white, size: 48),
             const SizedBox(height: 16),
             Text(
               'Errore nel caricare il profilo',
@@ -375,7 +376,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.article_outlined,
+                AppIcons.articleOutlined,
                 size: 64,
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
               ),

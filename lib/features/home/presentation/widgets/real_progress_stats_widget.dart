@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RealProgressStatsWidget extends ConsumerWidget {
   
@@ -66,7 +67,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.trending_up,
+                      AppIcons.trendUp,
                       color: theme.colorScheme.primary,
                       size: 20,
                     ),
@@ -98,19 +99,19 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       context,
                       label: 'Allenamenti',
                       value: '${frequencyStats['daysInLast30'] ?? 0}',
-                      icon: Icons.calendar_today,
+                      icon: AppIcons.calendar,
                     ),
                     _buildMiniStat(
                       context,
                       label: 'Media/settimana',
                       value: '${frequencyStats['avgPerWeek'] ?? 0}',
-                      icon: Icons.schedule,
+                      icon: AppIcons.schedule,
                     ),
                     _buildMiniStat(
                       context,
                       label: 'Streak',
                       value: '${frequencyStats['currentStreak'] ?? 0}',
-                      icon: Icons.local_fire_department,
+                      icon: AppIcons.streak,
                     ),
                   ],
                 ),
@@ -168,7 +169,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
-                      Icons.analytics,
+                      AppIcons.analytics,
                       color: Colors.white,
                       size: 24,
                     ),
@@ -261,7 +262,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: const Icon(
-                      Icons.insights,
+                      AppIcons.insights,
                       color: Colors.white,
                       size: 28,
                     ),
@@ -301,7 +302,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                     Expanded(
                       child: _buildStatCard(
                         context,
-                        icon: Icons.fitness_center,
+                        icon: AppIcons.workout,
                         label: 'Allenamenti Totali',
                         value: '${analyticsState.activities.length}',
                         color: Colors.blue,
@@ -312,7 +313,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                     Expanded(
                       child: _buildStatCard(
                         context,
-                        icon: Icons.calendar_today,
+                        icon: AppIcons.calendar,
                         label: 'Questo Mese',
                         value: '${frequencyStats['daysInLast30'] ?? 0}',
                         color: Colors.orange,
@@ -323,7 +324,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                     Expanded(
                       child: _buildStatCard(
                         context,
-                        icon: Icons.local_fire_department,
+                        icon: AppIcons.streak,
                         label: 'Streak Attuale',
                         value: '${frequencyStats['currentStreak'] ?? 0}',
                         color: Colors.red,
@@ -740,7 +741,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             size: 48,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),

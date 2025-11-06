@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseGifWidget extends StatelessWidget {
 
@@ -102,7 +103,7 @@ class ExerciseGifWidget extends StatelessWidget {
                 color: bgColor,
                 child: Center(
                   child: Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: icColor,
                     size: size * 0.5,
                   ),
@@ -124,7 +125,7 @@ class ExerciseGifWidget extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        Icons.fitness_center,
+        AppIcons.workout,
         color: iconColor,
         size: size * 0.5,
       ),

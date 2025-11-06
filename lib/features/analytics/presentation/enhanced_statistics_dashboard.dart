@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_chart_widgets.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_stat_cards.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_progress_indicators.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Statistics Dashboard with Material 3 design and responsive layout
 class EnhancedStatisticsDashboard extends ConsumerWidget {
@@ -30,11 +31,11 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         backgroundColor: colorScheme.surfaceContainerHighest,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             onPressed: () => _refreshData(ref),
           ),
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: const Icon(AppIcons.filter),
             onPressed: () => _showFilterDialog(context),
           ),
         ],
@@ -109,7 +110,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                Icons.trending_up,
+                AppIcons.trendUp,
                 size: 32,
                 color: colorScheme.onPrimaryContainer,
               ),
@@ -144,19 +145,19 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
                 context,
                 localizations.thisWeek,
                 '${stats.weeklyWorkouts}',
-                Icons.calendar_today,
+                AppIcons.calendar,
               ),
               _buildQuickStat(
                 context,
                 localizations.totalVolume,
                 '${stats.totalVolume.toStringAsFixed(0)}kg',
-                Icons.fitness_center,
+                AppIcons.workout,
               ),
               _buildQuickStat(
                 context,
                 localizations.consistency,
                 '${stats.consistencyPercentage}%',
-                Icons.trending_up,
+                AppIcons.trendUp,
               ),
             ],
           ),
@@ -219,28 +220,28 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         EnhancedStatCard(
           title: localizations.totalWorkouts,
           value: '${stats.totalWorkouts}',
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           trend: stats.workoutTrend,
           subtitle: localizations.completedSessions,
         ),
         EnhancedStatCard(
           title: localizations.totalVolume,
           value: '${stats.totalVolume.toStringAsFixed(0)}kg',
-          icon: Icons.bar_chart,
+          icon: AppIcons.barChart,
           trend: stats.volumeTrend,
           subtitle: localizations.weightLifted,
         ),
         EnhancedStatCard(
           title: localizations.averageWorkoutTime,
           value: '${stats.averageWorkoutDuration}min',
-          icon: Icons.timer,
+          icon: AppIcons.timer,
           trend: stats.durationTrend,
           subtitle: localizations.perSession,
         ),
         EnhancedStatCard(
           title: localizations.personalRecords,
           value: '${stats.personalRecords}',
-          icon: Icons.emoji_events,
+          icon: AppIcons.achievement,
           trend: StatTrend.positive,
           subtitle: localizations.newPRs,
         ),
@@ -305,7 +306,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.trending_up,
+                  AppIcons.trendUp,
                   color: Theme.of(context).colorScheme.primary,
                   size: 28,
                 ),
@@ -380,7 +381,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.analytics_outlined,
+            AppIcons.analyticsOutlined,
             size: 120,
             color: Colors.grey.withOpacity(0.5),
           ),
@@ -400,7 +401,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
           const SizedBox(height: 32),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pushNamed('/workout'),
-            icon: const Icon(Icons.play_arrow),
+            icon: const Icon(AppIcons.play),
             label: Text(localizations.startFirstWorkout),
           ),
         ],

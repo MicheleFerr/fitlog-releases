@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VotingCard extends StatefulWidget {
 
@@ -69,17 +70,17 @@ class _VotingCardState extends State<VotingCard>
   IconData _getTypeIcon() {
     switch (widget.contribution.type) {
       case ContributionType.tip:
-        return Icons.lightbulb;
+        return AppIcons.lightbulb;
       case ContributionType.warning:
-        return Icons.warning_amber_rounded;
+        return AppIcons.warningAmberRounded;
       case ContributionType.correction:
-        return Icons.edit_note;
+        return AppIcons.editNote;
       case ContributionType.technique:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case ContributionType.variant:
-        return Icons.alt_route;
+        return AppIcons.altRoute;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
     }
   }
   
@@ -251,7 +252,7 @@ class _VotingCardState extends State<VotingCard>
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          Icons.star,
+                                          AppIcons.star,
                                           size: 10,
                                           color: Colors.white,
                                         ),
@@ -378,8 +379,8 @@ class _VotingCardState extends State<VotingCard>
                       children: [
                         // Upvote button
                         _VoteButton(
-                          icon: Icons.thumb_up_outlined,
-                          activeIcon: Icons.thumb_up,
+                          icon: AppIcons.thumbUpOutlined,
+                          activeIcon: AppIcons.thumbUp,
                           count: widget.contribution.upvotes,
                           color: Colors.green,
                           isActive: hasUpvoted,
@@ -392,8 +393,8 @@ class _VotingCardState extends State<VotingCard>
 
                         // Downvote button
                         _VoteButton(
-                          icon: Icons.thumb_down_outlined,
-                          activeIcon: Icons.thumb_down,
+                          icon: AppIcons.thumbDownOutlined,
+                          activeIcon: AppIcons.thumbDown,
                           count: widget.contribution.downvotes,
                           color: Colors.red,
                           isActive: hasDownvoted,
@@ -414,7 +415,7 @@ class _VotingCardState extends State<VotingCard>
                                 widget.contribution.comments.length.toString(),
                               ),
                               isLabelVisible: widget.contribution.comments.isNotEmpty,
-                              child: const Icon(Icons.comment_outlined),
+                              child: const Icon(AppIcons.commentOutlined),
                             ),
                           ),
                         
@@ -424,7 +425,7 @@ class _VotingCardState extends State<VotingCard>
                             HapticFeedback.selectionClick();
                             // TODO: Implement share
                           },
-                          icon: const Icon(Icons.share_outlined),
+                          icon: const Icon(AppIcons.shareOutlined),
                         ),
                       ],
                     ),

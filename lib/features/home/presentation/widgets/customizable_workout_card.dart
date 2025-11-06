@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CustomizableWorkoutCard extends ConsumerStatefulWidget {
   const CustomizableWorkoutCard({super.key});
@@ -169,7 +170,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.play_arrow,
+                            AppIcons.play,
                             color: Theme.of(context).colorScheme.primary,
                             size: 32,
                           ),
@@ -240,7 +241,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            Icons.touch_app,
+                            AppIcons.touchApp,
                             color: Colors.white,
                             size: 12,
                           ),
@@ -259,7 +260,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            Icons.star,
+                            AppIcons.star,
                             color: Colors.white,
                             size: 12,
                           ),
@@ -319,7 +320,7 @@ class _CustomizationMenu extends ConsumerWidget {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                 ),
               ],
             ),
@@ -327,7 +328,7 @@ class _CustomizationMenu extends ConsumerWidget {
           const Divider(),
           if (currentPreferredId != null)
             ListTile(
-              leading: const Icon(Icons.clear),
+              leading: const Icon(AppIcons.clear),
               title: Text(AppLocalizations.of(context).removePreferredTemplate),
               subtitle: Text(AppLocalizations.of(context).startWithEmptyWorkout),
               onTap: () => onTemplateSelected(null),
@@ -365,7 +366,7 @@ class _CustomizationMenu extends ConsumerWidget {
                     ),
                     trailing: isSelected
                         ? Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: Theme.of(context).colorScheme.primary,
                           )
                         : null,
@@ -391,21 +392,21 @@ class _CustomizationMenu extends ConsumerWidget {
     final nameLower = template.name.toLowerCase();
     
     if (nameLower.contains('push') || nameLower.contains('petto') || nameLower.contains('chest')) {
-      return Icons.fitness_center;
+      return AppIcons.workout;
     }
     if (nameLower.contains('pull') || nameLower.contains('dorso') || nameLower.contains('back')) {
-      return Icons.sports_gymnastics;
+      return AppIcons.gymnastics;
     }
     if (nameLower.contains('leg') || nameLower.contains('gamb')) {
-      return Icons.directions_run;
+      return AppIcons.cardio;
     }
     if (nameLower.contains('cardio')) {
-      return Icons.favorite;
+      return AppIcons.favorite;
     }
     if (nameLower.contains('full') || nameLower.contains('total')) {
-      return Icons.accessibility_new;
+      return AppIcons.accessibility;
     }
     
-    return Icons.fitness_center;
+    return AppIcons.workout;
   }
 }

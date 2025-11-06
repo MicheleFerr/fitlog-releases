@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Heatmap calendar with zoom controls and detailed exercise view
 class EnhancedWorkoutHeatmap extends ConsumerStatefulWidget {
@@ -190,7 +191,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
         // Zoom out button
         IconButton(
           onPressed: isZoomedOut ? null : _zoomOut,
-          icon: const Icon(Icons.remove_circle_outline),
+          icon: const Icon(AppIcons.removeCircleOutline),
           tooltip: l10n.zoomOut,
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.surfaceContainer,
@@ -202,7 +203,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
         // Reset zoom button
         TextButton.icon(
           onPressed: isDefault ? null : _resetZoom,
-          icon: const Icon(Icons.center_focus_strong, size: 20),
+          icon: const Icon(AppIcons.centerFocusStrong, size: 20),
           label: Text(l10n.resetZoom),
           style: TextButton.styleFrom(
             backgroundColor: theme.colorScheme.surfaceContainer,
@@ -214,7 +215,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
         // Zoom in button
         IconButton(
           onPressed: isZoomedIn ? null : _zoomIn,
-          icon: const Icon(Icons.add_circle_outline),
+          icon: const Icon(AppIcons.addCircleOutline),
           tooltip: l10n.zoomIn,
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.surfaceContainer,
@@ -234,21 +235,21 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _buildStatCard(
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           value: totalWorkouts.toString(),
           label: l10n.totalWorkouts,
           color: theme.colorScheme.primary,
           theme: theme,
         ),
         _buildStatCard(
-          icon: Icons.local_fire_department,
+          icon: AppIcons.streak,
           value: currentStreak.toString(),
           label: l10n.currentStreak,
           color: Colors.orange,
           theme: theme,
         ),
         _buildStatCard(
-          icon: Icons.emoji_events,
+          icon: AppIcons.achievement,
           value: longestStreak.toString(),
           label: l10n.longestStreak,
           color: Colors.amber,
@@ -521,13 +522,13 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
               child: workoutData != null
                   ? const Center(
                       child: Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         color: Colors.white,
                         size: 20,
                       ),
                     )
                   : Icon(
-                      Icons.hotel,
+                      AppIcons.hotel,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                     ),
             ),
@@ -565,7 +566,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
               ),
             ),
             Icon(
-              Icons.chevron_right,
+              AppIcons.chevronRight,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ],
@@ -800,7 +801,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                 Row(
                   children: [
                     Icon(
-                      Icons.calendar_today,
+                      AppIcons.calendar,
                       color: theme.colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
@@ -813,7 +814,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -823,7 +824,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                   children: [
                     Chip(
                       avatar: Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         size: 16,
                         color: theme.colorScheme.onPrimaryContainer,
                       ),
@@ -834,7 +835,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                       const SizedBox(width: 8),
                       Chip(
                         avatar: Icon(
-                          Icons.timer,
+                          AppIcons.timer,
                           size: 16,
                           color: theme.colorScheme.onSecondaryContainer,
                         ),
@@ -886,7 +887,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                         ),
                         trailing: IconButton(
                           icon: Icon(
-                            isExpanded ? Icons.expand_less : Icons.expand_more,
+                            isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                           ),
                           onPressed: () {
                             setState(() {
@@ -1017,7 +1018,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 4),
                                                 child: Icon(
-                                                  Icons.arrow_downward,
+                                                  AppIcons.arrowDownward,
                                                   size: 14,
                                                   color: Colors.orange,
                                                 ),
@@ -1026,7 +1027,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 4),
                                                 child: Icon(
-                                                  Icons.pause,
+                                                  AppIcons.pause,
                                                   size: 14,
                                                   color: Colors.blue,
                                                 ),
@@ -1044,7 +1045,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Icon(
-                                      Icons.note,
+                                      AppIcons.note,
                                       size: 16,
                                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                     ),

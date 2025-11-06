@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Universal help button with explanations
 class HelpButton extends StatelessWidget {
@@ -22,7 +23,7 @@ class HelpButton extends StatelessWidget {
 
     return IconButton(
       icon: Icon(
-        Icons.help_outline,
+        AppIcons.help,
         size: 16,
         color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
       ),
@@ -55,7 +56,7 @@ class HelpButton extends StatelessWidget {
       builder: (_) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.info_outline, color: colorScheme.primary),
+            Icon(AppIcons.info, color: colorScheme.primary),
             const SizedBox(width: 8),
             Text(_getTitle(context, metricKey)),
           ],
@@ -125,7 +126,7 @@ class HelpButton extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.functions, size: 16, color: colorScheme.primary),
+                Icon(AppIcons.functions, size: 16, color: colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   localizations.formula,
@@ -171,7 +172,7 @@ class HelpButton extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.lightbulb_outline, size: 16, color: Colors.amber),
+                const Icon(AppIcons.tip, size: 16, color: Colors.amber),
                 const SizedBox(width: 8),
                 Text(
                   localizations.example,
@@ -215,7 +216,7 @@ class HelpButton extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.tips_and_updates, size: 16, color: colorScheme.tertiary),
+                Icon(AppIcons.tipsAndUpdates, size: 16, color: colorScheme.tertiary),
                 const SizedBox(width: 8),
                 Text(
                   localizations.proTip,
@@ -455,10 +456,10 @@ class TrendIndicator extends StatelessWidget {
             : Colors.orange;
 
     final icon = isNeutral
-        ? Icons.trending_flat
+        ? AppIcons.trendFlat
         : isPositive
-            ? Icons.trending_up
-            : Icons.trending_down;
+            ? AppIcons.trendUp
+            : AppIcons.trendDown;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -559,7 +560,7 @@ class MotivationalEmptyState extends StatelessWidget {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.format_quote,
+                        AppIcons.misc.formatQuote,
                         color: colorScheme.secondary,
                         size: 24,
                       ),
@@ -586,7 +587,7 @@ class MotivationalEmptyState extends StatelessWidget {
                   child: Row(
                     children: [
                       const Icon(
-                        Icons.lightbulb_outline,
+                        AppIcons.tip,
                         color: Colors.amber,
                         size: 20,
                       ),
@@ -620,7 +621,7 @@ class MotivationalEmptyState extends StatelessWidget {
                 HapticFeedback.mediumImpact();
                 onAction();
               },
-              icon: const Icon(Icons.fitness_center),
+              icon: const Icon(AppIcons.workout),
               label: Text(actionLabel),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

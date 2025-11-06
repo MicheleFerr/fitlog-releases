@@ -16,6 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyActionButtons extends StatefulWidget {
 
@@ -78,7 +79,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
           _buildActionButton(
             context: context,
             theme: theme,
-            icon: Icons.close,
+            icon: AppIcons.close,
             label: l10n.pass,
             color: Colors.red,
             size: 60,
@@ -90,7 +91,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
           _buildActionButton(
             context: context,
             theme: theme,
-            icon: Icons.star,
+            icon: AppIcons.star,
             label: l10n.superLike,
             color: Colors.blue,
             size: 45,
@@ -102,7 +103,7 @@ class _BuddyActionButtonsState extends State<BuddyActionButtons>
           _buildActionButton(
             context: context,
             theme: theme,
-            icon: Icons.favorite,
+            icon: AppIcons.favorite,
             label: l10n.like,
             color: Colors.green,
             size: 70,

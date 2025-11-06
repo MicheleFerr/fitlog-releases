@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EditSetModal extends ConsumerStatefulWidget {
 
@@ -139,7 +140,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               const Spacer(),
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close),
+                icon: const Icon(AppIcons.close),
               ),
             ],
           ),
@@ -157,7 +158,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
                 });
               },
               secondary: Icon(
-                _isCompleted ? Icons.check_circle : Icons.circle_outlined,
+                _isCompleted ? AppIcons.complete : Icons.circle_outlined,
                 color: _isCompleted 
                     ? context.colors.tertiary 
                     : context.colors.outline,
@@ -185,7 +186,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               width: double.infinity,
               child: TextButton.icon(
                 onPressed: _copyPreviousSet,
-                icon: const Icon(Icons.copy, size: 16),
+                icon: const Icon(AppIcons.iconCopy, size: 16),
                 label: Text(context.l10n.copyPreviousSet),
               ),
             ),
@@ -211,7 +212,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             decoration: InputDecoration(
               labelText: 'Set Notes',
               hintText: 'RPE, form notes, difficulty...',
-              prefixIcon: const Icon(Icons.note),
+              prefixIcon: const Icon(AppIcons.note),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -575,7 +576,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               size: 18,
               color: hasWeight 
                   ? context.colors.primary
@@ -598,7 +599,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             ),
             if (!hasWeight)
               Icon(
-                Icons.add_circle_outline,
+                AppIcons.addCircleOutline,
                 size: 16,
                 color: context.colors.onSurfaceVariant,
               ),
@@ -647,7 +648,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.repeat,
+              AppIcons.repeat,
               size: 18,
               color: hasReps 
                   ? context.colors.secondary
@@ -670,7 +671,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             ),
             if (!hasReps)
               Icon(
-                Icons.add_circle_outline,
+                AppIcons.addCircleOutline,
                 size: 16,
                 color: context.colors.onSurfaceVariant,
               ),
@@ -704,7 +705,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       decoration: InputDecoration(
         labelText: 'Actual Reps Completed',
         hintText: 'How many reps did you actually complete?',
-        prefixIcon: const Icon(Icons.fitness_center),
+        prefixIcon: const Icon(AppIcons.workout),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -725,7 +726,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         labelText: isAutoTracked ? 'Duration (auto-tracked)' : 'Duration (optional)',
         hintText: hasDuration ? null : 'ss,ms (e.g. 12,34)',
         prefixIcon: Icon(
-          Icons.timer,
+          AppIcons.timer,
           size: 18,
           color: hasDuration 
               ? context.colors.tertiary
@@ -768,7 +769,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         children: [
           Row(
             children: [
-              const Icon(Icons.timer, color: Colors.orange),
+              const Icon(AppIcons.timer, color: Colors.orange),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -840,7 +841,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           Row(
             children: [
               Icon(
-                isIncrease ? Icons.trending_up : Icons.trending_down,
+                isIncrease ? AppIcons.trendUp : AppIcons.trendDown,
                 color: isIncrease ? Colors.green : Colors.blue,
               ),
               const SizedBox(width: 8),

@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({
@@ -44,7 +45,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ),
         body: EnhancedEmptyState(
           type: EmptyStateType.error,
-          icon: Icons.error_outline,
+          icon: AppIcons.error,
           title: 'Exercise not found',
           description: 'No data available for ${widget.exerciseName}',
         ),
@@ -88,7 +89,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Weight progression chart
             _buildChartCard(
               context.l10n.weightProgression,
-              Icons.fitness_center,
+              AppIcons.workout,
               Colors.blue,
               _buildWeightChart(filteredSets),
             ),
@@ -97,7 +98,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Volume progression chart
             _buildChartCard(
               context.l10n.volumeProgression,
-              Icons.analytics,
+              AppIcons.analytics,
               Colors.orange,
               _buildVolumeChart(filteredSets),
             ),
@@ -106,7 +107,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Reps progression chart
             _buildChartCard(
               context.l10n.repsProgression,
-              Icons.repeat,
+              AppIcons.repeat,
               Colors.green,
               _buildRepsChart(filteredSets),
             ),
@@ -116,7 +117,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             if (filteredSets.any((s) => s.rpe != null)) ...[
               _buildChartCard(
                 context.l10n.effortProgression,
-                Icons.speed,
+                AppIcons.speed,
                 Colors.red,
                 _buildRPEChart(filteredSets),
               ),
@@ -183,12 +184,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ButtonSegment<ChartViewMode>(
           value: ChartViewMode.combined,
           label: Text(context.l10n.combinedView),
-          icon: const Icon(Icons.show_chart),
+          icon: const Icon(AppIcons.lineChart),
         ),
         ButtonSegment<ChartViewMode>(
           value: ChartViewMode.separated,
           label: Text(context.l10n.separatedView),
-          icon: const Icon(Icons.stacked_line_chart),
+          icon: const Icon(AppIcons.stackedLineChart),
         ),
       ],
       selected: {_viewMode},
@@ -227,7 +228,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
           children: [
             Row(
               children: [
-                Icon(Icons.insights, color: context.colors.primary, size: 24),
+                Icon(AppIcons.insights, color: context.colors.primary, size: 24),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.combinedChart,
@@ -443,10 +444,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       spacing: 12,
       runSpacing: 8,
       children: [
-        _buildLegendItem('weight', context.l10n.weight, Colors.blue, Icons.fitness_center),
-        _buildLegendItem('volume', context.l10n.volume, Colors.orange, Icons.analytics),
-        _buildLegendItem('reps', context.l10n.reps, Colors.green, Icons.repeat),
-        if (hasRPE) _buildLegendItem('rpe', context.l10n.effort, Colors.purple, Icons.speed),
+        _buildLegendItem('weight', context.l10n.weight, Colors.blue, AppIcons.workout),
+        _buildLegendItem('volume', context.l10n.volume, Colors.orange, AppIcons.analytics),
+        _buildLegendItem('reps', context.l10n.reps, Colors.green, AppIcons.repeat),
+        if (hasRPE) _buildLegendItem('rpe', context.l10n.effort, Colors.purple, AppIcons.speed),
       ],
     );
   }
@@ -543,26 +544,26 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               _buildStatItem(
                 context.l10n.personalRecord,
                 '${periodMaxWeight.toStringAsFixed(1)} kg',
-                Icons.emoji_events,
+                AppIcons.achievement,
                 Colors.amber,
               ),
               _buildStatItem(
                 context.l10n.averageWeight,
                 '${periodAvgWeight.toStringAsFixed(1)} kg',
-                Icons.fitness_center,
+                AppIcons.workout,
                 Colors.blue,
               ),
               _buildStatItem(
                 context.l10n.avgReps,
                 periodAvgReps.toStringAsFixed(0),
-                Icons.repeat,
+                AppIcons.repeat,
                 Colors.green,
               ),
               if (periodAvgRPE > 0)
                 _buildStatItem(
                   context.l10n.averageRPE,
                   periodAvgRPE.toStringAsFixed(1),
-                  Icons.speed,
+                  AppIcons.speed,
                   Colors.orange,
                 ),
             ],
@@ -936,7 +937,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Icons.calendar_today,
+                AppIcons.calendar,
                 color: context.colors.primary,
                 size: 20,
               ),

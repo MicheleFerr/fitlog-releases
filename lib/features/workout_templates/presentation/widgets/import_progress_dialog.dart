@@ -13,6 +13,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog showing import progress with phases and steps
 class ImportProgressDialog extends StatelessWidget {
@@ -64,7 +65,7 @@ class ImportProgressDialog extends StatelessWidget {
               // Icon or loading indicator
               if (isCompleted)
                 Icon(
-                  Icons.check_circle,
+                  AppIcons.complete,
                   color: context.colors.primary,
                   size: 64,
                 )

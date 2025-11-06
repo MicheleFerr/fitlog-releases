@@ -115,7 +115,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
             children: [
               ElevatedButton.icon(
                 onPressed: () => _showAddWorkoutDialog(context),
-                icon: const Icon(Icons.fitness_center, size: 18),
+                icon: const Icon(AppIcons.workout, size: 18),
                 label: Text(context.l10n.customPatternAddWorkout),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.primary,
@@ -128,7 +128,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
               ),
               OutlinedButton.icon(
                 onPressed: _addRestDay,
-                icon: const Icon(Icons.bed, size: 18),
+                icon: const Icon(AppIcons.bed, size: 18),
                 label: Text(context.l10n.customPatternAddRest),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: context.colors.secondary),
@@ -194,7 +194,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    isRest ? Icons.bed : Icons.fitness_center,
+                    isRest ? AppIcons.bed : AppIcons.workout,
                     color: isRest
                         ? context.colors.onSecondaryContainer
                         : context.colors.onPrimaryContainer,
@@ -216,7 +216,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
               ),
             ),
             trailing: IconButton(
-              icon: Icon(Icons.delete, color: context.colors.error),
+              icon: Icon(AppIcons.delete, color: context.colors.error),
               onPressed: () => _removeDay(index),
               tooltip: context.l10n.customPatternRemoveDay,
             ),
@@ -259,7 +259,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       color: context.colors.primary,
                       size: 28,
                     ),
@@ -273,7 +273,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       onPressed: () => Navigator.pop(sheetContext),
                     ),
                   ],
@@ -373,7 +373,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  template.isCustom ? Icons.person : Icons.star,
+                  template.isCustom ? AppIcons.person : AppIcons.star,
                   color: template.isCustom
                       ? context.colors.onPrimaryContainer
                       : context.colors.onSecondaryContainer,
@@ -397,7 +397,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                     Row(
                       children: [
                         Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           size: 14,
                           color: context.colors.onSurface.withValues(alpha: 0.6),
                         ),
@@ -411,7 +411,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                         if (template.estimatedDuration > 0) ...[
                           const SizedBox(width: 12),
                           Icon(
-                            Icons.schedule,
+                            AppIcons.schedule,
                             size: 14,
                             color: context.colors.onSurface.withValues(alpha: 0.6),
                           ),
@@ -431,7 +431,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
 
               // Arrow
               Icon(
-                Icons.arrow_forward_ios,
+                AppIcons.forwardIos,
                 size: 16,
                 color: context.colors.onSurface.withValues(alpha: 0.4),
               ),

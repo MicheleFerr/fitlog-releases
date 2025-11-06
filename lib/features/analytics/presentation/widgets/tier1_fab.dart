@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class Tier1FAB extends StatefulWidget {
   
@@ -163,7 +164,7 @@ class Tier1SearchFAB extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tier1FAB(
       onPressed: onPressed,
-      icon: Icons.search,
+      icon: AppIcons.search,
       label: 'Cerca Esercizio',
     );
   }

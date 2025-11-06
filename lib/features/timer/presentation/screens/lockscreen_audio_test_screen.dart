@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Test screen for lockscreen audio functionality
 class LockscreenAudioTestScreen extends StatelessWidget {
@@ -28,7 +29,7 @@ class LockscreenAudioTestScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
-                Icons.lock_outline,
+                AppIcons.lockOutline,
                 size: 80,
                 color: Colors.blue,
               ),
@@ -53,7 +54,7 @@ class LockscreenAudioTestScreen extends StatelessWidget {
               const SizedBox(height: 32),
               ElevatedButton.icon(
                 onPressed: _runLockscreenTest,
-                icon: const Icon(Icons.play_arrow),
+                icon: const Icon(AppIcons.play),
                 label: const Text('Run Test'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -70,7 +71,7 @@ class LockscreenAudioTestScreen extends StatelessWidget {
                   padding: EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Icon(Icons.warning, color: Colors.white),
+                      Icon(AppIcons.warning, color: Colors.white),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(

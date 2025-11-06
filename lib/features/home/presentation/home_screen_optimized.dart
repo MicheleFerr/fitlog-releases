@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/stale_profile_banner.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
 /// while ensuring full compliance with localization and theming standards
@@ -162,7 +163,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
-                              Icons.event_note,
+                              AppIcons.eventNote,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 24,
                             ),
@@ -190,7 +191,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                             ),
                           ),
                           Icon(
-                            Icons.arrow_forward_ios,
+                            AppIcons.forwardIos,
                             size: 16,
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -219,7 +220,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.people,
+                            AppIcons.people,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                           const SizedBox(width: 12),
@@ -233,7 +234,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                             ),
                           ),
                           Icon(
-                            Icons.arrow_forward_ios,
+                            AppIcons.forwardIos,
                             size: 16,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
@@ -270,7 +271,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                           Row(
                             children: [
                               Icon(
-                                Icons.admin_panel_settings,
+                                AppIcons.admin,
                                 color: Theme.of(context).colorScheme.onErrorContainer,
                                 size: 20,
                               ),
@@ -312,7 +313,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                                 child: Row(
                                   children: [
                                     const Icon(
-                                      Icons.flag_circle,
+                                      AppIcons.flagCircle,
                                       color: Colors.white,
                                       size: 24,
                                     ),
@@ -341,7 +342,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                                       ),
                                     ),
                                     const Icon(
-                                      Icons.arrow_forward_ios,
+                                      AppIcons.forwardIos,
                                       color: Colors.white,
                                       size: 16,
                                     ),
@@ -386,7 +387,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
         padding: const EdgeInsets.only(bottom: 8),
         child: PremiumActionButton(
           onPressed: () => context.goNamed('workout'),
-          icon: Icons.add,
+          icon: AppIcons.add,
           label: l10n.quickStart,
         ),
       ),

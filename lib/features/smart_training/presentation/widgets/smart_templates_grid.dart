@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_workout_template.dart';
 import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grid widget that displays smart workout templates
 class SmartTemplatesGrid extends ConsumerWidget {
@@ -56,7 +57,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
         onChanged: (value) => ref.read(templateSearchProvider.notifier).state = value,
         decoration: InputDecoration(
           hintText: 'Search templates...',
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: const Icon(AppIcons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -142,7 +143,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
             ),
             const SizedBox(width: 4),
             Icon(
-              Icons.arrow_drop_down,
+              AppIcons.arrowDropDown,
               size: 16,
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),
@@ -158,7 +159,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.search_off,
+            AppIcons.searchOff,
             size: 64,
             color: Theme.of(context).colorScheme.outline,
           ),
@@ -341,7 +342,7 @@ class SmartTemplateCard extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           size: 16,
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -354,7 +355,7 @@ class SmartTemplateCard extends ConsumerWidget {
                         Row(
                           children: [
                             const Icon(
-                              Icons.star,
+                              AppIcons.star,
                               size: 16,
                               color: Colors.amber,
                             ),

@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_match.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class MatchesPreviewBar extends StatelessWidget {
 
@@ -88,8 +89,8 @@ class MatchesPreviewBar extends StatelessWidget {
                           ),
                           child: Icon(
                             activePartnerships > 0 
-                                ? Icons.handshake 
-                                : Icons.favorite,
+                                ? AppIcons.handshake 
+                                : AppIcons.favorite,
                             size: 20,
                             color: theme.colorScheme.primary,
                           ),
@@ -140,7 +141,7 @@ class MatchesPreviewBar extends StatelessWidget {
                         children: [
                           if (confirmedMatches > 0) ...[
                             const Icon(
-                              Icons.favorite,
+                              AppIcons.favorite,
                               size: 14,
                               color: Colors.red,
                             ),
@@ -161,7 +162,7 @@ class MatchesPreviewBar extends StatelessWidget {
                             ),
                           if (activePartnerships > 0) ...[
                             const Icon(
-                              Icons.handshake,
+                              AppIcons.handshake,
                               size: 14,
                               color: Colors.green,
                             ),
@@ -181,7 +182,7 @@ class MatchesPreviewBar extends StatelessWidget {
 
                 // Arrow
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   size: 16,
                   color: theme.colorScheme.primary,
                 ),

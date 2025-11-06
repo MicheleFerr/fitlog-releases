@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/volume_chart_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/chart_data.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VolumeTrendChart extends ConsumerWidget {
   const VolumeTrendChart({super.key});
@@ -31,7 +32,7 @@ class VolumeTrendChart extends ConsumerWidget {
             // Header
             Row(
               children: [
-                Icon(Icons.trending_up, color: context.colors.primary),
+                Icon(AppIcons.trendUp, color: context.colors.primary),
                 const SizedBox(width: 8),
                 Text(
                   'Volume Trend', // TODO: Localize
@@ -230,7 +231,7 @@ class VolumeTrendChart extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+            isPositive ? AppIcons.arrowUpward : AppIcons.arrowDownward,
             color: isPositive ? Colors.green : Colors.red,
             size: 16,
           ),

@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget tooltip informativo per metriche scientifiche
 ///
@@ -58,7 +59,7 @@ class InfoTooltip extends StatelessWidget {
       child: GestureDetector(
         onTap: () => _showInfoDialog(context),
         child: Icon(
-          icon ?? Icons.info_outline,
+          icon ?? AppIcons.info,
           size: iconSize,
           color: defaultColor,
         ),
@@ -75,7 +76,7 @@ class InfoTooltip extends StatelessWidget {
         title: Row(
           children: [
             Icon(
-              Icons.lightbulb_outline,
+              AppIcons.tip,
               color: theme.colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -136,7 +137,7 @@ class CompactInfoTooltip extends StatelessWidget {
         color: theme.colorScheme.onInverseSurface,
       ),
       child: Icon(
-        icon ?? Icons.help_outline,
+        icon ?? AppIcons.help,
         size: iconSize,
         color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
       ),

@@ -119,7 +119,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               decoration: InputDecoration(
                 labelText: context.l10n.routineDescriptionLabel,
                 hintText: context.l10n.routineDescriptionHint,
-                prefixIcon: const Icon(Icons.description),
+                prefixIcon: const Icon(AppIcons.template),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -198,7 +198,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
   Widget _buildTypeSelector(BuildContext context, RoutineType selectedType) {
     final types = [
       (RoutineType.weekly, AppIcons.calendarViewWeek, context.l10n.routineTypeWeekly, context.l10n.routineTypeWeeklyDuration),
-      (RoutineType.monthly, Icons.calendar_month, context.l10n.routineTypeMonthly, context.l10n.routineTypeMonthlyDuration),
+      (RoutineType.monthly, AppIcons.calendarMonth, context.l10n.routineTypeMonthly, context.l10n.routineTypeMonthlyDuration),
       (RoutineType.bimonthly, AppIcons.dateRange, context.l10n.routineTypeBimonthly, context.l10n.routineTypeBimonthlyDuration),
       (RoutineType.semester, AppIcons.eventNote, context.l10n.routineTypeSemester, context.l10n.routineTypeSemesterDuration),
       (RoutineType.custom, AppIcons.tune, context.l10n.routineTypeCustom, context.l10n.routineTypeCustomDuration),
@@ -291,7 +291,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                     ),
                     if (isSelected)
                       Icon(
-                        Icons.check_circle,
+                        AppIcons.complete,
                         color: context.colors.primary,
                         size: 20,
                       ),
@@ -343,7 +343,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
             Row(
               children: [
                 Icon(
-                  Icons.calendar_today,
+                  AppIcons.calendar,
                   size: 20,
                   color: context.colors.primary,
                 ),
@@ -397,7 +397,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
       child: Row(
         children: [
           Icon(
-            Icons.info_outline,
+            AppIcons.info,
             color: context.colors.primary,
             size: 20,
           ),

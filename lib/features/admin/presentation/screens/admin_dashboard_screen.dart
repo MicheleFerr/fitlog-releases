@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_qui
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_recent_activity.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
@@ -28,13 +29,13 @@ class AdminDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         title: Row(
           children: [
             Icon(
-              Icons.admin_panel_settings,
+              AppIcons.admin,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -44,7 +45,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => _showAdminInfo(context, l10n),
-            icon: const Icon(Icons.info_outline),
+            icon: const Icon(AppIcons.info),
             tooltip: l10n.adminInfo,
           ),
         ],
@@ -112,7 +113,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.waving_hand,
+                  AppIcons.wavingHand,
                   size: 28,
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -137,7 +138,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.security,
+                  AppIcons.security,
                   size: 16,
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -180,7 +181,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.cloud,
+              AppIcons.cloud,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -205,7 +206,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.flash_on,
+              AppIcons.flashOn,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -230,7 +231,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.history,
+              AppIcons.history,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -255,7 +256,7 @@ class AdminDashboardScreen extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.admin_panel_settings,
+              AppIcons.admin,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -272,19 +273,19 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _InfoItem(
-              icon: Icons.fitness_center,
+              icon: AppIcons.workout,
               title: l10n.exerciseManagement,
               description: l10n.exerciseManagementDescription,
             ),
             const SizedBox(height: 12),
             _InfoItem(
-              icon: Icons.feedback,
+              icon: AppIcons.feedback,
               title: l10n.communityCorrections,
               description: l10n.communityCorrectionsDescription,
             ),
             const SizedBox(height: 12),
             _InfoItem(
-              icon: Icons.system_update,
+              icon: AppIcons.systemUpdate,
               title: l10n.versionControl,
               description: l10n.versionControlDescription,
             ),

@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/u
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CreateTemplateModal extends ConsumerStatefulWidget {
   const CreateTemplateModal({super.key});
@@ -114,7 +115,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
           // Titolo
           Row(
             children: [
-              const Icon(Icons.add_circle_outline, size: 24),
+              const Icon(AppIcons.addCircleOutline, size: 24),
               const SizedBox(width: 8),
               Text(
                 localizations.createTemplate ?? 'Crea Template',
@@ -143,7 +144,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                   Row(
                     children: [
                       Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         size: 20,
                         color: Theme.of(context).colorScheme.primary,
                       ),
@@ -230,7 +231,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                     //     labelText: 'URL Immagine (opzionale)',
                     //     hintText: 'https://...',
                     //     border: OutlineInputBorder(),
-                    //     prefixIcon: Icon(Icons.image),
+                    //     prefixIcon: Icon(AppIcons.image),
                     //   ),
                     //   validator: (value) {
                     //     if (value != null && value.isNotEmpty) {
@@ -332,7 +333,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.timer,
+                              AppIcons.timer,
                               color: _defaultRestTime != null 
                                   ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
@@ -351,7 +352,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                               ),
                             ),
                             Icon(
-                              Icons.arrow_forward_ios,
+                              AppIcons.forwardIos,
                               size: 16,
                               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
@@ -370,7 +371,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                           Row(
                             children: [
                               Icon(
-                                Icons.fitness_center,
+                                AppIcons.workout,
                                 size: 20,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
@@ -423,7 +424,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                                   }
                                 },
                                 icon: Icon(
-                                  questionnaire != null ? Icons.edit : Icons.add_circle_outline,
+                                  questionnaire != null ? AppIcons.edit : AppIcons.addCircleOutline,
                                 ),
                                 label: Text(
                                   questionnaire != null

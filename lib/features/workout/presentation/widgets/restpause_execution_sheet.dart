@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'dart:async';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RestPauseExecutionSheet extends ConsumerStatefulWidget {
 
@@ -421,7 +422,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                       ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
+                        icon: const Icon(AppIcons.close),
                       ),
                     ],
                   ),
@@ -478,7 +479,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.timer,
+                          AppIcons.timer,
                           size: 20,
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -531,7 +532,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   child: Row(
                     children: [
                       Icon(
-                        Icons.fitness_center,
+                        AppIcons.workout,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 12),
@@ -565,7 +566,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                         ),
                       ),
                       Icon(
-                        Icons.arrow_drop_down,
+                        AppIcons.arrowDropDown,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ],
@@ -615,7 +616,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                 ),
                                 child: Center(
                                   child: isCompleted
-                                      ? const Icon(Icons.check, color: Colors.white, size: 18)
+                                      ? const Icon(AppIcons.check, color: Colors.white, size: 18)
                                       : Text(
                                           '${index + 1}',
                                           style: TextStyle(
@@ -676,7 +677,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.repeat,
+                                    AppIcons.repeat,
                                     size: 20,
                                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   ),
@@ -705,7 +706,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                   ),
                                   if (!isCompleted && !isLocked && !_isResting)
                                     Icon(
-                                      Icons.arrow_drop_down,
+                                      AppIcons.arrowDropDown,
                                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                                     ),
                                 ],
@@ -725,7 +726,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                               child: Row(
                                 children: [
                                   Icon(
-                                    Icons.info_outline,
+                                    AppIcons.info,
                                     size: 16,
                                     color: Theme.of(context).colorScheme.primary,
                                   ),
@@ -814,7 +815,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: _canComplete && !_isResting ? _completeRestPause : null,
-                  icon: const Icon(Icons.check),
+                  icon: const Icon(AppIcons.check),
                   label: const Text('Completa Rest-Pause'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.tertiary,

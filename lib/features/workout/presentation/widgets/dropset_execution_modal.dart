@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal for executing DropSet exercises during workouts
 ///
@@ -260,7 +261,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.trending_down,
+                  AppIcons.trendDown,
                   color: context.colors.tertiary,
                   size: 28,
                 ),
@@ -300,7 +301,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.timer,
+                      AppIcons.timer,
                       size: 16,
                       color: context.colors.onSecondaryContainer,
                     ),
@@ -385,7 +386,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
       child: Row(
         children: [
           Icon(
-            Icons.flash_on,
+            AppIcons.flashOn,
             color: context.colors.onTertiaryContainer,
             size: 20,
           ),
@@ -448,7 +449,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 child: Center(
                   child: isCompleted
                       ? Icon(
-                          Icons.check,
+                          AppIcons.check,
                           color: context.colors.onTertiary,
                           size: 24,
                         )
@@ -485,7 +486,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                     Row(
                       children: [
                         Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           size: 16,
                           color: isCurrent
                               ? context.colors.tertiary
@@ -505,7 +506,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         ),
                         const SizedBox(width: 12),
                         Icon(
-                          Icons.repeat,
+                          AppIcons.repeat,
                           size: 16,
                           color: isCurrent
                               ? context.colors.tertiary
@@ -544,7 +545,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 )
               else if (isUpcoming)
                 Icon(
-                  Icons.lock_outline,
+                  AppIcons.lockOutline,
                   color: context.colors.onSurfaceVariant,
                   size: 20,
                 ),
@@ -608,7 +609,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                           color: Colors.white,
                         ),
                       )
-                    : const Icon(Icons.check_circle),
+                    : const Icon(AppIcons.complete),
                 label: Text(
                   context.l10n.completeDropset,
                   style: const TextStyle(
@@ -631,7 +632,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                icon: const Icon(Icons.check),
+                icon: const Icon(AppIcons.check),
                 label: Text(
                   context.l10n.completeStage(_currentStageIndex + 1),
                   style: const TextStyle(

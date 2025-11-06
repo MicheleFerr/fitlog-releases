@@ -16,6 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SetDurationOnboardingDialog extends ConsumerWidget {
   const SetDurationOnboardingDialog({super.key});
@@ -52,7 +53,7 @@ class SetDurationOnboardingDialog extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.timer,
+                AppIcons.timer,
                 size: 40,
                 color: colorScheme.onPrimaryContainer,
               ),
@@ -93,21 +94,21 @@ class SetDurationOnboardingDialog extends ConsumerWidget {
                 children: [
                   _buildFeatureItem(
                     context,
-                    icon: Icons.play_arrow,
+                    icon: AppIcons.play,
                     title: 'Inizio automatico',
                     description: 'Il timer parte quando finisce il rest timer',
                   ),
                   const SizedBox(height: 12),
                   _buildFeatureItem(
                     context,
-                    icon: Icons.stop,
+                    icon: AppIcons.stop,
                     title: 'Fine automatica',
                     description: 'Si ferma quando completi il set',
                   ),
                   const SizedBox(height: 12),
                   _buildFeatureItem(
                     context,
-                    icon: Icons.insights,
+                    icon: AppIcons.insights,
                     title: 'Analisi performance',
                     description: 'Monitora i tuoi tempi per migliorare',
                   ),
@@ -129,7 +130,7 @@ class SetDurationOnboardingDialog extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     size: 20,
                     color: colorScheme.primary,
                   ),

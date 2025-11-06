@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SyncDashboardScreen extends ConsumerStatefulWidget {
   const SyncDashboardScreen({super.key});
@@ -56,7 +57,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.lock_outline,
+                AppIcons.lockOutline,
                 size: 64,
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -76,7 +77,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         title: const Text('Sync Dashboard'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(AppIcons.refresh),
             onPressed: () {
               ref.read(syncMonitorProvider.notifier).refreshStats();
             },
@@ -90,7 +91,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.error_outline,
+                AppIcons.error,
                 size: 48,
                 color: colorScheme.error,
               ),
@@ -166,7 +167,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           children: [
             _buildStatCard(
               context,
-              icon: Icons.people,
+              icon: AppIcons.people,
               title: 'Total Users',
               value: data.totalUsers.toString(),
               subtitle: '${data.premiumUsers} premium',
@@ -174,7 +175,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             ),
             _buildStatCard(
               context,
-              icon: Icons.sync,
+              icon: AppIcons.syncIcon,
               title: 'Active Syncs',
               value: data.activeSyncs.toString(),
               subtitle: 'Last ${data.lastSyncTime}',
@@ -182,7 +183,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             ),
             _buildStatCard(
               context,
-              icon: Icons.storage,
+              icon: AppIcons.storage,
               title: 'Local Data',
               value: _formatBytes(data.localDataSize),
               subtitle: '${data.localEntities} entities',
@@ -190,7 +191,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             ),
             _buildStatCard(
               context,
-              icon: Icons.cloud_upload,
+              icon: AppIcons.cloudUpload,
               title: 'Cloud Synced',
               value: '${data.syncPercentage}%',
               subtitle: '${data.pendingSyncs} pending',
@@ -426,7 +427,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
               final activity = data.recentActivities[index];
               return ListTile(
                 leading: Icon(
-                  activity.isSuccess ? Icons.check_circle : Icons.error,
+                  activity.isSuccess ? AppIcons.complete : AppIcons.error,
                   color: activity.isSuccess 
                       ? theme.colorScheme.primary 
                       : theme.colorScheme.error,
@@ -589,8 +590,8 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                   children: [
                     Icon(
                       data.systemHealth.isHealthy 
-                          ? Icons.check_circle 
-                          : Icons.warning,
+                          ? AppIcons.complete 
+                          : AppIcons.warning,
                       color: data.systemHealth.isHealthy 
                           ? colorScheme.primary 
                           : colorScheme.error,
@@ -645,17 +646,17 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
   IconData _getFeatureIcon(String feature) {
     switch (feature.toLowerCase()) {
       case 'workouts':
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case 'templates':
-        return Icons.description;
+        return AppIcons.template;
       case 'achievements':
-        return Icons.emoji_events;
+        return AppIcons.achievement;
       case 'community':
-        return Icons.people;
+        return AppIcons.people;
       case 'preferences':
-        return Icons.settings;
+        return AppIcons.settings;
       default:
-        return Icons.folder;
+        return AppIcons.folder;
     }
   }
 

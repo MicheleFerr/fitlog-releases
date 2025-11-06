@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/community/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/buddy_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/buddy_matching_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingTab extends ConsumerWidget {
   const BuddyMatchingTab({super.key});
@@ -69,7 +70,7 @@ class BuddyMatchingTab extends ConsumerWidget {
               ),
             ),
             child: Icon(
-              Icons.handshake,
+              AppIcons.handshake,
               size: 60,
               color: theme.colorScheme.primary,
             ),
@@ -104,7 +105,7 @@ class BuddyMatchingTab extends ConsumerWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () => _navigateToOnboarding(context),
-              icon: const Icon(Icons.person_add),
+              icon: const Icon(AppIcons.personAdd),
               label: const Text('Inizia'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -117,7 +118,7 @@ class BuddyMatchingTab extends ConsumerWidget {
           // Alternative: Go directly to matching
           OutlinedButton.icon(
             onPressed: () => _navigateToMatching(context),
-            icon: const Icon(Icons.explore),
+            icon: const Icon(AppIcons.explore),
             label: const Text('Esplora ora'),
           ),
         ],
@@ -146,7 +147,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.person, color: theme.colorScheme.primary),
+                      Icon(AppIcons.person, color: theme.colorScheme.primary),
                       const SizedBox(width: 8),
                       Text('Il tuo profilo Buddy', 
                         style: theme.textTheme.titleMedium?.copyWith(
@@ -157,7 +158,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () => _navigateToEditProfile(context),
-                    icon: const Icon(Icons.edit),
+                    icon: const Icon(AppIcons.edit),
                     tooltip: 'Modifica profilo',
                   ),
                 ],
@@ -173,7 +174,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                 child: _buildQuickActionCard(
                   context,
                   theme,
-                  Icons.explore,
+                  AppIcons.explore,
                   'Trova Partner',
                   'Scopri nuovi buddy',
                   () => _navigateToMatching(context),
@@ -184,7 +185,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                 child: _buildQuickActionCard(
                   context,
                   theme,
-                  Icons.settings,
+                  AppIcons.settings,
                   'Preferenze',
                   'Modifica filtri',
                   () => _navigateToOnboarding(context),
@@ -208,7 +209,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                   Row(
                     children: [
                       const Icon(
-                        Icons.favorite,
+                        AppIcons.favorite,
                         color: Colors.red,
                         size: 20,
                       ),
@@ -248,7 +249,7 @@ class BuddyMatchingTab extends ConsumerWidget {
                   Row(
                     children: [
                       const Icon(
-                        Icons.handshake,
+                        AppIcons.handshake,
                         color: Colors.green,
                         size: 20,
                       ),
@@ -322,7 +323,7 @@ class BuddyMatchingTab extends ConsumerWidget {
         leading: CircleAvatar(
           backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
           child: Icon(
-            Icons.person,
+            AppIcons.person,
             color: theme.colorScheme.primary,
           ),
         ),
@@ -332,11 +333,11 @@ class BuddyMatchingTab extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.close, color: Colors.red),
+              icon: const Icon(AppIcons.close, color: Colors.red),
               onPressed: () => _handleMatchAction(context, match, false),
             ),
             IconButton(
-              icon: const Icon(Icons.favorite, color: Colors.green),
+              icon: const Icon(AppIcons.favorite, color: Colors.green),
               onPressed: () => _handleMatchAction(context, match, true),
             ),
           ],
@@ -352,14 +353,14 @@ class BuddyMatchingTab extends ConsumerWidget {
         leading: CircleAvatar(
           backgroundColor: Colors.green.withValues(alpha: 0.2),
           child: const Icon(
-            Icons.handshake,
+            AppIcons.handshake,
             color: Colors.green,
           ),
         ),
         title: const Text('Partnership Attiva'),
         subtitle: const Text('Partnership attiva'),
         trailing: IconButton(
-          icon: const Icon(Icons.chat),
+          icon: const Icon(AppIcons.chat),
           onPressed: () => _openChat(context, match),
         ),
       ),
@@ -372,7 +373,7 @@ class BuddyMatchingTab extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.error,
             size: 64,
             color: theme.colorScheme.error,
           ),

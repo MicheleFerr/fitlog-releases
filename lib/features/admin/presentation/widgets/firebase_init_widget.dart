@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FirebaseInitWidget extends ConsumerWidget {
   const FirebaseInitWidget({super.key});
@@ -33,7 +34,7 @@ class FirebaseInitWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.cloud_upload,
+                  AppIcons.cloudUpload,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -82,19 +83,19 @@ class FirebaseInitWidget extends ConsumerWidget {
         // Status Firebase
         isInitialized.when(
           data: (initialized) => _StatusTile(
-            icon: initialized ? Icons.check_circle : Icons.error,
+            icon: initialized ? AppIcons.complete : AppIcons.error,
             title: l10n.firebaseStatus,
             subtitle: initialized ? l10n.initialized : l10n.notInitialized,
             isSuccess: initialized,
           ),
           loading: () => _StatusTile(
-            icon: Icons.hourglass_empty,
+            icon: AppIcons.hourglassEmpty,
             title: l10n.firebaseStatus,
             subtitle: l10n.checking,
             isSuccess: null,
           ),
           error: (_, __) => _StatusTile(
-            icon: Icons.error,
+            icon: AppIcons.error,
             title: l10n.firebaseStatus,
             subtitle: l10n.checkFailed,
             isSuccess: false,
@@ -106,19 +107,19 @@ class FirebaseInitWidget extends ConsumerWidget {
         // Versione corrente
         currentVersion.when(
           data: (version) => _StatusTile(
-            icon: Icons.info,
+            icon: AppIcons.infoIcon,
             title: l10n.currentVersion,
             subtitle: version ?? l10n.notAvailable,
             isSuccess: version != null,
           ),
           loading: () => _StatusTile(
-            icon: Icons.hourglass_empty,
+            icon: AppIcons.hourglassEmpty,
             title: l10n.currentVersion,
             subtitle: l10n.loading,
             isSuccess: null,
           ),
           error: (error, __) => _StatusTile(
-            icon: Icons.error,
+            icon: AppIcons.error,
             title: l10n.currentVersion,
             subtitle: l10n.loadingError(error.toString()),
             isSuccess: false,
@@ -131,13 +132,13 @@ class FirebaseInitWidget extends ConsumerWidget {
         collectionStats.when(
           data: (stats) => _buildStatsDisplay(context, l10n, stats),
           loading: () => _StatusTile(
-            icon: Icons.hourglass_empty,
+            icon: AppIcons.hourglassEmpty,
             title: l10n.collectionStats,
             subtitle: l10n.loading,
             isSuccess: null,
           ),
           error: (error, __) => _StatusTile(
-            icon: Icons.error,
+            icon: AppIcons.error,
             title: l10n.collectionStats,
             subtitle: l10n.loadingError(error.toString()),
             isSuccess: false,
@@ -154,7 +155,7 @@ class FirebaseInitWidget extends ConsumerWidget {
   ) {
     if (stats.containsKey('error')) {
       return _StatusTile(
-        icon: Icons.error,
+        icon: AppIcons.error,
         title: l10n.collectionStats,
         subtitle: stats['error'].toString(),
         isSuccess: false,
@@ -168,21 +169,21 @@ class FirebaseInitWidget extends ConsumerWidget {
     return Column(
       children: [
         _StatusTile(
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           title: l10n.exerciseCountLabel,
           subtitle: exerciseCount.toString(),
           isSuccess: exerciseCount > 0,
         ),
         const SizedBox(height: 4),
         _StatusTile(
-          icon: Icons.info,
+          icon: AppIcons.infoIcon,
           title: l10n.versionMetadata,
           subtitle: hasVersionMetadata ? l10n.present : l10n.missing,
           isSuccess: hasVersionMetadata,
         ),
         const SizedBox(height: 4),
         _StatusTile(
-          icon: Icons.search,
+          icon: AppIcons.search,
           title: l10n.searchIndex,
           subtitle: hasSearchIndex ? l10n.present : l10n.missing,
           isSuccess: hasSearchIndex,
@@ -215,21 +216,21 @@ class FirebaseInitWidget extends ConsumerWidget {
             // Inizializzazione completa
             ElevatedButton.icon(
               onPressed: isLoading ? null : () => _showInitializeDialog(context, l10n, ref),
-              icon: const Icon(Icons.cloud_upload),
+              icon: const Icon(AppIcons.cloudUpload),
               label: Text(l10n.initializeExercises),
             ),
 
             // Verifica integrità
             OutlinedButton.icon(
               onPressed: isLoading ? null : () => ref.read(firebaseInitStateProvider.notifier).verifyDataIntegrity(),
-              icon: const Icon(Icons.verified),
+              icon: const Icon(AppIcons.verified),
               label: Text(l10n.verifyIntegrity),
             ),
 
             // Fix dati mancanti
             ElevatedButton.icon(
               onPressed: isLoading ? null : () => ref.read(firebaseInitStateProvider.notifier).fixMissingData(),
-              icon: const Icon(Icons.build_circle),
+              icon: const Icon(AppIcons.buildCircle),
               label: Text(l10n.fixMissingData),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -241,7 +242,7 @@ class FirebaseInitWidget extends ConsumerWidget {
             if (initState is! FirebaseInitIdle)
               TextButton.icon(
                 onPressed: () => ref.read(firebaseInitStateProvider.notifier).resetState(),
-                icon: const Icon(Icons.refresh),
+                icon: const Icon(AppIcons.refresh),
                 label: Text(l10n.resetStatus),
               ),
           ],
@@ -284,7 +285,7 @@ class FirebaseInitWidget extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.check_circle,
+                      AppIcons.complete,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
@@ -337,7 +338,7 @@ class FirebaseInitWidget extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.error,
+                      AppIcons.error,
                       color: Theme.of(context).colorScheme.error,
                     ),
                     const SizedBox(width: 8),

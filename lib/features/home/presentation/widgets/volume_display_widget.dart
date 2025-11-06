@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VolumeDisplayWidget extends ConsumerWidget {
   
@@ -97,7 +98,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -124,7 +125,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
               ),
               if (showSettings)
                 IconButton(
-                  icon: const Icon(Icons.settings),
+                  icon: const Icon(AppIcons.settings),
                   onPressed: () => _showVolumeSettings(context, ref),
                   color: theme.colorScheme.primary,
                 ),
@@ -188,7 +189,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: theme.colorScheme.primary,
               size: 20,
             ),
@@ -226,7 +227,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
             if (showSettings) ...[
               const SizedBox(width: 8),
               Icon(
-                Icons.arrow_drop_down,
+                AppIcons.arrowDropDown,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                 size: 20,
               ),
@@ -248,7 +249,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
     return Row(
       children: [
         const Icon(
-          isPositiveTrend ? Icons.trending_up : Icons.trending_down,
+          isPositiveTrend ? AppIcons.trendUp : AppIcons.trendDown,
           color: isPositiveTrend ? Colors.green : Colors.red,
           size: 16,
         ),

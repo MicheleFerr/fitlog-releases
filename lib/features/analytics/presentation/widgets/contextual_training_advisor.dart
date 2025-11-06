@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget che fornisce consigli contestuali invece di un numero astratto
 class ContextualTrainingAdvisor extends StatelessWidget {
@@ -78,7 +79,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.touch_app,
+                        AppIcons.touchApp,
                         color: Colors.white.withValues(alpha: 0.8),
                         size: 14,
                       ),
@@ -116,7 +117,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(
-                      advice.subIcon ?? Icons.info_outline,
+                      advice.subIcon ?? AppIcons.info,
                       color: Colors.white.withValues(alpha: 0.9),
                       size: 20,
                     ),
@@ -142,19 +143,19 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                 _buildQuickStat(
                   'Volume Change',
                   '${_getVolumeChangePercent().toStringAsFixed(1)}%',
-                  _getVolumeChangePercent() > 0 ? Icons.trending_up : Icons.trending_down,
+                  _getVolumeChangePercent() > 0 ? AppIcons.trendUp : AppIcons.trendDown,
                   theme,
                 ),
                 _buildQuickStat(
                   'Avg Intensity',
                   _formatIntensity(avgIntensity),
-                  Icons.flash_on,
+                  AppIcons.flashOn,
                   theme,
                 ),
                 _buildQuickStat(
                   'Recovery',
                   _getRecoveryStatus(),
-                  Icons.hotel,
+                  AppIcons.hotel,
                   theme,
                 ),
               ],
@@ -205,15 +206,15 @@ class ContextualTrainingAdvisor extends StatelessWidget {
   IconData _getAdviceIcon(AdviceCategory category) {
     switch (category) {
       case AdviceCategory.pushHard:
-        return Icons.rocket_launch;
+        return AppIcons.rocket;
       case AdviceCategory.maintainPace:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case AdviceCategory.beCareful:
-        return Icons.warning_amber;
+        return AppIcons.warningAmber;
       case AdviceCategory.takeRest:
-        return Icons.hotel;
+        return AppIcons.hotel;
       case AdviceCategory.recovery:
-        return Icons.spa;
+        return AppIcons.spa;
     }
   }
 
@@ -248,13 +249,13 @@ class ContextualTrainingAdvisor extends StatelessWidget {
         return ContextualAdvice(
           mainMessage: 'Il tuo corpo sta chiedendo riposo. Il volume è calato del ${volumeChange.abs().toStringAsFixed(0)}% e la fatica è alta.',
           subMessage: 'Considera 2-3 giorni di recupero completo o un allenamento molto leggero.',
-          subIcon: Icons.spa,
+          subIcon: AppIcons.spa,
         );
       } else {
         return ContextualAdvice(
           mainMessage: 'Settimana di scarico rilevata. Volume ridotto del ${volumeChange.abs().toStringAsFixed(0)}%.',
           subMessage: 'Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.',
-          subIcon: Icons.check_circle,
+          subIcon: AppIcons.complete,
         );
       }
     } else if (volumeChange > 15) {
@@ -262,26 +263,26 @@ class ContextualTrainingAdvisor extends StatelessWidget {
         return ContextualAdvice(
           mainMessage: 'Ottima progressione! Volume aumentato del ${volumeChange.toStringAsFixed(0)}% con fatica gestibile.',
           subMessage: 'Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.',
-          subIcon: Icons.rocket_launch,
+          subIcon: AppIcons.rocket,
         );
       } else {
         return ContextualAdvice(
           mainMessage: 'Volume aumentato del ${volumeChange.toStringAsFixed(0)}%, ma la fatica è elevata.',
           subMessage: 'Considera di mantenere il volume attuale per consolidare i progressi.',
-          subIcon: Icons.warning_amber,
+          subIcon: AppIcons.warningAmber,
         );
       }
     } else if (daysSinceLastWorkout > 4) {
       return ContextualAdvice(
         mainMessage: "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
         subMessage: 'Riparti con calma, magari con un volume ridotto del 20-30%.',
-        subIcon: Icons.directions_walk,
+        subIcon: AppIcons.directionsWalk,
       );
     } else if (normalizedIntensity > 8) {
       return ContextualAdvice(
         mainMessage: 'Intensità molto alta questa settimana (RPE medio: ${normalizedIntensity.toStringAsFixed(1)}).',
         subMessage: 'Assicurati di bilanciare con giorni di recupero adeguati.',
-        subIcon: Icons.flash_on,
+        subIcon: AppIcons.flashOn,
       );
     } else if (workoutCount >= 5) {
       return ContextualAdvice(
@@ -289,14 +290,14 @@ class ContextualTrainingAdvisor extends StatelessWidget {
         subMessage: avgFatigue > 3 
             ? 'Valuta se ridurre la frequenza per migliorare il recupero.'
             : 'Ottimo ritmo! Continua a monitorare i segnali del corpo.',
-        subIcon: Icons.calendar_today,
+        subIcon: AppIcons.calendar,
       );
     } else {
       // Messaggio standard basato su performance generale
       return ContextualAdvice(
         mainMessage: "Settimana equilibrata con volume ${volumeChange > 0 ? 'in crescita' : 'stabile'}.",
         subMessage: 'Continua così, ascoltando sempre i segnali del tuo corpo.',
-        subIcon: Icons.thumb_up,
+        subIcon: AppIcons.thumbUp,
       );
     }
   }
@@ -408,7 +409,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Volume Training',
               'Il volume è ${volumeChange > 0 ? "aumentato" : "diminuito"} del ${volumeChange.abs().toStringAsFixed(1)}%',
               _getVolumeExplanation(),
-              volumeChange > 0 ? Icons.trending_up : Icons.trending_down,
+              volumeChange > 0 ? AppIcons.trendUp : AppIcons.trendDown,
               volumeChange > 0 ? Colors.green : Colors.orange,
             ),
             
@@ -417,7 +418,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Intensità Media',
               'RPE ${(6 + (avgIntensity - 1) * 4 / 9).toStringAsFixed(1)} su 10',
               _getIntensityExplanation(),
-              Icons.flash_on,
+              AppIcons.flashOn,
               _getIntensityColor(),
             ),
             
@@ -426,7 +427,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Stato di Recupero',
               'Fatica media: ${avgFatigue.toStringAsFixed(1)}/5',
               _getRecoveryExplanation(),
-              Icons.hotel,
+              AppIcons.hotel,
               _getFatigueColor(),
             ),
             
@@ -435,7 +436,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Frequenza',
               '$workoutCount allenamenti questa settimana',
               _getFrequencyExplanation(),
-              Icons.calendar_today,
+              AppIcons.calendar,
               Colors.blue,
             ),
             
@@ -458,7 +459,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
                 child: Column(
                   children: [
                     Icon(
-                      Icons.star,
+                      AppIcons.star,
                       color: theme.colorScheme.primary,
                       size: 32,
                     ),

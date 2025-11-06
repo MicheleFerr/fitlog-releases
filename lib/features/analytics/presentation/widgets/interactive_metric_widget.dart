@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget interattivo che mostra una metrica con tooltip esplicativo
 class InteractiveMetricWidget extends StatelessWidget {
@@ -71,7 +72,7 @@ class InteractiveMetricWidget extends StatelessWidget {
                             ),
                           ),
                           Icon(
-                            Icons.info_outline,
+                            AppIcons.info,
                             size: 14,
                             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                           ),
@@ -264,7 +265,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
                             Row(
                               children: [
                                 Icon(
-                                  Icons.functions,
+                                  AppIcons.functions,
                                   color: theme.colorScheme.primary,
                                   size: 20,
                                 ),
@@ -353,22 +354,22 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
     switch (_selectedLevel) {
       case 0:
         explanation = widget.beginnerExplanation;
-        levelIcon = Icons.rocket_launch;
+        levelIcon = AppIcons.rocket;
         levelColor = Colors.green;
         break;
       case 1:
         explanation = widget.intermediateExplanation;
-        levelIcon = Icons.fitness_center;
+        levelIcon = AppIcons.workout;
         levelColor = Colors.orange;
         break;
       case 2:
         explanation = widget.advancedExplanation;
-        levelIcon = Icons.emoji_events;
+        levelIcon = AppIcons.achievement;
         levelColor = Colors.red;
         break;
       default:
         explanation = widget.beginnerExplanation;
-        levelIcon = Icons.rocket_launch;
+        levelIcon = AppIcons.rocket;
         levelColor = Colors.green;
     }
     
@@ -421,7 +422,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
           Row(
             children: [
               Icon(
-                Icons.lightbulb_outline,
+                AppIcons.tip,
                 color: theme.colorScheme.secondary,
                 size: 24,
               ),
@@ -478,7 +479,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
           Row(
             children: [
               Icon(
-                Icons.tips_and_updates,
+                AppIcons.tipsAndUpdates,
                 color: theme.colorScheme.tertiary,
                 size: 24,
               ),

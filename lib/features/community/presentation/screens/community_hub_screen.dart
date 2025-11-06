@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/widgets/contr
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/create_contribution_modal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityHubScreen extends ConsumerStatefulWidget {
   const CommunityHubScreen({super.key});
@@ -124,14 +125,14 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                 unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.6),
                 isScrollable: isAdmin, // Make scrollable if admin tab present
                 tabs: [
-                  const Tab(icon: Icon(Icons.local_fire_department), text: 'Popolari'),
-                  const Tab(icon: Icon(Icons.person), text: 'I Miei'),
+                  const Tab(icon: Icon(AppIcons.streak), text: 'Popolari'),
+                  const Tab(icon: Icon(AppIcons.person), text: 'I Miei'),
                   if (isAdmin)
                     const Tab(
-                      icon: Icon(Icons.admin_panel_settings),
+                      icon: Icon(AppIcons.admin),
                       text: 'Admin',
                     ),
-                  const Tab(icon: Icon(Icons.info_outline), text: 'Info'),
+                  const Tab(icon: Icon(AppIcons.info), text: 'Info'),
                 ],
               ),
               theme: theme,
@@ -154,7 +155,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateContributionModal(),
-        icon: const Icon(Icons.add),
+        icon: const Icon(AppIcons.add),
         label: const Text('Contribuisci'),
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
@@ -211,7 +212,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
             // Se vuoto, mostra mock data o empty state
             if (contributions.isEmpty) {
               return _buildEmptyStateWithMockOption(
-                icon: Icons.trending_up,
+                icon: AppIcons.trendUp,
                 title: 'Nessun Contributo',
                 subtitle: 'La community è ancora vuota',
                 showMockButton: true,
@@ -252,7 +253,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
           data: (contributions) {
             if (contributions.isEmpty) {
               return _buildEmptyStateWithAction(
-                icon: Icons.edit_note,
+                icon: AppIcons.editNote,
                 title: 'Nessun Contributo',
                 subtitle: 'Non hai ancora contribuito alla community',
                 actionText: 'Come Contribuire',
@@ -307,19 +308,19 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatChip(
-                      icon: Icons.pending_actions,
+                      icon: AppIcons.pendingActions,
                       label: 'Pending',
                       value: stats.pendingCount.toString(),
                       color: Colors.orange,
                     ),
                     _buildStatChip(
-                      icon: Icons.lightbulb,
+                      icon: AppIcons.lightbulb,
                       label: 'Tips',
                       value: stats.tipCount.toString(),
                       color: Colors.blue,
                     ),
                     _buildStatChip(
-                      icon: Icons.warning,
+                      icon: AppIcons.warning,
                       label: 'Warnings',
                       value: stats.warningCount.toString(),
                       color: Colors.red,
@@ -341,7 +342,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.check_circle_outline,
+                            AppIcons.completeOutline,
                             size: 64,
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -476,7 +477,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   const Spacer(),
                   TextButton.icon(
                     onPressed: () => _handleApprove(contribution.id),
-                    icon: const Icon(Icons.check_circle, size: 18),
+                    icon: const Icon(AppIcons.complete, size: 18),
                     label: const Text('Approva'),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.green,
@@ -484,7 +485,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   ),
                   TextButton.icon(
                     onPressed: () => _handleReject(contribution.id),
-                    icon: const Icon(Icons.cancel, size: 18),
+                    icon: const Icon(AppIcons.cancel, size: 18),
                     label: const Text('Rifiuta'),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.red,
@@ -597,7 +598,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
               children: [
                 Row(
                   children: [
-                    Icon(Icons.info_outline, color: theme.colorScheme.primary),
+                    Icon(AppIcons.info, color: theme.colorScheme.primary),
                     const SizedBox(width: 12),
                     Text(
                       'Come Funziona',
@@ -638,7 +639,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
               children: [
                 Row(
                   children: [
-                    Icon(Icons.star, color: theme.colorScheme.primary),
+                    Icon(AppIcons.star, color: theme.colorScheme.primary),
                     const SizedBox(width: 12),
                     Text(
                       'Sistema Punti XP',
@@ -667,7 +668,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
             child: Column(
               children: [
                 Icon(
-                  Icons.construction,
+                  AppIcons.construction,
                   size: 48,
                   color: theme.colorScheme.onPrimaryContainer,
                 ),
@@ -934,7 +935,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     : theme.colorScheme.error.withOpacity(0.1),
               ),
               child: Icon(
-                isNetworkError ? Icons.wifi_off : Icons.error_outline,
+                isNetworkError ? AppIcons.wifiOff : AppIcons.error,
                 size: 64,
                 color: isNetworkError ? Colors.orange : theme.colorScheme.error,
               ),
@@ -964,7 +965,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                 ref.invalidate(userContributionsProvider);
                 ref.invalidate(userContributionStatsProvider);
               },
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(AppIcons.refresh),
               label: const Text('Riprova'),
             ),
           ],
@@ -1018,7 +1019,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onActionTap,
-              icon: const Icon(Icons.help_outline),
+              icon: const Icon(AppIcons.help),
               label: Text(actionText),
             ),
           ],
@@ -1078,7 +1079,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     'Modalità demo non ancora disponibile',
                   );
                 },
-                icon: const Icon(Icons.preview),
+                icon: const Icon(AppIcons.preview),
                 label: const Text('Visualizza Demo'),
               ),
             ],
@@ -1091,17 +1092,17 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
   IconData _getContributionIcon(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return Icons.lightbulb_outline;
+        return AppIcons.tip;
       case ContributionType.warning:
-        return Icons.warning_amber_rounded;
+        return AppIcons.warningAmberRounded;
       case ContributionType.correction:
-        return Icons.edit_note;
+        return AppIcons.editNote;
       case ContributionType.technique:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case ContributionType.variant:
-        return Icons.alt_route;
+        return AppIcons.altRoute;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
     }
   }
 

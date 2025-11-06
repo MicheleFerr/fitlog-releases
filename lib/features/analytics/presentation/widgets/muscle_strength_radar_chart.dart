@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Radar chart interattivo per visualizzare la forza relativa
 /// dei diversi gruppi muscolari
@@ -165,13 +166,13 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
               HapticFeedback.lightImpact();
             },
             avatar: Icon(
-              _showComparison ? Icons.visibility : Icons.visibility_off,
+              _showComparison ? AppIcons.visibility : AppIcons.visibilityOff,
               size: 18,
             ),
           ),
         const SizedBox(width: 12),
         IconButton(
-          icon: const Icon(Icons.refresh),
+          icon: const Icon(AppIcons.refresh),
           onPressed: () {
             _animationController.reset();
             _animationController.forward();
@@ -332,7 +333,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close, size: 20),
+                icon: const Icon(AppIcons.close, size: 20),
                 onPressed: () {
                   setState(() {
                     _selectedMuscle = null;
@@ -370,7 +371,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
             Row(
               children: [
                 Icon(
-                  improvement >= 0 ? Icons.trending_up : Icons.trending_down,
+                  improvement >= 0 ? AppIcons.trendUp : AppIcons.trendDown,
                   color: improvement >= 0 ? Colors.green : Colors.red,
                   size: 20,
                 ),
@@ -502,17 +503,17 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
   IconData _getMuscleIcon(MuscleGroup muscle) {
     switch (muscle) {
       case MuscleGroup.chest:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case MuscleGroup.back:
-        return Icons.straighten;
+        return AppIcons.straighten;
       case MuscleGroup.shoulders:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case MuscleGroup.arms:
-        return Icons.sports_handball;
+        return AppIcons.sportsHandball;
       case MuscleGroup.legs:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case MuscleGroup.core:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
     }
   }
   

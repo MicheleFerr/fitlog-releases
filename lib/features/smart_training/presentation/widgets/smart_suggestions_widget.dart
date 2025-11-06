@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_suggestion.dart';
 import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget that displays smart training suggestions
 class SmartSuggestionsWidget extends ConsumerWidget {
@@ -38,7 +39,7 @@ class SmartSuggestionsWidget extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.lightbulb_outline,
+                  AppIcons.tip,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -132,7 +133,7 @@ class SmartSuggestionTile extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     size: 16,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),

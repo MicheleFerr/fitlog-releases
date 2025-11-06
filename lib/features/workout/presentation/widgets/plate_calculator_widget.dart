@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/barbell_selector_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class PlateCalculatorWidget extends ConsumerStatefulWidget {
   
@@ -101,7 +102,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
           child: Row(
             children: [
               Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
@@ -137,7 +138,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               OutlinedButton.icon(
                 onPressed: () => _showBarbellSelector(context),
                 icon: Icon(
-                  _barbellWeight != null ? Icons.fitness_center : Icons.block,
+                  _barbellWeight != null ? AppIcons.workout : AppIcons.block,
                   size: 16,
                 ),
                 label: Text(
@@ -206,7 +207,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               Row(
                 children: [
                   Icon(
-                    Icons.format_list_numbered,
+                    AppIcons.formatListNumbered,
                     size: 16,
                     color: theme.colorScheme.secondary,
                   ),
@@ -282,7 +283,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
             child: Row(
               children: [
                 Icon(
-                  Icons.settings,
+                  AppIcons.settings,
                   size: 16,
                   color: theme.colorScheme.secondary,
                 ),
@@ -296,7 +297,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                 ),
                 const Spacer(),
                 Icon(
-                  _showPlateConfig ? Icons.expand_less : Icons.expand_more,
+                  _showPlateConfig ? AppIcons.expandLess : AppIcons.expandMore,
                   size: 20,
                   color: theme.colorScheme.secondary,
                 ),
@@ -366,13 +367,13 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           children: [
                             if (isAvailable)
                               Icon(
-                                Icons.check_circle,
+                                AppIcons.complete,
                                 size: 16,
                                 color: _getPlateColor(plate),
                               )
                             else
                               Icon(
-                                Icons.cancel,
+                                AppIcons.cancel,
                                 size: 16,
                                 color: theme.colorScheme.outline.withOpacity(0.5),
                               ),
@@ -406,7 +407,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           });
                           HapticFeedback.lightImpact();
                         },
-                        icon: const Icon(Icons.select_all, size: 16),
+                        icon: const Icon(AppIcons.selectAll, size: 16),
                         label: Text(AppLocalizations.of(context).plateCalculatorAll),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -424,7 +425,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           });
                           HapticFeedback.lightImpact();
                         },
-                        icon: const Icon(Icons.star, size: 16),
+                        icon: const Icon(AppIcons.star, size: 16),
                         label: Text(AppLocalizations.of(context).plateCalculatorStandard),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -587,7 +588,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                 Row(
                   children: [
                     Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -600,7 +601,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                     ),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],

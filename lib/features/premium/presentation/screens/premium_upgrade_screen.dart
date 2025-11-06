@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -150,7 +151,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         child: Column(
           children: [
             Icon(
-              Icons.rocket_launch,
+              AppIcons.rocket,
               size: 64,
               color: colorScheme.primary,
             ),
@@ -179,12 +180,12 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     final colorScheme = theme.colorScheme;
     
     final features = [
-      (Icons.cloud_sync, 'Cross-Device Sync', 'Access your workouts on any device'),
-      (Icons.backup, 'Cloud Backup', 'Never lose your data with automatic backups'),
-      (Icons.people, 'Community Access', 'Share and discover workout templates'),
-      (Icons.speed, 'Priority Sync', 'Real-time updates every 5 minutes'),
-      (Icons.trending_up, 'Advanced Analytics', 'Deep insights into your progress'),
-      (Icons.support_agent, 'Priority Support', 'Get help when you need it'),
+      (AppIcons.cloudSync, 'Cross-Device Sync', 'Access your workouts on any device'),
+      (AppIcons.backup, 'Cloud Backup', 'Never lose your data with automatic backups'),
+      (AppIcons.people, 'Community Access', 'Share and discover workout templates'),
+      (AppIcons.speed, 'Priority Sync', 'Real-time updates every 5 minutes'),
+      (AppIcons.trendUp, 'Advanced Analytics', 'Deep insights into your progress'),
+      (AppIcons.supportAgent, 'Priority Support', 'Get help when you need it'),
     ];
     
     return Column(
@@ -209,7 +210,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             title: Text(feature.$2),
             subtitle: Text(feature.$3),
             trailing: Icon(
-              Icons.check_circle,
+              AppIcons.complete,
               color: colorScheme.primary,
             ),
           ),
@@ -368,7 +369,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                   ),
                   const SizedBox(width: 8),
                   Icon(
-                    Icons.arrow_forward_ios,
+                    AppIcons.forwardIos,
                     color: colorScheme.primary,
                   ),
                 ],
@@ -535,7 +536,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.rocket_launch),
+                        const Icon(AppIcons.rocket),
                         const SizedBox(width: 8),
                         Text(
                           'Start Free Trial - Then \$39.99/year',
@@ -569,7 +570,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.verified,
+                AppIcons.verified,
                 size: 100,
                 color: colorScheme.primary,
               ),
@@ -606,7 +607,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 onPressed: () {
                   // Navigate to subscription management
                 },
-                icon: const Icon(Icons.settings),
+                icon: const Icon(AppIcons.settings),
                 label: const Text('Manage Subscription'),
               ),
             ],
@@ -650,7 +651,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             const SnackBar(
               content: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.white),
+                  Icon(AppIcons.complete, color: Colors.white),
                   SizedBox(width: 8),
                   Text('Welcome to Premium! 🎉'),
                 ],

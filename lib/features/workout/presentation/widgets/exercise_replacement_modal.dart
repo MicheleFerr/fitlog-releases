@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_compatibility_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
   
@@ -127,7 +128,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                 Row(
                   children: [
                     Icon(
-                      Icons.swap_horiz_rounded,
+                      AppIcons.swapHorizRounded,
                       color: theme.colorScheme.primary,
                       size: 28,
                     ),
@@ -153,7 +154,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                     ),
                   ],
                 ),
@@ -173,7 +174,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.info,
                         color: theme.colorScheme.primary,
                         size: 20,
                       ),
@@ -198,11 +199,11 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   onChanged: (value) => setState(() => _searchQuery = value),
                   decoration: InputDecoration(
                     hintText: l10n.searchExercises,
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(AppIcons.search),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             onPressed: () => setState(() => _searchQuery = ''),
-                            icon: const Icon(Icons.clear),
+                            icon: const Icon(AppIcons.clear),
                           )
                         : null,
                     border: OutlineInputBorder(
@@ -226,7 +227,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.auto_awesome,
+                              AppIcons.autoAwesome,
                               size: 16,
                               color: _showOnlyCompatible 
                                   ? theme.colorScheme.onPrimary
@@ -277,7 +278,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.error_outline,
+                      AppIcons.error,
                       size: 64,
                       color: theme.colorScheme.error,
                     ),
@@ -295,7 +296,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.search_off,
+                          AppIcons.searchOff,
                           size: 64,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                         ),
@@ -334,16 +335,16 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     
     if (suggestion.compatibilityScore >= 80) {
       compatibilityColor = Colors.green;
-      compatibilityIcon = Icons.star;
+      compatibilityIcon = AppIcons.star;
     } else if (suggestion.compatibilityScore >= 60) {
       compatibilityColor = Colors.orange;
-      compatibilityIcon = Icons.star_half;
+      compatibilityIcon = AppIcons.starHalfIcon;
     } else if (suggestion.compatibilityScore >= 40) {
       compatibilityColor = Colors.amber;
-      compatibilityIcon = Icons.star_outline;
+      compatibilityIcon = AppIcons.starOutlineIcon;
     } else {
       compatibilityColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
-      compatibilityIcon = Icons.star_border;
+      compatibilityIcon = AppIcons.starOutline;
     }
     
     return Padding(
@@ -465,7 +466,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     size: 16,
                     color: theme.colorScheme.primary,
                   ),
@@ -500,7 +501,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   content: Row(
                     children: [
                       Icon(
-                        Icons.check_circle,
+                        AppIcons.complete,
                         color: theme.colorScheme.onTertiary,
                       ),
                       const SizedBox(width: 8),
@@ -542,21 +543,21 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   IconData _getCategoryIcon(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case ExerciseCategory.back:
-        return Icons.rowing;
+        return AppIcons.rowing;
       case ExerciseCategory.shoulders:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case ExerciseCategory.arms:
-        return Icons.sports_gymnastics;
+        return AppIcons.gymnastics;
       case ExerciseCategory.legs:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case ExerciseCategory.abs:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
       case ExerciseCategory.cardio:
-        return Icons.favorite;
+        return AppIcons.favorite;
       case ExerciseCategory.other:
-        return Icons.sports;
+        return AppIcons.sports;
     }
   }
   

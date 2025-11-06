@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
 
@@ -127,7 +128,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             Row(
               children: [
                 Icon(
-                  Icons.auto_awesome,
+                  AppIcons.autoAwesome,
                   color: context.colors.primary,
                   size: 28,
                 ),
@@ -252,7 +253,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                     ),
                   ),
                   Icon(
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     color: _selectedType == AutoAdjustmentType.apre
                         ? context.colors.primary
                         : context.colors.onSurfaceVariant,
@@ -302,7 +303,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                     ),
                   ),
                   Icon(
-                    Icons.psychology,
+                    AppIcons.ai,
                     color: _selectedType == AutoAdjustmentType.rpe
                         ? context.colors.secondary
                         : context.colors.onSurfaceVariant,
@@ -349,7 +350,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ButtonSegment<int>(
               value: 10,
               label: Text('APRE 10'),
-              icon: Icon(Icons.looks),
+              icon: Icon(AppIcons.looks),
             ),
           ],
           selected: {_apreProtocol},
@@ -382,7 +383,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           child: Row(
             children: [
               Icon(
-                Icons.info_outline,
+                AppIcons.info,
                 size: 16,
                 color: context.colors.onPrimaryContainer,
               ),
@@ -435,7 +436,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 Row(
                   children: [
                     Icon(
-                      Icons.check_circle_outline,
+                      AppIcons.completeOutline,
                       size: 16,
                       color: context.colors.primary,
                     ),
@@ -511,7 +512,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           decoration: InputDecoration(
             labelText: l10n.apreBaseWeight,
             hintText: l10n.apreBaseWeightHint,
-            prefixIcon: const Icon(Icons.fitness_center),
+            prefixIcon: const Icon(AppIcons.workout),
             suffixText: 'kg',
             helperText: _getBaseWeightHelper(l10n),
             border: OutlineInputBorder(
@@ -568,7 +569,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   decoration: InputDecoration(
                     labelText: 'Min RPE',
                     hintText: '7',
-                    prefixIcon: const Icon(Icons.arrow_downward),
+                    prefixIcon: const Icon(AppIcons.arrowDownward),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -583,7 +584,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   decoration: InputDecoration(
                     labelText: 'Max RPE',
                     hintText: '9',
-                    prefixIcon: const Icon(Icons.arrow_upward),
+                    prefixIcon: const Icon(AppIcons.arrowUpward),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -613,7 +614,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             decoration: InputDecoration(
               labelText: 'Target RIR',
               hintText: '2',
-              prefixIcon: const Icon(Icons.repeat),
+              prefixIcon: const Icon(AppIcons.repeat),
               helperText: 'Repetitions in Reserve',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),

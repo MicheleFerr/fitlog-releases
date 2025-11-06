@@ -176,13 +176,13 @@ class RoutineDetailScreen extends ConsumerWidget {
                     children: [
                       _buildInfoChip(
                         context,
-                        icon: Icons.calendar_today,
+                        icon: AppIcons.calendar,
                         label: _formatDateRange(routine.startDate, routine.endDate),
                       ),
                       const SizedBox(width: 8),
                       _buildInfoChip(
                         context,
-                        icon: Icons.fitness_center,
+                        icon: AppIcons.workout,
                         label: '${routine.totalWorkoutDays} workouts',
                       ),
                     ],
@@ -199,7 +199,7 @@ class RoutineDetailScreen extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             size: 16,
                             color: context.colors.onPrimary,
                           ),
@@ -300,7 +300,7 @@ class RoutineDetailScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.error,
             size: 64,
             color: context.colors.error,
           ),
@@ -329,7 +329,7 @@ class RoutineDetailScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 64,
               color: context.colors.error,
             ),
@@ -498,7 +498,7 @@ class RoutineDetailScreen extends ConsumerWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.archive),
+              leading: const Icon(AppIcons.archive),
               title: const Text('Archive'),
               onTap: () {
                 Navigator.pop(modalContext);
@@ -506,7 +506,7 @@ class RoutineDetailScreen extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.delete, color: context.colors.error),
+              leading: Icon(AppIcons.delete, color: context.colors.error),
               title: Text(
                 'Delete',
                 style: TextStyle(color: context.colors.error),

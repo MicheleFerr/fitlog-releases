@@ -16,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget that displays a banner when fitness profile is stale
 class StaleProfileBanner extends ConsumerWidget {
@@ -69,7 +70,7 @@ class StaleProfileBanner extends ConsumerWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.update,
+              AppIcons.updateIcon,
               color: context.colors.secondary,
               size: 24,
             ),

@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_celebration_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_comparison_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Real-time analytics bar showing key workout metrics during workout
 class WorkoutAnalyticsBar extends ConsumerWidget {
@@ -102,19 +103,19 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
               _buildCompactMetric(
                 l10n.volume,
                 '${volume.toStringAsFixed(0)} kg',
-                Icons.fitness_center,
+                AppIcons.workout,
                 colorScheme.primary,
               ),
               _buildCompactMetric(
                 l10n.completion,
                 '${(completion * 100).toStringAsFixed(0)}%',
-                Icons.check_circle_outline,
+                AppIcons.completeOutline,
                 _getCompletionColor(completion, colorScheme),
               ),
               _buildCompactMetric(
                 l10n.quality,
                 _getQualityGrade(quality),
-                Icons.stars,
+                AppIcons.stars,
                 _getQualityColor(quality, colorScheme),
               ),
             ],
@@ -131,7 +132,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
 
         // Expand button
         IconButton(
-          icon: const Icon(Icons.expand_more),
+          icon: const Icon(AppIcons.expandMore),
           onPressed: onTap,
           tooltip: l10n.viewDetails,
         ),
@@ -161,7 +162,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.analytics,
+              AppIcons.analytics,
               color: colorScheme.primary,
               size: 20,
             ),
@@ -185,7 +186,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.trending_up,
+                      AppIcons.trendUp,
                       color: colorScheme.secondary,
                       size: 14,
                     ),
@@ -252,7 +253,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
                 context,
                 l10n.volume,
                 '${volume.toStringAsFixed(0)} kg',
-                Icons.fitness_center,
+                AppIcons.workout,
                 colorScheme.primary,
                 metrics?.workingSetsVolume != null 
                     ? '${l10n.working}: ${metrics!.workingSetsVolume.toStringAsFixed(0)} kg'
@@ -267,7 +268,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
                 metrics?.averageRPE != null && metrics!.averageRPE > 0
                     ? '${metrics.averageRPE.toStringAsFixed(1)} RPE'
                     : l10n.noData,
-                Icons.whatshot,
+                AppIcons.whatshot,
                 colorScheme.secondary,
                 metrics?.peakIntensity != null
                     ? '${l10n.peak}: ${metrics!.peakIntensity.toStringAsFixed(0)}'
@@ -280,7 +281,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
                 context,
                 l10n.quality,
                 _getQualityGrade(quality),
-                Icons.stars,
+                AppIcons.stars,
                 _getQualityColor(quality, colorScheme),
                 '${quality.toStringAsFixed(0)}/100',
               ),
@@ -473,7 +474,7 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        Icons.celebration,
+                        AppIcons.celebration,
                         color: colorScheme.secondary,
                         size: 16,
                       ),
@@ -569,7 +570,7 @@ class FloatingAnalyticsWidget extends ConsumerWidget {
             children: [
               if (hasNewPRs) ...[
                 Icon(
-                  Icons.celebration,
+                  AppIcons.celebration,
                   color: colorScheme.secondary,
                   size: 14,
                 ),

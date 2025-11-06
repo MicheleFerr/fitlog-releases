@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Exercise Replacement Dialog with intelligent suggestions
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
@@ -142,7 +143,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             ],
           ),
           leading: IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(AppIcons.close),
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
@@ -153,11 +154,11 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
             tabs: [
               Tab(
-                icon: const Icon(Icons.auto_awesome),
+                icon: const Icon(AppIcons.autoAwesome),
                 text: l10n.smartSuggestions,
               ),
               Tab(
-                icon: const Icon(Icons.list),
+                icon: const Icon(AppIcons.list),
                 text: l10n.allExercises,
               ),
             ],
@@ -198,7 +199,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.search_off,
+              AppIcons.searchOff,
               size: 64,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
@@ -225,13 +226,13 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               children: [
                 _buildFilterChip(
                   label: l10n.sameMuscleGroup,
-                  icon: Icons.fitness_center,
+                  icon: AppIcons.workout,
                   isSelected: true,
                   theme: theme,
                 ),
                 _buildFilterChip(
                   label: l10n.sameEquipment,
-                  icon: Icons.sports_gymnastics,
+                  icon: AppIcons.gymnastics,
                   isSelected: false,
                   theme: theme,
                 ),
@@ -277,10 +278,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             onChanged: (value) => setState(() => _searchQuery = value),
             decoration: InputDecoration(
               hintText: l10n.searchExercises,
-              prefixIcon: const Icon(Icons.search),
+              prefixIcon: const Icon(AppIcons.search),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.clear),
+                      icon: const Icon(AppIcons.clear),
                       onPressed: () {
                         _searchController.clear();
                         setState(() => _searchQuery = '');
@@ -304,7 +305,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             children: [
               _buildFilterChip(
                 label: l10n.favorites,
-                icon: Icons.star,
+                icon: AppIcons.star,
                 isSelected: _showOnlyFavorites,
                 onTap: () => setState(() => _showOnlyFavorites = !_showOnlyFavorites),
                 theme: theme,
@@ -312,14 +313,14 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               const SizedBox(width: 8),
               _buildDropdownChip(
                 label: _selectedCategory ?? l10n.allCategories,
-                icon: Icons.category,
+                icon: AppIcons.category,
                 theme: theme,
                 onTap: () => _showCategoryFilter(theme, l10n),
               ),
               const SizedBox(width: 8),
               _buildDropdownChip(
                 label: _selectedEquipment ?? l10n.allEquipment,
-                icon: Icons.fitness_center,
+                icon: AppIcons.workout,
                 theme: theme,
                 onTap: () => _showEquipmentFilter(theme, l10n),
               ),
@@ -335,7 +336,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.search_off,
+                        AppIcons.searchOff,
                         size: 64,
                         color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
@@ -457,7 +458,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                       children: [
                         if (recommendation.exercise.equipment != null) ...[
                           Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             size: 14,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -472,7 +473,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                         ],
                         if (recommendation.exercise.category != null) ...[
                           Icon(
-                            Icons.category,
+                            AppIcons.category,
                             size: 14,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -491,7 +492,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               ),
               // Arrow
               Icon(
-                Icons.arrow_forward_ios,
+                AppIcons.forwardIos,
                 size: 20,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
@@ -533,7 +534,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
           children: [
             if (exercise.equipment != null) ...[
               Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 size: 14,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -548,7 +549,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             ],
             if (exercise.primaryMuscleGroups?.isNotEmpty ?? false) ...[
               Icon(
-                Icons.sports_gymnastics,
+                AppIcons.gymnastics,
                 size: 14,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -567,7 +568,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
           ],
         ),
         trailing: Icon(
-          Icons.swap_horiz,
+          AppIcons.swapHoriz,
           color: theme.colorScheme.primary,
         ),
       ),
@@ -649,7 +650,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               ),
               const SizedBox(width: 4),
               Icon(
-                Icons.arrow_drop_down,
+                AppIcons.arrowDropDown,
                 size: 18,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -670,19 +671,19 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   IconData _getCategoryIcon(String? category) {
     switch (category?.toLowerCase()) {
       case 'chest':
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case 'back':
-        return Icons.sports_gymnastics;
+        return AppIcons.gymnastics;
       case 'legs':
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case 'shoulders':
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case 'arms':
-        return Icons.sports_handball;
+        return AppIcons.sportsHandball;
       case 'core':
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
       default:
-        return Icons.fitness_center;
+        return AppIcons.workout;
     }
   }
 
@@ -749,7 +750,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     color: theme.colorScheme.warning,
                     size: 20,
                   ),

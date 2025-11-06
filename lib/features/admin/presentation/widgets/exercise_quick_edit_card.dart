@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
 
@@ -80,7 +81,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                           widget.exercise.imageUrl!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             color: context.colors.onSurfaceVariant,
                           ),
                         ),
@@ -121,7 +122,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             size: 14,
                             color: context.colors.onSecondary,
                           ),
@@ -173,7 +174,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        _isExpanded ? Icons.expand_less : Icons.expand_more,
+                        _isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                         size: 16,
                         color: context.colors.onSurfaceVariant,
                       ),
@@ -227,7 +228,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
       children: [
         // Dropdown Attrezzatura
         _QuickDropdown(
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           value: widget.exercise.attrezzatura,
           items: values.equipments,
           onChanged: (value) => _updateField('attrezzatura', value),
@@ -238,7 +239,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
 
         // Dropdown Difficoltà
         _QuickDropdown(
-          icon: Icons.trending_up,
+          icon: AppIcons.trendUp,
           value: widget.exercise.difficolta,
           items: values.difficulties,
           onChanged: (value) => _updateField('difficolta', value),
@@ -249,7 +250,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
 
         // Dropdown Tipo Esercizio
         _QuickDropdown(
-          icon: Icons.category,
+          icon: AppIcons.category,
           value: widget.exercise.tipoEsercizio,
           items: values.exerciseTypes,
           onChanged: (value) => _updateField('tipoEsercizio', value),
@@ -259,7 +260,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
 
         // Dropdown Range Ripetizioni
         _QuickDropdown(
-          icon: Icons.repeat,
+          icon: AppIcons.repeat,
           value: widget.exercise.rangeRipetizioni,
           items: values.repRanges,
           onChanged: (value) => _updateField('rangeRipetizioni', value),
@@ -270,7 +271,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
         // Dropdown TUT (Time Under Tension)
         if (widget.exercise.tempoEsecuzione != null)
           _QuickDropdown(
-            icon: Icons.timer,
+            icon: AppIcons.timer,
             value: widget.exercise.tempoEsecuzione ?? '',
             items: values.tutOptions,
             onChanged: (value) => _updateField('tempoEsecuzione', value),
@@ -294,7 +295,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             context,
             'Pattern Movimento',
             widget.exercise.patternMovimento,
-            Icons.directions_run,
+            AppIcons.cardio,
           ),
           const SizedBox(height: 8),
         ],
@@ -311,7 +312,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             context,
             'Note Tecniche',
             widget.exercise.noteTecniche!,
-            Icons.notes,
+            AppIcons.notes,
           ),
           const SizedBox(height: 8),
         ],
@@ -322,7 +323,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             context,
             'Mobilità Pre',
             widget.exercise.mobilitaPre!,
-            Icons.accessibility_new,
+            AppIcons.accessibility,
           ),
           const SizedBox(height: 8),
         ],
@@ -333,7 +334,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             context,
             'Attivazione Pre',
             widget.exercise.attivazionePre!,
-            Icons.bolt,
+            AppIcons.bolt,
           ),
           const SizedBox(height: 8),
         ],
@@ -344,7 +345,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             context,
             'Nota TUT',
             widget.exercise.tempoNote!,
-            Icons.schedule,
+            AppIcons.schedule,
           ),
         ],
       ],
@@ -457,7 +458,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                   height: 40,
                   color: context.colors.surface,
                   child: Icon(
-                    Icons.broken_image,
+                    AppIcons.brokenImage,
                     size: 20,
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -489,7 +490,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
               ),
             ),
             Icon(
-              Icons.touch_app,
+              AppIcons.touchApp,
               size: 16,
               color: context.colors.primary,
             ),
@@ -546,7 +547,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.image,
+                    AppIcons.image,
                     color: context.colors.onPrimaryContainer,
                   ),
                   const SizedBox(width: 8),
@@ -573,7 +574,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.broken_image,
+                        AppIcons.brokenImage,
                         size: 64,
                         color: context.colors.onSurfaceVariant,
                       ),
@@ -604,7 +605,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                         const SnackBar(content: Text('Cambio immagine - Coming soon')),
                       );
                     },
-                    icon: const Icon(Icons.edit),
+                    icon: const Icon(AppIcons.edit),
                     label: Text(l10n.changeImage),
                   ),
                   const SizedBox(width: 8),
@@ -706,7 +707,7 @@ class _QuickDropdown extends StatelessWidget {
             isExpanded: true,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             icon: Icon(
-              Icons.arrow_drop_down,
+              AppIcons.arrowDropDown,
               size: 18,
               color: color,
             ),

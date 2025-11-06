@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/skip_tracker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Result returned when user confirms skip
 class SkipDayResult {
@@ -101,7 +102,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        Icons.event_busy,
+                        AppIcons.eventBusy,
                         color: context.colors.error,
                         size: 24,
                       ),
@@ -147,7 +148,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                     child: Row(
                       children: [
                         const Icon(
-                          Icons.warning_amber_rounded,
+                          AppIcons.warningAmberRounded,
                           color: Colors.orange,
                           size: 24,
                         ),
@@ -255,13 +256,13 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
 
   List<Widget> _buildReasonChips() {
     final reasons = [
-      (SkipReasons.sick, Icons.sick, 'Sick'),
-      (SkipReasons.injury, Icons.healing, 'Injury'),
-      (SkipReasons.busy, Icons.work, 'Busy'),
-      (SkipReasons.tired, Icons.bedtime, 'Tired'),
-      (SkipReasons.travel, Icons.flight, 'Travel'),
-      (SkipReasons.weather, Icons.cloud, 'Weather'),
-      (SkipReasons.other, Icons.more_horiz, 'Other'),
+      (SkipReasons.sick, AppIcons.sick, 'Sick'),
+      (SkipReasons.injury, AppIcons.healing, 'Injury'),
+      (SkipReasons.busy, AppIcons.work, 'Busy'),
+      (SkipReasons.tired, AppIcons.bedtime, 'Tired'),
+      (SkipReasons.travel, AppIcons.flight, 'Travel'),
+      (SkipReasons.weather, AppIcons.cloud, 'Weather'),
+      (SkipReasons.other, AppIcons.moreHoriz, 'Other'),
     ];
 
     return reasons.map((reason) {
@@ -325,7 +326,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           Row(
             children: [
               Icon(
-                Icons.info_outline,
+                AppIcons.info,
                 size: 20,
                 color: context.colors.primary,
               ),
@@ -341,7 +342,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           ),
           const SizedBox(height: 12),
           _buildImpactRow(
-            icon: Icons.local_fire_department,
+            icon: AppIcons.streak,
             label: 'Current Streak',
             value: '$currentStreak days',
             change: currentStreak > 0 ? 'Will be lost' : null,
@@ -349,7 +350,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           ),
           const SizedBox(height: 8),
           _buildImpactRow(
-            icon: Icons.trending_up,
+            icon: AppIcons.trendUp,
             label: 'Adherence Rate',
             value: '${currentAdherence.toInt()}%',
             change: '${adherenceChange >= 0 ? '+' : ''}${adherenceChange.toStringAsFixed(1)}%',
@@ -393,7 +394,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
         if (change != null) ...[
           const SizedBox(width: 8),
           Icon(
-            isNegative ? Icons.arrow_downward : Icons.arrow_upward,
+            isNegative ? AppIcons.arrowDownward : AppIcons.arrowUpward,
             size: 14,
             color: isNegative ? context.colors.error : Colors.green,
           ),

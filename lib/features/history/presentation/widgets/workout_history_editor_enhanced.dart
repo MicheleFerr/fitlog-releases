@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_replacement_modal.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutHistoryEditorEnhanced extends ConsumerStatefulWidget {
 
@@ -153,7 +154,7 @@ class _WorkoutHistoryEditorEnhancedState
                   children: [
                     IconButton(
                       onPressed: _onClosePressed,
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                       style: IconButton.styleFrom(
                         backgroundColor: theme.colorScheme.surfaceContainerHighest,
                       ),
@@ -193,7 +194,7 @@ class _WorkoutHistoryEditorEnhancedState
                                 ),
                               ),
                             )
-                          : const Icon(Icons.save, size: 18),
+                          : const Icon(AppIcons.save, size: 18),
                       label: Text(l10n.save),
                     ),
                   ],
@@ -244,7 +245,7 @@ class _WorkoutHistoryEditorEnhancedState
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            prefixIcon: const Icon(Icons.fitness_center),
+            prefixIcon: const Icon(AppIcons.workout),
           ),
           textCapitalization: TextCapitalization.sentences,
         ),
@@ -276,7 +277,7 @@ class _WorkoutHistoryEditorEnhancedState
             child: Row(
               children: [
                 Icon(
-                  Icons.calendar_today,
+                  AppIcons.calendar,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
@@ -286,7 +287,7 @@ class _WorkoutHistoryEditorEnhancedState
                 ),
                 const Spacer(),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -302,7 +303,7 @@ class _WorkoutHistoryEditorEnhancedState
     return Row(
       children: [
         Icon(
-          Icons.fitness_center,
+          AppIcons.workout,
           color: theme.colorScheme.primary,
         ),
         const SizedBox(width: 8),
@@ -352,7 +353,7 @@ class _WorkoutHistoryEditorEnhancedState
                 ),
                 IconButton(
                   icon: Icon(
-                    Icons.swap_horiz_rounded,
+                    AppIcons.swapHorizRounded,
                     color: theme.colorScheme.primary,
                   ),
                   onPressed: () => _replaceExercise(index, exercise),
@@ -476,7 +477,7 @@ class _WorkoutHistoryEditorEnhancedState
             child: Container(
               padding: const EdgeInsets.all(4),
               child: Icon(
-                set.isCompleted ? Icons.check_box : Icons.check_box_outline_blank,
+                set.isCompleted ? AppIcons.checkBox : AppIcons.checkBoxOutlineBlank,
                 color: set.isCompleted
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,

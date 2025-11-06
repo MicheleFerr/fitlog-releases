@@ -20,6 +20,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Calendar widget for routine schedule
 class CalendarView extends StatefulWidget {
@@ -65,7 +66,7 @@ class _CalendarViewState extends State<CalendarView> {
           Row(
             children: [
               Icon(
-                Icons.calendar_today,
+                AppIcons.calendar,
                 color: context.colors.primary,
                 size: 20,
               ),

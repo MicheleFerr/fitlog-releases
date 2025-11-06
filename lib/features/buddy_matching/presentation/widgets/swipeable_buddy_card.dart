@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/fitness_level_badge.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/workout_goals_chips.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/instagram_link_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SwipeableBuddyCard extends StatefulWidget {
 
@@ -233,7 +234,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                           const SizedBox(width: 8),
                           if (widget.profile.isVerified)
                             const Icon(
-                              Icons.verified,
+                              AppIcons.verified,
                               color: Colors.blue,
                               size: 20,
                             ),
@@ -252,7 +253,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                               child: Row(
                                 children: [
                                   const Icon(
-                                    Icons.location_on,
+                                    AppIcons.location,
                                     color: Colors.white70,
                                     size: 14,
                                   ),
@@ -302,7 +303,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
       color: theme.colorScheme.primary.withValues(alpha: 0.1),
       child: Center(
         child: Icon(
-          Icons.person,
+          AppIcons.person,
           size: 64,
           color: theme.colorScheme.primary,
         ),
@@ -359,7 +360,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
             _buildStatChip(
               context,
               theme,
-              Icons.fitness_center,
+              AppIcons.workout,
               '${widget.profile.totalWorkouts}',
               l10n.workouts,
             ),
@@ -367,7 +368,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
             _buildStatChip(
               context,
               theme,
-              Icons.handshake,
+              AppIcons.handshake,
               '${widget.profile.partnershipsCount}',
               l10n.partnerships,
             ),
@@ -376,7 +377,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
               _buildStatChip(
                 context,
                 theme,
-                Icons.star,
+                AppIcons.star,
                 widget.profile.averageRating.toStringAsFixed(1),
                 l10n.rating,
               ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class QuickEditShowcase extends ConsumerStatefulWidget {
   const QuickEditShowcase({super.key});
@@ -120,7 +121,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  Icons.science,
+                  AppIcons.science,
                   color: theme.colorScheme.onPrimaryContainer,
                   size: 20,
                 ),
@@ -154,7 +155,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
                     _lastEditedVersion = '';
                   });
                 },
-                icon: const Icon(Icons.refresh),
+                icon: const Icon(AppIcons.refresh),
                 tooltip: 'Reset demo data',
               ),
             ],
@@ -171,7 +172,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             ),
             child: Row(
               children: [
-                Icon(Icons.fitness_center, size: 16, color: theme.colorScheme.primary),
+                Icon(AppIcons.workout, size: 16, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'Demo Set: ',
@@ -219,7 +220,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.layers, color: Colors.purple, size: 24),
+                const Icon(AppIcons.layers, color: Colors.purple, size: 24),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -252,7 +253,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: () => _showQuickEditVersion('v2'),
-              icon: const Icon(Icons.play_arrow),
+              icon: const Icon(AppIcons.play),
               label: const Text('Test QuickEdit V2'),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.purple,
@@ -275,7 +276,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.check_circle, size: 16, color: Colors.green),
+                  const Icon(AppIcons.complete, size: 16, color: Colors.green),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

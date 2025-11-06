@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_sel
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/enhanced_add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin-only modal tester widget with collapsible sections
 class AdminModalTesterWidget extends ConsumerWidget {
@@ -49,11 +50,11 @@ class AdminModalTesterWidget extends ConsumerWidget {
                 child: Row(
                   children: [
                     Icon(
-                      isMainCollapsed ? Icons.expand_more : Icons.expand_less,
+                      isMainCollapsed ? AppIcons.expandMore : AppIcons.expandLess,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
-                    Icon(Icons.bug_report,
+                    Icon(AppIcons.bugReport,
                       color: Theme.of(context).colorScheme.primary),
                     const SizedBox(width: 8),
                     Expanded(
@@ -188,7 +189,7 @@ class AdminModalTesterWidget extends ConsumerWidget {
                   onPressed: () {
                     ref.read(debugSectionStatesProvider.notifier).collapseAll();
                   },
-                  icon: const Icon(Icons.unfold_less),
+                  icon: const Icon(AppIcons.unfoldLess),
                   label: const Text('Collapse All Sections'),
                 ),
               ),
@@ -334,7 +335,7 @@ class _CollapsibleSection extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  isCollapsed ? Icons.chevron_right : Icons.expand_more,
+                  isCollapsed ? AppIcons.chevronRight : AppIcons.expandMore,
                   size: 16,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),

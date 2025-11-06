@@ -5,6 +5,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DraggableTutorialOverlay extends StatefulWidget {
   
@@ -137,7 +138,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.swipe,
+                                AppIcons.swipe,
                                 color: colorScheme.primary,
                                 size: 24,
                               ),
@@ -168,7 +169,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                             IconButton(
                               onPressed: _dismissTutorial,
                               icon: Icon(
-                                Icons.close,
+                                AppIcons.close,
                                 size: 18,
                                 color: colorScheme.onPrimaryContainer.withOpacity(0.6),
                               ),

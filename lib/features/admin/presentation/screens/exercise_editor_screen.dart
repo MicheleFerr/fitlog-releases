@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_selector.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseEditorScreen extends ConsumerStatefulWidget { // null = new exercise
 
@@ -123,7 +124,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
           else
             TextButton.icon(
               onPressed: _saveExercise,
-              icon: const Icon(Icons.save),
+              icon: const Icon(AppIcons.save),
               label: Text(l10n.save),
             ),
         ],
@@ -281,7 +282,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: _isLoading ? null : _saveExercise,
-                  icon: const Icon(Icons.save),
+                  icon: const Icon(AppIcons.save),
                   label: Text(isEditing ? l10n.updateExercise : l10n.createExercise),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),

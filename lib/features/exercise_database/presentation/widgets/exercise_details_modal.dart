@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced modal for displaying exercise details with improved aesthetics
 /// following Apple HIG and Material Design 3 principles
@@ -103,7 +104,7 @@ class ExerciseDetailsModal extends StatelessWidget {
             // Focus Badge
             _buildInfoChip(
               context,
-              icon: Icons.fitness_center,
+              icon: AppIcons.workout,
               label: exercise.focusDisplayName,
               color: context.colors.primary,
             ),
@@ -119,7 +120,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         // Equipment
         _buildInfoChip(
           context,
-          icon: Icons.sports_gymnastics,
+          icon: AppIcons.gymnastics,
           label: exercise.attrezzatura,
           color: context.colors.tertiary,
         ),
@@ -219,7 +220,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  Icons.lightbulb_outline,
+                  AppIcons.tip,
                   size: 20,
                   color: context.colors.onPrimaryContainer,
                 ),
@@ -267,7 +268,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  Icons.wb_sunny_outlined,
+                  AppIcons.wbSunnyOutlined,
                   size: 20,
                   color: context.colors.onSecondaryContainer,
                 ),
@@ -285,7 +286,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               IconButton(
                 onPressed: () => WarmupInfoDialog.show(context),
                 icon: Icon(
-                  Icons.info_outline,
+                  AppIcons.info,
                   color: context.colors.primary,
                   size: 20,
                 ),

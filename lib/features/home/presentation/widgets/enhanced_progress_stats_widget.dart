@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/level_info
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_distribution_modal.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
   
@@ -272,7 +273,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.more_vert, size: 20),
+                  icon: const Icon(AppIcons.moreVert, size: 20),
                   onPressed: () => _showOptionsMenu(context),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -352,7 +353,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.settings),
+                  icon: const Icon(AppIcons.settings),
                   onPressed: () => _showOptionsMenu(context),
                 ),
               ],
@@ -455,7 +456,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
         context,
         label: l10n.workoutsLabel,
         value: '${stats['daysInLast30'] ?? 0}',
-        icon: Icons.calendar_today,
+        icon: AppIcons.calendar,
       ));
     }
     
@@ -464,7 +465,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
         context,
         label: l10n.avgPerWeek,
         value: '${stats['avgPerWeek'] ?? 0}',
-        icon: Icons.schedule,
+        icon: AppIcons.schedule,
       ));
     }
     
@@ -473,7 +474,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
         context,
         label: l10n.streakLabel,
         value: '${stats['currentStreak'] ?? 0}',
-        icon: Icons.local_fire_department,
+        icon: AppIcons.streak,
       ));
     }
     
@@ -526,7 +527,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       stats.add(Expanded(
         child: _buildStatCard(
           context,
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           label: l10n.totalWorkouts,
           value: '${analyticsState.activities.length}',
           color: Colors.blue,
@@ -539,7 +540,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       stats.add(Expanded(
         child: _buildStatCard(
           context,
-          icon: Icons.calendar_today,
+          icon: AppIcons.calendar,
           label: l10n.thisMonth,
           value: '${frequencyStats['daysInLast30'] ?? 0}',
           color: Colors.orange,
@@ -552,7 +553,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       stats.add(Expanded(
         child: _buildStatCard(
           context,
-          icon: Icons.local_fire_department,
+          icon: AppIcons.streak,
           label: l10n.currentStreak,
           value: '${frequencyStats['currentStreak'] ?? 0}',
           color: Colors.red,
@@ -872,7 +873,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             size: 48,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
@@ -921,7 +922,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.dashboard_customize),
+                leading: const Icon(AppIcons.dashboardCustomize),
                 title: Text(l10n.changeLayout),
                 onTap: () {
                   Navigator.pop(context);
@@ -929,7 +930,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.checklist),
+                leading: const Icon(AppIcons.checklist),
                 title: Text(l10n.selectMetrics),
                 onTap: () {
                   Navigator.pop(context);
@@ -937,7 +938,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.restore),
+                leading: const Icon(AppIcons.restore),
                 title: Text(l10n.resetDefaults),
                 onTap: () {
                   Navigator.pop(context);

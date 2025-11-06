@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🚀 TIER-1: Optimized selection sheet with lazy loading
 class ExerciseSelectionSheet extends ConsumerStatefulWidget {
@@ -169,7 +170,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
               onPressed: () {
                 ref.read(exerciseSelectionProvider.notifier).clearSelection();
               },
-              icon: const Icon(Icons.clear_all, size: 20),
+              icon: const Icon(AppIcons.clearAll, size: 20),
               label: Text(l10n.clearAll),
             ),
         ],
@@ -188,10 +189,10 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
         controller: _searchController,
         decoration: InputDecoration(
           hintText: l10n.searchExercises,
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: const Icon(AppIcons.search),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear),
+                  icon: const Icon(AppIcons.clear),
                   onPressed: () {
                     _searchController.clear();
                     ref.read(exerciseSelectionProvider.notifier).updateSearch('');
@@ -262,7 +263,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.search_off,
+              AppIcons.searchOff,
               size: 64,
               color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
             ),
@@ -418,7 +419,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           size: 12,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -465,7 +466,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.check,
+                    AppIcons.check,
                     size: 16,
                     color: theme.colorScheme.onPrimary,
                   ),
@@ -499,7 +500,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
-          Icons.fitness_center,
+          AppIcons.workout,
           size: 30,
           color: theme.colorScheme.onSurfaceVariant,
         ),
@@ -532,7 +533,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
           height: 60,
           color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
           child: Icon(
-            Icons.broken_image,
+            AppIcons.brokenImage,
             size: 30,
             color: theme.colorScheme.onSurfaceVariant,
           ),

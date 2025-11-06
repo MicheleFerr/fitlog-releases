@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WeeklyDistributionModal extends ConsumerWidget {
   
@@ -59,7 +60,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.calendar_view_week,
+                    AppIcons.calendarViewWeek,
                     color: Colors.white,
                     size: 24,
                   ),
@@ -85,7 +86,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(AppIcons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -103,7 +104,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     title: l10n.trainingDays,
                     value: trainingDays.toString(),
                     subtitle: l10n.thisWeek,
-                    icon: Icons.calendar_today,
+                    icon: AppIcons.calendar,
                     color: Colors.blue,
                   ),
                 ),
@@ -113,7 +114,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     title: l10n.averageVolume,
                     value: '${(averageVolume / 1000).toStringAsFixed(1)}k',
                     subtitle: l10n.perDay,
-                    icon: Icons.analytics,
+                    icon: AppIcons.analytics,
                     color: Colors.green,
                   ),
                 ),
@@ -293,7 +294,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     color: theme.colorScheme.primary,
                     size: 20,
                   ),

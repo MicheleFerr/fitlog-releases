@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// 🎯 TIER-1 IMPROVEMENT COMPONENTS
 /// Componenti riutilizzabili per rendere Analytics tier-1
@@ -17,7 +18,7 @@ class HelpButton extends StatelessWidget {
     this.customTitle,
     this.customContent,
     this.additionalActions,
-    this.icon = Icons.help_outline,
+    this.icon = AppIcons.help,
     this.size = 18,
   });
   final String topic;
@@ -57,7 +58,7 @@ class HelpButton extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.info_outline, color: theme.colorScheme.primary),
+            Icon(AppIcons.info, color: theme.colorScheme.primary),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -359,7 +360,7 @@ class _InteractiveMetricCardState extends State<InteractiveMetricCard>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          _isExpanded ? Icons.expand_less : Icons.expand_more,
+                          _isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                           size: 16,
                           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                         ),
@@ -430,7 +431,7 @@ class TrendIndicator extends StatelessWidget {
     final isPositive = difference >= 0;
     
     final color = isPositive ? Colors.green : Colors.red;
-    final icon = isPositive ? Icons.trending_up : Icons.trending_down;
+    final icon = isPositive ? AppIcons.trendUp : AppIcons.trendDown;
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -713,7 +714,7 @@ class MotivationalEmptyState extends StatelessWidget {
                 child: Column(
                   children: [
                     Icon(
-                      Icons.format_quote,
+                      AppIcons.misc.formatQuote,
                       color: theme.colorScheme.primary.withValues(alpha: 0.5),
                       size: 24,
                     ),
@@ -739,7 +740,7 @@ class MotivationalEmptyState extends StatelessWidget {
                   HapticFeedback.mediumImpact();
                   onAction!();
                 },
-                icon: const Icon(Icons.rocket_launch),
+                icon: const Icon(AppIcons.rocket),
                 label: Text(actionLabel ?? l10n.startNow),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -761,7 +762,7 @@ class MotivationalEmptyState extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.lightbulb_outline,
+                    AppIcons.tip,
                     color: theme.colorScheme.secondary,
                     size: 20,
                   ),
@@ -842,7 +843,7 @@ class StreakWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.local_fire_department,
+                  AppIcons.streak,
                   color: Colors.white,
                   size: 24,
                 ),
@@ -951,7 +952,7 @@ class StreakWidget extends StatelessWidget {
               child: Row(
                 children: [
                   const Icon(
-                    Icons.star,
+                    AppIcons.star,
                     color: Colors.yellow,
                     size: 16,
                   ),

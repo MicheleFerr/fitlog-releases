@@ -166,7 +166,7 @@ class _RoutineOnboardingScreenState
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.calendar_month,
+              AppIcons.calendarMonth,
               size: 80,
               color: context.colors.primary,
             ),
@@ -236,28 +236,28 @@ class _RoutineOnboardingScreenState
           // Features
           _buildFeatureItem(
             context,
-            icon: Icons.calendar_today,
+            icon: AppIcons.calendar,
             title: context.l10n.routineOnboardingFeatureScheduled,
             description: context.l10n.routineOnboardingFeatureScheduledDesc,
           ),
           const SizedBox(height: 16),
           _buildFeatureItem(
             context,
-            icon: Icons.fitness_center,
+            icon: AppIcons.workout,
             title: context.l10n.routineOnboardingFeatureTemplates,
             description: context.l10n.routineOnboardingFeatureTemplatesDesc,
           ),
           const SizedBox(height: 16),
           _buildFeatureItem(
             context,
-            icon: Icons.repeat,
+            icon: AppIcons.repeat,
             title: context.l10n.routineOnboardingFeatureProgression,
             description: context.l10n.routineOnboardingFeatureProgressionDesc,
           ),
           const SizedBox(height: 16),
           _buildFeatureItem(
             context,
-            icon: Icons.show_chart,
+            icon: AppIcons.lineChart,
             title: context.l10n.routineOnboardingFeatureTracking,
             description: context.l10n.routineOnboardingFeatureTrackingDesc,
           ),
@@ -296,7 +296,7 @@ class _RoutineOnboardingScreenState
             number: 2,
             title: context.l10n.routineOnboardingStep2Title,
             description: context.l10n.routineOnboardingStep2Desc,
-            icon: Icons.assignment,
+            icon: AppIcons.assignment,
           ),
           const SizedBox(height: 24),
           _buildStepItem(
@@ -304,7 +304,7 @@ class _RoutineOnboardingScreenState
             number: 3,
             title: context.l10n.routineOnboardingStep3Title,
             description: context.l10n.routineOnboardingStep3Desc,
-            icon: Icons.trending_up,
+            icon: AppIcons.trendUp,
           ),
         ],
       ),
@@ -330,7 +330,7 @@ class _RoutineOnboardingScreenState
           // Benefits
           _buildBenefitCard(
             context,
-            icon: Icons.track_changes,
+            icon: AppIcons.trackChanges,
             title: context.l10n.routineOnboardingBenefit1Title,
             description: context.l10n.routineOnboardingBenefit1Desc,
             color: context.colors.primary,
@@ -338,7 +338,7 @@ class _RoutineOnboardingScreenState
           const SizedBox(height: 16),
           _buildBenefitCard(
             context,
-            icon: Icons.insights,
+            icon: AppIcons.insights,
             title: context.l10n.routineOnboardingBenefit2Title,
             description: context.l10n.routineOnboardingBenefit2Desc,
             color: context.colors.success,
@@ -346,7 +346,7 @@ class _RoutineOnboardingScreenState
           const SizedBox(height: 16),
           _buildBenefitCard(
             context,
-            icon: Icons.auto_awesome,
+            icon: AppIcons.autoAwesome,
             title: context.l10n.routineOnboardingBenefit3Title,
             description: context.l10n.routineOnboardingBenefit3Desc,
             color: context.colors.secondary,
@@ -367,7 +367,7 @@ class _RoutineOnboardingScreenState
             ),
             child: Row(
               children: [
-                Icon(Icons.rocket_launch, color: context.colors.primary),
+                Icon(AppIcons.rocket, color: context.colors.primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(

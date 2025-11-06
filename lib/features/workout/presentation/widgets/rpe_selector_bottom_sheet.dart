@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SupersetExerciseCompleteData {
 
@@ -446,7 +447,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.swipe,
+                AppIcons.swipe,
                 size: 16,
                 color: colorScheme.primary.withValues(alpha: 0.7),
               ),
@@ -556,7 +557,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       );
                     },
                     child: Icon(
-                      Icons.info_outline,
+                      AppIcons.info,
                       size: 18,
                       color: colorScheme.primary,
                     ),
@@ -611,7 +612,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.trending_up,
+                                AppIcons.trendUp,
                                 size: 18,
                                 color: colorScheme.primary,
                               ),
@@ -754,7 +755,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (_selectedRpe != null) ...[
-                          const Icon(Icons.check_circle, size: 20),
+                          const Icon(AppIcons.complete, size: 20),
                           const SizedBox(width: 8),
                         ],
                         Text(
@@ -878,7 +879,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           Row(
             children: [
               Icon(
-                Icons.trending_up,
+                AppIcons.trendUp,
                 size: 20,
                 color: suggestion.shouldIncrease
                     ? Colors.green
@@ -1030,7 +1031,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           Row(
             children: [
               Icon(
-                Icons.auto_awesome,
+                AppIcons.autoAwesome,
                 size: 20,
                 color: colorScheme.primary,
               ),
@@ -1157,7 +1158,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.fitness_center, size: 16, color: colorScheme.primary),
+                    Icon(AppIcons.workout, size: 16, color: colorScheme.primary),
                     const SizedBox(width: 4),
                     Text(
                       l10n.weight,
@@ -1186,7 +1187,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.remove, size: 18, color: colorScheme.error),
+                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
                       ),
                     ),
                     // Weight display
@@ -1235,7 +1236,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.add, size: 18, color: colorScheme.primary),
+                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
                       ),
                     ),
                   ],
@@ -1259,7 +1260,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.repeat, size: 16, color: colorScheme.primary),
+                    Icon(AppIcons.repeat, size: 16, color: colorScheme.primary),
                     const SizedBox(width: 4),
                     Text(
                       l10n.reps,
@@ -1288,7 +1289,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.remove, size: 18, color: colorScheme.error),
+                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
                       ),
                     ),
                     // Reps display
@@ -1337,7 +1338,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.add, size: 18, color: colorScheme.primary),
+                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
                       ),
                     ),
                   ],

@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -66,7 +67,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         title: Text(l10n.workoutTemplates),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -87,7 +88,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 return IconButton(
                   icon: Stack(
                     children: [
-                      const Icon(Icons.cloud),
+                      const Icon(AppIcons.cloud),
                       if (firebaseState.isSyncing)
                         Positioned(
                           right: 0,
@@ -124,7 +125,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             },
           ),
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(AppIcons.add),
             onPressed: () => _showCreateTemplateModal(context),
             tooltip: 'Crea Template',
           ),
@@ -132,9 +133,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: l10n.allExercises.replaceAll(' Exercises', ''), icon: const Icon(Icons.list)),
-            Tab(text: l10n.popularTemplates, icon: const Icon(Icons.trending_up)),
-            Tab(text: l10n.myTemplates, icon: const Icon(Icons.person)),
+            Tab(text: l10n.allExercises.replaceAll(' Exercises', ''), icon: const Icon(AppIcons.list)),
+            Tab(text: l10n.popularTemplates, icon: const Icon(AppIcons.trendUp)),
+            Tab(text: l10n.myTemplates, icon: const Icon(AppIcons.person)),
           ],
         ),
       ),
@@ -162,7 +163,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             color: Colors.red.withOpacity(0.3),
             child: Row(
               children: [
-                const Icon(Icons.warning, color: Colors.red, size: 16),
+                const Icon(AppIcons.warning, color: Colors.red, size: 16),
                 const SizedBox(width: 8),
                 const Expanded(
                   child: Text(
@@ -201,10 +202,10 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Cerca template...',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(AppIcons.search),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear),
+                        icon: const Icon(AppIcons.clear),
                         onPressed: () {
                           _searchController.clear();
                           ref.read(templateSearchQueryProvider.notifier).state = '';
@@ -265,7 +266,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const Icon(AppIcons.error, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               Text('Errore: $error'),
               const SizedBox(height: 16),
@@ -314,7 +315,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.trending_up, size: 64, color: Colors.grey),
+                Icon(AppIcons.trendUp, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
                 Text('Nessun template popolare ancora'),
                 SizedBox(height: 8),
@@ -355,7 +356,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.fitness_center, size: 64, color: Colors.grey),
+                const Icon(AppIcons.workout, size: 64, color: Colors.grey),
                 const SizedBox(height: 16),
                 const Text('Nessun template personalizzato'),
                 const SizedBox(height: 8),
@@ -366,7 +367,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () => _showCreateTemplateModal(context),
-                  icon: const Icon(Icons.add),
+                  icon: const Icon(AppIcons.add),
                   label: const Text('Crea Template'),
                 ),
               ],
@@ -385,7 +386,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 64, color: Colors.grey),
+            Icon(AppIcons.searchOff, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Nessun template trovato'),
           ],
@@ -430,7 +431,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             ),
             const SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.edit, color: context.colors.primary),
+              leading: Icon(AppIcons.edit, color: context.colors.primary),
               title: Text(context.l10n.createManually),
               subtitle: Text(context.l10n.buildFromScratch),
               onTap: () {
@@ -440,7 +441,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.upload_file, color: context.colors.secondary),
+              leading: Icon(AppIcons.uploadFile, color: context.colors.secondary),
               title: Text(context.l10n.importFromJSON),
               subtitle: Text(context.l10n.importJSONDescription),
               onTap: () {
@@ -749,7 +750,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           return AlertDialog(
             title: const Row(
               children: [
-                Icon(Icons.cloud),
+                Icon(AppIcons.cloud),
                 SizedBox(width: 8),
                 Text('Stato Sincronizzazione'),
               ],
@@ -846,7 +847,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                           child: Row(
                             children: [
                               Icon(
-                                Icons.info_outline,
+                                AppIcons.info,
                                 color: context.colors.primary,
                                 size: 20,
                               ),
@@ -876,7 +877,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                                   }
                                 },
                                 icon: Icon(
-                                  Icons.copy,
+                                  AppIcons.iconCopy,
                                   color: context.colors.primary,
                                   size: 18,
                                 ),
@@ -886,7 +887,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                               ),
                               // Toggle icon
                               Icon(
-                                isExampleMinimized ? Icons.expand_more : Icons.expand_less,
+                                isExampleMinimized ? AppIcons.expandMore : AppIcons.expandLess,
                                 color: context.colors.onSurfaceVariant,
                               ),
                             ],
@@ -945,7 +946,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                                         ),
                                       ),
                                       Icon(
-                                        Icons.content_copy,
+                                        AppIcons.copy,
                                         size: 16,
                                         color: context.colors.primary,
                                       ),
@@ -994,7 +995,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                       onPressed: () {
                         focusNode.unfocus();
                       },
-                      icon: const Icon(Icons.keyboard_hide, size: 16),
+                      icon: const Icon(AppIcons.keyboardHide, size: 16),
                       label: Text(l10n.hideKeyboard),
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1018,7 +1019,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                             onPressed: () {
                               jsonController.clear();
                             },
-                            icon: const Icon(Icons.clear),
+                            icon: const Icon(AppIcons.clear),
                           )
                         : null,
                     ),
@@ -1089,7 +1090,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 Navigator.of(context).pop(selectedFromDatabase);
               }
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(AppIcons.search),
             label: Text(l10n.chooseFromDatabase),
           ),
           
@@ -1113,7 +1114,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 Navigator.of(context).pop(customExercise);
               }
             },
-            icon: const Icon(Icons.add),
+            icon: const Icon(AppIcons.add),
             label: Text(l10n.createCustom),
           ),
           
@@ -1125,7 +1126,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 'category': ExerciseCategory.other,
               });
             },
-            icon: const Icon(Icons.text_fields),
+            icon: const Icon(AppIcons.textFields),
             label: Text(l10n.useOriginalName),
           ),
           
@@ -1657,7 +1658,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                             ],
                           ),
                           trailing: Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             color: Theme.of(dialogContext).colorScheme.primary,
                           ),
                           onTap: () {

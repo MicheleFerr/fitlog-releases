@@ -13,6 +13,7 @@ library;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Opzione per il FAB espandibile
 class ExpandableFabOption {
@@ -452,7 +453,7 @@ class _ExpandableFABState extends State<ExpandableFAB>
                                       child: IconButton(
                                         onPressed: _toggle,
                                         icon: Icon(
-                                          Icons.close,
+                                          AppIcons.close,
                                           color: colorScheme.onSurface,
                                           size: 20,
                                         ),

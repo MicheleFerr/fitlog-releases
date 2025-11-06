@@ -238,7 +238,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               children: [
                 _buildStatRow(
                   context,
-                  icon: Icons.fitness_center,
+                  icon: AppIcons.workout,
                   label: 'Volume',
                   value: '${stats.totalVolume.toStringAsFixed(0)} kg',
                   trend: stats.volumeChangePercent,
@@ -246,7 +246,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 const SizedBox(height: 12),
                 _buildStatRow(
                   context,
-                  icon: Icons.timer,
+                  icon: AppIcons.timer,
                   label: 'Duration',
                   value: _formatDuration(stats.duration),
                   trend: stats.durationChange?.inMinutes.toDouble(),
@@ -254,14 +254,14 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 const SizedBox(height: 12),
                 _buildStatRow(
                   context,
-                  icon: Icons.check_circle,
+                  icon: AppIcons.complete,
                   label: 'Exercises',
                   value: '${stats.completedExercises}/${stats.totalExercises}',
                 ),
                 const SizedBox(height: 12),
                 _buildStatRow(
                   context,
-                  icon: Icons.speed,
+                  icon: AppIcons.speed,
                   label: 'Average RPE',
                   value: stats.averageRPE > 0 ? '${stats.averageRPE.toStringAsFixed(1)}/10' : 'N/A',
                 ),
@@ -287,7 +287,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.emoji_events, color: Colors.amber, size: 20),
+                  const Icon(AppIcons.achievement, color: Colors.amber, size: 20),
                   const SizedBox(width: 8),
                   Text(
                     '🎯 Personal Record!',
@@ -342,7 +342,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   Widget _buildTrendIndicator(BuildContext context, double trend) {
     final isPositive = trend > 0;
     final color = isPositive ? Colors.green : Colors.red;
-    final icon = isPositive ? Icons.trending_up : Icons.trending_down;
+    final icon = isPositive ? AppIcons.trendUp : AppIcons.trendDown;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -389,7 +389,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               // Change Template button
               TextButton.icon(
                 onPressed: () => _changeTemplate(context),
-                icon: const Icon(Icons.swap_horiz, size: 18),
+                icon: const Icon(AppIcons.swapHoriz, size: 18),
                 label: const Text('Change'),
                 style: TextButton.styleFrom(
                   foregroundColor: context.colors.secondary,
@@ -469,7 +469,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  _showAllExercises ? Icons.expand_less : Icons.expand_more,
+                                  _showAllExercises ? AppIcons.expandLess : AppIcons.expandMore,
                                   size: 18,
                                   color: context.colors.primary,
                                 ),
@@ -533,7 +533,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Row(
                       children: [
-                        Icon(Icons.history, size: 16, color: context.colors.primary),
+                        Icon(AppIcons.history, size: 16, color: context.colors.primary),
                         const SizedBox(width: 8),
                         Text(
                           dateFormat.format(workout.completedAt),
@@ -559,7 +559,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                   Row(
                     children: [
                       Icon(
-                        stats.volumeChangePercent! > 0 ? Icons.trending_up : Icons.trending_down,
+                        stats.volumeChangePercent! > 0 ? AppIcons.trendUp : AppIcons.trendDown,
                         color: stats.volumeChangePercent! > 0 ? Colors.green : Colors.red,
                         size: 20,
                       ),
@@ -609,7 +609,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                     '• Rest day patterns\n'
                     '• Personal records',
                 child: Icon(
-                  Icons.info_outline,
+                  AppIcons.info,
                   size: 18,
                   color: context.colors.primary.withValues(alpha: 0.6),
                 ),
@@ -643,7 +643,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(
-                            Icons.lightbulb,
+                            AppIcons.lightbulb,
                             size: 16,
                             color: context.colors.primary,
                           ),
@@ -683,7 +683,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.local_fire_department, color: Colors.orange, size: 20),
+                  const Icon(AppIcons.streak, color: Colors.orange, size: 20),
                   const SizedBox(width: 8),
                   Text(
                     '🔥 ${stats.currentStreak} day streak',
@@ -711,7 +711,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             // Start Workout button
             ElevatedButton.icon(
               onPressed: () => _startWorkout(context),
-              icon: const Icon(Icons.play_arrow),
+              icon: const Icon(AppIcons.play),
               label: const Text('Start Workout'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.colors.primary,
@@ -729,7 +729,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             // View Full Details button
             OutlinedButton.icon(
               onPressed: () => _viewWorkoutDetails(context, stats),
-              icon: const Icon(Icons.visibility),
+              icon: const Icon(AppIcons.visibility),
               label: const Text('View Full Details'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.colors.primary,
@@ -750,7 +750,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _completeDay(context),
-                    icon: const Icon(Icons.check, size: 18),
+                    icon: const Icon(AppIcons.check, size: 18),
                     label: const Text('Complete'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.green,
@@ -766,7 +766,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _skipDay(context),
-                  icon: const Icon(Icons.skip_next, size: 18),
+                  icon: const Icon(AppIcons.skipNext, size: 18),
                   label: const Text('Skip'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.error,
@@ -788,15 +788,15 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   IconData _getStatusIcon() {
     switch (widget.dayInfo.status) {
       case DayStatus.completed:
-        return Icons.check_circle;
+        return AppIcons.complete;
       case DayStatus.scheduled:
-        return Icons.calendar_today;
+        return AppIcons.calendar;
       case DayStatus.skipped:
-        return Icons.skip_next;
+        return AppIcons.skipNext;
       case DayStatus.recovered:
         return AppIcons.replay;
       case DayStatus.rest:
-        return Icons.hotel;
+        return AppIcons.hotel;
     }
   }
 

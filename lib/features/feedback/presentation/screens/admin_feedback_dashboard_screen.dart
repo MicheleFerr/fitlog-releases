@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feedback_providers.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin dashboard for managing user feedback
 /// Only accessible to ferrara-michele@hotmail.it
@@ -112,7 +113,7 @@ class _AdminFeedbackDashboardScreenState
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.admin_panel_settings, color: context.colors.primary),
+            Icon(AppIcons.admin, color: context.colors.primary),
             const SizedBox(width: 8),
             const Text('Feedback Dashboard'),
           ],
@@ -163,7 +164,7 @@ class _AdminFeedbackDashboardScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.inbox,
+                          AppIcons.inbox,
                           size: 64,
                           color: context.colors.outline,
                         ),
@@ -194,7 +195,7 @@ class _AdminFeedbackDashboardScreenState
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: context.colors.error),
+                    Icon(AppIcons.error, size: 64, color: context.colors.error),
                     const SizedBox(height: 16),
                     Text(
                       'Error loading feedback',
@@ -249,21 +250,21 @@ class _AdminFeedbackDashboardScreenState
                 child: _buildStatItem(
                   'Total',
                   stats.totalFeedback.toString(),
-                  Icons.feedback,
+                  AppIcons.feedback,
                 ),
               ),
               Expanded(
                 child: _buildStatItem(
                   'New',
                   stats.newFeedback.toString(),
-                  Icons.new_releases,
+                  AppIcons.newReleases,
                 ),
               ),
               Expanded(
                 child: _buildStatItem(
                   'Avg Rating',
                   '${stats.averageRating.toStringAsFixed(1)}⭐',
-                  Icons.star,
+                  AppIcons.star,
                 ),
               ),
             ],
@@ -412,17 +413,17 @@ class _AdminFeedbackDashboardScreenState
               runSpacing: 8,
               children: [
                 _buildMetadataItem(
-                  Icons.access_time,
+                  AppIcons.clock,
                   _formatDate(feedback.createdAt),
                 ),
                 if (feedback.appVersion != null)
                   _buildMetadataItem(
-                    Icons.info_outline,
+                    AppIcons.info,
                     feedback.appVersion!,
                   ),
                 if (feedback.deviceInfo != null)
                   _buildMetadataItem(
-                    Icons.phone_android,
+                    AppIcons.phoneAndroid,
                     feedback.deviceInfo!,
                   ),
               ],
@@ -443,7 +444,7 @@ class _AdminFeedbackDashboardScreenState
                     Row(
                       children: [
                         Icon(
-                          Icons.admin_panel_settings,
+                          AppIcons.admin,
                           size: 16,
                           color: context.colors.onTertiaryContainer,
                         ),
@@ -480,7 +481,7 @@ class _AdminFeedbackDashboardScreenState
                   if (feedback.status == FeedbackStatus.newFeedback)
                     TextButton.icon(
                       onPressed: () => _markAsReviewed(feedback),
-                      icon: const Icon(Icons.visibility),
+                      icon: const Icon(AppIcons.visibility),
                       label: const Text('Mark Reviewed'),
                     ),
 
@@ -489,7 +490,7 @@ class _AdminFeedbackDashboardScreenState
                   // Resolve with notes
                   ElevatedButton.icon(
                     onPressed: () => _resolveWithNotes(feedback),
-                    icon: const Icon(Icons.check_circle),
+                    icon: const Icon(AppIcons.complete),
                     label: const Text('Resolve'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.colors.primary,
@@ -502,7 +503,7 @@ class _AdminFeedbackDashboardScreenState
                   // Dismiss
                   TextButton.icon(
                     onPressed: () => _dismissFeedback(feedback),
-                    icon: const Icon(Icons.cancel),
+                    icon: const Icon(AppIcons.cancel),
                     label: const Text('Dismiss'),
                     style: TextButton.styleFrom(
                       foregroundColor: context.colors.error,
@@ -516,7 +517,7 @@ class _AdminFeedbackDashboardScreenState
               alignment: Alignment.centerRight,
               child: IconButton(
                 onPressed: () => _deleteFeedback(feedback),
-                icon: Icon(Icons.delete, color: context.colors.error),
+                icon: Icon(AppIcons.delete, color: context.colors.error),
                 tooltip: 'Delete',
               ),
             ),

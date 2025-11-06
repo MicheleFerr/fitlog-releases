@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/empty_matches_view.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/location_permission_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/screens/edit_buddy_profile_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
   const BuddyMatchingScreen({super.key});
@@ -149,7 +150,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
               IconButton(
                 onPressed: () => _showFilterSheet(context),
                 icon: Icon(
-                  Icons.tune,
+                  AppIcons.tune,
                   color: theme.colorScheme.primary,
                 ),
                 style: IconButton.styleFrom(
@@ -163,7 +164,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
               IconButton(
                 onPressed: () => _navigateToEditProfile(context),
                 icon: Icon(
-                  Icons.edit,
+                  AppIcons.edit,
                   color: theme.colorScheme.primary,
                 ),
                 style: IconButton.styleFrom(
@@ -177,7 +178,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
               IconButton(
                 onPressed: () => _refreshMatches(),
                 icon: Icon(
-                  Icons.refresh,
+                  AppIcons.refresh,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
@@ -269,7 +270,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Icon(
-                              Icons.favorite,
+                              AppIcons.favorite,
                               size: 48,
                               color: Colors.white,
                             ),
@@ -352,7 +353,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               size: 64,
               color: theme.colorScheme.error,
             ),

@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/hybrid_analytics_service.dart';
 import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin Analytics Dashboard Screen
 ///
@@ -66,7 +67,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.lock,
+              AppIcons.lock,
               size: 64,
               color: context.colors.error,
             ),
@@ -85,7 +86,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(AppIcons.back),
               label: const Text('Go Back'),
             ),
           ],
@@ -104,13 +105,13 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         title: Row(
           children: [
             Icon(
-              Icons.admin_panel_settings,
+              AppIcons.admin,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -120,7 +121,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => _showRefreshInfo(context, hybridService),
-            icon: const Icon(Icons.info_outline),
+            icon: const Icon(AppIcons.info),
             tooltip: 'Analytics Info',
           ),
         ],
@@ -201,7 +202,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.admin_panel_settings,
+                  AppIcons.admin,
                   size: 28,
                   color: context.colors.primary,
                 ),
@@ -226,7 +227,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.security,
+                  AppIcons.security,
                   size: 16,
                   color: context.colors.primary,
                 ),
@@ -278,7 +279,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildOverviewCard(
                 context,
-                icon: Icons.event,
+                icon: AppIcons.event,
                 title: 'Total Events',
                 value: events.length.toString(),
                 color: context.colors.primary,
@@ -288,7 +289,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildOverviewCard(
                 context,
-                icon: Icons.category,
+                icon: AppIcons.category,
                 title: 'Event Types',
                 value: uniqueEventTypes.toString(),
                 color: context.colors.secondary,
@@ -298,7 +299,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildOverviewCard(
                 context,
-                icon: Icons.today,
+                icon: AppIcons.today,
                 title: 'Today',
                 value: todayEvents.toString(),
                 color: context.colors.tertiary,
@@ -377,7 +378,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.bar_chart,
+              AppIcons.barChart,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -481,7 +482,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -499,7 +500,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildMetricCard(
                 context,
-                icon: Icons.check_circle,
+                icon: AppIcons.complete,
                 title: 'Completion Rate',
                 value: '$completionRate%',
                 subtitle: '$workoutsCompleted/$workoutsStarted',
@@ -509,7 +510,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildMetricCard(
                 context,
-                icon: Icons.timer,
+                icon: AppIcons.timer,
                 title: 'Avg Duration',
                 value: _formatDuration(avgDuration),
                 subtitle: 'per workout',
@@ -523,7 +524,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildMetricCard(
                 context,
-                icon: Icons.cancel,
+                icon: AppIcons.cancel,
                 title: 'Cancelled',
                 value: workoutsCancelled.toString(),
                 subtitle: 'workouts',
@@ -533,7 +534,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Expanded(
               child: _buildMetricCard(
                 context,
-                icon: Icons.scale,
+                icon: AppIcons.scale,
                 title: 'Total Volume',
                 value: '${(totalVolume / 1000).toStringAsFixed(1)}k',
                 subtitle: 'kg lifted',
@@ -599,7 +600,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.person,
+              AppIcons.person,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -658,7 +659,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Icon(
-              Icons.history,
+              AppIcons.history,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -787,7 +788,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.info_outline,
+              AppIcons.info,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -832,7 +833,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.cloud_done,
+                    AppIcons.cloudDone,
                     size: 16,
                     color: context.colors.primary,
                   ),
@@ -900,17 +901,17 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
 
   IconData _getEventIcon(String eventName) {
     if (eventName.contains('workout')) {
-      return Icons.fitness_center;
+      return AppIcons.workout;
     } else if (eventName.contains('exercise')) {
-      return Icons.sports_gymnastics;
+      return AppIcons.gymnastics;
     } else if (eventName.contains('set')) {
-      return Icons.check_circle;
+      return AppIcons.complete;
     } else if (eventName.contains('timer') || eventName.contains('rest')) {
-      return Icons.timer;
+      return AppIcons.timer;
     } else if (eventName.contains('preset')) {
-      return Icons.tune;
+      return AppIcons.tune;
     } else {
-      return Icons.event;
+      return AppIcons.event;
     }
   }
 }

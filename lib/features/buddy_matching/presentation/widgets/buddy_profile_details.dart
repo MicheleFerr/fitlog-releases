@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/fitness_level_badge.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/workout_goals_chips.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/instagram_link_button.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyProfileDetails extends StatelessWidget {
 
@@ -73,7 +74,7 @@ class BuddyProfileDetails extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                     ),
                   ],
                 ),
@@ -166,7 +167,7 @@ class BuddyProfileDetails extends StatelessWidget {
             if (profile.isVerified) ...[
               const SizedBox(width: 8),
               const Icon(
-                Icons.verified,
+                AppIcons.verified,
                 color: Colors.blue,
                 size: 24,
               ),
@@ -201,7 +202,7 @@ class BuddyProfileDetails extends StatelessWidget {
 
   Widget _buildProfilePlaceholder(ThemeData theme) {
     return const Icon(
-      Icons.person,
+      AppIcons.person,
       size: 60,
       color: Colors.white,
     );
@@ -237,7 +238,7 @@ class BuddyProfileDetails extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   size: 20,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
@@ -253,7 +254,7 @@ class BuddyProfileDetails extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.location_on,
+                    AppIcons.location,
                     size: 20,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
@@ -405,7 +406,7 @@ class BuddyProfileDetails extends StatelessWidget {
                   child: _buildStatItem(
                     context,
                     theme,
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     '${profile.totalWorkouts}',
                     l10n.workouts,
                   ),
@@ -414,7 +415,7 @@ class BuddyProfileDetails extends StatelessWidget {
                   child: _buildStatItem(
                     context,
                     theme,
-                    Icons.handshake,
+                    AppIcons.handshake,
                     '${profile.partnershipsCount}',
                     l10n.partnerships,
                   ),
@@ -424,7 +425,7 @@ class BuddyProfileDetails extends StatelessWidget {
                     child: _buildStatItem(
                       context,
                       theme,
-                      Icons.star,
+                      AppIcons.star,
                       profile.averageRating.toStringAsFixed(1),
                       l10n.rating,
                     ),
@@ -549,17 +550,17 @@ class BuddyProfileDetails extends StatelessWidget {
   IconData _getBadgeIcon(BadgeType badge) {
     switch (badge) {
       case BadgeType.workoutBuddy:
-        return Icons.handshake;
+        return AppIcons.handshake;
       case BadgeType.consistentPartner:
-        return Icons.trending_up;
+        return AppIcons.trendUp;
       case BadgeType.motivator:
-        return Icons.psychology;
+        return AppIcons.ai;
       case BadgeType.newbie:
-        return Icons.star;
+        return AppIcons.star;
       case BadgeType.veteran:
-        return Icons.workspace_premium;
+        return AppIcons.premium;
       case BadgeType.verified:
-        return Icons.verified;
+        return AppIcons.verified;
     }
   }
 }

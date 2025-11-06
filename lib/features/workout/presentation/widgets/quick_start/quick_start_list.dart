@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_cards/template_quick_start_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/quick_start_card.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class QuickStartList extends ConsumerWidget {
   const QuickStartList({super.key});
@@ -37,7 +38,7 @@ class QuickStartList extends ConsumerWidget {
 
   Widget _buildQuickWorkoutCard(BuildContext context, WidgetRef ref) {
     return QuickStartCard(
-      icon: Icons.schedule,
+      icon: AppIcons.schedule,
       title: AppLocalizations.of(context).quickWorkout,
       subtitle: AppLocalizations.of(context).quickWorkoutSubtitle,
       color: Theme.of(context).colorScheme.primary,
@@ -64,7 +65,7 @@ class QuickStartList extends ConsumerWidget {
                 _buildSectionHeader(
                   context,
                   AppLocalizations.of(context).yourTemplates,
-                  Icons.person,
+                  AppIcons.person,
                   onSeeAll: () => _navigateToTemplates(context),
                 ),
                 const SizedBox(height: 8),
@@ -166,7 +167,7 @@ class QuickStartList extends ConsumerWidget {
               children: [
                 Text(AppLocalizations.of(context).seeAll),
                 const SizedBox(width: 4),
-                const Icon(Icons.arrow_forward_ios, size: 12),
+                const Icon(AppIcons.forwardIos, size: 12),
               ],
             ),
           ),
@@ -178,7 +179,7 @@ class QuickStartList extends ConsumerWidget {
     return Column(
       children: [
         QuickStartCard(
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           title: AppLocalizations.of(context).upperBody,
           subtitle: AppLocalizations.of(context).upperBodySubtitle,
           color: Theme.of(context).colorScheme.secondary,
@@ -186,7 +187,7 @@ class QuickStartList extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         QuickStartCard(
-          icon: Icons.directions_run,
+          icon: AppIcons.cardio,
           title: AppLocalizations.of(context).lowerBody,
           subtitle: AppLocalizations.of(context).lowerBodySubtitle,
           color: Theme.of(context).colorScheme.tertiary,
@@ -194,7 +195,7 @@ class QuickStartList extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         QuickStartCard(
-          icon: Icons.timer,
+          icon: AppIcons.timer,
           title: AppLocalizations.of(context).hiitTraining,
           subtitle: AppLocalizations.of(context).hiitTrainingSubtitle,
           color: Theme.of(context).colorScheme.error,

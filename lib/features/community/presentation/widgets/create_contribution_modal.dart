@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/quick_exercise_picker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal per creare un nuovo contributo community
 class CreateContributionModal extends ConsumerStatefulWidget {
@@ -102,7 +103,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                     ),
                   ],
                 ),
@@ -135,7 +136,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          prefixIcon: const Icon(Icons.title),
+                          prefixIcon: const Icon(AppIcons.titleIcon),
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
@@ -159,7 +160,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          prefixIcon: const Icon(Icons.description),
+                          prefixIcon: const Icon(AppIcons.template),
                           alignLabelWithHint: true,
                         ),
                         maxLines: 5,
@@ -186,7 +187,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            prefixIcon: const Icon(Icons.error_outline),
+                            prefixIcon: const Icon(AppIcons.error),
                           ),
                           validator: _selectedType == ContributionType.correction
                               ? (value) {
@@ -206,7 +207,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            prefixIcon: const Icon(Icons.check_circle_outline),
+                            prefixIcon: const Icon(AppIcons.completeOutline),
                           ),
                           validator: _selectedType == ContributionType.correction
                               ? (value) {
@@ -234,7 +235,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                         child: Row(
                           children: [
                             Icon(
-                              Icons.info_outline,
+                              AppIcons.info,
                               color: theme.colorScheme.primary,
                             ),
                             const SizedBox(width: 12),
@@ -261,7 +262,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                                 height: 20,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : const Icon(Icons.send),
+                            : const Icon(AppIcons.send),
                         label: Text(_isSubmitting ? 'Invio...' : 'Invia Contributo'),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -297,7 +298,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
         child: Row(
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: theme.colorScheme.primary,
             ),
             const SizedBox(width: 12),
@@ -327,7 +328,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   _selectedExerciseName = null;
                 });
               },
-              icon: const Icon(Icons.edit),
+              icon: const Icon(AppIcons.edit),
             ),
           ],
         ),
@@ -356,7 +357,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
             child: Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
@@ -369,7 +370,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   ),
                 ),
                 Icon(
-                  Icons.arrow_forward_ios,
+                  AppIcons.forwardIos,
                   size: 16,
                   color: theme.colorScheme.outline,
                 ),
@@ -564,17 +565,17 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
   IconData _getTypeIcon(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return Icons.lightbulb;
+        return AppIcons.lightbulb;
       case ContributionType.warning:
-        return Icons.warning;
+        return AppIcons.warning;
       case ContributionType.correction:
-        return Icons.edit;
+        return AppIcons.edit;
       case ContributionType.technique:
-        return Icons.school;
+        return AppIcons.education;
       case ContributionType.variant:
-        return Icons.alt_route;
+        return AppIcons.altRoute;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
     }
   }
 

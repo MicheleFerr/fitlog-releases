@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/domain/entities/timer_sound.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog to test timer sounds directly on iOS
 class TimerSoundTestDialog extends ConsumerStatefulWidget {
@@ -111,7 +112,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
             for (final sound in TimerSound.values) ...[
               ListTile(
                 leading: Icon(
-                  sound == currentSound ? Icons.check_circle : Icons.circle_outlined,
+                  sound == currentSound ? AppIcons.complete : Icons.circle_outlined,
                   color: sound == currentSound ? Colors.green : null,
                 ),
                 title: Text(sound.getLocalizedName()),
@@ -137,7 +138,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.play_arrow),
+                  : const Icon(AppIcons.play),
               label: const Text('Run Full Sound Test'),
             ),
             

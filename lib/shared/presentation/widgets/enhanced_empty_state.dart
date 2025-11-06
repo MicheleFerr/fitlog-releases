@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tipi di empty state disponibili
 enum EmptyStateType {
@@ -218,7 +219,7 @@ class EnhancedEmptyState extends StatelessWidget {
         child: Column(
           children: [
             Icon(
-              Icons.format_quote,
+              AppIcons.misc.formatQuote,
               color: quoteColor,
               size: 24,
             ),
@@ -246,7 +247,7 @@ class EnhancedEmptyState extends StatelessWidget {
         child: Row(
           children: [
             const Icon(
-              Icons.lightbulb_outline,
+              AppIcons.tip,
               color: Colors.amber,
               size: 20,
             ),
@@ -286,7 +287,7 @@ class EnhancedEmptyState extends StatelessWidget {
               HapticFeedback.mediumImpact();
               onPrimaryAction!();
             },
-            icon: Icon(primaryActionIcon ?? Icons.arrow_forward),
+            icon: Icon(primaryActionIcon ?? AppIcons.forward),
             label: Text(primaryActionLabel!),
             style: FilledButton.styleFrom(
               backgroundColor: effectiveColor,
@@ -303,7 +304,7 @@ class EnhancedEmptyState extends StatelessWidget {
               HapticFeedback.lightImpact();
               onSecondaryAction!();
             },
-            icon: Icon(secondaryActionIcon ?? Icons.info_outline),
+            icon: Icon(secondaryActionIcon ?? AppIcons.info),
             label: Text(secondaryActionLabel!),
             style: OutlinedButton.styleFrom(
               foregroundColor: effectiveColor,

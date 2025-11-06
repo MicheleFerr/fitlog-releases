@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced workout banner that shows active workout status
 class EnhancedWorkoutBanner extends ConsumerWidget {
@@ -44,8 +45,8 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                   ),
                   child: Icon(
                     workout.isActive
-                        ? Icons.fitness_center
-                        : Icons.pause_circle,
+                        ? AppIcons.workout
+                        : AppIcons.pauseCircle,
                     color: theme.colorScheme.onPrimary,
                     size: 24,
                   ),
@@ -59,8 +60,8 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                         children: [
                           Icon(
                             workout.isActive
-                                ? Icons.local_fire_department
-                                : Icons.pause,
+                                ? AppIcons.streak
+                                : AppIcons.pause,
                             color: theme.colorScheme.onPrimary,
                             size: 16,
                           ),
@@ -97,21 +98,21 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _WorkoutStat(
-                    icon: Icons.timer,
+                    icon: AppIcons.timer,
                     value: _formatDuration(workout.duration),
                     label: l10n.duration,
                   ),
                 ),
                 Expanded(
                   child: _WorkoutStat(
-                    icon: Icons.fitness_center,
+                    icon: AppIcons.workout,
                     value: '${workout.completedSets}/${workout.totalSets}',
                     label: 'Sets',
                   ),
                 ),
                 Expanded(
                   child: _WorkoutStat(
-                    icon: Icons.trending_up,
+                    icon: AppIcons.trendUp,
                     value: '${workout.completedExercises}/${workout.exercises.length}',
                     label: l10n.exercises,
                   ),
@@ -176,7 +177,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
-            Icon(Icons.fitness_center, color: theme.colorScheme.primary),
+            Icon(AppIcons.workout, color: theme.colorScheme.primary),
             const SizedBox(width: 12),
             Text(
               l10n.endWorkout,
@@ -201,7 +202,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     color: theme.colorScheme.primary,
                     size: 20,
                   ),
@@ -254,7 +255,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 SnackBar(
                   content: Row(
                     children: [
-                      const Icon(Icons.delete_outline, color: Colors.white),
+                      const Icon(AppIcons.deleteOutline, color: Colors.white),
                       const SizedBox(width: 8),
                       Text(l10n.workoutDiscarded),
                     ],
@@ -267,7 +268,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 ),
               );
             },
-            icon: const Icon(Icons.delete_outline, size: 20),
+            icon: const Icon(AppIcons.deleteOutline, size: 20),
             label: Text(l10n.discard),
             style: TextButton.styleFrom(
               foregroundColor: theme.colorScheme.error,
@@ -283,7 +284,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 SnackBar(
                   content: Row(
                     children: [
-                      const Icon(Icons.check_circle, color: Colors.white),
+                      const Icon(AppIcons.complete, color: Colors.white),
                       const SizedBox(width: 8),
                       Text(l10n.workoutSavedSuccessfully),
                     ],
@@ -300,7 +301,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 ref.read(currentWorkoutProvider.notifier).clearWorkout();
               });
             },
-            icon: const Icon(Icons.save, size: 20),
+            icon: const Icon(AppIcons.save, size: 20),
             label: Text(l10n.saveAndEnd),
             style: FilledButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
