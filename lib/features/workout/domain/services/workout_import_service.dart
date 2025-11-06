@@ -446,12 +446,14 @@ class WorkoutImportService {
     } catch (_) {}
     
     return Workout(
+      id: DateTime.now().millisecondsSinceEpoch.toString(), // Generate unique ID
       name: workoutName,
       exercises: exercises,
       status: WorkoutStatus.completed,
       startTime: workoutDate,
       endTime: workoutDate,
       createdAt: workoutDate ?? DateTime.now(),
+      updatedAt: workoutDate ?? DateTime.now(),
     );
   }
   

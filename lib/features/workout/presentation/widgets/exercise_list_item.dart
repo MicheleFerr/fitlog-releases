@@ -144,6 +144,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   @override
   void initState() {
     super.initState();
+
+    // 🐛 DEBUG: Test logs removed from production (uncomment if needed for debugging)
+    // if (kDebugMode) {
+    //   debugPrint('🚨 [ExerciseListItem.initState] WIDGET COSTRUITO: ${widget.exercise.name}');
+    //   debugPrint('✅ [ExerciseListItem.initState] kDebugMode = TRUE, countingMode=${widget.exercise.countingMode.name}');
+    // }
+
     _loadLastActivity();
     _notesController = TextEditingController(text: widget.exercise.notes ?? '');
     _notesController.addListener(_onNotesChanged);
@@ -172,6 +179,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   @override
   void didUpdateWidget(ExerciseListItem oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    // ✅ FIX: Trigger rebuild if counting mode changed
+    // This ensures UI updates when user switches between weight/reps and time modes
+    if (oldWidget.exercise.countingMode != widget.exercise.countingMode) {
+      // 🐛 DEBUG: Log removed from production (uncomment if needed for debugging)
+      // if (kDebugMode) {
+      //   debugPrint(
+      //     '🔄 [ExerciseListItem.didUpdateWidget] COUNTING MODE CHANGED: '
+      //     '${oldWidget.exercise.countingMode.name} → ${widget.exercise.countingMode.name} '
+      //     'for ${widget.exercise.name}',
+      //   );
+      // }
+      // Trigger rebuild to update UI (set input fields, display format, etc.)
+      setState(() {});
+    }
 
     // Check if auto-collapse should be triggered after widget update
     final config = ref.read(appConfigProvider);
@@ -616,6 +638,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   @override
   Widget build(BuildContext context) {
+    // 🐛 DEBUG: Log build with counting mode (debug only, removed from production)
+    // Uncomment if needed for debugging:
+    // if (kDebugMode) {
+    //   debugPrint('🎨 [ExerciseListItem.build] Building ${widget.exercise.name}, countingMode=${widget.exercise.countingMode.name}');
+    // }
+
     // Listen for autocollapse signals from provider
     ref.listen<AutoCollapseState>(
       exerciseAutoCollapseProvider(widget.exercise.id),
@@ -671,7 +699,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     }
                   : widget
                         .onTap), // EDIT: Card is expanded but exercise not complete, allow editing
-        onLongPress: () => _showExerciseOptions(context),
+        onLongPress: () {
+          // 🐛 DEBUG: Log removed from production (uncomment if needed for debugging)
+          // if (kDebugMode) {
+          //   debugPrint('👆 [InkWell.onLongPress] LONG PRESS DETECTED on ${widget.exercise.name}');
+          // }
+          _showExerciseOptions(context);
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -2299,6 +2333,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   void _showExerciseOptions(BuildContext context) {
+    // 🐛 DEBUG: Log removed from production (uncomment if needed for debugging)
+    // if (kDebugMode) {
+    //   debugPrint('📝 [_showExerciseOptions] Showing options menu for ${widget.exercise.name}');
+    // }
+
     ExerciseOptionsModal.show(
       context,
       widget.exercise,
@@ -2306,16 +2345,27 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       onHistory: () => _showExerciseHistory(context),
       onDuplicate: () => _duplicateExercise(),
       onDelete: () => _showDeleteConfirmation(context),
-      onChangeCountingMode: () => _handleCountingModeChange(context),
+      onChangeCountingMode: () {
+        // 🐛 DEBUG: SENZA kDebugMode per profile mode
+        print('🔘 [onChangeCountingMode] CALLBACK TRIGGERED!');
+        _handleCountingModeChange(context);
+      },
     );
   }
 
   Future<void> _handleCountingModeChange(BuildContext context) async {
+    // 🐛 DEBUG: Entry point (SENZA kDebugMode per profile mode)
+    print('🚀 [_handleCountingModeChange] METHOD CALLED for ${widget.exercise.name}');
+    print('   Current mode: ${widget.exercise.countingMode.name}');
+
     // Show counting mode picker
     final newMode = await CountingModePickerModal.show(
       context,
       currentMode: widget.exercise.countingMode,
     );
+
+    // 🐛 DEBUG: After modal (SENZA kDebugMode per profile mode)
+    print('📱 [_handleCountingModeChange] Modal returned: ${newMode?.name ?? "NULL (cancelled)"}');
 
     // User cancelled
     if (newMode == null || !mounted) return;
@@ -2341,10 +2391,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
     // Change counting mode in provider
     if (mounted) {
+      // 🐛 DEBUG: SENZA kDebugMode per profile mode
+      print('🔄 [_handleCountingModeChange] CALLING changeExerciseCountingMode: ${widget.exercise.countingMode.name} → ${newMode.name}');
+
       ref.read(currentWorkoutProvider.notifier).changeExerciseCountingMode(
         widget.exercise.id,
         newMode,
       );
+
+      // 🐛 DEBUG: SENZA kDebugMode per profile mode
+      print('✅ [_handleCountingModeChange] changeExerciseCountingMode CALLED');
 
       // Show success feedback
       if (context.mounted) {
@@ -2974,7 +3030,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   /// Get counting mode for current exercise
   ExerciseCountingMode _getCountingMode() {
-    return ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+    final mode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+    // 🐛 DEBUG: Log counting mode (debug only, removed from production)
+    // Uncomment if needed for debugging:
+    // if (kDebugMode) {
+    //   debugPrint('🎯 [_getCountingMode] Returning mode: ${mode.name} for ${widget.exercise.name}');
+    // }
+    return mode;
   }
 
   /// Build set details widgets based on counting mode
@@ -3254,11 +3316,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     HapticFeedback.selectionClick();
 
     // Use V2 quick edit with superset support
+    // ✅ FIX: Pass counting mode so quick edit shows correct fields (time/reps/weighted)
     context.showQuickEditOverlayV2(
       exerciseSet: set,
       onSave: widget.onSetUpdate!,
       position: position,
       previousSet: previousSet,
+      countingMode: widget.exercise.countingMode, // ✅ Pass counting mode
     );
   }
 
@@ -3527,11 +3591,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             );
           }
 
-          // Update set with RPE, actual reps, weight and calculated duration
+          // Update set with RPE, actual reps/weight/time based on counting mode
+          // ✅ NEW: For time-based exercises, actualReps contains total seconds
+          // ✅ NEW: For reps-only exercises, actualReps contains reps and actualWeight is 0
+          // ✅ NEW: For weighted exercises, both actualReps and actualWeight are used
+          final countingMode = widget.exercise.countingMode;
           final updatedSet = set.copyWith(
-            actualReps: actualReps,
+            actualReps: countingMode == ExerciseCountingMode.time ? null : actualReps,
+            seconds: countingMode == ExerciseCountingMode.time ? actualReps : null,
             rpe: rpe,
-            weight: actualWeight,
+            weight: countingMode == ExerciseCountingMode.weighted ? actualWeight : null,
             isCompleted: true,
             completedAt: DateTime.now(),
             setDurationMillis: duration, // ✅ Salva durata esecuzione
@@ -3600,9 +3669,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             );
           } else if (rpe == 0) {
             // ✅ User skipped RPE but kept completion → update without RPE
+            final countingMode = widget.exercise.countingMode;
             final updatedSet = set.copyWith(
-              actualReps: actualReps,
-              weight: actualWeight,
+              actualReps: countingMode == ExerciseCountingMode.time ? null : actualReps,
+              seconds: countingMode == ExerciseCountingMode.time ? actualReps : null,
+              weight: countingMode == ExerciseCountingMode.weighted ? actualWeight : null,
               rpe: null, // Remove RPE if skipped
               isCompleted: true,
             );
@@ -3624,9 +3695,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             );
           } else {
             // ✅ Normal RPE value → update set with RPE
+            final countingMode = widget.exercise.countingMode;
             final updatedSet = set.copyWith(
-              actualReps: actualReps,
-              weight: actualWeight,
+              actualReps: countingMode == ExerciseCountingMode.time ? null : actualReps,
+              seconds: countingMode == ExerciseCountingMode.time ? actualReps : null,
+              weight: countingMode == ExerciseCountingMode.weighted ? actualWeight : null,
               rpe: rpe,
               isCompleted: true,
             );

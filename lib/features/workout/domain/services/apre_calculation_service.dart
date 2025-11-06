@@ -8,6 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
+/// 🐛 DEBUG FLAG: Enable verbose APRE calculation logs
+/// Set to true only when debugging APRE weight calculations
+const bool kEnableApreDebugLogs = false;
+
 class APRECalculationService {
 
   APRECalculationService(this.ref);
@@ -19,12 +23,16 @@ class APRECalculationService {
   /// Pre-calculate APRE weights for all exercises in workout
   Future<List<Exercise>> preCalculateAllAPREWeights(List<Exercise> exercises) async {
     if (_calculationInProgress) {
-      debugPrint('[APRE] ⚠️ Calculation already in progress - skipping');
+      if (kEnableApreDebugLogs) {
+        debugPrint('[APRE] ⚠️ Calculation already in progress - skipping');
+      }
       return exercises;
     }
 
     _calculationInProgress = true;
-    debugPrint('[APRE] 🔒 Starting batch calculation');
+    if (kEnableApreDebugLogs) {
+      debugPrint('[APRE] 🔒 Starting batch calculation');
+    }
 
     try {
       final apreExercises = exercises
@@ -32,11 +40,15 @@ class APRECalculationService {
           .toList();
 
       if (apreExercises.isEmpty) {
-        debugPrint('[APRE] No APRE exercises to calculate');
+        if (kEnableApreDebugLogs) {
+          debugPrint('[APRE] No APRE exercises to calculate');
+        }
         return exercises;
       }
 
-      debugPrint('[APRE] Found ${apreExercises.length} APRE exercises');
+      if (kEnableApreDebugLogs) {
+        debugPrint('[APRE] Found ${apreExercises.length} APRE exercises');
+      }
 
       // Calculate in parallel
       final futures = apreExercises.map((exercise) =>
@@ -56,7 +68,9 @@ class APRECalculationService {
 
     } finally {
       _calculationInProgress = false;
-      debugPrint('[APRE] 🔓 Calculation complete');
+      if (kEnableApreDebugLogs) {
+        debugPrint('[APRE] 🔓 Calculation complete');
+      }
     }
   }
 
@@ -66,7 +80,9 @@ class APRECalculationService {
       // Skip if recent calculations exist
       if (exercise.calculated1RM != null &&
           !_shouldRecalculate(exercise)) {
-        debugPrint('[APRE] Using cached calculations for ${exercise.name}');
+        if (kEnableApreDebugLogs) {
+          debugPrint('[APRE] Using cached calculations for ${exercise.name}');
+        }
         return null;
       }
 
@@ -84,7 +100,9 @@ class APRECalculationService {
       );
 
     } catch (e) {
-      debugPrint('[APRE] Error calculating for ${exercise.name}: $e');
+      if (kEnableApreDebugLogs) {
+        debugPrint('[APRE] Error calculating for ${exercise.name}: $e');
+      }
       return null;
     }
   }
