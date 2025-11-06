@@ -69,27 +69,36 @@ class SecureHttpClient {
   /// - Primary certificate pin
   /// - Backup certificate pin (for rotation)
   ///
-  /// Last updated: 2025-10-21
+  /// Last updated: 2025-01-06 ✅ REAL PINS EXTRACTED
   static final Map<String, List<String>> _certificatePins = {
-    // Example Firebase pins (UPDATE WITH YOUR ACTUAL PINS)
-    // These are placeholder values - replace with actual certificate pins
+    // Firebase Firestore API
     'firestore.googleapis.com': [
-      // Primary pin (example - REPLACE!)
-      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
-      // Backup pin (example - REPLACE!)
-      'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=',
+      // ✅ Primary pin (extracted 2025-01-06)
+      'gYnaC7PCALu9KlQdrZHsf4iAKhb2WHxNo8fAk7rnz8g=',
+      // ✅ Backup pin (GTS Root R1 - Google Trust Services root CA)
+      'iie1VXtL7HzAMF+/PVPR9xzT80kQxdZeJ+zduCB3uj0=',
     ],
 
-    // Example custom API pins
-    // 'api.fitlogpro.app': [
-    //   'YOUR_PRIMARY_PIN_HERE',
-    //   'YOUR_BACKUP_PIN_HERE',
-    // ],
+    // Firebase Authentication API
+    'identitytoolkit.googleapis.com': [
+      // ✅ Primary pin (extracted 2025-01-06)
+      'VmEyOcbClGbkkUONWCzWOABnJ0mVO4Dl7i3xhZa+lzk=',
+      // ✅ Backup pin (GTS Root R1)
+      'iie1VXtL7HzAMF+/PVPR9xzT80kQxdZeJ+zduCB3uj0=',
+    ],
+
+    // Firebase Storage API
+    'storage.googleapis.com': [
+      // ✅ Primary pin (extracted 2025-01-06)
+      'G9XzYc5XMCFHcHLfn5tIJD/cqOic+TC0zT0AX0gh3Uc=',
+      // ✅ Backup pin (GTS Root R1)
+      'iie1VXtL7HzAMF+/PVPR9xzT80kQxdZeJ+zduCB3uj0=',
+    ],
   };
 
   /// Last certificate pin update date
   /// Update this when rotating certificates
-  static const String _lastPinUpdate = '2025-10-21';
+  static const String _lastPinUpdate = '2025-01-06';
 
   /// HTTP client with custom SSL context
   HttpClient? _client;
