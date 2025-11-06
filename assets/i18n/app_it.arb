@@ -5747,5 +5747,17 @@
   "footerDisclaimerTapHint": "Tocca per disclaimer completo",
   "@footerDisclaimerTapHint": {
     "description": "Suggerimento per toccare il footer per il disclaimer completo"
+  },
+  "apreProtocolChangeWarningTitle": "Allenamento in Corso",
+  "@apreProtocolChangeWarningTitle": {
+    "description": "Titolo del dialog di avviso cambio protocollo APRE"
+  },
+  "apreProtocolChangeWarningMessage": "Non puoi cambiare protocollo APRE durante un allenamento attivo. Completa prima l'allenamento corrente, poi torna per modificare le impostazioni del protocollo.",
+  "@apreProtocolChangeWarningMessage": {
+    "description": "Messaggio che spiega perché il protocollo APRE non può essere cambiato durante l'allenamento"
+  },
+  "apreGotIt": "Ho capito",
+  "@apreGotIt": {
+    "description": "Pulsante per chiudere l'avviso allenamento in corso"
   }
 }

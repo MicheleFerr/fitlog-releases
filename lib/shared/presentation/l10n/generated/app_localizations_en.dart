@@ -12702,4 +12702,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get footerDisclaimerTapHint => 'Tap for full disclaimer';
+
+  @override
+  String get apreProtocolChangeWarningTitle => 'Workout in Progress';
+
+  @override
+  String get apreProtocolChangeWarningMessage =>
+      'You cannot change APRE protocol during an active workout. Please finish your current workout first, then return to adjust protocol settings.';
+
+  @override
+  String get apreGotIt => 'Got it';
 }

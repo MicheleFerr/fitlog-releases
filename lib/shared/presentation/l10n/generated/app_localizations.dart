@@ -22445,6 +22445,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap for full disclaimer'**
   String get footerDisclaimerTapHint;
+
+  /// Title for APRE protocol change warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Workout in Progress'**
+  String get apreProtocolChangeWarningTitle;
+
+  /// Message explaining why APRE protocol cannot be changed during workout
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot change APRE protocol during an active workout. Please finish your current workout first, then return to adjust protocol settings.'**
+  String get apreProtocolChangeWarningMessage;
+
+  /// Button to dismiss APRE workout-in-progress warning
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get apreGotIt;
 }
 
 class _AppLocalizationsDelegate

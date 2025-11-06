@@ -12846,4 +12846,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get footerDisclaimerTapHint => 'Tocca per disclaimer completo';
+
+  @override
+  String get apreProtocolChangeWarningTitle => 'Allenamento in Corso';
+
+  @override
+  String get apreProtocolChangeWarningMessage =>
+      'Non puoi cambiare protocollo APRE durante un allenamento attivo. Completa prima l\'allenamento corrente, poi torna per modificare le impostazioni del protocollo.';
+
+  @override
+  String get apreGotIt => 'Ho capito';
 }
