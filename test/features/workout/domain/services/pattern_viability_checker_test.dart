@@ -354,6 +354,8 @@ void main() {
       final workouts = List.generate(
         10,
         (i) => Workout(
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           id: 'workout_$i',
           name: 'Workout $i',
           startTime: null, // No startTime
@@ -390,6 +392,8 @@ List<Workout> _createWorkoutHistory({
 
     workouts.add(
       Workout(
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         id: 'workout_$i',
         name: 'Workout $i',
         startTime: now.subtract(Duration(days: daysAgo)),

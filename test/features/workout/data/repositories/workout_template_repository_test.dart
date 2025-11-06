@@ -284,7 +284,7 @@ void main() {
       final recent = _createTestTemplate(
         name: 'Recent',
         usageCount: 5,
-        updatedAt: now,
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       await repository.saveTemplate(old);

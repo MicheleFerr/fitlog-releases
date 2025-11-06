@@ -385,12 +385,12 @@ void main() {
       // Create a mock active workout
       final now = DateTime.now();
       final activeWorkout = Workout(
-        id: 'test-workout-123',
+      id: 'test-workout-123',
         name: 'Test Workout',
         exercises: [testExercise],
         startTime: now,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       bool workoutProviderWasChecked = false;
@@ -438,12 +438,12 @@ void main() {
     testWidgets('TEST 2: verifies APREWorkoutInProgressException thrown when workout active', (WidgetTester tester) async {
       final now = DateTime.now();
       final activeWorkout = Workout(
-        id: 'test-workout-123',
+      id: 'test-workout-123',
         name: 'Test Workout',
         exercises: [testExercise],
         startTime: now,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       await tester.pumpWidget(
@@ -493,12 +493,12 @@ void main() {
     testWidgets('TEST 3: verifies warning dialog appears when exception thrown', (WidgetTester tester) async {
       final now = DateTime.now();
       final activeWorkout = Workout(
-        id: 'test-workout-123',
+      id: 'test-workout-123',
         name: 'Test Workout',
         exercises: [testExercise],
         startTime: now,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       await tester.pumpWidget(
@@ -541,12 +541,12 @@ void main() {
     testWidgets('TEST 4: verifies dialog shows correct localized message', (WidgetTester tester) async {
       final now = DateTime.now();
       final activeWorkout = Workout(
-        id: 'test-workout-123',
+      id: 'test-workout-123',
         name: 'Test Workout',
         exercises: [testExercise],
         startTime: now,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       await tester.pumpWidget(
@@ -596,12 +596,12 @@ void main() {
     testWidgets('TEST 5: verifies dialog dismisses on "Got it" tap, protocol unchanged', (WidgetTester tester) async {
       final now = DateTime.now();
       final activeWorkout = Workout(
-        id: 'test-workout-123',
+      id: 'test-workout-123',
         name: 'Test Workout',
         exercises: [testExercise],
         startTime: now,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       await tester.pumpWidget(

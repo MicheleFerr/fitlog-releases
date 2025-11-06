@@ -7,6 +7,9 @@ void main() {
     
     test('✅ TEST 1: Create new workout', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         id: 'test-workout-1',
         name: 'Chest Day',
         exercises: [],
@@ -30,6 +33,9 @@ void main() {
       );
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         id: 'test-workout-1',
         name: 'Chest Day',
         exercises: [],
@@ -68,6 +74,9 @@ void main() {
       );
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Chest Day',
         exercises: [exercise1, exercise2],
         status: WorkoutStatus.inProgress,
@@ -80,6 +89,9 @@ void main() {
     
     test('✅ TEST 4: Workout status transitions', () {
       var workout = Workout(
+        id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Chest Day',
         status: WorkoutStatus.planned,
       );
@@ -113,6 +125,9 @@ void main() {
       final endTime = DateTime.now();
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Chest Day',
         status: WorkoutStatus.completed,
         startTime: startTime,
@@ -141,6 +156,9 @@ void main() {
       );
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Chest Day',
         exercises: [exercise1, exercise2],
       );
@@ -177,6 +195,9 @@ void main() {
       );
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Chest Day',
         exercises: [exercise1, exercise2],
       );
@@ -186,6 +207,9 @@ void main() {
     
     test('✅ TEST 8: Workout with paused status', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Chest Day',
         status: WorkoutStatus.paused,
         startTime: DateTime.now().subtract(const Duration(minutes: 30)),
@@ -199,6 +223,9 @@ void main() {
     
     test('✅ TEST 9: Empty workout progress', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Rest Day',
         exercises: [],
       );
@@ -211,6 +238,9 @@ void main() {
     
     test('✅ TEST 10: Workout with notes', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Chest Day',
         notes: 'Feeling strong today! Increased weight on bench press.',
       );

@@ -481,8 +481,8 @@ void main() {
     test('addCompletedWorkout adds only completed workouts', () {
       final notifier = container.read(workoutHistoryProvider.notifier);
       
-      final incompleteWorkout = Workout(name: 'Incomplete');
-      final completedWorkout = Workout(name: 'Complete')
+      final incompleteWorkout = Workout(id: 'test-id', name: 'Incomplete', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
+      final completedWorkout = Workout(id: 'test-id', name: 'Complete', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         .startWorkout()
         .completeWorkout();
       
@@ -497,11 +497,19 @@ void main() {
     test('removeWorkout removes by id', () {
       final notifier = container.read(workoutHistoryProvider.notifier);
       
-      final workout1 = Workout(id: 'w1', name: 'Workout 1')
-        .startWorkout()
-        .completeWorkout();
-      final workout2 = Workout(id: 'w2', name: 'Workout 2')
-        .startWorkout()
+      final workout1 = Workout(
+        id: 'w1',
+        name: 'Workout 1',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+      ).startWorkout().completeWorkout();
+
+      final workout2 = Workout(
+        id: 'w2',
+        name: 'Workout 2',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+      ).startWorkout()
         .completeWorkout();
       
       notifier.addCompletedWorkout(workout1);
@@ -522,11 +530,11 @@ void main() {
       final lastWeek = now.subtract(const Duration(days: 7));
       
       // Create workouts with specific dates
-      final recentWorkout = Workout(name: 'Recent')
+      final recentWorkout = Workout(id: 'test-id', name: 'Recent', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         .copyWith(startTime: now)
         .completeWorkout();
       
-      final oldWorkout = Workout(name: 'Old')
+      final oldWorkout = Workout(id: 'test-id', name: 'Old', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         .copyWith(startTime: lastWeek)
         .completeWorkout();
       

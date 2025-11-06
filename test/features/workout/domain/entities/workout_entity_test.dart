@@ -7,6 +7,9 @@ void main() {
   group('Workout Entity Tests', () {
     test('creates workout with required fields', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Morning Workout',
       );
 
@@ -22,6 +25,9 @@ void main() {
       final startTime = DateTime(2024, 1, 1, 9, 0);
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Active Workout',
         status: WorkoutStatus.inProgress,
         startTime: startTime,
@@ -38,6 +44,9 @@ void main() {
       final endTime = DateTime(2024, 1, 1, 10, 30);
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Completed Workout',
         status: WorkoutStatus.completed,
         startTime: startTime,
@@ -55,6 +64,9 @@ void main() {
       final endTime = DateTime(2024, 1, 1, 10, 30);
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Test',
         startTime: startTime,
         endTime: endTime,
@@ -68,6 +80,9 @@ void main() {
 
     test('calculates total sets correctly', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Set Count Test',
         exercises: [
           Exercise(
@@ -96,6 +111,9 @@ void main() {
 
     test('calculates completed sets correctly', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Completed Sets Test',
         exercises: [
           Exercise(
@@ -125,6 +143,9 @@ void main() {
 
     test('calculates completed exercises correctly', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Exercise Completion Test',
         exercises: [
           Exercise(
@@ -152,6 +173,9 @@ void main() {
 
     test('copyWith creates new instance with updated values', () {
       final original = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Original',
         status: WorkoutStatus.planned,
       );
@@ -171,7 +195,12 @@ void main() {
     });
 
     test('addExercise updates exercises list', () {
-      final workout = Workout(name: 'Test');
+      final workout = Workout(
+      id: 'test-id',
+        name: 'Test',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+      );
       final exercise = Exercise(
         name: 'Push-ups',
         type: ExerciseType.single,
@@ -193,6 +222,9 @@ void main() {
       );
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Test',
         exercises: [exercise],
       );
@@ -208,6 +240,9 @@ void main() {
       final endTime = DateTime(2024, 1, 1, 10, 30);
       
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'Serialization Test',
         status: WorkoutStatus.completed,
         startTime: startTime,
@@ -282,8 +317,18 @@ void main() {
     });
 
     test('workout identity and copyWith', () {
-      final workout1 = Workout(name: 'Test');
-      final workout2 = Workout(name: 'Test');
+      final workout1 = Workout(
+      id: 'test-id-1',
+        name: 'Test',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+      );
+      final workout2 = Workout(
+      id: 'test-id-2',
+        name: 'Test',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
+      );
       final workout3 = workout1.copyWith();
 
       expect(workout1 == workout2, false); // Different objects
@@ -295,6 +340,9 @@ void main() {
 
     test('workout with RPE tracking', () {
       final workout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         name: 'RPE Test',
         exercises: [
           Exercise(

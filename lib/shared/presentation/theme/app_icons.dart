@@ -865,6 +865,40 @@ class AppIcons {
 
   // USER_PROFILE (1 icons)
   static const IconData personOutline = Icons.person_outline;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🔄 ALIASES (For backwards compatibility after merge)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /// ℹ️ Info icon (alias for info)
+  static const IconData infoIcon = Icons.info_outline;
+
+  /// 🔄 Sync icon (alias for sync)
+  static const IconData syncIcon = Icons.sync;
+
+  /// ☁️ Cloud upload (alias for upload)
+  static const IconData cloudUpload = Icons.cloud_upload;
+
+  /// 📋 Copy icon (alias for copy)
+  static const IconData iconCopy = Icons.content_copy;
+
+  /// 📦 Miscellaneous/Category
+  static const IconData misc = Icons.category;
+
+  /// ➕ Add circle (filled)
+  static const IconData addCircle = Icons.add_circle;
+
+  /// 📝 Title icon (alias for title)
+  static const IconData titleIcon = Icons.title;
+
+  /// ⭐ Star half icon (alias for starHalf)
+  static const IconData starHalfIcon = Icons.star_half;
+
+  /// ⬇️ Expand icon (alias for expand)
+  static const IconData expandIcon = Icons.unfold_more;
+
+  /// ♿ Accessibility icon (alias for accessibility)
+  static const IconData accessibilityIcon = Icons.accessibility_new;
 }
 
 /// 📦 Icon Groups - For when you need multiple related icons

@@ -377,6 +377,8 @@ List<Workout> _createWorkoutSequence(List<String> names) {
     final name = entry.value;
     final startTime = DateTime.now().subtract(Duration(days: names.length - index));
     return Workout(
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
       id: 'workout_$index',
       name: name,
       startTime: startTime,

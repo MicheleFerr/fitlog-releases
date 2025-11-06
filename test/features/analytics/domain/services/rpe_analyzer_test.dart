@@ -41,10 +41,12 @@ void main() {
       }
     }
 
+    final now = createdAt ?? DateTime.now();
     return Workout(
       id: 'workout-${DateTime.now().millisecondsSinceEpoch}',
       name: 'Test Workout',
-      createdAt: createdAt ?? DateTime.now(),
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
       exercises: [
         Exercise(
           name: 'Bench Press',
@@ -114,9 +116,10 @@ void main() {
 
     test('should skip incomplete sets', () {
       final workout = Workout(
-        id: 'test',
+      id: 'test',
         name: 'Test',
         createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         exercises: [
           Exercise(
             name: 'Exercise',
@@ -152,9 +155,10 @@ void main() {
 
     test('should skip sets without RPE', () {
       final workout = Workout(
-        id: 'test',
+      id: 'test',
         name: 'Test',
         createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         exercises: [
           Exercise(
             name: 'Exercise',
@@ -206,9 +210,10 @@ void main() {
 
     test('should handle workout with no RPE sets', () {
       final workout = Workout(
-        id: 'test',
+      id: 'test',
         name: 'Test',
         createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         exercises: [
           Exercise(
             name: 'Exercise',
@@ -255,9 +260,10 @@ void main() {
 
     test('should handle RPE above 10', () {
       final workout = Workout(
-        id: 'test',
+      id: 'test',
         name: 'Test',
         createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         exercises: [
           Exercise(
             name: 'Exercise',
@@ -383,9 +389,10 @@ void main() {
 
     test('should handle multiple exercises for same muscle group', () {
       final workout = Workout(
-        id: 'test',
+      id: 'test',
         name: 'Test',
         createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         exercises: [
           Exercise(
             name: 'Bench Press',

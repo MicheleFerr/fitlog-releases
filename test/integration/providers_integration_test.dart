@@ -152,7 +152,10 @@ void main() {
     test('Starting workout updates dependent providers', () {
       // Crea un workout di test
       final workout = Workout(
-        name: 'Test Workout',
+      id: 'test-id',
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
+      name: 'Test Workout',
         exercises: [
           Exercise(
             id: 'ex-1',
@@ -185,7 +188,10 @@ void main() {
     test('Completing set triggers timer and updates stats', () {
       // Setup workout
       final workout = Workout(
-        name: 'Test Workout',
+      id: 'test-id',
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
+      name: 'Test Workout',
         exercises: [
           Exercise(
             id: 'ex-1',
@@ -228,7 +234,10 @@ void main() {
     test('Timer lifecycle with workout integration', () {
       // Setup and start workout
       final workout = Workout(
-        name: 'Timer Test',
+      id: 'test-id',
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
+      name: 'Timer Test',
         exercises: [
           Exercise(
             id: 'ex-1',
@@ -273,7 +282,10 @@ void main() {
     test('Full workout flow with multiple exercises', () {
       // Create complex workout
       final workout = Workout(
-        name: 'Full Body',
+      id: 'test-id',
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
+      name: 'Full Body',
         exercises: [
           Exercise(
             id: 'ex-1',

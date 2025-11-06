@@ -308,10 +308,15 @@ void main() {
 
 // Helper functions
 Workout _createWorkout({
+      id: 'test-id',
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
   String? templateId,
   DateTime? endTime,
 }) {
   return Workout(
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
     id: 'test_workout_${DateTime.now().millisecondsSinceEpoch}',
     userId: 'test_user',
     templateId: templateId,
@@ -341,6 +346,7 @@ FlexibleRoutine _createRoutine({
     schedule: schedule ?? {},
     skipTracker: const SkipTracker(),
     recoverySettings: const RecoverySettings(),
+    createdAt: DateTime(2024, 1, 1),
   );
 }
 

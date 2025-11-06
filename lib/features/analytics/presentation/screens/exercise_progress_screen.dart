@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exe
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseProgressScreen extends ConsumerStatefulWidget {
   const ExerciseProgressScreen({super.key});

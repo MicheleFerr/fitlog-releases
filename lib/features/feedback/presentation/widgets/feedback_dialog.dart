@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feedback_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog for submitting feedback
 class FeedbackDialog extends ConsumerStatefulWidget {

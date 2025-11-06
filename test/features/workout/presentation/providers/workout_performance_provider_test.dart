@@ -14,6 +14,8 @@ void main() {
       container = ProviderContainer();
       
       testWorkout = Workout(
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         id: 'test-workout-1',
         name: 'Push Day',
         startTime: DateTime.now().subtract(const Duration(hours: 1)),
@@ -104,6 +106,9 @@ void main() {
 
     test('tracks exercise progression', () {
       final previousWorkout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         id: 'prev-1',
         name: 'Previous Push Day',
         startTime: DateTime.now().subtract(const Duration(days: 7)),
@@ -141,6 +146,8 @@ void main() {
     test('identifies personal records', () {
       final workoutHistory = [
         Workout(
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           id: 'w1',
           name: 'Old Workout',
           startTime: DateTime.now().subtract(const Duration(days: 30)),
@@ -176,6 +183,9 @@ void main() {
 
     test('calculates workout duration', () {
       final completedWorkout = Workout(
+      id: 'test-id',
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
         id: 'completed-1',
         name: 'Completed Workout',
         startTime: DateTime.now().subtract(const Duration(hours: 1, minutes: 30)),
@@ -226,6 +236,8 @@ void main() {
     test('identifies workout trends over time', () {
       final workoutHistory = List.generate(5, (i) {
         return Workout(
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           id: 'workout-$i',
           name: 'Push Day',
           startTime: DateTime.now().subtract(Duration(days: i * 7)),

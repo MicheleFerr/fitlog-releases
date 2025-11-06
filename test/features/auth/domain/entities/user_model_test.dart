@@ -19,7 +19,7 @@ void main() {
           email: 'test@example.com',
           displayName: 'Test User',
           photoURL: 'https://example.com/photo.jpg',
-          createdAt: now,
+          createdAt: DateTime(2024, 1, 1),
           lastLoginAt: now,
           isGuest: false,
           preferences: const UserPreferences(),
@@ -165,7 +165,7 @@ void main() {
           email: 'test@example.com',
           displayName: 'Test User',
           photoURL: 'https://example.com/photo.jpg',
-          createdAt: now,
+          createdAt: DateTime(2024, 1, 1),
           lastLoginAt: now,
           isGuest: false,
           preferences: const UserPreferences(),
@@ -347,7 +347,7 @@ void main() {
           isGuest: false,
           preferences: const UserPreferences(),
           stats: const UserStats(),
-          createdAt: now,
+          createdAt: DateTime(2024, 1, 1),
         );
 
         final str = user.toString();
@@ -370,7 +370,7 @@ void main() {
           isGuest: false,
           preferences: const UserPreferences(),
           stats: const UserStats(),
-          createdAt: now,
+          createdAt: DateTime(2024, 1, 1),
         );
 
         final user2 = UserModel(
@@ -380,7 +380,7 @@ void main() {
           isGuest: false,
           preferences: const UserPreferences(),
           stats: const UserStats(),
-          createdAt: now,
+          createdAt: DateTime(2024, 1, 1),
         );
 
         expect(user1, equals(user2));

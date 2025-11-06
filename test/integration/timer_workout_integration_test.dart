@@ -26,6 +26,9 @@ class IntegrationTestSuite {
       test('Starting workout should initialize timer correctly', () async {
         // 1. Crea un workout con esercizi
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Morning Workout',
           exercises: [
             Exercise(
@@ -101,6 +104,9 @@ class IntegrationTestSuite {
         );
         
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Leg Day',
           exercises: [exercise],
           status: WorkoutStatus.inProgress,
@@ -184,7 +190,10 @@ class IntegrationTestSuite {
       test('Full workout flow with timer integration', () async {
         // 1. Create workout
         final workout = Workout(
-          name: 'Full Body',
+      id: 'test-id',
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
+      name: 'Full Body',
           exercises: [
             Exercise(
               id: 'ex-1',

@@ -101,7 +101,7 @@ void main() {
         ]);
 
         final previousWorkout = Workout(
-          id: 'prev',
+      id: 'prev',
           name: 'Push Day',
           exercises: [
             Exercise(
@@ -154,7 +154,7 @@ void main() {
 
       test('should copy reps from previous workout', () {
         final currentWorkout = Workout(
-          id: 'current',
+      id: 'current',
           name: 'Push Day',
           exercises: [
             Exercise(
@@ -174,7 +174,7 @@ void main() {
         );
 
         final previousWorkout = Workout(
-          id: 'prev',
+      id: 'prev',
           name: 'Push Day',
           exercises: [
             Exercise(
@@ -266,7 +266,7 @@ void main() {
         ]);
 
         final previousWorkout = Workout(
-          id: 'prev',
+      id: 'prev',
           name: 'Push Day',
           exercises: [
             Exercise(
@@ -484,7 +484,7 @@ void main() {
 
       test('should skip exercises with empty sets', () {
         final currentWorkout = Workout(
-          id: 'current',
+      id: 'current',
           name: 'Test',
           exercises: [
             Exercise(
@@ -514,7 +514,7 @@ void main() {
 
       test('should skip exercises with zero average weight', () {
         final currentWorkout = Workout(
-          id: 'current',
+      id: 'current',
           name: 'Test',
           exercises: [
             Exercise(

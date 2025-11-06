@@ -19,8 +19,8 @@ void main() {
           sets: sets,
           notes: 'Good form',
           restTime: 90,
-          createdAt: now,
-          updatedAt: now,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         );
         
         expect(exercise.id, 'exercise-123');
@@ -188,8 +188,8 @@ void main() {
           ],
           notes: 'Test notes',
           restTime: 120,
-          createdAt: now,
-          updatedAt: now,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         );
         
         final json = exercise.toJson();

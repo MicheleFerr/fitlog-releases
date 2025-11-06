@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_ac
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/rpe_live_activity_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen di test per il sistema RPE Live Activities
 class RPETestScreen extends ConsumerWidget {

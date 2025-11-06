@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/u
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Debug screen to show fitness profile status and weight suggestions
 class FitnessProfileDebugScreen extends ConsumerWidget {

@@ -514,8 +514,8 @@ WorkoutModel _createWorkoutModel(String name, {DateTime? startTime}) {
     exercises: [],
     status: 'completed',
     startTime: startTime ?? now,
-    createdAt: now,
-    updatedAt: now,
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
   );
 }
 

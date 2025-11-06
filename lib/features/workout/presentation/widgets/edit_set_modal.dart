@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_pi
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart'; // ✅ NUOVO
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class EditSetModal extends ConsumerStatefulWidget {
 

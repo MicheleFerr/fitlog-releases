@@ -74,7 +74,7 @@ class SmartWorkoutTemplate {
     Map<String, double>? personalBests,
     int? availableTime,
   }) {
-    final adaptedExercises = exercises.map((templateEx) => 
+    final adaptedExercises = exercises.map((templateEx) =>
       templateEx.generateExercise(
         experience: experience ?? TrainingExperience.intermediate,
         personalBest: personalBests?[templateEx.name],
@@ -82,9 +82,13 @@ class SmartWorkoutTemplate {
       )
     ).toList();
 
+    final now = DateTime.now();
     return Workout(
+      id: const Uuid().v4(),
       name: name,
       exercises: adaptedExercises,
+      createdAt: now,
+      updatedAt: now,
     );
   }
 

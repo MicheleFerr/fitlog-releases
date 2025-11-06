@@ -43,15 +43,15 @@ void main() {
         ];
         
         final workout = Workout(
-          id: 'workout-123',
+      id: 'workout-123',
           name: 'Morning Workout',
           exercises: exercises,
           status: WorkoutStatus.inProgress,
           startTime: now,
           endTime: now.add(const Duration(hours: 1)),
           notes: 'Great workout!',
-          createdAt: now,
-          updatedAt: now,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         );
 
         expect(workout.id, 'workout-123');
@@ -66,7 +66,12 @@ void main() {
       });
 
       test('creates workout with default values', () {
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(
+      id: 'test-id',
+          name: 'Test Workout',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
+        );
 
         expect(workout.id, isNotEmpty);
         expect(workout.name, 'Test Workout');
@@ -80,8 +85,8 @@ void main() {
       });
 
       test('auto-generates UUID when id is null', () {
-        final workout1 = Workout(name: 'Workout 1');
-        final workout2 = Workout(name: 'Workout 2');
+        final workout1 = Workout(id: 'test-id', name: 'Workout 1', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
+        final workout2 = Workout(id: 'test-id', name: 'Workout 2', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
 
         expect(workout1.id, isNotEmpty);
         expect(workout2.id, isNotEmpty);
@@ -95,6 +100,9 @@ void main() {
         ];
         
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Bodyweight Workout',
           exercises: exercises,
         );
@@ -111,6 +119,9 @@ void main() {
         final end = DateTime(2024, 1, 1, 11, 30);
         
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           startTime: start,
           endTime: end,
@@ -120,12 +131,15 @@ void main() {
       });
 
       test('duration with no start time', () {
-        final workout = Workout(name: 'Test');
+        final workout = Workout(id: 'test-id', name: 'Test', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         expect(workout.duration, isNull);
       });
 
       test('duration with start time but no end time uses current time', () {
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           startTime: DateTime.now().subtract(const Duration(minutes: 30)),
         );
@@ -163,7 +177,7 @@ void main() {
           ),
         ];
 
-        final workout = Workout(name: 'Test', exercises: exercises);
+        final workout = Workout(id: 'test-id', name: 'Test', exercises: exercises, createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         expect(workout.completedExercises, 1);
       });
 
@@ -190,7 +204,7 @@ void main() {
           ),
         ];
 
-        final workout = Workout(name: 'Test', exercises: exercises);
+        final workout = Workout(id: 'test-id', name: 'Test', exercises: exercises, createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         expect(workout.totalSets, 5);
       });
 
@@ -217,7 +231,7 @@ void main() {
           ),
         ];
 
-        final workout = Workout(name: 'Test', exercises: exercises);
+        final workout = Workout(id: 'test-id', name: 'Test', exercises: exercises, createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         expect(workout.completedSets, 3);
       });
 
@@ -236,23 +250,29 @@ void main() {
           ),
         ];
 
-        final workout = Workout(name: 'Test', exercises: exercises);
+        final workout = Workout(id: 'test-id', name: 'Test', exercises: exercises, createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         expect(workout.progressPercentage, 0.5);
       });
 
       test('progressPercentage with no sets', () {
-        final workout = Workout(name: 'Test', exercises: []);
+        final workout = Workout(id: 'test-id', name: 'Test', exercises: [], createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         expect(workout.progressPercentage, 0.0);
       });
 
       test('isActive property', () {
         final activeWorkout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           status: WorkoutStatus.inProgress,
         );
         expect(activeWorkout.isActive, true);
 
         final plannedWorkout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           status: WorkoutStatus.planned,
         );
@@ -261,12 +281,18 @@ void main() {
 
       test('isCompleted property', () {
         final completedWorkout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           status: WorkoutStatus.completed,
         );
         expect(completedWorkout.isCompleted, true);
 
         final inProgressWorkout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           status: WorkoutStatus.inProgress,
         );
@@ -276,7 +302,7 @@ void main() {
 
     group('🔄 State Transitions', () {
       test('startWorkout', () {
-        final workout = Workout(name: 'Test');
+        final workout = Workout(id: 'test-id', name: 'Test', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         final started = workout.startWorkout();
 
         expect(started.status, WorkoutStatus.inProgress);
@@ -286,6 +312,9 @@ void main() {
 
       test('completeWorkout', () {
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           status: WorkoutStatus.inProgress,
         );
@@ -298,6 +327,9 @@ void main() {
 
       test('pauseWorkout', () {
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           status: WorkoutStatus.inProgress,
         );
@@ -309,6 +341,9 @@ void main() {
 
       test('resumeWorkout', () {
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           status: WorkoutStatus.paused,
         );
@@ -322,6 +357,9 @@ void main() {
     group('📝 Exercise Management', () {
       test('addExercise', () {
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [createTestExercise(name: 'Exercise 1')],
         );
@@ -340,6 +378,9 @@ void main() {
         final exercise3 = createTestExercise(id: 'ex-3', name: 'Exercise 3');
         
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [exercise1, exercise2, exercise3],
         );
@@ -354,6 +395,9 @@ void main() {
 
       test('removeExercise with non-existent id', () {
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [createTestExercise(id: 'ex-1')],
         );
@@ -368,6 +412,9 @@ void main() {
         final exercise2 = createTestExercise(id: 'ex-2', name: 'Exercise 2');
         
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [exercise1, exercise2],
         );
@@ -391,6 +438,9 @@ void main() {
       test('updateExercise with non-existent id', () {
         final exercise = createTestExercise(id: 'ex-1', name: 'Exercise 1');
         final workout = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [exercise],
         );
@@ -414,6 +464,9 @@ void main() {
       test('copyWith all fields', () {
         final now = DateTime.now();
         final original = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Original',
           exercises: [],
           status: WorkoutStatus.planned,
@@ -427,7 +480,7 @@ void main() {
           startTime: now,
           endTime: now.add(const Duration(hours: 1)),
           notes: 'Updated notes',
-          updatedAt: now,
+          updatedAt: DateTime(2024, 1, 1),
         );
 
         expect(copied.id, original.id);
@@ -443,6 +496,9 @@ void main() {
 
       test('copyWith preserves original values', () {
         final original = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Original',
           notes: 'Original notes',
         );
@@ -473,15 +529,15 @@ void main() {
         ];
         
         final workout = Workout(
-          id: 'workout-123',
+      id: 'workout-123',
           name: 'Morning Workout',
           exercises: exercises,
           status: WorkoutStatus.inProgress,
           startTime: now,
           endTime: now.add(const Duration(hours: 1)),
           notes: 'Great workout!',
-          createdAt: now,
-          updatedAt: now,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         );
 
         final json = workout.toJson();
@@ -501,9 +557,10 @@ void main() {
       test('toJson with null fields', () {
         final now = DateTime(2024, 1, 1);
         final workout = Workout(
+      id: 'test-id',
           name: 'Test',
-          createdAt: now,
-          updatedAt: now,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         );
         
         final json = workout.toJson();
@@ -597,6 +654,9 @@ void main() {
 
       test('roundtrip serialization', () {
         final original = Workout(
+      id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           id: 'roundtrip-test',
           name: 'Roundtrip Workout',
           exercises: [

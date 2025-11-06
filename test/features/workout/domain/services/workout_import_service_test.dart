@@ -507,8 +507,8 @@ Workout Date,Exercise,Weight,Reps
           success: true,
           message: 'Test',
           workouts: [
-            Workout(name: 'W1', exercises: []),
-            Workout(name: 'W2', exercises: []),
+            Workout(id: 'test-id', name: 'W1', exercises: [], createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1)),
+            Workout(id: 'test-id', name: 'W2', exercises: [], createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1)),
           ],
         );
 

@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_pro
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseHistoryTestWidget extends ConsumerStatefulWidget {
   

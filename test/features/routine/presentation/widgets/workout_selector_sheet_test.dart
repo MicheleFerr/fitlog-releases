@@ -29,8 +29,8 @@ void main() {
         recoveredDays: {},
       ),
       recoverySettings: RecoverySettings(),
-      createdAt: now,
-      updatedAt: now,
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
     );
 
     final mockWorkouts = <Workout>[

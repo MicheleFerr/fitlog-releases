@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ana
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RealProgressStatsWidget extends ConsumerWidget {
   

@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/privacy/consent_dialog.dart';
 // Secure Logging
 import 'package:gymbro_flutter_new/shared/utils/secure_logger.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});

@@ -16,6 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FitnessLevelBadge extends StatelessWidget {
 

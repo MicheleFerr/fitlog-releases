@@ -563,7 +563,7 @@ void main() {
         type: ContributionType.tip,
         contextType: 'test_context',
         priority: 85,
-        createdAt: now,
+        createdAt: DateTime(2024, 1, 1),
         trigger: 'test_trigger',
       );
 

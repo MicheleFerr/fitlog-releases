@@ -21,6 +21,9 @@ void main() {
       test('Complete weighted exercise flow - add exercise, enter sets, complete', () {
         // 1. Create workout
         var workout = Workout(
+          id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Weighted Exercise Test',
           status: WorkoutStatus.inProgress,
           startTime: DateTime.now(),
@@ -167,6 +170,9 @@ void main() {
       test('Complete bodyweight exercise flow - add exercise, enter reps, complete', () {
         // 1. Create workout
         var workout = Workout(
+          id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Bodyweight Exercise Test',
           status: WorkoutStatus.inProgress,
           startTime: DateTime.now(),
@@ -286,6 +292,9 @@ void main() {
       test('Complete time-based exercise flow - add exercise, enter duration, complete', () {
         // 1. Create workout
         var workout = Workout(
+          id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Time-based Exercise Test',
           status: WorkoutStatus.inProgress,
           startTime: DateTime.now(),
@@ -463,6 +472,9 @@ void main() {
       test('Workout with all three counting modes', () {
         // 1. Create workout
         var workout = Workout(
+          id: 'test-id',
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Mixed Counting Mode Test',
           status: WorkoutStatus.inProgress,
           startTime: DateTime.now(),

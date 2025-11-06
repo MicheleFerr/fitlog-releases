@@ -38,6 +38,7 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/session_timeout_
 import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_screen.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});

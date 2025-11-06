@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_ac
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget per RPE Live Activity senza ombreggiature
 class RPELiveActivityWidget extends ConsumerStatefulWidget {

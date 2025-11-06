@@ -106,8 +106,8 @@ Workout createMockWorkout({
     startTime: startTime ?? now,
     endTime: endTime,
     status: status ?? WorkoutStatus.inProgress,
-    createdAt: now,
-    updatedAt: now,
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
   );
 }
 

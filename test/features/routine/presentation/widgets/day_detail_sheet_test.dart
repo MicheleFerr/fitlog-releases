@@ -102,7 +102,7 @@ void main() {
       );
 
       final mockWorkout = Workout(
-        id: 'workout-1',
+      id: 'workout-1',
         userId: 'user-1',
         name: 'Giorno A',
         startTime: DateTime.now(),

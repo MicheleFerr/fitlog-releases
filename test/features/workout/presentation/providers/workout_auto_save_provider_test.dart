@@ -22,7 +22,12 @@ void main() {
   late Directory tempDir;
   
   setUpAll(() async {
-    registerFallbackValue(Workout(name: 'Fallback'));
+    registerFallbackValue(Workout(
+      id: 'test-id',
+      name: 'Fallback',
+      createdAt: DateTime(2024, 1, 1),
+      updatedAt: DateTime(2024, 1, 1),
+    ));
     registerFallbackValue(AppLifecycleState.resumed);
     
     // Initialize Hive for tests
@@ -144,7 +149,7 @@ void main() {
     group('startAutoSave', () {
       test('saves workout immediately when started', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(id: 'test-id', name: 'Test Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -163,7 +168,7 @@ void main() {
 
       test('does not start auto-save when disabled', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(id: 'test-id', name: 'Test Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         // Disable auto-save
         notifier.toggleAutoSave();
@@ -178,8 +183,8 @@ void main() {
 
       test('cancels existing timer when starting new auto-save', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout1 = Workout(name: 'Workout 1');
-        final workout2 = Workout(name: 'Workout 2');
+        final workout1 = Workout(id: 'test-id', name: 'Workout 1', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
+        final workout2 = Workout(id: 'test-id', name: 'Workout 2', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -199,7 +204,7 @@ void main() {
     group('triggerSave', () {
       test('saves workout after debounce delay', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(id: 'test-id', name: 'Test Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -217,7 +222,7 @@ void main() {
 
       test('debounces multiple rapid saves', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(id: 'test-id', name: 'Test Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -238,7 +243,7 @@ void main() {
 
       test('does not save when auto-save is disabled', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(id: 'test-id', name: 'Test Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         // Disable auto-save
         notifier.toggleAutoSave();
@@ -257,6 +262,7 @@ void main() {
       test('does not save unchanged workout', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
         final workout = Workout(
+      id: 'test-id',
           name: 'Test Workout',
           createdAt: DateTime(2024, 1, 1),
           updatedAt: DateTime(2024, 1, 1),
@@ -288,7 +294,7 @@ void main() {
     group('emergencySave', () {
       test('saves workout immediately regardless of changes', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Emergency Workout');
+        final workout = Workout(id: 'test-id', name: 'Emergency Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -300,7 +306,7 @@ void main() {
 
       test('cancels timers before saving', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(id: 'test-id', name: 'Test Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -318,7 +324,7 @@ void main() {
 
       test('handles save errors', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Error Workout');
+        final workout = Workout(id: 'test-id', name: 'Error Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenThrow(Exception('Save failed'));
@@ -383,7 +389,7 @@ void main() {
     group('recoverDraft', () {
       test('recovers draft and starts auto-save', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Recovered Workout');
+        final workout = Workout(id: 'test-id', name: 'Recovered Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.recoverDraft())
             .thenAnswer((_) async => workout);
@@ -440,7 +446,7 @@ void main() {
 
       test('cancels timers when disabling auto-save', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Test Workout');
+        final workout = Workout(id: 'test-id', name: 'Test Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -463,7 +469,7 @@ void main() {
     group('AppLifecycleState handling', () {
       test('saves workout when app goes to background', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Background Workout');
+        final workout = Workout(id: 'test-id', name: 'Background Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -483,7 +489,7 @@ void main() {
 
       test('saves workout when app becomes inactive', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Inactive Workout');
+        final workout = Workout(id: 'test-id', name: 'Inactive Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -503,7 +509,7 @@ void main() {
 
       test('does not save when app resumes', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Resume Workout');
+        final workout = Workout(id: 'test-id', name: 'Resume Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenAnswer((_) async {});
@@ -542,7 +548,7 @@ void main() {
     group('Error handling', () {
       test('handles save errors and updates state', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Error Workout');
+        final workout = Workout(id: 'test-id', name: 'Error Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         when(() => mockRepository.saveCurrentDraft(any()))
             .thenThrow(Exception('Database error'));
@@ -559,7 +565,7 @@ void main() {
 
       test('continues after error', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout = Workout(name: 'Recovery Workout');
+        final workout = Workout(id: 'test-id', name: 'Recovery Workout', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         
         // First save fails
         when(() => mockRepository.saveCurrentDraft(any()))
@@ -585,7 +591,7 @@ void main() {
     group('Workout change detection', () {
       test('detects changes in workout', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout1 = Workout(name: 'Original');
+        final workout1 = Workout(id: 'test-id', name: 'Original', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         final workout2 = workout1.copyWith(name: 'Modified');
         
         when(() => mockRepository.saveCurrentDraft(any()))
@@ -610,7 +616,7 @@ void main() {
 
       test('detects changes in exercises', () async {
         final notifier = container.read(workoutAutoSaveProvider.notifier);
-        final workout1 = Workout(name: 'Test', exercises: []);
+        final workout1 = Workout(id: 'test-id', name: 'Test', exercises: [], createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
         final workout2 = workout1.copyWith(
           exercises: [
             Exercise(

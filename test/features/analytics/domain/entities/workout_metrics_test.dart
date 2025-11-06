@@ -36,10 +36,13 @@ void main() {
       );
 
       final workout = Workout(
+      id: 'test-workout-1',
         name: 'Chest Day',
         exercises: [exercise],
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 30)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       // Act
@@ -68,10 +71,13 @@ void main() {
       );
 
       final workout = Workout(
+      id: 'test-workout-2',
         name: 'Leg Day',
         exercises: [exercise],
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 10)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       // Act
@@ -102,10 +108,13 @@ void main() {
       );
 
       final workout = Workout(
+      id: 'test-workout-3',
         name: 'Back Day',
         exercises: [exercise],
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 40)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       // Act
@@ -142,10 +151,13 @@ void main() {
       );
 
       final workout = Workout(
+      id: 'test-workout-4',
         name: 'Pull Day',
         exercises: [exercise],
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 20)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       // Act
@@ -160,9 +172,12 @@ void main() {
     test('should handle empty workout correctly', () {
       // Arrange
       final workout = Workout(
+      id: 'test-workout-5',
         name: 'Empty Workout',
         exercises: [],
         status: WorkoutStatus.planned,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       // Act
@@ -192,10 +207,13 @@ void main() {
       );
 
       final workout = Workout(
+      id: 'test-workout-6',
         name: 'Test Workout',
         exercises: [exercise],
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(hours: 1, minutes: 15)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       // Act
@@ -238,10 +256,13 @@ void main() {
       );
 
       final workout = Workout(
+      id: 'test-workout-7',
         name: 'Upper Body',
         exercises: [chestExercise, backExercise],
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 45)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       // Act

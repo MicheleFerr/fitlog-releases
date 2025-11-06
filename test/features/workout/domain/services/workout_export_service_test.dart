@@ -14,6 +14,7 @@ void main() {
       // Create test workouts
       testWorkouts = [
         Workout(
+          updatedAt: DateTime(2024, 1, 1),
           id: 'workout1',
           name: 'Push Day',
           exercises: [
@@ -54,6 +55,7 @@ void main() {
           notes: 'Great workout',
         ),
         Workout(
+          updatedAt: DateTime(2024, 1, 1),
           id: 'workout2',
           name: 'Pull Day',
           exercises: [
@@ -80,6 +82,7 @@ void main() {
           createdAt: DateTime(2024, 1, 16, 10, 0),
         ),
         Workout(
+          updatedAt: DateTime(2024, 1, 1),
           id: 'workout3',
           name: 'Leg Day',
           exercises: [
@@ -431,6 +434,8 @@ void main() {
       test('should escape quotes in notes', () {
         // Arrange
         final workoutWithQuotes = Workout(
+      id: 'test-id',
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [
             Exercise(
@@ -462,6 +467,8 @@ void main() {
       test('should only include completed sets', () {
         // Arrange
         final workoutWithIncompleteSets = Workout(
+      id: 'test-id',
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [
             Exercise(
@@ -625,6 +632,8 @@ void main() {
       test('should handle skipped exercises', () {
         // Arrange
         final workoutWithSkip = Workout(
+      id: 'test-id',
+          updatedAt: DateTime(2024, 1, 1),
           name: 'Test',
           exercises: [
             Exercise(

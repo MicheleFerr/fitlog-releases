@@ -729,7 +729,7 @@ void main() {
         ),
         createTestActivity(
           exerciseId: 'bench',
-          createdAt: now,
+          createdAt: DateTime(2024, 1, 1),
           sets: [
             ExerciseActivitySet(
               set: 1,

@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/services/ex
 import 'package:gymbro_flutter_new/features/exercise_database/data/providers/exercise_search_service_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Autocomplete widget for exercise name with ML-enhanced fuzzy search
 ///

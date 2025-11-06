@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/instagram_link_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class SwipeableBuddyCard extends StatefulWidget {
 

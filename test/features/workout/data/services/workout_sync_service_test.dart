@@ -578,7 +578,7 @@ WorkoutModel _createTestWorkoutModel({
   DateTime? updatedAt,
 }) {
   final workout = Workout(
-    id: id ?? 'workout-id',
+      id: id ?? 'workout-id',
     name: name,
     exercises: [],
     status: WorkoutStatus.planned,
