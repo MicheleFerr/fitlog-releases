@@ -22433,6 +22433,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get ageMinorWarningDecline;
+
+  /// Short disclaimer text for footer
+  ///
+  /// In en, this message translates to:
+  /// **'NOT medical advice • Consult physician • Use at your own risk'**
+  String get footerDisclaimerShort;
+
+  /// Hint text to tap footer for full disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for full disclaimer'**
+  String get footerDisclaimerTapHint;
 }
 
 class _AppLocalizationsDelegate

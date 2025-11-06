@@ -15221,5 +15221,13 @@
   "ageMinorWarningDecline": "No",
   "@ageMinorWarningDecline": {
     "description": "Decline button for minor consent"
+  },
+  "footerDisclaimerShort": "NOT medical advice • Consult physician • Use at your own risk",
+  "@footerDisclaimerShort": {
+    "description": "Short disclaimer text for footer"
+  },
+  "footerDisclaimerTapHint": "Tap for full disclaimer",
+  "@footerDisclaimerTapHint": {
+    "description": "Hint text to tap footer for full disclaimer"
   }
 }

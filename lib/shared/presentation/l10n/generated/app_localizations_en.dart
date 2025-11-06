@@ -12695,4 +12695,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ageMinorWarningDecline => 'No';
+
+  @override
+  String get footerDisclaimerShort =>
+      'NOT medical advice • Consult physician • Use at your own risk';
+
+  @override
+  String get footerDisclaimerTapHint => 'Tap for full disclaimer';
 }

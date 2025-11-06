@@ -5739,5 +5739,13 @@
   "ageMinorWarningDecline": "No",
   "@ageMinorWarningDecline": {
     "description": "Pulsante rifiuta per consenso minori"
+  },
+  "footerDisclaimerShort": "NON è consulenza medica • Consulta un medico • Uso a tuo rischio",
+  "@footerDisclaimerShort": {
+    "description": "Testo breve del disclaimer per footer"
+  },
+  "footerDisclaimerTapHint": "Tocca per disclaimer completo",
+  "@footerDisclaimerTapHint": {
+    "description": "Suggerimento per toccare il footer per il disclaimer completo"
   }
 }

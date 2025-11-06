@@ -12839,4 +12839,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ageMinorWarningDecline => 'No';
+
+  @override
+  String get footerDisclaimerShort =>
+      'NON è consulenza medica • Consulta un medico • Uso a tuo rischio';
+
+  @override
+  String get footerDisclaimerTapHint => 'Tocca per disclaimer completo';
 }
