@@ -657,6 +657,8 @@ void main() {
           status: WorkoutStatus.completed,
           startTime: DateTime.now().subtract(const Duration(hours: 1)),
           endTime: DateTime.now(),
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         );
         
         final savedIds = await repository.saveCompletedWorkout(
@@ -709,6 +711,8 @@ void main() {
           status: WorkoutStatus.completed,
           startTime: DateTime.now().subtract(const Duration(hours: 1)),
           endTime: DateTime.now(),
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         );
         
         final savedIds = await repository.saveCompletedWorkout(
@@ -732,6 +736,8 @@ Workout createTestWorkout({bool isCompleted = true}) {
       createTestExercise('Squat'),
     ],
     status: isCompleted ? WorkoutStatus.completed : WorkoutStatus.inProgress,
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
     startTime: DateTime.now().subtract(const Duration(hours: 1)),
     endTime: isCompleted ? DateTime.now() : null,
   );

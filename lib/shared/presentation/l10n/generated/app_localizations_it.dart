@@ -1372,7 +1372,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get thisWeek => 'Questa settimana';
 
   @override
-  String get totalVolume => 'Volume Totale';
+  String get totalVolume => 'totale';
 
   @override
   String get consistency => 'Consistenza';

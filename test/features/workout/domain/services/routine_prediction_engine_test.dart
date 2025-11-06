@@ -257,6 +257,8 @@ void main() {
               name: 'Push',
               startTime: date,
               status: WorkoutStatus.completed,
+              createdAt: DateTime(2024, 1, 1),
+              updatedAt: DateTime(2024, 1, 1),
             ),
           );
         }
@@ -307,6 +309,8 @@ void main() {
             name: 'Legs', // ← Template no longer exists
             startTime: adjustedDate,
             status: WorkoutStatus.completed,
+            createdAt: DateTime(2024, 1, 1),
+            updatedAt: DateTime(2024, 1, 1),
           ),
         );
       }
@@ -317,18 +321,24 @@ void main() {
         name: 'Push',
         startTime: DateTime.now().subtract(const Duration(days: 2)),
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       ));
       workouts.add(Workout(
         id: 'other_2',
         name: 'Pull',
         startTime: DateTime.now().subtract(const Duration(days: 5)),
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       ));
       workouts.add(Workout(
         id: 'other_3',
         name: 'Arms',
         startTime: DateTime.now().subtract(const Duration(days: 9)),
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       ));
 
       // Act: Predict next workout (force day-based by having diverse history)
@@ -369,6 +379,8 @@ void main() {
             name: 'Legs',
             startTime: DateTime.now().subtract(Duration(days: i * 7)),
             status: WorkoutStatus.completed,
+            createdAt: DateTime(2024, 1, 1),
+            updatedAt: DateTime(2024, 1, 1),
           ),
         );
       }
@@ -381,6 +393,8 @@ void main() {
             name: 'Push',
             startTime: DateTime.now().subtract(Duration(days: i * 3)),
             status: WorkoutStatus.completed,
+            createdAt: DateTime(2024, 1, 1),
+            updatedAt: DateTime(2024, 1, 1),
           ),
         );
       }
@@ -392,6 +406,8 @@ void main() {
           name: 'Pull',
           startTime: DateTime.now().subtract(const Duration(days: 5)),
           status: WorkoutStatus.completed,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         ),
       );
 
@@ -424,6 +440,8 @@ void main() {
             name: 'OldTemplate', // Doesn't exist anymore
             startTime: DateTime.now().subtract(Duration(days: i * 3)),
             status: WorkoutStatus.completed,
+            createdAt: DateTime(2024, 1, 1),
+            updatedAt: DateTime(2024, 1, 1),
           ),
         );
       }
@@ -564,6 +582,8 @@ void main() {
           name: '', // Empty name
           startTime: DateTime.now().subtract(Duration(days: 10 - i)),
           status: WorkoutStatus.completed,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         ),
       );
 
@@ -586,6 +606,8 @@ void main() {
           name: 'Push',
           startTime: null, // No timestamp
           status: WorkoutStatus.completed,
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
         ),
       );
 
@@ -620,6 +642,8 @@ List<Workout> _createWorkoutSequence({
         name: names[i],
         startTime: now.subtract(Duration(days: daysAgo)),
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       ),
     );
   }

@@ -598,6 +598,8 @@ void main() {
         name: 'Empty Workout',
         exercises: [],
         status: WorkoutStatus.inProgress,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       final draft = WorkoutDraft.fromWorkout(workout);
@@ -703,6 +705,8 @@ Workout _createTestWorkout({
     ],
     status: WorkoutStatus.inProgress,
     startTime: DateTime.now(),
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
   );
 }
 

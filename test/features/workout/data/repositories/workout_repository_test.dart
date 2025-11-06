@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_set.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import '../../../../test_helpers/firebase_test_helper.dart';
@@ -170,8 +169,8 @@ class WorkoutRepository {
 
         for (final set in exercise.sets) {
           if (set.isCompleted) {
-            final weight = set.actualWeight ?? 0;
-            final reps = set.actualReps ?? 0;
+            final weight = set.weight ?? 0;
+            final reps = set.actualReps ?? set.reps ?? 0;
             totalVolume += weight * reps;
           }
         }
@@ -207,22 +206,24 @@ class WorkoutRepository {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: newName,
       startTime: DateTime.now(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
       exercises: original.exercises.map((exercise) {
         return Exercise(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           name: exercise.name,
-          muscleGroup: exercise.muscleGroup,
-          equipment: exercise.equipment,
+          type: exercise.type,
+          category: exercise.category,
           sets: exercise.sets.map((set) {
             return ExerciseSet(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
               setNumber: set.setNumber,
-              targetWeight: set.actualWeight ?? set.targetWeight,
-              targetReps: set.actualReps ?? set.targetReps,
+              weight: set.weight,
+              reps: set.actualReps ?? set.reps,
             );
           }).toList(),
           notes: exercise.notes,
-          restSeconds: exercise.restSeconds,
+          restTime: exercise.restTime,
         );
       }).toList(),
       notes: original.notes,
@@ -264,16 +265,20 @@ void main() {
           id: 'workout-1',
           name: 'Morning Workout',
           startTime: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
           exercises: [
             Exercise(
               id: 'ex-1',
               name: 'Bench Press',
+              type: ExerciseType.single,
+              category: ExerciseCategory.chest,
               sets: [
                 ExerciseSet(
                   id: 's1',
                   setNumber: 1,
-                  targetWeight: 60,
-                  targetReps: 10,
+                  weight: 60,
+                  reps: 10,
                 ),
               ],
             ),
@@ -302,6 +307,8 @@ void main() {
           id: 'workout-1',
           name: 'Test',
           startTime: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
           exercises: [],
         );
 
@@ -406,8 +413,10 @@ void main() {
           id: 'workout-1',
           name: 'Updated Name',
           startTime: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
           exercises: [],
-          isCompleted: true,
+          status: WorkoutStatus.completed,
         );
 
         await repository.updateWorkout(updatedWorkout);
@@ -576,7 +585,7 @@ void main() {
                 {
                   'id': 's1',
                   'setNumber': 1,
-                  'actualWeight': 60.0,
+                  'weight': 60.0,
                   'actualReps': 10,
                   'isCompleted': true,
                 },
@@ -599,7 +608,7 @@ void main() {
                 {
                   'id': 's2',
                   'setNumber': 1,
-                  'actualWeight': 65.0,
+                  'weight': 65.0,
                   'actualReps': 10,
                   'isCompleted': true,
                 },
@@ -612,7 +621,7 @@ void main() {
                 {
                   'id': 's3',
                   'setNumber': 1,
-                  'actualWeight': 80.0,
+                  'weight': 80.0,
                   'actualReps': 10,
                   'isCompleted': true,
                 },
@@ -690,7 +699,7 @@ void main() {
                 {
                   'id': 's1',
                   'setNumber': 1,
-                  'actualWeight': 60.0,
+                  'weight': 60.0,
                   'actualReps': 10,
                   'isCompleted': true,
                 },

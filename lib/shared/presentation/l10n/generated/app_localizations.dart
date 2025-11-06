@@ -890,7 +890,7 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear;
 
-  /// Done button
+  /// Generic done/complete button label
   ///
   /// In en, this message translates to:
   /// **'Done'**
@@ -2620,7 +2620,7 @@ abstract class AppLocalizations {
   /// Label for total training volume
   ///
   /// In en, this message translates to:
-  /// **'Total Volume'**
+  /// **'total'**
   String get totalVolume;
 
   /// Consistency metric label

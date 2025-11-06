@@ -35,9 +35,9 @@ void main() {
         name: 'Test Dropset',
         category: ExerciseCategory.chest,
         stages: [
-          DropSetStage(weight: 100, targetReps: 8),
-          DropSetStage(weight: 80, targetReps: 10),
-          DropSetStage(weight: 60, targetReps: 12),
+          DropSetStage(weight: 100, reps: 8),
+          DropSetStage(weight: 80, reps: 10),
+          DropSetStage(weight: 60, reps: 12),
         ],
       );
 

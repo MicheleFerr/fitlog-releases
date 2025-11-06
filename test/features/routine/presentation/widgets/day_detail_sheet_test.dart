@@ -21,13 +21,24 @@ void main() {
         id: 'routine-1',
         userId: 'user-1',
         name: 'Winter Arc',
+        type: RoutineType.custom,
+        startDate: DateTime(2025, 1, 1),
+        endDate: DateTime(2025, 12, 31),
+        pattern: RoutinePattern(
+          sequence: ['giorno-a'],
+        ),
         schedule: {
-          DateTime(2025, 1, 5): ScheduledDay(
+          '2025-01-05': ScheduledDay(
             date: DateTime(2025, 1, 5),
             status: DayStatus.scheduled,
             templateId: 'giorno-a',
           ),
         },
+        skipTracker: SkipTracker(
+          skippedDays: {},
+          recoveredDays: {},
+        ),
+        recoverySettings: RecoverySettings(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -49,7 +60,7 @@ void main() {
               body: DayDetailSheet(
                 routine: mockRoutine,
                 date: DateTime(2025, 1, 5),
-                dayInfo: mockRoutine.schedule[DateTime(2025, 1, 5)]!,
+                dayInfo: mockRoutine.schedule['2025-01-05']!,
               ),
             ),
           ),
@@ -90,25 +101,34 @@ void main() {
         id: 'routine-1',
         userId: 'user-1',
         name: 'Winter Arc',
+        type: RoutineType.custom,
+        startDate: DateTime(2025, 1, 1),
+        endDate: DateTime(2025, 12, 31),
+        pattern: RoutinePattern(
+          sequence: ['giorno-a'],
+        ),
         schedule: {
-          DateTime(2025, 1, 5): ScheduledDay(
+          '2025-01-05': ScheduledDay(
             date: DateTime(2025, 1, 5),
             status: DayStatus.scheduled,
             templateId: 'giorno-a',
           ),
         },
+        skipTracker: SkipTracker(
+          skippedDays: {},
+          recoveredDays: {},
+        ),
+        recoverySettings: RecoverySettings(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
       final mockWorkout = Workout(
-      id: 'workout-1',
-        userId: 'user-1',
+        id: 'workout-1',
         name: 'Giorno A',
         startTime: DateTime.now(),
         endTime: DateTime.now().add(Duration(minutes: 45)),
         exercises: [],
-        totalDuration: Duration(minutes: 45),
         notes: null,
         templateId: 'giorno-a',
         createdAt: DateTime.now(),
@@ -130,7 +150,7 @@ void main() {
               body: DayDetailSheet(
                 routine: mockRoutine,
                 date: DateTime(2025, 1, 5),
-                dayInfo: mockRoutine.schedule[DateTime(2025, 1, 5)]!,
+                dayInfo: mockRoutine.schedule['2025-01-05']!,
               ),
             ),
           ),

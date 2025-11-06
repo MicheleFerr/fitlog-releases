@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_performance_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_set.dart';
 
 void main() {
   group('WorkoutPerformanceProvider Tests', () {
@@ -23,32 +22,30 @@ void main() {
           Exercise(
             id: 'ex1',
             name: 'Bench Press',
-            muscleGroup: 'Chest',
+            type: ExerciseType.single,
+            category: ExerciseCategory.chest,
             sets: [
               ExerciseSet(
                 id: 's1',
                 setNumber: 1,
-                targetWeight: 80,
-                targetReps: 10,
-                actualWeight: 80,
+                weight: 80,
+                reps: 10,
                 actualReps: 10,
                 isCompleted: true,
               ),
               ExerciseSet(
                 id: 's2',
                 setNumber: 2,
-                targetWeight: 80,
-                targetReps: 10,
-                actualWeight: 80,
+                weight: 80,
+                reps: 10,
                 actualReps: 8,
                 isCompleted: true,
               ),
               ExerciseSet(
                 id: 's3',
                 setNumber: 3,
-                targetWeight: 75,
-                targetReps: 10,
-                actualWeight: 75,
+                weight: 75,
+                reps: 10,
                 actualReps: 10,
                 isCompleted: true,
               ),
@@ -57,23 +54,22 @@ void main() {
           Exercise(
             id: 'ex2',
             name: 'Shoulder Press',
-            muscleGroup: 'Shoulders',
+            type: ExerciseType.single,
+            category: ExerciseCategory.shoulders,
             sets: [
               ExerciseSet(
                 id: 's4',
                 setNumber: 1,
-                targetWeight: 40,
-                targetReps: 12,
-                actualWeight: 40,
+                weight: 40,
+                reps: 12,
                 actualReps: 12,
                 isCompleted: true,
               ),
               ExerciseSet(
                 id: 's5',
                 setNumber: 2,
-                targetWeight: 40,
-                targetReps: 12,
-                actualWeight: 40,
+                weight: 40,
+                reps: 12,
                 actualReps: 10,
                 isCompleted: true,
               ),
@@ -106,21 +102,22 @@ void main() {
 
     test('tracks exercise progression', () {
       final previousWorkout = Workout(
-      id: 'test-id',
+        id: 'prev-1',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
-        id: 'prev-1',
         name: 'Previous Push Day',
         startTime: DateTime.now().subtract(const Duration(days: 7)),
         exercises: [
           Exercise(
             id: 'ex1',
             name: 'Bench Press',
+            type: ExerciseType.single,
+            category: ExerciseCategory.chest,
             sets: [
               ExerciseSet(
                 id: 'ps1',
                 setNumber: 1,
-                actualWeight: 75,
+                weight: 75,
                 actualReps: 10,
                 isCompleted: true,
               ),
@@ -155,10 +152,12 @@ void main() {
             Exercise(
               id: 'e1',
               name: 'Bench Press',
+              type: ExerciseType.single,
+              category: ExerciseCategory.chest,
               sets: [
                 ExerciseSet(
                   id: 's1',
-                  actualWeight: 70,
+                  weight: 70,
                   actualReps: 10,
                   isCompleted: true,
                 ),
@@ -183,10 +182,9 @@ void main() {
 
     test('calculates workout duration', () {
       final completedWorkout = Workout(
-      id: 'test-id',
+        id: 'completed-1',
         createdAt: DateTime(2024, 1, 1),
         updatedAt: DateTime(2024, 1, 1),
-        id: 'completed-1',
         name: 'Completed Workout',
         startTime: DateTime.now().subtract(const Duration(hours: 1, minutes: 30)),
         endTime: DateTime.now(),
@@ -245,10 +243,12 @@ void main() {
             Exercise(
               id: 'ex-$i',
               name: 'Bench Press',
+              type: ExerciseType.single,
+              category: ExerciseCategory.chest,
               sets: [
                 ExerciseSet(
                   id: 'set-$i',
-                  actualWeight: 70.0 + (i * 2.5), // Progressive overload
+                  weight: 70.0 + (i * 2.5), // Progressive overload
                   actualReps: 10,
                   isCompleted: true,
                 ),

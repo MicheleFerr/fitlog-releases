@@ -101,6 +101,8 @@ void main() {
         name: 'Integration Test Workout',
         status: WorkoutStatus.inProgress,
         startTime: startTime,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
       workoutNotifier.state = testWorkout;
       
@@ -294,6 +296,8 @@ void main() {
         name: 'Template Source Workout',
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 20)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
       workoutNotifier.state = testWorkout;
       
@@ -339,6 +343,8 @@ void main() {
         name: 'Auto-save Test',
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 10)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
       workoutNotifier.state = testWorkout;
       
@@ -365,11 +371,13 @@ void main() {
     test('Exercise removal from workout', () {
       final workoutNotifier = container.read(currentWorkoutProvider.notifier);
       
-      // Create workout manually without auto-save  
+      // Create workout manually without auto-save
       final testWorkout = Workout(
         name: 'Removal Test',
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 5)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
       workoutNotifier.state = testWorkout;
       
@@ -409,6 +417,8 @@ void main() {
         name: 'Set Management Test',
         status: WorkoutStatus.inProgress,
         startTime: DateTime.now().subtract(const Duration(minutes: 3)),
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
       workoutNotifier.state = testWorkout;
       

@@ -182,6 +182,8 @@ void main() {
           id: 'workout-1',
           name: 'Test Workout',
           startTime: DateTime.now(),
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           exercises: [
             Exercise(
               id: 'ex-1',
@@ -190,8 +192,8 @@ void main() {
                 ExerciseSet(
                   id: 'set-1',
                   setNumber: 1,
-                  targetReps: 10,
-                  targetWeight: 60,
+                  reps: 10,
+                  weight: 60,
                 ),
               ],
             ),
@@ -281,6 +283,8 @@ void main() {
           id: 'workout-1',
           name: 'Test',
           startTime: DateTime.now(),
+          createdAt: DateTime(2024, 1, 1),
+          updatedAt: DateTime(2024, 1, 1),
           exercises: [],
         );
 

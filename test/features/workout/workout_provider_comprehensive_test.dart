@@ -69,8 +69,9 @@ void main() {
       final exercise = Exercise(
         id: 'ex1',
         name: 'Pull-ups',
+        type: ExerciseType.single,
+        category: ExerciseCategory.back,
         sets: [],
-        orderIndex: 0,
       );
       
       notifier.addExercise(exercise);
@@ -88,8 +89,9 @@ void main() {
       final exercise = Exercise(
         id: 'ex1',
         name: 'Squats',
+        type: ExerciseType.single,
+        category: ExerciseCategory.legs,
         sets: [],
-        orderIndex: 0,
       );
       
       notifier.addExercise(exercise);
@@ -108,6 +110,8 @@ void main() {
       final exercise = Exercise(
         id: 'ex1',
         name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
         sets: [
           Set(
             id: 'set1',
@@ -116,7 +120,6 @@ void main() {
             weight: 60.0,
           ),
         ],
-        orderIndex: 0,
       );
       
       notifier.addExercise(exercise);
@@ -136,11 +139,12 @@ void main() {
       final exercise = Exercise(
         id: 'ex1',
         name: 'Deadlifts',
+        type: ExerciseType.single,
+        category: ExerciseCategory.back,
         sets: [
           Set(id: 'set1', setNumber: 1, reps: 5, weight: 100.0),
           Set(id: 'set2', setNumber: 2, reps: 5, weight: 100.0),
         ],
-        orderIndex: 0,
       );
       
       notifier.addExercise(exercise);
@@ -159,15 +163,17 @@ void main() {
       notifier.addExercise(Exercise(
         id: 'ex1',
         name: 'Squats',
+        type: ExerciseType.single,
+        category: ExerciseCategory.legs,
         sets: [],
-        orderIndex: 0,
       ));
-      
+
       notifier.addExercise(Exercise(
         id: 'ex2',
         name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
         sets: [],
-        orderIndex: 1,
       ));
       
       notifier.removeExercise('ex1');
@@ -185,22 +191,25 @@ void main() {
       notifier.addExercise(Exercise(
         id: 'ex1',
         name: 'Exercise A',
+        type: ExerciseType.single,
+        category: ExerciseCategory.other,
         sets: [],
-        orderIndex: 0,
       ));
-      
+
       notifier.addExercise(Exercise(
         id: 'ex2',
         name: 'Exercise B',
+        type: ExerciseType.single,
+        category: ExerciseCategory.other,
         sets: [],
-        orderIndex: 1,
       ));
-      
+
       notifier.addExercise(Exercise(
         id: 'ex3',
         name: 'Exercise C',
+        type: ExerciseType.single,
+        category: ExerciseCategory.other,
         sets: [],
-        orderIndex: 2,
       ));
       
       notifier.reorderExercises(2, 0); // Move C to first position
@@ -219,10 +228,11 @@ void main() {
       notifier.addExercise(Exercise(
         id: 'ex1',
         name: 'Push-ups',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
         sets: [
           Set(id: 'set1', setNumber: 1, reps: 20, weight: 0),
         ],
-        orderIndex: 0,
       ));
       
       notifier.completeWorkout();
@@ -275,20 +285,22 @@ void main() {
       notifier.addExercise(Exercise(
         id: 'ex1',
         name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
         sets: [
           Set(id: 's1', setNumber: 1, reps: 10, weight: 60.0),
           Set(id: 's2', setNumber: 2, reps: 8, weight: 65.0),
         ],
-        orderIndex: 0,
       ));
-      
+
       notifier.addExercise(Exercise(
         id: 'ex2',
         name: 'Squats',
+        type: ExerciseType.single,
+        category: ExerciseCategory.legs,
         sets: [
           Set(id: 's3', setNumber: 1, reps: 12, weight: 80.0),
         ],
-        orderIndex: 1,
       ));
       
       final workout = container.read(currentWorkoutProvider);
@@ -323,15 +335,17 @@ void main() {
         notifier.addExercise(Exercise(
           id: 'ex1',
           name: 'Bench Press',
+          type: ExerciseType.single,
+          category: ExerciseCategory.chest,
           sets: [],
-          orderIndex: 0,
         ));
-        
+
         notifier.addExercise(Exercise(
           id: 'ex2',
           name: 'Bent Over Row',
+          type: ExerciseType.single,
+          category: ExerciseCategory.back,
           sets: [],
-          orderIndex: 1,
         ));
         
         notifier.toggleSuperset('ex1', 'ex2');
@@ -349,17 +363,17 @@ void main() {
         notifier.addExercise(Exercise(
           id: 'ex1',
           name: 'Dips',
+          type: ExerciseType.superset,
+          category: ExerciseCategory.chest,
           sets: [],
-          orderIndex: 0,
-          supersetWith: 'ex2',
         ));
-        
+
         notifier.addExercise(Exercise(
           id: 'ex2',
           name: 'Pull-ups',
+          type: ExerciseType.superset,
+          category: ExerciseCategory.back,
           sets: [],
-          orderIndex: 1,
-          supersetWith: 'ex1',
         ));
         
         notifier.toggleSuperset('ex1', 'ex2');
@@ -389,8 +403,9 @@ void main() {
         notifier.addExercise(Exercise(
           id: 'ex1',
           name: 'Squats',
+          type: ExerciseType.single,
+          category: ExerciseCategory.legs,
           sets: [],
-          orderIndex: 0,
         ));
         
         notifier.updateExerciseNotes('ex1', 'Focus on depth');
@@ -411,12 +426,13 @@ void main() {
       notifier.addExercise(Exercise(
         id: 'ex1',
         name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
         sets: [
           Set(id: 's1', setNumber: 1, reps: 10, weight: 60.0),
           Set(id: 's2', setNumber: 2, reps: 8, weight: 65.0),
           Set(id: 's3', setNumber: 3, reps: 6, weight: 70.0),
         ],
-        orderIndex: 0,
       ));
       
       final stats = container.read(workoutStatsProvider);

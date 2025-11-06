@@ -336,6 +336,7 @@ void main() {
         id: 'test-workout',
         name: 'Test Workout',
         createdAt: DateTime.now(),
+        updatedAt: DateTime(2024, 1, 1),
         exercises: [
           Exercise(
             name: 'Bench Press',
@@ -431,6 +432,7 @@ void main() {
         id: 'empty',
         name: 'Empty Workout',
         createdAt: DateTime.now(),
+        updatedAt: DateTime(2024, 1, 1),
         exercises: [],
       );
 
@@ -446,6 +448,7 @@ void main() {
         id: 'warmup-only',
         name: 'Warmup Only',
         createdAt: DateTime.now(),
+        updatedAt: DateTime(2024, 1, 1),
         exercises: [
           Exercise(
             name: 'Bench Press',

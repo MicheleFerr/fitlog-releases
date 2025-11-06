@@ -21,6 +21,8 @@ void main() {
         startTime: DateTime.now(),
         endTime: null, // null endTime
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       final data = WeightRecoveryData.fromWorkout(workout);
@@ -40,6 +42,8 @@ void main() {
         startTime: DateTime.now(),
         endTime: endTime,
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       final data = WeightRecoveryData.fromWorkout(workout);
@@ -59,6 +63,8 @@ void main() {
         startTime: DateTime.now(),
         endTime: endTime,
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       final data = WeightRecoveryData.fromWorkout(workout);
@@ -77,6 +83,8 @@ void main() {
         startTime: DateTime.now(),
         endTime: endTime,
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       final data = WeightRecoveryData.fromWorkout(workout);
@@ -95,6 +103,8 @@ void main() {
         startTime: DateTime.now(),
         endTime: endTime,
         status: WorkoutStatus.completed,
+        createdAt: DateTime(2024, 1, 1),
+        updatedAt: DateTime(2024, 1, 1),
       );
 
       final data = WeightRecoveryData(

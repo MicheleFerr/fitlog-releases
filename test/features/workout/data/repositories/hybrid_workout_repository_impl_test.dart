@@ -853,6 +853,8 @@ Workout _createTestWorkout({
     startTime: DateTime(2024, 1, 15, 10, 0),
     endTime: DateTime(2024, 1, 15, 11, 0),
     notes: 'Test notes',
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
   );
 }
 
@@ -866,6 +868,8 @@ Workout _createTestWorkoutWithExercise() {
     startTime: DateTime(2024, 1, 15, 10, 0),
     endTime: DateTime(2024, 1, 15, 11, 0),
     notes: 'Test notes',
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
   );
 }
 

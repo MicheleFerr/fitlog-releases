@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_set.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -30,30 +29,27 @@ void main() {
       testExercise = Exercise(
         id: 'test-1',
         name: 'Bench Press',
-        muscleGroup: 'Chest',
-        equipment: 'Barbell',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
         sets: [
           ExerciseSet(
             id: 'set-1',
             setNumber: 1,
-            targetReps: 10,
-            targetWeight: 60.0,
+            reps: 10,
+            weight: 60.0,
             actualReps: 10,
-            actualWeight: 60.0,
             isCompleted: true,
           ),
           ExerciseSet(
             id: 'set-2',
             setNumber: 2,
-            targetReps: 10,
-            targetWeight: 60.0,
-            actualReps: null,
-            actualWeight: null,
+            reps: 10,
+            weight: 60.0,
             isCompleted: false,
           ),
         ],
         notes: 'Focus on form',
-        restSeconds: 90,
+        restTime: 90,
       );
     });
 
@@ -85,7 +81,7 @@ void main() {
                     color: set.isCompleted ? Colors.green : Colors.grey,
                   ),
                   title: Text('Set ${set.setNumber}'),
-                  subtitle: Text('${set.targetWeight}kg x ${set.targetReps}'),
+                  subtitle: Text('${set.weight}kg x ${set.reps}'),
                 );
               }).toList(),
             ),
@@ -105,9 +101,9 @@ void main() {
           Card(
             child: ListTile(
               title: Text(testExercise.name),
-              trailing: testExercise.restSeconds != null
+              trailing: testExercise.restTime != null
                   ? Chip(
-                      label: Text('${testExercise.restSeconds}s rest'),
+                      label: Text('${testExercise.restTime}s rest'),
                       avatar: const Icon(Icons.timer, size: 16),
                     )
                   : null,
@@ -201,7 +197,7 @@ void main() {
                 children: [
                   const Icon(Icons.fitness_center, size: 16),
                   const SizedBox(width: 4),
-                  Text(testExercise.equipment ?? 'No equipment'),
+                  Text('Barbell'),
                 ],
               ),
             ),
@@ -217,7 +213,8 @@ void main() {
       final longNameExercise = Exercise(
         id: 'test-2',
         name: 'Single Arm Dumbbell Row with Pause at Top Position',
-        muscleGroup: 'Back',
+        type: ExerciseType.single,
+        category: ExerciseCategory.back,
         sets: [],
       );
 
@@ -251,7 +248,7 @@ void main() {
             child: ListTile(
               title: Text(testExercise.name),
               leading: Chip(
-                label: Text(testExercise.muscleGroup ?? 'Unknown'),
+                label: Text('Chest'),
                 backgroundColor: Colors.blue.shade100,
               ),
             ),
@@ -267,8 +264,8 @@ void main() {
       final totalVolume = testExercise.sets
           .where((s) => s.isCompleted)
           .fold(0.0, (sum, set) {
-        final weight = set.actualWeight ?? set.targetWeight ?? 0;
-        final reps = set.actualReps ?? set.targetReps ?? 0;
+        final weight = set.weight ?? 0;
+        final reps = set.actualReps ?? set.reps ?? 0;
         return sum + (weight * reps);
       });
 
@@ -282,6 +279,8 @@ void main() {
       final completedExercise = Exercise(
         id: 'test-3',
         name: 'Squat',
+        type: ExerciseType.single,
+        category: ExerciseCategory.legs,
         sets: [
           ExerciseSet(
             id: 's1',

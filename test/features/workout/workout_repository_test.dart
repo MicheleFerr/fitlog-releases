@@ -712,6 +712,8 @@ Workout createTestWorkout({
     status: status ?? WorkoutStatus.completed,
     startTime: startTime ?? DateTime.now().subtract(const Duration(hours: 1)),
     endTime: endTime ?? DateTime.now(),
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
     exercises: exercises ?? [
       Exercise(
         name: 'Bench Press',
@@ -743,6 +745,8 @@ Workout createTestTemplate({
     id: id ?? 'template-test',
     name: name ?? 'Test Template',
     status: WorkoutStatus.planned,
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
     exercises: [
       Exercise(
         name: 'Exercise 1',

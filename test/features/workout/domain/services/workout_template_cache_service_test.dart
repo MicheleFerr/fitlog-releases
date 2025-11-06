@@ -556,5 +556,7 @@ Workout _createTestWorkout({String name = 'Test Workout'}) {
     name: name,
     exercises: [],
     status: WorkoutStatus.planned,
+    createdAt: DateTime(2024, 1, 1),
+    updatedAt: DateTime(2024, 1, 1),
   );
 }

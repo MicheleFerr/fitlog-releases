@@ -45,7 +45,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
     for (int i = 0; i < widget.dropset.stages.length; i++) {
       final stage = widget.dropset.stages[i];
       _weights[i] = stage.weight; // Already in kg
-      _reps[i] = stage.targetReps;
+      _reps[i] = stage.reps;
       _rpes[i] = 7; // Default RPE
       _completedDrops[i] = false;
     }
@@ -193,7 +193,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   }
 
   void _showRepsPicker(BuildContext context, int dropIndex) {
-    int selectedReps = _reps[dropIndex] ?? widget.dropset.stages[dropIndex].targetReps;
+    int selectedReps = _reps[dropIndex] ?? widget.dropset.stages[dropIndex].reps;
 
     showModalBottomSheet(
       context: context,
@@ -458,11 +458,6 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    if (stage.percentageOfMax != null)
-                                      Text(
-                                        '${stage.percentageOfMax}% del massimale',
-                                        style: Theme.of(context).textTheme.bodySmall,
-                                      ),
                                   ],
                                 ),
                               ),
@@ -555,12 +550,12 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${_reps[index] ?? stage.targetReps} ${AppLocalizations.of(context).reps}',
+                                                '${_reps[index] ?? stage.reps} ${AppLocalizations.of(context).reps}',
                                                 style: Theme.of(context).textTheme.bodyLarge,
                                               ),
-                                              if (stage.targetReps > 0)
+                                              if (stage.reps > 0)
                                                 Text(
-                                                  'Target: ${stage.targetReps}',
+                                                  'Target: ${stage.reps}',
                                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                                                   ),
