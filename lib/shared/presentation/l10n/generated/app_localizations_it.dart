@@ -12739,4 +12739,68 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get apreNoHistory => 'Nessuno Storico Disponibile';
+
+  @override
+  String get apreNoHistoryDescription =>
+      'Nessun dato storico disponibile per i calcoli APRE. Seleziona come vuoi stimare il tuo 1RM per iniziare.';
+
+  @override
+  String get apreOptionFromLastWorkout => 'Dall\'Ultimo Allenamento';
+
+  @override
+  String get apreOptionManualEstimate => 'Stima Manuale';
+
+  @override
+  String get apreOptionTestSet => 'Serie di Test';
+
+  @override
+  String get apreEnter1RM => 'Inserisci 1RM Stimato (kg)';
+
+  @override
+  String get aprePreviewWeights => 'Anteprima Pesi';
+
+  @override
+  String get apreContinue => 'Continua';
+
+  @override
+  String get apreCancel => 'Annulla';
+
+  @override
+  String get ageGateTitle => 'Verifica la Tua Età';
+
+  @override
+  String get ageGateInstructions =>
+      'Inserisci la tua data di nascita per continuare.';
+
+  @override
+  String get ageGateBirthDate => 'Data di Nascita';
+
+  @override
+  String get ageGateContinue => 'Continua';
+
+  @override
+  String get ageRestrictionTitle => 'Limitazione di Età';
+
+  @override
+  String get ageRestrictionMessage =>
+      'Devi avere almeno 14 anni per usare FITlog Pro.\n\nQuesto requisito è richiesto dal GDPR (Regolamento UE 2016/679) e dalle leggi italiane sulla privacy.';
+
+  @override
+  String get ageRestrictionOk => 'Ho Capito';
+
+  @override
+  String get ageMinorWarningTitle => 'Avviso Importante per Minori';
+
+  @override
+  String get ageMinorWarningMessage =>
+      'Se hai tra 14 e 17 anni:\n\n• DEVI avere il consenso dei genitori per usare questa app\n• DEVI consultare un medico prima di allenarti\n• DEVI essere supervisionato da un adulto durante gli allenamenti\n• I tuoi genitori sono legalmente responsabili per il tuo uso di questa app\n\nConfermi di avere il consenso dei genitori?';
+
+  @override
+  String get ageMinorWarningConfirm => 'Sì, Ho il Consenso';
+
+  @override
+  String get ageMinorWarningDecline => 'No';
 }

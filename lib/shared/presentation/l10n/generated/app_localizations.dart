@@ -22253,6 +22253,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}'**
   String apreDaysAgo(int days);
+
+  /// Title when user has no APRE historical data
+  ///
+  /// In en, this message translates to:
+  /// **'No Historical Data'**
+  String get apreNoHistory;
+
+  /// Description when user has no APRE historical data
+  ///
+  /// In en, this message translates to:
+  /// **'No historical data available for APRE calculations. Please select how you\'d like to estimate your 1RM to get started.'**
+  String get apreNoHistoryDescription;
+
+  /// Option to use last workout weight/reps as estimate
+  ///
+  /// In en, this message translates to:
+  /// **'From Last Workout'**
+  String get apreOptionFromLastWorkout;
+
+  /// Option to manually enter estimated 1RM
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Estimate'**
+  String get apreOptionManualEstimate;
+
+  /// Option to guide user to do a test set
+  ///
+  /// In en, this message translates to:
+  /// **'Test Set'**
+  String get apreOptionTestSet;
+
+  /// Label for 1RM input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Estimated 1RM (kg)'**
+  String get apreEnter1RM;
+
+  /// Label for weight preview section
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Weights'**
+  String get aprePreviewWeights;
+
+  /// Continue button in APRE modal
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get apreContinue;
+
+  /// Cancel button in APRE modal
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get apreCancel;
+
+  /// Title for age verification screen
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Age'**
+  String get ageGateTitle;
+
+  /// Instructions for age verification
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your date of birth to continue.'**
+  String get ageGateInstructions;
+
+  /// Label for birth date selection
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get ageGateBirthDate;
+
+  /// Continue button on age gate
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get ageGateContinue;
+
+  /// Title for age restriction dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Age Restriction'**
+  String get ageRestrictionTitle;
+
+  /// Message explaining age restriction
+  ///
+  /// In en, this message translates to:
+  /// **'You must be at least 14 years old to use FITlog Pro.\n\nThis requirement is mandated by GDPR (EU Regulation 2016/679) and Italian privacy laws.'**
+  String get ageRestrictionMessage;
+
+  /// OK button on age restriction dialog
+  ///
+  /// In en, this message translates to:
+  /// **'I Understand'**
+  String get ageRestrictionOk;
+
+  /// Title for minor warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Important Notice for Minors'**
+  String get ageMinorWarningTitle;
+
+  /// Warning message for minors
+  ///
+  /// In en, this message translates to:
+  /// **'If you are between 14 and 17 years old:\n\n• You MUST have parental consent to use this app\n• You MUST consult a physician before training\n• You MUST be supervised by an adult during workouts\n• Your parents are legally responsible for your use of this app\n\nDo you confirm you have parental consent?'**
+  String get ageMinorWarningMessage;
+
+  /// Confirm button for minor consent
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I Have Consent'**
+  String get ageMinorWarningConfirm;
+
+  /// Decline button for minor consent
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get ageMinorWarningDecline;
 }
 
 class _AppLocalizationsDelegate

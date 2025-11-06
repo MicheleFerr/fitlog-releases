@@ -5607,5 +5607,85 @@
         "example": "5"
       }
     }
+  },
+  "apreNoHistory": "Nessuno Storico Disponibile",
+  "@apreNoHistory": {
+    "description": "Titolo quando l'utente non ha dati storici APRE"
+  },
+  "apreNoHistoryDescription": "Nessun dato storico disponibile per i calcoli APRE. Seleziona come vuoi stimare il tuo 1RM per iniziare.",
+  "@apreNoHistoryDescription": {
+    "description": "Descrizione quando l'utente non ha dati storici APRE"
+  },
+  "apreOptionFromLastWorkout": "Dall'Ultimo Allenamento",
+  "@apreOptionFromLastWorkout": {
+    "description": "Opzione per usare peso/ripetizioni dell'ultimo allenamento come stima"
+  },
+  "apreOptionManualEstimate": "Stima Manuale",
+  "@apreOptionManualEstimate": {
+    "description": "Opzione per inserire manualmente il 1RM stimato"
+  },
+  "apreOptionTestSet": "Serie di Test",
+  "@apreOptionTestSet": {
+    "description": "Opzione per guidare l'utente a fare una serie di test"
+  },
+  "apreEnter1RM": "Inserisci 1RM Stimato (kg)",
+  "@apreEnter1RM": {
+    "description": "Etichetta per il campo di input 1RM"
+  },
+  "aprePreviewWeights": "Anteprima Pesi",
+  "@aprePreviewWeights": {
+    "description": "Etichetta per la sezione anteprima pesi"
+  },
+  "apreContinue": "Continua",
+  "@apreContinue": {
+    "description": "Pulsante continua nel modal APRE"
+  },
+  "apreCancel": "Annulla",
+  "@apreCancel": {
+    "description": "Pulsante annulla nel modal APRE"
+  },
+  "ageGateTitle": "Verifica la Tua Età",
+  "@ageGateTitle": {
+    "description": "Titolo per schermata di verifica età"
+  },
+  "ageGateInstructions": "Inserisci la tua data di nascita per continuare.",
+  "@ageGateInstructions": {
+    "description": "Istruzioni per verifica età"
+  },
+  "ageGateBirthDate": "Data di Nascita",
+  "@ageGateBirthDate": {
+    "description": "Etichetta per selezione data di nascita"
+  },
+  "ageGateContinue": "Continua",
+  "@ageGateContinue": {
+    "description": "Pulsante continua su age gate"
+  },
+  "ageRestrictionTitle": "Limitazione di Età",
+  "@ageRestrictionTitle": {
+    "description": "Titolo per dialog limitazione età"
+  },
+  "ageRestrictionMessage": "Devi avere almeno 14 anni per usare FITlog Pro.\n\nQuesto requisito è richiesto dal GDPR (Regolamento UE 2016/679) e dalle leggi italiane sulla privacy.",
+  "@ageRestrictionMessage": {
+    "description": "Messaggio che spiega limitazione età"
+  },
+  "ageRestrictionOk": "Ho Capito",
+  "@ageRestrictionOk": {
+    "description": "Pulsante OK su dialog limitazione età"
+  },
+  "ageMinorWarningTitle": "Avviso Importante per Minori",
+  "@ageMinorWarningTitle": {
+    "description": "Titolo per dialog avviso minori"
+  },
+  "ageMinorWarningMessage": "Se hai tra 14 e 17 anni:\n\n• DEVI avere il consenso dei genitori per usare questa app\n• DEVI consultare un medico prima di allenarti\n• DEVI essere supervisionato da un adulto durante gli allenamenti\n• I tuoi genitori sono legalmente responsabili per il tuo uso di questa app\n\nConfermi di avere il consenso dei genitori?",
+  "@ageMinorWarningMessage": {
+    "description": "Messaggio di avviso per minori"
+  },
+  "ageMinorWarningConfirm": "Sì, Ho il Consenso",
+  "@ageMinorWarningConfirm": {
+    "description": "Pulsante conferma per consenso minori"
+  },
+  "ageMinorWarningDecline": "No",
+  "@ageMinorWarningDecline": {
+    "description": "Pulsante rifiuta per consenso minori"
   }
 }

@@ -12596,4 +12596,68 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get apreNoHistory => 'No Historical Data';
+
+  @override
+  String get apreNoHistoryDescription =>
+      'No historical data available for APRE calculations. Please select how you\'d like to estimate your 1RM to get started.';
+
+  @override
+  String get apreOptionFromLastWorkout => 'From Last Workout';
+
+  @override
+  String get apreOptionManualEstimate => 'Manual Estimate';
+
+  @override
+  String get apreOptionTestSet => 'Test Set';
+
+  @override
+  String get apreEnter1RM => 'Enter Estimated 1RM (kg)';
+
+  @override
+  String get aprePreviewWeights => 'Preview Weights';
+
+  @override
+  String get apreContinue => 'Continue';
+
+  @override
+  String get apreCancel => 'Cancel';
+
+  @override
+  String get ageGateTitle => 'Verify Your Age';
+
+  @override
+  String get ageGateInstructions =>
+      'Please enter your date of birth to continue.';
+
+  @override
+  String get ageGateBirthDate => 'Date of Birth';
+
+  @override
+  String get ageGateContinue => 'Continue';
+
+  @override
+  String get ageRestrictionTitle => 'Age Restriction';
+
+  @override
+  String get ageRestrictionMessage =>
+      'You must be at least 14 years old to use FITlog Pro.\n\nThis requirement is mandated by GDPR (EU Regulation 2016/679) and Italian privacy laws.';
+
+  @override
+  String get ageRestrictionOk => 'I Understand';
+
+  @override
+  String get ageMinorWarningTitle => 'Important Notice for Minors';
+
+  @override
+  String get ageMinorWarningMessage =>
+      'If you are between 14 and 17 years old:\n\n• You MUST have parental consent to use this app\n• You MUST consult a physician before training\n• You MUST be supervised by an adult during workouts\n• Your parents are legally responsible for your use of this app\n\nDo you confirm you have parental consent?';
+
+  @override
+  String get ageMinorWarningConfirm => 'Yes, I Have Consent';
+
+  @override
+  String get ageMinorWarningDecline => 'No';
 }

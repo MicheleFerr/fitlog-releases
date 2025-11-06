@@ -15089,5 +15089,85 @@
         "example": "5"
       }
     }
+  },
+  "apreNoHistory": "No Historical Data",
+  "@apreNoHistory": {
+    "description": "Title when user has no APRE historical data"
+  },
+  "apreNoHistoryDescription": "No historical data available for APRE calculations. Please select how you'd like to estimate your 1RM to get started.",
+  "@apreNoHistoryDescription": {
+    "description": "Description when user has no APRE historical data"
+  },
+  "apreOptionFromLastWorkout": "From Last Workout",
+  "@apreOptionFromLastWorkout": {
+    "description": "Option to use last workout weight/reps as estimate"
+  },
+  "apreOptionManualEstimate": "Manual Estimate",
+  "@apreOptionManualEstimate": {
+    "description": "Option to manually enter estimated 1RM"
+  },
+  "apreOptionTestSet": "Test Set",
+  "@apreOptionTestSet": {
+    "description": "Option to guide user to do a test set"
+  },
+  "apreEnter1RM": "Enter Estimated 1RM (kg)",
+  "@apreEnter1RM": {
+    "description": "Label for 1RM input field"
+  },
+  "aprePreviewWeights": "Preview Weights",
+  "@aprePreviewWeights": {
+    "description": "Label for weight preview section"
+  },
+  "apreContinue": "Continue",
+  "@apreContinue": {
+    "description": "Continue button in APRE modal"
+  },
+  "apreCancel": "Cancel",
+  "@apreCancel": {
+    "description": "Cancel button in APRE modal"
+  },
+  "ageGateTitle": "Verify Your Age",
+  "@ageGateTitle": {
+    "description": "Title for age verification screen"
+  },
+  "ageGateInstructions": "Please enter your date of birth to continue.",
+  "@ageGateInstructions": {
+    "description": "Instructions for age verification"
+  },
+  "ageGateBirthDate": "Date of Birth",
+  "@ageGateBirthDate": {
+    "description": "Label for birth date selection"
+  },
+  "ageGateContinue": "Continue",
+  "@ageGateContinue": {
+    "description": "Continue button on age gate"
+  },
+  "ageRestrictionTitle": "Age Restriction",
+  "@ageRestrictionTitle": {
+    "description": "Title for age restriction dialog"
+  },
+  "ageRestrictionMessage": "You must be at least 14 years old to use FITlog Pro.\n\nThis requirement is mandated by GDPR (EU Regulation 2016/679) and Italian privacy laws.",
+  "@ageRestrictionMessage": {
+    "description": "Message explaining age restriction"
+  },
+  "ageRestrictionOk": "I Understand",
+  "@ageRestrictionOk": {
+    "description": "OK button on age restriction dialog"
+  },
+  "ageMinorWarningTitle": "Important Notice for Minors",
+  "@ageMinorWarningTitle": {
+    "description": "Title for minor warning dialog"
+  },
+  "ageMinorWarningMessage": "If you are between 14 and 17 years old:\n\n• You MUST have parental consent to use this app\n• You MUST consult a physician before training\n• You MUST be supervised by an adult during workouts\n• Your parents are legally responsible for your use of this app\n\nDo you confirm you have parental consent?",
+  "@ageMinorWarningMessage": {
+    "description": "Warning message for minors"
+  },
+  "ageMinorWarningConfirm": "Yes, I Have Consent",
+  "@ageMinorWarningConfirm": {
+    "description": "Confirm button for minor consent"
+  },
+  "ageMinorWarningDecline": "No",
+  "@ageMinorWarningDecline": {
+    "description": "Decline button for minor consent"
   }
 }
