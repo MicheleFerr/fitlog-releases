@@ -597,6 +597,30 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     return 'Progress: $progress% • Adherence: $adherence% • Skips: ${skipTracker.totalSkips}';
   }
 
+  /// Check if today is a programmed workout day (more semantic than "isActiveToday")
+  bool hasProgrammedWorkoutToday() {
+    if (!isActive) return false;
+
+    final today = DateTime.now();
+    final todayScheduled = getScheduledDay(today);
+
+    return todayScheduled != null &&
+           !todayScheduled.isRestDay &&
+           todayScheduled.status == DayStatus.scheduled;
+  }
+
+  /// Get today's workout if scheduled, null otherwise
+  ScheduledDay? getTodayWorkout() {
+    final today = DateTime.now();
+    final todayScheduled = getScheduledDay(today);
+
+    if (todayScheduled == null || todayScheduled.isRestDay) {
+      return null;
+    }
+
+    return todayScheduled;
+  }
+
   /// Convert date to string key for map
   String _dateKey(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';

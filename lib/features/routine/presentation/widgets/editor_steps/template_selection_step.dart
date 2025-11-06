@@ -16,11 +16,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/features/routine/data/popular_templates_data.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:uuid/uuid.dart';
 
 /// Step 3: Select templates for automatic rotation
 class TemplateSelectionStep extends ConsumerWidget {
@@ -40,7 +41,7 @@ class TemplateSelectionStep extends ConsumerWidget {
       );
     }
 
-    final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
+    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     return templatesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -310,23 +311,16 @@ class TemplateSelectionStep extends ConsumerWidget {
   /// Empty state when user has no templates
   Widget _buildEmptyState(BuildContext context, WidgetRef ref) {
     return Center(
-      child: SingleChildScrollView(
+      child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Icon
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withValues(alpha: 0.3),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.fitness_center,
-                size: 80,
-                color: context.colors.primary,
-              ),
+            // Warning Icon
+            Icon(
+              AppIcons.warningAmberRounded,
+              size: 80,
+              color: context.colors.error,
             ),
             const SizedBox(height: 24),
 
@@ -341,7 +335,7 @@ class TemplateSelectionStep extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
 
-            // Description
+            // Message
             Text(
               context.l10n.routineNeedTemplatesMessage,
               style: context.textTheme.bodyLarge?.copyWith(
@@ -351,373 +345,85 @@ class TemplateSelectionStep extends ConsumerWidget {
             ),
             const SizedBox(height: 40),
 
-            // Option 1: Use Popular Templates
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    context.colors.primary.withValues(alpha: 0.1),
-                    context.colors.secondary.withValues(alpha: 0.1),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: context.colors.primary.withValues(alpha: 0.3),
-                  width: 2,
+            // Primary Action - Create Template
+            ElevatedButton.icon(
+              onPressed: () => _createCustomTemplate(context, ref),
+              icon: Icon(AppIcons.add, color: context.colors.onPrimary),
+              label: Text(
+                context.l10n.routineCreateFirstTemplate,
+                style: TextStyle(
+                  color: context.colors.onPrimary,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: context.colors.primary.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.star,
-                          color: context.colors.primary,
-                          size: 28,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              context.l10n.routinePopularTemplates,
-                              style: context.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: context.colors.primary,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              context.l10n.routinePopularTemplatesDesc,
-                              style: context.textTheme.bodySmall?.copyWith(
-                                color: context.colors.onSurface
-                                    .withValues(alpha: 0.7),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => _importPopularTemplates(context, ref),
-                    icon: Icon(
-                      Icons.download,
-                      color: context.colors.onPrimary,
-                    ),
-                    label: Text(
-                      context.l10n.routineImportPopularTemplates,
-                      style: TextStyle(
-                        color: context.colors.onPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: context.colors.primary,
-                      minimumSize: const Size(double.infinity, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ],
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                backgroundColor: context.colors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
+            const SizedBox(height: 12),
 
-            const SizedBox(height: 24),
-
-            // Divider with "OR"
-            Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    color: context.colors.outline.withValues(alpha: 0.3),
-                  ),
+            // Secondary Action - Go Back
+            OutlinedButton.icon(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(AppIcons.back),
+              label: Text(context.l10n.routineButtonBack),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    context.l10n.routineOr,
-                    style: context.textTheme.labelMedium?.copyWith(
-                      color: context.colors.onSurface.withValues(alpha: 0.5),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                side: BorderSide(color: context.colors.outline),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Expanded(
-                  child: Divider(
-                    color: context.colors.outline.withValues(alpha: 0.3),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Option 2: Create Custom Template
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest
-                    .withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: context.colors.outline.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: context.colors.secondaryContainer,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.create,
-                          color: context.colors.onSecondaryContainer,
-                          size: 28,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              context.l10n.routineCustomTemplate,
-                              style: context.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              context.l10n.routineCustomTemplateDesc,
-                              style: context.textTheme.bodySmall?.copyWith(
-                                color: context.colors.onSurface
-                                    .withValues(alpha: 0.7),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  OutlinedButton.icon(
-                    onPressed: () => _createCustomTemplate(context),
-                    icon: const Icon(Icons.add),
-                    label: Text(
-                      context.l10n.routineCreateFirstTemplate,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 48),
-                      side: BorderSide(
-                        color: context.colors.outline,
-                        width: 2,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  /// Import popular templates from predefined data
-  Future<void> _importPopularTemplates(
-    BuildContext context,
-    WidgetRef ref,
-  ) async {
-    final popularTemplates = PopularTemplatesData.getPopularTemplates();
-
-    // Show selection dialog
-    final selectedTemplates = await ModalService.showCustomDialog<
-        List<WorkoutTemplate>>(
-      context,
-      child: _PopularTemplatesDialog(
-        templates: popularTemplates,
-      ),
-    );
-
-    if (selectedTemplates != null && selectedTemplates.isNotEmpty) {
-      // TODO: Save templates to user's account via provider
-      // This requires a method in workout_template_provider to save multiple templates
-      // For now, show success and refresh
-
-      if (context.mounted) {
-        SnackBarService.showSuccess(
-          context,
-          '${selectedTemplates.length} template${selectedTemplates.length > 1 ? 's' : ''} imported! 🎉',
-        );
-
-        // Refresh templates list
-        ref.invalidate(allWorkoutTemplatesProvider);
-      }
-    }
   }
 
   /// Navigate to template creator
-  void _createCustomTemplate(BuildContext context) {
-    SnackBarService.showInfo(
-      context,
-      context.l10n.routineNavigatingToCreator,
+  Future<void> _createCustomTemplate(BuildContext context, WidgetRef ref) async {
+    // Create empty template for new template creation
+    final emptyTemplate = WorkoutTemplate(
+      id: const Uuid().v4(),
+      name: 'New Template',
+      description: '',
+      exercises: [],
+      userId: '', // Will be filled by EditTemplateScreen
+      isCustom: true,
+      isPublic: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
-    // TODO: Navigate to template creator screen
-    // This requires knowing the route name for the template creator
-  }
-}
 
-/// Dialog for selecting popular templates to import
-class _PopularTemplatesDialog extends StatefulWidget {
-  const _PopularTemplatesDialog({required this.templates});
-  final List<WorkoutTemplate> templates;
-
-  @override
-  State<_PopularTemplatesDialog> createState() =>
-      _PopularTemplatesDialogState();
-}
-
-class _PopularTemplatesDialogState extends State<_PopularTemplatesDialog> {
-  final Set<String> _selectedIds = {};
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Row(
-        children: [
-          Icon(Icons.star, color: context.colors.primary),
-          const SizedBox(width: 12),
-          Text(context.l10n.routinePopularTemplates),
-        ],
+    // Open template editor as fullscreen dialog
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => EditTemplateScreen(template: emptyTemplate),
+        fullscreenDialog: true,
       ),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              context.l10n.routineSelectTemplatesDialog,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurface.withValues(alpha: 0.7),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: widget.templates.length,
-                itemBuilder: (context, index) {
-                  final template = widget.templates[index];
-                  final isSelected = _selectedIds.contains(template.id);
-
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: CheckboxListTile(
-                      value: isSelected,
-                      onChanged: (value) {
-                        setState(() {
-                          if (value == true) {
-                            _selectedIds.add(template.id);
-                          } else {
-                            _selectedIds.remove(template.id);
-                          }
-                        });
-                      },
-                      activeColor: context.colors.primary,
-                      title: Text(
-                        template.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (template.description.isNotEmpty)
-                            Text(template.description),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.fitness_center,
-                                size: 14,
-                                color: context.colors.onSurface
-                                    .withValues(alpha: 0.6),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                context.l10n.routineExercises(template.exercises.length),
-                                style: context.textTheme.bodySmall,
-                              ),
-                              const SizedBox(width: 12),
-                              if (template.estimatedDuration > 0) ...[
-                                Icon(
-                                  Icons.schedule,
-                                  size: 14,
-                                  color: context.colors.onSurface
-                                      .withValues(alpha: 0.6),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '${template.estimatedDuration} ${context.l10n.minutes}',
-                                  style: context.textTheme.bodySmall,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ],
-                      ),
-                      isThreeLine: true,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(context.l10n.cancel),
-        ),
-        FilledButton.icon(
-          onPressed: _selectedIds.isEmpty
-              ? null
-              : () {
-                  final selected = widget.templates
-                      .where((t) => _selectedIds.contains(t.id))
-                      .toList();
-                  Navigator.of(context).pop(selected);
-                },
-          icon: const Icon(Icons.download),
-          label: Text(
-            _selectedIds.isEmpty
-                ? context.l10n.routineSelectTemplatesButton
-                : context.l10n.routineImportCount(_selectedIds.length),
-          ),
-        ),
-      ],
     );
+
+    // If template was created, refresh provider
+    if (result == true && context.mounted) {
+      // Invalidate provider to trigger reload
+      ref.invalidate(customWorkoutTemplatesProvider);
+
+      // Show success feedback
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.routineTemplateCreatedSuccess,
+      );
+    }
   }
 }

@@ -20,6 +20,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Step 3: Review and confirm
 class ReviewStep extends ConsumerWidget {
@@ -55,7 +56,7 @@ class ReviewStep extends ConsumerWidget {
           // Routine details
           _buildDetailSection(
             context,
-            icon: Icons.label,
+            icon: AppIcons.label,
             title: 'Routine Details',
             children: [
               _buildDetailRow(
@@ -270,7 +271,7 @@ class ReviewStep extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                Icons.grid_view,
+                AppIcons.gridView,
                 color: context.colors.primary,
                 size: 24,
               ),

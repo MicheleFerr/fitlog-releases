@@ -318,13 +318,13 @@ class RoutineEditorScreen extends ConsumerWidget { // For editing existing routi
                   foregroundColor: context.colors.onPrimary,
                 ),
                 child: isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                              AlwaysStoppedAnimation<Color>(context.colors.surface),
                         ),
                       )
                     : Text(

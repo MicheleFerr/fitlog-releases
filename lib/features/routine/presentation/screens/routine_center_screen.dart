@@ -29,13 +29,21 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_onboarding_provider.dart';
+// TODO: Reimplementare onboarding migliore
+// import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/routine_card.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/onboarding/routine_onboarding_screen.dart';
+// TODO: Reimplementare onboarding migliore
+// import 'package:gymbro_flutter_new/features/routine/presentation/widgets/onboarding/routine_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_recovery_dialog.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_reminder_service_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/workout_suggestion_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/workout_suggestion_card.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Main screen for managing all flexible routines
 class RoutineCenterScreen extends ConsumerStatefulWidget {
@@ -50,31 +58,33 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
   @override
   void initState() {
     super.initState();
+    // TODO: Reimplementare onboarding migliore
     // Check onboarding status after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkOnboarding();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _checkOnboarding();
+    // });
   }
 
-  Future<void> _checkOnboarding() async {
-    final hasSeenOnboarding = ref.read(routineOnboardingProvider);
-
-    if (!hasSeenOnboarding && mounted) {
-      // Show onboarding as fullscreen dialog
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          fullscreenDialog: true,
-          builder: (context) => RoutineOnboardingScreen(
-            onComplete: () {
-              // Mark as completed
-              ref.read(routineOnboardingProvider.notifier).completeOnboarding();
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-      );
-    }
-  }
+  // TODO: Reimplementare onboarding migliore
+  // Future<void> _checkOnboarding() async {
+  //   final hasSeenOnboarding = ref.read(routineOnboardingProvider);
+  //
+  //   if (!hasSeenOnboarding && mounted) {
+  //     // Show onboarding as fullscreen dialog
+  //     await Navigator.of(context).push(
+  //       MaterialPageRoute(
+  //         fullscreenDialog: true,
+  //         builder: (context) => RoutineOnboardingScreen(
+  //           onComplete: () {
+  //             // Mark as completed
+  //             ref.read(routineOnboardingProvider.notifier).completeOnboarding();
+  //             Navigator.of(context).pop();
+  //           },
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +103,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
         backgroundColor: context.colors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(AppIcons.back),
           onPressed: () async {
             // First try Navigator pop (for internal navigation like detail screens)
             final didPop = await Navigator.of(context).maybePop();
@@ -113,31 +123,32 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           // Create new routine button
           IconButton(
             onPressed: () => _navigateToCreateRoutine(context),
-            icon: const Icon(Icons.add_circle),
+            icon: const Icon(AppIcons.addCircleOutline),
             color: context.colors.primary,
             iconSize: 28,
             tooltip: 'Create New Routine',
           ),
+          // TODO: Reimplementare onboarding migliore
           // More options menu
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'tutorial') {
-                _showTutorialAgain();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'tutorial',
-                child: Row(
-                  children: [
-                    Icon(Icons.school, size: 20),
-                    SizedBox(width: 12),
-                    Text('Show Tutorial'),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          // PopupMenuButton<String>(
+          //   onSelected: (value) {
+          //     if (value == 'tutorial') {
+          //       _showTutorialAgain();
+          //     }
+          //   },
+          //   itemBuilder: (context) => [
+          //     const PopupMenuItem(
+          //       value: 'tutorial',
+          //       child: Row(
+          //         children: [
+          //           Icon(AppIcons.education, size: 20),
+          //           SizedBox(width: 12),
+          //           Text('Show Tutorial'),
+          //         ],
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
       body: routinesAsync.when(
@@ -181,7 +192,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               child: _buildSectionHeader(
                 context,
                 title: 'Active Routine',
-                icon: Icons.play_circle,
+                icon: AppIcons.playCircle,
                 color: context.colors.primary,
               ),
             ),
@@ -195,6 +206,10 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                 onDelete: () => _deleteRoutine(context, ref, activeRoutine.id),
               ),
             ),
+            // Workout Suggestion Card (AI-powered next workout prediction)
+            SliverToBoxAdapter(
+              child: _buildWorkoutSuggestionCard(context, ref),
+            ),
             // Skip Recovery Card
             SliverToBoxAdapter(
               child: _buildSkipRecoveryCard(context, ref, activeRoutine),
@@ -207,7 +222,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               child: _buildSectionHeader(
                 context,
                 title: 'Other Routines',
-                icon: Icons.folder_outlined,
+                icon: AppIcons.folderOutlined,
                 color: context.colors.secondary,
               ),
             ),
@@ -235,7 +250,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               child: _buildSectionHeader(
                 context,
                 title: 'Archived',
-                icon: Icons.archive,
+                icon: AppIcons.archive,
                 color: context.colors.onSurface.withValues(alpha: 0.6),
               ),
             ),
@@ -300,7 +315,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.calendar_today_outlined,
+              AppIcons.calendarTodayOutlined,
               size: 80,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
@@ -324,7 +339,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             const SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: () => _navigateToCreateRoutine(context),
-              icon: Icon(Icons.add, color: context.colors.onPrimary),
+              icon: Icon(AppIcons.add, color: context.colors.onPrimary),
               label: Text(
                 'Create Your First Routine',
                 style: TextStyle(
@@ -372,7 +387,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.errorOutlineRounded,
               size: 64,
               color: context.colors.error,
             ),
@@ -407,7 +422,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                   }
                 }
               },
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(AppIcons.back),
               label: const Text('Go Back'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
@@ -424,19 +439,20 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     );
   }
 
-  void _showTutorialAgain() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) => RoutineOnboardingScreen(
-          onComplete: () {
-            Navigator.of(context).pop();
-            SnackBarService.showSuccess(context, 'Tutorial completed! 📚');
-          },
-        ),
-      ),
-    );
-  }
+  // TODO: Reimplementare onboarding migliore
+  // void _showTutorialAgain() {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       fullscreenDialog: true,
+  //       builder: (context) => RoutineOnboardingScreen(
+  //         onComplete: () {
+  //           Navigator.of(context).pop();
+  //           SnackBarService.showSuccess(context, 'Tutorial completed! 📚');
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // === NAVIGATION ===
 
@@ -588,6 +604,281 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     }
   }
 
+  // === WORKOUT SUGGESTION ===
+
+  Widget _buildWorkoutSuggestionCard(BuildContext context, WidgetRef ref) {
+    // 🔥 NEW: Check for active routine first (same method as CTA)
+    final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: activeRoutineAsync.when(
+        data: (activeRoutine) {
+          // If active routine exists, use getTodayWorkout() directly (no cache!)
+          if (activeRoutine != null) {
+            return _buildRoutineBasedSuggestion(context, ref, activeRoutine);
+          }
+
+          // No active routine - fallback to AI prediction provider
+          return _buildAIPredictionSuggestion(context, ref);
+        },
+        loading: () => const WorkoutSuggestionLoadingState(),
+        error: (error, stack) => const SizedBox.shrink(),
+      ),
+    );
+  }
+
+  /// Build suggestion from active routine (same method as CTA - always fresh!)
+  Widget _buildRoutineBasedSuggestion(
+    BuildContext context,
+    WidgetRef ref,
+    FlexibleRoutine routine,
+  ) {
+    final todayWorkout = routine.getTodayWorkout();
+
+    // Rest day - show rest message
+    if (todayWorkout == null || todayWorkout.isRestDay) {
+      return WorkoutSuggestionCard(
+        suggestion: WorkoutSuggestion(
+          level: SuggestionLevel.routine,
+          workoutName: 'Rest Day',
+          confidence: 1.0,
+          reason: 'Your routine schedule shows rest day today',
+          generatedAt: DateTime.now(),
+        ),
+        onStartWorkout: null, // No action on rest day
+        onShowAlternatives: () {
+          SnackBarService.showInfo(
+            context,
+            'Enjoy your rest day!',
+          );
+        },
+      );
+    }
+
+    // Has workout scheduled - load template and show
+    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+
+    return templatesAsync.when(
+      data: (templates) {
+        // Find template by ID
+        final template = templates
+            .where((t) => t.id == todayWorkout.templateId)
+            .firstOrNull;
+
+        if (template == null) {
+          // Template not found - show error
+          return WorkoutSuggestionCard(
+            suggestion: WorkoutSuggestion(
+              level: SuggestionLevel.routine,
+              workoutName: 'Template Not Found',
+              confidence: 0.5,
+              reason: 'The scheduled template could not be found',
+              generatedAt: DateTime.now(),
+            ),
+            onStartWorkout: null,
+          );
+        }
+
+        // ✅ Show workout from routine (synchronized with CTA!)
+        return WorkoutSuggestionCard(
+          suggestion: WorkoutSuggestion(
+            level: SuggestionLevel.routine,
+            workoutName: template.name,
+            confidence: 0.95, // High confidence from routine
+            reason: 'Following your active routine: ${routine.name}',
+            generatedAt: DateTime.now(),
+          ),
+          onStartWorkout: (workoutName) async {
+            await HapticFeedback.mediumImpact();
+
+            // Navigate to workout screen with template ID (same as CTA)
+            if (context.mounted) {
+              context.goNamed(
+                'workout',
+                queryParameters: {
+                  'templateId': template.id,
+                  'fromSmartCTA': 'true', // Mark as routine-based
+                },
+              );
+            }
+          },
+          onShowAlternatives: () {
+            SnackBarService.showInfo(
+              context,
+              'Alternatives feature coming soon!',
+            );
+          },
+          onWhyThisSuggestion: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Why This Suggestion?'),
+                content: Text(
+                  'This workout is scheduled in your active routine "${routine.name}".\n\n'
+                  'Confidence: 95% (from routine schedule)',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Got it'),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      loading: () => const WorkoutSuggestionLoadingState(),
+      error: (error, stack) => const SizedBox.shrink(),
+    );
+  }
+
+  /// Build suggestion from AI prediction provider (fallback when no routine)
+  Widget _buildAIPredictionSuggestion(BuildContext context, WidgetRef ref) {
+    final suggestionAsync = ref.watch(workoutSuggestionProvider);
+
+    return suggestionAsync.when(
+      data: (suggestion) => WorkoutSuggestionCard(
+        suggestion: suggestion,
+        onStartWorkout: (workoutName) async {
+          // Haptic feedback
+          await HapticFeedback.mediumImpact();
+
+          // Get template by name
+          final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+
+          await templatesAsync.when(
+            data: (templates) async {
+              // Find template by normalized name (case-insensitive)
+              final template = templates.firstWhere(
+                (t) => t.name.toLowerCase() == workoutName.toLowerCase(),
+                orElse: () => templates.first, // Fallback to first template if not found
+              );
+
+              // Start workout from template
+              ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+
+              // Navigate to workout screen
+              if (context.mounted) {
+                context.goNamed('workout');
+              }
+            },
+            loading: () {
+              SnackBarService.showInfo(
+                context,
+                'Loading template...',
+              );
+            },
+            error: (error, _) {
+              SnackBarService.showError(
+                context,
+                'Failed to load template: $error',
+              );
+            },
+          );
+        },
+        onShowAlternatives: () {
+          // TODO: Show alternatives dialog with other suggestions
+          SnackBarService.showInfo(
+            context,
+            'Alternatives feature coming soon!',
+          );
+        },
+        onWhyThisSuggestion: () {
+          // Show explanation of why this workout was suggested
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Why This Suggestion?'),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Suggestion Level: ${_getLevelName(suggestion.level)}',
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      suggestion.reason,
+                      style: context.textTheme.bodyMedium,
+                    ),
+                    if (suggestion.patternInfo != null) ...[
+                      const SizedBox(height: 12),
+                      Text(
+                        suggestion.patternInfo!,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                    if (suggestion.frequencyData != null) ...[
+                      const SizedBox(height: 12),
+                      Text(
+                        suggestion.frequencyData!,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    Text(
+                      'Confidence: ${suggestion.displayConfidence}',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Got it'),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      loading: () => const WorkoutSuggestionLoadingState(),
+      error: (error, stack) {
+        // If <6 workouts, show empty state instead of error
+        if (error.toString().contains('Insufficient')) {
+          return WorkoutSuggestionEmptyState(
+            onCreateWorkout: () {
+              // TODO: Navigate to create workout screen
+              SnackBarService.showInfo(
+                context,
+                'Create workout feature coming soon!',
+              );
+            },
+          );
+        }
+
+        // For other errors, don't show card at all
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  String _getLevelName(SuggestionLevel level) {
+    switch (level) {
+      case SuggestionLevel.pattern:
+        return 'Pattern Detection';
+      case SuggestionLevel.routine:
+        return 'Routine Schedule';
+      case SuggestionLevel.frequency:
+        return 'Frequency Analysis';
+      case SuggestionLevel.dayBased:
+        return 'Day-Based Default';
+    }
+  }
+
   // === SKIP RECOVERY ===
 
   Widget _buildSkipRecoveryCard(
@@ -631,7 +922,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        Icons.restore,
+                        AppIcons.restore,
                         color: context.colors.secondary,
                         size: 28,
                       ),
@@ -662,7 +953,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                       ),
                     ),
                     Icon(
-                      Icons.arrow_forward_ios,
+                      AppIcons.arrowForwardRounded,
                       size: 18,
                       color: context.colors.onSecondaryContainer
                           .withValues(alpha: 0.5),

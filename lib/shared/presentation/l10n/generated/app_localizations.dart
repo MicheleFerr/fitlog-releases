@@ -614,6 +614,30 @@ abstract class AppLocalizations {
   /// **'Start with empty workout'**
   String get quickWorkoutSubtitle;
 
+  /// Free session button label
+  ///
+  /// In en, this message translates to:
+  /// **'Free Session'**
+  String get sessioneLibera;
+
+  /// Suggested label for recommendations
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get suggested;
+
+  /// Prompt to browse other options
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Not what you wanted?'**
+  String get notWhatYouWanted;
+
+  /// Button to browse workout templates
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Templates'**
+  String get browseTemplates;
+
   /// Upper body workout template
   ///
   /// In en, this message translates to:
@@ -842,6 +866,18 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to clear the exercise cache? This will remove all cached exercises and they will be downloaded again on next sync.'**
   String get clearCacheConfirmation;
 
+  /// Description for clear exercise cache option
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cached exercise database and force reload from JSON assets'**
+  String get clearExerciseCacheDesc;
+
+  /// Success message after clearing exercise cache
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise cache cleared successfully! Exercises will reload from JSON assets on next use.'**
+  String get exerciseCacheCleared;
+
   /// Cancel button
   ///
   /// In en, this message translates to:
@@ -854,7 +890,7 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear;
 
-  /// Done button text
+  /// Done button
   ///
   /// In en, this message translates to:
   /// **'Done'**
@@ -1424,7 +1460,7 @@ abstract class AppLocalizations {
   /// **'Exercise Category'**
   String get exerciseCategory;
 
-  /// Sets unit label
+  /// Label for sets (lowercase)
   ///
   /// In en, this message translates to:
   /// **'sets'**
@@ -1442,16 +1478,16 @@ abstract class AppLocalizations {
   /// **'Weight'**
   String get weight;
 
-  /// Reps metric label
+  /// Label for repetitions (lowercase)
   ///
   /// In en, this message translates to:
-  /// **'Reps'**
+  /// **'reps'**
   String get reps;
 
-  /// Notes input label
+  /// Notes label
   ///
   /// In en, this message translates to:
-  /// **'Notes (optional)'**
+  /// **'Notes'**
   String get notes;
 
   /// Notes input field hint
@@ -2233,7 +2269,7 @@ abstract class AppLocalizations {
   /// **'Choose Theme'**
   String get chooseTheme;
 
-  /// Choose language dialog title
+  /// Language selection dialog title
   ///
   /// In en, this message translates to:
   /// **'Choose Language'**
@@ -2581,7 +2617,7 @@ abstract class AppLocalizations {
   /// **'This Week'**
   String get thisWeek;
 
-  /// Total volume label
+  /// Label for total training volume
   ///
   /// In en, this message translates to:
   /// **'Total Volume'**
@@ -2623,7 +2659,7 @@ abstract class AppLocalizations {
   /// **'Per Session'**
   String get perSession;
 
-  /// Personal records statistic
+  /// Section title for personal records
   ///
   /// In en, this message translates to:
   /// **'Personal Records'**
@@ -3211,6 +3247,198 @@ abstract class AppLocalizations {
   /// **'We\'ll keep you updated on your progress!'**
   String get notificationsDescription;
 
+  /// Title for workout reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Reminder'**
+  String get workoutReminderTitle;
+
+  /// Body for workout reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Time for your {workoutName} workout! 💪'**
+  String workoutReminderBody(String workoutName);
+
+  /// Title for recovery alert notification
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Needed'**
+  String get recoveryAlertTitle;
+
+  /// Body for recovery alert notification (singular)
+  ///
+  /// In en, this message translates to:
+  /// **'You have {days} skipped day to recover! 🔄'**
+  String recoveryAlertBodySingle(int days);
+
+  /// Body for recovery alert notification (plural)
+  ///
+  /// In en, this message translates to:
+  /// **'You have {days} skipped days to recover! 🔄'**
+  String recoveryAlertBodyMultiple(int days);
+
+  /// Title for streak motivation notification
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Your Streak Going!'**
+  String get streakMotivationTitle;
+
+  /// Body for streak motivation notification
+  ///
+  /// In en, this message translates to:
+  /// **'{streak} days streak! Don\'t break it now! 🔥'**
+  String streakMotivationBody(int streak);
+
+  /// Title for rest day reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Day'**
+  String get restDayTitle;
+
+  /// Body for rest day reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Today is your rest day. Recovery is just as important! 😴'**
+  String get restDayBody;
+
+  /// Toggle for enabling workout reminders
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Workout Reminders'**
+  String get enableWorkoutReminders;
+
+  /// Toggle for enabling recovery alerts
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Recovery Alerts'**
+  String get enableRecoveryAlerts;
+
+  /// Toggle for enabling streak motivation notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Streak Motivation'**
+  String get enableStreakMotivation;
+
+  /// Toggle for enabling rest day reminders
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Rest Day Reminders'**
+  String get enableRestDayReminders;
+
+  /// Label for preferred notification time setting
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred Time'**
+  String get preferredNotificationTime;
+
+  /// Label for Do Not Disturb setting
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get doNotDisturb;
+
+  /// Morning time option for notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Morning (8:00 AM)'**
+  String get morningTime;
+
+  /// Midday time option for notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Midday (12:30 PM)'**
+  String get middayTime;
+
+  /// Afternoon time option for notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon (4:00 PM)'**
+  String get afternoonTime;
+
+  /// Evening time option for notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Evening (7:00 PM)'**
+  String get eveningTime;
+
+  /// Custom time option for notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Time'**
+  String get customTime;
+
+  /// Title for new weight personal record notification
+  ///
+  /// In en, this message translates to:
+  /// **'New Weight PR!'**
+  String get newWeightPR;
+
+  /// Title for new reps personal record notification
+  ///
+  /// In en, this message translates to:
+  /// **'New Reps PR!'**
+  String get newRepsPR;
+
+  /// Title for new 1RM personal record notification
+  ///
+  /// In en, this message translates to:
+  /// **'New 1RM PR!'**
+  String get newOneRMPR;
+
+  /// Title for new volume personal record notification
+  ///
+  /// In en, this message translates to:
+  /// **'New Volume PR!'**
+  String get newVolumePR;
+
+  /// Title for 3-day streak achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Building Momentum!'**
+  String get buildingMomentum;
+
+  /// Title for 7-day streak achievement
+  ///
+  /// In en, this message translates to:
+  /// **'One Week Strong!'**
+  String get oneWeekStrong;
+
+  /// Title for 14-day streak achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Two Weeks Streak!'**
+  String get twoWeeksStreak;
+
+  /// Title for 30-day streak achievement
+  ///
+  /// In en, this message translates to:
+  /// **'ONE MONTH STREAK!'**
+  String get oneMonthStreak;
+
+  /// Title for 50+ day streak achievement
+  ///
+  /// In en, this message translates to:
+  /// **'LEGENDARY STREAK!'**
+  String get legendaryStreak;
+
+  /// Title for volume milestone achievement
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Milestone!'**
+  String get volumeMilestone;
+
+  /// Title for 50k+ kg volume achievement
+  ///
+  /// In en, this message translates to:
+  /// **'MASSIVE VOLUME!'**
+  String get massiveVolume;
+
+  /// Title for 100k+ kg volume achievement
+  ///
+  /// In en, this message translates to:
+  /// **'LEGENDARY VOLUME!'**
+  String get legendaryVolume;
+
   /// Quick stats section title
   ///
   /// In en, this message translates to:
@@ -3371,7 +3599,7 @@ abstract class AppLocalizations {
   /// **'Primary Muscles'**
   String get primaryMuscles;
 
-  /// Secondary muscles label
+  /// Label for secondary muscles
   ///
   /// In en, this message translates to:
   /// **'Secondary Muscles'**
@@ -3557,7 +3785,7 @@ abstract class AppLocalizations {
   /// **'AI Coach'**
   String get aiCoach;
 
-  /// Volume metric label
+  /// Label for volume calculation
   ///
   /// In en, this message translates to:
   /// **'Volume'**
@@ -3575,10 +3803,10 @@ abstract class AppLocalizations {
   /// **'Suggested for today'**
   String get suggestedForToday;
 
-  /// Progress section title
+  /// Progress section header
   ///
   /// In en, this message translates to:
-  /// **'Your progress'**
+  /// **'Your Progress'**
   String get yourProgress;
 
   /// Push day workout template
@@ -3653,7 +3881,7 @@ abstract class AppLocalizations {
   /// **'Create your first template!'**
   String get createFirstTemplate;
 
-  /// Button and dialog title for creating template
+  /// Create template button label
   ///
   /// In en, this message translates to:
   /// **'Create Template'**
@@ -3826,6 +4054,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete your first workout to get started'**
   String get aiInsightStartJourneyRec;
+
+  /// Unit for sets per week in AI Coach insights
+  ///
+  /// In en, this message translates to:
+  /// **'series/week'**
+  String get aiCoachSeriesPerWeek;
+
+  /// Unit for volume in tons (metric) in AI Coach insights
+  ///
+  /// In en, this message translates to:
+  /// **'tons'**
+  String get aiCoachTons;
+
+  /// Label for current training volume metric
+  ///
+  /// In en, this message translates to:
+  /// **'Current volume'**
+  String get aiCoachCurrentVolume;
+
+  /// Label for progressive overload percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive overload'**
+  String get aiCoachProgressiveLoad;
+
+  /// Unit for training frequency per week
+  ///
+  /// In en, this message translates to:
+  /// **'times/week'**
+  String get aiCoachTimesPerWeek;
+
+  /// Label for current training frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Current frequency'**
+  String get aiCoachCurrentFrequency;
+
+  /// MEV (Minimum Effective Volume) range display
+  ///
+  /// In en, this message translates to:
+  /// **'MEV: {min}-{max} sets'**
+  String aiCoachMEVRange(String min, String max);
+
+  /// Title for collapsible scientific references section
+  ///
+  /// In en, this message translates to:
+  /// **'Scientific References'**
+  String get aiCoachScientificReferences;
 
   /// AI insight title for new users (1-3 workouts)
   ///
@@ -4079,11 +4355,11 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get muscleGroupOther;
 
-  /// Days plural
+  /// Days unit (lowercase)
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{0 days} =1{1 day} other{{count} days}}'**
-  String days(int count);
+  /// **'days'**
+  String get days;
 
   /// Per week suffix
   ///
@@ -4136,7 +4412,7 @@ abstract class AppLocalizations {
   /// Error message when data fails to load
   ///
   /// In en, this message translates to:
-  /// **'Unable to load data'**
+  /// **'Error loading data'**
   String get errorLoadingData;
 
   /// Pull to refresh instruction
@@ -4385,10 +4661,10 @@ abstract class AppLocalizations {
   /// **'Unknown Error'**
   String get unknownError;
 
-  /// User not found error message
+  /// Error message when user is not found
   ///
   /// In en, this message translates to:
-  /// **'User Not Found'**
+  /// **'User not found'**
   String get userNotFound;
 
   /// Wrong password error message
@@ -4937,7 +5213,7 @@ abstract class AppLocalizations {
   /// **'Total'**
   String get totalExercises;
 
-  /// Total sets statistic
+  /// Label for total number of sets
   ///
   /// In en, this message translates to:
   /// **'Total Sets'**
@@ -4973,10 +5249,10 @@ abstract class AppLocalizations {
   /// **'Chest'**
   String get chest;
 
-  /// Back muscle group
+  /// Back button
   ///
   /// In en, this message translates to:
-  /// **'DORSO (Back)'**
+  /// **'Back'**
   String get back;
 
   /// Shoulders muscle group
@@ -4996,6 +5272,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GAMBE (Legs)'**
   String get legs;
+
+  /// Abdominals muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Abs'**
+  String get abs;
+
+  /// Cardio exercise category
+  ///
+  /// In en, this message translates to:
+  /// **'Cardio'**
+  String get cardio;
+
+  /// Other exercise category
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// Personal/custom template badge
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get personal;
+
+  /// Number of times a template has been used
+  ///
+  /// In en, this message translates to:
+  /// **'usages'**
+  String get usages;
+
+  /// Title for muscle group breakdown section
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Distribution'**
+  String get muscleDistribution;
 
   /// Core muscle group
   ///
@@ -5105,7 +5417,7 @@ abstract class AppLocalizations {
   /// **'Volume Change'**
   String get volumeChange;
 
-  /// Maximum weight label
+  /// Label for maximum weight lifted
   ///
   /// In en, this message translates to:
   /// **'Max Weight'**
@@ -5849,6 +6161,24 @@ abstract class AppLocalizations {
   /// **'No data available for this exercise'**
   String get noDataForExercise;
 
+  /// Message when multi-metric chart has no data
+  ///
+  /// In en, this message translates to:
+  /// **'No data available for selected metrics'**
+  String get noDataForChart;
+
+  /// Hint text explaining that chart shows normalized values and user can tap to see actual values
+  ///
+  /// In en, this message translates to:
+  /// **'Tap chart to see real values'**
+  String get chartTapToSeeRealValues;
+
+  /// Title for multi-metric overlay chart section
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-Metric Comparison'**
+  String get multiMetricComparison;
+
   /// Volume heatmap chart title
   ///
   /// In en, this message translates to:
@@ -5963,10 +6293,10 @@ abstract class AppLocalizations {
   /// **'Weight (kg)'**
   String get weightLabel;
 
-  /// Reps input field label
+  /// Short label for repetitions
   ///
   /// In en, this message translates to:
-  /// **'Reps'**
+  /// **'reps'**
   String get repsLabel;
 
   /// Effort or intensity label
@@ -6341,7 +6671,7 @@ abstract class AppLocalizations {
   /// **'Set completed!'**
   String get setCompleted;
 
-  /// Next button text
+  /// Next button
   ///
   /// In en, this message translates to:
   /// **'Next'**
@@ -6515,7 +6845,7 @@ abstract class AppLocalizations {
   /// **'Statistics'**
   String get statistics;
 
-  /// Average weight statistic label
+  /// Label for average weight lifted
   ///
   /// In en, this message translates to:
   /// **'Avg Weight'**
@@ -6539,13 +6869,13 @@ abstract class AppLocalizations {
   /// **'Complete workouts to see history'**
   String get completeWorkoutsToSeeHistory;
 
-  /// Today date label
+  /// Label for today's date
   ///
   /// In en, this message translates to:
   /// **'Today'**
   String get today;
 
-  /// Yesterday date label
+  /// Label for yesterday's date
   ///
   /// In en, this message translates to:
   /// **'Yesterday'**
@@ -6839,7 +7169,7 @@ abstract class AppLocalizations {
   /// **'Check Failed'**
   String get checkFailed;
 
-  /// Current version label
+  /// Current database version label
   ///
   /// In en, this message translates to:
   /// **'Current Version'**
@@ -7096,12 +7426,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Activity for'**
   String get activityFor;
-
-  /// Days ago time format
-  ///
-  /// In en, this message translates to:
-  /// **'{count}d ago'**
-  String daysAgo(int count);
 
   /// Timestamp showing hours elapsed
   ///
@@ -7486,6 +7810,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Database Manager'**
   String get databaseManager;
+
+  /// Button to publish new exercise database version
+  ///
+  /// In en, this message translates to:
+  /// **'Publish New Version'**
+  String get publishNewVersion;
+
+  /// Last publication date label
+  ///
+  /// In en, this message translates to:
+  /// **'Last Published'**
+  String get lastPublished;
+
+  /// Total exercises count label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Exercises in Database'**
+  String get totalExercisesInDb;
+
+  /// Version history section title
+  ///
+  /// In en, this message translates to:
+  /// **'Version History'**
+  String get versionHistory;
+
+  /// Publish version dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Publish Version'**
+  String get publishVersion;
+
+  /// Version number input label
+  ///
+  /// In en, this message translates to:
+  /// **'Version Number'**
+  String get versionNumber;
+
+  /// Changelog input label
+  ///
+  /// In en, this message translates to:
+  /// **'Changelog'**
+  String get changelog;
+
+  /// Changelog input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what changed in this version (e.g., \'Added 15 new shoulder exercises\')'**
+  String get changelogHint;
+
+  /// Publishing progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing...'**
+  String get publishing;
+
+  /// Version published success message
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} published successfully! All users will receive the update within 6 hours.'**
+  String versionPublished(String version);
+
+  /// Publish failed error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to publish version: {error}'**
+  String publishFailed(String error);
+
+  /// Force update checkbox label
+  ///
+  /// In en, this message translates to:
+  /// **'Force Update (Required)'**
+  String get forceUpdate;
+
+  /// Force update description
+  ///
+  /// In en, this message translates to:
+  /// **'If enabled, users must update to continue using the app'**
+  String get forceUpdateDesc;
 
   /// Multi-select mode toggle tooltip
   ///
@@ -8525,7 +8927,7 @@ abstract class AppLocalizations {
   /// **'Set a default timer that will be applied to all exercises in the template'**
   String get defaultRestTimerDescription;
 
-  /// Warmup protocol section title
+  /// Section title for warmup protocol
   ///
   /// In en, this message translates to:
   /// **'Warmup Protocol'**
@@ -8537,10 +8939,10 @@ abstract class AppLocalizations {
   /// **'Understanding Warmup Phases'**
   String get warmupPhaseInfo;
 
-  /// Title for mobility phase
+  /// Title for warmup phase 1
   ///
   /// In en, this message translates to:
-  /// **'🔄 Phase 1: Mobility (3-5 min)'**
+  /// **'Mobility'**
   String get warmupPhase1Title;
 
   /// Description for mobility phase
@@ -8549,10 +8951,10 @@ abstract class AppLocalizations {
   /// **'Prepares joints and range of motion with dynamic stretches. Examples: hip circles, arm swings, leg swings.'**
   String get warmupPhase1Desc;
 
-  /// Title for activation phase
+  /// Title for warmup phase 2
   ///
   /// In en, this message translates to:
-  /// **'⚡ Phase 2: Activation (3-4 min)'**
+  /// **'Activation'**
   String get warmupPhase2Title;
 
   /// Description for activation phase
@@ -8561,10 +8963,10 @@ abstract class AppLocalizations {
   /// **'Activates target muscles and stabilizers with light contractions. Examples: glute bridges, band work, light sets.'**
   String get warmupPhase2Desc;
 
-  /// Title for warmup sets phase
+  /// Title for warmup phase 3
   ///
   /// In en, this message translates to:
-  /// **'🏋️ Phase 3: Warmup Sets (5-10 min)'**
+  /// **'Specific Warmup'**
   String get warmupPhase3Title;
 
   /// Description for warmup sets phase
@@ -11939,7 +12341,7 @@ abstract class AppLocalizations {
   /// **'Execute'**
   String get execute;
 
-  /// Button to skip rest timer
+  /// Button to skip rest period
   ///
   /// In en, this message translates to:
   /// **'Skip Rest'**
@@ -12106,6 +12508,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Rest-Pause'**
   String get createRestPause;
+
+  /// Label for rest-pause execution header
+  ///
+  /// In en, this message translates to:
+  /// **'REST-PAUSE'**
+  String get restPauseLabel;
+
+  /// Label for main set in rest-pause execution
+  ///
+  /// In en, this message translates to:
+  /// **'Main Set'**
+  String get restPauseMainSet;
+
+  /// Label for individual mini-set in rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Mini-Set {index}'**
+  String restPauseMiniSet(int index);
+
+  /// Label for mini-set progress indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Mini-Set Progress'**
+  String get miniSetProgress;
+
+  /// Label for rest timer during rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'MICRO-PAUSE'**
+  String get microPause;
+
+  /// Text showing pause duration
+  ///
+  /// In en, this message translates to:
+  /// **'After {duration}s pause'**
+  String afterPauseDuration(int duration);
+
+  /// Label for RPE selector in rest-pause execution
+  ///
+  /// In en, this message translates to:
+  /// **'Overall RPE (Perceived Exertion)'**
+  String get rpeLabel;
 
   /// Title for fitness questionnaire
   ///
@@ -13133,6 +13577,12 @@ abstract class AppLocalizations {
   /// **'Workout completed! Great job!'**
   String get workoutCompletedSuccess;
 
+  /// Message shown when workout completion is undone
+  ///
+  /// In en, this message translates to:
+  /// **'Workout restored - you can continue training'**
+  String get workoutResumed;
+
   /// Save as template menu item
   ///
   /// In en, this message translates to:
@@ -13288,6 +13738,27 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get categoryOther;
+
+  /// Success message when exercise is manually categorized
+  ///
+  /// In en, this message translates to:
+  /// **'\"{exerciseName}\" categorized as {muscleGroupName}'**
+  String exerciseCategorizedSuccess(
+    String exerciseName,
+    String muscleGroupName,
+  );
+
+  /// Undo button label
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// Message shown when categorization is undone
+  ///
+  /// In en, this message translates to:
+  /// **'Categorization removed'**
+  String get categorizationUndone;
 
   /// Exercise editing coming soon message
   ///
@@ -13912,6 +14383,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Execute DropSet'**
   String get executeDropset;
+
+  /// Button to start rest-pause execution
+  ///
+  /// In en, this message translates to:
+  /// **'Execute Rest-Pause'**
+  String get executeRestPause;
 
   /// Keep workout active dialog content
   ///
@@ -16053,6 +16530,36 @@ abstract class AppLocalizations {
   /// **'You need workout templates to create a routine.\nChoose one of the options below to continue.'**
   String get routineNeedTemplatesMessage;
 
+  /// Message explaining users need to create templates first
+  ///
+  /// In en, this message translates to:
+  /// **'Before creating a routine, you need to create workout templates with exercises first.'**
+  String get routineCreateTemplatesFirst;
+
+  /// Workflow section title
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get routineWorkflowTitle;
+
+  /// First step in routine workflow
+  ///
+  /// In en, this message translates to:
+  /// **'Go to \'My Templates\' and create workout templates with exercises'**
+  String get routineWorkflowStep1;
+
+  /// Second step in routine workflow
+  ///
+  /// In en, this message translates to:
+  /// **'Return here and select your templates for the routine'**
+  String get routineWorkflowStep2;
+
+  /// Third step in routine workflow
+  ///
+  /// In en, this message translates to:
+  /// **'Configure rotation and complete your routine setup'**
+  String get routineWorkflowStep3;
+
   /// Popular templates option title
   ///
   /// In en, this message translates to:
@@ -16317,6 +16824,12 @@ abstract class AppLocalizations {
   /// **'Exercise Progress'**
   String get exerciseProgress;
 
+  /// Subtitle for exercise progress card describing functionality
+  ///
+  /// In en, this message translates to:
+  /// **'Track your exercise gains'**
+  String get trackExerciseGrowth;
+
   /// Exercise progress screen title
   ///
   /// In en, this message translates to:
@@ -16365,10 +16878,10 @@ abstract class AppLocalizations {
   /// **'Avg RPE'**
   String get averageRPE;
 
-  /// Total sessions label
+  /// Label for total number of workout sessions
   ///
   /// In en, this message translates to:
-  /// **'Sessions'**
+  /// **'Total Sessions'**
   String get totalSessions;
 
   /// Exercise statistics section title
@@ -17822,6 +18335,3246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check the template format matches the example'**
   String get suggestionCheckFormat;
+
+  /// List view mode
+  ///
+  /// In en, this message translates to:
+  /// **'List View'**
+  String get listView;
+
+  /// Grid view mode
+  ///
+  /// In en, this message translates to:
+  /// **'Grid View'**
+  String get gridView;
+
+  /// Import phase: parsing JSON
+  ///
+  /// In en, this message translates to:
+  /// **'Parsing...'**
+  String get parsing;
+
+  /// Import phase: matching exercises with database
+  ///
+  /// In en, this message translates to:
+  /// **'Matching exercises...'**
+  String get matchingExercises;
+
+  /// Import phase: converting percentage weights
+  ///
+  /// In en, this message translates to:
+  /// **'Converting weights...'**
+  String get convertingWeights;
+
+  /// Import phase: finalizing import
+  ///
+  /// In en, this message translates to:
+  /// **'Finalizing...'**
+  String get finalizing;
+
+  /// Import failed error message
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed'**
+  String get importFailed;
+
+  /// Placeholder for missing description
+  ///
+  /// In en, this message translates to:
+  /// **'No description'**
+  String get noDescription;
+
+  /// Exercise detail tab: Summary
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get exerciseDetailSummary;
+
+  /// Exercise detail tab: History
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get exerciseDetailHistory;
+
+  /// Exercise detail tab: Instructions
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get exerciseDetailInstructions;
+
+  /// Label for primary muscle
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Muscle'**
+  String get primaryMuscle;
+
+  /// Chart title for last 3 months data
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get last3MonthsChart;
+
+  /// Label for best one rep max
+  ///
+  /// In en, this message translates to:
+  /// **'Best 1RM'**
+  String get best1RM;
+
+  /// Label for best volume in a single set
+  ///
+  /// In en, this message translates to:
+  /// **'Best Set Volume'**
+  String get bestSetVolume;
+
+  /// Label for best total session volume
+  ///
+  /// In en, this message translates to:
+  /// **'Best Session Volume'**
+  String get bestSessionVolume;
+
+  /// Label for user's strength level
+  ///
+  /// In en, this message translates to:
+  /// **'Strength Level'**
+  String get strengthLevel;
+
+  /// Placeholder message for strength level feature
+  ///
+  /// In en, this message translates to:
+  /// **'Strength level benchmarks coming soon!'**
+  String get strengthLevelComingSoon;
+
+  /// Message when exercise has no history
+  ///
+  /// In en, this message translates to:
+  /// **'No history yet'**
+  String get noHistoryYet;
+
+  /// Hint to start workout to see history
+  ///
+  /// In en, this message translates to:
+  /// **'Start a workout to see your exercise history'**
+  String get startWorkoutToSeeHistory;
+
+  /// Placeholder for workout with no name
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Workout'**
+  String get unknownWorkout;
+
+  /// Section title for video tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Video Tutorial'**
+  String get videoTutorial;
+
+  /// Section title for form cues
+  ///
+  /// In en, this message translates to:
+  /// **'Form Cues'**
+  String get formCues;
+
+  /// Description for warmup phase 1
+  ///
+  /// In en, this message translates to:
+  /// **'Joint mobilization and dynamic stretching (5-10 min)'**
+  String get warmupPhase1Description;
+
+  /// Description for warmup phase 2
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle activation with bodyweight exercises'**
+  String get warmupPhase2Description;
+
+  /// Description for warmup phase 3
+  ///
+  /// In en, this message translates to:
+  /// **'2-3 warmup sets with progressive weight'**
+  String get warmupPhase3Description;
+
+  /// Title for warmup phase 4
+  ///
+  /// In en, this message translates to:
+  /// **'Rest & Recovery'**
+  String get warmupPhase4Title;
+
+  /// Description for warmup phase 4
+  ///
+  /// In en, this message translates to:
+  /// **'1-2 minutes rest before starting working sets'**
+  String get warmupPhase4Description;
+
+  /// Section title for tips
+  ///
+  /// In en, this message translates to:
+  /// **'Tips'**
+  String get tips;
+
+  /// Back button accessibility hint
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate to previous screen'**
+  String get backHint;
+
+  /// Create template button accessibility hint
+  ///
+  /// In en, this message translates to:
+  /// **'Open form to create a new workout template'**
+  String get createTemplateHint;
+
+  /// Sync status button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Status'**
+  String get syncStatus;
+
+  /// Sync status button accessibility hint
+  ///
+  /// In en, this message translates to:
+  /// **'View cloud synchronization status and offline changes'**
+  String get syncStatusHint;
+
+  /// Error message for 404 page
+  ///
+  /// In en, this message translates to:
+  /// **'Page Not Found'**
+  String get pageNotFound;
+
+  /// Success message for modal test
+  ///
+  /// In en, this message translates to:
+  /// **'✅ {modalName} - WORKING'**
+  String modalTestSuccess(String modalName);
+
+  /// Modal opened message for testing
+  ///
+  /// In en, this message translates to:
+  /// **'✅ {modalName} - OPENED (check functionality)'**
+  String modalTestOpened(String modalName);
+
+  /// Error message for modal test
+  ///
+  /// In en, this message translates to:
+  /// **'❌ {modalName} - ERROR: {error}'**
+  String modalTestError(String modalName, String error);
+
+  /// RPE selector test success message
+  ///
+  /// In en, this message translates to:
+  /// **'✅ RpeSelectorBottomSheet - WORKING: RPE {rpe}'**
+  String modalTestRpeSuccess(String rpe);
+
+  /// Message when history button is tapped
+  ///
+  /// In en, this message translates to:
+  /// **'📊 History button tapped'**
+  String get historyButtonTapped;
+
+  /// Message when edit button is tapped
+  ///
+  /// In en, this message translates to:
+  /// **'✏️ Edit button tapped'**
+  String get editButtonTapped;
+
+  /// Title for variation selector dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Select Variation'**
+  String get exerciseSelectVariation;
+
+  /// Label for equipment filter toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by available equipment'**
+  String get exerciseFilterByEquipment;
+
+  /// Label for standard variation type
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get exerciseVariationStandard;
+
+  /// Label for equipment variation type
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment'**
+  String get exerciseVariationEquipment;
+
+  /// Label for grip variation type
+  ///
+  /// In en, this message translates to:
+  /// **'Grip'**
+  String get exerciseVariationGrip;
+
+  /// Label for angle variation type
+  ///
+  /// In en, this message translates to:
+  /// **'Angle'**
+  String get exerciseVariationAngle;
+
+  /// Label for tempo variation type
+  ///
+  /// In en, this message translates to:
+  /// **'Tempo'**
+  String get exerciseVariationTempo;
+
+  /// Label for range of motion variation type
+  ///
+  /// In en, this message translates to:
+  /// **'Range of Motion'**
+  String get exerciseVariationROM;
+
+  /// Label when no equipment is required
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight'**
+  String get exerciseEquipmentNone;
+
+  /// Info text showing filtered variation count
+  ///
+  /// In en, this message translates to:
+  /// **'Showing {filtered} of {total} variations'**
+  String exerciseVariationsFiltered(int filtered, int total);
+
+  /// Info text showing total variation count
+  ///
+  /// In en, this message translates to:
+  /// **'{total} variations available'**
+  String exerciseVariationsTotal(int total);
+
+  /// Empty state message when no variations match equipment
+  ///
+  /// In en, this message translates to:
+  /// **'No variations available with your current equipment'**
+  String get exerciseNoVariationsWithEquipment;
+
+  /// Empty state message when no variations exist
+  ///
+  /// In en, this message translates to:
+  /// **'No variations available for this exercise'**
+  String get exerciseNoVariationsAvailable;
+
+  /// Button to disable equipment filter
+  ///
+  /// In en, this message translates to:
+  /// **'Show All Variations'**
+  String get exerciseShowAllVariations;
+
+  /// Equipment profile label
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment Profile'**
+  String get equipmentProfile;
+
+  /// Button to create new equipment profile
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get equipmentProfileCreate;
+
+  /// Equipment count in profile
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String equipmentProfileItemsCount(int count);
+
+  /// Placeholder when no profile selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select an equipment profile'**
+  String get equipmentProfileSelectOne;
+
+  /// Title for profile selection sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Select Equipment Profile'**
+  String get equipmentProfileSelect;
+
+  /// Error message when profile creation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create equipment profile'**
+  String get equipmentProfileCreateError;
+
+  /// Error message when profiles fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load equipment profiles'**
+  String get equipmentProfileLoadError;
+
+  /// Message when no profiles exist
+  ///
+  /// In en, this message translates to:
+  /// **'No equipment profiles yet'**
+  String get equipmentProfileEmpty;
+
+  /// Button to create first profile
+  ///
+  /// In en, this message translates to:
+  /// **'Create First Profile'**
+  String get equipmentProfileCreateFirst;
+
+  /// Dialog title for creating new profile
+  ///
+  /// In en, this message translates to:
+  /// **'Create Equipment Profile'**
+  String get equipmentProfileCreateNew;
+
+  /// Instructions for template selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select Starting Template'**
+  String get equipmentProfileSelectTemplate;
+
+  /// Commercial gym profile name
+  ///
+  /// In en, this message translates to:
+  /// **'Commercial Gym'**
+  String get equipmentProfileCommercial;
+
+  /// Commercial gym profile description
+  ///
+  /// In en, this message translates to:
+  /// **'Full equipment - barbell, dumbbells, machines, cables'**
+  String get equipmentProfileCommercialDesc;
+
+  /// Home basic profile name
+  ///
+  /// In en, this message translates to:
+  /// **'Home Gym (Basic)'**
+  String get equipmentProfileHomeBasic;
+
+  /// Home basic profile description
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell, dumbbells, bench, resistance bands'**
+  String get equipmentProfileHomeBasicDesc;
+
+  /// Home complete profile name
+  ///
+  /// In en, this message translates to:
+  /// **'Home Gym (Complete)'**
+  String get equipmentProfileHomeComplete;
+
+  /// Home complete profile description
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced home setup - kettlebells, TRX, pull-up bar'**
+  String get equipmentProfileHomeCompleteDesc;
+
+  /// Travel profile name
+  ///
+  /// In en, this message translates to:
+  /// **'Travel / Hotel'**
+  String get equipmentProfileTravel;
+
+  /// Travel profile description
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal - dumbbells and bodyweight exercises'**
+  String get equipmentProfileTravelDesc;
+
+  /// Bodyweight profile name
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight Only'**
+  String get equipmentProfileBodyweight;
+
+  /// Bodyweight profile description
+  ///
+  /// In en, this message translates to:
+  /// **'No equipment - calisthenics and bodyweight movements'**
+  String get equipmentProfileBodyweightDesc;
+
+  /// Barbell equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell'**
+  String get equipment_barbell;
+
+  /// Dumbbell equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Dumbbell'**
+  String get equipment_dumbbell;
+
+  /// Weight machine equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Machine'**
+  String get equipment_machine;
+
+  /// Cable machine equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Cables'**
+  String get equipment_cables;
+
+  /// Smith machine equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Smith Machine'**
+  String get equipment_smith_machine;
+
+  /// EZ curl bar equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'EZ Bar'**
+  String get equipment_ez_bar;
+
+  /// Kettlebell equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Kettlebell'**
+  String get equipment_kettlebell;
+
+  /// Bodyweight/calisthenics equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight'**
+  String get equipment_bodyweight;
+
+  /// TRX/suspension training equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'TRX'**
+  String get equipment_trx;
+
+  /// Resistance bands equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Resistance Bands'**
+  String get equipment_bands;
+
+  /// Pull-up bar equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Pull-up Bar'**
+  String get equipment_pullup_bar;
+
+  /// Parallel bars/dip station equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Parallel Bars'**
+  String get equipment_parallel_bars;
+
+  /// Power rack/squat rack equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Rack'**
+  String get equipment_rack;
+
+  /// Weight bench equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Bench'**
+  String get equipment_bench;
+
+  /// Title for rotation config dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Rotation Settings'**
+  String get rotationConfigTitle;
+
+  /// Enable rotation toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Rotation'**
+  String get rotationEnabled;
+
+  /// Description for rotation enable toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically rotate exercise variations'**
+  String get rotationEnabledDesc;
+
+  /// Label for rotation frequency section
+  ///
+  /// In en, this message translates to:
+  /// **'Rotation Frequency'**
+  String get rotationFrequency;
+
+  /// Label for notifications toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get rotationNotifications;
+
+  /// Description for notifications toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Notify before variation changes'**
+  String get rotationNotificationsDesc;
+
+  /// Label for notification days selector
+  ///
+  /// In en, this message translates to:
+  /// **'Notify days before'**
+  String get rotationNotifyDaysBefore;
+
+  /// Rotation frequency in weeks
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks, plural, =1{Every week} other{Every {weeks} weeks}}'**
+  String rotationFrequencyWeeks(int weeks);
+
+  /// Notification days count
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
+  String rotationNotifyDaysCount(int days);
+
+  /// Label for rotation preview section
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get rotationPreview;
+
+  /// Label for next rotation date
+  ///
+  /// In en, this message translates to:
+  /// **'Next rotation'**
+  String get rotationNextDate;
+
+  /// Next rotation in N days
+  ///
+  /// In en, this message translates to:
+  /// **'In {days} days'**
+  String rotationInDays(int days);
+
+  /// Tomorrow label
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// Access denied title for unauthorized screen
+  ///
+  /// In en, this message translates to:
+  /// **'Access Denied'**
+  String get accessDenied;
+
+  /// Message shown when user lacks required permission
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission to access this feature. Please upgrade your account or contact support.'**
+  String get noPermissionMessage;
+
+  /// Warning message shown before session timeout
+  ///
+  /// In en, this message translates to:
+  /// **'Your session will expire in {seconds} seconds. Tap to extend.'**
+  String sessionExpiringSoon(int seconds);
+
+  /// Message shown when session has timed out
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Please log in again.'**
+  String get sessionExpired;
+
+  /// Button to extend user session
+  ///
+  /// In en, this message translates to:
+  /// **'Extend Session'**
+  String get extendSession;
+
+  /// No description provided for @equipmentProfileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Name'**
+  String get equipmentProfileName;
+
+  /// No description provided for @equipmentProfileNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Home Gym, Travel Kit'**
+  String get equipmentProfileNameHint;
+
+  /// No description provided for @equipmentProfileBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get equipmentProfileBadge;
+
+  /// No description provided for @equipmentProfileSelectEquipment.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Available Equipment'**
+  String get equipmentProfileSelectEquipment;
+
+  /// No description provided for @selectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAll;
+
+  /// No description provided for @equipmentProfileEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Equipment Profile'**
+  String get equipmentProfileEdit;
+
+  /// No description provided for @equipmentProfileTemplateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a template to customize or start from scratch'**
+  String get equipmentProfileTemplateHint;
+
+  /// No description provided for @equipmentProfilesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment Profiles'**
+  String get equipmentProfilesTitle;
+
+  /// No description provided for @equipmentProfilesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your equipment availability for exercise recommendations'**
+  String get equipmentProfilesSubtitle;
+
+  /// No description provided for @equipmentProfilesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment Profiles Help'**
+  String get equipmentProfilesHelp;
+
+  /// No description provided for @equipmentProfilesHelpText.
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment profiles help the app suggest exercises that match your available equipment. Create different profiles for different locations (gym, home, travel).'**
+  String get equipmentProfilesHelpText;
+
+  /// No description provided for @equipmentProfileBadgeFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full gym with 6+ equipment types'**
+  String get equipmentProfileBadgeFull;
+
+  /// No description provided for @equipmentProfileBadgeHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home setup with 3-5 equipment types'**
+  String get equipmentProfileBadgeHome;
+
+  /// No description provided for @equipmentProfileBadgeMinimal.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal setup with 1-2 equipment types'**
+  String get equipmentProfileBadgeMinimal;
+
+  /// No description provided for @equipmentProfilesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No Equipment Profiles Yet'**
+  String get equipmentProfilesEmpty;
+
+  /// No description provided for @equipmentProfilesEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first equipment profile to get exercise recommendations based on what you have available.'**
+  String get equipmentProfilesEmptyDescription;
+
+  /// No description provided for @equipmentProfileUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get equipmentProfileUpdated;
+
+  /// No description provided for @equipmentProfileCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile created successfully'**
+  String get equipmentProfileCreated;
+
+  /// No description provided for @equipmentProfileSaveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save profile'**
+  String get equipmentProfileSaveError;
+
+  /// No description provided for @equipmentProfileDeleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Equipment Profile?'**
+  String get equipmentProfileDeleteConfirmTitle;
+
+  /// Confirmation message for deleting equipment profile
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"? This action cannot be undone.'**
+  String equipmentProfileDeleteConfirmMessage(String name);
+
+  /// No description provided for @equipmentProfileDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile deleted successfully'**
+  String get equipmentProfileDeleted;
+
+  /// No description provided for @equipmentProfileDeleteError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete profile'**
+  String get equipmentProfileDeleteError;
+
+  /// No description provided for @equipmentProfileSetDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default profile updated'**
+  String get equipmentProfileSetDefault;
+
+  /// No description provided for @equipmentProfileDefaultError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to set default profile'**
+  String get equipmentProfileDefaultError;
+
+  /// No description provided for @equipmentProfileDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get equipmentProfileDefault;
+
+  /// No description provided for @equipmentProfileMakeDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Default'**
+  String get equipmentProfileMakeDefault;
+
+  /// No description provided for @equipmentProfileStepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Equipment'**
+  String get equipmentProfileStepTitle;
+
+  /// No description provided for @equipmentProfileStepDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select which equipment you have available for this routine. This will help filter exercises to match your setup.'**
+  String get equipmentProfileStepDescription;
+
+  /// No description provided for @equipmentProfileStepDescriptionOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Select which equipment you have available. You can skip this and set it up later.'**
+  String get equipmentProfileStepDescriptionOptional;
+
+  /// No description provided for @equipmentProfileOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'(Optional)'**
+  String get equipmentProfileOptional;
+
+  /// No description provided for @equipmentProfileSkipForNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get equipmentProfileSkipForNow;
+
+  /// No description provided for @equipmentProfileSkipConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Equipment Profile?'**
+  String get equipmentProfileSkipConfirmTitle;
+
+  /// No description provided for @equipmentProfileSkipConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add an equipment profile later from Settings. Without it, all exercises will be available.'**
+  String get equipmentProfileSkipConfirmMessage;
+
+  /// No description provided for @equipmentProfileStepInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why is this important?'**
+  String get equipmentProfileStepInfoTitle;
+
+  /// No description provided for @equipmentProfileStepInfoMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The app will only suggest exercises that match your selected equipment, ensuring you can actually perform the recommended workouts.'**
+  String get equipmentProfileStepInfoMessage;
+
+  /// No description provided for @equipmentProfileManageInSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Profiles in Settings'**
+  String get equipmentProfileManageInSettings;
+
+  /// No description provided for @migrationWizardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment Profile Change'**
+  String get migrationWizardTitle;
+
+  /// No description provided for @migrationWizardImpactAnalysisTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing Impact'**
+  String get migrationWizardImpactAnalysisTitle;
+
+  /// No description provided for @migrationWizardImpactSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Impact Summary'**
+  String get migrationWizardImpactSummary;
+
+  /// No description provided for @migrationWizardFromProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get migrationWizardFromProfile;
+
+  /// No description provided for @migrationWizardToProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get migrationWizardToProfile;
+
+  /// No description provided for @migrationWizardAffectedExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exercise affected} other{{count} exercises affected}}'**
+  String migrationWizardAffectedExercises(int count);
+
+  /// No description provided for @migrationWizardWithAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'with alternatives'**
+  String get migrationWizardWithAlternatives;
+
+  /// No description provided for @migrationWizardWithoutAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'without alternatives'**
+  String get migrationWizardWithoutAlternatives;
+
+  /// No description provided for @migrationWizardAffectedRoutines.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 routine} other{{count} routines}}'**
+  String migrationWizardAffectedRoutines(int count);
+
+  /// No description provided for @migrationWizardAffectedTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 template} other{{count} templates}}'**
+  String migrationWizardAffectedTemplates(int count);
+
+  /// No description provided for @migrationWizardReviewChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Changes'**
+  String get migrationWizardReviewChanges;
+
+  /// No description provided for @migrationWizardNoImpact.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises are affected by this change.'**
+  String get migrationWizardNoImpact;
+
+  /// No description provided for @migrationWizardNoImpactMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All your exercises are compatible with the new equipment profile.'**
+  String get migrationWizardNoImpactMessage;
+
+  /// No description provided for @migrationWizardExerciseReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Exercise'**
+  String get migrationWizardExerciseReviewTitle;
+
+  /// No description provided for @migrationWizardExerciseProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise {current} of {total}'**
+  String migrationWizardExerciseProgress(int current, int total);
+
+  /// No description provided for @migrationWizardRequiredEquipment.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String migrationWizardRequiredEquipment(Object equipment);
+
+  /// No description provided for @migrationWizardUsedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Used in'**
+  String get migrationWizardUsedIn;
+
+  /// No description provided for @migrationWizardSuggestedAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Alternatives'**
+  String get migrationWizardSuggestedAlternatives;
+
+  /// No description provided for @migrationWizardNoAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'No compatible alternatives found'**
+  String get migrationWizardNoAlternatives;
+
+  /// No description provided for @migrationWizardNoAlternativesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider keeping this exercise if you plan to get the equipment, or remove it.'**
+  String get migrationWizardNoAlternativesMessage;
+
+  /// No description provided for @migrationWizardSimilarityScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Match'**
+  String migrationWizardSimilarityScore(Object score);
+
+  /// No description provided for @migrationWizardReplaceWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace with'**
+  String get migrationWizardReplaceWith;
+
+  /// No description provided for @migrationWizardKeepExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep anyway'**
+  String get migrationWizardKeepExercise;
+
+  /// No description provided for @migrationWizardKeepExerciseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll get this equipment'**
+  String get migrationWizardKeepExerciseHint;
+
+  /// No description provided for @migrationWizardRemoveExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove exercise'**
+  String get migrationWizardRemoveExercise;
+
+  /// No description provided for @migrationWizardConfirmationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Changes'**
+  String get migrationWizardConfirmationTitle;
+
+  /// No description provided for @migrationWizardConfirmationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your decisions before applying'**
+  String get migrationWizardConfirmationMessage;
+
+  /// No description provided for @migrationWizardSummaryReplaced.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaced'**
+  String get migrationWizardSummaryReplaced;
+
+  /// No description provided for @migrationWizardSummaryKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept'**
+  String get migrationWizardSummaryKept;
+
+  /// No description provided for @migrationWizardSummaryRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed'**
+  String get migrationWizardSummaryRemoved;
+
+  /// No description provided for @migrationWizardWillUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'This will update'**
+  String get migrationWizardWillUpdate;
+
+  /// No description provided for @migrationWizardApplyChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Changes'**
+  String get migrationWizardApplyChanges;
+
+  /// No description provided for @migrationWizardApplying.
+  ///
+  /// In en, this message translates to:
+  /// **'Applying changes...'**
+  String get migrationWizardApplying;
+
+  /// No description provided for @migrationWizardSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Migration Complete!'**
+  String get migrationWizardSuccessTitle;
+
+  /// No description provided for @migrationWizardSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your equipment profile has been updated.'**
+  String get migrationWizardSuccessMessage;
+
+  /// No description provided for @migrationWizardChangesApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes applied'**
+  String get migrationWizardChangesApplied;
+
+  /// No description provided for @migrationWizardExercisesReplaced.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exercise replaced} other{{count} exercises replaced}}'**
+  String migrationWizardExercisesReplaced(int count);
+
+  /// No description provided for @migrationWizardExercisesKept.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exercise kept} other{{count} exercises kept}}'**
+  String migrationWizardExercisesKept(int count);
+
+  /// No description provided for @migrationWizardExercisesRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exercise removed} other{{count} exercises removed}}'**
+  String migrationWizardExercisesRemoved(int count);
+
+  /// No description provided for @migrationWizardUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get migrationWizardUpdated;
+
+  /// No description provided for @migrationWizardAnalyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing impact...'**
+  String get migrationWizardAnalyzing;
+
+  /// No description provided for @migrationWizardScanningRoutines.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning active routines'**
+  String get migrationWizardScanningRoutines;
+
+  /// No description provided for @migrationWizardScanningTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning workout templates'**
+  String get migrationWizardScanningTemplates;
+
+  /// No description provided for @migrationWizardFindingAffected.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding affected exercises'**
+  String get migrationWizardFindingAffected;
+
+  /// No description provided for @migrationWizardGeneratingAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating alternatives'**
+  String get migrationWizardGeneratingAlternatives;
+
+  /// No description provided for @migrationWizardImpactSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Migration Impact Summary'**
+  String get migrationWizardImpactSummaryTitle;
+
+  /// No description provided for @migrationWizardTotalAffected.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Affected:'**
+  String get migrationWizardTotalAffected;
+
+  /// No description provided for @migrationWizardExercisesWithAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 with alternatives} other{{count} with alternatives}}'**
+  String migrationWizardExercisesWithAlternatives(int count);
+
+  /// No description provided for @migrationWizardExercisesWithoutAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 without alternatives} other{{count} without alternatives}}'**
+  String migrationWizardExercisesWithoutAlternatives(int count);
+
+  /// No description provided for @migrationWizardImpactLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Impact:'**
+  String get migrationWizardImpactLabel;
+
+  /// No description provided for @migrationWizardNoImpactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Impact'**
+  String get migrationWizardNoImpactTitle;
+
+  /// No description provided for @migrationWizardContinueToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Review'**
+  String get migrationWizardContinueToReview;
+
+  /// No description provided for @migrationWizardSkipToConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to Confirmation'**
+  String get migrationWizardSkipToConfirmation;
+
+  /// No description provided for @migrationWizardExerciseXOfY.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise {current} of {total}'**
+  String migrationWizardExerciseXOfY(int current, int total);
+
+  /// No description provided for @migrationWizardNoAlternativesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No compatible alternatives found'**
+  String get migrationWizardNoAlternativesFound;
+
+  /// No description provided for @migrationWizardPreviousExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Exercise'**
+  String get migrationWizardPreviousExercise;
+
+  /// No description provided for @migrationWizardNextExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Exercise'**
+  String get migrationWizardNextExercise;
+
+  /// No description provided for @migrationWizardDecisionsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Decisions Summary:'**
+  String get migrationWizardDecisionsSummary;
+
+  /// No description provided for @migrationWizardReplaceAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace: {original} → {replacement}'**
+  String migrationWizardReplaceAction(String original, String replacement);
+
+  /// No description provided for @migrationWizardKeepAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep: {exercise}'**
+  String migrationWizardKeepAction(String exercise);
+
+  /// No description provided for @migrationWizardRemoveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove: {exercise}'**
+  String migrationWizardRemoveAction(String exercise);
+
+  /// No description provided for @migrationWizardBackToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Review'**
+  String get migrationWizardBackToReview;
+
+  /// No description provided for @migrationWizardApplyingChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Applying changes...'**
+  String get migrationWizardApplyingChanges;
+
+  /// No description provided for @migrationWizardRoutinesUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 routine updated} other{{count} routines updated}}'**
+  String migrationWizardRoutinesUpdated(int count);
+
+  /// No description provided for @migrationWizardTemplatesUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 template updated} other{{count} templates updated}}'**
+  String migrationWizardTemplatesUpdated(int count);
+
+  /// No description provided for @migrationWizardProfileSwitched.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile switched to: {profileName}'**
+  String migrationWizardProfileSwitched(String profileName);
+
+  /// No description provided for @migrationWizardDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get migrationWizardDone;
+
+  /// No description provided for @migrationWizardCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Migration'**
+  String get migrationWizardCancel;
+
+  /// No description provided for @migrationWizardCancelConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Migration?'**
+  String get migrationWizardCancelConfirmTitle;
+
+  /// No description provided for @migrationWizardCancelConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your decisions will not be saved and the equipment profile will not be changed.'**
+  String get migrationWizardCancelConfirmMessage;
+
+  /// No description provided for @migrationWizardProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress: {percent}%'**
+  String migrationWizardProgress(int percent);
+
+  /// No description provided for @migrationWizardError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error during migration: {error}'**
+  String migrationWizardError(String error);
+
+  /// No description provided for @migrationWizardRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get migrationWizardRetry;
+
+  /// Title for auto-shift confirmation banner
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Auto-Shifted'**
+  String get routineShiftTitle;
+
+  /// Message explaining the auto-shift
+  ///
+  /// In en, this message translates to:
+  /// **'We shifted \'{workoutName}\' to {date}. Confirm or skip permanently?'**
+  String routineShiftMessage(String workoutName, String date);
+
+  /// Button to confirm the auto-shift (recommended)
+  ///
+  /// In en, this message translates to:
+  /// **'OK, keep shift'**
+  String get routineShiftConfirm;
+
+  /// Button to revert shift and skip permanently (not recommended)
+  ///
+  /// In en, this message translates to:
+  /// **'Skip permanently'**
+  String get routineShiftRevert;
+
+  /// Success message after confirming shift
+  ///
+  /// In en, this message translates to:
+  /// **'Shift confirmed successfully'**
+  String get routineShiftConfirmed;
+
+  /// Error message when confirm fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to confirm shift'**
+  String get routineShiftConfirmFailed;
+
+  /// Success message after reverting shift
+  ///
+  /// In en, this message translates to:
+  /// **'Shift reverted, workout skipped'**
+  String get routineShiftReverted;
+
+  /// Error message when revert fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to revert shift'**
+  String get routineShiftRevertFailed;
+
+  /// Dialog title for confirming permanent skip
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Permanently?'**
+  String get routineShiftRevertConfirmTitle;
+
+  /// Dialog message warning about permanent skip
+  ///
+  /// In en, this message translates to:
+  /// **'This will undo the shift and mark the workout as skipped. This is not recommended. Are you sure?'**
+  String get routineShiftRevertConfirmMessage;
+
+  /// Date format for routine shift banner
+  ///
+  /// In en, this message translates to:
+  /// **'{month}/{day}/{year}'**
+  String routineDateFormat(int day, int month, int year);
+
+  /// Title for exercise rotation config step in wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Variation Rotation'**
+  String get exerciseRotationTitle;
+
+  /// Subtitle explaining exercise rotation benefits
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically rotate exercise variations every few weeks to keep your workouts fresh and prevent adaptation'**
+  String get exerciseRotationSubtitle;
+
+  /// Menu option to change/replace exercise with a variation or different exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Change Exercise'**
+  String get exerciseChangeVariation;
+
+  /// Success message after changing exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise changed successfully'**
+  String get exerciseChangeVariationSuccess;
+
+  /// Banner title when rotation is ready to apply
+  ///
+  /// In en, this message translates to:
+  /// **'Rotation Due Now!'**
+  String get rotationDueNow;
+
+  /// Banner title showing when next rotation will occur
+  ///
+  /// In en, this message translates to:
+  /// **'Next Rotation Scheduled'**
+  String get rotationNextScheduled;
+
+  /// Text shown when rotation is due
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to apply new exercise variations'**
+  String get rotationReadyToApply;
+
+  /// Button to apply rotation immediately when due
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Rotation Now'**
+  String get rotationApplyNow;
+
+  /// Button to apply rotation before scheduled date
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Early'**
+  String get rotationApplyEarly;
+
+  /// Shows weeks until rotation
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks, plural, =1{In 1 week} other{In {weeks} weeks}}'**
+  String rotationInWeeks(int weeks);
+
+  /// Confirmation message before applying rotation
+  ///
+  /// In en, this message translates to:
+  /// **'This will change all exercise variations in your routine. This action cannot be undone. Continue?'**
+  String get rotationApplyConfirmMessage;
+
+  /// Success message after rotation is applied
+  ///
+  /// In en, this message translates to:
+  /// **'Rotation applied successfully! All exercise variations have been updated.'**
+  String get rotationAppliedSuccess;
+
+  /// Error message when rotation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to apply rotation. Please try again.'**
+  String get rotationAppliedError;
+
+  /// Message shown when settings are successfully saved
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved'**
+  String get settingsSaved;
+
+  /// Message shown when no similar exercises are available for replacement
+  ///
+  /// In en, this message translates to:
+  /// **'No similar exercises found'**
+  String get noSimilarExercisesFound;
+
+  /// Filter label for exercises targeting the same muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Same muscle group'**
+  String get sameMuscleGroup;
+
+  /// Filter label for exercises using the same equipment
+  ///
+  /// In en, this message translates to:
+  /// **'Same equipment'**
+  String get sameEquipment;
+
+  /// Label for favorite exercises filter
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// Label for showing all exercise categories
+  ///
+  /// In en, this message translates to:
+  /// **'All categories'**
+  String get allCategories;
+
+  /// Label for showing all equipment types
+  ///
+  /// In en, this message translates to:
+  /// **'All equipment'**
+  String get allEquipment;
+
+  /// Header text for exercise replacement dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Replace this exercise with:'**
+  String get replaceExerciseWith;
+
+  /// Title for skip workout dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Workout'**
+  String get skipWorkoutTitle;
+
+  /// Warning message for consecutive skips
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} consecutive skip(s). Consider recovering them to maintain consistency.'**
+  String skipConsecutiveWarning(int count);
+
+  /// Question asking reason for skip
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you skipping?'**
+  String get skipWhyQuestion;
+
+  /// Question asking user choice for skip action
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do?'**
+  String get skipWhatToDo;
+
+  /// Title for recover option
+  ///
+  /// In en, this message translates to:
+  /// **'Recover (+1 day)'**
+  String get skipRecoverTitle;
+
+  /// Subtitle explaining recover option
+  ///
+  /// In en, this message translates to:
+  /// **'Shift entire routine by 1 day to recover this workout'**
+  String get skipRecoverSubtitle;
+
+  /// Title for skip permanently option
+  ///
+  /// In en, this message translates to:
+  /// **'Skip permanently'**
+  String get skipPermanentlyTitle;
+
+  /// Subtitle explaining skip permanently option
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this workout completely (cannot be recovered)'**
+  String get skipPermanentlySubtitle;
+
+  /// Label for optional notes field
+  ///
+  /// In en, this message translates to:
+  /// **'Additional notes (optional)'**
+  String get skipAdditionalNotes;
+
+  /// Hint text for notes field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Feeling under the weather...'**
+  String get skipNotesHint;
+
+  /// Title for impact preview section
+  ///
+  /// In en, this message translates to:
+  /// **'Impact on your progress'**
+  String get skipImpactTitle;
+
+  /// Label for current streak
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak'**
+  String get skipCurrentStreak;
+
+  /// Message indicating streak will be lost
+  ///
+  /// In en, this message translates to:
+  /// **'Will be lost'**
+  String get skipWillBeLost;
+
+  /// Label for adherence rate
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence Rate'**
+  String get skipAdherenceRate;
+
+  /// Label for days count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String skipDaysLabel(int count);
+
+  /// Skip reason: sick
+  ///
+  /// In en, this message translates to:
+  /// **'Sick'**
+  String get skipReasonSick;
+
+  /// Skip reason: injury
+  ///
+  /// In en, this message translates to:
+  /// **'Injury'**
+  String get skipReasonInjury;
+
+  /// Skip reason: busy
+  ///
+  /// In en, this message translates to:
+  /// **'Busy'**
+  String get skipReasonBusy;
+
+  /// Skip reason: tired
+  ///
+  /// In en, this message translates to:
+  /// **'Tired'**
+  String get skipReasonTired;
+
+  /// Skip reason: travel
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get skipReasonTravel;
+
+  /// Skip reason: weather
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get skipReasonWeather;
+
+  /// Skip reason: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get skipReasonOther;
+
+  /// Title for rotation preview dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Rotation Changes'**
+  String get rotationPreviewTitle;
+
+  /// Button to select all exercises for rotation
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get rotationSelectAll;
+
+  /// Button to deselect all exercises for rotation
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get rotationDeselectAll;
+
+  /// Label showing number of selected exercises
+  ///
+  /// In en, this message translates to:
+  /// **'{selected} of {total} selected'**
+  String rotationSelectedCount(int selected, int total);
+
+  /// Label for current variation
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get rotationCurrentLabel;
+
+  /// Label for new variation
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get rotationNewLabel;
+
+  /// Button to confirm and apply rotation changes
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Changes'**
+  String get rotationApplyChanges;
+
+  /// Badge text for new personal records
+  ///
+  /// In en, this message translates to:
+  /// **'NEW RECORD!'**
+  String get newRecordBadge;
+
+  /// Title for progress trend chart section
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Trend'**
+  String get progressTrend;
+
+  /// Title for statistics breakdown section
+  ///
+  /// In en, this message translates to:
+  /// **'Stats Breakdown'**
+  String get statsBreakdown;
+
+  /// Title for comparison and context section
+  ///
+  /// In en, this message translates to:
+  /// **'Comparison & Context'**
+  String get comparisonAndContext;
+
+  /// Title for notes and media section
+  ///
+  /// In en, this message translates to:
+  /// **'Notes & Media'**
+  String get notesAndMedia;
+
+  /// Title for related workout sessions section
+  ///
+  /// In en, this message translates to:
+  /// **'Related Sessions'**
+  String get relatedSessions;
+
+  /// Placeholder message for share feature
+  ///
+  /// In en, this message translates to:
+  /// **'Share functionality coming soon'**
+  String get shareFunctionalityComingSoon;
+
+  /// Placeholder message for edit feature
+  ///
+  /// In en, this message translates to:
+  /// **'Edit functionality coming soon'**
+  String get editFunctionalityComingSoon;
+
+  /// Title for delete record confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Record'**
+  String get deleteRecordTitle;
+
+  /// Confirmation message for deleting a personal record
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this personal record?'**
+  String get deleteRecordConfirmation;
+
+  /// Label for weight relative to bodyweight
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight Multiplier'**
+  String get bodyweightMultiplier;
+
+  /// Label for estimated one-rep max
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated 1RM'**
+  String get estimatedOneRM;
+
+  /// Subtitle explaining bodyweight multiplier
+  ///
+  /// In en, this message translates to:
+  /// **'Relative to {weight} kg bodyweight'**
+  String relativeToBodyweight(String weight);
+
+  /// Subtitle explaining 1RM calculation method
+  ///
+  /// In en, this message translates to:
+  /// **'Using Brzycki formula'**
+  String get usingBrzyckiFormula;
+
+  /// Subtitle explaining volume calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Total weight × reps'**
+  String get totalWeightReps;
+
+  /// Message shown when no trend data exists
+  ///
+  /// In en, this message translates to:
+  /// **'No trend data available'**
+  String get noTrendDataAvailable;
+
+  /// Label for 30 days time range
+  ///
+  /// In en, this message translates to:
+  /// **'30D'**
+  String get timeRangeLabel30D;
+
+  /// Label for 90 days time range
+  ///
+  /// In en, this message translates to:
+  /// **'90D'**
+  String get timeRangeLabel90D;
+
+  /// Label for all time range
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get timeRangeLabelAll;
+
+  /// Format for days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days ago'**
+  String daysAgo(int days);
+
+  /// Format for weeks ago
+  ///
+  /// In en, this message translates to:
+  /// **'{weeks} weeks ago'**
+  String weeksAgo(String weeks);
+
+  /// Format for months ago
+  ///
+  /// In en, this message translates to:
+  /// **'{months} months ago'**
+  String monthsAgo(String months);
+
+  /// Short format for days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d ago'**
+  String dAgo(String days);
+
+  /// Short format for number of sets
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sets'**
+  String setsCountShort(String count);
+
+  /// Format for volume in tons
+  ///
+  /// In en, this message translates to:
+  /// **'{value}t volume'**
+  String volumeInTons(String value);
+
+  /// Label for kilograms unit
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get kgLabel;
+
+  /// Debug logs settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Logs'**
+  String get debugLogsTitle;
+
+  /// Debug logs settings subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Configure logging categories'**
+  String get debugLogsSubtitle;
+
+  /// Debug logs settings description
+  ///
+  /// In en, this message translates to:
+  /// **'Enable or disable specific log categories to reduce console noise during debugging. All categories are disabled by default.'**
+  String get debugLogsDescription;
+
+  /// Button to enable all log categories
+  ///
+  /// In en, this message translates to:
+  /// **'Enable All'**
+  String get debugLogsEnableAll;
+
+  /// Button to disable all log categories
+  ///
+  /// In en, this message translates to:
+  /// **'Disable All'**
+  String get debugLogsDisableAll;
+
+  /// Shows count of enabled log categories
+  ///
+  /// In en, this message translates to:
+  /// **'{count} enabled'**
+  String debugLogsEnabledCount(int count);
+
+  /// Section title for log categories list
+  ///
+  /// In en, this message translates to:
+  /// **'Log Categories'**
+  String get debugLogsCategoriesTitle;
+
+  /// Snackbar message when all logs enabled
+  ///
+  /// In en, this message translates to:
+  /// **'All logs enabled successfully'**
+  String get debugLogsAllEnabled;
+
+  /// Snackbar message when all logs disabled
+  ///
+  /// In en, this message translates to:
+  /// **'All logs disabled successfully'**
+  String get debugLogsAllDisabled;
+
+  /// Snackbar message when a category is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'{category} enabled'**
+  String debugLogsCategoryEnabled(String category);
+
+  /// Snackbar message when a category is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'{category} disabled'**
+  String debugLogsCategoryDisabled(String category);
+
+  /// Exercise counting mode for weighted exercises (with weight)
+  ///
+  /// In en, this message translates to:
+  /// **'Weighted'**
+  String get countingModeWeighted;
+
+  /// Exercise counting mode for bodyweight exercises (reps only)
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get countingModeReps;
+
+  /// Exercise counting mode for time-based exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get countingModeTime;
+
+  /// Data refreshed successfully status message
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshed'**
+  String get refreshed;
+
+  /// Database version information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Version Information'**
+  String get versionInformation;
+
+  /// Title for Quick Start screen
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to GymBro!'**
+  String get quickStartTitle;
+
+  /// Subtitle for Quick Start screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your personalized fitness journey starts here'**
+  String get quickStartSubtitle;
+
+  /// Quick Start question asking about user experience
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have gym experience?'**
+  String get quickStartQuestion;
+
+  /// Description for Quick Start question
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us customize your experience'**
+  String get quickStartQuestionDescription;
+
+  /// Beginner option in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'No, I\'m new 🌱'**
+  String get quickStartBeginner;
+
+  /// Description for beginner option
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll guide you step-by-step'**
+  String get quickStartBeginnerDescription;
+
+  /// Expert option in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I\'m experienced 💪'**
+  String get quickStartExpert;
+
+  /// Description for expert option
+  ///
+  /// In en, this message translates to:
+  /// **'Get out of my way'**
+  String get quickStartExpertDescription;
+
+  /// Continue button in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get quickStartContinue;
+
+  /// Skip button in Quick Start
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get quickStartSkip;
+
+  /// Home empty state title for beginners
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to start your fitness journey? 🌱'**
+  String get homeEmptyBeginnerTitle;
+
+  /// Home empty state description for beginners
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t worry, I\'ll guide you through every step. Let\'s start with your first workout!'**
+  String get homeEmptyBeginnerDescription;
+
+  /// Home empty state CTA button for beginners
+  ///
+  /// In en, this message translates to:
+  /// **'Start My First Workout'**
+  String get homeEmptyBeginnerCTA;
+
+  /// Home empty state title for experts
+  ///
+  /// In en, this message translates to:
+  /// **'No active workout'**
+  String get homeEmptyExpertTitle;
+
+  /// Home empty state description for experts
+  ///
+  /// In en, this message translates to:
+  /// **'Start a quick workout or use a template'**
+  String get homeEmptyExpertDescription;
+
+  /// Home empty state CTA button for experts
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get homeEmptyExpertCTA;
+
+  /// Button to use a workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Use Template'**
+  String get useTemplate;
+
+  /// Semantic label for bullet points
+  ///
+  /// In en, this message translates to:
+  /// **'Bullet point'**
+  String get bullet;
+
+  /// Skip tour button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Tour'**
+  String get skipTour;
+
+  /// Auto-advance semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-advance'**
+  String get autoAdvance;
+
+  /// Auto-advance countdown
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-advance in {seconds}s'**
+  String autoAdvanceIn(int seconds);
+
+  /// Tour step 1 title - AI Coach
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach 👋'**
+  String get tourAiCoachTitle;
+
+  /// Tour step 1 description - AI Coach
+  ///
+  /// In en, this message translates to:
+  /// **'Hi! I\'m your AI Coach.\nI\'ll give you personalized tips after your first workout!'**
+  String get tourAiCoachDescription;
+
+  /// Tour step 2 title - FAB
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Start ⚡'**
+  String get tourFabTitle;
+
+  /// Tour step 2 description - FAB
+  ///
+  /// In en, this message translates to:
+  /// **'Press here to start a workout quickly.\nIt\'s the easiest way to track your progress!'**
+  String get tourFabDescription;
+
+  /// Tour step 3 title - Smart Workout
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Workout 🧠'**
+  String get tourSmartWorkoutTitle;
+
+  /// Tour step 3 description - Smart Workout
+  ///
+  /// In en, this message translates to:
+  /// **'Or let me create the perfect workout for you based on your goals!'**
+  String get tourSmartWorkoutDescription;
+
+  /// Tour step 4 title - Analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics - Your Progress 📊'**
+  String get tourAnalyticsTitle;
+
+  /// Tour step 4 description - Analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Here you\'ll find detailed charts of:'**
+  String get tourAnalyticsDescription;
+
+  /// Tour step 4 bullet 1
+  ///
+  /// In en, this message translates to:
+  /// **'Total volume per workout'**
+  String get tourAnalyticsBullet1;
+
+  /// Tour step 4 bullet 2
+  ///
+  /// In en, this message translates to:
+  /// **'Strength per exercise (estimated 1RM)'**
+  String get tourAnalyticsBullet2;
+
+  /// Tour step 4 bullet 3
+  ///
+  /// In en, this message translates to:
+  /// **'Personal records and improvements'**
+  String get tourAnalyticsBullet3;
+
+  /// Tour step 5 title - History
+  ///
+  /// In en, this message translates to:
+  /// **'Workout History 📅'**
+  String get tourHistoryTitle;
+
+  /// Tour step 5 description - History
+  ///
+  /// In en, this message translates to:
+  /// **'Here you\'ll find your complete workout history.\nReview past sessions and track your consistency!'**
+  String get tourHistoryDescription;
+
+  /// Tour step 6 title - Routine Center
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Center - Advanced Training 🏋️'**
+  String get tourRoutineCenterTitle;
+
+  /// Tour step 6 description - Routine Center
+  ///
+  /// In en, this message translates to:
+  /// **'Create multi-week programs with:'**
+  String get tourRoutineCenterDescription;
+
+  /// Tour step 6 bullet 1
+  ///
+  /// In en, this message translates to:
+  /// **'Periodization (strength → hypertrophy → deload)'**
+  String get tourRoutineCenterBullet1;
+
+  /// Tour step 6 bullet 2
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic template swapping'**
+  String get tourRoutineCenterBullet2;
+
+  /// Tour step 6 bullet 3
+  ///
+  /// In en, this message translates to:
+  /// **'Progress tracking for each phase'**
+  String get tourRoutineCenterBullet3;
+
+  /// Tour step 7 title - Community
+  ///
+  /// In en, this message translates to:
+  /// **'Community 🤝'**
+  String get tourCommunityTitle;
+
+  /// Tour step 7 description - Community
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with other athletes for motivation and support!'**
+  String get tourCommunityDescription;
+
+  /// Tour step 8 title - Notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications 🔔'**
+  String get tourNotificationsTitle;
+
+  /// Tour step 8 description - Notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications will keep you updated on milestones and tips!'**
+  String get tourNotificationsDescription;
+
+  /// Title for AI workout suggestion card
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Next Workout'**
+  String get suggestedNextWorkout;
+
+  /// Button to start suggested workout
+  ///
+  /// In en, this message translates to:
+  /// **'Start This Workout'**
+  String get startThisWorkout;
+
+  /// Button to show alternative workout suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Alternatives'**
+  String get alternatives;
+
+  /// Button to explain reasoning behind suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Why This Suggestion?'**
+  String get whyThisSuggestion;
+
+  /// Label for suggestion confidence level
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get confidence;
+
+  /// Badge for pattern-based suggestion level
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern'**
+  String get levelPattern;
+
+  /// Badge for routine-based suggestion level
+  ///
+  /// In en, this message translates to:
+  /// **'Routine'**
+  String get levelRoutine;
+
+  /// Badge for frequency-based suggestion level
+  ///
+  /// In en, this message translates to:
+  /// **'Frequent'**
+  String get levelFrequent;
+
+  /// Badge for day-based (default) suggestion level
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get levelDefault;
+
+  /// Badge when suggesting alternative template
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative'**
+  String get levelAlternative;
+
+  /// Empty state title when user has no workout history
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough workout data yet'**
+  String get notEnoughWorkoutData;
+
+  /// Empty state message explaining minimum workouts needed
+  ///
+  /// In en, this message translates to:
+  /// **'Complete at least 6 workouts to get personalized suggestions'**
+  String get completeWorkoutsForSuggestions;
+
+  /// Button to create new workout from empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Create Workout'**
+  String get createWorkout;
+
+  /// Loading message while analyzing workout history
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing your workout pattern...'**
+  String get analyzingWorkoutPattern;
+
+  /// Error message when suggestion generation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate workout suggestion'**
+  String get workoutSuggestionError;
+
+  /// Button/title to pause a routine
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Routine'**
+  String get pauseRoutine;
+
+  /// Modal title for pause routine dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Pause This Routine'**
+  String get pauseRoutineTitle;
+
+  /// Description in pause routine modal
+  ///
+  /// In en, this message translates to:
+  /// **'Your routine will be paused during this period. You won\'t receive workout reminders.'**
+  String get pauseRoutineDescription;
+
+  /// Label for pause reason selection
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for pause'**
+  String get pauseReason;
+
+  /// Pause reason: Injury
+  ///
+  /// In en, this message translates to:
+  /// **'Injury'**
+  String get pauseReasonInjury;
+
+  /// Pause reason: Sick or illness
+  ///
+  /// In en, this message translates to:
+  /// **'Sick/Illness'**
+  String get pauseReasonSick;
+
+  /// Pause reason: Vacation or travel
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation'**
+  String get pauseReasonVacation;
+
+  /// Pause reason: Work or life busy period
+  ///
+  /// In en, this message translates to:
+  /// **'Too Busy'**
+  String get pauseReasonBusy;
+
+  /// Pause reason: Mental health or burnout
+  ///
+  /// In en, this message translates to:
+  /// **'Burnout'**
+  String get pauseReasonBurnout;
+
+  /// Pause reason: Other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get pauseReasonOther;
+
+  /// Label for pause start date picker
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// Label for pause end date picker
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// Label for optional pause notes field
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get pauseNotes;
+
+  /// Hint text for pause notes field
+  ///
+  /// In en, this message translates to:
+  /// **'E.g., Shoulder injury - avoid overhead pressing'**
+  String get pauseNotesHint;
+
+  /// Button to confirm pause creation
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Routine'**
+  String get confirmPause;
+
+  /// Badge showing routine is paused
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get pausedBadge;
+
+  /// Shows when pause ends
+  ///
+  /// In en, this message translates to:
+  /// **'Paused until {date}'**
+  String pausedUntil(String date);
+
+  /// Shows days remaining in pause
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days remaining'**
+  String daysRemaining(int count);
+
+  /// Button to manually resume a paused routine
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Routine'**
+  String get resumeRoutine;
+
+  /// Success message when routine is resumed
+  ///
+  /// In en, this message translates to:
+  /// **'Routine resumed!'**
+  String get routineResumed;
+
+  /// Validation error: start date is in past
+  ///
+  /// In en, this message translates to:
+  /// **'Start date cannot be in the past'**
+  String get pauseValidationStartInPast;
+
+  /// Validation error: end date before start date
+  ///
+  /// In en, this message translates to:
+  /// **'End date must be after start date'**
+  String get pauseValidationEndBeforeStart;
+
+  /// Validation error: pause too long
+  ///
+  /// In en, this message translates to:
+  /// **'Pause duration cannot exceed {maxDays} days'**
+  String pauseValidationTooLong(int maxDays);
+
+  /// Validation error: overlapping pause exists
+  ///
+  /// In en, this message translates to:
+  /// **'Routine already paused until {date}'**
+  String pauseValidationOverlap(String date);
+
+  /// Dialog title for workout conflicts
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Workouts in Pause Range'**
+  String get conflictingWorkouts;
+
+  /// Message showing count of conflicting workouts
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} workouts scheduled during this pause. They will be automatically skipped.'**
+  String conflictingWorkoutsMessage(int count);
+
+  /// Button to confirm pause despite conflicts
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Pause'**
+  String get confirmAndPause;
+
+  /// Placeholder when no date selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get selectDate;
+
+  /// Generic pause label
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// Success message when routine is paused
+  ///
+  /// In en, this message translates to:
+  /// **'Routine paused successfully'**
+  String get routinePaused;
+
+  /// Success message after creating a template from routine editor empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Template created! Select it below to continue.'**
+  String get routineTemplateCreatedSuccess;
+
+  /// Level system header
+  ///
+  /// In en, this message translates to:
+  /// **'Level System'**
+  String get levelSystem;
+
+  /// Current level label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Level'**
+  String get currentLevel;
+
+  /// Progress indicator suffix
+  ///
+  /// In en, this message translates to:
+  /// **'to next level'**
+  String get toNextLevel;
+
+  /// Level label
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get level;
+
+  /// Current status indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get current;
+
+  /// Default level name
+  ///
+  /// In en, this message translates to:
+  /// **'Elite'**
+  String get elite;
+
+  /// Level 2 name
+  ///
+  /// In en, this message translates to:
+  /// **'Novice'**
+  String get novice;
+
+  /// Level 5 name
+  ///
+  /// In en, this message translates to:
+  /// **'Expert'**
+  String get expert;
+
+  /// Level 6 name
+  ///
+  /// In en, this message translates to:
+  /// **'Master'**
+  String get master;
+
+  /// Level 7 name
+  ///
+  /// In en, this message translates to:
+  /// **'Grandmaster'**
+  String get grandmaster;
+
+  /// Level 8 name
+  ///
+  /// In en, this message translates to:
+  /// **'Champion'**
+  String get champion;
+
+  /// Level 9 name
+  ///
+  /// In en, this message translates to:
+  /// **'Legend'**
+  String get legend;
+
+  /// Level 10 name
+  ///
+  /// In en, this message translates to:
+  /// **'Titan'**
+  String get titan;
+
+  /// Level 1 description
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re just getting started! Complete your first workouts to level up.'**
+  String get levelDesc1;
+
+  /// Level 2 description
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve completed your first workouts. Keep the momentum going!'**
+  String get levelDesc2;
+
+  /// Level 3 description
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re building solid workout habits. Consistency is key!'**
+  String get levelDesc3;
+
+  /// Level 4 description
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced lifter! Your dedication shows in your progress.'**
+  String get levelDesc4;
+
+  /// Level 5 description
+  ///
+  /// In en, this message translates to:
+  /// **'Expert level achieved! You\'re mastering your training.'**
+  String get levelDesc5;
+
+  /// Level 6 description
+  ///
+  /// In en, this message translates to:
+  /// **'Master of fitness! Your consistency inspires others.'**
+  String get levelDesc6;
+
+  /// Level 7 description
+  ///
+  /// In en, this message translates to:
+  /// **'Grandmaster status! Few reach this level of dedication.'**
+  String get levelDesc7;
+
+  /// Level 8 description
+  ///
+  /// In en, this message translates to:
+  /// **'Champion! You\'re in the top tier of athletes.'**
+  String get levelDesc8;
+
+  /// Level 9 description
+  ///
+  /// In en, this message translates to:
+  /// **'Legendary status! Your discipline is unmatched.'**
+  String get levelDesc9;
+
+  /// Level 10 description
+  ///
+  /// In en, this message translates to:
+  /// **'Titan! The ultimate level of fitness mastery.'**
+  String get levelDesc10;
+
+  /// Level 1 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Track your first workouts'**
+  String get benefit1_1;
+
+  /// Level 1 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Learn the basics of progress tracking'**
+  String get benefit1_2;
+
+  /// Level 2 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock workout analytics'**
+  String get benefit2_1;
+
+  /// Level 2 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Access basic progress charts'**
+  String get benefit2_2;
+
+  /// Level 3 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced exercise library access'**
+  String get benefit3_1;
+
+  /// Level 3 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Workout templates available'**
+  String get benefit3_2;
+
+  /// Level 3 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Custom workout creation'**
+  String get benefit3_3;
+
+  /// Level 4 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Personal records tracking'**
+  String get benefit4_1;
+
+  /// Level 4 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced analytics dashboard'**
+  String get benefit4_2;
+
+  /// Level 4 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Volume and intensity insights'**
+  String get benefit4_3;
+
+  /// Level 5 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Expert workout recommendations'**
+  String get benefit5_1;
+
+  /// Level 5 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Periodization suggestions'**
+  String get benefit5_2;
+
+  /// Level 5 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery optimization'**
+  String get benefit5_3;
+
+  /// Level 6 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Master-level training programs'**
+  String get benefit6_1;
+
+  /// Level 6 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced progression tracking'**
+  String get benefit6_2;
+
+  /// Level 6 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle group balance analysis'**
+  String get benefit6_3;
+
+  /// Level 7 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Elite training protocols'**
+  String get benefit7_1;
+
+  /// Level 7 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Competition preparation tools'**
+  String get benefit7_2;
+
+  /// Level 7 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Performance optimization'**
+  String get benefit7_3;
+
+  /// Level 8 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Champion workout strategies'**
+  String get benefit8_1;
+
+  /// Level 8 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Peak performance planning'**
+  String get benefit8_2;
+
+  /// Level 8 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced recovery protocols'**
+  String get benefit8_3;
+
+  /// Level 9 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Legendary training methods'**
+  String get benefit9_1;
+
+  /// Level 9 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Pro-level analytics'**
+  String get benefit9_2;
+
+  /// Level 9 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Ultimate performance tracking'**
+  String get benefit9_3;
+
+  /// Level 10 benefit 1
+  ///
+  /// In en, this message translates to:
+  /// **'Titan workout mastery'**
+  String get benefit10_1;
+
+  /// Level 10 benefit 2
+  ///
+  /// In en, this message translates to:
+  /// **'Complete training ecosystem'**
+  String get benefit10_2;
+
+  /// Level 10 benefit 3
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum potential unlocked'**
+  String get benefit10_3;
+
+  /// Average effort level metric
+  ///
+  /// In en, this message translates to:
+  /// **'Average Effort Level'**
+  String get averageEffortLevel;
+
+  /// Fitness level label
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness Level'**
+  String get fitnessLevel;
+
+  /// Display option for level and XP
+  ///
+  /// In en, this message translates to:
+  /// **'Level & XP Only'**
+  String get levelAndXpOnly;
+
+  /// Level requirement message
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} Required'**
+  String levelRequired(int level);
+
+  /// Monday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get mon;
+
+  /// Tuesday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get tue;
+
+  /// Wednesday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get wed;
+
+  /// Thursday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get thu;
+
+  /// Friday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get fri;
+
+  /// Saturday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get sat;
+
+  /// Sunday abbreviation
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get sun;
+
+  /// Velocity analytics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Velocity Analytics'**
+  String get velocityAnalytics;
+
+  /// Performance heatmap title
+  ///
+  /// In en, this message translates to:
+  /// **'Performance Heatmap'**
+  String get performanceHeatmap;
+
+  /// Load-velocity relationship
+  ///
+  /// In en, this message translates to:
+  /// **'Load-Velocity'**
+  String get loadVelocity;
+
+  /// Velocity metric
+  ///
+  /// In en, this message translates to:
+  /// **'Velocity'**
+  String get velocity;
+
+  /// Load/weight metric
+  ///
+  /// In en, this message translates to:
+  /// **'Load'**
+  String get load;
+
+  /// Minimum velocity threshold
+  ///
+  /// In en, this message translates to:
+  /// **'Min Velocity'**
+  String get minVelocity;
+
+  /// Average velocity loss metric
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Velocity Loss'**
+  String get avgVelocityLoss;
+
+  /// Optimal training load
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal Load'**
+  String get optimalLoad;
+
+  /// Exercise execution time
+  ///
+  /// In en, this message translates to:
+  /// **'Execution Time'**
+  String get executionTime;
+
+  /// Exercise form quality score
+  ///
+  /// In en, this message translates to:
+  /// **'Form Score'**
+  String get formScore;
+
+  /// Quality metric
+  ///
+  /// In en, this message translates to:
+  /// **'Quality'**
+  String get quality;
+
+  /// Fatigue accumulation metric
+  ///
+  /// In en, this message translates to:
+  /// **'Fatigue Index'**
+  String get fatigueIndex;
+
+  /// Explosive training zone
+  ///
+  /// In en, this message translates to:
+  /// **'Explosive Zone'**
+  String get explosiveZone;
+
+  /// Speed training zone
+  ///
+  /// In en, this message translates to:
+  /// **'Speed Zone'**
+  String get speedZone;
+
+  /// Training zones
+  ///
+  /// In en, this message translates to:
+  /// **'Zones'**
+  String get zones;
+
+  /// Loading message for velocity analysis
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing velocity data...'**
+  String get analyzingVelocityData;
+
+  /// Error message for missing velocity data
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient velocity data'**
+  String get insufficientVelocityData;
+
+  /// Error message for velocity analysis failure
+  ///
+  /// In en, this message translates to:
+  /// **'Velocity analysis error'**
+  String get velocityAnalysisError;
+
+  /// Empty state message for performance data
+  ///
+  /// In en, this message translates to:
+  /// **'No performance data available'**
+  String get noPerformanceData;
+
+  /// Empty state instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Start a workout to see data'**
+  String get startWorkoutToSeeData;
+
+  /// Key insights section header
+  ///
+  /// In en, this message translates to:
+  /// **'Key Insights'**
+  String get keyInsights;
+
+  /// Action hint for expandable content
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for more info'**
+  String get tapForMoreInfo;
+
+  /// Action hint to collapse content
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to collapse'**
+  String get tapToCollapse;
+
+  /// Help dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'What does this mean?'**
+  String get whatDoesThisMean;
+
+  /// Help section title
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get helpTitle;
+
+  /// Default help content placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'More information coming soon'**
+  String get defaultHelpContent;
+
+  /// Formula/calculation label
+  ///
+  /// In en, this message translates to:
+  /// **'Formula'**
+  String get formula;
+
+  /// Example label
+  ///
+  /// In en, this message translates to:
+  /// **'Example'**
+  String get example;
+
+  /// General tip label
+  ///
+  /// In en, this message translates to:
+  /// **'General Tip'**
+  String get generalTip;
+
+  /// Volume metric explanation title
+  ///
+  /// In en, this message translates to:
+  /// **'Total Volume'**
+  String get volumeExplanation;
+
+  /// Volume metric explanation description
+  ///
+  /// In en, this message translates to:
+  /// **'Total volume = Sets × Reps × Weight. Measures total training load.'**
+  String get volumeExplanationDesc;
+
+  /// Volume training tip
+  ///
+  /// In en, this message translates to:
+  /// **'Gradually increase volume by 5-10% per week to avoid overtraining.'**
+  String get volumeTip;
+
+  /// Intensity metric explanation title
+  ///
+  /// In en, this message translates to:
+  /// **'Training Intensity'**
+  String get intensityExplanation;
+
+  /// Intensity metric explanation description
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage of your one-rep max (1RM) used in training.'**
+  String get intensityExplanationDesc;
+
+  /// Intensity training tip
+  ///
+  /// In en, this message translates to:
+  /// **'Vary intensity: 60-75% for volume, 80-90% for strength, 90%+ for power.'**
+  String get intensityTip;
+
+  /// Sets metric explanation title
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sets'**
+  String get setsExplanation;
+
+  /// Sets metric explanation description
+  ///
+  /// In en, this message translates to:
+  /// **'Number of sets performed across all exercises.'**
+  String get setsExplanationDesc;
+
+  /// Sets training tip
+  ///
+  /// In en, this message translates to:
+  /// **'Research suggests 10-20 sets per muscle group per week for hypertrophy.'**
+  String get setsTip;
+
+  /// Streak metric explanation title
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Streak'**
+  String get streakExplanation;
+
+  /// Streak metric explanation description
+  ///
+  /// In en, this message translates to:
+  /// **'Consecutive days with at least one completed workout.'**
+  String get streakExplanationDesc;
+
+  /// Streak training tip
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency beats intensity. Even light workouts maintain your streak.'**
+  String get streakTip;
+
+  /// 1RM explanation title
+  ///
+  /// In en, this message translates to:
+  /// **'One-Rep Max (1RM)'**
+  String get oneRmExplanation;
+
+  /// 1RM explanation description
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum weight you can lift for a single repetition.'**
+  String get oneRmExplanationDesc;
+
+  /// 1RM training tip
+  ///
+  /// In en, this message translates to:
+  /// **'Test 1RM every 4-8 weeks to track strength progress safely.'**
+  String get oneRmTip;
+
+  /// Total volume help question
+  ///
+  /// In en, this message translates to:
+  /// **'What is Total Volume?'**
+  String get whatIsTotalVolume;
+
+  /// Total volume explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Total weight lifted across all sets and reps (Sets × Reps × Weight).'**
+  String get totalVolumeExplanation;
+
+  /// Total volume example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 3 sets × 10 reps × 50kg = 1,500kg total volume'**
+  String get totalVolumeExample;
+
+  /// Total sets help question
+  ///
+  /// In en, this message translates to:
+  /// **'What are Total Sets?'**
+  String get whatAreTotalSets;
+
+  /// Total sets explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Number of sets performed across all exercises in your workout.'**
+  String get totalSetsExplanation;
+
+  /// Total sets example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 4 sets squats + 3 sets bench press = 7 total sets'**
+  String get totalSetsExample;
+
+  /// Workout frequency help question
+  ///
+  /// In en, this message translates to:
+  /// **'What is Workout Frequency?'**
+  String get whatIsWorkoutFrequency;
+
+  /// Workout frequency explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Number of training sessions per week or muscle group hits per week.'**
+  String get workoutFrequencyExplanation;
+
+  /// Workout frequency example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Training chest 2× per week = 2× frequency'**
+  String get workoutFrequencyExample;
+
+  /// Personal record help question
+  ///
+  /// In en, this message translates to:
+  /// **'What is a Personal Record (PR)?'**
+  String get whatIsPersonalRecord;
+
+  /// Personal record explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Your best performance for a specific exercise (max weight, reps, or volume).'**
+  String get personalRecordExplanation;
+
+  /// Personal record example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Bench press 100kg × 5 reps beats your previous 95kg × 5 reps'**
+  String get personalRecordExample;
+
+  /// Muscle balance help question
+  ///
+  /// In en, this message translates to:
+  /// **'What is Muscle Balance?'**
+  String get whatIsMuscleBalance;
+
+  /// Muscle balance example
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Training chest 3× per week but back only 1× creates imbalance'**
+  String get muscleBalanceExample;
+
+  /// Next milestone label
+  ///
+  /// In en, this message translates to:
+  /// **'Next Milestone'**
+  String get nextMilestone;
+
+  /// Days remaining suffix
+  ///
+  /// In en, this message translates to:
+  /// **'days to go'**
+  String get daysToGo;
+
+  /// Comparison to previous period
+  ///
+  /// In en, this message translates to:
+  /// **'vs last period'**
+  String get vsLastPeriod;
+
+  /// Last year time period
+  ///
+  /// In en, this message translates to:
+  /// **'Last Year'**
+  String get lastYear;
+
+  /// Color shade identifier
+  ///
+  /// In en, this message translates to:
+  /// **'Shade 400'**
+  String get shade400;
+
+  /// Time period - last N months
+  ///
+  /// In en, this message translates to:
+  /// **'Last {n} months'**
+  String lastNMonths(int n);
+
+  /// Time period - last N days
+  ///
+  /// In en, this message translates to:
+  /// **'Last {n} days'**
+  String lastNDays(int n);
+
+  /// Error when workout template is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Template not found'**
+  String get templateNotFound;
+
+  /// Error loading workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading template: {error}'**
+  String templateLoadError(String error);
+
+  /// Loading workout template message
+  ///
+  /// In en, this message translates to:
+  /// **'Loading template...'**
+  String get loadingTemplate;
+
+  /// Generic unexpected error message
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected error: {error}'**
+  String unexpectedError(String error);
 }
 
 class _AppLocalizationsDelegate

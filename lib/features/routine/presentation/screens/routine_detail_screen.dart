@@ -33,6 +33,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/widgets/stats_d
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/day_detail_sheet.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/dialogs/recovery_picker_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Detail screen for a specific flexible routine
 class RoutineDetailScreen extends ConsumerWidget {
@@ -153,7 +154,7 @@ class RoutineDetailScreen extends ConsumerWidget {
             color: context.colors.onSurface,
           ),
         ),
-        background: Container(
+        background: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -223,7 +224,7 @@ class RoutineDetailScreen extends ConsumerWidget {
         // More actions menu
         IconButton(
           onPressed: () => _showMoreActions(context, ref, routine),
-          icon: const Icon(Icons.more_vert),
+          icon: const Icon(AppIcons.moreVert),
         ),
       ],
     );
@@ -272,7 +273,7 @@ class RoutineDetailScreen extends ConsumerWidget {
         leading: CircleAvatar(
           backgroundColor: context.colors.errorContainer,
           child: Icon(
-            Icons.event_busy,
+            AppIcons.eventBusy,
             color: context.colors.error,
           ),
         ),
@@ -485,7 +486,7 @@ class RoutineDetailScreen extends ConsumerWidget {
           children: [
             ListTile(
               leading: Icon(
-                Icons.edit_calendar,
+                AppIcons.editCalendar,
                 color: context.colors.primary,
               ),
               title: const Text('Edit Schedule'),

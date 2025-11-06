@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Custom pattern builder widget
 class CustomPatternBuilder extends ConsumerStatefulWidget {
@@ -63,7 +64,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
           Row(
             children: [
               Icon(
-                Icons.edit_calendar,
+                AppIcons.editCalendar,
                 color: context.colors.tertiary,
                 size: 28,
               ),
@@ -180,7 +181,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.drag_handle,
+                  AppIcons.dragHandle,
                   color: context.colors.onSurfaceVariant,
                 ),
                 const SizedBox(width: 8),
@@ -246,7 +247,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.3),
+                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -303,7 +304,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.inbox,
+                                  AppIcons.inbox,
                                   size: 64,
                                   color: context.colors.onSurface.withValues(alpha: 0.3),
                                 ),

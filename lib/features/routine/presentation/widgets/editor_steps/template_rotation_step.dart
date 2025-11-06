@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Step 4: Arrange rotation order and preview distribution
 class TemplateRotationStep extends ConsumerWidget {
@@ -75,7 +76,7 @@ class TemplateRotationStep extends ConsumerWidget {
       );
     }
 
-    final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
+    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     return templatesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -88,12 +89,18 @@ class TemplateRotationStep extends ConsumerWidget {
         ),
       ),
       data: (allTemplates) {
-        // Map IDs to actual templates
+        // Map IDs to actual templates, filtering out any not found
         final selectedTemplates = selectedTemplateIds
-            .map((id) => allTemplates.firstWhere(
-                  (t) => t.id == id,
-                  orElse: () => allTemplates.first,
-                ))
+            .map((id) {
+              try {
+                return allTemplates.firstWhere((t) => t.id == id);
+              } catch (e) {
+                // Template not found - this shouldn't happen but handle gracefully
+                debugPrint('⚠️ Template with ID $id not found in provider');
+                return null;
+              }
+            })
+            .whereType<WorkoutTemplate>() // Filter out nulls
             .toList();
 
         return _buildContent(context, ref, state, selectedTemplates);
@@ -199,7 +206,7 @@ class TemplateRotationStep extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.drag_handle,
+              AppIcons.dragHandle,
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
             const SizedBox(width: 8),

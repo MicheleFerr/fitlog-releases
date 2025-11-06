@@ -20,6 +20,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Card widget for displaying a flexible routine
 class RoutineCard extends StatelessWidget {
@@ -152,7 +154,7 @@ class RoutineCard extends StatelessWidget {
 
     switch (routine.type) {
       case RoutineType.weekly:
-        icon = Icons.calendar_view_week;
+        icon = AppIcons.calendarViewWeek;
         color = context.colors.primary;
         break;
       case RoutineType.monthly:
@@ -160,16 +162,16 @@ class RoutineCard extends StatelessWidget {
         color = context.colors.secondary;
         break;
       case RoutineType.bimonthly:
-        icon = Icons.date_range;
+        icon = AppIcons.dateRange;
         color = context.colors.tertiary;
         break;
       case RoutineType.semester:
-        icon = Icons.event_note;
-        color = Colors.purple;
+        icon = AppIcons.eventNote;
+        color = context.colors.tertiary;
         break;
       case RoutineType.custom:
-        icon = Icons.tune;
-        color = Colors.orange;
+        icon = AppIcons.tune;
+        color = context.colors.secondary;
         break;
     }
 
@@ -301,7 +303,7 @@ class RoutineCard extends StatelessWidget {
         Expanded(
           child: _buildStatChip(
             context,
-            icon: Icons.event_busy,
+            icon: AppIcons.eventBusy,
             label: 'Skipped',
             value: '${routine.skipTracker.totalSkips}',
             color: context.colors.secondary,
@@ -314,7 +316,7 @@ class RoutineCard extends StatelessWidget {
             icon: Icons.check_circle,
             label: 'Completed',
             value: '${routine.completedDays}/${routine.totalWorkoutDays}',
-            color: Colors.green,
+            color: context.colors.success,
           ),
         ),
       ],
@@ -394,7 +396,7 @@ class RoutineCard extends StatelessWidget {
         // More actions menu
         IconButton(
           onPressed: () => _showMoreActions(context),
-          icon: const Icon(Icons.more_vert),
+          icon: const Icon(AppIcons.moreVert),
           color: context.colors.onSurface.withValues(alpha: 0.7),
         ),
       ],
@@ -482,9 +484,9 @@ class RoutineCard extends StatelessWidget {
 
   Color _getAdherenceColor(BuildContext context, double adherence) {
     if (adherence >= 80) {
-      return Colors.green;
+      return context.colors.success;
     } else if (adherence >= 60) {
-      return Colors.orange;
+      return context.colors.secondary;
     } else {
       return context.colors.error;
     }

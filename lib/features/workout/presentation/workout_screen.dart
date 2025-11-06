@@ -38,7 +38,21 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:flutter/foundation.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
-  const WorkoutScreen({super.key});
+  /// Optional template ID to pre-load when opening the screen
+  final String? initialTemplateId;
+
+  /// Session ID for analytics correlation
+  final String? sessionId;
+
+  /// Whether this screen was opened from the Smart CTA
+  final bool fromSmartCTA;
+
+  const WorkoutScreen({
+    super.key,
+    this.initialTemplateId,
+    this.sessionId,
+    this.fromSmartCTA = false,
+  });
 
   @override
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
@@ -56,6 +70,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
 
     // 💾 Add lifecycle observer for force-saving when app goes to background
     WidgetsBinding.instance.addObserver(this);
+
+    // 🚀 Auto-load template from Smart CTA if provided
+    if (widget.initialTemplateId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadTemplateAndStart(widget.initialTemplateId!);
+      });
+    }
   }
 
   @override
@@ -780,22 +801,81 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     );
   }
 
+  /// Load template by ID and start workout (called from Smart CTA)
+  Future<void> _loadTemplateAndStart(String templateId) async {
+    if (!mounted) return;
+
+    try {
+      // Load all templates from provider
+      final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+
+      await templatesAsync.when(
+        data: (templates) async {
+          // Find the template by ID
+          final template = templates.where((t) => t.id == templateId).firstOrNull;
+
+          if (template == null) {
+            if (mounted) {
+              SnackBarService.showError(
+                context,
+                context.l10n.templateNotFound,
+              );
+            }
+            return;
+          }
+
+          // Start workout from template
+          if (mounted) {
+            await _startWorkoutFromTemplate(context, ref, template);
+
+            // Show CTA-specific message if needed
+            if (widget.fromSmartCTA && mounted) {
+              if (kDebugMode) {
+                debugPrint('🚀 [WorkoutScreen] Started workout from Smart CTA: ${template.name}');
+              }
+            }
+          }
+        },
+        loading: () {
+          if (mounted) {
+            SnackBarService.showInfo(context, context.l10n.loadingTemplate);
+          }
+        },
+        error: (error, stack) {
+          if (mounted) {
+            SnackBarService.showError(
+              context,
+              context.l10n.templateLoadError(error.toString()),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.unexpectedError(e.toString()),
+        );
+      }
+    }
+  }
+
   void _startWorkoutFromTemplate(BuildContext context, WidgetRef ref, wt.WorkoutTemplate template) async {
     try {
       // Incrementa contatore utilizzo
       await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
-      
+
       // Crea workout dal template
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
       workoutNotifier.createWorkout(template.name);
       workoutNotifier.startWorkout();
-      
+
       // Aggiungi esercizi dal template
       final exercises = template.toWorkoutExercises();
       for (final exercise in exercises) {
         workoutNotifier.addExercise(exercise);
       }
-      
+
       // Mostra messaggio di successo
       SnackBarService.showSuccess(
         context,

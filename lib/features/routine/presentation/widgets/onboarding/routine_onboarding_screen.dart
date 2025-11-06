@@ -19,6 +19,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Onboarding screen for routine feature
 class RoutineOnboardingScreen extends ConsumerStatefulWidget {
@@ -286,7 +288,7 @@ class _RoutineOnboardingScreenState
             number: 1,
             title: context.l10n.routineOnboardingStep1Title,
             description: context.l10n.routineOnboardingStep1Desc,
-            icon: Icons.create,
+            icon: AppIcons.create,
           ),
           const SizedBox(height: 24),
           _buildStepItem(
@@ -331,7 +333,7 @@ class _RoutineOnboardingScreenState
             icon: Icons.track_changes,
             title: context.l10n.routineOnboardingBenefit1Title,
             description: context.l10n.routineOnboardingBenefit1Desc,
-            color: Colors.blue,
+            color: context.colors.primary,
           ),
           const SizedBox(height: 16),
           _buildBenefitCard(
@@ -339,7 +341,7 @@ class _RoutineOnboardingScreenState
             icon: Icons.insights,
             title: context.l10n.routineOnboardingBenefit2Title,
             description: context.l10n.routineOnboardingBenefit2Desc,
-            color: Colors.green,
+            color: context.colors.success,
           ),
           const SizedBox(height: 16),
           _buildBenefitCard(
@@ -347,7 +349,7 @@ class _RoutineOnboardingScreenState
             icon: Icons.auto_awesome,
             title: context.l10n.routineOnboardingBenefit3Title,
             description: context.l10n.routineOnboardingBenefit3Desc,
-            color: Colors.orange,
+            color: context.colors.secondary,
           ),
           const SizedBox(height: 32),
 

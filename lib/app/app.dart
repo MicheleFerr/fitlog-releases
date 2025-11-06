@@ -183,7 +183,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/workout',
         name: 'workout',
-        builder: (context, state) => const WorkoutScreen(),
+        builder: (context, state) {
+          // Read queryParameters from CTA or direct navigation
+          final templateId = state.uri.queryParameters['templateId'];
+          final sessionId = state.uri.queryParameters['sessionId'];
+          final fromSmartCTA = state.uri.queryParameters['fromSmartCTA'] == 'true';
+
+          return WorkoutScreen(
+            initialTemplateId: templateId,
+            sessionId: sessionId,
+            fromSmartCTA: fromSmartCTA,
+          );
+        },
       ),
       GoRoute(
         path: '/workout-completion-summary',

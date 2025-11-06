@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DayDetailSheet extends ConsumerStatefulWidget {
 
@@ -56,7 +57,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
 
     final statsAsync = ref.watch(dayStatsProvider(statsParams));
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -92,7 +93,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: context.colors.onSurface.withOpacity(0.3),
+                color: context.colors.onSurface.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -173,7 +174,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           Text(
             dateFormat.format(widget.date),
             style: context.textTheme.bodyLarge?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.7),
+              color: context.colors.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -191,9 +192,9 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: statusColor.withOpacity(0.15),
+          color: statusColor.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: statusColor.withOpacity(0.3)),
+          border: Border.all(color: statusColor.withValues(alpha: 0.3)),
         ),
         child: Row(
           children: [
@@ -276,8 +277,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.amber.withOpacity(0.2),
-                    Colors.orange.withOpacity(0.2),
+                    Colors.amber.withValues(alpha: 0.2),
+                    Colors.orange.withValues(alpha: 0.2),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -319,7 +320,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           child: Text(
             label,
             style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.7),
+              color: context.colors.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -346,7 +347,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
@@ -461,7 +462,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: context.colors.primary.withOpacity(0.1),
+                              color: context.colors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -545,7 +546,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                           child: Text(
                             '${workout.totalVolume.toStringAsFixed(0)} kg • ${workout.duration.inMinutes} min',
                             style: context.textTheme.bodySmall?.copyWith(
-                              color: context.colors.onSurface.withOpacity(0.7),
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
                           ),
                         ),
@@ -610,7 +611,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 child: Icon(
                   Icons.info_outline,
                   size: 18,
-                  color: context.colors.primary.withOpacity(0.6),
+                  color: context.colors.primary.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -619,7 +620,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           Text(
             'Based on your performance metrics',
             style: context.textTheme.bodySmall?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.6),
+              color: context.colors.onSurface.withValues(alpha: 0.6),
               fontStyle: FontStyle.italic,
             ),
           ),
@@ -628,10 +629,10 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             data: (suggestions) => Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withOpacity(0.3),
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: context.colors.primary.withOpacity(0.3),
+                  color: context.colors.primary.withValues(alpha: 0.3),
                 ),
               ),
               child: Column(
@@ -672,8 +673,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.orange.withOpacity(0.2),
-                    Colors.red.withOpacity(0.2),
+                    Colors.orange.withValues(alpha: 0.2),
+                    Colors.red.withValues(alpha: 0.2),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -793,7 +794,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       case DayStatus.skipped:
         return Icons.skip_next;
       case DayStatus.recovered:
-        return Icons.replay;
+        return AppIcons.replay;
       case DayStatus.rest:
         return Icons.hotel;
     }
