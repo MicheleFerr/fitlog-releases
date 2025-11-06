@@ -287,5 +287,155 @@ void main() {
       expect(find.textContaining('83.0'), findsOneWidget); // 83% for 6RM
       expect(find.textContaining('75.0'), findsOneWidget); // 75% for 10RM
     });
+
+    testWidgets('selecting "From Last Workout" calls onOptionSelected', (WidgetTester tester) async {
+      String? selectedOption;
+      double? selectedValue;
+
+      await tester.pumpWidget(
+        buildTestWidget(
+          child: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => AutoAdjustmentModalNoHistory(
+                      onOptionSelected: (option, value) {
+                        selectedOption = option;
+                        selectedValue = value;
+                      },
+                    ),
+                  );
+                },
+                child: const Text('Show Modal'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Show Modal'));
+      await tester.pumpAndSettle();
+
+      // Select "From Last Workout" option
+      await tester.tap(find.textContaining('Last Workout'));
+      await tester.pumpAndSettle();
+
+      // Should show text field (needs input like manual)
+      expect(find.byType(TextField), findsOneWidget);
+
+      // Enter value from last workout
+      await tester.enterText(find.byType(TextField), '80');
+      await tester.pumpAndSettle();
+
+      // Scroll to make continue button visible
+      await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
+      await tester.pumpAndSettle();
+
+      // Tap continue
+      await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
+      await tester.pumpAndSettle();
+
+      expect(selectedOption, equals('lastWorkout'));
+      expect(selectedValue, equals(80.0));
+    });
+
+    testWidgets('selecting "Test Set" calls onOptionSelected without value', (WidgetTester tester) async {
+      String? selectedOption;
+      double? selectedValue;
+
+      await tester.pumpWidget(
+        buildTestWidget(
+          child: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => AutoAdjustmentModalNoHistory(
+                      onOptionSelected: (option, value) {
+                        selectedOption = option;
+                        selectedValue = value;
+                      },
+                    ),
+                  );
+                },
+                child: const Text('Show Modal'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Show Modal'));
+      await tester.pumpAndSettle();
+
+      // Select "Test Set" option
+      await tester.tap(find.textContaining('Test Set'));
+      await tester.pumpAndSettle();
+
+      // Should NOT show text field (test set doesn't need upfront input)
+      expect(find.byType(TextField), findsNothing);
+
+      // Continue button should be enabled immediately
+      final continueButton = find.widgetWithText(FilledButton, 'Continue');
+      expect(tester.widget<FilledButton>(continueButton).onPressed, isNotNull);
+
+      // Scroll to make continue button visible
+      await tester.ensureVisible(continueButton);
+      await tester.pumpAndSettle();
+
+      // Tap continue
+      await tester.tap(continueButton);
+      await tester.pumpAndSettle();
+
+      expect(selectedOption, equals('testSet'));
+      expect(selectedValue, isNull); // No value needed for test set
+    });
+
+    testWidgets('all text is properly localized', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        buildTestWidget(
+          child: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) => AutoAdjustmentModalNoHistory(
+                      onOptionSelected: (option, value) {},
+                    ),
+                  );
+                },
+                child: const Text('Show Modal'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Show Modal'));
+      await tester.pumpAndSettle();
+
+      // Get localization strings
+      final context = tester.element(find.byType(AutoAdjustmentModalNoHistory));
+      final l10n = AppLocalizations.of(context);
+
+      // Verify localized title and description
+      expect(find.text(l10n.apreNoHistory), findsOneWidget);
+      expect(find.text(l10n.apreNoHistoryDescription), findsOneWidget);
+
+      // Verify localized option titles
+      expect(find.text(l10n.apreOptionFromLastWorkout), findsOneWidget);
+      expect(find.text(l10n.apreOptionManualEstimate), findsOneWidget);
+      expect(find.text(l10n.apreOptionTestSet), findsOneWidget);
+
+      // Verify localized action buttons
+      expect(find.text(l10n.apreCancel), findsOneWidget);
+      expect(find.text(l10n.apreContinue), findsOneWidget);
+    });
   });
 }

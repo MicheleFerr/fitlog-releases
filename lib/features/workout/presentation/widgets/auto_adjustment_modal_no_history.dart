@@ -93,7 +93,7 @@ class _AutoAdjustmentModalNoHistoryState
               _buildOptionCard(
                 icon: AppIcons.history,
                 title: context.l10n.apreOptionFromLastWorkout,
-                description: 'Use last set weight/reps as estimate',
+                description: context.l10n.apreOptionFromLastWorkoutDescription,
                 optionKey: 'lastWorkout',
               ),
               const SizedBox(height: 12),
@@ -101,7 +101,7 @@ class _AutoAdjustmentModalNoHistoryState
               _buildOptionCard(
                 icon: AppIcons.edit,
                 title: context.l10n.apreOptionManualEstimate,
-                description: 'Enter estimated 1RM directly',
+                description: context.l10n.apreOptionManualEstimateDescription,
                 optionKey: 'manual',
               ),
               const SizedBox(height: 12),
@@ -109,7 +109,7 @@ class _AutoAdjustmentModalNoHistoryState
               _buildOptionCard(
                 icon: AppIcons.science,
                 title: context.l10n.apreOptionTestSet,
-                description: 'Guide to do a test set first',
+                description: context.l10n.apreOptionTestSetDescription,
                 optionKey: 'testSet',
               ),
               const SizedBox(height: 24),

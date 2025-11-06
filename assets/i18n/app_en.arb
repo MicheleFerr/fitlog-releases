@@ -15198,6 +15198,18 @@
   "@apreOptionTestSet": {
     "description": "Option to guide user to do a test set"
   },
+  "apreOptionFromLastWorkoutDescription": "Use last set weight/reps as estimate",
+  "@apreOptionFromLastWorkoutDescription": {
+    "description": "Description for from last workout option"
+  },
+  "apreOptionManualEstimateDescription": "Enter estimated 1RM directly",
+  "@apreOptionManualEstimateDescription": {
+    "description": "Description for manual estimate option"
+  },
+  "apreOptionTestSetDescription": "Guide to do a test set first",
+  "@apreOptionTestSetDescription": {
+    "description": "Description for test set option"
+  },
   "apreEnter1RM": "Enter Estimated 1RM (kg)",
   "@apreEnter1RM": {
     "description": "Label for 1RM input field"

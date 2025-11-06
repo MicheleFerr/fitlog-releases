@@ -22398,6 +22398,24 @@ abstract class AppLocalizations {
   /// **'Test Set'**
   String get apreOptionTestSet;
 
+  /// Description for from last workout option
+  ///
+  /// In en, this message translates to:
+  /// **'Use last set weight/reps as estimate'**
+  String get apreOptionFromLastWorkoutDescription;
+
+  /// Description for manual estimate option
+  ///
+  /// In en, this message translates to:
+  /// **'Enter estimated 1RM directly'**
+  String get apreOptionManualEstimateDescription;
+
+  /// Description for test set option
+  ///
+  /// In en, this message translates to:
+  /// **'Guide to do a test set first'**
+  String get apreOptionTestSetDescription;
+
   /// Label for 1RM input field
   ///
   /// In en, this message translates to:

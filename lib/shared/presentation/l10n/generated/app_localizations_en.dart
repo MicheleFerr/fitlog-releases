@@ -12678,6 +12678,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apreOptionTestSet => 'Test Set';
 
   @override
+  String get apreOptionFromLastWorkoutDescription =>
+      'Use last set weight/reps as estimate';
+
+  @override
+  String get apreOptionManualEstimateDescription =>
+      'Enter estimated 1RM directly';
+
+  @override
+  String get apreOptionTestSetDescription => 'Guide to do a test set first';
+
+  @override
   String get apreEnter1RM => 'Enter Estimated 1RM (kg)';
 
   @override

@@ -12822,6 +12822,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get apreOptionTestSet => 'Serie di Test';
 
   @override
+  String get apreOptionFromLastWorkoutDescription =>
+      'Usa peso/ripetizioni dell\'ultima serie come stima';
+
+  @override
+  String get apreOptionManualEstimateDescription =>
+      'Inserisci direttamente il 1RM stimato';
+
+  @override
+  String get apreOptionTestSetDescription =>
+      'Guida per fare prima una serie di test';
+
+  @override
   String get apreEnter1RM => 'Inserisci 1RM Stimato (kg)';
 
   @override

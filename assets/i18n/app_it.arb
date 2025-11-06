@@ -5716,6 +5716,18 @@
   "@apreOptionTestSet": {
     "description": "Opzione per guidare l'utente a fare una serie di test"
   },
+  "apreOptionFromLastWorkoutDescription": "Usa peso/ripetizioni dell'ultima serie come stima",
+  "@apreOptionFromLastWorkoutDescription": {
+    "description": "Descrizione per l'opzione dall'ultimo allenamento"
+  },
+  "apreOptionManualEstimateDescription": "Inserisci direttamente il 1RM stimato",
+  "@apreOptionManualEstimateDescription": {
+    "description": "Descrizione per l'opzione stima manuale"
+  },
+  "apreOptionTestSetDescription": "Guida per fare prima una serie di test",
+  "@apreOptionTestSetDescription": {
+    "description": "Descrizione per l'opzione serie di test"
+  },
   "apreEnter1RM": "Inserisci 1RM Stimato (kg)",
   "@apreEnter1RM": {
     "description": "Etichetta per il campo di input 1RM"
