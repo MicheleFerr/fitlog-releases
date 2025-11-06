@@ -132,6 +132,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
     }
 
     return ListView.builder(
+      key: const PageStorageKey('exercise_progress_list'),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: exercises.length,
       itemBuilder: (context, index) {

@@ -542,6 +542,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         // Exercise List + Missing Exercise Widget
         Expanded(
           child: ListView.builder(
+            key: const PageStorageKey('exercise_search_list'),
             itemCount: exercises.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
               // Show missing exercise widget as last item
@@ -600,6 +601,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         // Fuzzy Exercise List + Missing Exercise Widget
         Expanded(
           child: ListView.builder(
+            key: const PageStorageKey('exercise_fuzzy_search_list'),
             itemCount: _fuzzyResults.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
               // Show missing exercise widget as last item
