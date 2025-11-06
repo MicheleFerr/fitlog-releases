@@ -138,7 +138,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
             ],
 
             // Title
@@ -150,7 +150,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     AppIcons.workout,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       exercise.name,
@@ -173,9 +173,9 @@ class ExerciseOptionsModal extends StatelessWidget {
                 children: [
                   // Info Esercizio
                   ListTile(
-                    leading: const Icon(AppIcons.info),
-                    title: const Text('Info esercizio'),
-                    subtitle: const Text('Muscoli coinvolti e tecnica'),
+                    leading: Icon(AppIcons.info),
+                    title: Text('Info esercizio'),
+                    subtitle: Text('Muscoli coinvolti e tecnica'),
                     onTap: () async {
                       Navigator.pop(context);
                       final exerciseData = await _loadExerciseDataFromJson(exercise.name, languageCode);
@@ -194,9 +194,9 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // Info Riscaldamento
                   ListTile(
-                    leading: const Icon(AppIcons.whatshot, color: Colors.orange),
-                    title: const Text('Info riscaldamento'),
-                    subtitle: const Text('Consigli per il warmup'),
+                    leading: Icon(AppIcons.whatshot, color: Colors.orange),
+                    title: Text('Info riscaldamento'),
+                    subtitle: Text('Consigli per il warmup'),
                     onTap: () async {
                       Navigator.pop(context);
                       final exerciseData = await _loadExerciseDataFromJson(exercise.name, languageCode);
@@ -217,9 +217,9 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // Prevenzione infortuni
                   ListTile(
-                    leading: const Icon(AppIcons.shieldOutlined, color: Colors.green),
-                    title: const Text('Prevenzione infortuni'),
-                    subtitle: const Text('Consigli per evitare infortuni'),
+                    leading: Icon(AppIcons.shieldOutlined, color: Colors.green),
+                    title: Text('Prevenzione infortuni'),
+                    subtitle: Text('Consigli per evitare infortuni'),
                     onTap: () async {
                       Navigator.pop(context);
                       final exerciseData = await _loadExerciseDataFromJson(exercise.name, languageCode);
@@ -296,8 +296,8 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   if (onDuplicate != null) ...[
                     ListTile(
-                      leading: const Icon(AppIcons.iconCopy),
-                      title: const Text('Duplica esercizio'),
+                      leading: Icon(AppIcons.iconCopy),
+                      title: Text('Duplica esercizio'),
                       onTap: () {
                         Navigator.pop(context);
                         onDuplicate!();
@@ -413,7 +413,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(AppIcons.info, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         exerciseData['nome'] ?? 'Info Esercizio',
@@ -516,8 +516,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    const Icon(AppIcons.whatshot, color: Colors.orange),
-                    const SizedBox(width: 12),
+                    Icon(AppIcons.whatshot, color: Colors.orange),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Info Riscaldamento',
@@ -609,8 +609,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    const Icon(AppIcons.shieldOutlined, color: Colors.green),
-                    const SizedBox(width: 12),
+                    Icon(AppIcons.shieldOutlined, color: Colors.green),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Prevenzione Infortuni',
@@ -700,7 +700,7 @@ class ExerciseOptionsModal extends StatelessWidget {
           Row(
             children: [
               Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -710,7 +710,7 @@ class ExerciseOptionsModal extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           if (content is List) ...[
             ...content.map((item) => Padding(
               padding: const EdgeInsets.only(bottom: 4),

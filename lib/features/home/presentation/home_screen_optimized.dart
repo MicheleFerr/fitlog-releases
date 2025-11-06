@@ -107,7 +107,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
               color: Theme.of(context).colorScheme.primary,
               size: 28,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 l10n.communityComingSoonTitle,
@@ -128,7 +128,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                     color: Theme.of(context).colorScheme.primary,
                     size: 20,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       '🚀 ${l10n.comingSoon}',
@@ -240,11 +240,11 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
 
                 // AI Coach Insights Card
                 AICoachCard(key: aiCoachCardKey),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Primary CTA - Smart workout starter
                 SmartWorkoutCTA(key: smartWorkoutCardKey),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Routine Center Card (Flexible Multi-Period Routines)
                 Material(
@@ -287,7 +287,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               size: 24,
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: 16),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,7 +299,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Text(
                                   l10n.routineCenterDescription,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -343,7 +343,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                             AppIcons.people,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,7 +355,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Text(
                                   l10n.comingSoon,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -383,7 +383,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                   analyticsKey: analyticsCardKey,
                   historyKey: historyCardKey,
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Admin panel (only visible for admin users)
                 Consumer(
@@ -411,7 +411,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                 color: Theme.of(context).colorScheme.onErrorContainer,
                                 size: 20,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 'Admin Panel',
                                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -487,7 +487,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               ),
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
 
                           // Reset Onboarding Button
                           FilledButton.tonal(
@@ -495,7 +495,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               ref.read(onboardingStateProvider.notifier).resetOnboarding();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: const Text('Onboarding reset completato'),
+                                  content: Text('Onboarding reset completato'),
                                   backgroundColor: Theme.of(context).colorScheme.primary,
                                 ),
                               );
@@ -538,9 +538,9 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                       );
                     }
                   },
-                  child: const Icon(Icons.refresh, size: 20),
+                  child: Icon(Icons.refresh, size: 20),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 // Regular Quick Start
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),

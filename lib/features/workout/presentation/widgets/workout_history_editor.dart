@@ -300,7 +300,7 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.workoutDate,
+          l10n.workoutDate(_selectedDate.day, _selectedDate.month, _selectedDate.year),
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
           ),

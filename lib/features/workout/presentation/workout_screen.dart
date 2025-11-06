@@ -272,12 +272,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               title: Text(workoutName ?? context.l10n.myWorkouts),
               leading: isActive
                 ? IconButton(
-                    icon: const Icon(AppIcons.home),
+                    icon: Icon(AppIcons.home),
                     onPressed: () => _handleBackNavigation(context, ref),
                     tooltip: context.l10n.backToHomeKeepWorkoutActive,
                   )
                 : IconButton(
-                    icon: const Icon(AppIcons.back),
+                    icon: Icon(AppIcons.back),
                     onPressed: () => context.goNamed('home'),
                     tooltip: context.l10n.backToHome,
                   ),
@@ -303,7 +303,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   IconButton(
                     key: _completeWorkoutButtonKey, // PHASE 2: GlobalKey for contextual overlay
                     onPressed: () => _completeWorkout(context, ref),
-                    icon: const Icon(AppIcons.checkCircle),
+                    icon: Icon(AppIcons.checkCircle),
                     tooltip: context.l10n.completeWorkout,
                   ),
                 IconButton(
@@ -440,11 +440,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(AppIcons.error, size: 64, color: context.errorColor),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(context.l10n.errorOccurred),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text('Error: $e', style: const TextStyle(fontSize: 12)),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => context.goNamed('home'),
                 child: Text(context.l10n.goHome),
@@ -473,11 +473,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               tabs: [
                 Tab(
-                  icon: const Icon(AppIcons.person),
+                  icon: Icon(AppIcons.person),
                   text: context.l10n.yourTemplates,
                 ),
                 Tab(
-                  icon: const Icon(AppIcons.stars),
+                  icon: Icon(AppIcons.stars),
                   text: context.l10n.predefinedWorkouts,
                 ),
               ],
@@ -551,14 +551,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               size: 64,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               isCustomTab ? context.l10n.noCustomTemplates : context.l10n.noPredefinedWorkouts,
               style: context.textTheme.titleMedium?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.5),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               isCustomTab ? context.l10n.createFirstTemplate : context.l10n.predefinedWorkoutsComingSoon,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -566,10 +566,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               ),
             ),
             if (isCustomTab) ...[
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               FilledButton.icon(
                 onPressed: () => _showCreateTemplateModal(context),
-                icon: const Icon(AppIcons.add),
+                icon: Icon(AppIcons.add),
                 label: Text(context.l10n.createNewTemplate),
               ),
             ],
@@ -670,7 +670,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                               size: 14,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               context.l10n.exercisesCount(template.exercises.length),
                               style: theme.textTheme.bodySmall,
@@ -693,7 +693,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                             ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         // Custom badge
                         if (template.isCustom)
                           Container(
@@ -895,7 +895,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               ),
             ],
 
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
           ],
         ),
       ),
@@ -913,7 +913,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           color: context.colors.secondary,
           onTap: () => _startTemplateWorkout(context, ref, 'Upper Body'),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _QuickStartCard(
           icon: AppIcons.cardio,
           title: context.l10n.lowerBody,
@@ -921,7 +921,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           color: context.colors.tertiary,
           onTap: () => _startTemplateWorkout(context, ref, 'Lower Body'),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _QuickStartCard(
           icon: AppIcons.timer,
           title: context.l10n.hiitTraining,
@@ -1087,7 +1087,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             Expanded(
               child: Text(workout.name),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
@@ -1102,7 +1102,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     size: 14,
                     color: context.colors.primary,
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Text(
                     'Suggerito',
                     style: context.textTheme.labelSmall?.copyWith(
@@ -1142,7 +1142,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
               onPressed: () => _onStartWorkout(context, ref, workout, sessionId),
-              icon: const Icon(AppIcons.playArrowRounded),
+              icon: Icon(AppIcons.playArrowRounded),
               label: Text(context.l10n.startWorkout),
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.successColor,
@@ -1349,13 +1349,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                           color: context.successColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           AppIcons.flashOn,
                           color: Colors.white,
                           size: 32,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1367,7 +1367,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                                 color: context.textOnSuccess,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               context.l10n.startImmediately,
                               style: context.textTheme.bodyMedium?.copyWith(
@@ -1571,14 +1571,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             size: 64,
             color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             context.l10n.noExercisesYet,
             style: context.textTheme.headlineSmall?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             context.l10n.tapToAddExercise,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -1876,7 +1876,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Container(
             width: 40,
             height: 4,
@@ -1885,10 +1885,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           if (ref.watch(currentWorkoutProvider) != null) ...[
             ListTile(
-              leading: const Icon(AppIcons.saveAlt),
+              leading: Icon(AppIcons.saveAlt),
               title: Text(context.l10n.saveAsTemplate),
               subtitle: Text(context.l10n.saveToFirebase),
               onTap: () {
@@ -1898,7 +1898,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(AppIcons.pause),
+              leading: Icon(AppIcons.pause),
               title: Text(context.l10n.pauseWorkout),
               onTap: () {
                 ref.read(currentWorkoutProvider.notifier).pauseWorkout();
@@ -1916,7 +1916,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             const Divider(),
           ],
           ListTile(
-            leading: const Icon(AppIcons.tune),
+            leading: Icon(AppIcons.tune),
             title: Text(context.l10n.customizeWorkout),
             subtitle: Text(context.l10n.rpeTimerMore),
             onTap: () {
@@ -1925,7 +1925,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             },
           ),
           ListTile(
-            leading: const Icon(AppIcons.logout),
+            leading: Icon(AppIcons.logout),
             title: Text(context.l10n.signOut),
             onTap: () {
               Navigator.pop(context);
@@ -1977,7 +1977,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const LoadingIndicator(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(context.l10n.generatingPdf),
                 ],
               ),
@@ -2045,7 +2045,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const LoadingIndicator(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(context.l10n.preparingPrint),
                 ],
               ),
@@ -2088,7 +2088,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(context.l10n.deleteTemplateQuestion(template.name)),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Questa azione non può essere annullata.',
               style: TextStyle(
@@ -2174,7 +2174,7 @@ class _QuickStartCard extends StatelessWidget {
                   size: 24,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2185,7 +2185,7 @@ class _QuickStartCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       subtitle,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -2252,7 +2252,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                   size: 24,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               
               // Info template
               Expanded(
@@ -2265,7 +2265,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       template.description,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -2274,7 +2274,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     
                     // Statistiche mini
                     Row(
@@ -2284,7 +2284,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                           size: 12,
                           color: context.colors.onSurface.withValues(alpha: 0.5),
                         ),
-                        const SizedBox(width: 2),
+                        SizedBox(width: 2),
                         Text(
                           '${template.exercises.length}',
                           style: TextStyle(
@@ -2292,13 +2292,13 @@ class _TemplateQuickStartCard extends StatelessWidget {
                             color: context.colors.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Icon(
                           AppIcons.schedule,
                           size: 12,
                           color: context.colors.onSurface.withValues(alpha: 0.5),
                         ),
-                        const SizedBox(width: 2),
+                        SizedBox(width: 2),
                         Text(
                           '${template.estimatedDuration}min',
                           style: TextStyle(
@@ -2307,13 +2307,13 @@ class _TemplateQuickStartCard extends StatelessWidget {
                           ),
                         ),
                         if (template.usageCount > 0) ...[
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Icon(
                             AppIcons.trendUp,
                             size: 12,
                             color: context.colors.onSurface.withValues(alpha: 0.5),
                           ),
-                          const SizedBox(width: 2),
+                          SizedBox(width: 2),
                           Text(
                             '${template.usageCount}',
                             style: TextStyle(
@@ -2364,7 +2364,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             
             // Titolo
             Row(
@@ -2373,7 +2373,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                   template.isCustom ? AppIcons.person : AppIcons.star,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     template.name,
@@ -2386,7 +2386,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             
             // Opzioni menu
             ListTile(
@@ -2502,10 +2502,10 @@ class _SaveTemplateHelper {
                 size: 48,
                 color: context.colors.error,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(context.l10n.templateQuotaLimit(maxTemplates)),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: 8),
+              Text(
                 'Elimina un template esistente o passa a Premium per avere più spazio.',
                 style: TextStyle(fontSize: 14),
               ),
@@ -2583,7 +2583,7 @@ class _SaveTemplateHelper {
                         color: context.warningColor,
                         size: 20,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Solo ${maxTemplates - usedTemplates} template rimanenti nel piano Free',
@@ -2602,23 +2602,23 @@ class _SaveTemplateHelper {
                   labelText: context.l10n.templateName,
                   hintText: context.l10n.templateNameHint,
                   border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(AppIcons.workout),
+                  prefixIcon: Icon(AppIcons.workout),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextField(
                 controller: descriptionController,
                 decoration: InputDecoration(
                   labelText: context.l10n.description,
                   hintText: context.l10n.descriptionHint,
                   border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(AppIcons.template),
+                  prefixIcon: Icon(AppIcons.template),
                 ),
                 maxLines: 3,
                 textCapitalization: TextCapitalization.sentences,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -2634,7 +2634,7 @@ class _SaveTemplateHelper {
                       AppIcons.cloudUpload,
                       color: context.colors.primary,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi',
@@ -2676,12 +2676,12 @@ class _SaveTemplateHelper {
                   SnackBar(
                     content: Row(
                       children: [
-                        const SizedBox(
+                        SizedBox(
                           width: 20,
                           height: 20,
                           child: LoadingIndicator(),
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(width: 16),
                         Text(context.l10n.savingToFirebase),
                       ],
                     ),
@@ -2727,10 +2727,10 @@ class _SaveTemplateHelper {
                             size: 48,
                             color: context.warningColor,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           Text(errorMessage.replaceAll('Exception: ', '')),
-                          const SizedBox(height: 8),
-                          const Text(
+                          SizedBox(height: 8),
+                          Text(
                             'Elimina template esistenti o passa a Premium.',
                             style: TextStyle(fontSize: 14),
                           ),
@@ -2759,7 +2759,7 @@ class _SaveTemplateHelper {
                 }
               }
             },
-            icon: const Icon(AppIcons.cloudUpload),
+            icon: Icon(AppIcons.cloudUpload),
             label: Text(context.l10n.saveToFirebase),
           ),
         ],

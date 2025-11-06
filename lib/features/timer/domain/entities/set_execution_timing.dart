@@ -77,8 +77,8 @@ class SetTimingConfig with _$SetTimingConfig {
     @Default(true) bool autoStartDetection,
     @Default(true) bool autoEndDetection,
     @Default(500) int motionThresholdMs,
-  }) = _$SetTimingConfig;
-  
+  }) = _$$SetTimingConfigImpl;
+
   factory SetTimingConfig.fromJson(Map<String, dynamic> json) =>
       _$SetTimingConfigFromJson(json);
 }
@@ -127,10 +127,10 @@ class LiveSetMetrics with _$LiveSetMetrics {
     String? coachingTip,
     double? suggestedWeight,
     int? suggestedReps,
-    
+
     required DateTime timestamp,
-  }) = _$LiveSetMetrics;
-  
+  }) = _$$LiveSetMetricsImpl;
+
   factory LiveSetMetrics.fromJson(Map<String, dynamic> json) =>
       _$LiveSetMetricsFromJson(json);
 }

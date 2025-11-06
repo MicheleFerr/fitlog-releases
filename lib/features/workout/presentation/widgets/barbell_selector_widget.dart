@@ -302,7 +302,7 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,

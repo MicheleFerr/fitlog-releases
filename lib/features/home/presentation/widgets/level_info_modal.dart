@@ -230,7 +230,7 @@ class LevelInfoModal extends ConsumerWidget {
                               : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         ..._getLevelBenefits(level, l10n).map((benefit) => 
                           Padding(
                             padding: const EdgeInsets.only(top: 4),

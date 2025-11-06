@@ -56,8 +56,8 @@ class ExerciseInstructionsTab extends ConsumerWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.local_fire_department, color: Colors.orange),
-            const SizedBox(width: 8),
+            Icon(Icons.local_fire_department, color: Colors.orange),
+            SizedBox(width: 8),
             Text(
               context.l10n.warmupProtocol,
               style: context.textTheme.titleMedium?.copyWith(
@@ -67,7 +67,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -141,7 +141,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
             child: Icon(icon, color: color, size: 20),
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +153,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
                   color: context.colors.onSurface,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 description,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -176,8 +176,8 @@ class ExerciseInstructionsTab extends ConsumerWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.lightbulb_outline, color: Colors.amber),
-            const SizedBox(width: 8),
+            Icon(Icons.lightbulb_outline, color: Colors.amber),
+            SizedBox(width: 8),
             Text(
               context.l10n.tips,
               style: context.textTheme.titleMedium?.copyWith(
@@ -203,12 +203,12 @@ class ExerciseInstructionsTab extends ConsumerWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
+            Icon(
               Icons.check_circle,
               color: Colors.green,
               size: 20,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 tip,

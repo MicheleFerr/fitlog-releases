@@ -346,7 +346,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 'Set ${widget.setIndex + 1}',
                                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -355,7 +355,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             widget.dropset.name,
                             style: Theme.of(context).textTheme.titleMedium,
@@ -370,7 +370,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   ),
                   
                   // Progress bar
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -389,7 +389,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       LinearProgressIndicator(
                         value: _completionProgress,
                         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -447,7 +447,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,7 +475,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                             ],
                           ),
                           
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           
                           // Weight and reps picker buttons
                           Row(
@@ -502,7 +502,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                           size: 20,
                                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                                         ),
-                                        const SizedBox(width: 8),
+                                        SizedBox(width: 8),
                                         Expanded(
                                           child: Text(
                                             (_weights[index] ?? 0) > 0
@@ -521,7 +521,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: InkWell(
                                   onTap: isCompleted ? null : () => _showRepsPicker(context, index),
@@ -544,7 +544,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                           size: 20,
                                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                                         ),
-                                        const SizedBox(width: 8),
+                                        SizedBox(width: 8),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -576,7 +576,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                             ],
                           ),
                           
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           
                           // RPE selector
                           Column(
@@ -630,7 +630,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                           
                           // Important note for dropsets
                           if (index < widget.dropset.stages.length - 1) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -644,7 +644,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     size: 16,
                                     color: Theme.of(context).colorScheme.error,
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       'Nessun riposo! Riduci il peso e continua subito',
@@ -674,8 +674,8 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: _canComplete ? _completeDropSet : null,
-                  icon: const Icon(AppIcons.check),
-                  label: const Text('Completa Dropset'),
+                  icon: Icon(AppIcons.check),
+                  label: Text('Completa Dropset'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.error,
                     padding: const EdgeInsets.symmetric(vertical: 16),

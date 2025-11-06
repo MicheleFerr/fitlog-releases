@@ -309,12 +309,14 @@ class TrackSetExecutionUseCase {
   }
 }
 
+// TODO: Implement SetTimingRepository and analyzer services
 // Provider for the use case
 final trackSetExecutionUseCaseProvider = Provider<TrackSetExecutionUseCase>((ref) {
-  return TrackSetExecutionUseCase(
-    ref.read(setTimingRepositoryProvider),
-    ref.read(velocityAnalyzerServiceProvider),
-    ref.read(formAnalyzerServiceProvider),
-    ref.read(fatigueAnalyzerServiceProvider),
-  );
+  // return TrackSetExecutionUseCase(
+  //   ref.read(setTimingRepositoryProvider),
+  //   ref.read(velocityAnalyzerServiceProvider),
+  //   ref.read(formAnalyzerServiceProvider),
+  //   ref.read(fatigueAnalyzerServiceProvider),
+  // );
+  throw UnimplementedError('TrackSetExecutionUseCase dependencies not yet implemented');
 });

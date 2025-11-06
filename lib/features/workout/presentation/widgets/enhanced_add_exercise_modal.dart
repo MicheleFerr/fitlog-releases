@@ -549,7 +549,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                   ));
                 });
               },
-              icon: const Icon(AppIcons.add),
+              icon: Icon(AppIcons.add),
               label: Text(l10n.addSet),
             ),
           ],
@@ -806,7 +806,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                     ));
                   });
                 },
-                icon: const Icon(AppIcons.add),
+                icon: Icon(AppIcons.add),
                 label: Text(l10n.addStage),
               ),
           ],

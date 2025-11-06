@@ -266,7 +266,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                   size: 28,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
 
               // Exercise name and stage count
               Expanded(
@@ -279,7 +279,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       context.l10n.dropsetStages(_stages.length),
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -305,7 +305,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                       size: 16,
                       color: context.colors.onSecondaryContainer,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     StreamBuilder(
                       stream: Stream.periodic(const Duration(seconds: 1)),
                       builder: (context, snapshot) {
@@ -357,7 +357,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
@@ -390,7 +390,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
             color: context.colors.onTertiaryContainer,
             size: 20,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Text(
               _motivationalMessage,
@@ -464,7 +464,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         ),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
 
               // Stage details
               Expanded(
@@ -482,7 +482,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(
@@ -492,7 +492,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           '${stage.weight.toStringAsFixed(1)} kg',
                           style: context.textTheme.titleMedium?.copyWith(
@@ -504,7 +504,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Icon(
                           AppIcons.repeat,
                           size: 16,
@@ -512,7 +512,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           context.l10n.targetReps(stage.reps),
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -609,7 +609,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                           color: context.colors.surface,
                         ),
                       )
-                    : const Icon(AppIcons.complete),
+                    : Icon(AppIcons.complete),
                 label: Text(
                   context.l10n.completeDropset,
                   style: const TextStyle(
@@ -632,7 +632,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                icon: const Icon(AppIcons.check),
+                icon: Icon(AppIcons.check),
                 label: Text(
                   context.l10n.completeStage(_currentStageIndex + 1),
                   style: const TextStyle(
@@ -643,7 +643,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
               ),
             ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Cancel button
           TextButton(

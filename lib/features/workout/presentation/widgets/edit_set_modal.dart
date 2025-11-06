@@ -123,7 +123,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           
           // Header
           Row(
@@ -146,7 +146,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           // Completion toggle
           Card(
             child: SwitchListTile(
-              title: const Text('Mark as Completed'),
+              title: Text('Mark as Completed'),
               subtitle: Text(_isCompleted ? 'This set is completed' : 'This set is not completed'),
               value: _isCompleted,
               onChanged: (value) {
@@ -186,12 +186,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           ),
 
           if (widget.previousSet != null) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: TextButton.icon(
                 onPressed: _copyPreviousSet,
-                icon: const Icon(AppIcons.iconCopy, size: 16),
+                icon: Icon(AppIcons.iconCopy, size: 16),
                 label: Text(context.l10n.copyPreviousSet),
               ),
             ),
@@ -219,7 +219,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             decoration: InputDecoration(
               labelText: 'Set Notes',
               hintText: 'RPE, form notes, difficulty...',
-              prefixIcon: const Icon(AppIcons.note),
+              prefixIcon: Icon(AppIcons.note),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -229,7 +229,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           
           // RPE selector (if set is completed)
           if (_isCompleted) ...[
@@ -260,7 +260,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               }),
             ),
             if (_selectedRpe != null) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'RIR: ${10 - _selectedRpe!} reps in reserve',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -329,13 +329,13 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
 
           // Rest Time Suggestion Banner
           if (_showRestSuggestionBanner && _restTimeSuggestion != null) ...[
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildRestTimeSuggestionBanner(context),
           ],
 
           // Weight Adjustment Suggestion Banner
           if (_showWeightSuggestionBanner && _suggestedWeight != null) ...[
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildWeightSuggestionBanner(context),
           ],
 
@@ -605,7 +605,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
                   ? context.colors.primary
                   : context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Text(
                 hasWeight 
@@ -677,7 +677,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
                   ? context.colors.secondary
                   : context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Text(
                 hasReps 
@@ -792,8 +792,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         children: [
           Row(
             children: [
-              const Icon(AppIcons.timer, color: Colors.orange),
-              const SizedBox(width: 8),
+              Icon(AppIcons.timer, color: Colors.orange),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   l10n.restTimeSuggestion,
@@ -805,7 +805,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             _restTimeSuggestion!.message,
             style: context.textTheme.bodyMedium,
@@ -867,7 +867,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
                 isIncrease ? AppIcons.trendUp : AppIcons.trendDown,
                 color: isIncrease ? Colors.green : Colors.blue,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'APRE Weight Adjustment',
@@ -879,7 +879,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Suggested weight for next set: ${_suggestedWeight!.toStringAsFixed(1)}kg '
             '(${weightDiff > 0 ? "+" : ""}${weightDiff.toStringAsFixed(1)}kg)',

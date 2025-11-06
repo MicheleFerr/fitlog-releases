@@ -116,7 +116,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
       context,
       MaterialPageRoute(
         builder: (context) => const ExerciseSearchScreen(
-          allowMultipleSelection: false,
+          multiSelectMode: false,
         ),
       ),
     );
@@ -187,7 +187,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(AppIcons.workout, color: Theme.of(context).colorScheme.tertiary),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Text(
                         '${WeightHelper.formatPickerWeight(selectedWeight, unit)} $unit',
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -334,7 +334,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -625,7 +625,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
             // Target reps button
             _buildPickerButton(
               context: context,
-              label: l10n.targetReps,
+              label: l10n.targetReps(_targetReps),
               value: '$_targetReps ${l10n.reps}',
               icon: AppIcons.repeat,
               onTap: () => _showRepsPicker(context),

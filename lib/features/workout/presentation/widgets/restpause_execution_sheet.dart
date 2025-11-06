@@ -408,7 +408,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 'Set ${widget.setIndex + 1}',
                                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -417,7 +417,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             widget.restPause.name,
                             style: Theme.of(context).textTheme.titleMedium,
@@ -432,7 +432,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   ),
                   
                   // Progress bar
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -451,7 +451,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       LinearProgressIndicator(
                         value: _completionProgress,
                         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -487,7 +487,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                           size: 20,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           'MICRO-PAUSA',
                           style: TextStyle(
@@ -499,7 +499,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       '$_restSeconds',
                       style: Theme.of(context).textTheme.displayMedium?.copyWith(
@@ -515,7 +515,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
             ],
             
             // Weight picker button (shared for all mini-sets)
@@ -539,7 +539,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                         AppIcons.workout,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -550,7 +550,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               _weight > 0
                                   ? _weight.formatWeight(ref.read(measurementUnitProvider))
@@ -620,7 +620,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                 ),
                                 child: Center(
                                   child: isCompleted
-                                      ? const Icon(AppIcons.check, color: Colors.white, size: 18)
+                                      ? Icon(AppIcons.check, color: Colors.white, size: 18)
                                       : Text(
                                           '${index + 1}',
                                           style: TextStyle(
@@ -632,7 +632,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                         ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -659,7 +659,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                             ],
                           ),
                           
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           
                           // Reps picker button
                           InkWell(
@@ -685,7 +685,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                     size: 20,
                                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -696,7 +696,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                         ),
-                                        const SizedBox(height: 2),
+                                        SizedBox(height: 2),
                                         Text(
                                           _reps[index] != null && _reps[index]! > 0
                                               ? '${_reps[index]} ${AppLocalizations.of(context).reps}'
@@ -720,7 +720,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                           
                           // Instructions
                           if (isCurrent && !isCompleted && !_isResting) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -734,7 +734,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                                     size: 16,
                                     color: Theme.of(context).colorScheme.primary,
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       index == 0 
@@ -819,8 +819,8 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: _canComplete && !_isResting ? _completeRestPause : null,
-                  icon: const Icon(AppIcons.check),
-                  label: const Text('Completa Rest-Pause'),
+                  icon: Icon(AppIcons.check),
+                  label: Text('Completa Rest-Pause'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.tertiary,
                     padding: const EdgeInsets.symmetric(vertical: 16),

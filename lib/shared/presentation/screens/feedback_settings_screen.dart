@@ -34,7 +34,7 @@ class FeedbackSettingsScreen extends ConsumerWidget {
                 size: 64,
                 color: context.colors.error,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 context.l10n.errorLoadingSettings,
                 style: context.textTheme.titleMedium,
@@ -56,15 +56,14 @@ class FeedbackSettingsScreen extends ConsumerWidget {
           color: context.colors.primaryContainer,
           child: Padding(
             padding: const EdgeInsets.all(16),
-            children: [
-              Row(
-                children: [
+            child: Row(
+              children: [
                   Icon(
                     AppIcons.vibration,
                     color: context.colors.onPrimaryContainer,
                     size: 28,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       context.l10n.hapticDescription,
@@ -75,10 +74,9 @@ class FeedbackSettingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            ],
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // Enable/Disable Switch
         Card(
@@ -114,7 +112,7 @@ class FeedbackSettingsScreen extends ConsumerWidget {
             activeTrackColor: context.colors.primary,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // Intensity Selection
         Card(
@@ -131,18 +129,18 @@ class FeedbackSettingsScreen extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 SegmentedButton<HapticIntensity>(
                   segments: [
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.light,
                       label: Text(context.l10n.intensityLight),
-                      icon: const Icon(AppIcons.circle, size: 12),
+                      icon: Icon(AppIcons.circle, size: 12),
                     ),
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.medium,
                       label: Text(context.l10n.intensityMedium),
-                      icon: const Icon(AppIcons.circle, size: 16),
+                      icon: Icon(AppIcons.circle, size: 16),
                     ),
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.heavy,

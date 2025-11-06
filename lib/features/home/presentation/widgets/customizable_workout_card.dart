@@ -177,7 +177,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             color: Theme.of(context).colorScheme.primary,
                             size: 32,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             AppLocalizations.of(context).newWorkout,
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -185,7 +185,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           templatesAsync.when(
                             data: (templates) {
                               if (preferredTemplateId != null) {
@@ -205,7 +205,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 2),
+                                    SizedBox(height: 2),
                                     Text(
                                       AppLocalizations.of(context).tapToStart,
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -243,7 +243,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             color: Theme.of(context).colorScheme.primary,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.touch_app,
                             color: context.colors.surface,
                             size: 12,
@@ -262,7 +262,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             color: Theme.of(context).colorScheme.secondary,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.star,
                             color: context.colors.surface,
                             size: 12,
@@ -300,7 +300,7 @@ class _CustomizationMenu extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Container(
             width: 40,
             height: 4,
@@ -309,7 +309,7 @@ class _CustomizationMenu extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -336,7 +336,7 @@ class _CustomizationMenu extends ConsumerWidget {
               subtitle: Text(AppLocalizations.of(context).startWithEmptyWorkout),
               onTap: () => onTemplateSelected(null),
             ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Flexible(
             child: templatesAsync.when(
               data: (templates) => ListView.builder(

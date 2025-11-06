@@ -409,7 +409,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                   size: 16,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   sizeLabel,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -484,7 +484,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                       child: Row(
                         children: [
                           Icon(widget.icon, size: 24),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               widget.title,
@@ -597,7 +597,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                 AppIcons.addCircleOutline,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text(
                 'Aggiungi Widget',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(

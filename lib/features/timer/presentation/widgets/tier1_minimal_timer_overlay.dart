@@ -295,7 +295,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
           // Progress indicator - more compact
           _buildProgressIndicator(progress),
           
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           
           // Timer info - more compact layout
           Expanded(
@@ -314,7 +314,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                   ),
                 ),
                 if (timerState.exerciseName != null) ...[
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     timerState.exerciseName!,
                     style: TextStyle(

@@ -87,11 +87,11 @@ class _WorkoutExerciseDetailScreenState
           tabs: [
             Tab(
               text: context.l10n.exerciseDetailSummary,
-              icon: const Icon(AppIcons.analytics),
+              icon: Icon(AppIcons.analytics),
             ),
             Tab(
               text: context.l10n.exerciseDetailHistory,
-              icon: const Icon(Icons.history),
+              icon: Icon(Icons.history),
             ),
             Tab(
               text: context.l10n.exerciseDetailInstructions,

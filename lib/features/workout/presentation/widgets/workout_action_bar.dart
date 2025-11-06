@@ -530,7 +530,7 @@ class _ActionToastState extends State<_ActionToast>
     
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 0.8, end: 1)
+        tween: Tween<double>(begin: 0.8, end: 1.0)
           .chain(CurveTween(curve: Curves.elasticOut)),
         weight: 20,
       ),

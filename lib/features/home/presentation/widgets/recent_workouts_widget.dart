@@ -207,7 +207,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.history,
                       color: context.colors.surface,
                       size: 24,
@@ -269,7 +269,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                 },
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
         ),
       ),
@@ -330,7 +330,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.history,
                       color: context.colors.surface,
                       size: 28,
@@ -428,7 +428,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                 );
               },
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
           ],
         ),
       ),
@@ -561,7 +561,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
           ),
         ),
         if (label.isNotEmpty) ...[
-          const SizedBox(width: 2),
+          SizedBox(width: 2),
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -584,7 +584,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
             size: 48,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             message,
             style: theme.textTheme.bodyMedium?.copyWith(

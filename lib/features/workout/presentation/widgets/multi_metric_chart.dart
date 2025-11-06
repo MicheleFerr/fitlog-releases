@@ -85,7 +85,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
                   size: 14,
                   color: context.colors.onSurface.withValues(alpha: 0.5),
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   context.l10n.chartTapToSeeRealValues,
                   style: context.textTheme.labelSmall?.copyWith(
@@ -210,7 +210,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   metric,
                   style: context.textTheme.labelMedium?.copyWith(
@@ -436,7 +436,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
               size: 48,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.noDataForChart,
               style: context.textTheme.bodyMedium?.copyWith(

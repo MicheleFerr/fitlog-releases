@@ -14,17 +14,16 @@ import 'dart:convert';
 
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/template_import_export.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/export_format.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/services/analytics_service.dart';
+// import 'package:gymbro_flutter_new/features/analytics/domain/services/analytics_service.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 
 /// Service for exporting workout templates
 class TemplateExportService {
-  
-  TemplateExportService(this._analyticsService);
-  final AnalyticsService _analyticsService;
+
+  // TemplateExportService(this._analyticsService);
+  // final AnalyticsService _analyticsService;
   
   /// Export single template
   Future<String> exportTemplate(
@@ -79,12 +78,34 @@ class TemplateExportService {
     UserProfile user, {
     bool includeAnalytics = false,
   }) async {
+    // Convert difficulty level from String to int
+    // beginner=1, intermediate=2, advanced=3, expert=4
+    int? difficultyInt;
+    if (template.difficultyLevel != null) {
+      switch (template.difficultyLevel!.toLowerCase()) {
+        case 'beginner':
+          difficultyInt = 1;
+          break;
+        case 'intermediate':
+          difficultyInt = 2;
+          break;
+        case 'advanced':
+          difficultyInt = 3;
+          break;
+        case 'expert':
+          difficultyInt = 4;
+          break;
+        default:
+          difficultyInt = null;
+      }
+    }
+
     final importData = WorkoutTemplateImportData(
       name: template.name,
       description: template.description,
       exercises: template.exercises.map(_convertExercise).toList(),
       category: template.category.name,
-      difficulty: template.difficultyLevel,
+      difficulty: difficultyInt,
       estimatedDurationMinutes: template.estimatedDurationMinutes,
       tags: template.tags,
       requiredEquipment: template.requiredEquipment,
@@ -135,67 +156,75 @@ class TemplateExportService {
     String userId,
   ) async {
     final analytics = <String, dynamic>{};
-    
-    try {
-      // Get template usage statistics
-      final usageStats = await _analyticsService.getTemplateUsageStats(
-        templateId: template.id,
-        userId: userId,
-      );
-      
-      if (usageStats != null) {
-        analytics['usage'] = {
-          'totalUses': usageStats['totalUses'],
-          'lastUsed': usageStats['lastUsed']?.toIso8601String(),
-          'averageDuration': usageStats['averageDuration'],
-          'completionRate': usageStats['completionRate'],
-        };
-      }
-      
-      // Get exercise-specific analytics
-      final exerciseAnalytics = <String, dynamic>{};
-      
-      for (final exercise in template.exercises) {
-        final exerciseStats = await _analyticsService.getExerciseAnalytics(
-          userId: userId,
-          exerciseName: exercise.name,
-        );
-        
-        if (exerciseStats.isNotEmpty) {
-          exerciseAnalytics[exercise.name] = {
-            'personalBests': exerciseStats
-                .map((stat) => {
-                      'weight': stat.weight,
-                      'reps': stat.reps,
-                      'date': stat.date.toIso8601String(),
-                    })
-                .toList(),
-            'progressTrend': _calculateProgressTrend(exerciseStats),
-            'averageVolume': _calculateAverageVolume(exerciseStats),
-            'oneRepMax': _calculateEstimatedOneRepMax(exerciseStats),
-          };
-        }
-      }
-      
-      if (exerciseAnalytics.isNotEmpty) {
-        analytics['exercises'] = exerciseAnalytics;
-      }
-      
-      // Add export metadata
-      analytics['metadata'] = {
-        'exportedAt': DateTime.now().toIso8601String(),
-        'dataTimeRange': {
-          'from': DateTime.now().subtract(const Duration(days: 365)).toIso8601String(),
-          'to': DateTime.now().toIso8601String(),
-        },
-        'analyticsVersion': '1.0',
-      };
-      
-    } catch (e) {
-      // If analytics collection fails, continue without analytics
-      analytics['error'] = 'Failed to collect analytics: $e';
-    }
-    
+
+    // TODO: Re-enable when analytics_service is available
+    // try {
+    //   // Get template usage statistics
+    //   final usageStats = await _analyticsService.getTemplateUsageStats(
+    //     templateId: template.id,
+    //     userId: userId,
+    //   );
+    //
+    //   if (usageStats != null) {
+    //     analytics['usage'] = {
+    //       'totalUses': usageStats['totalUses'],
+    //       'lastUsed': usageStats['lastUsed']?.toIso8601String(),
+    //       'averageDuration': usageStats['averageDuration'],
+    //       'completionRate': usageStats['completionRate'],
+    //     };
+    //   }
+    //
+    //   // Get exercise-specific analytics
+    //   final exerciseAnalytics = <String, dynamic>{};
+    //
+    //   for (final exercise in template.exercises) {
+    //     final exerciseStats = await _analyticsService.getExerciseAnalytics(
+    //       userId: userId,
+    //       exerciseName: exercise.name,
+    //     );
+    //
+    //     if (exerciseStats.isNotEmpty) {
+    //       exerciseAnalytics[exercise.name] = {
+    //         'personalBests': exerciseStats
+    //             .map((stat) => {
+    //                   'weight': stat.weight,
+    //                   'reps': stat.reps,
+    //                   'date': stat.date.toIso8601String(),
+    //                 })
+    //             .toList(),
+    //         'progressTrend': _calculateProgressTrend(exerciseStats),
+    //         'averageVolume': _calculateAverageVolume(exerciseStats),
+    //         'oneRepMax': _calculateEstimatedOneRepMax(exerciseStats),
+    //       };
+    //     }
+    //   }
+    //
+    //   if (exerciseAnalytics.isNotEmpty) {
+    //     analytics['exercises'] = exerciseAnalytics;
+    //   }
+    //
+    //   // Add export metadata
+    //   analytics['metadata'] = {
+    //     'exportedAt': DateTime.now().toIso8601String(),
+    //     'dataTimeRange': {
+    //       'from': DateTime.now().subtract(const Duration(days: 365)).toIso8601String(),
+    //       'to': DateTime.now().toIso8601String(),
+    //     },
+    //     'analyticsVersion': '1.0',
+    //   };
+    //
+    // } catch (e) {
+    //   // If analytics collection fails, continue without analytics
+    //   analytics['error'] = 'Failed to collect analytics: $e';
+    // }
+
+    // Placeholder until analytics service is available
+    analytics['metadata'] = {
+      'exportedAt': DateTime.now().toIso8601String(),
+      'analyticsVersion': '1.0',
+      'note': 'Analytics not available',
+    };
+
     return analytics;
   }
   
@@ -255,19 +284,21 @@ class TemplateExportService {
     List<WorkoutTemplateExportData> exportDataList,
     ExportFormat format,
   ) {
-    final data = exportDataList.length == 1 
+    final data = exportDataList.length == 1
         ? exportDataList.first.toJson()
         : exportDataList.map((e) => e.toJson()).toList();
-    
+
     switch (format) {
       case ExportFormat.json:
         return const JsonEncoder.withIndent('  ').convert(data);
-      
-      case ExportFormat.jsonMinified:
-        return json.encode(data);
-      
-      case ExportFormat.jsonWithAnalytics:
-        return const JsonEncoder.withIndent('  ').convert(data);
+
+      case ExportFormat.csv:
+        // TODO: Implement CSV export
+        throw UnimplementedError('CSV export not yet implemented');
+
+      case ExportFormat.pdf:
+        // TODO: Implement PDF export
+        throw UnimplementedError('PDF export not yet implemented');
     }
   }
   
@@ -288,30 +319,34 @@ class TemplateExportService {
         'appVersion': '1.0.0', // Should come from app config
       },
     );
-    
+
     switch (format) {
       case ExportFormat.json:
-      case ExportFormat.jsonWithAnalytics:
         return const JsonEncoder.withIndent('  ').convert(batchExport.toJson());
-      
-      case ExportFormat.jsonMinified:
-        return json.encode(batchExport.toJson());
+
+      case ExportFormat.csv:
+        // TODO: Implement CSV batch export
+        throw UnimplementedError('CSV batch export not yet implemented');
+
+      case ExportFormat.pdf:
+        // TODO: Implement PDF batch export
+        throw UnimplementedError('PDF batch export not yet implemented');
     }
   }
   
   /// Check if user can include analytics in export
   bool _canIncludeAnalytics(UserProfile user, bool requested) {
     if (!requested) return false;
-    
+
     // Only premium and pro users can export with analytics
-    return user.accountTier == AccountTier.premium || 
+    return user.accountTier == AccountTier.premium ||
            user.accountTier == AccountTier.pro;
   }
   
   /// Check if user can perform batch export
   bool _canBatchExport(UserProfile user) {
     // Only premium and pro users can batch export
-    return user.accountTier == AccountTier.premium || 
+    return user.accountTier == AccountTier.premium ||
            user.accountTier == AccountTier.pro;
   }
   
@@ -325,7 +360,7 @@ class TemplateExportService {
           canIncludeAnalytics: false,
           canBatchExport: false,
         );
-      
+
       case AccountTier.premium:
         return const ExportLimits(
           maxTemplatesPerExport: 10,
@@ -333,7 +368,7 @@ class TemplateExportService {
           canIncludeAnalytics: true,
           canBatchExport: true,
         );
-      
+
       case AccountTier.pro:
         return const ExportLimits(
           maxTemplatesPerExport: -1, // Unlimited

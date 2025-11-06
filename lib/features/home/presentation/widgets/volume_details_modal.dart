@@ -91,7 +91,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.fitness_center,
                     color: context.colors.surface,
                     size: 28,
@@ -171,7 +171,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -180,7 +180,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                         color: percentageChange >= 0 ? context.colors.success : context.colors.error,
                         size: 20,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Text(
                         '${percentageChange >= 0 ? '+' : ''}${percentageChange.toStringAsFixed(1)}%',
                         style: theme.textTheme.titleMedium?.copyWith(
@@ -201,7 +201,7 @@ class VolumeDetailsModal extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           
           // Quick Stats
           Padding(
@@ -217,7 +217,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     color: context.colors.primary,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: _QuickStatCard(
                     label: l10n.bestDay,

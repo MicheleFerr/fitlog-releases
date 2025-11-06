@@ -149,7 +149,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             size: 16,
             color: isSelected ? context.colors.onPrimary : context.colors.onSurface,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(label),
         ],
       ),
@@ -212,7 +212,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           color: context.colors.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Center(child: LoadingIndicator()),
+        child: Center(child: LoadingIndicator()),
       );
     }
 
@@ -235,7 +235,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 size: 48,
                 color: context.colors.error.withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 context.l10n.errorLoadingData,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -291,7 +291,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           color: context.colors.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Center(child: LoadingIndicator()),
+        child: Center(child: LoadingIndicator()),
       ),
       error: (error, stack) {
         // Show error state
@@ -313,7 +313,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   size: 48,
                   color: context.colors.error.withValues(alpha: 0.5),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   context.l10n.errorLoadingData,
                   style: context.textTheme.bodyMedium?.copyWith(
@@ -444,7 +444,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, color: color, size: 28),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 label,
                 style: context.textTheme.labelSmall?.copyWith(
@@ -452,7 +452,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 value,
                 style: context.textTheme.titleMedium?.copyWith(
@@ -461,7 +461,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Icon(
                 Icons.info_outline,
                 size: 16,
@@ -495,7 +495,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             Row(
               children: [
                 Icon(Icons.emoji_events, color: context.colors.primary),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.strengthLevel,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -580,7 +580,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           size: 48,
           color: context.colors.onSurface.withValues(alpha: 0.3),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Text(
           'Nessun dato disponibile per questo esercizio',
           style: context.textTheme.bodyMedium?.copyWith(
@@ -588,7 +588,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           'I livelli di forza saranno disponibili dopo il primo workout',
           style: context.textTheme.bodySmall?.copyWith(
@@ -679,7 +679,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // Livello attuale
         Row(
@@ -698,7 +698,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             if (currentLevel != ExperienceLevel.elite && progressToNext > 0)
               Expanded(
                 child: Text(
@@ -711,7 +711,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ],
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Progress bar
         if (currentLevel != ExperienceLevel.elite) ...[
@@ -724,7 +724,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               valueColor: AlwaysStoppedAnimation<Color>(levelColor),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
         ],
 
         // Tabella livelli
@@ -755,7 +755,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                           shape: BoxShape.circle,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           level.getLabel(locale),
@@ -776,9 +776,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   ),
                 );
               }),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               const Divider(height: 1),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'Benchmark basati su peso corporeo di 80kg',
                 style: context.textTheme.labelSmall?.copyWith(
@@ -925,7 +925,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             Row(
               children: [
                 Icon(Icons.emoji_events, color: context.colors.primary, size: 32),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     recordLabel,
@@ -938,7 +938,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ],
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Valore record
             Container(
@@ -1007,13 +1007,13 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                     ),
                   ),
                 ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
             ],
 
             // Dettagli sessione (se è un volume di sessione)
             if (recordData.sessionSets != null && recordData.sessionSets!.isNotEmpty) ...[
               const Divider(),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'Set della sessione (${recordData.sessionSets!.length}):',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -1021,7 +1021,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   color: context.colors.onSurface,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               ...recordData.sessionSets!.asMap().entries.map((entry) {
                 final index = entry.key + 1;
                 final set = entry.value;
@@ -1047,7 +1047,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           '${set.weight?.toStringAsFixed(1) ?? '0'} kg × ${set.reps ?? 0} reps',
@@ -1067,7 +1067,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               }),
             ],
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Close button
             SizedBox(
@@ -1082,7 +1082,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Chiudi'),
+                child: Text('Chiudi'),
               ),
             ),
           ],
@@ -1095,14 +1095,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return Row(
       children: [
         Icon(icon, size: 20, color: context.colors.primary),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Text(
           '$label:',
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colors.onSurface.withValues(alpha: 0.7),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Text(
             value,

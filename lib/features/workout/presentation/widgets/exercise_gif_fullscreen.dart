@@ -64,7 +64,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                           color: colorScheme.error,
                           size: 64,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Text(
                           context.l10n.errorLoadingImage,
                           style: TextStyle(
@@ -118,7 +118,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: Icon(
@@ -162,7 +162,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                         color: context.colors.surface.withValues(alpha: 0.7),
                         size: 16,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         context.l10n.tapAnywhereToClose,
                         style: theme.textTheme.bodySmall?.copyWith(

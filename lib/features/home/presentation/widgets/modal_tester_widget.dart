@@ -33,7 +33,7 @@ class ModalTesterWidget extends ConsumerWidget {
               children: [
                 Icon(AppIcons.bugReport, 
                   color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   '🧪 MODAL TESTER - Debug Mode',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -43,7 +43,7 @@ class ModalTesterWidget extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Test all workout modals to identify duplicates and determine which ones to keep',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(

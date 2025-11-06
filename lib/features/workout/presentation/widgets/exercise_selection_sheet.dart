@@ -172,7 +172,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
               onPressed: () {
                 ref.read(exerciseSelectionProvider.notifier).clearSelection();
               },
-              icon: const Icon(AppIcons.clearAll, size: 20),
+              icon: Icon(AppIcons.clearAll, size: 20),
               label: Text(l10n.clearAll),
             ),
         ],
@@ -269,7 +269,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
               size: 64,
               color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               AppLocalizations.of(context).noExercisesFound,
               style: Theme.of(context).textTheme.bodyLarge,

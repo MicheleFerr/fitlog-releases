@@ -72,7 +72,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
               size: 64,
               color: context.colors.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               context.l10n.errorLoadingHistory,
               style: context.textTheme.bodyLarge?.copyWith(
@@ -95,14 +95,14 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
             size: 64,
             color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             context.l10n.noHistoryYet,
             style: context.textTheme.titleMedium?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             context.l10n.startWorkoutToSeeHistory,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -163,7 +163,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     ),
                   ),
 
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
 
                   // Data e info
                   Expanded(
@@ -177,7 +177,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                             color: context.colors.onSurface,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           '$totalSets ${context.l10n.sets} · ${totalVolume.toStringAsFixed(0)} kg ${context.l10n.totalVolume}',
                           style: context.textTheme.labelSmall?.copyWith(
@@ -246,7 +246,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
             ),
           ),
 
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
 
           // Peso e reps
           Expanded(
@@ -260,7 +260,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                       size: 16,
                       color: context.colors.primary,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       '${weight.toStringAsFixed(1)} kg',
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -268,13 +268,13 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                         color: context.colors.onSurface,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Icon(
                       Icons.repeat,
                       size: 16,
                       color: context.colors.secondary,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       '$reps ${context.l10n.reps}',
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -284,7 +284,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   workoutName,
                   style: context.textTheme.labelSmall?.copyWith(

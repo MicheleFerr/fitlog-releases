@@ -84,7 +84,7 @@ class _BeginnerEmptyState extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // Encouraging title
             Text(
@@ -97,7 +97,7 @@ class _BeginnerEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Supportive description
             Text(
@@ -110,7 +110,7 @@ class _BeginnerEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 48),
+            SizedBox(height: 48),
 
             // Large, prominent CTA button (with GlobalKey for overlay)
             SizedBox(
@@ -166,7 +166,7 @@ class _BeginnerEmptyState extends StatelessWidget {
                     color: colors.primary,
                     size: AppIconSize.large,
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: Text(
                       'Tip: Start with 3-4 exercises, 3 sets each. I\'ll guide you!',
@@ -212,7 +212,7 @@ class _ExpertEmptyState extends StatelessWidget {
               color: colors.onSurface.withValues(alpha: 0.4),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Minimal title
             Text(
@@ -224,7 +224,7 @@ class _ExpertEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Brief description
             Text(

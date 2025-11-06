@@ -130,7 +130,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         l10n.editRoundData,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -215,7 +215,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         exercise.category.name,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -295,7 +295,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
             
             // Target info (if available)
             if (exerciseData.targetWeight != null || exerciseData.targetReps != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(

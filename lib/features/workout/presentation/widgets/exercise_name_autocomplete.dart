@@ -252,7 +252,7 @@ class _ExerciseNameAutocompleteState
                           ),
                           // Auto-correct icon
                           if (fuzzyResult.wasAutoCorrected) ...[
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Icon(
                               AppIcons.autoFixHigh,
                               size: 14,

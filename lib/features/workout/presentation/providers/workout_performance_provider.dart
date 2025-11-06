@@ -12,6 +12,7 @@
 /// - Performance: Memory and CPU optimization
 library;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -63,7 +64,7 @@ class WorkoutCalculations {
       return workout.exercises.fold<double>(0.0, (total, exercise) {
         final exerciseVolume = exercise.sets.fold<double>(0.0, (exerciseTotal, set) {
           if (set.isCompleted) {
-            return exerciseTotal + (set.weight * set.reps);
+            return exerciseTotal + ((set.weight ?? 0.0) * (set.reps ?? 0));
           }
           return exerciseTotal;
         });
@@ -86,11 +87,13 @@ class WorkoutCalculations {
         // Check each completed set for PRs
         for (final set in exercise.sets.where((s) => s.isCompleted)) {
           if (_isPersonalRecord(set, previousBest)) {
+            final weight = set.weight ?? 0.0;
+            final reps = set.reps ?? 0;
             records.add(PersonalRecord(
               exerciseName: exercise.name,
-              weight: set.weight,
-              reps: set.reps,
-              volume: set.weight * set.reps,
+              weight: weight,
+              reps: reps,
+              volume: weight * reps,
               date: DateTime.now(),
             ));
           }
@@ -112,21 +115,21 @@ class WorkoutCalculations {
       final exerciseData = <String, List<WorkoutExerciseData>>{};
       
       for (final workout in workouts) {
-        if (workout.isCompleted && workout.completedAt != null) {
+        if (workout.isCompleted && workout.endTime != null) {
           for (final exercise in workout.exercises) {
             exerciseData.putIfAbsent(exercise.name, () => []);
-            
+
             final maxWeight = exercise.sets
                 .where((s) => s.isCompleted)
-                .map((s) => s.weight)
+                .map((s) => s.weight ?? 0.0)
                 .maxOrNull ?? 0.0;
-            
+
             final totalVolume = exercise.sets
                 .where((s) => s.isCompleted)
-                .fold<double>(0.0, (sum, s) => sum + (s.weight * s.reps));
-            
+                .fold<double>(0.0, (sum, s) => sum + ((s.weight ?? 0.0) * (s.reps ?? 0)));
+
             exerciseData[exercise.name]!.add(WorkoutExerciseData(
-              date: workout.completedAt!,
+              date: workout.endTime!,
               maxWeight: maxWeight,
               totalVolume: totalVolume,
               totalSets: exercise.sets.where((s) => s.isCompleted).length,
@@ -172,7 +175,7 @@ class WorkoutCalculations {
         for (final exercise in workout.exercises) {
           if (exercise.name == exerciseName) {
             for (final set in exercise.sets.where((s) => s.isCompleted)) {
-              final volume = set.weight * set.reps;
+              final volume = (set.weight ?? 0.0) * (set.reps ?? 0);
               if (volume > bestVolume) {
                 bestVolume = volume;
                 best = set;
@@ -188,18 +191,23 @@ class WorkoutCalculations {
 
   static bool _isPersonalRecord(ExerciseSet set, ExerciseSet? previousBest) {
     if (previousBest == null) return true;
-    
-    final currentVolume = set.weight * set.reps;
-    final previousVolume = previousBest.weight * previousBest.reps;
-    
-    return currentVolume > previousVolume || 
-           (set.weight > previousBest.weight && set.reps >= previousBest.reps);
+
+    final currentWeight = set.weight ?? 0.0;
+    final currentReps = set.reps ?? 0;
+    final previousWeight = previousBest.weight ?? 0.0;
+    final previousReps = previousBest.reps ?? 0;
+
+    final currentVolume = currentWeight * currentReps;
+    final previousVolume = previousWeight * previousReps;
+
+    return currentVolume > previousVolume ||
+           (currentWeight > previousWeight && currentReps >= previousReps);
   }
 
   static ProgressionTrend _calculateTrend(List<WorkoutExerciseData> data) {
     if (data.length < 3) return ProgressionTrend.stable;
-    
-    final recentData = data.takeLast(3).toList();
+
+    final recentData = data.skip(data.length - 3).toList();
     final weights = recentData.map((d) => d.maxWeight).toList();
     
     bool increasing = true;

@@ -43,6 +43,31 @@ class WorkoutTemplateImportData {
   final List<String>? requiredEquipment;
   final List<String>? targetMuscles;
 
+  /// Creates a copy with optional new values
+  WorkoutTemplateImportData copyWith({
+    String? name,
+    String? description,
+    List<ExerciseImportData>? exercises,
+    String? category,
+    int? difficulty,
+    int? estimatedDurationMinutes,
+    List<String>? tags,
+    List<String>? requiredEquipment,
+    List<String>? targetMuscles,
+  }) {
+    return WorkoutTemplateImportData(
+      name: name ?? this.name,
+      description: description ?? this.description,
+      exercises: exercises ?? this.exercises,
+      category: category ?? this.category,
+      difficulty: difficulty ?? this.difficulty,
+      estimatedDurationMinutes: estimatedDurationMinutes ?? this.estimatedDurationMinutes,
+      tags: tags ?? this.tags,
+      requiredEquipment: requiredEquipment ?? this.requiredEquipment,
+      targetMuscles: targetMuscles ?? this.targetMuscles,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -89,6 +114,25 @@ class ExerciseImportData {
   final String? notes;
   final int? restTimeSeconds;
 
+  /// Creates a copy with optional new values
+  ExerciseImportData copyWith({
+    String? name,
+    String? category,
+    String? type,
+    List<SetImportData>? sets,
+    String? notes,
+    int? restTimeSeconds,
+  }) {
+    return ExerciseImportData(
+      name: name ?? this.name,
+      category: category ?? this.category,
+      type: type ?? this.type,
+      sets: sets ?? this.sets,
+      notes: notes ?? this.notes,
+      restTimeSeconds: restTimeSeconds ?? this.restTimeSeconds,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -126,6 +170,23 @@ class SetImportData {
   final String? reps;
   final String? notes;
   final bool? isWarmup;
+
+  /// Creates a copy with optional new values
+  SetImportData copyWith({
+    int? setNumber,
+    String? weight,
+    String? reps,
+    String? notes,
+    bool? isWarmup,
+  }) {
+    return SetImportData(
+      setNumber: setNumber ?? this.setNumber,
+      weight: weight ?? this.weight,
+      reps: reps ?? this.reps,
+      notes: notes ?? this.notes,
+      isWarmup: isWarmup ?? this.isWarmup,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

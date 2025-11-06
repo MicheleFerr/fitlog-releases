@@ -29,7 +29,7 @@ class QuickStartList extends ConsumerWidget {
     return ListView(
       children: [
         _buildQuickWorkoutCard(context, ref),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildCustomTemplatesSection(context, ref),
         _buildPopularTemplatesSection(context, ref),
       ],
@@ -150,7 +150,7 @@ class QuickStartList extends ConsumerWidget {
             size: 20,
             color: Theme.of(context).colorScheme.primary,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
         ],
         Text(
           title,
@@ -185,7 +185,7 @@ class QuickStartList extends ConsumerWidget {
           color: Theme.of(context).colorScheme.secondary,
           onTap: () => _startTemplateWorkout(context, ref, 'Upper Body'),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         QuickStartCard(
           icon: AppIcons.cardio,
           title: AppLocalizations.of(context).lowerBody,
@@ -193,7 +193,7 @@ class QuickStartList extends ConsumerWidget {
           color: Theme.of(context).colorScheme.tertiary,
           onTap: () => _startTemplateWorkout(context, ref, 'Lower Body'),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         QuickStartCard(
           icon: AppIcons.timer,
           title: AppLocalizations.of(context).hiitTraining,
@@ -244,7 +244,7 @@ class QuickStartList extends ConsumerWidget {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).errorStartingWorkout(e.toString())),
+          content: Text('${AppLocalizations.of(context).errorStartingWorkout}: ${e.toString()}'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -318,7 +318,7 @@ class QuickStartList extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context).errorDeleting(e.toString())),
+                      content: Text('${AppLocalizations.of(context).errorDeleting}: ${e.toString()}'),
                       backgroundColor: Theme.of(context).colorScheme.error,
                     ),
                   );

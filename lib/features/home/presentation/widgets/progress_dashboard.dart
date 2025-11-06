@@ -330,7 +330,7 @@ class ProgressDashboard extends ConsumerWidget {
                 icon: AppIcons.streak,
                 label: l10n.streak,
                 value: '${stats.currentStreak}',
-                subtitle: stats.currentStreak == 1 ? l10n.day : l10n.days(stats.currentStreak),
+                subtitle: stats.currentStreak == 1 ? l10n.day : l10n.days,
                 color: _getStreakColor(stats.currentStreak, theme),
                 onTap: () => _showStreakInfo(context),
               ),

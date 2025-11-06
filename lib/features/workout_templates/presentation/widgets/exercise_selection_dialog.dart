@@ -82,7 +82,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(l10n.selectExercise),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             '${l10n.originalExercise}: "${widget.originalExerciseName}"',
             style: context.textTheme.bodyMedium?.copyWith(
@@ -102,11 +102,11 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: l10n.searchExercises,
-                prefixIcon: const Icon(AppIcons.search),
+                prefixIcon: Icon(AppIcons.search),
                 border: const OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             
             // Suggested matches
             if (_filteredMatches.isNotEmpty) ...[
@@ -134,7 +134,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                             size: 48,
                             color: colorScheme.onSurfaceVariant,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           Text(
                             l10n.noExercisesFound,
                             style: context.textTheme.bodyLarge?.copyWith(
@@ -167,7 +167,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('${l10n.targetMuscles}: ${match.exercise.focus}'),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: 4),
                                   Row(
                                     children: [
                                       Container(
@@ -186,7 +186,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
+                                      SizedBox(width: 8),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,

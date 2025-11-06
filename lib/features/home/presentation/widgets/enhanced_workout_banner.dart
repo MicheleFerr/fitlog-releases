@@ -121,7 +121,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16), // Apple HIG spacing
+            SizedBox(height: 16), // Apple HIG spacing
             Row(
               children: [
                 Expanded(

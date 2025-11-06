@@ -169,7 +169,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.analytics,
                       color: context.colors.surface,
                       size: 24,
@@ -198,7 +198,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
               const SizedBox(height: 20),
               Expanded(
                 child: analyticsState.isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? Center(child: CircularProgressIndicator())
                     : volumeData.isEmpty
                         ? _buildEmptyState(context)
                         : _buildWeeklyVolumeChart(context, volumeData),
@@ -262,7 +262,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.insights,
                       color: context.colors.surface,
                       size: 28,
@@ -293,7 +293,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
               const SizedBox(height: 24),
               
               if (analyticsState.isLoading)
-                const Center(child: CircularProgressIndicator())
+                Center(child: CircularProgressIndicator())
               else if (analyticsState.activities.isEmpty)
                 _buildEmptyState(context)
               else ...[
@@ -310,7 +310,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         subtitle: 'Dalla registrazione',
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: _buildStatCard(
                         context,
@@ -321,7 +321,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         subtitle: 'Giorni attivi',
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: _buildStatCard(
                         context,
@@ -545,7 +545,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.toStringAsFixed(0)} kg',
-                const TextStyle(
+                TextStyle(
                   color: context.colors.surface,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,

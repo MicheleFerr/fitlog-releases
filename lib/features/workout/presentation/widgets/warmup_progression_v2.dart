@@ -152,7 +152,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
     if (warmupSets.every((set) => set.completed)) {
       widget.onComplete?.call();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Warmup completed! Ready for working sets 💪'),
           backgroundColor: context.colors.success,
           duration: Duration(seconds: 2),
@@ -203,7 +203,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                     color: context.colors.secondary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.whatshot,
                     color: context.colors.secondary,
                     size: 24,
@@ -387,7 +387,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                         
                         // Action button
                         if (set.completed)
-                          const Icon(
+                          Icon(
                             Icons.check_circle,
                             color: context.colors.success,
                             size: 32,

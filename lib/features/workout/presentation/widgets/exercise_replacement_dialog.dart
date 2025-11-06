@@ -651,7 +651,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Icon(
                 AppIcons.arrowDropDown,
                 size: 18,

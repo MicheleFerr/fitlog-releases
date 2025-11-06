@@ -69,7 +69,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
             ..._buildZenModeSection(context, ref),
             const Divider(),
             ..._buildGeneralActions(context),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
           ],
         ),
       ),
@@ -99,7 +99,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
         },
       ),
       ListTile(
-        leading: const Icon(AppIcons.pause),
+        leading: Icon(AppIcons.pause),
         title: Text(AppLocalizations.of(context).pauseWorkout),
         onTap: () {
           ref.read(currentWorkoutProvider.notifier).pauseWorkout();
@@ -187,7 +187,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
   List<Widget> _buildGeneralActions(BuildContext context) {
     return [
       ListTile(
-        leading: const Icon(AppIcons.tune),
+        leading: Icon(AppIcons.tune),
         title: Text(AppLocalizations.of(context).customizeWorkout),
         subtitle: Text(AppLocalizations.of(context).rpeTimerAndMore),
         onTap: () {
@@ -196,7 +196,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
         },
       ),
       ListTile(
-        leading: const Icon(AppIcons.logout),
+        leading: Icon(AppIcons.logout),
         title: Text(AppLocalizations.of(context).signOut),
         onTap: () {
           Navigator.pop(context);

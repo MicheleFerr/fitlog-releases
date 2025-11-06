@@ -128,7 +128,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Header
             Row(
@@ -138,7 +138,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   color: context.colors.primary,
                   size: 28,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +160,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Type Selection
             Text(
@@ -169,11 +169,11 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Type selector cards
             _buildTypeSelector(l10n),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Configuration based on selected type
             if (_selectedType != null) ...[
@@ -197,7 +197,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                     child: Text(l10n.clear ?? 'Clear'),
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: FilledButton(
                     onPressed: _selectedType != null ? _saveSettings : null,
@@ -247,7 +247,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                     const Radio<AutoAdjustmentType>(
                       value: AutoAdjustmentType.apre,
                     ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +258,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           l10n.apreAutoregulationDescription,
                           style: context.textTheme.bodySmall,
@@ -277,7 +277,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // RPE Card
         Card(
@@ -295,7 +295,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   const Radio<AutoAdjustmentType>(
                     value: AutoAdjustmentType.rpe,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +306,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           l10n.rpeBasedDescription,
                           style: context.textTheme.bodySmall,
@@ -340,7 +340,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // Protocol Selection
         Text(
@@ -409,7 +409,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             }
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Protocol Description
         Container(
@@ -425,7 +425,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 size: 16,
                 color: context.colors.onPrimaryContainer,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   _getProtocolDescription(l10n),
@@ -435,7 +435,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // 1RM Calculation Info
         if (_isCalculating1RM)
@@ -447,12 +447,12 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ),
             child: Row(
               children: [
-                const SizedBox(
+                SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   'Calculating from your history...',
                   style: context.textTheme.bodySmall,
@@ -478,7 +478,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                       size: 16,
                       color: context.colors.primary,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       '1RM Stimato: ${_calculated1RM!.toStringAsFixed(1)} kg',
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -488,15 +488,15 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   ],
                 ),
                 if (_calculationInfo != null) ...[
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     _calculationInfo!,
                     style: context.textTheme.bodySmall,
                   ),
                 ],
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 const Divider(height: 1),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 // Rep Maxes Grid
                 Text(
                   'Massimali per Range di Ripetizioni:',
@@ -609,7 +609,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   size: 20,
                   color: context.colors.secondary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     l10n.apreProtocolPreview,
@@ -621,14 +621,14 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               l10n.aprePreviewDescription,
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Comparison table
             Container(
@@ -672,13 +672,13 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Icon(
                           AppIcons.arrowForwardRounded,
                           size: 16,
                           color: context.colors.primary,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Expanded(
                           flex: 3,
                           child: Text(
@@ -795,13 +795,13 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Icon(
             AppIcons.arrowForwardRounded,
             size: 16,
             color: context.colors.primary,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             flex: 3,
             child: Column(
@@ -816,7 +816,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   textAlign: TextAlign.center,
                 ),
                 if (weightDiff.abs() > 0.1) ...[
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     '${isIncrease ? '+' : ''}${weightDiff.toStringAsFixed(1)} kg',
                     style: context.textTheme.bodySmall?.copyWith(
@@ -918,7 +918,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // RPE explanation
           Container(
             padding: const EdgeInsets.all(12),
@@ -938,7 +938,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             decoration: InputDecoration(
               labelText: 'Target RIR',
               hintText: '2',
-              prefixIcon: const Icon(AppIcons.repeat),
+              prefixIcon: Icon(AppIcons.repeat),
               helperText: 'Repetitions in Reserve',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -946,7 +946,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ),
             keyboardType: TextInputType.number,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // RIR explanation
           Container(
             padding: const EdgeInsets.all(12),
@@ -1215,7 +1215,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
       if (baseWeight == null || baseWeight <= 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Please enter a valid base weight'),
+            content: Text('Please enter a valid base weight'),
             backgroundColor: context.colors.error,
           ),
         );
@@ -1240,7 +1240,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         if (minRPE == null || maxRPE == null || minRPE < 1 || maxRPE > 10 || minRPE >= maxRPE) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Please enter valid RPE range (1-10)'),
+              content: Text('Please enter valid RPE range (1-10)'),
               backgroundColor: context.colors.error,
             ),
           );
@@ -1262,7 +1262,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         if (targetRIR == null || targetRIR < 0 || targetRIR > 10) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Please enter valid RIR (0-10)'),
+              content: Text('Please enter valid RIR (0-10)'),
               backgroundColor: context.colors.error,
             ),
           );
@@ -1289,7 +1289,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Auto adjustment configured'),
+        content: Text('Auto adjustment configured'),
         backgroundColor: context.colors.primary,
       ),
     );

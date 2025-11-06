@@ -80,7 +80,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
               TextButton(
                 onPressed: _isLoading ? null : _saveTemplate,
                 child: _isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 16,
                         height: 16,
                         child: LoadingIndicator(),
@@ -114,7 +114,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     maxLines: 2,
                     onChanged: (_) => _markAsChanged(),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   // Toggle pubblico/privato
                   /* Card(
                     child: Padding(
@@ -132,7 +132,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                     : context.colors.onSurface
                                         .withValues(alpha: 0.6),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 _isPublic
                                     ? 'Template Pubblico'
@@ -153,7 +153,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             _isPublic
                                 ? 'Altri utenti potranno trovare e utilizzare questo template'
@@ -164,7 +164,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                             ),
                           ),
                           if (_isPublic) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -183,7 +183,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                     size: 16,
                                     color: context.colors.primary,
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       'Assicurati che il template sia completo e ben descritto',
@@ -242,24 +242,24 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             size: 64,
             color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             context.l10n.noExercisesYet,
             style: context.textTheme.headlineSmall?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             context.l10n.tapToAddExercise,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _showAddExercise,
-            icon: const Icon(AppIcons.add),
+            icon: Icon(AppIcons.add),
             label: Text(context.l10n.addExercise),
           ),
         ],
@@ -287,8 +287,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(AppIcons.delete, color: Colors.white, size: 28),
-              const SizedBox(height: 4),
+              Icon(AppIcons.delete, color: Colors.white, size: 28),
+              SizedBox(height: 4),
               Text(
                 context.l10n.delete,
                 style: const TextStyle(
@@ -329,7 +329,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                           color: context.colors.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       // Exercise info
                       Expanded(
                         child: Column(
@@ -341,7 +341,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Row(
                               children: [
                                 Text(
@@ -352,7 +352,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                   ),
                                 ),
                                 if (exerciseTemplate.restTime != null) ...[
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 2),
@@ -373,7 +373,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                           size: 12,
                                           color: context.colors.primary,
                                         ),
-                                        const SizedBox(width: 2),
+                                        SizedBox(width: 2),
                                         Text(
                                           _formatRestTime(
                                               exerciseTemplate.restTime!),
@@ -395,11 +395,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       // Rest timer button
                       IconButton.filledTonal(
                         onPressed: () => _showRestTimePicker(index),
-                        icon: const Icon(AppIcons.timer),
+                        icon: Icon(AppIcons.timer),
                         iconSize: 20,
                         tooltip: 'Timer Recupero',
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       // Expand/collapse icon
                       Icon(
                         isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
@@ -443,7 +443,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             Row(
               children: [
                 Icon(icon, size: 12, color: color),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   label,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -453,7 +453,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               value,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -514,7 +514,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     // Weight Picker Button
                     Expanded(
                       child: _buildPickerButton(
@@ -535,9 +535,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    const Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
+                    Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(width: 8),
                     // Reps Picker Button
                     Expanded(
                       child: _buildPickerButton(
@@ -556,12 +556,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     // Remove set button
                     if (exerciseTemplate.sets.length > 1)
                       IconButton(
                         onPressed: () => _removeSet(exerciseIndex, setIndex),
-                        icon: const Icon(AppIcons.removeCircleOutline),
+                        icon: Icon(AppIcons.removeCircleOutline),
                         color: Colors.red,
                         iconSize: 20,
                         tooltip: context.l10n.removeSet,
@@ -576,7 +576,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: OutlinedButton.icon(
               onPressed: () => _addSet(exerciseIndex),
-              icon: const Icon(AppIcons.add),
+              icon: Icon(AppIcons.add),
               label: Text(context.l10n.addSet),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 40),

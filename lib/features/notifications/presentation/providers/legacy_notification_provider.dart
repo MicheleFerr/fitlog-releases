@@ -1056,11 +1056,14 @@ class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState>
       }
 
       // Collect all notification-related data
-      final [notifications, preferences, analytics] = await Future.wait([
+      final results = await Future.wait([
         _exportNotifications(currentUser!.uid),
         _exportPreferences(currentUser.uid),
         _exportAnalytics(currentUser.uid),
       ]);
+      final notifications = results[0] as List<Map<String, dynamic>>;
+      final preferences = results[1] as Map<String, dynamic>;
+      final analytics = results[2] as List<Map<String, dynamic>>;
 
       final exportData = {
         'userId': currentUser.uid,
@@ -1118,7 +1121,7 @@ class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState>
   Future<List<Map<String, dynamic>>> _exportAnalytics(String userId) async {
     final snapshot = await _firestore
         .collection('notification_analytics')
-        .where('userId', '==', userId)
+        .where('userId', isEqualTo: userId)
         .get();
 
     return snapshot.docs.map((doc) => {

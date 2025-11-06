@@ -196,7 +196,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 size: AppAnimations.iconSizeMedium,
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Title
               Text(
@@ -210,7 +210,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
 
               // Subtitle
               Text(

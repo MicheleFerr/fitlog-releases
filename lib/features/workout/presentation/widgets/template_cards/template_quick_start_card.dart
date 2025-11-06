@@ -82,7 +82,7 @@ class TemplateQuickStartCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           template.description,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -132,7 +132,7 @@ class TemplateQuickStartCard extends StatelessWidget {
           size: 12,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
         ),
-        const SizedBox(width: 2),
+        SizedBox(width: 2),
         Text(
           value,
           style: TextStyle(
@@ -172,9 +172,9 @@ class TemplateQuickStartCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildHandleBar(context),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildSheetHeader(context),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           _buildMenuOption(
             context,
             icon: AppIcons.play,
@@ -210,7 +210,7 @@ class TemplateQuickStartCard extends StatelessWidget {
                 onDelete!();
               },
             ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
         ],
       ),
     );
@@ -234,7 +234,7 @@ class TemplateQuickStartCard extends StatelessWidget {
           template.isCustom ? AppIcons.person : AppIcons.star,
           color: Theme.of(context).colorScheme.primary,
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Text(
             template.name,

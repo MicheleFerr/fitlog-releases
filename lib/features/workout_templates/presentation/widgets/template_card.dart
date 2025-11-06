@@ -77,7 +77,7 @@ class TemplateCard extends StatelessWidget {
                     color: context.colors.surface,
                     size: 20,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       template.category.name.toUpperCase(),
@@ -100,12 +100,12 @@ class TemplateCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
+                          Icon(
                             AppIcons.public,
                             size: 12,
                             color: context.colors.surface,
                           ),
-                          const SizedBox(width: 2),
+                          SizedBox(width: 2),
                           Text(
                             'PUBLIC',
                             style: theme.textTheme.labelSmall?.copyWith(
@@ -273,7 +273,8 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.mixed:
         return context.colors.surfaceContainerHighest;
       case TemplateCategory.custom:
-        return context.colors.primaryGrey;
+        // TODO: primaryGrey doesn't exist - using surfaceVariant instead
+        return context.colors.surfaceVariant;
     }
   }
   

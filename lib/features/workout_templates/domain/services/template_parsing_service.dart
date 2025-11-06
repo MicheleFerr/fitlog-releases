@@ -79,12 +79,13 @@ class TemplateParsingService {
           isBlocking: true,
         ));
         return ImportParsingResult(
+          success: false,
+          errorMessage: errors.isNotEmpty ? errors.first.message : 'No workout sections found in text',
           template: const WorkoutTemplateImportData(
             name: '',
             exercises: [],
             category: 'other',
           ),
-          errors: errors,
         );
       }
       
@@ -92,13 +93,17 @@ class TemplateParsingService {
       final firstSection = workoutSections.first;
       final workoutName = _extractWorkoutName(firstSection);
       final exercises = await _parseExercises(firstSection, warnings, errors);
-      
+
+      // Convert difficulty from String? to int?
+      final difficultyStr = _inferDifficulty(exercises);
+      final difficultyInt = difficultyStr != null ? int.tryParse(difficultyStr) : null;
+
       final template = WorkoutTemplateImportData(
         name: workoutName,
         description: _extractDescription(firstSection),
         exercises: exercises,
-        category: _inferCategory(workoutName, exercises),
-        difficulty: _inferDifficulty(exercises),
+        category: _inferCategory(workoutName, exercises) ?? 'general',
+        difficulty: difficultyInt,
         estimatedDurationMinutes: _estimateDuration(exercises),
         tags: _extractTags(workoutName),
         requiredEquipment: _inferEquipment(exercises),
@@ -106,9 +111,9 @@ class TemplateParsingService {
       );
       
       return ImportParsingResult(
+        success: errors.where((e) => e.isBlocking).isEmpty,
+        errorMessage: errors.isNotEmpty ? errors.map((e) => e.message).join('; ') : null,
         template: template,
-        warnings: warnings,
-        errors: errors,
       );
     } catch (e) {
       errors.add(ImportError(
@@ -118,12 +123,13 @@ class TemplateParsingService {
       ));
 
       return ImportParsingResult(
+        success: false,
+        errorMessage: errors.isNotEmpty ? errors.map((e) => e.message).join('; ') : 'Failed to parse workout',
         template: const WorkoutTemplateImportData(
           name: '',
           exercises: [],
           category: 'other',
         ),
-        errors: errors,
       );
     }
   }
@@ -300,7 +306,6 @@ class TemplateParsingService {
       warnings.add(ImportWarning(
         message: 'No sets found for exercise: $exerciseName',
         field: 'sets',
-        context: {'exercise': exerciseName},
       ));
     }
     
@@ -340,13 +345,6 @@ class TemplateParsingService {
     }
     
     return null;
-  }
-  
-  /// Extract rest time string as is
-  String? _extractRestTimeString(String line) {
-    final timeMatch = RegExp(r'(\d+(?:-\d+)?\s*(?:min|sec|secondi|minuti))', 
-                            caseSensitive: false).firstMatch(line);
-    return timeMatch?.group(1);
   }
   
   /// Parse individual set

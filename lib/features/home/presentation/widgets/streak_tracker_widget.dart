@@ -75,12 +75,12 @@ class StreakTrackerWidget extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [context.colors.secondary, context.colors.error],
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.local_fire_department,
                       color: context.colors.surface,
                       size: 20,
@@ -104,7 +104,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                                 color: streak > 0 ? context.colors.secondary : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Text(
                               streak == 1 ? 'giorno' : 'giorni',
                               style: theme.textTheme.bodyLarge?.copyWith(
@@ -116,7 +116,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                         Text(
                           _getStreakMessage(streak),
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: streak > 0 ? context.colors.secondary[700] : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: streak > 0 ? context.colors.secondary : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -180,7 +180,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [context.colors.secondary, context.colors.warning],
                       ),
                       borderRadius: BorderRadius.circular(12),
@@ -192,13 +192,13 @@ class StreakTrackerWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.local_fire_department,
                       color: context.colors.surface,
                       size: 24,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +221,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Expanded(
                 child: _buildWeekView(context, weekDays, activityMap, analyticsState),
               ),
@@ -268,7 +268,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [context.colors.secondary, context.colors.warning],
                       ),
                       borderRadius: BorderRadius.circular(16),
@@ -280,7 +280,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.local_fire_department,
                       color: context.colors.surface,
                       size: 28,
@@ -308,7 +308,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               // Stats row
               Row(
                 children: [
@@ -321,7 +321,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       color: context.colors.secondary,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: _buildStreakStat(
                       context,
@@ -331,7 +331,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       color: context.colors.primary,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: _buildStreakStat(
                       context,
@@ -343,7 +343,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               // Calendar heatmap
               _buildFullCalendar(context, analyticsState),
             ],
@@ -410,14 +410,14 @@ class StreakTrackerWidget extends ConsumerWidget {
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.check,
                                 color: context.colors.surface,
                                 size: 16,
                               ),
                               Text(
                                 '${dayActivities.length}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: context.colors.surface,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -446,9 +446,9 @@ class StreakTrackerWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildLegendItem(context, 'Riposo', theme.colorScheme.surfaceContainerHighest),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             _buildLegendItem(context, 'Leggero', _getIntensityColor(context,1)),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             _buildLegendItem(context, 'Intenso', _getIntensityColor(context,3)),
           ],
         ),
@@ -570,7 +570,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                           ),
                         ),
                         if (hasWorkout) ...[
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                             decoration: BoxDecoration(
@@ -579,7 +579,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                             ),
                             child: Text(
                               '${activities.length}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: context.colors.surface,
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
@@ -600,11 +600,11 @@ class StreakTrackerWidget extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildLegendItem(context, 'Nessuno', theme.colorScheme.surfaceContainerHighest),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               _buildLegendItem(context, '1-2 es.', _getIntensityColor(context,1)),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               _buildLegendItem(context, '3-4 es.', _getIntensityColor(context,3)),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               _buildLegendItem(context, '5+ es.', _getIntensityColor(context,5)),
             ],
           ),
@@ -625,7 +625,7 @@ class StreakTrackerWidget extends ConsumerWidget {
             borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(

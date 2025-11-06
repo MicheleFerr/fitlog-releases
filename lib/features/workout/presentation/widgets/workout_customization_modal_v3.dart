@@ -414,7 +414,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
           },
         ),
         if (_enableApre) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -460,14 +460,14 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     _saveSettings();
                   },
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   _getApreProtocolDescription(_defaultApreProtocol, l10n),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Divider(color: context.colors.tertiary.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
@@ -569,7 +569,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
           },
         ),
         if (_rpeTracking) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -637,7 +637,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Divider(color: context.colors.secondary.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
@@ -779,7 +779,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         Row(
           children: [
             Icon(Icons.star, color: context.colors.primary, size: 24),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(
               l10n.essentialsSection,
               style: theme.textTheme.titleLarge?.copyWith(
@@ -789,14 +789,14 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           l10n.essentialsSectionDesc,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // Toggle 1: Auto Rest Timer (Default ON)
         _buildToggleCard(
@@ -813,7 +813,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             _saveSettings();
           },
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         // Toggle 2: Warmup Suggestions (Default ON)
         _buildToggleCard(
@@ -830,7 +830,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             _saveSettings();
           },
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         // Toggle 3: RPE Tracking (Default OFF - moved from Auto-Regulation)
         _buildToggleCard(
@@ -889,7 +889,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   color: Colors.teal,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Exercise Notes
               _buildToggleCard(
@@ -906,7 +906,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Exercise Insights
               _buildToggleCard(
@@ -923,7 +923,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Community Suggestions
               _buildToggleCard(
@@ -957,7 +957,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Quick Info Icon
               _buildToggleCard(
@@ -974,7 +974,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Quick Warmup Icon
               _buildToggleCard(
@@ -991,7 +991,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Quick Prevention Icon
               _buildToggleCard(
@@ -1008,7 +1008,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Advanced Menu
               _buildToggleCard(
@@ -1025,7 +1025,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Custom Timers
               _buildToggleCard(
@@ -1043,7 +1043,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 },
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Subcategory 2: Auto-regolazione
               Text(
@@ -1053,11 +1053,11 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   color: context.colors.tertiary,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // APRE System
               _buildApreSection(theme, l10n),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Auto-adjust Weight from RPE (depends on RPE tracking)
               _buildToggleCard(
@@ -1095,7 +1095,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveSettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Auto-adjust Rest from RPE (depends on RPE tracking)
               _buildToggleCard(
@@ -1134,7 +1134,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 },
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Subcategory 3: Interfaccia
               Text(
@@ -1161,7 +1161,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveSettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Collapse Countdown
               _buildToggleCard(
@@ -1178,7 +1178,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Simplified Animations
               _buildToggleCard(

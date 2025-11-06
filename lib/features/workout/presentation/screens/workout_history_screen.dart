@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_history_list_item.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_history_editor.dart';
@@ -74,7 +75,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             // Navigate back to home using Go Router
             context.go('/');
@@ -425,8 +426,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).deleteWorkout),
-        content: Text(AppLocalizations.of(context).deleteWorkoutConfirmation(workout.name)),
+        title: Text(context.l10n.deleteWorkout),
+        content: Text('${context.l10n.deleteWorkoutConfirmation}\n\n"${workout.name}"'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

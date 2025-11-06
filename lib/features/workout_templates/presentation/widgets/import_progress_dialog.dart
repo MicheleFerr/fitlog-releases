@@ -80,7 +80,7 @@ class ImportProgressDialog extends StatelessWidget {
                   ),
                 ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Title
               Text(
@@ -91,7 +91,7 @@ class ImportProgressDialog extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Current phase
               if (currentPhase.isNotEmpty && !isCompleted)
@@ -103,7 +103,7 @@ class ImportProgressDialog extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Current step details
               if (currentStep.isNotEmpty && !isCompleted)
@@ -117,7 +117,7 @@ class ImportProgressDialog extends StatelessWidget {
 
               // Progress indicator
               if (totalTemplates > 0 && !isCompleted) ...[
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 LinearProgressIndicator(
                   value: progress,
                   backgroundColor: context.colors.surfaceContainerHighest,
@@ -125,7 +125,7 @@ class ImportProgressDialog extends StatelessWidget {
                   minHeight: 8,
                   borderRadius: BorderRadius.circular(4),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   '$processedTemplates / $totalTemplates',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -136,7 +136,7 @@ class ImportProgressDialog extends StatelessWidget {
 
               // Completed message
               if (isCompleted && totalTemplates > 0) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   l10n.templatesImportedSuccessfully(processedTemplates),
                   style: context.textTheme.bodyMedium?.copyWith(

@@ -212,7 +212,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Chiudi'),
+                    child: Text('Chiudi'),
                   ),
                 ],
               ),

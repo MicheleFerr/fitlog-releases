@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+// TODO: File non esiste - commentato temporaneamente
+// import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget per RPE Live Activity senza ombreggiature
@@ -16,7 +15,7 @@ class RPELiveActivityWidget extends ConsumerStatefulWidget {
     required this.rpeData,
     required this.activityId,
   });
-  final RPELiveActivityData rpeData;
+  final Map<String, dynamic> rpeData;
   final String activityId;
 
   @override
@@ -31,7 +30,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
   @override
   void initState() {
     super.initState();
-    _actualReps = widget.rpeData.targetReps; // Default alle reps target
+    _actualReps = widget.rpeData['targetReps'] as int? ?? 0; // Default alle reps target
   }
 
   @override
@@ -78,7 +77,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
         ),
         const SizedBox(height: 8),
         Text(
-          widget.rpeData.exerciseName,
+          widget.rpeData['exerciseName'] as String? ?? 'Unknown',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -86,7 +85,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           ),
         ),
         Text(
-          '${widget.rpeData.weight}kg • Set ${widget.rpeData.currentSet}/${widget.rpeData.totalSets}',
+          '${widget.rpeData['weight']}kg • Set ${widget.rpeData['currentSet']}/${widget.rpeData['totalSets']}',
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.9),
             fontSize: 14,
@@ -133,7 +132,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
                 ),
                 child: Center(
                   child: Text(
-                    '${_actualReps ?? widget.rpeData.targetReps}',
+                    '${_actualReps ?? widget.rpeData['targetReps']}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -276,7 +275,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
             onPressed: _isLoading ? null : _handleCancel,
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           flex: 2,
           child: _buildActionButton(
@@ -402,14 +401,15 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
 
   Future<void> _handleCancel() async {
     try {
-      final liveActivityService = ref.read(liveActivityProvider);
-      
+      // TODO: dismissRPEInterface method not defined in LiveActivityService
+      /* final liveActivityService = ref.read(liveActivityProvider);
+
       await liveActivityService.dismissRPEInterface(
         activityId: widget.activityId,
-      );
-      
+      ); */
+
       if (kDebugMode) {
-        debugPrint('❌ RPE cancellato dall\'utente');
+        debugPrint('❌ RPE cancellato dall\'utente (method not implemented)');
       }
       
     } catch (e) {
@@ -427,7 +427,7 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
     super.key,
     required this.rpeData,
   });
-  final RPELiveActivityData rpeData;
+  final Map<String, dynamic> rpeData;
 
   @override
   Widget build(BuildContext context) {
@@ -462,7 +462,7 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  rpeData.exerciseName,
+                  rpeData['exerciseName'] as String? ?? 'Unknown',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -471,7 +471,7 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  'Set ${rpeData.currentSet}/${rpeData.totalSets} • ${rpeData.weight}kg',
+                  'Set ${rpeData['currentSet']}/${rpeData['totalSets']} • ${rpeData['weight']}kg',
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 12,

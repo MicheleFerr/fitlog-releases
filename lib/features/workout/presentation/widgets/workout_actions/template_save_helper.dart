@@ -67,7 +67,7 @@ class TemplateSaveHelper {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).templateLimitReached),
+        title: Text(AppLocalizations.of(context).templateLimitReached(quotaInfo.maxTemplates)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -147,7 +147,7 @@ class TemplateSaveHelper {
               descriptionController.text.trim(),
               currentWorkout,
             ),
-            icon: const Icon(AppIcons.cloudUpload),
+            icon: Icon(AppIcons.cloudUpload),
             label: Text(AppLocalizations.of(context).saveToFirebase),
           ),
         ],
@@ -195,7 +195,7 @@ class TemplateSaveHelper {
             color: Theme.of(context).colorScheme.secondary,
             size: 20,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Text(
               AppLocalizations.of(context).templatesRemaining(quotaInfo.remaining),
@@ -230,7 +230,7 @@ class TemplateSaveHelper {
         labelText: AppLocalizations.of(context).description,
         hintText: AppLocalizations.of(context).descriptionHint,
         border: const OutlineInputBorder(),
-        prefixIcon: const Icon(AppIcons.template),
+        prefixIcon: Icon(AppIcons.template),
       ),
       maxLines: 3,
       textCapitalization: TextCapitalization.sentences,
@@ -253,7 +253,7 @@ class TemplateSaveHelper {
             AppIcons.cloudUpload,
             color: Theme.of(context).colorScheme.primary,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Text(
               AppLocalizations.of(context).templateSyncDescription,
@@ -287,7 +287,6 @@ class TemplateSaveHelper {
       SnackBarService.showCustom(
         context,
         message: AppLocalizations.of(context).savingToFirebase,
-        icon: const LoadingIndicator(size: 20, strokeWidth: 2),
         duration: const Duration(seconds: 30),
       );
       

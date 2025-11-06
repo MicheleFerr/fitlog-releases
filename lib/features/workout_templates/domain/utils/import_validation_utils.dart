@@ -11,7 +11,6 @@
 library;
 
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/template_import_export.dart';
 
@@ -142,63 +141,30 @@ class ImportValidationUtils {
     return ValidationResult(errors: errors, warnings: warnings);
   }
   
-  /// Validate exercise disambiguation
-  static ValidationResult validateExerciseDisambiguation(ExerciseDisambiguation disambiguation) {
-    final errors = <String>[];
-    final warnings = <String>[];
-    
-    if (disambiguation.options.isEmpty) {
-      errors.add('No exercise options provided for disambiguation');
-    }
-    
-    if (disambiguation.selectedOptionIndex != null) {
-      final selectedIndex = disambiguation.selectedOptionIndex!;
-      if (selectedIndex < 0 || selectedIndex >= disambiguation.options.length) {
-        errors.add('Selected option index out of range');
-      }
-    }
-    
-    // Check option quality
-    for (final option in disambiguation.options) {
-      if (option.matchConfidence != null && option.matchConfidence! < 0.3) {
-        warnings.add('Low confidence match for "${option.name}" (${(option.matchConfidence! * 100).toInt()}%)');
-      }
-    }
-    
-    return ValidationResult(errors: errors, warnings: warnings);
-  }
-  
-  /// Validate percentage conversion
-  static ValidationResult validatePercentageConversion(PercentageConversion conversion) {
-    final errors = <String>[];
-    final warnings = <String>[];
-    
-    // Validate percentage
-    if (conversion.percentage < 0 || conversion.percentage > 200) {
-      errors.add('Invalid percentage: ${conversion.percentage}%');
-    }
-    
-    // Validate estimated max
-    if (conversion.estimatedMax != null && conversion.estimatedMax! <= 0) {
-      errors.add('Invalid estimated max: ${conversion.estimatedMax}kg');
-    }
-    
-    // Validate calculated weight
-    if (conversion.calculatedWeight != null && conversion.calculatedWeight! <= 0) {
-      errors.add('Invalid calculated weight: ${conversion.calculatedWeight}kg');
-    }
-    
-    // Check for unrealistic values
-    if (conversion.estimatedMax != null && conversion.estimatedMax! > 500) {
-      warnings.add('Very high estimated max (${conversion.estimatedMax}kg) - please verify');
-    }
-    
-    if (conversion.userAdjustedMax != null && conversion.userAdjustedMax! > 500) {
-      warnings.add('Very high adjusted max (${conversion.userAdjustedMax}kg) - please verify');
-    }
-    
-    return ValidationResult(errors: errors, warnings: warnings);
-  }
+  // NOTE: ExerciseDisambiguation and PercentageConversion classes don't exist yet
+  // Commenting out these validation methods until the classes are implemented
+
+  // /// Validate exercise disambiguation
+  // static ValidationResult validateExerciseDisambiguation(dynamic disambiguation) {
+  //   final errors = <String>[];
+  //   final warnings = <String>[];
+  //
+  //   // TODO: Implement when ExerciseDisambiguation class is created
+  //   errors.add('Exercise disambiguation validation not implemented');
+  //
+  //   return ValidationResult(errors: errors, warnings: warnings);
+  // }
+  //
+  // /// Validate percentage conversion
+  // static ValidationResult validatePercentageConversion(dynamic conversion) {
+  //   final errors = <String>[];
+  //   final warnings = <String>[];
+  //
+  //   // TODO: Implement when PercentageConversion class is created
+  //   errors.add('Percentage conversion validation not implemented');
+  //
+  //   return ValidationResult(errors: errors, warnings: warnings);
+  // }
   
   /// Sanitize and fix common import issues
   static WorkoutTemplateImportData sanitizeTemplate(WorkoutTemplateImportData template) {
@@ -206,9 +172,9 @@ class ImportValidationUtils {
       name: _sanitizeName(template.name),
       description: _sanitizeDescription(template.description),
       exercises: template.exercises.map(_sanitizeExercise).toList(),
-      tags: _sanitizeTags(template.tags),
-      requiredEquipment: _sanitizeStringList(template.requiredEquipment),
-      targetMuscles: _sanitizeStringList(template.targetMuscles),
+      tags: _sanitizeTags(template.tags ?? []),
+      requiredEquipment: _sanitizeStringList(template.requiredEquipment ?? []),
+      targetMuscles: _sanitizeStringList(template.targetMuscles ?? []),
       estimatedDurationMinutes: _sanitizeDuration(template.estimatedDurationMinutes),
     );
   }

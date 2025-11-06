@@ -10,7 +10,6 @@
 /// Screen for exporting workout templates to JSON with premium features
 library;
 
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,14 +19,14 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/template_import_export.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/export_format.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_export_provider.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/export_options_widget.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_selection_widget.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/premium_export_features_widget.dart';
+// TODO: Create these missing widget files:
+// import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/export_options_widget.dart';
+// import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_selection_widget.dart';
+// import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/premium_export_features_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen for exporting workout templates
@@ -40,7 +39,7 @@ class TemplateExportScreen extends ConsumerStatefulWidget {
   final List<WorkoutTemplate>? preselectedTemplates;
 
   @override
-  ConsumerState<TemplateExportScreen> createState() => _TemplateExportScreenState;
+  ConsumerState<TemplateExportScreen> createState() => _TemplateExportScreenState();
 }
 
 class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
@@ -61,28 +60,65 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final user = ref.watch(unifiedUserProvider);
-    final exportState = ref.watch(templateExportProvider);
-    
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.exportTemplates),
-        backgroundColor: theme.colorScheme.surface,
-        foregroundColor: theme.colorScheme.onSurface,
-        actions: [
-          if (user.accountTier != AccountTier.free)
-            IconButton(
-              onPressed: () => _showExportLimits(context, l10n),
-              icon: const Icon(AppIcons.info),
+    final userAsync = ref.watch(unifiedUserProvider);
+    // final exportState = ref.watch(templateExportProvider); // TODO: Use export state if needed
+
+    return userAsync.when(
+      data: (user) {
+        if (user == null) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(l10n.exportTemplates),
+              backgroundColor: theme.colorScheme.surface,
+              foregroundColor: theme.colorScheme.onSurface,
             ),
-        ],
+            body: const Center(
+              child: Text('Please log in to export templates'), // TODO: Add l10n.pleaseLogIn
+            ),
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(l10n.exportTemplates),
+            backgroundColor: theme.colorScheme.surface,
+            foregroundColor: theme.colorScheme.onSurface,
+            actions: [
+              if (user.accountTier != AccountTier.free)
+                IconButton(
+                  onPressed: () => _showExportLimits(context, l10n),
+                  icon: const Icon(AppIcons.info),
+                ),
+            ],
+          ),
+          body: _isExporting
+              ? _buildExportingView(l10n, theme)
+              : _buildExportContent(context, l10n, theme, user),
+          bottomNavigationBar: _selectedTemplates.isNotEmpty && !_isExporting
+              ? _buildExportButton(l10n, theme, user)
+              : null,
+        );
+      },
+      loading: () => Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.exportTemplates),
+          backgroundColor: theme.colorScheme.surface,
+          foregroundColor: theme.colorScheme.onSurface,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
-      body: _isExporting
-          ? _buildExportingView(l10n, theme)
-          : _buildExportContent(context, l10n, theme, user),
-      bottomNavigationBar: _selectedTemplates.isNotEmpty && !_isExporting
-          ? _buildExportButton(l10n, theme, user)
-          : null,
+      error: (error, stack) => Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.exportTemplates),
+          backgroundColor: theme.colorScheme.surface,
+          foregroundColor: theme.colorScheme.onSurface,
+        ),
+        body: const Center(
+          child: Text('Error loading profile'), // TODO: Add l10n.errorLoadingProfile
+        ),
+      ),
     );
   }
   
@@ -99,44 +135,109 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
         children: [
           _buildUserTierInfo(l10n, theme, user),
           const SizedBox(height: 24),
-          
+
+          // TODO: Implement TemplateSelectionWidget
           // Template selection
-          TemplateSelectionWidget(
-            selectedTemplates: _selectedTemplates,
-            onSelectionChanged: (templates) {
-              setState(() {
-                _selectedTemplates = templates;
-              });
-            },
-            maxSelection: _getMaxTemplatesForUser(user),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Select Templates', // TODO: Add l10n.selectTemplates
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Max: ${_getMaxTemplatesForUser(user)} templates',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Selected: ${_selectedTemplates.length}',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
           ),
-          
+
           if (_selectedTemplates.isNotEmpty) ...[
             const SizedBox(height: 24),
-            
+
+            // TODO: Implement ExportOptionsWidget
             // Export options
-            ExportOptionsWidget(
-              selectedFormat: _selectedFormat,
-              includeAnalytics: _includeAnalytics,
-              canIncludeAnalytics: _canIncludeAnalytics(user),
-              onFormatChanged: (format) {
-                setState(() {
-                  _selectedFormat = format;
-                });
-              },
-              onIncludeAnalyticsChanged: (include) {
-                setState(() {
-                  _includeAnalytics = include;
-                });
-              },
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Export Options', // TODO: Add l10n.exportOptions
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    CheckboxListTile(
+                      title: const Text('Include Analytics'), // TODO: Add l10n.includeAnalytics
+                      value: _includeAnalytics,
+                      enabled: _canIncludeAnalytics(user),
+                      onChanged: (value) {
+                        if (value != null && _canIncludeAnalytics(user)) {
+                          setState(() {
+                            _includeAnalytics = value;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
+            // TODO: Implement PremiumExportFeaturesWidget
             // Premium features info
             if (user.accountTier == AccountTier.free)
-              PremiumExportFeaturesWidget(
-                onUpgradePressed: () => _showUpgradeDialog(context),
+              Card(
+                color: theme.colorScheme.primaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            AppIcons.premium,
+                            color: theme.colorScheme.onPrimaryContainer,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Premium Features', // TODO: Add l10n.premiumFeatures
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onPrimaryContainer,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Upgrade for more features', // TODO: Add l10n.upgradeForMoreFeatures
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () => _showUpgradeDialog(context),
+                        child: Text(l10n.upgrade),
+                      ),
+                    ],
+                  ),
+                ),
               ),
           ],
         ],
@@ -293,10 +394,24 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
     setState(() {
       _isExporting = true;
     });
-    
+
     try {
-      final user = ref.read(unifiedUserProvider);
-      
+      final userAsync = ref.read(unifiedUserProvider);
+      final user = userAsync.value;
+
+      // Check if user exists
+      if (user == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Error loading profile'), // TODO: Add l10n.errorLoadingProfile
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+        return;
+      }
+
       // Check if user can export this many templates
       if (!_canExportTemplates(user, _selectedTemplates.length)) {
         _showLimitReachedDialog();
@@ -393,9 +508,9 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
         return -1; // Unlimited
     }
   }
-  
+
   bool _canIncludeAnalytics(UserProfile user) {
-    return user.accountTier == AccountTier.premium || 
+    return user.accountTier == AccountTier.premium ||
            user.accountTier == AccountTier.pro;
   }
   

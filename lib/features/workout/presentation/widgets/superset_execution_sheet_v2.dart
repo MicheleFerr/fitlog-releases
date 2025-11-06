@@ -313,7 +313,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                         color: context.colors.primary, 
                                         size: 20
                                       ),
-                                      const SizedBox(width: 8),
+                                      SizedBox(width: 8),
                                       Text(
                                         'Weight',
                                         style: context.textTheme.titleMedium?.copyWith(
@@ -323,7 +323,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: 16),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -335,7 +335,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                           backgroundColor: context.colors.errorContainer,
                                         ),
                                       ),
-                                      const SizedBox(width: 16),
+                                      SizedBox(width: 16),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                         decoration: BoxDecoration(
@@ -359,7 +359,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(width: 16),
+                                      SizedBox(width: 16),
                                       IconButton(
                                         onPressed: () => _quickAdjustWeight(2.5),
                                         icon: Icon(AppIcons.add, 
@@ -374,7 +374,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                               ),
                             ),
                             
-                            const SizedBox(width: 24),
+                            SizedBox(width: 24),
                             
                             // Reps section
                             Expanded(
@@ -387,7 +387,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                         color: context.colors.primary, 
                                         size: 20
                                       ),
-                                      const SizedBox(width: 8),
+                                      SizedBox(width: 8),
                                       Text(
                                         'Reps',
                                         style: context.textTheme.titleMedium?.copyWith(
@@ -397,7 +397,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: 16),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -409,7 +409,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                           backgroundColor: context.colors.errorContainer,
                                         ),
                                       ),
-                                      const SizedBox(width: 16),
+                                      SizedBox(width: 16),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                         decoration: BoxDecoration(
@@ -434,7 +434,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(width: 16),
+                                      SizedBox(width: 16),
                                       IconButton(
                                         onPressed: () => _quickAdjustReps(1),
                                         icon: Icon(AppIcons.add, 
@@ -451,7 +451,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                           ],
                         ),
                         
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32),
                         
                         // RPE section
                         Column(
@@ -465,14 +465,14 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Icon(AppIcons.info, 
                                   color: context.colors.outline, 
                                   size: 20
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Text(
                               'Quanto è stata difficile questa serie?',
                               style: context.textTheme.bodyMedium?.copyWith(
@@ -522,7 +522,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                           emoji,
                                           style: const TextStyle(fontSize: 24),
                                         ),
-                                        const SizedBox(height: 4),
+                                        SizedBox(height: 4),
                                         Text(
                                           rpeValue.toString(),
                                           style: context.textTheme.titleMedium?.copyWith(
@@ -532,7 +532,7 @@ class _SupersetExecutionSheetV2State extends ConsumerState<SupersetExecutionShee
                                                 : null,
                                           ),
                                         ),
-                                        const SizedBox(height: 2),
+                                        SizedBox(height: 2),
                                         Text(
                                           label,
                                           style: context.textTheme.bodySmall?.copyWith(

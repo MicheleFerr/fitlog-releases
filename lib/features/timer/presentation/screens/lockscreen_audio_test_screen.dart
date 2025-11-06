@@ -21,7 +21,7 @@ class LockscreenAudioTestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lockscreen Audio Test'),
+        title: Text('Lockscreen Audio Test'),
       ),
       body: Center(
         child: Padding(
@@ -29,7 +29,7 @@ class LockscreenAudioTestScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 AppIcons.lockOutline,
                 size: 80,
                 color: context.colors.primary,
@@ -55,8 +55,8 @@ class LockscreenAudioTestScreen extends StatelessWidget {
               const SizedBox(height: 32),
               ElevatedButton.icon(
                 onPressed: _runLockscreenTest,
-                icon: const Icon(AppIcons.play),
-                label: const Text('Run Test'),
+                icon: Icon(AppIcons.play),
+                label: Text('Run Test'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
@@ -65,8 +65,8 @@ class LockscreenAudioTestScreen extends StatelessWidget {
                   textStyle: const TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Card(
+              SizedBox(height: 16),
+              Card(
                 color: context.colors.secondary,
                 child: Padding(
                   padding: EdgeInsets.all(16.0),

@@ -530,7 +530,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ListTile(
               leading: Icon(AppIcons.edit, color: colorScheme.primary),
               title: Text(l10n.createManually),

@@ -132,7 +132,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
       context,
       MaterialPageRoute(
         builder: (context) => const ExerciseSearchScreen(
-          allowMultipleSelection: false,
+          multiSelectMode: false,
         ),
       ),
     );
@@ -203,7 +203,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(AppIcons.workout, color: Theme.of(context).colorScheme.error),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Text(
                         '${WeightHelper.formatPickerWeight(selectedWeight, unit)} $unit',
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -350,7 +350,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -645,7 +645,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
             // Target reps button
             _buildPickerButton(
               context: context,
-              label: l10n.targetReps,
+              label: l10n.targetReps(_targetReps),
               value: '$_targetReps ${l10n.reps}',
               icon: AppIcons.repeat,
               onTap: () => _showRepsPicker(context),
@@ -849,7 +849,9 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                             ),
                           ),
                           Text(
-                            '${stage.percentageOfMax}% ${l10n.ofMax}',
+                            // TODO: DropSetStage doesn't have percentageOfMax yet - need to calculate from weight
+                            // widget.stages doesn't exist - using _initialWeight as reference
+                            '${_initialWeight > 0 ? (stage.weight * 100 / _initialWeight).toInt() : 100}% ${l10n.ofMax}',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),

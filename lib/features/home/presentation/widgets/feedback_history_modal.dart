@@ -132,7 +132,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           // Illustrative icons showing how feedback works
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -149,7 +149,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   size: 32,
                 ),
               ),
-              const SizedBox(width: 24),
+              SizedBox(width: 24),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(

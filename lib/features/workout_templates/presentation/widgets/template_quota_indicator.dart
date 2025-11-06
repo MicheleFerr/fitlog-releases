@@ -186,7 +186,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
         Row(
           children: [
             Icon(icon, size: 16, color: color),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text(
               label,
               style: theme.textTheme.labelMedium,
@@ -205,7 +205,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(

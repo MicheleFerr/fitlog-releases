@@ -250,7 +250,7 @@ class TemplateCarousel extends ConsumerWidget {
                 fontSize: 16,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               l10n.createFirstTemplate,
               style: TextStyle(
@@ -259,7 +259,7 @@ class TemplateCarousel extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ElevatedButton(
               onPressed: () => context.goNamed('workout'),
               child: Text(l10n.createTemplate),

@@ -69,7 +69,7 @@ class RepPresetChips extends ConsumerWidget {
                   size: 18,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.quickRepPresets,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -221,7 +221,7 @@ class SetCountPresetChips extends ConsumerWidget {
                   size: 18,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.quickSetCount,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -230,7 +230,7 @@ class SetCountPresetChips extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,

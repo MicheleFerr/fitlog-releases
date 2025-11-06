@@ -115,7 +115,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
   void _quickAdjustWeight(String exerciseId, double increment) {
     setState(() {
       final currentWeight = _weights[exerciseId] ?? 0.0;
-      final newWeight = (currentWeight + increment).clamp(0, 200);
+      final newWeight = (currentWeight + increment).clamp(0, 200).toDouble();
       _weights[exerciseId] = newWeight;
       
       final weightIndex = (newWeight * 2).round().clamp(0, 400);
@@ -175,7 +175,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                     AppIcons.repeat,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -258,7 +258,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                       ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,7 +308,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                   },
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               
                               // Reps input
                               Expanded(
@@ -332,7 +332,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                   },
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               
                               // RPE selector
                               Expanded(
@@ -419,7 +419,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                           'Progresso',
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         LinearProgressIndicator(
                           value: _exerciseCompleted.values.where((c) => c).length / 
                                  _exerciseCompleted.length,

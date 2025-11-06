@@ -94,7 +94,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 if (widget.onEdit != null) widget.onEdit!();
               },
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             _buildSwipeAction(
               context,
               icon: AppIcons.delete,
@@ -225,7 +225,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             size: 20,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         
         // Titolo e badge
         Expanded(
@@ -255,7 +255,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   
                   // Nome del superset
                   Expanded(
@@ -270,7 +270,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               
               // Info sui set
               Text(
@@ -286,7 +286,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         // Menu button
         IconButton(
           onPressed: () => _showSupersetOptions(context),
-          icon: const Icon(AppIcons.moreVert),
+          icon: Icon(AppIcons.moreVert),
           tooltip: 'Options',
         ),
       ],
@@ -313,7 +313,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 size: 16,
                 color: context.colors.primary,
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Text(
                 'Exercises',
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -342,7 +342,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Icon(
                         _isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
                         size: 16,
@@ -417,7 +417,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             
             // Nome esercizio
             Expanded(
@@ -435,7 +435,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               size: 16,
               color: context.colors.primary.withValues(alpha: 0.7),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             
             // Categoria
             Container(
@@ -483,7 +483,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                   color: context.colors.primary,
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 exercise.name,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -508,7 +508,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               size: 16,
               color: context.colors.primary,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(
               'Sets (${widget.superset.supersetSets.where((s) => s.isFullyCompleted).length}/${widget.superset.supersetSets.length})',
               style: context.textTheme.bodyMedium?.copyWith(
@@ -551,7 +551,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 size: 16,
                 color: context.colors.onSurface,
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Text(
                 l10n.notes,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -561,7 +561,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             widget.superset.notes!,
             style: context.textTheme.bodySmall,
@@ -589,8 +589,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               },
             ),
             ListTile(
-              leading: const Icon(AppIcons.iconCopy),
-              title: const Text('Duplicate'),
+              leading: Icon(AppIcons.iconCopy),
+              title: Text('Duplicate'),
               onTap: () {
                 Navigator.pop(context);
                 // TODO: Implement duplicate functionality
@@ -648,7 +648,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 ),
                 child: Center(
                   child: isFullyCompleted
-                      ? const Icon(AppIcons.check, color: Colors.white, size: 16)
+                      ? Icon(AppIcons.check, color: Colors.white, size: 16)
                       : Text(
                           '$setNumber',
                           style: TextStyle(
@@ -659,7 +659,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                         ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Text(
                 'Set $setNumber',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -759,7 +759,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       color: context.colors.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Text(
                     '${exerciseData.actualReps ?? exerciseData.targetReps ?? 0}',
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -803,7 +803,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             else
               const Expanded(flex: 1, child: SizedBox()),
             
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             
             // Completion toggle on the right (like single cards)
             Container(

@@ -33,7 +33,7 @@ class SupersetExercisesTooltip extends ConsumerStatefulWidget {
   }) {
     return showDialog(
       context: context,
-      barrierColor: context.colors.onSurface26,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.26),
       builder: (context) => SupersetExercisesTooltip(
         supersetExercise: supersetExercise,
         onExerciseInfo: onExerciseInfo,
@@ -133,12 +133,12 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 size: 18,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Exercise Info'),
+                    Text('Exercise Info'),
                     Text(
                       'Detailed exercise information',
                       style: TextStyle(
@@ -161,12 +161,12 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 size: 18,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Warmup & Prevention'),
+                    Text('Warmup & Prevention'),
                     Text(
                       'Injury prevention tips',
                       style: TextStyle(
@@ -189,12 +189,12 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 size: 18,
                 color: Theme.of(context).colorScheme.tertiary,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Technique Tips'),
+                    Text('Technique Tips'),
                     Text(
                       'Form and execution guidance',
                       style: TextStyle(

@@ -227,7 +227,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
               ],
             ),
             if (showSettings) ...[
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Icon(
                 AppIcons.arrowDropDown,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
@@ -250,12 +250,12 @@ class VolumeDisplayWidget extends ConsumerWidget {
     
     return Row(
       children: [
-        const Icon(
+        Icon(
           isPositiveTrend ? Icons.trending_up : Icons.trending_down,
           color: isPositiveTrend ? context.colors.success : context.colors.error,
           size: 16,
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Text(
           '${isPositiveTrend ? '+' : ''}${trendPercentage.toStringAsFixed(1)}%',
           style: theme.textTheme.bodySmall?.copyWith(

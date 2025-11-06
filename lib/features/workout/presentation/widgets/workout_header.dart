@@ -118,7 +118,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   _buildStatusChip(context),
                 ],
               ),
@@ -141,7 +141,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
           ],
         ),
         
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         
         // Progress and stats
         Row(
@@ -155,7 +155,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 Theme.of(context).colorScheme.primary,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
                 context,
@@ -165,7 +165,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 Theme.of(context).colorScheme.secondary,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
                 context,
@@ -178,7 +178,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
           ],
         ),
         
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         
         // Progress bar
         Column(
@@ -203,7 +203,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             LinearProgressIndicator(
               value: widget.workout.progressPercentage,
               backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -237,7 +237,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 AppIcons.workout,
                 Theme.of(context).colorScheme.primary,
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               // Sets stat
               _buildCompactStat(
                 'Sets',
@@ -245,7 +245,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 AppIcons.formatListNumbered,
                 Theme.of(context).colorScheme.secondary,
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               // Volume stat
               _buildCompactStat(
                 'Volume',
@@ -262,7 +262,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // Progress bar (maintained)
           LinearProgressIndicator(
             value: widget.workout.progressPercentage,
@@ -286,7 +286,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 16, color: color),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -354,7 +354,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: textColor),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             text,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -387,7 +387,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
       child: Column(
         children: [
           Icon(icon, color: color, size: 20),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             value,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(

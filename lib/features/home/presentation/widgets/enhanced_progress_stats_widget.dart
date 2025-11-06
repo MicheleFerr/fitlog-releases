@@ -153,7 +153,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   children: [
                     Text(
                       '${levelInfo.level}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: context.colors.surface,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -281,7 +281,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             // Metrics Grid
             if (analyticsState.isLoading)
               const CircularProgressIndicator()
@@ -380,7 +380,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               
               // Weekly distribution
               if (preferences.visibleMetrics.contains('weekdayDistribution')) ...[
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 _buildWeekdayDistribution(
                   context, 
                   frequencyStats['dayDistribution'] as Map<int, int>? ?? {}
@@ -426,7 +426,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           children: [
             Text(
               '${levelInfo.level}',
-              style: const TextStyle(
+              style: TextStyle(
                 color: context.colors.surface,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -569,7 +569,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       children: [
         for (int i = 0; i < stats.length; i++) ...[
           stats[i],
-          if (i < stats.length - 1) const SizedBox(width: 12),
+          if (i < stats.length - 1) SizedBox(width: 12),
         ],
       ],
     );
@@ -668,7 +668,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Expanded(
             child: _buildChart(context, volumeData),
           ),
@@ -912,7 +912,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Container(
                 width: 40,
                 height: 4,
@@ -970,7 +970,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Container(
                 width: 40,
                 height: 4,

@@ -67,7 +67,7 @@ class _CountingModeWarningDialogContent extends StatelessWidget {
             size: AppIconSize.large,
             color: context.iconWarning,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Text(
               context.l10n.countingModeWarningTitle,
@@ -94,7 +94,7 @@ class _CountingModeWarningDialogContent extends StatelessWidget {
               color: context.colors.onSurface.withValues(alpha: 0.8),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Info box
           Container(
@@ -114,7 +114,7 @@ class _CountingModeWarningDialogContent extends StatelessWidget {
                   size: AppIconSize.small,
                   color: context.iconWarning,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     context.l10n.countingModeWarningInfo,

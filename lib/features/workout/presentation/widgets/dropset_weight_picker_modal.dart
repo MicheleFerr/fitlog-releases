@@ -185,7 +185,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                   AppIcons.workout,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,12 +231,12 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                   if (widget.stageIndex > 0 && widget.previousStageWeight != null)
                     _buildPercentageSelector(),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   // Weight input
                   _buildWeightInput(),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Confirm button
                   FilledButton(
@@ -280,7 +280,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                       : AppIcons.sportsGymnastics,
               color: context.colors.primary,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,7 +342,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
@@ -353,7 +353,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                     subtitle: context.l10n.barbellRoundingInfo,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: _buildEquipmentCard(
                     type: EquipmentType.dumbbell,
@@ -426,7 +426,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
               color: isSelected ? context.colors.primary : context.colors.onSurfaceVariant,
               size: 32,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               title,
               style: context.textTheme.titleSmall?.copyWith(
@@ -435,7 +435,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               subtitle,
               style: context.textTheme.bodySmall?.copyWith(
@@ -463,7 +463,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                   AppIcons.trendDown,
                   color: context.colors.secondary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.selectWeightDrop,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -496,7 +496,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
               }).toList(),
             ),
             if (_calculatedWeight != null) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -510,7 +510,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                       AppIcons.calculate,
                       color: context.colors.primary,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,9 +547,9 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         const Divider(),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Text(
           context.l10n.dumbbellIncrementQuestion,
           style: context.textTheme.titleSmall?.copyWith(
@@ -617,7 +617,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         TextField(
           controller: _weightController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),

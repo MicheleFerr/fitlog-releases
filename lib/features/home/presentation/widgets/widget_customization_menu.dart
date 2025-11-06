@@ -149,7 +149,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
             'Tutti i widget sono visibili',
             style: theme.textTheme.titleMedium,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Nascondi widget dalla modalità modifica',
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -230,7 +230,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.tertiary,
                       size: 16,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       'Aggiungi',
                       style: TextStyle(

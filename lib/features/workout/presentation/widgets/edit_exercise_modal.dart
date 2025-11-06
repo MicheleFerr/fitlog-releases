@@ -113,7 +113,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             
             // Header
             Row(
@@ -122,7 +122,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   AppIcons.edit,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     l10n.editExercise,
@@ -160,13 +160,13 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               decoration: InputDecoration(
                 labelText: l10n.notes,
                 hintText: l10n.notesHint,
-                prefixIcon: const Icon(AppIcons.note),
+                prefixIcon: Icon(AppIcons.note),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             
             // Rest time section
             Text(
@@ -175,7 +175,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               l10n.exerciseRestTimeDesc,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -226,7 +226,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Predefined rest times
                   Text(
@@ -254,7 +254,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Custom rest time
                   Card(
@@ -366,11 +366,11 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(AppIcons.error, color: Colors.red, size: 48),
-              const SizedBox(height: 16),
+              Icon(AppIcons.error, color: Colors.red, size: 48),
+              SizedBox(height: 16),
               Text(context.l10n.errorLoadingEditor),
               Text('Error: $e', style: const TextStyle(fontSize: 12)),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(context.l10n.close),
@@ -399,7 +399,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   AppIcons.trendUp,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,9 +435,9 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
 
             // APRE Configuration (shown when enabled)
             if (_useAPRE) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               const Divider(),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Protocol Selection
               Text(
@@ -472,7 +472,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   });
                 },
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               // Protocol Description
               Container(
@@ -488,7 +488,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                       size: 16,
                       color: Theme.of(context).colorScheme.onTertiaryContainer,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         _getProtocolDescription(l10n),

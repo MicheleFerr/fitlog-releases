@@ -88,7 +88,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).errorPickingImage(e.toString()))),
+          SnackBar(content: Text('${AppLocalizations.of(context).errorPickingImage}: ${e.toString()}')),
         );
       }
     }
@@ -129,7 +129,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).errorSharing(e.toString()))),
+          SnackBar(content: Text('${AppLocalizations.of(context).errorSharing}: ${e.toString()}')),
         );
       }
     } finally {

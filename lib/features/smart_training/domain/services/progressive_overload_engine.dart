@@ -48,7 +48,7 @@ class ProgressiveOverloadEngine {
     return sets
         .where((set) => includeWarmup || !set.isWarmup)
         .where((set) => set.isCompleted)
-        .fold(0.0, (total, set) => total + (set.weight * (set.actualReps ?? set.reps)));
+        .fold(0.0, (total, set) => total + ((set.weight ?? 0.0) * ((set.actualReps ?? set.reps) ?? 0)));
   }
   
   /// Calculate average intensity (%1RM) for an exercise
@@ -60,7 +60,9 @@ class ProgressiveOverloadEngine {
     
     double totalIntensity = 0.0;
     for (final set in workingSets) {
-      totalIntensity += (set.weight / oneRM) * 100;
+      if (set.weight != null && set.weight! > 0) {
+        totalIntensity += (set.weight! / oneRM) * 100;
+      }
     }
     
     return totalIntensity / workingSets.length;
@@ -99,7 +101,8 @@ class ProgressiveOverloadEngine {
     
     // Analyze volume progression
     final volumeChange = (latest.volume - previous.volume) / previous.volume;
-    final intensityChange = (latest.averageIntensity - previous.averageIntensity) / previous.averageIntensity;
+    // Note: intensityChange calculated but not used in current logic
+    // final intensityChange = (latest.averageIntensity - previous.averageIntensity) / previous.averageIntensity;
     
     // Volume-based progression
     if (volumeChange < 0.02 && latest.averageIntensity < 85) {
@@ -153,7 +156,7 @@ class ProgressiveOverloadEngine {
     }
     
     // Advanced methods for experienced trainees
-    if (previousAnalysis?.stallWeeks ?? 0 >= 3) {
+    if ((previousAnalysis?.stallWeeks ?? 0) >= 3) {
       recommendations.addAll(_getAdvancedOverloadMethods(latest, exerciseName));
     }
     

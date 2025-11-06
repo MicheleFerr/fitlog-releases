@@ -212,7 +212,7 @@ class ExerciseMetricChart extends StatelessWidget {
               size: 48,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.noDataForChart,
               style: context.textTheme.bodyMedium?.copyWith(

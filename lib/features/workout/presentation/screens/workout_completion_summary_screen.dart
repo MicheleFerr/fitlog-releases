@@ -105,7 +105,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                 size: 80,
                 color: context.colors.primary,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // 💪 Workout Name
               Text(
@@ -116,7 +116,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // ✅ Completion Timestamp
               Text(
@@ -126,7 +126,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
 
               // 📊 Statistics Cards
               Expanded(
@@ -140,7 +140,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                         value: durationText,
                         color: context.colors.primary,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // Grid: Esercizi + Serie
                       Row(
@@ -153,7 +153,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                               color: context.colors.secondary,
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: 16),
                           Expanded(
                             child: _StatCard(
                               icon: AppIcons.repeat,
@@ -164,7 +164,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // Volume Totale
                       _StatCard(
@@ -173,7 +173,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                         value: '${totalVolume.toStringAsFixed(0)} kg',
                         color: const Color(0xFF4CAF50), // Verde
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // RPE Medio (se disponibile)
                       if (averageRpe > 0)
@@ -188,7 +188,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                 ),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // 🔘 Action Buttons
               Column(
@@ -199,10 +199,10 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                       // TODO: Navigate to workout history detail
                       context.pop();
                     },
-                    icon: const Icon(AppIcons.analytics),
+                    icon: Icon(AppIcons.analytics),
                     label: Text(context.l10n.viewDetails),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
 
                   // Done Button
                   OutlinedButton(
@@ -268,7 +268,7 @@ class _StatCard extends StatelessWidget {
               size: 32,
               color: color,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               value,
               style: context.textTheme.headlineMedium?.copyWith(
@@ -276,7 +276,7 @@ class _StatCard extends StatelessWidget {
                 color: context.colors.onSurface,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               label,
               style: context.textTheme.bodySmall?.copyWith(

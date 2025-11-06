@@ -447,7 +447,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               color: context.colors.primary,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Expanded(
                             child: _buildGoalCard(
                               context,
@@ -457,7 +457,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               color: context.colors.success,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Expanded(
                             child: _buildGoalCard(
                               context,
@@ -501,7 +501,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(height: 8),
                               Text(
                                 _getSuggestion(count, goal - count),
                                 style: theme.textTheme.bodyMedium,
@@ -526,12 +526,12 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           ),
                           child: Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.emoji_events,
                                 color: context.colors.success,
                                 size: 32,
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

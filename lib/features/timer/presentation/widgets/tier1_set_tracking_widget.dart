@@ -3,7 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
+// TODO: File non esiste - commentato temporaneamente
+// import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
+// TODO: Unused until registerSetRep() and completeSetTracking() are implemented
+// import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -31,7 +35,8 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     final shouldStopSet = ref.watch(shouldStopSetProvider);
     final coachingTip = ref.watch(currentCoachingTipProvider);
     final fatigueIndex = ref.watch(setFatigueIndexProvider);
-    final velocityDrop = ref.watch(setVelocityDropProvider);
+    // TODO: Use velocityDrop for additional feedback when needed
+    // final velocityDrop = ref.watch(setVelocityDropProvider);
     
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -65,7 +70,8 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             ],
             
             // Fatigue and form indicators
-            _buildFatigueFormIndicators(context, theme, l10n, fatigueIndex, currentMetrics.currentFormScore),
+            // TODO: SetMetrics doesn't have currentFormScore property yet
+            _buildFatigueFormIndicators(context, theme, l10n, fatigueIndex, 0.0),
             
             const SizedBox(height: 16),
             
@@ -116,17 +122,21 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, ThemeData theme, AppLocalizations l10n, LiveSetMetrics metrics) {
+  Widget _buildHeader(BuildContext context, ThemeData theme, AppLocalizations l10n, SetMetrics metrics) {
+    // TODO: SetMetrics.phase returns String, need SetPhase enum
+    // Temporary conversion until SetMetrics is updated
+    final phaseEnum = _parsePhaseString(metrics.phase);
+
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: _getPhaseColor(metrics.phase, theme),
+            color: _getPhaseColor(phaseEnum, theme),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            _getPhaseText(metrics.phase, l10n),
+            _getPhaseText(phaseEnum, l10n),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onPrimary,
               fontWeight: FontWeight.bold,
@@ -173,7 +183,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildLiveMetricsRow(BuildContext context, ThemeData theme, AppLocalizations l10n, LiveSetMetrics metrics) {
+  Widget _buildLiveMetricsRow(BuildContext context, ThemeData theme, AppLocalizations l10n, SetMetrics metrics) {
     return Row(
       children: [
         Expanded(
@@ -242,7 +252,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildVelocityGraph(BuildContext context, ThemeData theme, AppLocalizations l10n, LiveSetMetrics metrics) {
+  Widget _buildVelocityGraph(BuildContext context, ThemeData theme, AppLocalizations l10n, SetMetrics metrics) {
     return Container(
       height: 150,
       padding: const EdgeInsets.all(16),
@@ -477,7 +487,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     return theme.colorScheme.error;
   }
 
-  List<FlSpot> _generateVelocitySpots(LiveSetMetrics metrics) {
+  List<FlSpot> _generateVelocitySpots(SetMetrics metrics) {
     // Mock velocity data for demo - in real app, would use actual velocity history
     final spots = <FlSpot>[];
     final baseVelocity = metrics.averageVelocityMps;
@@ -485,7 +495,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     for (int i = 0; i < 20; i++) {
       final x = i.toDouble();
       final noise = (math.sin(i * 0.5) * 0.1) + (math.Random().nextDouble() * 0.2 - 0.1);
-      final y = math.max(0, baseVelocity + noise - (i * 0.02)); // Gradual decline with noise
+      final y = math.max(0.0, baseVelocity + noise - (i * 0.02)); // Gradual decline with noise
       spots.add(FlSpot(x, y));
     }
     
@@ -522,20 +532,44 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     }
   }
 
+  /// Helper to parse String phase from SetMetrics to SetPhase enum
+  /// TODO: Remove this when SetMetrics.phase returns SetPhase enum directly
+  SetPhase _parsePhaseString(String phase) {
+    switch (phase.toLowerCase()) {
+      case 'preparation':
+        return SetPhase.preparation;
+      case 'execution':
+      case 'active':
+        return SetPhase.execution;
+      case 'completion':
+      case 'completed':
+        return SetPhase.completion;
+      case 'rest':
+      case 'resting':
+        return SetPhase.rest;
+      default:
+        return SetPhase.execution; // Default fallback
+    }
+  }
+
   void _registerRep(WidgetRef ref) {
-    final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
-    unifiedTimer.registerSetRep();
+    // TODO: UnifiedTimerProvider doesn't have registerSetRep() method yet
+    // final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
+    // unifiedTimer.registerSetRep();
   }
 
   void _completeSet(WidgetRef ref) {
-    final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
-    final trackingNotifier = ref.read(tier1SetTrackingProvider.notifier);
-    
+    // TODO: Implement Tier1SetTrackingNotifier.completeSetTracking()
+    // final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
+    // final trackingNotifier = ref.read(tier1SetTrackingProvider.notifier);
+
+    /*
     unifiedTimer.completeSetTracking().then((completedSet) {
       if (completedSet != null) {
         trackingNotifier.completeSetTracking(completedSet);
       }
     });
+    */
   }
 }
 

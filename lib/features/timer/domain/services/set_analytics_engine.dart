@@ -934,7 +934,9 @@ class CoachingInsight {
 enum InsightPriority { low, medium, high, critical }
 enum InsightCategory { form, fatigue, velocity, consistency, volume }
 
+// TODO: Implement SetTimingRepository and its provider
 // Provider for the analytics engine
 final setAnalyticsEngineProvider = Provider<SetAnalyticsEngine>((ref) {
-  return SetAnalyticsEngine(ref.read(setTimingRepositoryProvider));
+  // return SetAnalyticsEngine(ref.read(setTimingRepositoryProvider));
+  throw UnimplementedError('SetTimingRepository not yet implemented');
 });

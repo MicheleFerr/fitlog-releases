@@ -215,7 +215,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
                   ),
                 ],
               ),
-              const SizedBox(height: 2),
+              SizedBox(height: 2),
               Text(
                 l10n.aiCoachPersonalized,
                 style: theme.textTheme.bodySmall?.copyWith(
@@ -1661,14 +1661,14 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Expected Outcome
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(AppIcons.timeline, size: 16, color: Colors.green),
-              const SizedBox(width: 6),
+              Icon(AppIcons.timeline, size: 16, color: Colors.green),
+              SizedBox(width: 6),
               Expanded(
                 child: Text(
                   strategy.expectedOutcome,
@@ -2063,7 +2063,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   size: 16,
                   color: colorScheme.primary,
                 ),
-                const SizedBox(width: AppSpacing.xs),
+                SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: RichText(
                     text: TextSpan(

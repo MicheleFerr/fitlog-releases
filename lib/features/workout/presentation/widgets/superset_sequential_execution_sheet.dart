@@ -301,7 +301,7 @@ class _SupersetSequentialExecutionSheetState
                   color: context.colors.secondary,
                   size: 28,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,7 +328,7 @@ class _SupersetSequentialExecutionSheetState
               ],
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // ✅ FIX PROBLEMA 3: Lista esercizi con double-tap editing
             ...widget.superset.exercises.map((exercise) {
@@ -360,7 +360,7 @@ class _SupersetSequentialExecutionSheetState
                             ? context.colors.secondary
                             : context.colors.outline,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,7 +399,7 @@ class _SupersetSequentialExecutionSheetState
               );
             }),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Info box metodologia
             Container(
@@ -415,7 +415,7 @@ class _SupersetSequentialExecutionSheetState
                     size: 20,
                     color: context.colors.onPrimaryContainer,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Esegui tutti gli esercizi in sequenza senza riposo',
@@ -428,12 +428,12 @@ class _SupersetSequentialExecutionSheetState
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Pulsante per eseguire il round
             FilledButton.icon(
               onPressed: completedExercises > 0 ? null : _executeRound,
-              icon: const Icon(AppIcons.workout),
+              icon: Icon(AppIcons.workout),
               label: Text(
                 completedExercises > 0
                     ? context.l10n.completed

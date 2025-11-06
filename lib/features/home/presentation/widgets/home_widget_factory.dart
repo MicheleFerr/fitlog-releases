@@ -37,8 +37,8 @@ class HomeWidgetFactory {
         break;
         
       case HomeWidgetType.statsCard:
+        // TODO: UnifiedStatsCard doesn't have size parameter - ignoring config.size
         widget = UnifiedStatsCard(
-          size: config.size,
           onTapXP: isPreview ? null : () => context.push('/community'),
           onTapAchievements: isPreview ? null : () {},
         );
@@ -296,7 +296,7 @@ class HomeWidgetFactory {
                     onTap: () => context.push('/workout'),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: _buildActionButton(
                     context,
@@ -306,7 +306,7 @@ class HomeWidgetFactory {
                     onTap: () => _showCompleteDialog(context, ref, workout),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 _buildActionButton(
                   context,
                   icon: AppIcons.deleteOutline,
@@ -444,7 +444,7 @@ class HomeWidgetFactory {
               // Mostra conferma
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text('Allenamento scartato'),
+                  content: Text('Allenamento scartato'),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
               );
@@ -468,10 +468,10 @@ class HomeWidgetFactory {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context).saveAndEndWorkout(workout.name)),
-            const SizedBox(height: 8),
+            Text('${AppLocalizations.of(context).saveAndEndWorkout} ${workout.name}'),
+            SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context).exercisesCompleted(workout.exercises.length),
+              '${AppLocalizations.of(context).exercisesCompleted} ${workout.exercises.length}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -479,7 +479,7 @@ class HomeWidgetFactory {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Continua'),
+            child: Text('Continua'),
           ),
           FilledButton(
             onPressed: () {
@@ -489,7 +489,7 @@ class HomeWidgetFactory {
               // Vai alla schermata di riepilogo
               context.push('/workout/summary');
             },
-            child: const Text('Termina e Salva'),
+            child: Text('Termina e Salva'),
           ),
         ],
       ),
@@ -1147,7 +1147,7 @@ class HomeWidgetFactory {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Text(
                         item['status'],
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -1788,7 +1788,7 @@ class HomeWidgetFactory {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               '3/4 questa settimana',
               style: theme.textTheme.bodyMedium,
@@ -1867,7 +1867,7 @@ class HomeWidgetFactory {
                   size: 24,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2176,7 +2176,7 @@ class _AICoachDialog extends ConsumerWidget {
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -2263,7 +2263,7 @@ class _AICoachDialog extends ConsumerWidget {
                 }).toList(),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             // Suggerimento
             Wrap(
               children: [
@@ -2281,7 +2281,7 @@ class _AICoachDialog extends ConsumerWidget {
                         size: 14,
                         color: context.successColor,
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Flexible(
                         child: Text(
                           _generateProgressionAdvice(history),

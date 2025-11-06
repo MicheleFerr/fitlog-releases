@@ -53,7 +53,7 @@ class TemplateCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           template.description,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -137,7 +137,7 @@ class TemplateCard extends StatelessWidget {
                 ],
               ),
               
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               
               // Tag e badge
               Row(
@@ -166,7 +166,7 @@ class TemplateCard extends StatelessWidget {
                               ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).colorScheme.secondary,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           template.isCustom ? 'Personale' : 'Predefinito',
                           style: TextStyle(
@@ -181,7 +181,7 @@ class TemplateCard extends StatelessWidget {
                     ),
                   ),
                   
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   
                   // Tags
                   Expanded(
@@ -210,7 +210,7 @@ class TemplateCard extends StatelessWidget {
               ),
               
               // DEBUG: Mostra sempre info esercizi
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -235,7 +235,7 @@ class TemplateCard extends StatelessWidget {
               
               // Anteprima esercizi se ce ne sono
               if (template.exercises.isNotEmpty) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -253,7 +253,7 @@ class TemplateCard extends StatelessWidget {
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         template.exercises
                             .take(3)
@@ -287,7 +287,7 @@ class TemplateCard extends StatelessWidget {
           size: 16,
           color: Theme.of(context).colorScheme.primary,
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         RichText(
           text: TextSpan(
             children: [
@@ -331,7 +331,7 @@ class TemplateCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Header con info template
           Padding(
@@ -342,7 +342,7 @@ class TemplateCard extends StatelessWidget {
                   template.isCustom ? AppIcons.person : AppIcons.star,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,7 +366,7 @@ class TemplateCard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Opzioni menu
           ListTile(

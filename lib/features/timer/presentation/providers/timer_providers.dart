@@ -75,6 +75,14 @@ class SetMetrics {
   final double velocity;
   final double fatigue;
   final DateTime startTime;
+
+  // TODO: Add proper implementation for these getters
+  String get phase => 'active'; // Placeholder
+  int get currentRep => repCount;
+  int get elapsedMs => DateTime.now().difference(startTime).inMilliseconds;
+  double get currentVelocityMps => velocity;
+  double get averageVelocityMps => velocity;
+  double get velocityDropPercent => 0.0;
 }
 
 /// State for tier-1 set tracking

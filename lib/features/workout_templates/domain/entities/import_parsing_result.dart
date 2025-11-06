@@ -13,4 +13,19 @@ class ImportParsingResult {
   final String? errorMessage;
   final dynamic data;
   final WorkoutTemplateImportData? template;
+
+  /// Creates a copy with optional new values
+  ImportParsingResult copyWith({
+    bool? success,
+    String? errorMessage,
+    dynamic data,
+    WorkoutTemplateImportData? template,
+  }) {
+    return ImportParsingResult(
+      success: success ?? this.success,
+      errorMessage: errorMessage ?? this.errorMessage,
+      data: data ?? this.data,
+      template: template ?? this.template,
+    );
+  }
 }

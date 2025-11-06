@@ -13,7 +13,7 @@ final optimizedAchievementXPProvider = StateNotifierProvider<OptimizedAchievemen
 });
 
 class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
-  
+
   OptimizedAchievementXPNotifier(this._ref) : super(const AsyncValue.loading()) {
     _initializeWithDefaults();
     _loadAchievements();
@@ -21,28 +21,37 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
   }
   final Ref _ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   // Debouncing and caching
   Timer? _debounceTimer;
   Timer? _cacheTimer;
   DateTime? _lastFetchTime;
   static const Duration _debounceDelay = Duration(milliseconds: 500);
   static const Duration _cacheValidity = Duration(minutes: 5);
-  
+
   // Listener management
-  StreamSubscription? _workoutListener;
-  StreamSubscription? _streakListener;
+  ProviderSubscription<int>? _workoutListener;
+  ProviderSubscription<AsyncValue<int>>? _streakListener;
   bool _listenersSetup = false;
-  
+
   // Current data cache
   int _cachedWorkoutCount = 0;
   int _cachedStreak = 0;
+
+  // Get default achievements from the non-optimized provider
+  List<Achievement> get _defaultAchievements {
+    try {
+      return _ref.read(achievementXPProvider).valueOrNull?.allAchievements ?? [];
+    } catch (e) {
+      return [];
+    }
+  }
   
   void _initializeWithDefaults() {
     // Provide immediate default data to prevent loading states
     state = AsyncValue.data(AchievementData(
       totalXP: 0,
-      allAchievements: AchievementXPNotifier._allAchievements,
+      allAchievements: _defaultAchievements,
       recentAchievements: [],
       xpByType: {},
     ));
@@ -76,7 +85,7 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
         }
       }
       
-      final updatedAchievements = AchievementXPNotifier._allAchievements.map((achievement) {
+      final updatedAchievements = _defaultAchievements.map((achievement) {
         if (unlockedIds.containsKey(achievement.id)) {
           final unlockedData = unlockedIds[achievement.id]!;
           return achievement.copyWith(
@@ -129,12 +138,12 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
     
     // OPTIMIZED: Use debounced listeners to prevent excessive checking
     _workoutListener = _ref.listen(optimizedCompletedWorkoutsCountProvider, (previous, next) {
-      if (next.hasValue && next.value != _cachedWorkoutCount) {
-        _cachedWorkoutCount = next.value!;
-        _debouncedCheckAchievements('workout', next.value!);
+      if (next != _cachedWorkoutCount) {
+        _cachedWorkoutCount = next;
+        _debouncedCheckAchievements('workout', next);
       }
     });
-    
+
     _streakListener = _ref.listen(optimizedCurrentStreakProvider, (previous, next) {
       if (next.hasValue && next.value != _cachedStreak) {
         _cachedStreak = next.value!;
@@ -303,8 +312,8 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
   void dispose() {
     _debounceTimer?.cancel();
     _cacheTimer?.cancel();
-    _workoutListener?.cancel();
-    _streakListener?.cancel();
+    _workoutListener?.close();
+    _streakListener?.close();
     super.dispose();
   }
 }

@@ -372,23 +372,25 @@ class DataValidationService {
   static double _getWeightLimit(Exercise? exercise) {
     if (exercise == null) return _maxWeightLimits['default']!;
 
-    // Determina categoria in base a muscle group
-    final primaryMuscle = exercise.muscleGroups.isNotEmpty
-        ? exercise.muscleGroups.first
-        : '';
+    // Determina categoria in base ai muscle groups nel focus
+    final focus = exercise.focus;
 
-    if (['QUAD', 'FEMOR', 'GLUT'].contains(primaryMuscle)) {
+    // Legs exercises (QUAD, GLUT, HAMS, POLP, ADD)
+    if (focus.any((m) => ['QUAD', 'GLUT', 'HAMS', 'POLP', 'ADD'].contains(m))) {
       return _maxWeightLimits['legs']!;
     }
 
-    // Esercizi di isolamento (singolo muscolo, bodyweight, cables)
-    if (exercise.equipment.contains('Cables') ||
-        exercise.equipment.contains('Machine') ||
-        exercise.muscleGroups.length == 1 && ['BRAC', 'TRIC', 'DELT'].contains(primaryMuscle)) {
+    // Isolation exercises (BICE, TRICE, TRAP, FORE, CORE)
+    if (focus.any((m) => ['BICE', 'TRICE', 'TRAP', 'FORE', 'CORE'].contains(m))) {
       return _maxWeightLimits['isolation']!;
     }
 
-    return _maxWeightLimits['upper']!;
+    // Upper body compound movements (PETT, DORS, DELT)
+    if (focus.any((m) => ['PETT', 'DORS', 'DELT'].contains(m))) {
+      return _maxWeightLimits['upper']!;
+    }
+
+    return _maxWeightLimits['default']!;
   }
 
   /// Calcola volume totale di un'attività

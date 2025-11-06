@@ -1326,7 +1326,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 12),
+                                SizedBox(height: 12),
                                 
                                 // RPE chips with color coding
                                 Wrap(
@@ -1511,7 +1511,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         : context.colors.success,
                                       size: 24,
                                     ),
-                                    const SizedBox(width: 12),
+                                    SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1587,7 +1587,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         HapticFeedback.mediumImpact();
                                         Navigator.of(context).pop();
                                       },
-                                      icon: const Icon(AppIcons.check, size: 18),
+                                      icon: Icon(AppIcons.check, size: 18),
                                       label: Text(l10n.accept),
                                       style: FilledButton.styleFrom(
                                         backgroundColor: _restTimeSuggestion!.type == RestTimeSuggestionType.increase

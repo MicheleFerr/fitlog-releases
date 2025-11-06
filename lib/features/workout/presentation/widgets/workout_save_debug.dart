@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
@@ -115,7 +117,7 @@ class WorkoutSaveDebug extends ConsumerWidget {
               const SizedBox(height: 16),
               
               Expanded(
-                child: FutureBuilder(
+                child: FutureBuilder<List<ExerciseActivity>>(
                   future: ref.read(exerciseActivityRepositoryProvider)
                       .getUserActivities(userEmail: userEmail, limit: 20),
                   builder: (context, snapshot) {
@@ -199,7 +201,7 @@ class WorkoutSaveDebug extends ConsumerWidget {
     );
   }
 
-  void _showActivityDetails(BuildContext context, activity) {
+  void _showActivityDetails(BuildContext context, ExerciseActivity activity) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

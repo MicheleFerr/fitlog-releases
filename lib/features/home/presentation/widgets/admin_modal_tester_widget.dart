@@ -53,10 +53,10 @@ class AdminModalTesterWidget extends ConsumerWidget {
                       isMainCollapsed ? AppIcons.expandMore : AppIcons.expandLess,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Icon(AppIcons.bugReport,
                       color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,7 @@ class AdminModalTesterWidget extends ConsumerWidget {
 
             // Collapsible content
             if (!isMainCollapsed) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'Test all workout modals to identify duplicates and determine which ones to keep',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -339,7 +339,7 @@ class _CollapsibleSection extends ConsumerWidget {
                   size: 16,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   title,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -347,7 +347,7 @@ class _CollapsibleSection extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                   decoration: BoxDecoration(

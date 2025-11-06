@@ -281,8 +281,8 @@ class WorkoutHistoryListItem extends StatelessWidget {
     for (final exercise in workout.exercises) {
       for (final set in exercise.sets) {
         if (set.isCompleted) {
-          final weight = set.weight;
-          final reps = set.reps;
+          final weight = set.weight ?? 0;
+          final reps = set.reps ?? 0;
           totalVolume += weight * reps;
         }
       }

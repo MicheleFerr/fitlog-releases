@@ -297,10 +297,9 @@ class ImportErrorRecoveryService {
       );
       
     } catch (e) {
-      return RecoveryResult.failed(
-        originalData: originalJson,
+      return RecoveryResult.failure(
         error: 'Unable to recover JSON: ${e.toString()}',
-        attemptedFixes: fixes,
+        appliedFixes: fixes,
       );
     }
   }
@@ -402,7 +401,8 @@ class ImportErrorRecoveryService {
     
     return exercise.copyWith(sets: fixedSets);
   }
-  
+  */
+
   String _fixTextFormatting(String text) {
     return text
         .replaceAll(RegExp(r'\s+'), ' ') // Normalize whitespace
@@ -475,13 +475,15 @@ class ImportErrorRecoveryService {
            !line.toLowerCase().startsWith('set') &&
            !RegExp(r'^\w+DAY|^\w+DÌ', caseSensitive: false).hasMatch(line);
   }
-  
+
   bool _hasFollowingSet(List<String> lines, int exerciseIndex) {
     if (exerciseIndex + 1 >= lines.length) return false;
     final nextLine = lines[exerciseIndex + 1];
     return RegExp(r'Set\d+', caseSensitive: false).hasMatch(nextLine);
   }
-  
+
+  /// TODO: Uncomment when ExerciseOption class is defined
+  /*
   List<ExerciseOption> _createFallbackExerciseOptions(String originalName) {
     // Create generic options based on common exercise patterns
     final options = <ExerciseOption>[];
@@ -531,7 +533,8 @@ class ImportErrorRecoveryService {
     
     return bestIndex;
   }
-  
+  */
+
   double _getDefaultMaxForExercise(String exerciseName) {
     final nameUpper = exerciseName.toUpperCase();
     
@@ -551,94 +554,3 @@ class ImportErrorRecoveryService {
   }
 }
 
-/// Result of an error recovery attempt
-class RecoveryResult<T> {
-  final T data;
-  final bool wasRecovered;
-  final List<String> appliedFixes;
-  final double confidence;
-  final String? error;
-  final List<String> remainingIssues;
-  
-  RecoveryResult._({
-    required this.data,
-    required this.wasRecovered,
-    this.appliedFixes = const [],
-    this.confidence = 1.0,
-    this.error,
-    this.remainingIssues = const [],
-  });
-  
-  factory RecoveryResult.success({
-    required T data,
-    required List<String> appliedFixes,
-    required double confidence,
-    List<String> remainingIssues = const [],
-  }) {
-    return RecoveryResult._(
-      data: data,
-      wasRecovered: true,
-      appliedFixes: appliedFixes,
-      confidence: confidence,
-      remainingIssues: remainingIssues,
-    );
-  }
-  
-  factory RecoveryResult.failed({
-    required T originalData,
-    required String error,
-    List<String> attemptedFixes = const [],
-  }) {
-    return RecoveryResult._(
-      data: originalData,
-      wasRecovered: false,
-      appliedFixes: attemptedFixes,
-      confidence: 0.0,
-      error: error,
-    );
-  }
-  
-  factory RecoveryResult.noRecoveryNeeded(T data) {
-    return RecoveryResult._(
-      data: data,
-      wasRecovered: false,
-      confidence: 1.0,
-    );
-  }
-  
-  bool get isSuccess => error == null;
-  bool get hasRemainingIssues => remainingIssues.isNotEmpty;
-}
-
-/// Suggestion for recovering from an error
-class RecoverySuggestion {
-  final String error;
-  final String suggestion;
-  final RecoveryAction action;
-  final RecoveryPriority priority;
-  
-  RecoverySuggestion({
-    required this.error,
-    required this.suggestion,
-    required this.action,
-    required this.priority,
-  });
-}
-
-/// Types of recovery actions
-enum RecoveryAction {
-  autoFix,    // Can be automatically fixed
-  userInput,  // Requires user input
-  manualFix,  // Requires manual editing
-  templateFix, // Requires template modification
-}
-
-/// Priority levels for recovery
-enum RecoveryPriority {
-  low,
-  medium,
-  high,
-  critical,
-}
-*/
-}

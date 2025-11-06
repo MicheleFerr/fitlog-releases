@@ -234,7 +234,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                               color: Colors.orange,
                               size: 16,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               'Near PB!',
                               style: TextStyle(
@@ -249,7 +249,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                               color: Theme.of(context).colorScheme.outline,
                               size: 14,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               'PB: ${_formatDuration(_personalBest!)}',
                               style: TextStyle(
@@ -265,7 +265,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                   
                   // Instruction text when not tracking
                   if (!widget.isTracking) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       'Tap to start tracking',
                       style: TextStyle(
@@ -342,7 +342,7 @@ class VelocityIndicatorWidget extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           
           // Progress bar
           ClipRRect(
@@ -354,7 +354,7 @@ class VelocityIndicatorWidget extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(_getVelocityColor(context)),
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           
           // Target and PB indicators
           Row(
@@ -437,7 +437,7 @@ class SetTimesChartWidget extends StatelessWidget {
                       fontWeight: isCurrentSet ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     height: height,

@@ -111,13 +111,13 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           
           // Titolo
           Row(
             children: [
-              const Icon(AppIcons.addCircleOutline, size: 24),
-              const SizedBox(width: 8),
+              Icon(AppIcons.addCircleOutline, size: 24),
+              SizedBox(width: 8),
               Text(
                 localizations.createTemplate ?? 'Crea Template',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -126,7 +126,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Opzione per creare da workout attuale
           if (hasActiveWorkout) ...[
@@ -149,7 +149,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         size: 20,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         'Workout Attuale Rilevato',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -159,7 +159,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     '${currentWorkout.exercises.length} esercizi trovati: "${currentWorkout.name}"',
                     style: Theme.of(context).textTheme.bodySmall,
@@ -265,7 +265,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                     //     return null;
                     //   },
                     // ),
-                    // const SizedBox(height: 20),
+                    // SizedBox(height: 20),
 
                     // Tag selection
                     Container(
@@ -279,7 +279,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             localizations.selectTagsDescription ?? 'Seleziona i tag che descrivono il tuo template',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -314,7 +314,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                       }).toList(),
                     ),
                     
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
 
                     // Timer di default
                     Container(
@@ -328,7 +328,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             localizations.defaultRestTimerDescription ??
                               'Imposta un timer di default che verrà applicato a tutti gli esercizi del template',
@@ -339,7 +339,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
 
                     InkWell(
                       onTap: _showDefaultRestTimePicker,
@@ -360,7 +360,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                                   ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: Text(
                                 _defaultRestTime != null 
@@ -400,7 +400,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                                 size: 20,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 'Weight Suggestions',
                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -409,7 +409,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Consumer(
                             builder: (context, ref, _) {
                               final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
@@ -431,7 +431,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                               );
                             },
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           Consumer(
                             builder: (context, ref, _) {
                               final questionnaire = ref.watch(userFitnessQuestionnaireProvider);

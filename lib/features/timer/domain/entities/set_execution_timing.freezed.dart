@@ -734,7 +734,7 @@ abstract class _SetExecutionTiming implements SetExecutionTiming {
 }
 
 SetTimingConfig _$SetTimingConfigFromJson(Map<String, dynamic> json) {
-  return _$SetTimingConfig.fromJson(json);
+  return _$$SetTimingConfigImpl.fromJson(json);
 }
 
 /// @nodoc
@@ -870,11 +870,12 @@ class _$SetTimingConfigCopyWithImpl<$Res, $Val extends SetTimingConfig>
 }
 
 /// @nodoc
-abstract class _$$$SetTimingConfigImplCopyWith<$Res>
+abstract class _$$$$SetTimingConfigImplImplCopyWith<$Res>
     implements $SetTimingConfigCopyWith<$Res> {
-  factory _$$$SetTimingConfigImplCopyWith(_$$SetTimingConfigImpl value,
-          $Res Function(_$$SetTimingConfigImpl) then) =
-      __$$$SetTimingConfigImplCopyWithImpl<$Res>;
+  factory _$$$$SetTimingConfigImplImplCopyWith(
+          _$$$SetTimingConfigImplImpl value,
+          $Res Function(_$$$SetTimingConfigImplImpl) then) =
+      __$$$$SetTimingConfigImplImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -894,11 +895,11 @@ abstract class _$$$SetTimingConfigImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$$SetTimingConfigImplCopyWithImpl<$Res>
-    extends _$SetTimingConfigCopyWithImpl<$Res, _$$SetTimingConfigImpl>
-    implements _$$$SetTimingConfigImplCopyWith<$Res> {
-  __$$$SetTimingConfigImplCopyWithImpl(_$$SetTimingConfigImpl _value,
-      $Res Function(_$$SetTimingConfigImpl) _then)
+class __$$$$SetTimingConfigImplImplCopyWithImpl<$Res>
+    extends _$SetTimingConfigCopyWithImpl<$Res, _$$$SetTimingConfigImplImpl>
+    implements _$$$$SetTimingConfigImplImplCopyWith<$Res> {
+  __$$$$SetTimingConfigImplImplCopyWithImpl(_$$$SetTimingConfigImplImpl _value,
+      $Res Function(_$$$SetTimingConfigImplImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -918,7 +919,7 @@ class __$$$SetTimingConfigImplCopyWithImpl<$Res>
     Object? autoEndDetection = null,
     Object? motionThresholdMs = null,
   }) {
-    return _then(_$$SetTimingConfigImpl(
+    return _then(_$$$SetTimingConfigImplImpl(
       mode: null == mode
           ? _value.mode
           : mode // ignore: cast_nullable_to_non_nullable
@@ -977,8 +978,8 @@ class __$$$SetTimingConfigImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$$SetTimingConfigImpl implements _$SetTimingConfig {
-  const _$$SetTimingConfigImpl(
+class _$$$SetTimingConfigImplImpl implements _$$SetTimingConfigImpl {
+  const _$$$SetTimingConfigImplImpl(
       {required this.mode,
       this.samplingRateHz = 10,
       this.trackVelocity = true,
@@ -993,8 +994,8 @@ class _$$SetTimingConfigImpl implements _$SetTimingConfig {
       this.autoEndDetection = true,
       this.motionThresholdMs = 500});
 
-  factory _$$SetTimingConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$$SetTimingConfigImplFromJson(json);
+  factory _$$$SetTimingConfigImplImpl.fromJson(Map<String, dynamic> json) =>
+      _$$$$SetTimingConfigImplImplFromJson(json);
 
   @override
   final TimingMode mode;
@@ -1048,7 +1049,7 @@ class _$$SetTimingConfigImpl implements _$SetTimingConfig {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$$SetTimingConfigImpl &&
+            other is _$$$SetTimingConfigImplImpl &&
             (identical(other.mode, mode) || other.mode == mode) &&
             (identical(other.samplingRateHz, samplingRateHz) ||
                 other.samplingRateHz == samplingRateHz) &&
@@ -1099,20 +1100,20 @@ class _$$SetTimingConfigImpl implements _$SetTimingConfig {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$$SetTimingConfigImplCopyWith<_$$SetTimingConfigImpl> get copyWith =>
-      __$$$SetTimingConfigImplCopyWithImpl<_$$SetTimingConfigImpl>(
-          this, _$identity);
+  _$$$$SetTimingConfigImplImplCopyWith<_$$$SetTimingConfigImplImpl>
+      get copyWith => __$$$$SetTimingConfigImplImplCopyWithImpl<
+          _$$$SetTimingConfigImplImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$$SetTimingConfigImplToJson(
+    return _$$$$SetTimingConfigImplImplToJson(
       this,
     );
   }
 }
 
-abstract class _$SetTimingConfig implements SetTimingConfig {
-  const factory _$SetTimingConfig(
+abstract class _$$SetTimingConfigImpl implements SetTimingConfig {
+  const factory _$$SetTimingConfigImpl(
       {required final TimingMode mode,
       final int samplingRateHz,
       final bool trackVelocity,
@@ -1125,10 +1126,10 @@ abstract class _$SetTimingConfig implements SetTimingConfig {
       final int maxPauseBetweenRepsMs,
       final bool autoStartDetection,
       final bool autoEndDetection,
-      final int motionThresholdMs}) = _$$SetTimingConfigImpl;
+      final int motionThresholdMs}) = _$$$SetTimingConfigImplImpl;
 
-  factory _$SetTimingConfig.fromJson(Map<String, dynamic> json) =
-      _$$SetTimingConfigImpl.fromJson;
+  factory _$$SetTimingConfigImpl.fromJson(Map<String, dynamic> json) =
+      _$$$SetTimingConfigImplImpl.fromJson;
 
   @override
   TimingMode get mode;
@@ -1158,12 +1159,12 @@ abstract class _$SetTimingConfig implements SetTimingConfig {
   int get motionThresholdMs;
   @override
   @JsonKey(ignore: true)
-  _$$$SetTimingConfigImplCopyWith<_$$SetTimingConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$$$SetTimingConfigImplImplCopyWith<_$$$SetTimingConfigImplImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 LiveSetMetrics _$LiveSetMetricsFromJson(Map<String, dynamic> json) {
-  return _$LiveSetMetrics.fromJson(json);
+  return _$$LiveSetMetricsImpl.fromJson(json);
 }
 
 /// @nodoc
@@ -1313,11 +1314,11 @@ class _$LiveSetMetricsCopyWithImpl<$Res, $Val extends LiveSetMetrics>
 }
 
 /// @nodoc
-abstract class _$$$LiveSetMetricsImplCopyWith<$Res>
+abstract class _$$$$LiveSetMetricsImplImplCopyWith<$Res>
     implements $LiveSetMetricsCopyWith<$Res> {
-  factory _$$$LiveSetMetricsImplCopyWith(_$$LiveSetMetricsImpl value,
-          $Res Function(_$$LiveSetMetricsImpl) then) =
-      __$$$LiveSetMetricsImplCopyWithImpl<$Res>;
+  factory _$$$$LiveSetMetricsImplImplCopyWith(_$$$LiveSetMetricsImplImpl value,
+          $Res Function(_$$$LiveSetMetricsImplImpl) then) =
+      __$$$$LiveSetMetricsImplImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1339,11 +1340,11 @@ abstract class _$$$LiveSetMetricsImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$$LiveSetMetricsImplCopyWithImpl<$Res>
-    extends _$LiveSetMetricsCopyWithImpl<$Res, _$$LiveSetMetricsImpl>
-    implements _$$$LiveSetMetricsImplCopyWith<$Res> {
-  __$$$LiveSetMetricsImplCopyWithImpl(
-      _$$LiveSetMetricsImpl _value, $Res Function(_$$LiveSetMetricsImpl) _then)
+class __$$$$LiveSetMetricsImplImplCopyWithImpl<$Res>
+    extends _$LiveSetMetricsCopyWithImpl<$Res, _$$$LiveSetMetricsImplImpl>
+    implements _$$$$LiveSetMetricsImplImplCopyWith<$Res> {
+  __$$$$LiveSetMetricsImplImplCopyWithImpl(_$$$LiveSetMetricsImplImpl _value,
+      $Res Function(_$$$LiveSetMetricsImplImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1365,7 +1366,7 @@ class __$$$LiveSetMetricsImplCopyWithImpl<$Res>
     Object? suggestedReps = freezed,
     Object? timestamp = null,
   }) {
-    return _then(_$$LiveSetMetricsImpl(
+    return _then(_$$$LiveSetMetricsImplImpl(
       setId: null == setId
           ? _value.setId
           : setId // ignore: cast_nullable_to_non_nullable
@@ -1432,8 +1433,8 @@ class __$$$LiveSetMetricsImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$$LiveSetMetricsImpl implements _$LiveSetMetrics {
-  const _$$LiveSetMetricsImpl(
+class _$$$LiveSetMetricsImplImpl implements _$$LiveSetMetricsImpl {
+  const _$$$LiveSetMetricsImplImpl(
       {required this.setId,
       required this.phase,
       required this.elapsedMs,
@@ -1450,8 +1451,8 @@ class _$$LiveSetMetricsImpl implements _$LiveSetMetrics {
       this.suggestedReps,
       required this.timestamp});
 
-  factory _$$LiveSetMetricsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$$LiveSetMetricsImplFromJson(json);
+  factory _$$$LiveSetMetricsImplImpl.fromJson(Map<String, dynamic> json) =>
+      _$$$$LiveSetMetricsImplImplFromJson(json);
 
   @override
   final String setId;
@@ -1505,7 +1506,7 @@ class _$$LiveSetMetricsImpl implements _$LiveSetMetrics {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$$LiveSetMetricsImpl &&
+            other is _$$$LiveSetMetricsImplImpl &&
             (identical(other.setId, setId) || other.setId == setId) &&
             (identical(other.phase, phase) || other.phase == phase) &&
             (identical(other.elapsedMs, elapsedMs) ||
@@ -1559,20 +1560,21 @@ class _$$LiveSetMetricsImpl implements _$LiveSetMetrics {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$$LiveSetMetricsImplCopyWith<_$$LiveSetMetricsImpl> get copyWith =>
-      __$$$LiveSetMetricsImplCopyWithImpl<_$$LiveSetMetricsImpl>(
-          this, _$identity);
+  _$$$$LiveSetMetricsImplImplCopyWith<_$$$LiveSetMetricsImplImpl>
+      get copyWith =>
+          __$$$$LiveSetMetricsImplImplCopyWithImpl<_$$$LiveSetMetricsImplImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$$LiveSetMetricsImplToJson(
+    return _$$$$LiveSetMetricsImplImplToJson(
       this,
     );
   }
 }
 
-abstract class _$LiveSetMetrics implements LiveSetMetrics {
-  const factory _$LiveSetMetrics(
+abstract class _$$LiveSetMetricsImpl implements LiveSetMetrics {
+  const factory _$$LiveSetMetricsImpl(
       {required final String setId,
       required final SetPhase phase,
       required final int elapsedMs,
@@ -1587,10 +1589,10 @@ abstract class _$LiveSetMetrics implements LiveSetMetrics {
       final String? coachingTip,
       final double? suggestedWeight,
       final int? suggestedReps,
-      required final DateTime timestamp}) = _$$LiveSetMetricsImpl;
+      required final DateTime timestamp}) = _$$$LiveSetMetricsImplImpl;
 
-  factory _$LiveSetMetrics.fromJson(Map<String, dynamic> json) =
-      _$$LiveSetMetricsImpl.fromJson;
+  factory _$$LiveSetMetricsImpl.fromJson(Map<String, dynamic> json) =
+      _$$$LiveSetMetricsImplImpl.fromJson;
 
   @override
   String get setId;
@@ -1624,6 +1626,6 @@ abstract class _$LiveSetMetrics implements LiveSetMetrics {
   DateTime get timestamp;
   @override
   @JsonKey(ignore: true)
-  _$$$LiveSetMetricsImplCopyWith<_$$LiveSetMetricsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$$$LiveSetMetricsImplImplCopyWith<_$$$LiveSetMetricsImplImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

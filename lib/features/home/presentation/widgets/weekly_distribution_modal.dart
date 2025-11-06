@@ -61,7 +61,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     AppIcons.calendarViewWeek,
                     color: context.colors.surface,
                     size: 24,
@@ -94,7 +94,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           
           // Stats Cards
           Padding(
@@ -110,7 +110,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     color: context.colors.primary,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
                     title: l10n.averageVolume,

@@ -40,7 +40,8 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   // Cache for data to prevent unnecessary rebuilds
   DashboardStats? _cachedStats;
   AchievementData? _cachedAchievementData;
-  UserContributionStats? _cachedUserStats;
+  // UserContributionStats? _cachedUserStats; // TODO: Define UserContributionStats class
+  dynamic _cachedUserStats; // Temporary workaround
   DateTime? _lastDataFetch;
   
   @override
@@ -121,7 +122,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   }
   
   // OPTIMIZATION: Cache data and only rebuild when necessary
-  bool _shouldRebuildData(DashboardStats? newStats, AchievementData? newAchievement, UserContributionStats? newUser) {
+  bool _shouldRebuildData(DashboardStats? newStats, AchievementData? newAchievement, dynamic newUser) {
     if (_cachedStats == null || _cachedAchievementData == null || _cachedUserStats == null) {
       return true;
     }
@@ -221,7 +222,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.auto_awesome,
                     color: context.colors.surface,
                     size: 16,
@@ -326,7 +327,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           child: Center(
             child: Text(
               '$level',
-              style: const TextStyle(
+              style: TextStyle(
                 color: context.colors.surface,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -393,7 +394,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   Text(
                     '$level',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: context.colors.surface,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -496,7 +497,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   Text(
                     '$level',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: context.colors.surface,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -572,7 +573,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           ),
         ),
         
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         
         // Stats Grid
         Row(
@@ -586,7 +587,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                 color: context.colors.primary,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: _buildStatItem(
                 context,
@@ -596,7 +597,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                 color: context.colors.secondary,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: _buildStatItem(
                 context,
@@ -663,11 +664,11 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             Container(
               width: 60,
               height: 60,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: context.colors.success,
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   '1',
                   style: TextStyle(
