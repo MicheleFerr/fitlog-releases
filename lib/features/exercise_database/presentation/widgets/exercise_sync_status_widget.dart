@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -233,7 +234,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     AppIcons.newReleases,
                     size: 16,
                     color: context.colors.secondary,
@@ -241,7 +242,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                   const SizedBox(width: 4),
                   Text(
                     AppLocalizations.of(context).updateAvailable,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: context.colors.secondary,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,

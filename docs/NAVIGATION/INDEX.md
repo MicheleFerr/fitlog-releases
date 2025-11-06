@@ -88,6 +88,28 @@ open docs/QUICK_REFERENCE.md
 | **[`HIVE_BOX_MANAGER_MIGRATION_REPORT.md`](../TECHNICAL_FOUNDATION/HIVE_BOX_MANAGER_MIGRATION_REPORT.md)** | **✅ Complete migration report: HiveBoxManager centralized pattern (68+ calls)** | **All developers** | **20 min** |
 | **[`HIVE_BOX_MANAGER_CHECKLIST.md`](../TECHNICAL_FOUNDATION/HIVE_BOX_MANAGER_CHECKLIST.md)** | **🚨 Mandatory checklist for all Hive storage (prevents memory leaks)** | **All developers** | **10 min** |
 
+### 🏋️ APRE SYSTEM DOCUMENTATION
+**⚠️ Complete documentation for APRE (Auto-Regulated Progressive Resistance Exercise) system**
+
+| Document | Purpose | Audience | Read Time |
+|----------|---------|----------|-----------|
+| [`APRE_INDEX.md`](../APRE/APRE_INDEX.md) | **START HERE** - Navigation guide for all APRE docs | All | 10 min |
+| [`APRE_QUICK.md`](../APRE/APRE_QUICK.md) | **TL;DR** - 2-minute summary: 4 problems + 4 solutions | All | 2 min |
+| [`APRE_EXECUTIVE.md`](../APRE/APRE_EXECUTIVE.md) | Strategic overview, ROI analysis, implementation timeline | PM/Stakeholders | 15 min |
+| [`APRE_SYSTEM_EXPLORATION.md`](../APRE/APRE_SYSTEM_EXPLORATION.md) | Complete system exploration: 15 files analyzed, workflows, learning path | Developers | 30 min |
+| [`APRE_INTEGRATION_MAP.md`](../APRE/APRE_INTEGRATION_MAP.md) | Architecture diagrams, data flow, state dependencies, debugging | Developers | 25 min |
+| [`APRE_MIGLIORAMENTI.md`](../APRE/APRE_MIGLIORAMENTI.md) | **Detailed solutions** with complete Dart code examples | Developers | 40 min |
+| [`APRE_CASI_USO.md`](../APRE/APRE_CASI_USO.md) | Real scenarios, flowcharts, test cases | Developers/QA | 30 min |
+| [`APRE_ACTION_ITEMS.md`](../APRE/APRE_ACTION_ITEMS.md) | **Implementation roadmap** - 17 tasks with timing and code | Developers/Team Lead | 45 min |
+
+**Total Documentation**: 8 files, 36+ pages, ~12 hours implementation
+
+**Key Problems Addressed**:
+1. 🔍 **Transparency** - 1RM calculation "black box" → metadata display
+2. 🛡️ **Robustness** - No history crash → manual input modal
+3. 🎨 **UX Clarity** - Protocol change silent → validation + warnings
+4. 📊 **Configurability** - Hardcoded "top 10" → flexible config
+
 ### 💻 IMPLEMENTATION GUIDES (ROE - Rules of Engagement)
 These are **mandatory** before implementing features in their domain:
 
@@ -162,6 +184,13 @@ These cover initial setup and configuration:
 **Admin Feedback System (User Submissions & Reviews)**:
 1. Read: [`EXERCISE_FEEDBACK_SYSTEM_ARCHITECTURE.md`](./EXERCISE_FEEDBACK_SYSTEM_ARCHITECTURE.md)
 2. Reference: [`EXERCISE_DATABASE_SYNC_ARCHITECTURE.md`](./EXERCISE_DATABASE_SYNC_ARCHITECTURE.md) (parent system)
+
+**APRE System (Auto-Regulated Progressive Resistance)**:
+1. Start: [`APRE_INDEX.md`](../APRE/APRE_INDEX.md) - Navigation guide
+2. Quick read: [`APRE_QUICK.md`](../APRE/APRE_QUICK.md) - 2-min summary
+3. Understand: [`APRE_SYSTEM_EXPLORATION.md`](../APRE/APRE_SYSTEM_EXPLORATION.md) - Complete system analysis
+4. Implement: [`APRE_ACTION_ITEMS.md`](../APRE/APRE_ACTION_ITEMS.md) - Roadmap with code
+5. Test: [`APRE_CASI_USO.md`](../APRE/APRE_CASI_USO.md) - Scenarios & test cases
 
 **Routine Center Improvements (Pattern Detection & Smart Suggestions)**:
 1. Read: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md)

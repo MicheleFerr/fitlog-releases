@@ -17,7 +17,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart' show isAdminCachedProvider;
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
@@ -34,9 +33,7 @@ class SettingsScreen extends ConsumerWidget {
     // Auto-load fitness profile when user is authenticated
     ref.watch(fitnessProfileAutoLoadProvider);
 
-    return DebugScreenNameOverlay(
-      screenName: 'SettingsScreen',
-      child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
@@ -102,7 +99,6 @@ class SettingsScreen extends ConsumerWidget {
             _buildAccountSection(context, ref),
           ],
         ),
-      ),
       ),
     );
   }

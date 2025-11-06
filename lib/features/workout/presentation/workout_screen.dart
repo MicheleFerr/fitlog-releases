@@ -35,7 +35,6 @@ import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
@@ -247,10 +246,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
 
     // Add error boundary for debugging
     try {
-      final scaffold = DebugScreenNameOverlay(
-        screenName: 'WorkoutScreen',
-        child: PopScope(
-          canPop: false, // Prevent default back navigation
+      final scaffold = PopScope(
+        canPop: false, // Prevent default back navigation
           onPopInvoked: (didPop) {
             if (!didPop) {
               _handleBackNavigation(context, ref);
@@ -314,6 +311,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                       // ⚡ OPTIMIZATION: Watch full workout only in body builder
                       // This isolates rebuilds to this section when exercise data changes
                       final currentWorkout = ref.watch(currentWorkoutProvider);
+
+                      // 🐛 DEBUG: Log exercise counting modes on rebuild (SENZA kDebugMode per profile mode)
+                      if (currentWorkout != null) {
+                        for (final ex in currentWorkout.exercises) {
+                          print('🔍 [WorkoutScreen Consumer] Exercise: ${ex.name}, CountingMode: ${ex.countingMode.name}');
+                        }
+                      }
+
                       return _buildWorkoutView(context, ref, currentWorkout!);
                     },
                   ),
@@ -327,9 +332,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               ],
             ),
           ),
-        ),
-      );
-      
+        );
+
       // Wrap con il button draggabile e tutorial
       return DraggableTutorialOverlay(
         tutorialKey: 'workout_fab',
@@ -1322,6 +1326,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
   }
 
   Widget _buildWorkoutView(BuildContext context, WidgetRef ref, Workout workout) {
+    // 🐛 DEBUG: Log exercises in _buildWorkoutView (SENZA kDebugMode per profile mode)
+    print('🏗️ [_buildWorkoutView] Building view with ${workout.exercises.length} exercises');
+    for (final ex in workout.exercises) {
+      print('   - ${ex.name}: countingMode=${ex.countingMode.name}');
+    }
+
     return SafeArea(
       child: Column(
         children: [
@@ -1427,6 +1437,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         itemCount: workout.exercises.length,
                         itemBuilder: (context, index) {
                           final exercise = workout.exercises[index];
+
+                          // 🐛 DEBUG: Log exercise being passed to ExerciseListItem (SENZA kDebugMode per profile mode)
+                          print('📋 [ListView.builder] Creating ExerciseListItem for: ${exercise.name}, countingMode=${exercise.countingMode.name}');
+
                           return Padding(
                             key: ValueKey(exercise.id), // ⚡ OPTIMIZATION: Key for better performance on list changes
                             padding: const EdgeInsets.only(bottom: 12),

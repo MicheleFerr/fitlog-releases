@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
 
@@ -366,8 +367,18 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ),
           ],
           selected: {_apreProtocol},
-          onSelectionChanged: (Set<int> newSelection) {
+          onSelectionChanged: (Set<int> newSelection) async {
             final newProtocol = newSelection.first;
+
+            // 🚨 T2.4: Check if workout is active
+            final workoutState = ref.read(currentWorkoutProvider);
+            final hasActiveWorkout = workoutState != null;
+
+            if (hasActiveWorkout) {
+              // Show warning dialog - cannot change protocol during active workout
+              await _showWorkoutInProgressWarning(context);
+              return; // Don't change protocol
+            }
 
             // Show preview if protocol is changing and we have calculated values
             if (newProtocol != _previousProtocol &&
@@ -1281,6 +1292,43 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         content: const Text('Auto adjustment configured'),
         backgroundColor: context.colors.primary,
       ),
+    );
+  }
+
+  /// 🚨 T2.4: Shows warning dialog when attempting to change protocol during active workout
+  Future<void> _showWorkoutInProgressWarning(BuildContext context) async {
+    final l10n = context.l10n;
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // User must tap button to dismiss
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          icon: Icon(
+            AppIcons.warning,
+            color: context.colors.warning,
+            size: AppIconSize.xlarge,
+          ),
+          title: Text(
+            l10n.apreProtocolChangeWarningTitle,
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            l10n.apreProtocolChangeWarningMessage,
+            style: context.textTheme.bodyMedium,
+          ),
+          actions: <Widget>[
+            FilledButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(l10n.apreGotIt),
+            ),
+          ],
+        );
+      },
     );
   }
 

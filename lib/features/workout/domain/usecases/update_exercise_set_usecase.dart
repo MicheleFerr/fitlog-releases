@@ -50,30 +50,30 @@ class UpdateExerciseSetUseCase {
   
   /// Validate exercise set business rules
   ValidationFailure? _validateExerciseSet(ExerciseSet set) {
-    // Weight validation
-    if (set.weight < 0) {
+    // Weight validation (null-safe: weight is nullable)
+    if (set.weight != null && set.weight! < 0) {
       return const ValidationFailure(
         'Weight cannot be negative',
         code: 'negative_weight',
       );
     }
-    
-    if (set.weight > 10000) { // Reasonable maximum
+
+    if (set.weight != null && set.weight! > 10000) { // Reasonable maximum
       return const ValidationFailure(
         'Weight cannot exceed 10,000 kg',
         code: 'weight_too_high',
       );
     }
-    
-    // Reps validation
-    if (set.reps <= 0) {
+
+    // Reps validation (null-safe: reps is nullable)
+    if (set.reps != null && set.reps! <= 0) {
       return const ValidationFailure(
         'Reps must be greater than 0',
         code: 'invalid_reps',
       );
     }
-    
-    if (set.reps > 1000) { // Reasonable maximum
+
+    if (set.reps != null && set.reps! > 1000) { // Reasonable maximum
       return const ValidationFailure(
         'Reps cannot exceed 1000',
         code: 'reps_too_high',
@@ -109,10 +109,9 @@ class UpdateExerciseSetUseCase {
   /// Process exercise set with business logic
   ExerciseSet _processExerciseSet(ExerciseSet currentSet, ExerciseSet? previousSet) {
     ExerciseSet result = currentSet;
-    
-    // Auto-calculate volume if not set
-    final volume = result.weight * result.reps;
-    result = result.copyWith(volume: volume);
+
+    // ✅ Note: volume is a computed getter (weight * reps)
+    // It's automatically calculated, no need to set it explicitly
     
     // Apply progressive overload suggestions
     if (previousSet != null) {
@@ -137,11 +136,15 @@ class UpdateExerciseSetUseCase {
     ExerciseSet currentSet,
     ExerciseSet previousSet,
   ) {
-    // Calculate improvement metrics
-    final weightImprovement = currentSet.weight - previousSet.weight;
-    final repsImprovement = currentSet.reps - previousSet.reps;
+    // Calculate improvement metrics (null-safe: weight and reps are nullable)
+    final weightImprovement = (currentSet.weight != null && previousSet.weight != null)
+        ? currentSet.weight! - previousSet.weight!
+        : null;
+    final repsImprovement = (currentSet.reps != null && previousSet.reps != null)
+        ? currentSet.reps! - previousSet.reps!
+        : null;
     final volumeImprovement = currentSet.volume - previousSet.volume;
-    
+
     // Add metadata about progression
     final Map<String, dynamic> progression = {
       'weightChange': weightImprovement,
@@ -149,11 +152,11 @@ class UpdateExerciseSetUseCase {
       'volumeChange': volumeImprovement,
       'isProgression': volumeImprovement > 0,
     };
-    
+
     // Determine progression type
-    if (weightImprovement > 0 && repsImprovement >= 0) {
+    if (weightImprovement != null && weightImprovement > 0 && repsImprovement != null && repsImprovement >= 0) {
       progression['progressionType'] = 'weight_increase';
-    } else if (repsImprovement > 0 && weightImprovement >= 0) {
+    } else if (repsImprovement != null && repsImprovement > 0 && weightImprovement != null && weightImprovement >= 0) {
       progression['progressionType'] = 'reps_increase';
     } else if (volumeImprovement > 0) {
       progression['progressionType'] = 'volume_increase';

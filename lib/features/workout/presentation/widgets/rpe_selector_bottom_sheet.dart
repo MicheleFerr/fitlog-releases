@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 
 class SupersetExerciseCompleteData {
 
@@ -118,6 +119,10 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   bool _isSetCompleted = false; // ✅ Toggle state for set completion
   bool _originallyCompleted = false; // ✅ Track original completion state for button logic
 
+  // ✅ NEW: For time-based exercises (counting mode = time)
+  int _actualMinutes = 0;
+  int _actualSeconds = 0;
+
   // Superset navigation state
   PageController? _pageController;
   int _currentExerciseIndex = 0;
@@ -160,6 +165,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       _selectedRpe = exerciseSet.rpe;
       _isSetCompleted = exerciseSet.isCompleted; // ✅ Initialize from set state
       _originallyCompleted = exerciseSet.isCompleted; // ✅ Track original state (set once)
+
+      // ✅ NEW: Initialize time variables for time-based exercises
+      final totalSeconds = exerciseSet.seconds ?? 60; // Default 60 seconds if not set
+      _actualMinutes = totalSeconds ~/ 60; // Integer division for minutes
+      _actualSeconds = totalSeconds % 60;  // Remainder for seconds
     }
     _updateRir();
   }
@@ -216,6 +226,26 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     }
   }
   
+  /// ✅ NEW: Calculate data to pass to onConfirm based on counting mode
+  (int, double) _getConfirmData() {
+    final countingMode = widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
+
+    switch (countingMode) {
+      case ExerciseCountingMode.time:
+        // For time-based: pass total seconds via actualReps (workaround), weight = 0
+        final totalSeconds = (_actualMinutes * 60) + _actualSeconds;
+        return (totalSeconds, 0.0);
+
+      case ExerciseCountingMode.reps:
+        // For reps-only: pass reps, weight = 0
+        return (_actualReps, 0.0);
+
+      case ExerciseCountingMode.weighted:
+        // For weighted: pass both reps and weight
+        return (_actualReps, _actualWeight);
+    }
+  }
+
   void _saveCurrentExerciseData(int rpe) {
     if (widget.isPartOfSuperset) {
       _supersetCompleteData[_currentExerciseIndex] = SupersetExerciseCompleteData(
@@ -282,6 +312,36 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
         return 'Max';
       default:
         return '';
+    }
+  }
+
+  /// ✅ FIX: Get verify text based on exercise counting mode
+  String _getVerifyText(AppLocalizations l10n) {
+    final countingMode = widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
+    switch (countingMode) {
+      case ExerciseCountingMode.time:
+        return l10n.verifyTime; // "Verify Minutes & Seconds"
+      case ExerciseCountingMode.reps:
+        return l10n.verifyReps; // "Verify Reps"
+      case ExerciseCountingMode.weighted:
+        return l10n.verifyWeightReps; // "Verify Weight & Reps"
+    }
+  }
+
+  /// ✅ FIX: Build input fields dynamically based on counting mode
+  Widget _buildInputFieldsBasedOnCountingMode(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+    final countingMode = widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
+
+    switch (countingMode) {
+      case ExerciseCountingMode.time:
+        // Show Minutes & Seconds pickers
+        return _buildTimeInputSection(context, theme, colorScheme);
+      case ExerciseCountingMode.reps:
+        // Show only Reps picker
+        return _buildRepsOnlySection(context, theme, colorScheme);
+      case ExerciseCountingMode.weighted:
+        // Show Weight & Reps (existing behavior)
+        return _buildWeightAndRepsSection(context, theme, colorScheme);
     }
   }
 
@@ -492,14 +552,15 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
         if (showRPESuggestion && rpeSuggestion != null && rpeSuggestion.adjustmentPercent != 0)
           _buildRPESuggestionCard(context, theme, l10n, colorScheme, rpeSuggestion),
 
-        // Toggle for Weight & Reps
+        // Toggle for Weight & Reps (dynamic text based on counting mode)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                l10n.verifyWeightReps,
+                // ✅ FIX: Dynamic text based on counting mode
+                _getVerifyText(l10n),
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -520,10 +581,10 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           ),
         ),
         
-        // Weight & Reps Section - Premium design
+        // Weight & Reps Section - Premium design (dynamic based on counting mode)
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
-          child: _showWeightAndReps ? _buildWeightAndRepsSection(context, theme, colorScheme) : const SizedBox.shrink(),
+          child: _showWeightAndReps ? _buildInputFieldsBasedOnCountingMode(context, theme, colorScheme) : const SizedBox.shrink(),
         ),
 
         const SizedBox(height: 16),
@@ -743,7 +804,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         }
                       } else {
                         Navigator.of(context).pop();
-                        widget.onConfirm(_actualReps, _actualWeight, 0);
+                        // ✅ NEW: Get correct data based on counting mode
+                        final (actualReps, actualWeight) = _getConfirmData();
+                        widget.onConfirm(actualReps, actualWeight, 0);
                       }
                     }
                   },
@@ -820,7 +883,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                               // rpe = 0 if user skipped RPE but kept toggle ON
                               // rpe > 0 if user selected RPE
                               final rpeToSend = !_isSetCompleted ? -1 : (_selectedRpe ?? 0);
-                              widget.onConfirm(_actualReps, _actualWeight, rpeToSend);
+                              // ✅ NEW: Get correct data based on counting mode
+                              final (actualReps, actualWeight) = _getConfirmData();
+                              widget.onConfirm(actualReps, actualWeight, rpeToSend);
                             }
                           }
                         : null,
@@ -1414,6 +1479,336 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         HapticFeedback.lightImpact();
                         setState(() => _actualReps++);
                       },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.add, size: 18, color: colorScheme.primary),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// ✅ FIX: Build reps-only section (for reps counting mode)
+  Widget _buildRepsOnlySection(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+    final l10n = AppLocalizations.of(context);
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+            colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.1),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.repeat, size: 18, color: colorScheme.primary),
+              const SizedBox(width: 8),
+              Text(
+                l10n.reps,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Decrease reps
+              InkWell(
+                onTap: _actualReps > 1
+                    ? () {
+                        HapticFeedback.lightImpact();
+                        setState(() => _actualReps--);
+                      }
+                    : null,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.errorContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.remove, size: 24, color: colorScheme.error),
+                ),
+              ),
+              // Reps display
+              Container(
+                width: 100,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _actualReps == widget.targetReps
+                        ? colorScheme.primary.withValues(alpha: 0.5)
+                        : colorScheme.outline.withValues(alpha: 0.2),
+                    width: 2,
+                  ),
+                ),
+                child: Text(
+                  '$_actualReps',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ),
+              // Increase reps
+              InkWell(
+                onTap: _actualReps < 50
+                    ? () {
+                        HapticFeedback.lightImpact();
+                        setState(() => _actualReps++);
+                      }
+                    : null,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.add, size: 24, color: colorScheme.primary),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// ✅ FIX: Build time input section (for time counting mode)
+  Widget _buildTimeInputSection(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+    final l10n = AppLocalizations.of(context);
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+            colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.1),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Minutes Section
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.schedule, size: 16, color: colorScheme.primary),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Minuti', // TODO: Add localization
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Decrease minutes
+                    InkWell(
+                      onTap: _actualMinutes > 0
+                          ? () {
+                              HapticFeedback.lightImpact();
+                              setState(() => _actualMinutes--);
+                            }
+                          : null,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: colorScheme.errorContainer.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.remove, size: 18, color: colorScheme.error),
+                      ),
+                    ),
+                    // Minutes display
+                    Container(
+                      width: 70,
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: colorScheme.outline.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '$_actualMinutes',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                          Text(
+                            'min',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 10,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Increase minutes
+                    InkWell(
+                      onTap: _actualMinutes < 6
+                          ? () {
+                              HapticFeedback.lightImpact();
+                              setState(() => _actualMinutes++);
+                            }
+                          : null,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.add, size: 18, color: colorScheme.primary),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // Divider
+          Container(
+            width: 1,
+            height: 60,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            color: colorScheme.outline.withValues(alpha: 0.2),
+          ),
+
+          // Seconds Section
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.timer, size: 16, color: colorScheme.primary),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Secondi', // TODO: Add localization
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Decrease seconds
+                    InkWell(
+                      onTap: _actualSeconds > 0
+                          ? () {
+                              HapticFeedback.lightImpact();
+                              setState(() => _actualSeconds = (_actualSeconds - 5).clamp(0, 60));
+                            }
+                          : null,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: colorScheme.errorContainer.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.remove, size: 18, color: colorScheme.error),
+                      ),
+                    ),
+                    // Seconds display
+                    Container(
+                      width: 70,
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: colorScheme.outline.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            _actualSeconds.toString().padLeft(2, '0'),
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                          Text(
+                            'sec',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 10,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Increase seconds
+                    InkWell(
+                      onTap: _actualSeconds < 60
+                          ? () {
+                              HapticFeedback.lightImpact();
+                              setState(() => _actualSeconds = (_actualSeconds + 5).clamp(0, 60));
+                            }
+                          : null,
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
                         padding: const EdgeInsets.all(4),

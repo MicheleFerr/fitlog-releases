@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_model.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_cache_manager.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 
 class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
 
@@ -423,11 +424,4 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   }
 }
 
-/// Stato della sincronizzazione
-enum SyncStatus {
-  idle,
-  loading,
-  syncing,
-  success,
-  error,
-}
+// ✅ SyncStatus removed - now using shared/domain/entities/sync_status.dart

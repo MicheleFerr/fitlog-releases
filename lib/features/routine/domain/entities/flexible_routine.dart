@@ -609,6 +609,12 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
            todayScheduled.status == DayStatus.scheduled;
   }
 
+  /// Check if there's any uncompleted workout in the routine (not just today)
+  bool hasUncompletedWorkout() {
+    if (!isActive) return false;
+    return getNextUncompletedWorkout() != null;
+  }
+
   /// Get today's workout if scheduled, null otherwise
   ScheduledDay? getTodayWorkout() {
     final today = DateTime.now();
@@ -619,6 +625,30 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     }
 
     return todayScheduled;
+  }
+
+  /// Get next uncompleted workout starting from today
+  /// Returns the first scheduled workout that is not completed, skipping completed days
+  ScheduledDay? getNextUncompletedWorkout() {
+    final today = DateTime.now();
+
+    // Check up to 30 days in the future for next uncompleted workout
+    for (int i = 0; i < 30; i++) {
+      final checkDate = today.add(Duration(days: i));
+      final scheduledDay = getScheduledDay(checkDate);
+
+      // Skip if null or rest day
+      if (scheduledDay == null || scheduledDay.isRestDay) {
+        continue;
+      }
+
+      // Return first workout that is not completed
+      if (scheduledDay.status != DayStatus.completed) {
+        return scheduledDay;
+      }
+    }
+
+    return null; // No uncompleted workout found in next 30 days
   }
 
   /// Convert date to string key for map

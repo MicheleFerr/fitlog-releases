@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_dete
 import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_viability_checker.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart'; // ✅ Explicit import for extension
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 
 /// Provider for current user ID from Firebase Auth
@@ -89,15 +90,24 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
     }
   }
 
-  // Get active routine template ID (if any)
+  // Get active routine and next uncompleted workout (if any)
   final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
   final activeRoutineTemplateId = activeRoutineAsync.maybeWhen(
     data: (routine) => routine?.id,
     orElse: () => null,
   );
 
+  // ✅ NEW: Get next uncompleted workout from active routine
+  final nextUncompletedWorkout = activeRoutineAsync.maybeWhen(
+    data: (routine) => routine?.getNextUncompletedWorkout(),
+    orElse: () => null,
+  );
+
+  final nextWorkoutTemplateId = nextUncompletedWorkout?.templateId;
+
   if (kDebugMode || kProfileMode) {
     debugPrint('🔍 [WORKOUT_SUGGESTION] Active routine template ID: $activeRoutineTemplateId');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Next uncompleted workout template ID: $nextWorkoutTemplateId');
   }
 
   // Get available template names for validation
@@ -121,6 +131,7 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
   final suggestion = await predictionEngine.predictNextWorkout(
     workoutHistory: workouts,
     activeRoutineTemplateId: activeRoutineTemplateId,
+    nextWorkoutTemplateId: nextWorkoutTemplateId, // ✅ NEW: Pass next workout from routine
     availableTemplateNames: availableTemplateNames,
     useCache: true,
   );

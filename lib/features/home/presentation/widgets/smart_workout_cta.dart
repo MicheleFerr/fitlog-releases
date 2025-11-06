@@ -26,8 +26,8 @@ class SmartWorkoutCTA extends ConsumerWidget {
         'Errore caricamento',
       ),
       data: (routine) {
-        // Guard 1: Check if routine exists and has today scheduled
-        if (routine == null || !routine.hasProgrammedWorkoutToday()) {
+        // Guard 1: Check if routine exists and has uncompleted workout
+        if (routine == null || !routine.hasUncompletedWorkout()) {
           return _buildDisabledState(
             context,
             theme,
@@ -35,9 +35,9 @@ class SmartWorkoutCTA extends ConsumerWidget {
           );
         }
 
-        // Guard 2: Get today's workout
-        final todayWorkout = routine.getTodayWorkout();
-        if (todayWorkout == null || todayWorkout.templateId == null) {
+        // Guard 2: Get next uncompleted workout
+        final nextWorkout = routine.getNextUncompletedWorkout();
+        if (nextWorkout == null || nextWorkout.templateId == null) {
           return _buildDisabledState(
             context,
             theme,
@@ -50,7 +50,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
           context,
           ref,
           theme,
-          todayWorkout.templateId!,
+          nextWorkout.templateId!,
         );
       },
     );
@@ -223,51 +223,35 @@ class SmartWorkoutCTA extends ConsumerWidget {
     // Guard 1: Check AsyncValue state
     final routineAsync = ref.read(activeFlexibleRoutineProvider);
     if (routineAsync is! AsyncData) {
-      if (context.mounted) {
-        // Fallback: Navigate to workout with template ID
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
       return;
     }
 
     final routine = routineAsync.value;
 
     // Guard 2: Routine null check
-    if (routine == null || !routine.hasProgrammedWorkoutToday()) {
-      if (context.mounted) {
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
+    if (routine == null || !routine.hasUncompletedWorkout()) {
       return;
     }
 
-    // Guard 3: getTodayWorkout() null check
-    final todayWorkoutFresh = routine.getTodayWorkout();
-    if (todayWorkoutFresh == null || todayWorkoutFresh.templateId == null) {
-      if (context.mounted) {
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
+    // Guard 3: getNextUncompletedWorkout() null check
+    final nextWorkoutFresh = routine.getNextUncompletedWorkout();
+    if (nextWorkoutFresh == null || nextWorkoutFresh.templateId == null) {
       return;
     }
 
     // Fetch template to get exercises
     final templatesAsync = ref.read(customWorkoutTemplatesProvider);
     if (templatesAsync is! AsyncData) {
-      if (context.mounted) {
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
       return;
     }
 
     final templates = templatesAsync.value ?? [];
     final template = templates.where((t) => t.id == templateId).firstOrNull;
     if (template == null) {
-      if (context.mounted) {
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
       return;
     }
 
-    // ✅ FIX #2: Re-enable analytics tracking
+    // ✅ Analytics tracking BEFORE starting workout
     await WorkoutAnalytics.trackEvent(
       'smart_cta_tapped',
       properties: {
@@ -279,20 +263,13 @@ class SmartWorkoutCTA extends ConsumerWidget {
       },
     );
 
-    // ✅ FIX #1: Pre-load workout with exercises from template
-    await ref.read(currentWorkoutProvider.notifier).createWorkoutFromRoutine(
-      routineName: template.name,
-      exercises: template.toWorkoutExercises(), // Convert ExerciseTemplate to Exercise
-      sessionId: sessionId,
-      templateId: template.id, // ✅ FIX #6: Pass template ID for auto-save
-    );
+    // ✅ Start workout from template (same as DayDetailSheet)
+    // This creates an active workout, not a preloaded one
+    ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
 
-    // Navigate to workout screen with session ID in extras
+    // ✅ Navigate directly to workout screen (no extra needed)
     if (context.mounted) {
-      context.goNamed(
-        'workout',
-        extra: {'sessionId': sessionId},
-      );
+      context.goNamed('workout');
     }
   }
 }

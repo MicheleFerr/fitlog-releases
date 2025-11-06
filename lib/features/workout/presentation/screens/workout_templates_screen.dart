@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/weight_recov
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart' hide syncStatusProvider;
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:flutter/foundation.dart';
 // GDPR Consent Management
 import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
@@ -88,9 +87,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return DebugScreenNameOverlay(
-      screenName: 'WorkoutTemplatesScreen',
-      child: Scaffold(
+    return Scaffold(
           appBar: AppBar(
           title: Text(l10n.workoutTemplates),
           centerTitle: true,
@@ -287,8 +284,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           ),
         ],
       ),
-    ),
-  );
+    );
   }
 
   Widget _buildAllTemplatesTab() {

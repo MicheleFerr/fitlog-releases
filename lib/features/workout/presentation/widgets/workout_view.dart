@@ -39,10 +39,10 @@ class WorkoutView extends ConsumerWidget {
   }
 
   Widget _buildExerciseList(BuildContext context, WidgetRef ref) {
-    // Performance: use selector for exercise IDs only
-    final exerciseIds = ref.watch(
+    // Get exercises from current workout
+    final exercises = ref.watch(
       currentWorkoutProvider.select(
-        (w) => w?.exercises.map((e) => e.id).toList() ?? [],
+        (w) => w?.exercises ?? [],
       ),
     );
 
@@ -53,14 +53,19 @@ class WorkoutView extends ConsumerWidget {
         top: 8,
         bottom: 100, // Space for FAB
       ),
-      itemCount: exerciseIds.length,
+      itemCount: exercises.length,
       itemBuilder: (context, index) {
+        final exercise = exercises[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: ExerciseListItem(
-            key: ValueKey(exerciseIds[index]),
-            exerciseId: exerciseIds[index],
-            exerciseIndex: index,
+            key: ValueKey(exercise.id),
+            exercise: exercise,
+            onTap: () {}, // TODO: Add navigation/edit functionality
+            onDelete: () {
+              // TODO: Add delete functionality
+              // ref.read(workoutProvider.notifier).deleteExercise(exercise.id);
+            },
           ),
         );
       },

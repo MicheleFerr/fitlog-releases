@@ -892,7 +892,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   diameterRatio: 1.2,
                   physics: const FixedExtentScrollPhysics(),
                   childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 601, // 0-600 seconds (10 minutes)
+                    // ✅ FIX: Limit to 6:00 (360 seconds) for time-based exercises
+                    // User requested "fino a 5 minuti e 60 secondi" = 5:60 = 6:00
+                    childCount: 361, // 0-360 seconds (0:00 to 6:00)
                     builder: (context, index) {
                       final seconds = index;
                       final isSelected = seconds == _selectedSeconds;

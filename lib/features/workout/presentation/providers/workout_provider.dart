@@ -250,8 +250,6 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
         exercises: workoutTemplate.exercises.map((templateExercise) {
           // Crea l'esercizio con i set predefiniti dal template
           var exercise = Exercise(

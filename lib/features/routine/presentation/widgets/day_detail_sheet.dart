@@ -727,7 +727,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             const SizedBox(height: 12),
           ],
 
-          if (stats.hasCompletedWorkout) ...[
+          if (widget.dayInfo.status == DayStatus.completed) ...[
             // View Full Details button
             OutlinedButton.icon(
               onPressed: () => _viewWorkoutDetails(context, stats),
@@ -748,7 +748,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           // Secondary actions row
           Row(
             children: [
-              if (!stats.hasCompletedWorkout) ...[
+              if (widget.dayInfo.status != DayStatus.completed) ...[
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _completeDay(context),

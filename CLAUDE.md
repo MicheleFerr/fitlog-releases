@@ -39,6 +39,7 @@
 | **Workout Session** | `docs/UX_FLOWS/workout_session/WORKOUT_SYSTEM_OVERVIEW.md` | Prima di modificare workout flow principale |
 | **Exercise Database** | `docs/UX_FLOWS/exercise_database/EXERCISE_DATABASE_SYNC_ARCHITECTURE.md` | Prima di modificare esercizi, feedback, sync |
 | **Routine Center** | `docs/UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md` | Prima di modificare routine, swap flow, templates |
+| **APRE System** | `docs/APRE/APRE_INDEX.md` → Start here, poi `APRE_SYSTEM_EXPLORATION.md` (sistema completo), `APRE_ACTION_ITEMS.md` (implementazione) | Prima di modificare APRE protocol, 1RM calculation, auto-adjustment |
 
 ### 🎯 Workflow Completo:
 
