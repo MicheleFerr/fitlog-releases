@@ -71,6 +71,12 @@ class WorkoutSuggestion with _$WorkoutSuggestion {
 
     /// Timestamp when this suggestion was generated
     @Default(null) DateTime? generatedAt,
+
+    /// ✅ NEW: Is this a recovery suggestion for a missed workout?
+    @Default(false) bool isRecovery,
+
+    /// ✅ NEW: Date of the missed workout being recovered
+    DateTime? recoveryDate,
   }) = _WorkoutSuggestion;
 
   const WorkoutSuggestion._();
