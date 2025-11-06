@@ -5626,6 +5626,14 @@
   "@apreCalculationMetadata": {
     "description": "Intestazione per il display dei metadati di calcolo APRE"
   },
+  "apreShowCalculationDetails": "Mostra Dettagli Calcolo",
+  "@apreShowCalculationDetails": {
+    "description": "Pulsante per espandere il banner dei metadati di calcolo"
+  },
+  "apreHideCalculationDetails": "Nascondi Dettagli Calcolo",
+  "@apreHideCalculationDetails": {
+    "description": "Pulsante per comprimere il banner dei metadati di calcolo"
+  },
   "apreFormula": "Formula",
   "@apreFormula": {
     "description": "Etichetta per la formula di calcolo 1RM"

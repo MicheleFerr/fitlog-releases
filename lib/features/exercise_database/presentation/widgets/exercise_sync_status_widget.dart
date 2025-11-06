@@ -52,7 +52,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
 
             // Stato sincronizzazione corrente
             syncStatus.when(
-              data: (status) => _buildSyncStatusIndicator(context, status),
+              data: (status) => _buildSyncStatusIndicator(context, status as SyncStatus),
               loading: () => _buildLoadingIndicator(context),
               error: (error, _) => _buildErrorIndicator(context, error),
             ),

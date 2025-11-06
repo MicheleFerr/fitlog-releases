@@ -12603,6 +12603,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apreCalculationMetadata => 'Calculation Analysis';
 
   @override
+  String get apreShowCalculationDetails => 'Show Calculation Details';
+
+  @override
+  String get apreHideCalculationDetails => 'Hide Calculation Details';
+
+  @override
   String get apreFormula => 'Formula';
 
   @override

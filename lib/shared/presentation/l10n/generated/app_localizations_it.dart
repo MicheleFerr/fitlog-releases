@@ -12747,6 +12747,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get apreCalculationMetadata => 'Analisi Calcolo';
 
   @override
+  String get apreShowCalculationDetails => 'Mostra Dettagli Calcolo';
+
+  @override
+  String get apreHideCalculationDetails => 'Nascondi Dettagli Calcolo';
+
+  @override
   String get apreFormula => 'Formula';
 
   @override

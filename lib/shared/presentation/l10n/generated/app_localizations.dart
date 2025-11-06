@@ -22272,6 +22272,18 @@ abstract class AppLocalizations {
   /// **'Calculation Analysis'**
   String get apreCalculationMetadata;
 
+  /// Button to expand calculation metadata banner
+  ///
+  /// In en, this message translates to:
+  /// **'Show Calculation Details'**
+  String get apreShowCalculationDetails;
+
+  /// Button to collapse calculation metadata banner
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Calculation Details'**
+  String get apreHideCalculationDetails;
+
   /// Label for 1RM calculation formula
   ///
   /// In en, this message translates to:

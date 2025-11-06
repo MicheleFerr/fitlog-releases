@@ -15108,6 +15108,14 @@
   "@apreCalculationMetadata": {
     "description": "Header for APRE calculation metadata display"
   },
+  "apreShowCalculationDetails": "Show Calculation Details",
+  "@apreShowCalculationDetails": {
+    "description": "Button to expand calculation metadata banner"
+  },
+  "apreHideCalculationDetails": "Hide Calculation Details",
+  "@apreHideCalculationDetails": {
+    "description": "Button to collapse calculation metadata banner"
+  },
   "apreFormula": "Formula",
   "@apreFormula": {
     "description": "Label for 1RM calculation formula"

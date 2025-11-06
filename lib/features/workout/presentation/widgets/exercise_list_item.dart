@@ -48,6 +48,8 @@ import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/calculation_metadata_display.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
 
 class ExerciseListItem extends ConsumerStatefulWidget {
   const ExerciseListItem({
@@ -91,6 +93,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   bool? _cachedCompletionStatus;
   // REFACTORED: Community suggestions → exerciseSuggestionsProvider
   Map<String, dynamic>? _exerciseData;
+  // APRE metadata banner state
+  bool _showMetadataBanner = false; // Collapsed by default
 
   bool get isProMode => ref.read(appConfigProvider).isProMode ?? false;
 
@@ -1783,8 +1787,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           ],
         ),
         const SizedBox(height: 8),
-        ...widget.exercise.sets.asMap().entries.map(
-          (entry) => _buildSetItem(context, entry.key, entry.value, config),
+        ...widget.exercise.sets.asMap().entries.expand(
+          (entry) => [
+            _buildSetItem(context, entry.key, entry.value, config),
+            // Inject metadata banner after Set 4 if APRE enabled
+            if (entry.key == 3 && widget.exercise.useAPRE && widget.exercise.sets.length >= 4)
+              _buildMetadataBanner(context),
+          ],
         ),
         const SizedBox(height: 8),
         // Add set button (with smooth animated collapse button when completed)
@@ -5363,6 +5372,113 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
     setState(() {
       _warmupSuggestionDismissed = true;
     });
+  }
+
+  /// Builds collapsible metadata banner for APRE calculations
+  Widget _buildMetadataBanner(BuildContext context) {
+    // Parse metadata from JSON string
+    Map<String, dynamic>? calculations;
+    if (widget.exercise.calculationMetadata != null) {
+      try {
+        final decoded = jsonDecode(widget.exercise.calculationMetadata!);
+        // Convert to expected format for CalculationMetadataDisplay
+        calculations = {
+          'confidence': _parseConfidence(decoded['confidence']),
+          'dataPoints': decoded['dataPoints'] ?? 0,
+          'formula': decoded['formula'] ?? 'Brzycki',
+          'dataAge': Duration(days: decoded['dataAge']?['inDays'] ?? 0),
+          'standardDeviation': decoded['standardDeviation']?.toDouble() ?? 0.0,
+        };
+      } catch (e) {
+        debugPrint('Error parsing calculation metadata: $e');
+      }
+    }
+
+    // Don't show banner if no calculations available
+    if (calculations == null) return const SizedBox.shrink();
+
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      child: Column(
+        children: [
+          const SizedBox(height: 12),
+          // Collapsible header
+          InkWell(
+            onTap: () {
+              setState(() {
+                _showMetadataBanner = !_showMetadataBanner;
+              });
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: context.colors.primary.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    _showMetadataBanner ? Icons.expand_less : Icons.expand_more,
+                    color: context.colors.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _showMetadataBanner
+                          ? context.l10n.apreHideCalculationDetails
+                          : context.l10n.apreShowCalculationDetails,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.info_outline,
+                    color: context.colors.primary,
+                    size: 18,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Expanded metadata details
+          if (_showMetadataBanner) ...[
+            const SizedBox(height: 8),
+            CalculationMetadataDisplay(
+              calculations: calculations,
+              lastCalculationDate: widget.exercise.lastCalculationDate,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Parses confidence string to enum
+  CalculationConfidence _parseConfidence(dynamic confidence) {
+    if (confidence == null) return CalculationConfidence.unknown;
+    if (confidence is CalculationConfidence) return confidence;
+
+    final confStr = confidence.toString().toLowerCase();
+    switch (confStr) {
+      case 'veryhigh':
+        return CalculationConfidence.veryHigh;
+      case 'high':
+        return CalculationConfidence.high;
+      case 'medium':
+        return CalculationConfidence.medium;
+      case 'low':
+        return CalculationConfidence.low;
+      default:
+        return CalculationConfidence.unknown;
+    }
   }
 }
 
