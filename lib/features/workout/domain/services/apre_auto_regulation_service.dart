@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/onerm_calculation_config.dart';
@@ -384,23 +385,93 @@ class APREAutoRegulationService {
 
   /// Selects subset of sets based on configuration strategy
   ///
-  /// Implementation will be added in T3.2 - Top Set Selection Logic.
-  /// For now, this returns all sets without filtering to maintain
-  /// current behavior while allowing the config parameter to be used.
+  /// Applies different filtering strategies depending on user's preference:
+  /// - [OneRMCalculationConfig.topThreeSets]: 3 most recent sets (prioritizes recency)
+  /// - [OneRMCalculationConfig.topFiveSets]: 5 most recent sets (balanced, default)
+  /// - [OneRMCalculationConfig.allSetsInWindow]: All sets (comprehensive)
+  /// - [OneRMCalculationConfig.medianOfTop5]: Median of top 5 (stable estimates)
   ///
-  /// Future implementation will filter sets based on:
-  /// - [OneRMCalculationConfig.topThreeSets] → Most recent 3 sets
-  /// - [OneRMCalculationConfig.topFiveSets] → Most recent 5 sets (default)
-  /// - [OneRMCalculationConfig.allSetsInWindow] → All sets (no filtering)
-  /// - [OneRMCalculationConfig.medianOfTop5] → Median of top 5 sets
-  // ignore: unused_element (T3.2 placeholder - will be used when filtering logic is implemented)
-  static List<dynamic> _selectTopSets(
+  /// Returns: Filtered list of sets to use for 1RM calculation
+  @visibleForTesting
+  static List<dynamic> selectTopSets(
     List<dynamic> allSets,
     OneRMCalculationConfig config,
   ) {
-    // TODO(T3.2): Implement filtering logic based on config
-    // For now, return all sets to maintain current behavior
-    return allSets;
+    if (allSets.isEmpty) return allSets;
+
+    switch (config) {
+      case OneRMCalculationConfig.topThreeSets:
+        return _selectTopNRecent(allSets, 3);
+
+      case OneRMCalculationConfig.topFiveSets:
+        return _selectTopNRecent(allSets, 5);
+
+      case OneRMCalculationConfig.allSetsInWindow:
+        return allSets; // No filtering, return everything
+
+      case OneRMCalculationConfig.medianOfTop5:
+        return _selectMedianOfTopN(allSets, 5);
+    }
+  }
+
+  /// Selects N most recent sets, sorted by timestamp descending
+  ///
+  /// If fewer than N sets available, returns all sets.
+  static List<dynamic> _selectTopNRecent(List<dynamic> sets, int n) {
+    if (sets.length <= n) return sets;
+
+    // Sort by timestamp descending (most recent first)
+    final sortedSets = List<dynamic>.from(sets);
+    sortedSets.sort((a, b) {
+      final timestampA = a['timestamp'] as Timestamp;
+      final timestampB = b['timestamp'] as Timestamp;
+      return timestampB.compareTo(timestampA); // Descending
+    });
+
+    return sortedSets.take(n).toList();
+  }
+
+  /// Selects median of top N sets for stable 1RM estimation
+  ///
+  /// Algorithm:
+  /// 1. Calculate 1RM for each set using Brzycki formula
+  /// 2. Take top N sets by 1RM value
+  /// 3. Return only the median set (middle value)
+  ///
+  /// This minimizes impact of outliers and provides stable estimates.
+  static List<dynamic> _selectMedianOfTopN(List<dynamic> sets, int n) {
+    if (sets.isEmpty) return sets;
+    if (sets.length == 1) return sets;
+
+    // Calculate 1RM for each set
+    final setsWithOneRM = sets.map((set) {
+      final weight = (set['weight'] as num).toDouble();
+      final reps = set['reps'] as int;
+      final oneRM = _calculate1RM(weight, reps);
+      return {'set': set, 'oneRM': oneRM};
+    }).toList();
+
+    // Sort by 1RM descending (highest first)
+    setsWithOneRM.sort((a, b) => (b['oneRM'] as double).compareTo(a['oneRM'] as double));
+
+    // Take top N
+    final topN = setsWithOneRM.take(n).toList();
+
+    // Sort by 1RM to find median
+    topN.sort((a, b) => (a['oneRM'] as double).compareTo(b['oneRM'] as double));
+
+    // Return median set (middle value)
+    final medianIndex = topN.length ~/ 2;
+    return [topN[medianIndex]['set']];
+  }
+
+  /// Calculates 1RM using Brzycki formula
+  ///
+  /// Formula: 1RM = weight × (36 / (37 - reps))
+  /// Valid for reps between 1-10 (most accurate 1-6 reps)
+  static double _calculate1RM(double weight, int reps) {
+    if (reps >= 37) return weight; // Formula breaks down, return weight
+    return weight * (36 / (37 - reps));
   }
 
   // ============================================================================

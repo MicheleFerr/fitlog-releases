@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/onerm_calculation_config.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
 
 void main() {
@@ -990,16 +991,19 @@ void main() {
       final sets = _createMockSets(10); // 10 sets with timestamps
 
       // Act
-      final selected = APREAutoRegulationService._selectTopSets(
+      final selected = APREAutoRegulationService.selectTopSets(
         sets,
         OneRMCalculationConfig.topThreeSets,
       );
 
       // Assert
       expect(selected.length, equals(3));
-      // Verify they are the 3 most recent (sorted descending)
-      expect(selected[0]['timestamp'], greaterThan(selected[1]['timestamp']));
-      expect(selected[1]['timestamp'], greaterThan(selected[2]['timestamp']));
+      // Verify they are sorted by timestamp descending (most recent first)
+      final timestamp0 = (selected[0]['timestamp'] as Timestamp).toDate();
+      final timestamp1 = (selected[1]['timestamp'] as Timestamp).toDate();
+      final timestamp2 = (selected[2]['timestamp'] as Timestamp).toDate();
+      expect(timestamp0.isAfter(timestamp1) || timestamp0.isAtSameMomentAs(timestamp1), isTrue);
+      expect(timestamp1.isAfter(timestamp2) || timestamp1.isAtSameMomentAs(timestamp2), isTrue);
     });
 
     test('T3.2.2: topThreeSets returns all sets when fewer than 3', () {
@@ -1007,7 +1011,7 @@ void main() {
       final sets = _createMockSets(2);
 
       // Act
-      final selected = APREAutoRegulationService._selectTopSets(
+      final selected = APREAutoRegulationService.selectTopSets(
         sets,
         OneRMCalculationConfig.topThreeSets,
       );
@@ -1021,7 +1025,7 @@ void main() {
       final sets = _createMockSets(10);
 
       // Act
-      final selected = APREAutoRegulationService._selectTopSets(
+      final selected = APREAutoRegulationService.selectTopSets(
         sets,
         OneRMCalculationConfig.topFiveSets,
       );
@@ -1035,7 +1039,7 @@ void main() {
       final sets = _createMockSets(3);
 
       // Act
-      final selected = APREAutoRegulationService._selectTopSets(
+      final selected = APREAutoRegulationService.selectTopSets(
         sets,
         OneRMCalculationConfig.topFiveSets,
       );
@@ -1049,7 +1053,7 @@ void main() {
       final sets = _createMockSets(10);
 
       // Act
-      final selected = APREAutoRegulationService._selectTopSets(
+      final selected = APREAutoRegulationService.selectTopSets(
         sets,
         OneRMCalculationConfig.allSetsInWindow,
       );
@@ -1064,7 +1068,7 @@ void main() {
       final sets = _createMockSetsWithVariedWeights();
 
       // Act
-      final selected = APREAutoRegulationService._selectTopSets(
+      final selected = APREAutoRegulationService.selectTopSets(
         sets,
         OneRMCalculationConfig.medianOfTop5,
       );
@@ -1078,7 +1082,7 @@ void main() {
       final sets = _createMockSets(1);
 
       // Act
-      final selected = APREAutoRegulationService._selectTopSets(
+      final selected = APREAutoRegulationService.selectTopSets(
         sets,
         OneRMCalculationConfig.medianOfTop5,
       );
@@ -1090,7 +1094,7 @@ void main() {
     test('T3.2.8: returns empty list when no sets available', () {
       // Arrange & Act & Assert
       for (final config in OneRMCalculationConfig.values) {
-        final selected = APREAutoRegulationService._selectTopSets([], config);
+        final selected = APREAutoRegulationService.selectTopSets([], config);
         expect(selected, isEmpty, reason: 'Config $config should return empty for empty input');
       }
     });
