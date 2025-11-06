@@ -13,8 +13,10 @@ class AdMobConfig {
   static const String _iosAppIdProduction = 'ca-app-pub-5716120224398761~6339854350';
   static const String _androidAppIdProduction = 'ca-app-pub-5716120224398761~4072675862';
 
-  // Test App IDs (non usati direttamente, ma documentati)
+  // Test App IDs (reference only - not used in code, but kept for documentation)
+  // ignore: unused_field
   static const String _iosAppIdTest = 'ca-app-pub-3940256099942544~1458002511';
+  // ignore: unused_field
   static const String _androidAppIdTest = 'ca-app-pub-3940256099942544~3347511713';
 
   // ============================================================================

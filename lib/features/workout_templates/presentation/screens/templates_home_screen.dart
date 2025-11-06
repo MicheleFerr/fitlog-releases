@@ -90,7 +90,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              background: Container(
+              background: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
@@ -112,7 +112,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         height: 200,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: colorScheme.onPrimary.withOpacity(0.1),
+                          color: colorScheme.onPrimary.withValues(alpha: 0.1),
                         ),
                       ),
                     ),
@@ -153,7 +153,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               // Show view toggle button only on "My Templates" tab
               if (_tabController.index == 0)
                 IconButton(
-                  icon: Icon(_isGridView ? AppIcons.viewList : AppIcons.gridView),
+                  icon: Icon(_isGridView ? Icons.view_list : AppIcons.gridView),
                   tooltip: _isGridView ? l10n.listView : l10n.gridView,
                   onPressed: () {
                     setState(() {
@@ -211,7 +211,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }) {
     return Column(
       children: [
-        Icon(icon, color: colorScheme.onPrimary.withOpacity(0.9), size: 20),
+        Icon(icon, color: colorScheme.onPrimary.withValues(alpha: 0.9), size: 20),
         const SizedBox(height: 4),
         Text(
           value,
@@ -224,7 +224,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         Text(
           label,
           style: TextStyle(
-            color: colorScheme.onPrimary.withOpacity(0.8),
+            color: colorScheme.onPrimary.withValues(alpha: 0.8),
             fontSize: 11,
           ),
         ),
@@ -273,7 +273,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     Icon(
                       AppIcons.workout,
                       size: 80,
-                      color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -286,7 +286,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     Text(
                       l10n.createFirstTemplate,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -348,7 +348,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
               child: ListTile(
-                leading: CircleAvatar(
+                leading: const CircleAvatar(
                   child: Icon(
                     AppIcons.workout, // Default icon - TemplateCategory.icon doesn't exist
                     size: 20,
@@ -407,7 +407,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   hintText: l10n.searchTemplates,
                   prefixIcon: const Icon(AppIcons.search),
                   filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -734,7 +734,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 ),
                 style: const TextStyle(
                   fontFamily: 'monospace',

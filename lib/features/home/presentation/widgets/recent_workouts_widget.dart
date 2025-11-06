@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class RecentWorkoutsWidget extends ConsumerWidget {
   
@@ -207,8 +207,8 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
-                      AppIcons.history,
-                      color: Colors.white,
+                      Icons.history,
+                      color: context.colors.surface,
                       size: 24,
                     ),
                   ),
@@ -293,7 +293,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
@@ -330,8 +330,8 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: const Icon(
-                      AppIcons.history,
-                      color: Colors.white,
+                      Icons.history,
+                      color: context.colors.surface,
                       size: 28,
                     ),
                   ),

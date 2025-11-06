@@ -148,3 +148,39 @@ final insightFeedbackStatsProvider =
     };
   }
 });
+
+// ========================================
+// ADMIN PROVIDERS
+// ========================================
+
+/// Provider for all feedback from all users (Admin only)
+/// Returns limited number of recent feedback (default: 50)
+final adminAllFeedbackProvider =
+    FutureProvider.autoDispose.family<List<InsightFeedback>, int?>((ref, limit) async {
+  final repository = ref.watch(insightFeedbackRepositoryProvider);
+
+  try {
+    return await repository.getAllFeedback(limit: limit ?? 50);
+  } catch (e) {
+    return [];
+  }
+});
+
+/// Provider for overall feedback statistics (Admin only)
+final adminFeedbackStatsProvider =
+    FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+  final repository = ref.watch(insightFeedbackRepositoryProvider);
+
+  try {
+    return await repository.getOverallStats();
+  } catch (e) {
+    return {
+      'totalFeedback': 0,
+      'totalHelpful': 0,
+      'totalNotHelpful': 0,
+      'helpfulPercentage': 0.0,
+      'uniqueUsers': 0,
+      'byType': <String, dynamic>{},
+    };
+  }
+});

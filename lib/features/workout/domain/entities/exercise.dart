@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 
 enum AutoAdjustmentType {
   apre,     // APRE protocol
@@ -49,6 +50,7 @@ class Exercise {         // Target RIR if using RIR-based
     this.targetRPEMin,
     this.targetRPEMax,
     this.targetRIR,
+    this.countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) :
     id = id ?? const Uuid().v4(),
     sets = sets ?? [],
@@ -86,6 +88,7 @@ class Exercise {         // Target RIR if using RIR-based
       targetRPEMin: json['targetRPEMin']?.toDouble(),
       targetRPEMax: json['targetRPEMax']?.toDouble(),
       targetRIR: json['targetRIR'],
+      countingMode: ExerciseCountingMode.fromString(json['countingMode']), // ✅ NUOVO
     );
   }
   final String id;
@@ -120,6 +123,9 @@ class Exercise {         // Target RIR if using RIR-based
   final double? targetRPEMax;   // Maximum target RPE (e.g., 9)
   final int? targetRIR;
 
+  // ✅ Exercise Counting Mode
+  final ExerciseCountingMode countingMode; // How this exercise is counted (weighted/reps/time)
+
   Exercise copyWith({
     String? name,
     ExerciseType? type,
@@ -142,6 +148,7 @@ class Exercise {         // Target RIR if using RIR-based
     double? targetRPEMin,
     double? targetRPEMax,
     int? targetRIR,
+    ExerciseCountingMode? countingMode, // ✅ NUOVO
   }) {
     return Exercise(
       id: id,
@@ -167,6 +174,7 @@ class Exercise {         // Target RIR if using RIR-based
       targetRPEMin: targetRPEMin ?? this.targetRPEMin,
       targetRPEMax: targetRPEMax ?? this.targetRPEMax,
       targetRIR: targetRIR ?? this.targetRIR,
+      countingMode: countingMode ?? this.countingMode, // ✅ NUOVO
     );
   }
 
@@ -195,6 +203,7 @@ class Exercise {         // Target RIR if using RIR-based
       'targetRPEMin': targetRPEMin,
       'targetRPEMax': targetRPEMax,
       'targetRIR': targetRIR,
+      'countingMode': countingMode.name, // ✅ NUOVO
     };
   }
 
@@ -384,6 +393,70 @@ class ExerciseSet { // Rest time in seconds after this set
     final effectiveReps = actualReps ?? reps ?? 0;
     final effectiveWeight = weight ?? 0.0;
     return effectiveWeight * effectiveReps;
+  }
+
+  // ========== COUNTING MODE VALIDATION ==========
+
+  /// Valida che il set abbia i campi richiesti in base al counting mode
+  bool isValid(ExerciseCountingMode countingMode) {
+    switch (countingMode) {
+      case ExerciseCountingMode.weighted:
+        // Weighted exercises require weight + reps
+        return weight != null && weight! > 0 && reps != null && reps! > 0;
+
+      case ExerciseCountingMode.reps:
+        // Bodyweight exercises require only reps
+        return reps != null && reps! > 0;
+
+      case ExerciseCountingMode.time:
+        // Time-based exercises require seconds
+        return seconds != null && seconds! > 0;
+    }
+  }
+
+  /// Restituisce i campi mancanti in base al counting mode
+  List<String> getMissingFields(ExerciseCountingMode countingMode) {
+    final missing = <String>[];
+
+    switch (countingMode) {
+      case ExerciseCountingMode.weighted:
+        if (weight == null || weight! <= 0) missing.add('weight');
+        if (reps == null || reps! <= 0) missing.add('reps');
+        break;
+
+      case ExerciseCountingMode.reps:
+        if (reps == null || reps! <= 0) missing.add('reps');
+        break;
+
+      case ExerciseCountingMode.time:
+        if (seconds == null || seconds! <= 0) missing.add('seconds');
+        break;
+    }
+
+    return missing;
+  }
+
+  /// Restituisce una stringa descrittiva del set in base al counting mode
+  String getDisplayText(ExerciseCountingMode countingMode) {
+    switch (countingMode) {
+      case ExerciseCountingMode.weighted:
+        final w = weight?.toStringAsFixed(1) ?? '?';
+        final r = actualReps ?? reps ?? '?';
+        return '$w kg × $r reps';
+
+      case ExerciseCountingMode.reps:
+        final r = actualReps ?? reps ?? '?';
+        return '$r reps';
+
+      case ExerciseCountingMode.time:
+        final s = seconds ?? 0;
+        final minutes = s ~/ 60;
+        final secs = s % 60;
+        if (minutes > 0) {
+          return '${minutes}m ${secs}s';
+        }
+        return '${secs}s';
+    }
   }
 }
 
@@ -603,6 +676,7 @@ class SupersetExercise extends Exercise { // I set del superset
     double? targetRPEMin,
     double? targetRPEMax,
     int? targetRIR,
+    ExerciseCountingMode? countingMode, // ✅ Added to match Exercise.copyWith
     List<Exercise>? exercises,
     List<SupersetSet>? supersetSets,
   }) {

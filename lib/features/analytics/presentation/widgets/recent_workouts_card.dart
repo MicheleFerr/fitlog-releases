@@ -189,7 +189,7 @@ class RecentWorkoutsCard extends StatelessWidget {
           minChildSize: 0.4,
           expand: false,
           builder: (context, scrollController) {
-            return Container(
+            return DecoratedBox(
               decoration: BoxDecoration(
                 color: context.colors.surface,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -206,7 +206,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                           width: 48,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: context.colors.outline.withOpacity(0.4),
+                            color: context.colors.outline.withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -230,7 +230,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                                   Text(
                                     _formatDate(syntheticActivities.first.createdAt),
                                     style: context.textTheme.bodyMedium?.copyWith(
-                                      color: context.colors.onSurface.withOpacity(0.6),
+                                      color: context.colors.onSurface.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ],
@@ -238,8 +238,8 @@ class RecentWorkoutsCard extends StatelessWidget {
                               IconButton(
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
-                                  AppIcons.close,
-                                  color: context.colors.onSurface.withOpacity(0.6),
+                                  Icons.close,
+                                  color: context.colors.onSurface.withValues(alpha: 0.6),
                                 ),
                               ),
                             ],
@@ -254,7 +254,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: context.colors.primaryContainer.withOpacity(0.3),
+                      color: context.colors.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -386,7 +386,7 @@ class RecentWorkoutsCard extends StatelessWidget {
           ),
           children: [
             // Set details table
-            Container(
+            DecoratedBox(
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),

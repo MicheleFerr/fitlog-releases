@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
@@ -9,13 +8,8 @@ import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/suggestion_accuracy.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/questionnaire_analytics_datasource.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart'; // ✅ NUOVO
 
 class EditSetModal extends ConsumerStatefulWidget {
 
@@ -27,6 +21,7 @@ class EditSetModal extends ConsumerStatefulWidget {
     this.previousSet,
     this.suggestedWeight,
     this.suggestedReps,
+    this.countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   });
   final ExerciseSet exerciseSet;
   final Function(ExerciseSet) onSave;
@@ -34,6 +29,7 @@ class EditSetModal extends ConsumerStatefulWidget {
   final ExerciseSet? previousSet;
   final double? suggestedWeight;
   final int? suggestedReps;
+  final ExerciseCountingMode countingMode; // ✅ NUOVO: Determines which fields to show/edit
 
   @override
   ConsumerState<EditSetModal> createState() => _EditSetModalState();
@@ -121,7 +117,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
+                color: Colors.grey.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -166,17 +162,25 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             ),
           ),
           const SizedBox(height: 16),
-          
-          // Weight and Reps row
+
+          // Weight and Reps row - ✅ NUOVO: Conditional rendering based on counting mode
           Row(
             children: [
-              Expanded(
-                child: _buildWeightSelector(context, config),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildRepsSelector(context),
-              ),
+              // Weight selector (only for weighted exercises)
+              if (widget.countingMode.requiresWeight)
+                Expanded(
+                  child: _buildWeightSelector(context, config),
+                ),
+
+              // Spacing (only if both weight and reps are shown)
+              if (widget.countingMode.requiresWeight && widget.countingMode.requiresReps)
+                const SizedBox(width: 16),
+
+              // Reps selector (for weighted + reps exercises)
+              if (widget.countingMode.requiresReps)
+                Expanded(
+                  child: _buildRepsSelector(context),
+                ),
             ],
           ),
 
@@ -198,10 +202,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             _buildActualRepsField(context),
             const SizedBox(height: 16),
           ],
-          
-          // Duration (for timed exercises) - more compact
-          _buildDurationField(context),
-          const SizedBox(height: 16),
+
+          // Duration (for timed exercises) - ✅ NUOVO: Only show for time-based exercises
+          if (widget.countingMode.requiresTime) ...[
+            _buildDurationField(context),
+            const SizedBox(height: 16),
+          ],
           
           // Notes
           TextField(
@@ -345,6 +351,14 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       setState(() {
         _weightController.text = widget.previousSet!.weight?.toString() ?? '';
         _repsController.text = widget.previousSet!.reps?.toString() ?? '';
+
+        // ✅ NUOVO: Copy seconds for time-based exercises
+        if (widget.countingMode.requiresTime) {
+          final previousSeconds = widget.previousSet!.seconds;
+          if (previousSeconds != null) {
+            _secondsController.text = '$previousSeconds,00';
+          }
+        }
       });
     }
   }
@@ -388,15 +402,16 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       
       final notes = _notesController.text.trim();
 
+      // ✅ NUOVO: Conditionally save fields based on counting mode
       final updatedSet = widget.exerciseSet.copyWith(
-        weight: weight,
-        reps: reps,
-        actualReps: actualReps,
+        weight: widget.countingMode.requiresWeight ? weight : null,
+        reps: widget.countingMode.requiresReps ? reps : null,
+        actualReps: _isCompleted && widget.countingMode.requiresReps ? actualReps : null,
         rpe: _selectedRpe,
-        seconds: seconds,
+        seconds: widget.countingMode.requiresTime ? seconds : null,
         notes: notes.isEmpty ? null : notes,
         isCompleted: _isCompleted,
-        setDurationMillis: setDurationMillis,
+        setDurationMillis: widget.countingMode.requiresTime ? setDurationMillis : null,
         setStartedAt: widget.exerciseSet.setStartedAt, // Preserve start time
       );
 
@@ -495,6 +510,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     required double actualWeight,
     required int actualReps,
   }) async {
+    // DISABLED: Suggestion accuracy tracking
+    // Reason: GDPR compliance - depends on medical questionnaire data
+    // Date: 2025-01-21
+    return;
+
+    /* ORIGINAL CODE - DISABLED
     try {
       // Get current user
       final userAsync = ref.read(firebaseUserProvider);
@@ -542,6 +563,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       }
       // Don't show error to user - this is background tracking
     }
+    */ // END DISABLED CODE
   }
 
   Color _getRpeChipColor(int rpe) {
@@ -563,12 +585,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: hasWeight 
-              ? context.colors.primaryContainer.withOpacity(0.3)
+              ? context.colors.primaryContainer.withValues(alpha: 0.3)
               : context.colors.surfaceContainerHighest,
           border: Border.all(
             color: hasWeight 
-                ? context.colors.primary.withOpacity(0.3)
-                : context.colors.outline.withOpacity(0.2),
+                ? context.colors.primary.withValues(alpha: 0.3)
+                : context.colors.outline.withValues(alpha: 0.2),
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -635,12 +657,12 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: hasReps 
-              ? context.colors.secondaryContainer.withOpacity(0.3)
+              ? context.colors.secondaryContainer.withValues(alpha: 0.3)
               : context.colors.surfaceContainerHighest,
           border: Border.all(
             color: hasReps 
-                ? context.colors.secondary.withOpacity(0.3)
-                : context.colors.outline.withOpacity(0.2),
+                ? context.colors.secondary.withValues(alpha: 0.3)
+                : context.colors.outline.withValues(alpha: 0.2),
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -760,7 +782,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: Colors.orange.withValues(alpha: 0.1),
         border: Border.all(color: Colors.orange),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -828,8 +850,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isIncrease
-            ? Colors.green.withOpacity(0.1)
-            : Colors.blue.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.blue.withValues(alpha: 0.1),
         border: Border.all(
           color: isIncrease ? Colors.green : Colors.blue,
         ),
@@ -903,6 +925,7 @@ extension EditSetModalExtension on BuildContext {
     ExerciseSet? previousSet,
     double? suggestedWeight,
     int? suggestedReps,
+    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) async {
     // Validate inputs
     if (exerciseSet == null) {
@@ -933,6 +956,7 @@ extension EditSetModalExtension on BuildContext {
           previousSet: previousSet,
           suggestedWeight: suggestedWeight,
           suggestedReps: suggestedReps,
+          countingMode: countingMode, // ✅ NUOVO
         ),
       );
     } catch (e, stackTrace) {

@@ -228,10 +228,10 @@ class WorkoutComparisonWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: statusColor.withOpacity(0.3),
+          color: statusColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -260,21 +260,21 @@ class WorkoutComparisonWidget extends ConsumerWidget {
 
   Color _getComparisonBackgroundColor(WorkoutComparison comparison, ColorScheme colorScheme) {
     if (comparison.isImprovement) {
-      return colorScheme.secondary.withOpacity(0.05);
+      return colorScheme.secondary.withValues(alpha: 0.05);
     } else if (comparison.isRegression) {
-      return colorScheme.error.withOpacity(0.05);
+      return colorScheme.error.withValues(alpha: 0.05);
     } else {
-      return colorScheme.surfaceContainerHighest.withOpacity(0.3);
+      return colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
     }
   }
 
   Color _getComparisonBorderColor(WorkoutComparison comparison, ColorScheme colorScheme) {
     if (comparison.isImprovement) {
-      return colorScheme.secondary.withOpacity(0.3);
+      return colorScheme.secondary.withValues(alpha: 0.3);
     } else if (comparison.isRegression) {
-      return colorScheme.error.withOpacity(0.3);
+      return colorScheme.error.withValues(alpha: 0.3);
     } else {
-      return colorScheme.outline.withOpacity(0.3);
+      return colorScheme.outline.withValues(alpha: 0.3);
     }
   }
 
@@ -351,7 +351,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              AppIcons.analyticsOutlined,
+              AppIcons.analytics,
               color: colorScheme.onSurfaceVariant,
               size: 48,
             ),
@@ -566,7 +566,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
                       ? AppIcons.arrowUpward
                       : isNegative
                           ? AppIcons.arrowDownward
-                          : AppIcons.remove,
+                          : Icons.remove,
                   color: color,
                   size: 16,
                 ),
@@ -593,7 +593,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -625,11 +625,11 @@ class DetailedWorkoutComparison extends ConsumerWidget {
   // Helper methods (same as WorkoutComparisonWidget)
   Color _getComparisonBackgroundColor(WorkoutComparison comparison, ColorScheme colorScheme) {
     if (comparison.isImprovement) {
-      return colorScheme.secondary.withOpacity(0.05);
+      return colorScheme.secondary.withValues(alpha: 0.05);
     } else if (comparison.isRegression) {
-      return colorScheme.error.withOpacity(0.05);
+      return colorScheme.error.withValues(alpha: 0.05);
     } else {
-      return colorScheme.surfaceContainerHighest.withOpacity(0.3);
+      return colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
     }
   }
 

@@ -16,7 +16,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/zen_mode_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/zen_mode_settings_dialog.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_actions/template_save_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
@@ -192,7 +192,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
         subtitle: Text(AppLocalizations.of(context).rpeTimerAndMore),
         onTap: () {
           Navigator.pop(context);
-          WorkoutCustomizationModalV2.show(context);
+          WorkoutCustomizationModalV3.show(context);
         },
       ),
       ListTile(

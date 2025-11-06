@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/data/repositories/rate_limited_firestore_mixin.dart';
 
+/// 🔒 RATE LIMITING: All Firestore operations are rate-limited to prevent quota exhaustion
 /// Repository per gestire le attività degli esercizi in Firestore
 /// Salva nella collezione /exerciseActivities come nella vecchia app
-class ExerciseActivityRepository {
+class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   static const String _collectionName = 'exerciseActivities';
@@ -79,9 +81,11 @@ class ExerciseActivityRepository {
       );
 
       // Salva in Firestore
-      final docRef = await _firestore
-          .collection(_collectionName)
-          .add(exerciseActivity.toFirestore());
+      final docRef = await rateLimitedWrite(() async {
+        return await _firestore
+            .collection(_collectionName)
+            .add(exerciseActivity.toFirestore());
+      });
 
       return docRef.id;
     } catch (e) {
@@ -99,37 +103,39 @@ class ExerciseActivityRepository {
     // Normalizza email per consistency
     final normalizedEmail = userEmail.toLowerCase().trim();
     
-    
+
+
     try {
-      Query query = _firestore
-          .collection(_collectionName)
-          .where('email', isEqualTo: normalizedEmail)
-          .orderBy('createdAt', descending: true);
+      return await rateLimitedQuery(() async {
+        Query query = _firestore
+            .collection(_collectionName)
+            .where('email', isEqualTo: normalizedEmail)
+            .orderBy('createdAt', descending: true);
 
+        // Applica filtri opzionali
+        if (startDate != null) {
+          query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        }
 
-      // Applica filtri opzionali
-      if (startDate != null) {
-        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
-      }
-      
-      if (endDate != null) {
-        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
-      }
-      
-      if (limit != null) {
-        query = query.limit(limit);
-      }
+        if (endDate != null) {
+          query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        }
 
-      final querySnapshot = await query.get();
-      
-      if (querySnapshot.docs.isEmpty) {
-      }
-      
-      final activities = querySnapshot.docs
-          .map((doc) => ExerciseActivity.fromFirestore(doc))
-          .toList();
-      
-      return activities;
+        if (limit != null) {
+          query = query.limit(limit);
+        }
+
+        final querySnapshot = await query.get();
+
+        if (querySnapshot.docs.isEmpty) {
+        }
+
+        final activities = querySnapshot.docs
+            .map((doc) => ExerciseActivity.fromFirestore(doc))
+            .toList();
+
+        return activities;
+      });
       
     } catch (e) {
       return [];
@@ -145,22 +151,24 @@ class ExerciseActivityRepository {
     try {
       // Normalizza email per consistency
       final normalizedEmail = userEmail.toLowerCase().trim();
-      
-      Query query = _firestore
-          .collection(_collectionName)
-          .where('email', isEqualTo: normalizedEmail)
-          .where('exerciseName', isEqualTo: exerciseName)
-          .orderBy('createdAt', descending: true);
-      
-      if (limit != null) {
-        query = query.limit(limit);
-      }
 
-      final querySnapshot = await query.get();
-      
-      return querySnapshot.docs
-          .map((doc) => ExerciseActivity.fromFirestore(doc))
-          .toList();
+      return await rateLimitedQuery(() async {
+        Query query = _firestore
+            .collection(_collectionName)
+            .where('email', isEqualTo: normalizedEmail)
+            .where('exerciseName', isEqualTo: exerciseName)
+            .orderBy('createdAt', descending: true);
+
+        if (limit != null) {
+          query = query.limit(limit);
+        }
+
+        final querySnapshot = await query.get();
+
+        return querySnapshot.docs
+            .map((doc) => ExerciseActivity.fromFirestore(doc))
+            .toList();
+      });
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Errore nel recuperare attività per esercizio: $e');
@@ -227,10 +235,12 @@ class ExerciseActivityRepository {
   /// Elimina un'attività
   Future<bool> deleteActivity(String activityId) async {
     try {
-      await _firestore
-          .collection(_collectionName)
-          .doc(activityId)
-          .delete();
+      await rateLimitedDelete(() async {
+        await _firestore
+            .collection(_collectionName)
+            .doc(activityId)
+            .delete();
+      });
       return true;
     } catch (e) {
       if (kDebugMode) {

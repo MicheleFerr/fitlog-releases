@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_hub.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 // import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_pulse_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/enhanced_workout_banner.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
@@ -16,11 +17,12 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/secondary_
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/dynamic_greeting.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_update_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/stale_profile_banner.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/mixins/tour_target_keys_mixin.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/onboarding_tour_overlay_enhanced.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_tour_manager.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
 /// while ensuring full compliance with localization and theming standards
@@ -31,39 +33,147 @@ class HomeScreenOptimized extends ConsumerStatefulWidget {
   ConsumerState<HomeScreenOptimized> createState() => _HomeScreenOptimizedState();
 }
 
-class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
+class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
+    with TourTargetKeysMixin {
+  /// Enhanced tour manager for advanced positioning
+  late final OnboardingTourManager _tourManager;
+
   @override
   void initState() {
     super.initState();
 
+    // Initialize tour manager with target keys and completion callback
+    _tourManager = OnboardingTourManager(
+      tourTargetKeys,
+      onTourCompleted: () {
+        // Save tour completion to persistent storage
+        ref.read(onboardingStateProvider.notifier).completeOnboarding();
+        // Also mark overlay as seen for backward compatibility
+        ref.read(onboardingStateProvider.notifier).markOverlaySeen('homeTour');
+        debugPrint('✅ [TOUR] Tour completion saved to storage');
+      },
+    );
+
     // Start exercise update check with 30-second delay
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(exerciseUpdateProvider.notifier).checkForUpdatesOnAppStart(context);
-
-      // Check if user should see onboarding with additional safety checks
-      final shouldShow = ref.read(shouldShowOnboardingProvider);
-      final onboardingState = ref.read(onboardingStateProvider);
 
       // Debug state for troubleshooting
       if (kDebugMode) {
         ref.read(onboardingStateProvider.notifier).debugOnboardingState();
       }
 
-      // Only navigate if really necessary - never seen AND not completed
-      if (shouldShow && !onboardingState.hasSeenGlobalOnboarding && !onboardingState.isCompleted) {
-        // Small delay to ensure UI is ready
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
-            debugPrint('🚀 Navigating to onboarding - first time user');
-            context.goNamed('onboarding');
+      // 🎯 AUTO-START TOUR: If user is beginner and hasn't seen global onboarding
+      final onboardingState = ref.read(onboardingStateProvider);
+      if (onboardingState.isBeginner && !onboardingState.hasSeenGlobalOnboarding) {
+        debugPrint('🎯 [TOUR] Auto-starting ENHANCED tour for beginner user');
+        // Delay to ensure UI is fully rendered
+        Future.delayed(const Duration(milliseconds: 800), () async {
+          if (mounted && context.mounted) {
+            // Validate tour setup before starting
+            final missingSteps = _tourManager.validateTourSetup();
+            if (missingSteps.isEmpty) {
+              await _tourManager.startTour(context);
+            } else {
+              debugPrint('⚠️ [TOUR] Cannot start - missing target keys: $missingSteps');
+            }
           }
         });
-      } else if (shouldShow) {
-        // This shouldn't happen with our new logic, but log it for debugging
-        debugPrint('⚠️ shouldShow is true but onboarding conditions not met - investigating');
-        debugPrint('hasSeenGlobal: ${onboardingState.hasSeenGlobalOnboarding}, isCompleted: ${onboardingState.isCompleted}');
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // Dispose tour manager
+    _tourManager.dispose();
+    super.dispose();
+  }
+
+  /// Shows a dialog informing the user that the Community feature is coming soon
+  void _showCommunityComingSoonDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.people,
+              color: Theme.of(context).colorScheme.primary,
+              size: 28,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l10n.communityComingSoonTitle,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.communityComingSoonDescription,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.construction,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '🚀 ${l10n.comingSoon}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              l10n.close,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -71,9 +181,15 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
     final currentWorkout = ref.watch(currentWorkoutProvider);
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    // Note: FAB step removed from tour (was obscured by bottom sheet)
+
+    return Stack(
+      children: [
+          // Main scaffold content
+          Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
+        key: const PageStorageKey('home_screen_scroll'),
         slivers: [
           // Premium App Bar with proper theming
           SliverAppBar(
@@ -81,7 +197,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
             floating: true,
             pinned: true,
             backgroundColor: Colors.transparent,
-            flexibleSpace: Container(
+            flexibleSpace: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -101,7 +217,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                 titlePadding: EdgeInsets.only(left: 20, bottom: 16),
               ),
             ),
-            actions: const [NotificationHub(), SizedBox(width: 16)],
+            actions: [NotificationHub(key: notificationHubKey), const SizedBox(width: 16)],
           ),
 
           // Main content
@@ -115,21 +231,24 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                   const SizedBox(height: 24),
                 ],
 
-                // Stale profile banner (if profile is 30+ days old)
-                const StaleProfileBanner(),
+                // DISABLED: Stale profile banner
+                // Reason: GDPR compliance - medical questionnaire data
+                // Date: 2025-01-21
+                // const StaleProfileBanner(),
 
                 // Removed gamification features for MVP
 
                 // AI Coach Insights Card
-                const AICoachCard(),
+                AICoachCard(key: aiCoachCardKey),
                 const SizedBox(height: 24),
 
                 // Primary CTA - Smart workout starter
-                const SmartWorkoutCTA(),
+                SmartWorkoutCTA(key: smartWorkoutCardKey),
                 const SizedBox(height: 24),
 
                 // Routine Center Card (Flexible Multi-Period Routines)
                 Material(
+                  key: routineCenterCardKey,
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
@@ -202,13 +321,14 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                 ),
                 const SizedBox(height: 24),
 
-                // Community card - navigate to community hub
+                // Community card - Coming Soon dialog
                 Material(
+                  key: communityCardKey,
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
                       HapticFeedback.lightImpact();
-                      context.push('/community');
+                      _showCommunityComingSoonDialog(context);
                     },
                     borderRadius: BorderRadius.circular(16),
                     child: Ink(
@@ -225,17 +345,30 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              l10n.community,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.community,
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  l10n.comingSoon,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Icon(
-                            AppIcons.forwardIos,
-                            size: 16,
+                            Icons.info_outline,
+                            size: 20,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ],
@@ -246,7 +379,10 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                 const SizedBox(height: 24),
 
                 // Secondary Actions Grid
-                const SecondaryActions(),
+                SecondaryActions(
+                  analyticsKey: analyticsCardKey,
+                  historyKey: historyCardKey,
+                ),
                 const SizedBox(height: 24),
 
                 // Admin panel (only visible for admin users)
@@ -262,7 +398,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                         color: Theme.of(context).colorScheme.errorContainer,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+                          color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Column(
@@ -334,7 +470,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
                                           Text(
                                             'Segnalazioni e bug utenti',
                                             style: TextStyle(
-                                              color: Colors.white.withOpacity(0.8),
+                                              color: Colors.white.withValues(alpha: 0.8),
                                               fontSize: 12,
                                             ),
                                           ),
@@ -383,14 +519,66 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized> {
       ),
 
       // Floating Action Button for emergency quick start
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: PremiumActionButton(
-          onPressed: () => context.goNamed('workout'),
-          icon: AppIcons.add,
-          label: l10n.quickStart,
-        ),
-      ),
-    );
+      floatingActionButton: kDebugMode
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Debug: Reset Onboarding Button
+                FloatingActionButton.small(
+                  heroTag: 'resetOnboarding',
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  onPressed: () async {
+                    await ref.read(onboardingStateProvider.notifier).resetOnboarding();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('🔄 Onboarding reset! Riavvia l\'app per vedere Quick Start'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Icon(Icons.refresh, size: 20),
+                ),
+                const SizedBox(height: 8),
+                // Regular Quick Start
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: PremiumActionButton(
+                    key: quickStartFabKey,
+                    onPressed: () {
+                      WorkoutAnalytics.trackEvent('fab_tapped', properties: {
+                        'timestamp': DateTime.now().toIso8601String(),
+                      });
+                      context.goNamed('workout');
+                    },
+                    icon: Icons.add,
+                    label: l10n.sessioneLibera,
+                  ),
+                ),
+              ],
+            )
+          : Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: PremiumActionButton(
+                key: quickStartFabKey,
+                onPressed: () {
+                  WorkoutAnalytics.trackEvent('fab_tapped', properties: {
+                    'timestamp': DateTime.now().toIso8601String(),
+                  });
+                  context.goNamed('workout');
+                },
+                icon: Icons.add,
+                label: l10n.sessioneLibera,
+              ),
+            ),
+          ), // End of Scaffold
+
+          // 🎯 ENHANCED ONBOARDING TOUR OVERLAY
+          // Shows dynamic spotlight with auto-centering + bottom sheet
+          // Uses OnboardingTourManager for advanced positioning
+          OnboardingTourOverlayEnhanced(manager: _tourManager),
+        ],
+      ); // End of Stack
   }
 }

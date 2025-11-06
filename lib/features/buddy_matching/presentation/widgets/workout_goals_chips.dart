@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WorkoutGoalsChips extends StatelessWidget {
@@ -51,7 +52,7 @@ class WorkoutGoalsChips extends StatelessWidget {
   }
 
   Widget _buildGoalChip(BuildContext context, ThemeData theme, WorkoutGoal goal) {
-    final color = _getGoalColor(goal);
+    final color = _getGoalColor(goal, theme.colorScheme);
     final icon = _getGoalIcon(goal);
 
     return Container(
@@ -112,20 +113,20 @@ class WorkoutGoalsChips extends StatelessWidget {
     );
   }
 
-  Color _getGoalColor(WorkoutGoal goal) {
+  Color _getGoalColor(WorkoutGoal goal, ColorScheme colorScheme) {
     switch (goal) {
       case WorkoutGoal.weightLoss:
-        return Colors.red;
+        return colorScheme.error;
       case WorkoutGoal.muscleGain:
-        return Colors.blue;
+        return colorScheme.primary;
       case WorkoutGoal.strength:
-        return Colors.deepOrange;
+        return colorScheme.warning;
       case WorkoutGoal.endurance:
-        return Colors.green;
+        return colorScheme.success;
       case WorkoutGoal.flexibility:
-        return Colors.purple;
+        return colorScheme.tertiary;
       case WorkoutGoal.general:
-        return Colors.grey;
+        return colorScheme.surfaceContainerHighest;
     }
   }
 
@@ -136,7 +137,7 @@ class WorkoutGoalsChips extends StatelessWidget {
       case WorkoutGoal.muscleGain:
         return AppIcons.workout;
       case WorkoutGoal.strength:
-        return AppIcons.gymnastics;
+        return AppIcons.sportsGymnastics;
       case WorkoutGoal.endurance:
         return AppIcons.cardio;
       case WorkoutGoal.flexibility:

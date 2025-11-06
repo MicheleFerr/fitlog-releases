@@ -19,7 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseStartButton extends ConsumerStatefulWidget {
   
@@ -151,10 +152,10 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: colorScheme.outline.withOpacity(0.2),
+              color: colorScheme.outline.withValues(alpha: 0.2),
               style: BorderStyle.solid,
             ),
           ),
@@ -164,7 +165,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -187,7 +188,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
               Text(
                 l10n.tapToStart,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.6),
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -206,10 +207,10 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withOpacity(0.2),
+        color: colorScheme.primaryContainer.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: colorScheme.primary.withOpacity(0.3),
+          color: colorScheme.primary.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -222,7 +223,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
             decoration: BoxDecoration(
               color: _countdownValue > 0 
                   ? colorScheme.primary 
-                  : Colors.green,
+                  : context.colors.success,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -232,7 +233,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
                   _countdownValue > 0 ? '$_countdownValue' : '✓',
                   key: ValueKey(_countdownValue),
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontWeight: FontWeight.bold,
                     fontSize: _countdownValue > 0 ? 16 : 14,
                   ),

@@ -13,6 +13,9 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseSyncStatusWidget extends ConsumerWidget {
@@ -49,7 +52,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
 
             // Stato sincronizzazione corrente
             syncStatus.when(
-              data: (status) => _buildSyncStatusIndicator(context, status),
+              data: (status) => _buildSyncStatusIndicator(context, status as SyncStatus),
               loading: () => _buildLoadingIndicator(context),
               error: (error, _) => _buildErrorIndicator(context, error),
             ),
@@ -96,8 +99,8 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         break;
       case SyncStatus.success:
         text = AppLocalizations.of(context).syncSuccess;
-        color = Colors.green;
-        icon = AppIcons.complete;
+        color = context.colors.success;
+        icon = Icons.check_circle;
         break;
       case SyncStatus.error:
         text = AppLocalizations.of(context).syncError;
@@ -171,7 +174,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -225,22 +228,22 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: context.colors.secondary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     AppIcons.newReleases,
                     size: 16,
-                    color: Colors.orange,
+                    color: context.colors.secondary,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     AppLocalizations.of(context).updateAvailable,
-                    style: const TextStyle(
-                      color: Colors.orange,
+                    style: TextStyle(
+                      color: context.colors.secondary,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
                     ),
@@ -279,13 +282,13 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.1),
+        color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
           Icon(
-            AppIcons.warningOutlined,
+            AppIcons.warning,
             size: 16,
             color: Theme.of(context).colorScheme.error,
           ),
@@ -564,14 +567,31 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context).selectSyncFrequency),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _frequencyOption(const Duration(hours: 1), AppLocalizations.of(context).everyHour),
-            _frequencyOption(const Duration(hours: 6), AppLocalizations.of(context).every6Hours),
-            _frequencyOption(const Duration(hours: 12), AppLocalizations.of(context).every12Hours),
-            _frequencyOption(const Duration(hours: 24), AppLocalizations.of(context).daily),
-          ],
+        content: RadioGroup<Duration>(
+          groupValue: _syncFrequency,
+          onChanged: (value) async {
+            if (value != null) {
+              final syncActions = ref.read(exerciseSyncActionsProvider);
+              await syncActions.setSyncFrequency(value);
+
+              if (!mounted) return;
+
+              setState(() {
+                _syncFrequency = value;
+              });
+
+              Navigator.of(context).pop();
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _frequencyOption(const Duration(hours: 1), AppLocalizations.of(context).everyHour),
+              _frequencyOption(const Duration(hours: 6), AppLocalizations.of(context).every6Hours),
+              _frequencyOption(const Duration(hours: 12), AppLocalizations.of(context).every12Hours),
+              _frequencyOption(const Duration(hours: 24), AppLocalizations.of(context).daily),
+            ],
+          ),
         ),
       ),
     );
@@ -581,19 +601,6 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
     return RadioListTile<Duration>(
       title: Text(title),
       value: frequency,
-      groupValue: _syncFrequency,
-      onChanged: (value) async {
-        if (value != null) {
-          final syncActions = ref.read(exerciseSyncActionsProvider);
-          await syncActions.setSyncFrequency(value);
-
-          setState(() {
-            _syncFrequency = value;
-          });
-
-          Navigator.of(context).pop();
-        }
-      },
     );
   }
 

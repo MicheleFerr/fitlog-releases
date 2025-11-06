@@ -18,6 +18,10 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_pr
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/screens/fitness_questionnaire_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/providers/apre_calculation_config_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/onerm_calculation_config.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -51,17 +55,21 @@ class SettingsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Fitness Benchmark Hero Card
-            _buildFitnessBenchmarkCard(context, ref),
-            const SizedBox(height: 24),
+            // DISABLED: Fitness Benchmark Hero Card
+            // Reason: GDPR compliance - medical questionnaire data
+            // Date: 2025-01-21
+            // _buildFitnessBenchmarkCard(context, ref),
+            // const SizedBox(height: 24),
 
             // User Info Section
             _buildUserInfoSection(context, ref, currentUser),
             const SizedBox(height: 24),
 
-            // Fitness Profile Section
-            _buildFitnessProfileSection(context, ref),
-            const SizedBox(height: 24),
+            // DISABLED: Fitness Profile Section
+            // Reason: GDPR compliance - medical questionnaire data
+            // Date: 2025-01-21
+            // _buildFitnessProfileSection(context, ref),
+            // const SizedBox(height: 24),
 
             // Appearance Settings
             _buildAppearanceSection(context, ref, config),
@@ -101,7 +109,7 @@ class SettingsScreen extends ConsumerWidget {
     final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
     final l10n = context.l10n;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -139,7 +147,7 @@ class SettingsScreen extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    AppIcons.analyticsOutlined,
+                    AppIcons.analytics,
                     size: 32,
                     color: context.colors.primary,
                   ),
@@ -252,6 +260,25 @@ class SettingsScreen extends ConsumerWidget {
                             label: Text(context.l10n.adminDashboard),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: context.colors.primary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        // Database Manager Button (Direct Access)
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const DatabaseManagerScreen(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.storage),
+                            label: Text(context.l10n.databaseManager),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: context.colors.primary,
                             ),
                           ),
                         ),
@@ -731,22 +758,41 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
+            // Clear Exercise Cache
+            _buildSettingTile(
+              context,
+              title: context.l10n.clearCache,
+              subtitle: context.l10n.clearExerciseCacheDesc,
+              leading: const Icon(Icons.delete_sweep),
+              onTap: () => _clearExerciseCache(context, ref),
+            ),
+
+            const Divider(),
+
+            // APRE Calculation Method
+            _buildAPRECalculationMethodSetting(context, ref),
+
+            const Divider(),
+
             // Fitness Profile Debug (Admin Only)
             Consumer(
               builder: (context, ref, child) {
                 final isAdmin = ref.watch(isAdminCachedProvider);
                 if (!isAdmin) return const SizedBox.shrink();
 
-                return Column(
+                return const Column(
                   children: [
-                    _buildSettingTile(
-                      context,
-                      title: 'Fitness Profile Debug',
-                      subtitle: 'View fitness profile and weight suggestions status',
-                      leading: const Icon(AppIcons.bugReport),
-                      onTap: () => context.pushNamed('fitness-profile-debug'),
-                    ),
-                    const Divider(),
+                    // DISABLED: Fitness Profile Debug
+                    // Reason: GDPR compliance - medical questionnaire data
+                    // Date: 2025-01-21
+                    // _buildSettingTile(
+                    //   context,
+                    //   title: 'Fitness Profile Debug',
+                    //   subtitle: 'View fitness profile and weight suggestions status',
+                    //   leading: const Icon(Icons.bug_report),
+                    //   onTap: () => context.pushNamed('fitness-profile-debug'),
+                    // ),
+                    // const Divider(),
                   ],
                 );
               },
@@ -1007,46 +1053,34 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.chooseTheme),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.themeLight),
-              subtitle: Text(l10n.themeLightDesc),
-              value: ThemeMode.light,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setThemeMode(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.themeDark),
-              subtitle: Text(l10n.themeDarkDesc),
-              value: ThemeMode.dark,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setThemeMode(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: Text(l10n.themeSystem),
-              subtitle: Text(l10n.themeSystemDesc),
-              value: ThemeMode.system,
-              groupValue: currentMode,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setThemeMode(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+        content: RadioGroup<ThemeMode>(
+          groupValue: currentMode,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(appConfigProvider.notifier).setThemeMode(value);
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<ThemeMode>(
+                title: Text(l10n.themeLight),
+                subtitle: Text(l10n.themeLightDesc),
+                value: ThemeMode.light,
+              ),
+              RadioListTile<ThemeMode>(
+                title: Text(l10n.themeDark),
+                subtitle: Text(l10n.themeDarkDesc),
+                value: ThemeMode.dark,
+              ),
+              RadioListTile<ThemeMode>(
+                title: Text(l10n.themeSystem),
+                subtitle: Text(l10n.themeSystemDesc),
+                value: ThemeMode.system,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1057,34 +1091,29 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Choose Language'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<String>(
-              title: Text(context.l10n.languageEnglish),
-              subtitle: const Text('English (US)'),
-              value: 'en',
-              groupValue: currentLang,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setLanguage(value, 'US');
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('Italiano'),
-              subtitle: const Text('Italian (IT)'),
-              value: 'it',
-              groupValue: currentLang,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setLanguage(value, 'IT');
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+        content: RadioGroup<String>(
+          groupValue: currentLang,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(appConfigProvider.notifier).setLanguage(value, value == 'en' ? 'US' : 'IT');
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: Text(context.l10n.languageEnglish),
+                subtitle: const Text('English (US)'),
+                value: 'en',
+              ),
+              const RadioListTile<String>(
+                title: Text('Italiano'),
+                subtitle: Text('Italian (IT)'),
+                value: 'it',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1095,34 +1124,29 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Weight Units'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<String>(
-              title: const Text('Kilograms (kg)'),
-              subtitle: const Text('Metric system'),
-              value: 'kg',
-              groupValue: currentUnit,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setMeasurementUnit(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('Pounds (lbs)'),
-              subtitle: const Text('Imperial system'),
-              value: 'lbs',
-              groupValue: currentUnit,
-              onChanged: (value) {
-                if (value != null) {
-                  ref.read(appConfigProvider.notifier).setMeasurementUnit(value);
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
+        content: RadioGroup<String>(
+          groupValue: currentUnit,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(appConfigProvider.notifier).setMeasurementUnit(value);
+              Navigator.pop(context);
+            }
+          },
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: Text('Kilograms (kg)'),
+                subtitle: Text('Metric system'),
+                value: 'kg',
+              ),
+              RadioListTile<String>(
+                title: Text('Pounds (lbs)'),
+                subtitle: Text('Imperial system'),
+                value: 'lbs',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1225,6 +1249,46 @@ class SettingsScreen extends ConsumerWidget {
               SnackBarService.showSuccess(context, 'Timer position reset to default');
             },
             child: const Text('Reset Position'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _clearExerciseCache(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.clearCache),
+        content: Text(l10n.clearCacheConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              try {
+                // Clear exercise cache from repository
+                final repository = ref.read(hybridExerciseRepositoryProvider);
+                await repository.clearCache();
+
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  SnackBarService.showSuccess(context, l10n.exerciseCacheCleared);
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  SnackBarService.showError(context, 'Failed to clear cache: $e');
+                }
+              }
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
+            ),
+            child: Text(l10n.clear),
           ),
         ],
       ),
@@ -1383,6 +1447,78 @@ class SettingsScreen extends ConsumerWidget {
       default:
         return 'English';
     }
+  }
+
+  /// APRE Calculation Method Setting
+  Widget _buildAPRECalculationMethodSetting(BuildContext context, WidgetRef ref) {
+    final configAsync = ref.watch(apreCalculationConfigProvider);
+
+    return configAsync.when(
+      data: (currentConfig) => ExpansionTile(
+        leading: const Icon(AppIcons.calculate),
+        title: Text(context.l10n.apreCalculationMethodTitle),
+        subtitle: Text(currentConfig.displayName),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.apreCalculationMethodDescription,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ...OneRMCalculationConfig.values.map((config) {
+                  return RadioListTile<OneRMCalculationConfig>(
+                    title: Text(config.displayName),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(config.description),
+                        const SizedBox(height: 4),
+                        Text(
+                          config.useCase,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    value: config,
+                    groupValue: currentConfig,
+                    onChanged: (value) {
+                      if (value != null) {
+                        ref
+                            .read(apreCalculationConfigProvider.notifier)
+                            .setConfig(value);
+                        SnackBarService.showSuccess(
+                          context,
+                          'APRE calculation method updated to ${value.displayName}',
+                        );
+                      }
+                    },
+                  );
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
+      loading: () => const ListTile(
+        leading: Icon(AppIcons.calculate),
+        title: Text('APRE Calculation Method'),
+        subtitle: Text('Loading...'),
+      ),
+      error: (error, stack) => ListTile(
+        leading: Icon(AppIcons.error, color: context.colors.error),
+        title: const Text('APRE Calculation Method'),
+        subtitle: Text('Error: $error'),
+      ),
+    );
   }
 
   Color _getPrimaryColor(String colorName) {

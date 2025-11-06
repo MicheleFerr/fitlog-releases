@@ -123,7 +123,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -134,7 +134,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: colorScheme.primary.withOpacity(0.2),
+                                color: colorScheme.primary.withValues(alpha: 0.2),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -160,7 +160,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                                   Text(
                                     'Swipe the button left or right to change its position',
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: colorScheme.onPrimaryContainer.withOpacity(0.8),
+                                      color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
                                     ),
                                   ),
                                 ],
@@ -171,7 +171,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                               icon: Icon(
                                 AppIcons.close,
                                 size: 18,
-                                color: colorScheme.onPrimaryContainer.withOpacity(0.6),
+                                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
                               ),
                             ),
                           ],

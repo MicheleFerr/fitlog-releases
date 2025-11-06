@@ -43,20 +43,36 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
-            _buildFormatOption(
-              context,
-              ExportFormat.pdf,
-              'PDF Report',
-              'Complete analytics report with charts and insights',
-              AppIcons.pictureAsPdf,
-            ),
-            const SizedBox(height: 8),
-            _buildFormatOption(
-              context,
-              ExportFormat.csv,
-              'CSV Spreadsheet',
-              'Raw data for analysis in Excel or Google Sheets',
-              AppIcons.tableChart,
+            RadioGroup<ExportFormat>(
+              groupValue: _selectedFormat,
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedFormat = value;
+                    _errorMessage = null;
+                  });
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildFormatOption(
+                    context,
+                    ExportFormat.pdf,
+                    'PDF Report',
+                    'Complete analytics report with charts and insights',
+                    Icons.picture_as_pdf,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildFormatOption(
+                    context,
+                    ExportFormat.csv,
+                    'CSV Spreadsheet',
+                    'Raw data for analysis in Excel or Google Sheets',
+                    AppIcons.tableChart,
+                  ),
+                ],
+              ),
             ),
             if (_selectedFormat == ExportFormat.csv) ...[
               const SizedBox(height: 16),
@@ -188,13 +204,6 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
             ),
             Radio<ExportFormat>(
               value: format,
-              groupValue: _selectedFormat,
-              onChanged: (value) {
-                setState(() {
-                  _selectedFormat = value!;
-                  _errorMessage = null;
-                });
-              },
             ),
           ],
         ),

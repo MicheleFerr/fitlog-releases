@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseHistorySearchModal extends StatefulWidget {
@@ -93,7 +95,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
       initialChildSize: 0.9,
       minChildSize: 0.5,
       maxChildSize: 0.95,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -425,22 +427,22 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
           _buildStatItem(
             'Total Sets',
             totalSets.toString(),
-            AppIcons.formatListNumbered,
-            Colors.orange,
+            Icons.format_list_numbered,
+            context.colors.secondary,
             theme,
           ),
           _buildStatItem(
             'Total Reps',
             totalReps.toString(),
-            AppIcons.repeat,
-            Colors.green,
+            Icons.repeat,
+            context.colors.success,
             theme,
           ),
           _buildStatItem(
             'Total Volume',
             '${(totalVolume / 1000).toStringAsFixed(1)}k',
-            AppIcons.barChart,
-            Colors.blue,
+            Icons.bar_chart,
+            context.colors.primary,
             theme,
           ),
         ],
@@ -729,20 +731,20 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
   
   IconData _getExerciseIcon(String exerciseName) {
     final name = exerciseName.toLowerCase();
-    if (name.contains('squat') || name.contains('leg')) return AppIcons.airlineSeatRecline;
+    if (name.contains('squat') || name.contains('leg')) return AppIcons.airlineSeatReclineNormal;
     if (name.contains('bench') || name.contains('chest')) return AppIcons.airlineSeatFlat;
-    if (name.contains('deadlift') || name.contains('stacco')) return AppIcons.workout;
-    if (name.contains('curl') || name.contains('bicep')) return AppIcons.gymnastics;
-    if (name.contains('shoulder') || name.contains('spalle')) return AppIcons.accessibility;
+    if (name.contains('deadlift') || name.contains('stacco')) return Icons.fitness_center;
+    if (name.contains('curl') || name.contains('bicep')) return AppIcons.sportsGymnastics;
+    if (name.contains('shoulder') || name.contains('spalle')) return Icons.accessibility_new;
     if (name.contains('back') || name.contains('dorso')) return AppIcons.rowing;
-    return AppIcons.workout;
+    return Icons.fitness_center;
   }
   
   Color _getEffortColor(int effort) {
-    if (effort >= 9) return Colors.red;
-    if (effort >= 7) return Colors.orange;
-    if (effort >= 5) return Colors.yellow;
-    return Colors.green;
+    if (effort >= 9) return context.colors.error;
+    if (effort >= 7) return context.colors.secondary;
+    if (effort >= 5) return context.colors.warning;
+    return context.colors.success;
   }
   
   String _getRelativeTime(DateTime date) {

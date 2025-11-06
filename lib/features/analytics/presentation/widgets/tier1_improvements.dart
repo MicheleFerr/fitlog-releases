@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// 🎯 TIER-1 IMPROVEMENT COMPONENTS
 /// Componenti riutilizzabili per rendere Analytics tier-1
@@ -430,8 +432,8 @@ class TrendIndicator extends StatelessWidget {
     final percentage = previous > 0 ? (difference / previous * 100) : 0.0;
     final isPositive = difference >= 0;
     
-    final color = isPositive ? Colors.green : Colors.red;
-    final icon = isPositive ? AppIcons.trendUp : AppIcons.trendDown;
+    final color = isPositive ? context.successColor : context.errorColor;
+    final icon = isPositive ? Icons.trending_up : Icons.trending_down;
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -565,25 +567,25 @@ class InsightCard extends StatelessWidget {
   InsightColors _getColors(ThemeData theme) {
     return switch (type) {
       InsightType.success => InsightColors(
-          background: Colors.green,
-          border: Colors.green.shade700,
-          icon: Colors.green.shade900,
-          iconBackground: Colors.green.shade100,
-          text: Colors.green.shade900,
+          background: context.successColor,
+          border: context.successColor.shade700,
+          icon: context.successColor.shade900,
+          iconBackground: context.successColor.shade100,
+          text: context.successColor.shade900,
         ),
       InsightType.warning => InsightColors(
-          background: Colors.orange,
-          border: Colors.orange.shade700,
-          icon: Colors.orange.shade900,
-          iconBackground: Colors.orange.shade100,
-          text: Colors.orange.shade900,
+          background: context.warningColor,
+          border: context.warningColor.shade700,
+          icon: context.warningColor.shade900,
+          iconBackground: context.warningColor.shade100,
+          text: context.warningColor.shade900,
         ),
       InsightType.error => InsightColors(
-          background: Colors.red,
-          border: Colors.red.shade700,
-          icon: Colors.red.shade900,
-          iconBackground: Colors.red.shade100,
-          text: Colors.red.shade900,
+          background: context.errorColor,
+          border: context.errorColor.shade700,
+          icon: context.errorColor.shade900,
+          iconBackground: context.errorColor.shade100,
+          text: context.errorColor.shade900,
         ),
       InsightType.info => InsightColors(
           background: theme.colorScheme.primary,
@@ -816,8 +818,8 @@ class StreakWidget extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.orange.shade400,
-            Colors.deepOrange.shade400,
+            context.warningColor.shade400,
+            context.warningColor,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -825,7 +827,7 @@ class StreakWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withValues(alpha: 0.3),
+            color: context.warningColor.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -952,8 +954,8 @@ class StreakWidget extends StatelessWidget {
               child: Row(
                 children: [
                   const Icon(
-                    AppIcons.star,
-                    color: Colors.yellow,
+                    Icons.star,
+                    color: context.warningColor,
                     size: 16,
                   ),
                   const SizedBox(width: 8),

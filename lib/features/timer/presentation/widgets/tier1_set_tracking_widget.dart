@@ -6,6 +6,8 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// TIER-1 Set Tracking Widget with real-time visualization
@@ -104,7 +106,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             Text(
               '${l10n.set} $setNumber',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -145,7 +147,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
               Text(
                 '${l10n.rep} ${metrics.currentRep} • ${_formatDuration(metrics.elapsedMs)}',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -156,11 +158,11 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           width: 12,
           height: 12,
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: context.colors.error,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.red.withOpacity(0.5),
+                color: context.colors.error.withValues(alpha: 0.5),
                 blurRadius: 8,
                 spreadRadius: 2,
               ),
@@ -180,8 +182,8 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.velocity,
             '${metrics.currentVelocityMps.toStringAsFixed(2)} m/s',
-            AppIcons.speed,
-            _getVelocityColor(metrics.currentVelocityMps, theme),
+            Icons.speed,
+            _getVelocityColor(context, metrics.currentVelocityMps, theme),
           ),
         ),
         const SizedBox(width: 8),
@@ -202,8 +204,8 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.drop,
             '${metrics.velocityDropPercent.toStringAsFixed(1)}%',
-            AppIcons.trendDown,
-            _getDropColor(metrics.velocityDropPercent, theme),
+            Icons.trending_down,
+            _getDropColor(context, metrics.velocityDropPercent, theme),
           ),
         ),
       ],
@@ -214,9 +216,9 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -232,7 +234,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -245,7 +247,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
       height: 150,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -273,7 +275,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     ),
                   ),
                 ],
@@ -297,7 +299,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.fatigue,
             fatigueIndex,
-            _getFatigueColor(fatigueIndex, theme),
+            _getFatigueColor(context, fatigueIndex, theme),
             '%',
           ),
         ),
@@ -308,7 +310,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.form,
             formScore,
-            _getFormColor(formScore, theme),
+            _getFormColor(context, formScore, theme),
             '%',
           ),
         ),
@@ -347,7 +349,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
       ],
@@ -361,9 +363,9 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: _getSeverityColor(severity, theme).withOpacity(0.1),
+        color: _getSeverityColor(severity, theme).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: _getSeverityColor(severity, theme).withOpacity(0.3)),
+        border: Border.all(color: _getSeverityColor(severity, theme).withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -451,27 +453,27 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     }
   }
 
-  Color _getVelocityColor(double velocity, ThemeData theme) {
-    if (velocity > 1.0) return Colors.green;
+  Color _getVelocityColor(BuildContext context, double velocity, ThemeData theme) {
+    if (velocity > 1.0) return context.colors.success;
     if (velocity > 0.5) return theme.colorScheme.primary;
-    return Colors.orange;
+    return context.colors.secondary;
   }
 
-  Color _getDropColor(double drop, ThemeData theme) {
+  Color _getDropColor(BuildContext context, double drop, ThemeData theme) {
     if (drop > 25) return theme.colorScheme.error;
-    if (drop > 15) return Colors.orange;
-    return Colors.green;
+    if (drop > 15) return context.colors.secondary;
+    return context.colors.success;
   }
 
-  Color _getFatigueColor(double fatigue, ThemeData theme) {
+  Color _getFatigueColor(BuildContext context, double fatigue, ThemeData theme) {
     if (fatigue > 80) return theme.colorScheme.error;
-    if (fatigue > 60) return Colors.orange;
-    return Colors.green;
+    if (fatigue > 60) return context.colors.secondary;
+    return context.colors.success;
   }
 
-  Color _getFormColor(double form, ThemeData theme) {
-    if (form > 80) return Colors.green;
-    if (form > 60) return Colors.orange;
+  Color _getFormColor(BuildContext context, double form, ThemeData theme) {
+    if (form > 80) return context.colors.success;
+    if (form > 60) return context.colors.secondary;
     return theme.colorScheme.error;
   }
 
@@ -516,7 +518,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
       case _CoachingSeverity.info:
         return AppIcons.info;
       case _CoachingSeverity.warning:
-        return AppIcons.warningOutlined;
+        return AppIcons.warning;
     }
   }
 

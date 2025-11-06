@@ -281,12 +281,10 @@ class WorkoutExportService {
       
       for (final exercise in workout.exercises) {
         buffer.writeln('### 💪 ${exercise.name}\n');
-        
-        if (exercise.isSkipped) {
-          buffer.writeln('*Skipped: ${exercise.skipReason}*\n');
-          continue;
-        }
-        
+
+        // Note: Exercise entity does not have isSkipped/skipReason fields
+        // If exercise is skipped, it would have no completed sets
+
         // Table header
         buffer.writeln('| Set | Weight | Reps | Volume |'
             '${options.includeRPE ? ' RPE |' : ''}'

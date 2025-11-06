@@ -26,7 +26,7 @@ class PremiumLockCard extends StatelessWidget {
           context,
           l10n.repContinuum,
           l10n.repContinuumPreview,
-          AppIcons.analyticsOutlined,
+          AppIcons.analytics,
         ),
         const SizedBox(height: 16),
 
@@ -196,7 +196,7 @@ class PremiumLockCard extends StatelessWidget {
         ),
         // Lock overlay
         Positioned.fill(
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: theme.colorScheme.surface.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(12),

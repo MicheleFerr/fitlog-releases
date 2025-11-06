@@ -178,7 +178,7 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
     return Positioned(
       top: 16,
       right: 16,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
@@ -288,19 +288,24 @@ class _LocationPermissionWidgetState extends ConsumerState<LocationPermissionWid
     try {
       final locationService = ref.read(locationServiceProvider);
       final location = await locationService.getCurrentLocation();
-      
+
+      if (!mounted) return;
+
       if (location != null) {
         await locationService.updateUserLocation(location);
         await _loadLocationStats();
-        
+
+        if (!mounted) return;
+
         // Refresh matches dopo l'aggiornamento della location
         ref.read(matchingProvider.notifier).refreshMatches();
-        
+
         _showSuccessMessage('✅ ${AppLocalizations.of(context).locationUpdated}: ${location.cityName}');
       } else {
         _showErrorMessage(AppLocalizations.of(context).unableToGetLocation);
       }
     } catch (e) {
+      if (!mounted) return;
       _showErrorMessage('${AppLocalizations.of(context).locationUpdateError}: $e');
     } finally {
       if (mounted) {

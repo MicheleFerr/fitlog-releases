@@ -316,7 +316,7 @@ class _FitnessQuestionnaireScreenState
         color: context.colors.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, -2),
           ),
@@ -658,14 +658,23 @@ class _FitnessQuestionnaireScreenState
               style: context.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            ...ExperienceLevel.values.map((level) {
-              return RadioListTile<ExperienceLevel>(
-                title: Text(_getExperienceLevelLabel(level)),
-                value: level,
-                groupValue: _experienceLevel,
-                onChanged: (val) => setState(() => _experienceLevel = val!),
-              );
-            }),
+            RadioGroup<ExperienceLevel>(
+              groupValue: _experienceLevel,
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() => _experienceLevel = val);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: ExperienceLevel.values.map((level) {
+                  return RadioListTile<ExperienceLevel>(
+                    title: Text(_getExperienceLevelLabel(level)),
+                    value: level,
+                  );
+                }).toList(),
+              ),
+            ),
             const SizedBox(height: 16),
 
             TextFormField(
@@ -916,14 +925,23 @@ class _FitnessQuestionnaireScreenState
               style: context.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            ...TrainingGoal.values.map((goal) {
-              return RadioListTile<TrainingGoal>(
-                title: Text(_getTrainingGoalLabel(goal)),
-                value: goal,
-                groupValue: _trainingGoal,
-                onChanged: (val) => setState(() => _trainingGoal = val!),
-              );
-            }),
+            RadioGroup<TrainingGoal>(
+              groupValue: _trainingGoal,
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() => _trainingGoal = val);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: TrainingGoal.values.map((goal) {
+                  return RadioListTile<TrainingGoal>(
+                    title: Text(_getTrainingGoalLabel(goal)),
+                    value: goal,
+                  );
+                }).toList(),
+              ),
+            ),
             const SizedBox(height: 16),
 
             Text(
@@ -931,14 +949,23 @@ class _FitnessQuestionnaireScreenState
               style: context.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            ...SuggestionStyle.values.map((style) {
-              return RadioListTile<SuggestionStyle>(
-                title: Text(_getSuggestionStyleLabel(style)),
-                value: style,
-                groupValue: _suggestionStyle,
-                onChanged: (val) => setState(() => _suggestionStyle = val!),
-              );
-            }),
+            RadioGroup<SuggestionStyle>(
+              groupValue: _suggestionStyle,
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() => _suggestionStyle = val);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: SuggestionStyle.values.map((style) {
+                  return RadioListTile<SuggestionStyle>(
+                    title: Text(_getSuggestionStyleLabel(style)),
+                    value: style,
+                  );
+                }).toList(),
+              ),
+            ),
             const SizedBox(height: 16),
 
             Text(
@@ -953,14 +980,23 @@ class _FitnessQuestionnaireScreenState
               ),
             ),
             const SizedBox(height: 8),
-            ...SelfReportCalibration.values.map((calibration) {
-              return RadioListTile<SelfReportCalibration>(
-                title: Text(calibration.getLabel(Localizations.localeOf(context).languageCode)),
-                value: calibration,
-                groupValue: _selfReportCalibration,
-                onChanged: (val) => setState(() => _selfReportCalibration = val!),
-              );
-            }),
+            RadioGroup<SelfReportCalibration>(
+              groupValue: _selfReportCalibration,
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() => _selfReportCalibration = val);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: SelfReportCalibration.values.map((calibration) {
+                  return RadioListTile<SelfReportCalibration>(
+                    title: Text(calibration.getLabel(Localizations.localeOf(context).languageCode)),
+                    value: calibration,
+                  );
+                }).toList(),
+              ),
+            ),
 
             // Feedback widget for step 5
             StepFeedbackWidget(

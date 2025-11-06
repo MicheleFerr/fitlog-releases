@@ -16,6 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_reminder_service.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_reminder_service_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
@@ -431,67 +432,22 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
     final dateOnly = DateTime(date.year, date.month, date.day);
     final diff = dateOnly.difference(today).inDays;
 
-    if (diff == 0) return 'Today';
-    if (diff == -1) return 'Yesterday';
-    if (diff == 1) return 'Tomorrow';
-    if (diff == -2) return '2 days ago';
-    if (diff == 2) return 'In 2 days';
+    // Use localized relative dates
+    if (diff == 0) return context.l10n.today;
+    if (diff == -1) return context.l10n.yesterday;
+    if (diff == 1) return context.l10n.tomorrow;
+    if (diff == -2) return context.l10n.daysAgo(2);
 
-    // Format as "Mon 15 Jan"
-    final weekday = _weekdayName(date.weekday);
-    final month = _monthName(date.month);
-    return '$weekday ${date.day} $month';
-  }
-
-  String _weekdayName(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'Mon';
-      case 2:
-        return 'Tue';
-      case 3:
-        return 'Wed';
-      case 4:
-        return 'Thu';
-      case 5:
-        return 'Fri';
-      case 6:
-        return 'Sat';
-      case 7:
-        return 'Sun';
-      default:
-        return '';
+    // For future dates beyond tomorrow
+    if (diff > 1 && diff <= 7) {
+      // Format as "In 2 days", "In 3 days", etc.
+      return context.l10n.daysAgo(diff.abs()).replaceFirst('ago', 'from now');
     }
-  }
 
-  String _monthName(int month) {
-    switch (month) {
-      case 1:
-        return 'Jan';
-      case 2:
-        return 'Feb';
-      case 3:
-        return 'Mar';
-      case 4:
-        return 'Apr';
-      case 5:
-        return 'May';
-      case 6:
-        return 'Jun';
-      case 7:
-        return 'Jul';
-      case 8:
-        return 'Aug';
-      case 9:
-        return 'Sep';
-      case 10:
-        return 'Oct';
-      case 11:
-        return 'Nov';
-      case 12:
-        return 'Dec';
-      default:
-        return '';
-    }
+    // Use locale-aware date formatting for other dates
+    // Format: "Mon 15 Jan" (locale-aware)
+    final locale = Localizations.localeOf(context).languageCode;
+    final formatter = DateFormat.MMMEd(locale);
+    return formatter.format(date);
   }
 }

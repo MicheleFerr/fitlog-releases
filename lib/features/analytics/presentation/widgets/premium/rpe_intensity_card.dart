@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/rpe_analyzer.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
@@ -220,31 +221,31 @@ class RPEIntensityCard extends StatelessWidget {
                   _buildBarSegment(
                     context,
                     distribution.recoverySets / total,
-                    Colors.green.shade300,
+                    context.successColor.withOpacity(0.6),
                   ),
                 if (distribution.moderateSets > 0)
                   _buildBarSegment(
                     context,
                     distribution.moderateSets / total,
-                    Colors.blue.shade400,
+                    context.colors.tertiary.withOpacity(0.7),
                   ),
                 if (distribution.hardSets > 0)
                   _buildBarSegment(
                     context,
                     distribution.hardSets / total,
-                    Colors.orange.shade400,
+                    context.warningColor.withOpacity(0.7),
                   ),
                 if (distribution.veryHardSets > 0)
                   _buildBarSegment(
                     context,
                     distribution.veryHardSets / total,
-                    Colors.deepOrange.shade500,
+                    context.warningColor,
                   ),
                 if (distribution.maximalSets > 0)
                   _buildBarSegment(
                     context,
                     distribution.maximalSets / total,
-                    Colors.red.shade600,
+                    context.errorColor,
                   ),
               ],
             ),
@@ -260,31 +261,31 @@ class RPEIntensityCard extends StatelessWidget {
             _buildLegendItem(
               context,
               l10n.rpeRecovery,
-              Colors.green.shade300,
+              context.successColor.withOpacity(0.6),
               '${distribution.recoveryPercentage.toStringAsFixed(0)}%',
             ),
             _buildLegendItem(
               context,
               l10n.rpeModerate,
-              Colors.blue.shade400,
+              context.colors.tertiary.withOpacity(0.7),
               '${distribution.moderatePercentage.toStringAsFixed(0)}%',
             ),
             _buildLegendItem(
               context,
               l10n.rpeHard,
-              Colors.orange.shade400,
+              context.warningColor.withOpacity(0.7),
               '${distribution.hardPercentage.toStringAsFixed(0)}%',
             ),
             _buildLegendItem(
               context,
               l10n.rpeVeryHard,
-              Colors.deepOrange.shade500,
+              context.warningColor,
               '${distribution.veryHardPercentage.toStringAsFixed(0)}%',
             ),
             _buildLegendItem(
               context,
               l10n.rpeMaximal,
-              Colors.red.shade600,
+              context.errorColor,
               '${distribution.maximalPercentage.toStringAsFixed(0)}%',
             ),
           ],
@@ -357,36 +358,36 @@ class RPEIntensityCard extends StatelessWidget {
         title = l10n.intensityZoneTooEasy;
         description = l10n.intensityZoneTooEasyDesc;
         advice = l10n.intensityZoneTooEasyAdvice;
-        icon = AppIcons.trendDown;
-        color = Colors.grey;
+        icon = Icons.trending_down;
+        color = context.colors.outline;
         break;
       case IntensityZone.optimalHypertrophy:
         title = l10n.intensityZoneOptimalHypertrophy;
         description = l10n.intensityZoneOptimalHypertrophyDesc;
         advice = l10n.intensityZoneOptimalHypertrophyAdvice;
-        icon = AppIcons.trendUp;
-        color = Colors.green;
+        icon = Icons.trending_up;
+        color = context.successColor;
         break;
       case IntensityZone.optimalStrength:
         title = l10n.intensityZoneOptimalStrength;
         description = l10n.intensityZoneOptimalStrengthDesc;
         advice = l10n.intensityZoneOptimalStrengthAdvice;
-        icon = AppIcons.workout;
-        color = Colors.blue;
+        icon = Icons.fitness_center;
+        color = context.infoColor;
         break;
       case IntensityZone.balanced:
         title = l10n.intensityZoneBalanced;
         description = l10n.intensityZoneBalancedDesc;
         advice = l10n.intensityZoneBalancedAdvice;
-        icon = AppIcons.balance;
-        color = Colors.amber;
+        icon = Icons.balance;
+        color = context.warningColor;
         break;
       case IntensityZone.tooHard:
         title = l10n.intensityZoneTooHard;
         description = l10n.intensityZoneTooHardDesc;
         advice = l10n.intensityZoneTooHardAdvice;
-        icon = AppIcons.warning;
-        color = Colors.red;
+        icon = Icons.warning;
+        color = context.errorColor;
         break;
     }
 
@@ -465,11 +466,11 @@ class RPEIntensityCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     Color getRPEColor(double rpe) {
-      if (rpe <= 6) return Colors.green;
-      if (rpe <= 7) return Colors.blue;
-      if (rpe <= 8) return Colors.orange;
-      if (rpe <= 9) return Colors.deepOrange;
-      return Colors.red;
+      if (rpe <= 6) return context.successColor;
+      if (rpe <= 7) return context.infoColor;
+      if (rpe <= 8) return context.warningColor;
+      if (rpe <= 9) return context.warningColor;
+      return context.errorColor;
     }
 
     final avgColor = getRPEColor(stats.averageRPE);
@@ -625,11 +626,11 @@ class RPEIntensityCard extends StatelessWidget {
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 12),
-              _buildRPEExplanationRow(l10n.rpeScale5_6, l10n.rpeScale5_6Desc, Colors.green),
-              _buildRPEExplanationRow(l10n.rpeScale7, l10n.rpeScale7Desc, Colors.blue),
-              _buildRPEExplanationRow(l10n.rpeScale8, l10n.rpeScale8Desc, Colors.orange),
-              _buildRPEExplanationRow(l10n.rpeScale9, l10n.rpeScale9Desc, Colors.deepOrange),
-              _buildRPEExplanationRow(l10n.rpeScale10, l10n.rpeScale10Desc, Colors.red),
+              _buildRPEExplanationRow(l10n.rpeScale5_6, l10n.rpeScale5_6Desc, context.successColor),
+              _buildRPEExplanationRow(l10n.rpeScale7, l10n.rpeScale7Desc, context.infoColor),
+              _buildRPEExplanationRow(l10n.rpeScale8, l10n.rpeScale8Desc, context.warningColor),
+              _buildRPEExplanationRow(l10n.rpeScale9, l10n.rpeScale9Desc, context.warningColor),
+              _buildRPEExplanationRow(l10n.rpeScale10, l10n.rpeScale10Desc, context.errorColor),
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 16),

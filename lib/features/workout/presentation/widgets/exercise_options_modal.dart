@@ -16,6 +16,7 @@ class ExerciseOptionsModal extends StatelessWidget {
     this.onHistory,
     this.onDuplicate,
     this.onDelete,
+    this.onChangeCountingMode,
     this.imageUrl,
     this.languageCode = 'en',
   });
@@ -24,6 +25,7 @@ class ExerciseOptionsModal extends StatelessWidget {
   final VoidCallback? onHistory;
   final VoidCallback? onDuplicate;
   final VoidCallback? onDelete;
+  final VoidCallback? onChangeCountingMode;
   final String? imageUrl;
   final String languageCode;
 
@@ -33,7 +35,7 @@ class ExerciseOptionsModal extends StatelessWidget {
       initialChildSize: 0.5,
       minChildSize: 0.3,
       maxChildSize: 0.7,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -46,7 +48,7 @@ class ExerciseOptionsModal extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -109,7 +111,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withValues(alpha: 0.6),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -118,13 +120,13 @@ class ExerciseOptionsModal extends StatelessWidget {
                               Icon(
                                 AppIcons.zoomOutMap,
                                 size: 16,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 'Tap per ingrandire',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 11,
                                 ),
                               ),
@@ -248,7 +250,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                       // Show feedback dialog
                       ExerciseFeedbackButton.showFeedbackDialog(
                         context,
-                        exerciseId: exercise.id ?? 'unknown',
+                        exerciseId: exercise.id,
                         exerciseName: exercise.name,
                         version: '1.0.0',
                       );
@@ -279,7 +281,19 @@ class ExerciseOptionsModal extends StatelessWidget {
                       },
                     ),
                   ],
-                  
+
+                  if (onChangeCountingMode != null) ...[
+                    ListTile(
+                      leading: Icon(AppIcons.swapHoriz),
+                      title: const Text('Cambia formato counting'),
+                      subtitle: const Text('Passa tra peso/reps/tempo'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        onChangeCountingMode!();
+                      },
+                    ),
+                  ],
+
                   if (onDuplicate != null) ...[
                     ListTile(
                       leading: const Icon(AppIcons.iconCopy),
@@ -375,7 +389,7 @@ class ExerciseOptionsModal extends StatelessWidget {
         initialChildSize: 0.7,
         minChildSize: 0.5,
         maxChildSize: 0.9,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -388,7 +402,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -479,7 +493,7 @@ class ExerciseOptionsModal extends StatelessWidget {
         initialChildSize: 0.7,
         minChildSize: 0.5,
         maxChildSize: 0.9,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -492,7 +506,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -572,7 +586,7 @@ class ExerciseOptionsModal extends StatelessWidget {
         initialChildSize: 0.7,
         minChildSize: 0.5,
         maxChildSize: 0.9,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -585,7 +599,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -674,10 +688,10 @@ class ExerciseOptionsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer.withOpacity(0.5),
+        color: Theme.of(context).colorScheme.surfaceContainer.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -730,6 +744,7 @@ class ExerciseOptionsModal extends StatelessWidget {
     VoidCallback? onHistory,
     VoidCallback? onDuplicate,
     VoidCallback? onDelete,
+    VoidCallback? onChangeCountingMode,
     String? imageUrl,
     String languageCode = 'en',
   }) {
@@ -744,6 +759,7 @@ class ExerciseOptionsModal extends StatelessWidget {
         onHistory: onHistory,
         onDuplicate: onDuplicate,
         onDelete: onDelete,
+        onChangeCountingMode: onChangeCountingMode,
         imageUrl: imageUrl,
         languageCode: languageCode,
       ),

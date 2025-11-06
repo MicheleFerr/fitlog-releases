@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VotingCard extends StatefulWidget {
@@ -88,17 +90,17 @@ class _VotingCardState extends State<VotingCard>
     final theme = Theme.of(context);
     switch (widget.contribution.type) {
       case ContributionType.tip:
-        return Colors.amber;
+        return context.colors.warning;
       case ContributionType.warning:
-        return Colors.orange;
+        return context.colors.secondary;
       case ContributionType.correction:
         return theme.colorScheme.primary;
       case ContributionType.technique:
-        return Colors.blue;
+        return context.colors.primary;
       case ContributionType.variant:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ContributionType.translation:
-        return Colors.green;
+        return context.colors.success;
     }
   }
   
@@ -145,24 +147,24 @@ class _VotingCardState extends State<VotingCard>
                 end: Alignment.bottomRight,
                 colors: [
                   theme.colorScheme.surface,
-                  theme.colorScheme.surface.withOpacity(0.95),
+                  theme.colorScheme.surface.withValues(alpha: 0.95),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: typeColor.withOpacity(0.1),
+                  color: typeColor.withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: context.colors.onSurface.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
               ],
               border: Border.all(
-                color: theme.colorScheme.outline.withOpacity(0.1),
+                color: theme.colorScheme.outline.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -177,8 +179,8 @@ class _VotingCardState extends State<VotingCard>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        typeColor.withOpacity(0.1),
-                        typeColor.withOpacity(0.05),
+                        typeColor.withValues(alpha: 0.1),
+                        typeColor.withValues(alpha: 0.05),
                       ],
                     ),
                   ),
@@ -195,7 +197,7 @@ class _VotingCardState extends State<VotingCard>
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: typeColor.withOpacity(0.2),
+                                color: typeColor.withValues(alpha: 0.2),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -220,7 +222,7 @@ class _VotingCardState extends State<VotingCard>
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: typeColor.withOpacity(0.2),
+                                    color: typeColor.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -240,27 +242,27 @@ class _VotingCardState extends State<VotingCard>
                                       vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
+                                      gradient: LinearGradient(
                                         colors: [
-                                          Colors.amber,
-                                          Colors.orange,
+                                          context.colors.warning,
+                                          context.colors.secondary,
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
                                           AppIcons.star,
                                           size: 10,
-                                          color: Colors.white,
+                                          color: context.colors.surface,
                                         ),
-                                        SizedBox(width: 2),
+                                        const SizedBox(width: 2),
                                         Text(
                                           'Featured',
                                           style: TextStyle(
-                                            color: Colors.white,
+                                            color: context.colors.surface,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -382,7 +384,7 @@ class _VotingCardState extends State<VotingCard>
                           icon: AppIcons.thumbUpOutlined,
                           activeIcon: AppIcons.thumbUp,
                           count: widget.contribution.upvotes,
-                          color: Colors.green,
+                          color: context.colors.success,
                           isActive: hasUpvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
@@ -396,7 +398,7 @@ class _VotingCardState extends State<VotingCard>
                           icon: AppIcons.thumbDownOutlined,
                           activeIcon: AppIcons.thumbDown,
                           count: widget.contribution.downvotes,
-                          color: Colors.red,
+                          color: context.colors.error,
                           isActive: hasDownvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
@@ -526,13 +528,13 @@ class _VoteButtonState extends State<_VoteButton>
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: widget.isActive
-              ? widget.color.withOpacity(0.1)
+              ? widget.color.withValues(alpha: 0.1)
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: widget.isActive
-                ? widget.color.withOpacity(0.3)
-                : theme.colorScheme.outline.withOpacity(0.1),
+                ? widget.color.withValues(alpha: 0.3)
+                : theme.colorScheme.outline.withValues(alpha: 0.1),
           ),
         ),
         child: Row(
@@ -589,7 +591,7 @@ class _DiffDisplay extends StatelessWidget {
         color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -600,8 +602,8 @@ class _DiffDisplay extends StatelessWidget {
               Container(
                 width: 8,
                 height: 8,
-                decoration: const BoxDecoration(
-                  color: Colors.red,
+                decoration: BoxDecoration(
+                  color: context.colors.error,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -619,7 +621,7 @@ class _DiffDisplay extends StatelessWidget {
             original,
             style: theme.textTheme.bodySmall?.copyWith(
               decoration: TextDecoration.lineThrough,
-              color: theme.colorScheme.error.withOpacity(0.7),
+              color: theme.colorScheme.error.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 12),
@@ -628,8 +630,8 @@ class _DiffDisplay extends StatelessWidget {
               Container(
                 width: 8,
                 height: 8,
-                decoration: const BoxDecoration(
-                  color: Colors.green,
+                decoration: BoxDecoration(
+                  color: context.colors.success,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -664,7 +666,7 @@ class _TrustScoreIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = _getScoreColor();
+    final color = _getScoreColor(context);
     
     return Container(
       width: 48,
@@ -672,7 +674,7 @@ class _TrustScoreIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 3,
         ),
       ),
@@ -701,10 +703,10 @@ class _TrustScoreIndicator extends StatelessWidget {
     );
   }
   
-  Color _getScoreColor() {
-    if (score >= 80) return Colors.green;
-    if (score >= 60) return Colors.blue;
-    if (score >= 40) return Colors.orange;
-    return Colors.red;
+  Color _getScoreColor(BuildContext context) {
+    if (score >= 80) return context.colors.success;
+    if (score >= 60) return context.colors.primary;
+    if (score >= 40) return context.colors.secondary;
+    return context.colors.error;
   }
 }

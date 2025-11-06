@@ -15,7 +15,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseHistoryTestWidget extends ConsumerStatefulWidget {
   
@@ -51,7 +51,7 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
       final userId = ref.read(currentUserIdProvider);
       if (userId == null) return;
 
-      const service = ExerciseHistoryService();
+      final service = ExerciseHistoryService(boxManager: HiveBoxManagerEnhanced());
       final exerciseNames = await service.getAllExerciseNames(userId);
       final workoutCount = await service.getWorkoutCount(userId);
 

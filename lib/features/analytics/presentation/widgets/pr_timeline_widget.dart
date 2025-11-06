@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget showing personal records timeline
 class PRTimelineWidget extends StatelessWidget {
@@ -35,8 +37,8 @@ class PRTimelineWidget extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  AppIcons.achievement,
-                  color: Colors.amber,
+                  Icons.emoji_events,
+                  color: context.colors.warning,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
@@ -85,8 +87,8 @@ class PRTimelineWidget extends StatelessWidget {
         gradient: isNew
             ? LinearGradient(
                 colors: [
-                  Colors.amber.withValues(alpha: 0.3),
-                  Colors.amber.withValues(alpha: 0.1),
+                  context.colors.warning.withValues(alpha: 0.3),
+                  context.colors.warning.withValues(alpha: 0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -95,7 +97,7 @@ class PRTimelineWidget extends StatelessWidget {
         color: isNew ? null : colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
         border: isNew
-            ? Border.all(color: Colors.amber, width: 2)
+            ? Border.all(color: context.colors.warning, width: 2)
             : Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -107,7 +109,7 @@ class PRTimelineWidget extends StatelessWidget {
               Icon(
                 _getIconForPRType(pr.type),
                 size: 16,
-                color: isNew ? Colors.amber : colorScheme.primary,
+                color: isNew ? context.colors.warning : colorScheme.primary,
               ),
               const SizedBox(width: 4),
               Expanded(
@@ -123,7 +125,7 @@ class PRTimelineWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.amber,
+                    color: context.colors.warning,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: const Text(
@@ -131,7 +133,7 @@ class PRTimelineWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 8,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: context.colors.surface,
                     ),
                   ),
                 ),
@@ -168,13 +170,13 @@ class PRTimelineWidget extends StatelessWidget {
                 const Icon(
                   AppIcons.trendUp,
                   size: 12,
-                  color: Colors.green,
+                  color: context.colors.success,
                 ),
                 Text(
                   '+${pr.improvementPercentage.toStringAsFixed(1)}%',
                   style: const TextStyle(
                     fontSize: 10,
-                    color: Colors.green,
+                    color: context.colors.success,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -196,13 +198,13 @@ class PRTimelineWidget extends StatelessWidget {
               Icon(
                 AppIcons.achievement,
                 size: 48,
-                color: Colors.grey.withValues(alpha: 0.5),
+                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(
                 localizations.noPRsYet,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
+                  color: context.colors.surfaceContainerHighest,
                 ),
               ),
             ],

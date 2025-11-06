@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/feedback_detail_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseFeedbackScreen extends ConsumerWidget {
@@ -125,7 +126,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             title: l10n.feedbackStatsOpen,
             value: stats.openCount.toString(),
             icon: AppIcons.pending,
-            color: Colors.orange,
+            color: context.colors.secondary,
           ),
         ),
         const SizedBox(width: 12),
@@ -133,8 +134,8 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.feedbackStatsResolved,
             value: stats.resolvedCount.toString(),
-            icon: AppIcons.complete,
-            color: Colors.green,
+            icon: Icons.check_circle,
+            color: context.colors.success,
           ),
         ),
       ],
@@ -180,7 +181,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: context.colors.primary.withOpacity(0.1),
+                    color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -212,16 +213,16 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
       String severityLabel;
 
       if (severity >= 4) {
-        severityColor = Colors.red;
+        severityColor = context.colors.error;
         severityLabel = l10n.feedbackSeverityCritical;
       } else if (severity == 3) {
-        severityColor = Colors.orange;
+        severityColor = context.colors.secondary;
         severityLabel = l10n.feedbackSeverityHigh;
       } else if (severity == 2) {
-        severityColor = Colors.amber;
+        severityColor = context.colors.warning;
         severityLabel = l10n.feedbackSeverityMedium;
       } else {
-        severityColor = Colors.green;
+        severityColor = context.colors.success;
         severityLabel = l10n.feedbackSeverityLow;
       }
 
@@ -255,7 +256,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: severityColor.withOpacity(0.1),
+                    color: severityColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -288,7 +289,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           l10n.feedbackCriticalIssues,
           style: context.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.red,
+            color: context.colors.error,
           ),
         ),
         const SizedBox(height: 12),
@@ -369,13 +370,13 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
 
     Color severityColor;
     if (feedback.severity >= 4) {
-      severityColor = Colors.red;
+      severityColor = context.colors.error;
     } else if (feedback.severity == 3) {
-      severityColor = Colors.orange;
+      severityColor = context.colors.secondary;
     } else if (feedback.severity == 2) {
-      severityColor = Colors.amber;
+      severityColor = context.colors.warning;
     } else {
-      severityColor = Colors.green;
+      severityColor = context.colors.success;
     }
 
     return Card(

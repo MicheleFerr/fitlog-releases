@@ -3,15 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Exercise review report model
 class ExerciseReviewReport {
-  final String id;
-  final DateTime reportDate;
-  final String period;
-  final ReviewStatistics statistics;
-  final List<String> recommendations;
-  final List<StaleExercise> staleExercises;
-  final List<FlaggedExercise> flaggedExercises;
-  final String status;
-  final DateTime createdAt;
 
   ExerciseReviewReport({
     required this.id,
@@ -48,6 +39,15 @@ class ExerciseReviewReport {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
+  final String id;
+  final DateTime reportDate;
+  final String period;
+  final ReviewStatistics statistics;
+  final List<String> recommendations;
+  final List<StaleExercise> staleExercises;
+  final List<FlaggedExercise> flaggedExercises;
+  final String status;
+  final DateTime createdAt;
 
   /// Convert to map
   Map<String, dynamic> toMap() {
@@ -67,10 +67,6 @@ class ExerciseReviewReport {
 
 /// Statistics from review report
 class ReviewStatistics {
-  final int staleExercisesCount;
-  final int flaggedExercisesCount;
-  final int totalFeedbackFlagged;
-  final int criticalIssuesCount;
 
   ReviewStatistics({
     required this.staleExercisesCount,
@@ -90,6 +86,10 @@ class ReviewStatistics {
       criticalIssuesCount: (data['criticalIssuesCount'] as num?)?.toInt() ?? 0,
     );
   }
+  final int staleExercisesCount;
+  final int flaggedExercisesCount;
+  final int totalFeedbackFlagged;
+  final int criticalIssuesCount;
 
   /// Convert to map
   Map<String, dynamic> toMap() {
@@ -104,10 +104,6 @@ class ReviewStatistics {
 
 /// Stale exercise in report
 class StaleExercise {
-  final String id;
-  final String nome;
-  final DateTime? lastModified;
-  final int lastModifiedDaysAgo;
 
   StaleExercise({
     required this.id,
@@ -126,6 +122,10 @@ class StaleExercise {
       lastModifiedDaysAgo: (data['lastModifiedDaysAgo'] as num?)?.toInt() ?? 0,
     );
   }
+  final String id;
+  final String nome;
+  final DateTime? lastModified;
+  final int lastModifiedDaysAgo;
 
   /// Convert to map
   Map<String, dynamic> toMap() {
@@ -140,11 +140,6 @@ class StaleExercise {
 
 /// Flagged exercise in report
 class FlaggedExercise {
-  final String id;
-  final String nome;
-  final int feedbackCount;
-  final int criticalCount;
-  final DateTime? mostRecentFeedback;
 
   FlaggedExercise({
     required this.id,
@@ -165,6 +160,11 @@ class FlaggedExercise {
           (data['mostRecentFeedback'] as Timestamp?)?.toDate(),
     );
   }
+  final String id;
+  final String nome;
+  final int feedbackCount;
+  final int criticalCount;
+  final DateTime? mostRecentFeedback;
 
   /// Convert to map
   Map<String, dynamic> toMap() {

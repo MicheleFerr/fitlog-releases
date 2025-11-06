@@ -3,7 +3,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
@@ -11,6 +10,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 // ============= STATE MODELS =============
 
@@ -250,11 +251,14 @@ final legacyNotificationsByTypeProvider = Provider.family<List<AppNotification>,
 @Deprecated('Use UnifiedNotificationProvider from unified_notification_provider.dart')
 class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState> {
 
-  LegacyUnifiedNotificationNotifier(this.ref) : super(NotificationState.initial()) {
+  LegacyUnifiedNotificationNotifier(this.ref) :
+    _boxManager = ref.read(hiveBoxManagerProvider),
+    super(NotificationState.initial()) {
     _initCompleter = Completer<void>();
     _initializeNotifications();
   }
   final Ref ref;
+  final HiveBoxManagerEnhanced _boxManager;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -945,7 +949,7 @@ class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState>
 
   Future<List<AppNotification>> _getCachedNotifications() async {
     try {
-      final box = await Hive.openBox<AppNotification>('cached_notifications');
+      final box = await _boxManager.openBox<AppNotification>('cached_notifications');
       return box.values.toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     } catch (error) {
@@ -958,7 +962,7 @@ class LegacyUnifiedNotificationNotifier extends StateNotifier<NotificationState>
 
   Future<void> _cacheNotifications(List<AppNotification> notifications) async {
     try {
-      final box = await Hive.openBox<AppNotification>('cached_notifications');
+      final box = await _boxManager.openBox<AppNotification>('cached_notifications');
       await box.clear();
       
       for (final notification in notifications.take(50)) {

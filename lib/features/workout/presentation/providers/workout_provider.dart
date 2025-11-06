@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,26 +9,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/intelligent_notification_service.dart';
+// Achievement notification service for PR, streak, and volume notifications
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/achievement_notification_provider.dart';
 // MIGRATION: Using bridge provider for backward compatibility while migrating to unified system
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart';
+// import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart'; // REMOVED: cleanup
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
 // Auto-sync for cached progress stats
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/cached_progress_provider.dart';
+// Progress providers for streak and volume tracking
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 // App config for default APRE settings
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 // APRE auto-regulation
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/providers/apre_calculation_config_provider.dart';
 // 🔒 Security: Input sanitization
 import 'package:gymbro_flutter_new/shared/domain/services/input_sanitizer.dart';
 // Haptic feedback
@@ -41,16 +50,26 @@ import 'package:gymbro_flutter_new/shared/data/services/snapshot_sync_service.da
 // 📢 Sync Status Toast for user feedback during save flow
 import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast.dart';
 // 🔄 Routine Auto-Completion Service for automatic day completion
+// 💾 Workout Repository for fetching workout data
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
-// 📊 Analytics Tracking for workout events
+// 📊 Analytics Tracking for workout events & PR detection
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 // 💾 Template Cache Service for auto-saving modifications
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
+// 🔒 Session Timeout: Record activity to prevent auto-logout during workouts
+import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_providers.dart';
+// 🐛 Debug Log Manager for categorized logging
+import 'package:gymbro_flutter_new/shared/data/services/debug_log_manager.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/log_category.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
-  return HiveWorkoutDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return HiveWorkoutDataSource(boxManager);
 });
 
 // Hybrid Exercise Activity Repository provider
@@ -67,9 +86,18 @@ final exerciseActivityRepositoryProvider = Provider<ExerciseActivityRepository>(
 // NOTE: WorkoutHistoryRepository removed - using unified HybridWorkoutRepository instead
 
 // Current workout state provider
-final currentWorkoutProvider = StateNotifierProvider<CurrentWorkoutNotifier, Workout?>((ref) {
-  return CurrentWorkoutNotifier(ref);
-});
+final currentWorkoutProvider = StateNotifierProvider<CurrentWorkoutNotifier, Workout?>(
+  (ref) {
+    final notifier = CurrentWorkoutNotifier(ref);
+    notifier._startCleanupTimer();
+
+    ref.onDispose(() {
+      notifier._cleanupTimer?.cancel();
+    });
+
+    return notifier;
+  },
+);
 
 class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   CurrentWorkoutNotifier(this.ref) : super(null);
@@ -85,6 +113,10 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   // 💾 Track current template ID for auto-save
   String? _currentTemplateId;
 
+  // 🧹 Cleanup timer fields
+  Timer? _cleanupTimer;
+  bool _timerPaused = false;
+
   // 💾 Helper method to auto-save modifications
   void _autoSaveIfNeeded() {
     if (_currentTemplateId != null && state != null) {
@@ -96,8 +128,92 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     }
   }
 
+  /// Creates workout from routine with pre-loaded exercises
+  Future<void> createWorkoutFromRoutine({
+    required String routineName,
+    required List<Exercise> exercises,
+    required String sessionId,
+    String? templateId, // ✅ FIX #6: Accept templateId for auto-save
+  }) async {
+    // ✅ FIX #6: Store template ID for auto-save functionality
+    _currentTemplateId = templateId;
+
+    final workout = Workout(
+      id: const Uuid().v4(),
+      name: routineName,
+      exercises: exercises,
+      status: WorkoutStatus.planned,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      isPreloaded: true, // Flag to identify pre-loaded state
+      preloadExpiry: DateTime.now().add(const Duration(minutes: 15)), // 15-min timeout
+      sessionId: sessionId, // Analytics tracking
+      templateId: templateId, // ✅ FIX #6: Link workout to template
+    );
+
+    state = workout;
+    _autoSaveIfNeeded();
+  }
+
+  void _startCleanupTimer() {
+    _cleanupTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (_timerPaused) return; // Skip if paused
+
+      final workout = state;
+      if (workout?.isPreloaded == true && workout!.isExpired) {
+        state = null; // Cleanup expired workout
+        if (kDebugMode) debugPrint('🧹 Preloaded workout expired and removed');
+      }
+    });
+  }
+
+  void pauseCleanupTimer() {
+    _timerPaused = true;
+    if (kDebugMode) debugPrint('⏸️ Cleanup timer paused');
+  }
+
+  void resumeCleanupTimer() {
+    _timerPaused = false;
+    if (kDebugMode) debugPrint('▶️ Cleanup timer resumed');
+  }
+
+  Future<void> replaceExercisesFromTemplate(wt.WorkoutTemplate template) async {
+    final workout = state;
+    if (workout == null) return;
+
+    // Convert ExerciseTemplate list to Exercise list
+    final exercises = template.exercises.map((templateExercise) {
+      return Exercise(
+        name: templateExercise.exerciseName,
+        type: templateExercise.type,
+        category: templateExercise.category,
+        sets: templateExercise.sets.map((templateSet) {
+          return ExerciseSet(
+            setNumber: templateSet.setNumber,
+            weight: templateSet.targetWeight,
+            reps: templateSet.targetReps,
+          );
+        }).toList(),
+      );
+    }).toList();
+
+    state = workout.copyWith(
+      name: template.name,
+      exercises: exercises,
+      isPreloaded: false, // No longer pre-loaded
+      exercisesModified: true, // Track modification
+    );
+
+    _autoSaveIfNeeded();
+  }
+
   void createWorkout(String name) {
-    state = Workout(name: name);
+    state = Workout(
+      id: const Uuid().v4(),
+      name: name,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
     _currentTemplateId = null; // Reset template ID for manual workouts
   }
 
@@ -119,18 +235,21 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       if (cachedWorkout != null) {
         // Use cached version with modifications
         if (kDebugMode) {
-          debugPrint('💾 [WorkoutProvider] Loading cached workout for template: ${workoutTemplate.name}');
+          debugLog(LogCategory.workout, '💾 [WorkoutProvider] Loading cached workout for template: ${workoutTemplate.name}');
         }
         workout = cachedWorkout;
       } else {
         if (kDebugMode) {
-          debugPrint('[APRE] Starting workout from template: ${workoutTemplate.name}');
-          debugPrint('[APRE] APRE system enabled: $isApreEnabled');
+          debugLog(LogCategory.workout, '[APRE] Starting workout from template: ${workoutTemplate.name}');
+          debugLog(LogCategory.workout, '[APRE] APRE system enabled: $isApreEnabled');
         }
 
         // Crea un nuovo workout dal template
         workout = Workout(
+        id: const Uuid().v4(),
         name: workoutTemplate.name,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
         exercises: workoutTemplate.exercises.map((templateExercise) {
           // Crea l'esercizio con i set predefiniti dal template
@@ -154,7 +273,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             final protocol = APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
 
             if (kDebugMode) {
-              debugPrint('[APRE] Auto-selected protocol $protocol for ${exercise.name} (target reps: $targetReps)');
+              debugLog(LogCategory.workout, '[APRE] Auto-selected protocol $protocol for ${exercise.name} (target reps: $targetReps)');
             }
 
             // Get appropriate rest time for protocol
@@ -200,7 +319,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       // Pre-calculate APRE weights for all exercises with APRE enabled
       if (isApreEnabled) {
         if (kDebugMode) {
-          debugPrint('[APRE] Triggering pre-calculation of APRE weights for all exercises');
+          debugLog(LogCategory.workout, '[APRE] Triggering pre-calculation of APRE weights for all exercises');
         }
         _preCalculateAllAPREWeights();
       }
@@ -212,8 +331,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       // Questo verrà gestito dal template provider
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error starting workout from template: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error starting workout from template: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Ensure we don't leave the app in a bad state
       state = null;
@@ -289,6 +408,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         completionRate: totalSetsCount > 0
             ? ((completedSets / totalSetsCount) * 100).round()
             : 0,
+        sessionId: workout.sessionId, // ✅ FIX #8: Add sessionId for funnel correlation
       );
 
       state = state!.completeWorkout();
@@ -345,7 +465,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       );
 
       if (!validation.isValid) {
-        debugPrint('❌ [WorkoutProvider] Validation failed: ${validation.errors.join(', ')}');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Validation failed: ${validation.errors.join(', ')}');
         // Don't throw - log error but continue with sanitized data
       }
 
@@ -379,7 +499,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         return ExerciseHistoryDetail(
           id: exercise.id,
           name: sanitizedExerciseName,
-          category: exercise.category.name ?? 'Other',
+          category: exercise.category.name,
           notes: sanitizedExerciseNotes,
           sets: setsHistory,
           exerciseData: {},
@@ -411,7 +531,23 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           await hiveDataSource.saveWorkout(workoutModel, userId);
 
           if (kDebugMode) {
-            debugPrint('✅ [WorkoutProvider] Workout saved to Hive local storage');
+            debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to Hive local storage');
+          }
+
+          // 💾 CACHING: Invalidate analytics cache after workout completion
+          try {
+            final analyticsRepo = ref.read(workoutAnalyticsRepositoryProvider);
+            if (analyticsRepo is WorkoutAnalyticsRepositoryImpl) {
+              await analyticsRepo.invalidateAnalyticsCache(userId);
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Analytics cache invalidated for user: $userId');
+              }
+            }
+          } catch (cacheError) {
+            // Non-critical error - log but don't fail workout save
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to invalidate analytics cache: $cacheError');
+            }
           }
 
           // 📢 UI Feedback: Show "Workout saved locally" toast
@@ -421,8 +557,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         }
       } catch (saveError, stackTrace) {
         if (kDebugMode) {
-          debugPrint('❌ [WorkoutProvider] CRITICAL: Failed to save workout locally: $saveError');
-          debugPrint('📍 [WorkoutProvider] Stack trace: $stackTrace');
+          debugLog(LogCategory.workout, '❌ [WorkoutProvider] CRITICAL: Failed to save workout locally: $saveError');
+          debugLog(LogCategory.workout, '📍 [WorkoutProvider] Stack trace: $stackTrace');
         }
 
         // 📢 UI Feedback: Show CRITICAL error toast with retry/export options
@@ -438,11 +574,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
               try {
                 await _exportWorkoutData(workout);
                 if (kDebugMode) {
-                  debugPrint('✅ [WorkoutProvider] Workout data exported successfully');
+                  debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout data exported successfully');
                 }
               } catch (e) {
                 if (kDebugMode) {
-                  debugPrint('❌ [WorkoutProvider] Failed to export workout data: $e');
+                  debugLog(LogCategory.workout, '❌ [WorkoutProvider] Failed to export workout data: $e');
                 }
               }
             },
@@ -457,7 +593,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       // CRITICAL FIX: Check disposal after local save
       if (_isDisposed) {
         if (kDebugMode) {
-          debugPrint('⚠️ [WorkoutProvider] Provider disposed after local save - aborting cloud sync');
+          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Provider disposed after local save - aborting cloud sync');
         }
         return;
       }
@@ -474,11 +610,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         );
 
         if (kDebugMode) {
-          debugPrint('📸 [WorkoutProvider] Workout tracked for differential sync');
+          debugLog(LogCategory.workout, '📸 [WorkoutProvider] Workout tracked for differential sync');
         }
       } catch (snapshotError) {
         if (kDebugMode) {
-          debugPrint('⚠️ [WorkoutProvider] Failed to track workout snapshot: $snapshotError');
+          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to track workout snapshot: $snapshotError');
         }
         // Non-critical: continua comunque con batch sync
       }
@@ -499,7 +635,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         );
 
         if (kDebugMode) {
-          debugPrint('✅ [WorkoutProvider] Workout queued for batch cloud sync');
+          debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout queued for batch cloud sync');
         }
 
         // 📢 UI Feedback: Show final success toast
@@ -509,7 +645,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         }
       } catch (batchError) {
         if (kDebugMode) {
-          debugPrint('⚠️ [WorkoutProvider] Failed to queue cloud sync: $batchError');
+          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to queue cloud sync: $batchError');
         }
 
         // 📢 UI Feedback: Show warning that cloud sync failed to queue
@@ -559,15 +695,15 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             'stats.monthlyWorkouts': currentMonthlyWorkouts + 1,
           });
         });
-        debugPrint('✅ [WorkoutProvider] User stats updated atomically');
+        debugLog(LogCategory.workout, '✅ [WorkoutProvider] User stats updated atomically');
       } catch (statsError) {
-        debugPrint('⚠️ [WorkoutProvider] Failed to update stats: $statsError');
+        debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to update stats: $statsError');
         // Non-critical - workout is already saved
       }
 
       // CRITICAL FIX: Check disposal after stats update
       if (_isDisposed) {
-        debugPrint('⚠️ [WorkoutProvider] Provider disposed after stats update - aborting remaining operations');
+        debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Provider disposed after stats update - aborting remaining operations');
         return;
       }
 
@@ -583,25 +719,52 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         ref.invalidate(cachedProgressProvider);
       }
 
-      // 6. Generate intelligent notifications
+      // 6. Generate intelligent notifications + Achievement notifications
       try {
         final intelligentService = ref.read(intelligentNotificationServiceProvider);
         final notifications = await intelligentService.analyzeWorkoutCompletion(workout);
 
         // CRITICAL FIX: Check disposal after notification generation
         if (_isDisposed) {
-          debugPrint('⚠️ [WorkoutProvider] Provider disposed after notification generation - skipping notification addition');
+          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Provider disposed after notification generation - skipping notification addition');
           return;
         }
 
-        final notificationNotifier = ref.read(notificationProvider.notifier);
-        for (final notification in notifications) {
-          await notificationNotifier.addNotification(notification);
+        // ✅ NEW: Achievement Notifications with BATCHING (Anti-Spam)
+        // Collects all achievements for 3 seconds then sends ONE notification
+        try {
+          final achievementService = ref.read(achievementNotificationServiceProvider);
+          // 1. Detect Personal Records and queue them
+          final prUseCase = ref.read(detectPersonalRecordsUseCaseProvider);
+          final prs = await prUseCase.execute(currentUser.uid, workout);
+
+          if (prs.isNotEmpty) {
+            final queuedCount = await achievementService.notifyMultiplePRs(prs, workoutId: workout.id);
+            debugLog(LogCategory.workout, '📦 [Batching] Queued $queuedCount PRs for batch ${workout.id}');
+          }
+
+          // 2. Queue Streak Milestone
+          final streakAsync = await ref.read(currentStreakProvider.future);
+          if (streakAsync > 0) {
+            await achievementService.queueStreakAchievement(streakAsync, workoutId: workout.id);
+            debugLog(LogCategory.workout, '📦 [Batching] Queued streak milestone: $streakAsync days');
+          }
+
+          // 3. Queue Volume Milestone
+          final progressData = await ref.read(progressDataProvider.future);
+          if (progressData != null && progressData.totalVolume > 0) {
+            await achievementService.queueVolumeAchievement(progressData.totalVolume, workoutId: workout.id);
+            debugLog(LogCategory.workout, '📦 [Batching] Queued volume milestone: ${progressData.totalVolume}kg');
+          }
+
+          debugLog(LogCategory.workout, '📦 [Batching] All achievements queued - will send 1 notification in 3s');
+                } catch (achievementError) {
+          debugLog(LogCategory.workout, '⚠️ [Achievements] Failed to queue achievement notifications: $achievementError');
+          // Non-critical - continue with other operations
         }
-        final dailySuggestion = await intelligentService.generateDailySuggestion();
-        if (dailySuggestion != null) {
-          await notificationNotifier.addNotification(dailySuggestion);
-        }
+
+        // REMOVED: notification provider bridge (cleanup)
+        // Old AI notifications code removed during cleanup
       } catch (notificationError) {
         // Non-critical
       }
@@ -610,10 +773,10 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       try {
         final didAutoComplete = await _autoCompleteRoutineDay(workout, context);
         if (didAutoComplete) {
-          debugPrint('✅ [Routine] Auto-completed routine day');
+          debugLog(LogCategory.workout, '✅ [Routine] Auto-completed routine day');
         }
       } catch (routineError) {
-        debugPrint('⚠️ [Routine] Failed to auto-complete day: $routineError');
+        debugLog(LogCategory.workout, '⚠️ [Routine] Failed to auto-complete day: $routineError');
         // Non-critical - workout is already saved
       }
 
@@ -626,13 +789,13 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         );
 
         if (kDebugMode) {
-          debugPrint('📊 [WorkoutProvider] Navigated to completion summary screen');
+          debugLog(LogCategory.workout, '📊 [WorkoutProvider] Navigated to completion summary screen');
         }
       }
 
     } catch (e, stackTrace) {
-      debugPrint('❌ Critical error saving workout: $e');
-      debugPrint('Stack: $stackTrace');
+      debugLog(LogCategory.workout, '❌ Critical error saving workout: $e');
+      debugLog(LogCategory.workout, 'Stack: $stackTrace');
     }
   }
 
@@ -652,8 +815,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     // (For now, we skip this case - will implement UI in next task)
     if (result.candidateDates != null && result.candidateDates!.isNotEmpty) {
       if (kDebugMode) {
-        debugPrint('ℹ️ [WorkoutProvider] Multiple candidate dates found, but UI selection not yet implemented');
-        debugPrint('   Candidates: ${result.candidateDates}');
+        debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] Multiple candidate dates found, but UI selection not yet implemented');
+        debugLog(LogCategory.workout, '   Candidates: ${result.candidateDates}');
       }
       // TODO: Show DaySelectionBottomSheet for user to pick date
       return false;
@@ -679,7 +842,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   Future<void> _exportWorkoutData(Workout workout) async {
     try {
       if (kDebugMode) {
-        debugPrint('📁 [WorkoutProvider] Exporting workout data: ${workout.name}');
+        debugLog(LogCategory.workout, '📁 [WorkoutProvider] Exporting workout data: ${workout.name}');
       }
 
       // 1. Convert workout to JSON
@@ -699,8 +862,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       await file.writeAsString(prettyJson);
 
       if (kDebugMode) {
-        debugPrint('📁 [WorkoutProvider] Created file: ${file.path}');
-        debugPrint('📊 [WorkoutProvider] File size: ${await file.length()} bytes');
+        debugLog(LogCategory.workout, '📁 [WorkoutProvider] Created file: ${file.path}');
+        debugLog(LogCategory.workout, '📊 [WorkoutProvider] File size: ${await file.length()} bytes');
       }
 
       // 4. Share file using share_plus
@@ -711,7 +874,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       );
 
       if (kDebugMode) {
-        debugPrint('✅ [WorkoutProvider] Share result: ${result.status}');
+        debugLog(LogCategory.workout, '✅ [WorkoutProvider] Share result: ${result.status}');
       }
 
       // 5. Clean up temporary file after short delay
@@ -720,19 +883,19 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           if (await file.exists()) {
             await file.delete();
             if (kDebugMode) {
-              debugPrint('🗑️ [WorkoutProvider] Cleaned up temporary file');
+              debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Cleaned up temporary file');
             }
           }
         } catch (e) {
           if (kDebugMode) {
-            debugPrint('⚠️ [WorkoutProvider] Failed to delete temp file: $e');
+            debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to delete temp file: $e');
           }
         }
       });
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error exporting workout: $e');
-        debugPrint('📍 [WorkoutProvider] Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error exporting workout: $e');
+        debugLog(LogCategory.workout, '📍 [WorkoutProvider] Stack trace: $stackTrace');
       }
       // Rethrow to allow caller to handle error
       rethrow;
@@ -772,6 +935,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   void addExercise(Exercise exercise) {
     if (state == null) return;
 
+    // 🔒 SESSION: Record activity to prevent auto-logout during workout
+    ref.read(sessionActivityRecorderProvider);
+
     try {
       // Check if APRE is enabled globally and exercise doesn't have APRE configured yet
       final config = ref.read(appConfigProvider);
@@ -786,7 +952,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         final protocol = APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
 
         if (kDebugMode) {
-          debugPrint('[APRE] Auto-selected protocol $protocol for ${exercise.name} (target reps: $targetReps)');
+          debugLog(LogCategory.workout, '[APRE] Auto-selected protocol $protocol for ${exercise.name} (target reps: $targetReps)');
         }
 
         // Get appropriate rest time for protocol
@@ -822,14 +988,14 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         workoutId: state!.id,
         exerciseId: exerciseToAdd.id,
         exerciseName: exerciseToAdd.name,
-        exerciseCategory: exerciseToAdd.category.name ?? 'other',
+        exerciseCategory: exerciseToAdd.category.name,
         sets: exerciseToAdd.sets.length,
         source: 'add_exercise_modal',
       );
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error adding exercise: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding exercise: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -837,6 +1003,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void removeExercise(String exerciseId) {
     if (state != null) {
+      // 🔒 SESSION: Record activity to prevent auto-logout during workout
+      ref.read(sessionActivityRecorderProvider);
+
       // Find exercise before removing for analytics
       final exercise = state!.exercises.firstWhere(
         (ex) => ex.id == exerciseId,
@@ -873,7 +1042,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       if (oldIndex < 0 || oldIndex >= state!.exercises.length ||
           newIndex < 0 || newIndex >= state!.exercises.length) {
         if (kDebugMode) {
-          debugPrint('⚠️ [WorkoutProvider] Invalid reorder indices: old=$oldIndex, new=$newIndex, exercises=${state!.exercises.length}');
+          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Invalid reorder indices: old=$oldIndex, new=$newIndex, exercises=${state!.exercises.length}');
         }
         return;
       }
@@ -890,8 +1059,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       state = state!.copyWith(exercises: exercises);
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error reordering exercises: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error reordering exercises: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -919,8 +1088,79 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       );
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error updating exercise: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating exercise: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
+      }
+      // Don't rethrow - silently fail to avoid disrupting user experience
+    }
+  }
+
+  /// Check if an exercise has completed sets
+  /// Returns number of completed sets
+  int getCompletedSetsCount(String exerciseId) {
+    if (state == null) return 0;
+
+    try {
+      final exercise = state!.exercises.firstWhere(
+        (e) => e.id == exerciseId,
+        orElse: () => throw Exception('Exercise not found'),
+      );
+
+      return exercise.sets.where((set) => set.isCompleted).length;
+    } catch (e) {
+      if (kDebugMode) {
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error checking completed sets: $e');
+      }
+      return 0;
+    }
+  }
+
+  /// Change the counting mode of an exercise (weighted/reps/time)
+  /// Used when user needs to fix template counting format during workout
+  void changeExerciseCountingMode(
+    String exerciseId,
+    ExerciseCountingMode newMode,
+  ) {
+    if (state == null) return;
+
+    try {
+      // Find exercise
+      final exercise = state!.exercises.firstWhere(
+        (e) => e.id == exerciseId,
+        orElse: () => throw Exception('Exercise not found'),
+      );
+
+      // Create updated exercise with new counting mode
+      final updatedExercise = exercise.copyWith(
+        countingMode: newMode,
+        updatedAt: DateTime.now(),
+      );
+
+      // Update exercise in state
+      updateExercise(exerciseId, updatedExercise);
+
+      // 📊 Track counting mode changed
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackExerciseCustomized(
+        workoutId: state!.id,
+        exerciseId: exerciseId,
+        fieldChanged: 'counting_mode',
+        oldValue: exercise.countingMode.name,
+        newValue: newMode.name,
+      );
+
+      if (kDebugMode) {
+        debugLog(
+          LogCategory.workout,
+          '✅ [WorkoutProvider] Counting mode changed: ${exercise.name} → ${newMode.name}',
+        );
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error changing counting mode: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -960,6 +1200,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void completeSet(String exerciseId, String setId) {
     if (state == null) return;
+
+    // 🔒 SESSION: Record activity to prevent auto-logout during workout
+    ref.read(sessionActivityRecorderProvider);
 
     try {
       // Track which exercise and set were completed for auto-timer
@@ -1014,8 +1257,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           final nextSetNumber = completedSetNumber + 1;
 
           if (kDebugMode) {
-            debugPrint('⏰ [AUTO-TIMER] Starting rest timer after set $completedSetNumber/$totalSets');
-            debugPrint('⏰ [AUTO-TIMER] Duration: ${restTime}s for next set $nextSetNumber');
+            debugLog(LogCategory.workout, '⏰ [AUTO-TIMER] Starting rest timer after set $completedSetNumber/$totalSets');
+            debugLog(LogCategory.workout, '⏰ [AUTO-TIMER] Duration: ${restTime}s for next set $nextSetNumber');
           }
 
           // Start the timer automatically
@@ -1028,14 +1271,14 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           );
         } else {
           if (kDebugMode) {
-            debugPrint('⏰ [AUTO-TIMER] Last set completed - no timer started');
+            debugLog(LogCategory.workout, '⏰ [AUTO-TIMER] Last set completed - no timer started');
           }
         }
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error completing set: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error completing set: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -1064,8 +1307,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       _autoSaveIfNeeded();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error updating exercise set: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating exercise set: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -1094,8 +1337,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       state = state!.copyWith(exercises: updatedExercises);
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error updating superset set: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating superset set: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -1103,6 +1346,9 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   void addSetToExercise(String exerciseId) {
     if (state == null) return;
+
+    // 🔒 SESSION: Record activity to prevent auto-logout during workout
+    ref.read(sessionActivityRecorderProvider);
 
     try {
       final updatedExercises = state!.exercises.map((exercise) {
@@ -1124,8 +1370,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       state = state!.copyWith(exercises: updatedExercises);
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error adding set to exercise: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding set to exercise: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -1142,7 +1388,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           // Prevent removing last set
           if (updatedSets.isEmpty) {
             if (kDebugMode) {
-              debugPrint('⚠️ [WorkoutProvider] Cannot remove last set from exercise');
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Cannot remove last set from exercise');
             }
             return exercise;
           }
@@ -1160,8 +1406,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       state = state!.copyWith(exercises: updatedExercises);
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error removing set from exercise: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error removing set from exercise: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -1216,8 +1462,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       state = state!.copyWith(exercises: updatedExercises);
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error adding round to superset: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding round to superset: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
@@ -1237,7 +1483,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           // Prevent removing last round
           if (updatedRounds.isEmpty) {
             if (kDebugMode) {
-              debugPrint('⚠️ [WorkoutProvider] Cannot remove last round from superset');
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Cannot remove last round from superset');
             }
             return exercise;
           }
@@ -1255,15 +1501,55 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       state = state!.copyWith(exercises: updatedExercises);
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error removing round from superset: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error removing round from superset: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
     }
   }
 
+  /// 🔄 Undo workout completion - restore to "in progress" state
+  ///
+  /// Reverts a completed workout back to active state, allowing user to continue.
+  /// Used for the undo pattern after workout completion.
+  void undoCompletion() {
+    if (state != null && state!.isCompleted) {
+      if (kDebugMode) {
+        debugLog(LogCategory.workout, '🔄 [WorkoutProvider] Undoing workout completion: ${state!.name}');
+      }
+
+      // Restore workout to active state
+      state = state!.copyWith(
+        status: WorkoutStatus.inProgress,
+        endTime: null,
+      );
+
+      // Haptic feedback for undo action
+      HapticFeedbackService.exerciseCompletion(ref);
+
+      // Re-enable wakelock
+      ref.read(screenWakelockProvider.notifier).startWakelock();
+
+      // 📊 Track undo action
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackWorkoutResumed(
+        workoutId: state!.id,
+        pausedSeconds: state!.duration?.inSeconds ?? 0,
+      );
+    }
+  }
+
   void clearWorkout() {
     try {
+      // 💾 DEFENSIVE FIX: Force save any pending template modifications before clearing
+      // This acts as a safety net in case clearWorkout is called directly
+      if (_currentTemplateId != null && state != null) {
+        final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+        cacheService.forceSave(); // Non-blocking, triggers immediate save
+      }
+
       // 📊 Track workout cancelled if there was an active workout
       if (state != null) {
         final analytics = ref.read(analyticsServiceProvider);
@@ -1282,8 +1568,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       ref.read(screenWakelockProvider.notifier).stopWakelock();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutProvider] Error clearing workout: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error clearing workout: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Ensure state is cleared even if wakelock fails
       state = null;
@@ -1296,24 +1582,24 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
     // CRITICAL FIX: Prevent concurrent APRE calculations
     if (_apreCalculationInProgress) {
-      debugPrint('[APRE] ⚠️ Calculation already in progress - skipping duplicate request');
+      debugLog(LogCategory.workout, '[APRE] ⚠️ Calculation already in progress - skipping duplicate request');
       return;
     }
 
     _apreCalculationInProgress = true;
-    debugPrint('[APRE] 🔒 Calculation started - locking concurrent access');
+    debugLog(LogCategory.workout, '[APRE] 🔒 Calculation started - locking concurrent access');
 
     try {
       await _preCalculateAllAPREWeightsInternal();
     } finally {
       _apreCalculationInProgress = false;
-      debugPrint('[APRE] 🔓 Calculation complete - unlocking');
+      debugLog(LogCategory.workout, '[APRE] 🔓 Calculation complete - unlocking');
     }
   }
 
   /// Internal method for APRE calculation (called with lock held)
   Future<void> _preCalculateAllAPREWeightsInternal() async {
-    debugPrint('[APRE] Pre-calculating weights for all APRE exercises...');
+    debugLog(LogCategory.workout, '[APRE] Pre-calculating weights for all APRE exercises...');
 
     // Get all exercises with APRE enabled that need calculation
     final apreExercises = state!.exercises
@@ -1321,13 +1607,13 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         .toList();
 
     if (apreExercises.isEmpty) {
-      debugPrint('[APRE] No APRE exercises to calculate');
+      debugLog(LogCategory.workout, '[APRE] No APRE exercises to calculate');
       return;
     }
 
-    debugPrint('[APRE] Found ${apreExercises.length} APRE exercises to process');
+    debugLog(LogCategory.workout, '[APRE] Found ${apreExercises.length} APRE exercises to process');
     for (final ex in apreExercises) {
-      debugPrint('[APRE]   - ${ex.name}: protocol=${ex.apreProtocol}, cached1RM=${ex.calculated1RM?.toStringAsFixed(1)}');
+      debugLog(LogCategory.workout, '[APRE]   - ${ex.name}: protocol=${ex.apreProtocol}, cached1RM=${ex.calculated1RM?.toStringAsFixed(1)}');
     }
 
     // Calculate weights for each exercise in parallel
@@ -1335,8 +1621,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       // Skip if calculations are recent AND values exist
       if (exercise.calculated1RM != null &&
           !APREAutoRegulationService.shouldRecalculate(exercise)) {
-        debugPrint('[APRE] Skipping ${exercise.name} - calculations are recent and exist');
-        debugPrint('[APRE]   Existing 1RM: ${exercise.calculated1RM?.toStringAsFixed(1)}kg');
+        debugLog(LogCategory.workout, '[APRE] Skipping ${exercise.name} - calculations are recent and exist');
+        debugLog(LogCategory.workout, '[APRE]   Existing 1RM: ${exercise.calculated1RM?.toStringAsFixed(1)}kg');
         return null;
       }
 
@@ -1345,27 +1631,29 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         final historyData = await ref.read(exerciseHistoryFromWorkoutsProvider(exercise.name).future);
 
         if (historyData.isEmpty) {
-          debugPrint('[APRE] No history for ${exercise.name}');
+          debugLog(LogCategory.workout, '[APRE] No history for ${exercise.name}');
           return null;
         }
 
-        // Calculate APRE weights
+        // Calculate APRE weights with user's preferred config
+        final config = await ref.read(apreCalculationConfigProvider.future);
         final calculations = APREAutoRegulationService.calculateAPREWeights(
           historicalSets: historyData,
           protocol: exercise.apreProtocol ?? 6,
           useMetricSystem: true,
+          config: config,
         );
 
         if (calculations.isEmpty) {
-          debugPrint('[APRE] No calculations returned for ${exercise.name}');
+          debugLog(LogCategory.workout, '[APRE] No calculations returned for ${exercise.name}');
           return null;
         }
 
-        debugPrint('[APRE] Calculations for ${exercise.name}:');
-        debugPrint('[APRE]   1RM: ${calculations['calculated1RM']?.toStringAsFixed(1)}kg');
-        debugPrint('[APRE]   3RM: ${calculations['calculated3RM']?.toStringAsFixed(1)}kg');
-        debugPrint('[APRE]   6RM: ${calculations['calculated6RM']?.toStringAsFixed(1)}kg');
-        debugPrint('[APRE]   10RM: ${calculations['calculated10RM']?.toStringAsFixed(1)}kg');
+        debugLog(LogCategory.workout, '[APRE] Calculations for ${exercise.name}:');
+        debugLog(LogCategory.workout, '[APRE]   1RM: ${calculations['calculated1RM']?.toStringAsFixed(1)}kg');
+        debugLog(LogCategory.workout, '[APRE]   3RM: ${calculations['calculated3RM']?.toStringAsFixed(1)}kg');
+        debugLog(LogCategory.workout, '[APRE]   6RM: ${calculations['calculated6RM']?.toStringAsFixed(1)}kg');
+        debugLog(LogCategory.workout, '[APRE]   10RM: ${calculations['calculated10RM']?.toStringAsFixed(1)}kg');
 
         // Return updated exercise
         return exercise.copyWith(
@@ -1378,7 +1666,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           calculationMetadata: calculations['metadata'],
         );
       } catch (e) {
-        debugPrint('[APRE] Error calculating for ${exercise.name}: $e');
+        debugLog(LogCategory.workout, '[APRE] Error calculating for ${exercise.name}: $e');
         return null;
       }
     });
@@ -1388,7 +1676,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
     // CRITICAL FIX: Check disposal state before updating state
     if (_isDisposed) {
-      debugPrint('[APRE] ⚠️ Provider disposed during calculations - aborting state update');
+      debugLog(LogCategory.workout, '[APRE] ⚠️ Provider disposed during calculations - aborting state update');
       return;
     }
 
@@ -1404,7 +1692,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
-      debugPrint('[APRE] Pre-calculation complete for ${results.where((r) => r != null).length} exercises');
+      debugLog(LogCategory.workout, '[APRE] Pre-calculation complete for ${results.where((r) => r != null).length} exercises');
     }
   }
 
@@ -1414,8 +1702,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       // Skip if calculations are recent AND values exist
       if (exercise.calculated1RM != null &&
           !APREAutoRegulationService.shouldRecalculate(exercise)) {
-        debugPrint('[APRE] Using cached calculations for ${exercise.name}');
-        debugPrint('[APRE]   Cached 1RM: ${exercise.calculated1RM?.toStringAsFixed(1)}kg');
+        debugLog(LogCategory.workout, '[APRE] Using cached calculations for ${exercise.name}');
+        debugLog(LogCategory.workout, '[APRE]   Cached 1RM: ${exercise.calculated1RM?.toStringAsFixed(1)}kg');
         return;
       }
 
@@ -1423,25 +1711,27 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       final historyData = await ref.read(exerciseHistoryFromWorkoutsProvider(exercise.name).future);
 
       if (historyData.isEmpty) {
-        debugPrint('⚠️ [APRE] No history for ${exercise.name}, skipping base weight calculation');
+        debugLog(LogCategory.workout, '⚠️ [APRE] No history for ${exercise.name}, skipping base weight calculation');
         return;
       }
 
-      // Calculate APRE weights using the service
+      // Calculate APRE weights using the service with user's preferred config
+      final config = await ref.read(apreCalculationConfigProvider.future);
       final calculations = APREAutoRegulationService.calculateAPREWeights(
         historicalSets: historyData,
         protocol: exercise.apreProtocol ?? 6,
         useMetricSystem: true, // TODO: Get from user settings
+        config: config,
       );
 
       if (calculations.isEmpty) {
-        debugPrint('⚠️ [APRE] Could not calculate weights for ${exercise.name}');
+        debugLog(LogCategory.workout, '⚠️ [APRE] Could not calculate weights for ${exercise.name}');
         return;
       }
 
       // CRITICAL FIX: Check disposal state before updating state
       if (_isDisposed) {
-        debugPrint('[APRE] ⚠️ Provider disposed during calculation - aborting state update');
+        debugLog(LogCategory.workout, '[APRE] ⚠️ Provider disposed during calculation - aborting state update');
         return;
       }
 
@@ -1465,7 +1755,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         state = state!.copyWith(exercises: updatedExercises);
       }
     } catch (e) {
-      debugPrint('❌ [APRE] Error calculating base weight for ${exercise.name}: $e');
+      debugLog(LogCategory.workout, '❌ [APRE] Error calculating base weight for ${exercise.name}: $e');
     }
   }
 
@@ -1473,7 +1763,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
   void dispose() {
     // CRITICAL FIX: Mark as disposed to prevent async operations from modifying state
     _isDisposed = true;
-    debugPrint('🔒 [WorkoutProvider] Provider disposed - blocking future async operations');
+    debugLog(LogCategory.workout, '🔒 [WorkoutProvider] Provider disposed - blocking future async operations');
+
+    // Cancel cleanup timer
+    _cleanupTimer?.cancel();
+
     super.dispose();
   }
 }
@@ -1531,3 +1825,29 @@ final selectedExerciseCategoryProvider = StateProvider<ExerciseCategory>((ref) {
 final selectedExerciseTypeProvider = StateProvider<ExerciseType>((ref) {
   return ExerciseType.single;
 });
+
+/// Provider for fetching workouts from the last N days
+///
+/// Usage: ref.watch(recentWorkoutsProvider(7)) → Last 7 days
+///
+/// Returns: List of Workout filtered by:
+/// - startTime is not null
+/// - startTime is after cutoff date (now - N days)
+///
+/// Throws: Exception if repository fetch fails
+final recentWorkoutsProvider = FutureProvider.family<List<Workout>, int>(
+  (ref, days) async {
+    final repository = ref.watch(workoutRepositoryProvider);
+    final cutoffDate = DateTime.now().subtract(Duration(days: days));
+
+    final result = await repository.getWorkouts(limit: 50);
+
+    return result.fold(
+      (failure) => throw Exception('Failed to load workouts: ${failure.message}'),
+      (workouts) => workouts.where((w) =>
+        w.startTime != null &&
+        w.startTime!.isAfter(cutoffDate)
+      ).toList(),
+    );
+  },
+);

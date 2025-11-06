@@ -17,6 +17,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile_consolidated.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 
 /// Base repository that ALL feature repositories MUST extend
 /// Provides automatic local storage and premium sync
@@ -26,14 +28,17 @@ abstract class BaseHybridRepository<T> {
     required this.featureName,
     required this.collectionName,
     this.requiresPremiumForCloud = true,
+    HiveBoxManagerEnhanced? boxManager,
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance {
+       _auth = auth ?? FirebaseAuth.instance,
+       _boxManager = boxManager ?? HiveBoxManagerEnhanced() {
     _initialize();
   }
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
+  final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _localBox;
   late Box<Map> _syncQueueBox;
   
@@ -52,18 +57,27 @@ abstract class BaseHybridRepository<T> {
 
   // MEMORY LEAK FIX: Disposal flag to prevent operations after dispose
   bool _isDisposed = false;
+  Future<void>? _disposeFuture;
   
   /// Initialize boxes and load user profile
   Future<void> _initialize() async {
-    // Initialize Hive boxes for this feature
-    _localBox = await Hive.openBox<Map>('${featureName}_data');
-    _syncQueueBox = await Hive.openBox<Map>('${featureName}_sync_queue');
-    
+    // ✅ FIX: Use HiveBoxManagerEnhanced instead of Hive.openBox() directly
+    // This ensures proper lifecycle management and prevents memory leaks
+    final dataBoxName = HiveBoxNames.getDataBoxName(featureName);
+    final syncBoxName = HiveBoxNames.getSyncQueueName(featureName);
+
+    _localBox = await _boxManager.openBox<Map>(dataBoxName);
+    _syncQueueBox = await _boxManager.openBox<Map>(syncBoxName);
+
     // Load and monitor user profile
     await _loadUserProfile();
     _startProfileMonitoring();
-    
-    debugPrint('✅ BaseHybridRepository initialized for: $featureName');
+
+    if (kDebugMode) {
+      debugPrint('✅ BaseHybridRepository initialized for: $featureName');
+      debugPrint('   - Data box: $dataBoxName');
+      debugPrint('   - Sync box: $syncBoxName');
+    }
   }
   
   /// Load user profile
@@ -500,33 +514,82 @@ abstract class BaseHybridRepository<T> {
     await _syncQueueBox.clear();
   }
   
-  /// Dispose resources
-  /// MEMORY LEAK FIX: Properly close Hive boxes to prevent memory leaks
+  /// Dispose resources (synchronous entry point)
+  ///
+  /// ✅ FIX: Async disposal pattern to prevent race conditions.
+  ///
+  /// This method is synchronous for compatibility with Riverpod's `ref.onDispose()`,
+  /// but internally starts async disposal without blocking.
+  ///
+  /// For tests or critical shutdown, use [waitForDisposal] to ensure
+  /// all async cleanup completes.
   void dispose() {
-    // 1. CRITICAL: Set disposed flag first to prevent operations after dispose
+    if (_isDisposed) return;
+
+    // Start async disposal but don't await
+    // (ref.onDispose() in Riverpod is sync)
+    _disposeFuture = _disposeAsync();
+  }
+
+  /// Internal async disposal implementation
+  ///
+  /// ✅ FIX: Properly awaits all async cleanup operations
+  Future<void> _disposeAsync() async {
+    if (_isDisposed) return;
     _isDisposed = true;
 
-    // 2. Cancel timer
-    _profileRefreshTimer?.cancel();
-    _profileRefreshTimer = null;
-
-    // 3. Close stream controller
-    _syncEventController.close();
-
-    // 4. ✅ FIX: Close Hive boxes (CRITICAL - was missing!)
-    // This fixes memory leak affecting 3 repositories:
-    // - HybridAppConfigRepository
-    // - HybridCommunityRepository
-    // - HybridAchievementRepository
-    _localBox.close();
-    _syncQueueBox.close();
-
-    // 5. Clear user profile cache
-    _userProfile = null;
-
     if (kDebugMode) {
-      debugPrint('✅ BaseHybridRepository disposed for: $featureName');
-      debugPrint('   - Hive boxes closed: ${featureName}_data, ${featureName}_sync_queue');
+      debugPrint('🗑️ BaseHybridRepository disposing for: $featureName...');
+    }
+
+    try {
+      // 1. Cancel timer
+      _profileRefreshTimer?.cancel();
+      _profileRefreshTimer = null;
+
+      // 2. Close stream controller (async)
+      await _syncEventController.close();
+
+      // 3. ✅ CRITICAL FIX: DO NOT close boxes manually!
+      //    HiveBoxManagerEnhanced owns box lifecycle and will close them centrally.
+      //    Closing here causes race conditions with other repositories.
+      //
+      //    OLD (WRONG):
+      //    await _localBox.close();      // ❌ Race condition!
+      //    await _syncQueueBox.close();  // ❌ Race condition!
+      //
+      //    NEW (CORRECT):
+      //    Boxes are managed by HiveBoxManagerEnhanced and closed via:
+      //    - ref.onDispose() in hiveBoxManagerProvider
+      //    - Or manually: await manager.closeAll()
+
+      // 4. Clear user profile cache
+      _userProfile = null;
+
+      if (kDebugMode) {
+        debugPrint('✅ BaseHybridRepository disposed for: $featureName');
+        debugPrint('   - Timer cancelled');
+        debugPrint('   - Stream closed');
+        debugPrint('   - Boxes managed by HiveBoxManagerEnhanced (not closed here)');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ Error during disposal of $featureName: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Wait for disposal to complete (for tests and critical shutdown)
+  ///
+  /// Example:
+  /// ```dart
+  /// repository.dispose();
+  /// await repository.waitForDisposal(); // Ensures cleanup is done
+  /// ```
+  Future<void> waitForDisposal() async {
+    if (_disposeFuture != null) {
+      await _disposeFuture;
     }
   }
 }

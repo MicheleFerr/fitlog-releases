@@ -17,6 +17,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
@@ -27,6 +28,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/usecases/detect_per
 import 'package:gymbro_flutter_new/features/analytics/domain/usecases/compare_workouts_usecase.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
+import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_cache_service.dart';
 
 // =============================================================================
 // PROVIDERS SETUP
@@ -34,7 +36,8 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 
 /// Hive workout data source provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
-  return HiveWorkoutDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return HiveWorkoutDataSource(boxManager);
 });
 
 /// Hive cache box for workout metrics
@@ -44,6 +47,22 @@ final workoutMetricsCacheProvider = Provider<Box<Map>>((ref) {
     throw StateError('workoutMetrics box not opened. Call Hive.openBox<Map>(\'workoutMetrics\') first.');
   }
   return Hive.box<Map>('workoutMetrics');
+});
+
+/// Analytics cache service provider
+final analyticsCacheServiceProvider = Provider<AnalyticsCacheService>((ref) {
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  final cacheService = AnalyticsCacheService(boxManager);
+
+  // Initialize cache service
+  cacheService.initialize();
+
+  // Dispose on provider disposal
+  ref.onDispose(() {
+    cacheService.dispose();
+  });
+
+  return cacheService;
 });
 
 /// Workout Analytics Repository Provider
@@ -58,11 +77,26 @@ final workoutAnalyticsRepositoryProvider = Provider<WorkoutAnalyticsRepository>(
     throw StateError('workoutMetrics box must be opened before using analytics');
   }
 
-  // Pass cache directly without cast - repository now accepts untyped Box
-  return WorkoutAnalyticsRepositoryImpl(
+  // Get HiveBoxManagerEnhanced
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+
+  // Get analytics cache service
+  final cacheService = ref.watch(analyticsCacheServiceProvider);
+
+  // Pass cache, boxManager, and cacheService to repository
+  final repository = WorkoutAnalyticsRepositoryImpl(
     metricsCache: cache,
+    boxManager: boxManager,
     hiveWorkoutDataSource: hiveDataSource,
+    cacheService: cacheService,
   );
+
+  // Dispose repository on provider disposal
+  ref.onDispose(() {
+    repository.dispose();
+  });
+
+  return repository;
 });
 
 /// Calculate Workout Metrics Use Case Provider

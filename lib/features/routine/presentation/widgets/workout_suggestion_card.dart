@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -76,12 +77,28 @@ class WorkoutSuggestionCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      _formatWorkoutName(suggestion.workoutName),
-                      style: context.textTheme.headlineMedium?.copyWith(
-                        color: context.colors.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _formatWorkoutName(suggestion.workoutName),
+                          style: context.textTheme.headlineMedium?.copyWith(
+                            color: context.colors.onPrimaryContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        // ✅ NEW: Show scheduled date if available
+                        if (suggestion.scheduledDate != null) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            _formatScheduledDate(suggestion.scheduledDate!),
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.colors.onPrimaryContainer.withValues(alpha: 0.8),
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ],
@@ -300,6 +317,15 @@ class WorkoutSuggestionCard extends StatelessWidget {
       case SuggestionLevel.dayBased:
         return context.l10n.levelDefault;
     }
+  }
+
+  /// Format scheduled date for display
+  ///
+  /// Returns: "Questo è l'allenamento che dovresti fare il dd/mm/yyyy"
+  String _formatScheduledDate(DateTime date) {
+    final formatter = DateFormat('dd/MM/yyyy');
+    final formattedDate = formatter.format(date);
+    return 'Questo è l\'allenamento che dovresti fare il $formattedDate';
   }
 }
 

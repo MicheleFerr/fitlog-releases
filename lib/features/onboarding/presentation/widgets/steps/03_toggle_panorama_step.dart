@@ -232,7 +232,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                 Text(
                   AppLocalizations.of(context).onboardingTogglePanoramaDescription,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.7),
+                    color: colorScheme.onSurface.withValues(alpha: 0.7),
                     fontSize: 16,
                   ),
                   textAlign: TextAlign.center,
@@ -252,13 +252,13 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: isProMode
-                  ? colorScheme.primary.withOpacity(0.1)
-                  : colorScheme.secondary.withOpacity(0.1),
+                  ? colorScheme.primary.withValues(alpha: 0.1)
+                  : colorScheme.secondary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isProMode
-                    ? colorScheme.primary.withOpacity(0.3)
-                    : colorScheme.secondary.withOpacity(0.3),
+                    ? colorScheme.primary.withValues(alpha: 0.3)
+                    : colorScheme.secondary.withValues(alpha: 0.3),
               ),
             ),
             child: Text(
@@ -298,10 +298,10 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: colorScheme.primaryContainer.withOpacity(0.3),
+              color: colorScheme.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: colorScheme.primary.withOpacity(0.3),
+                color: colorScheme.primary.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
@@ -327,7 +327,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                             decoration: BoxDecoration(
-                              color: colorScheme.primary.withOpacity(0.2),
+                              color: colorScheme.primary.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Row(
@@ -373,11 +373,11 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -407,7 +407,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: category.color.withOpacity(0.1),
+                      color: category.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -432,15 +432,15 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                         Text(
                           category.description,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withOpacity(0.7),
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
                     ),
                   ),
                   Icon(
-                    isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
-                    color: colorScheme.onSurface.withOpacity(0.6),
+                    isExpanded ? Icons.expand_less : Icons.expand_more,
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ],
               ),
@@ -475,16 +475,16 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
       decoration: BoxDecoration(
         color: isAvailable
             ? (isEnabled
-                ? colorScheme.primaryContainer.withOpacity(0.3)
-                : colorScheme.surfaceContainerHighest.withOpacity(0.3))
-            : colorScheme.outline.withOpacity(0.1),
+                ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+                : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3))
+            : colorScheme.outline.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isAvailable
               ? (isEnabled
-                  ? colorScheme.primary.withOpacity(0.3)
-                  : colorScheme.outline.withOpacity(0.2))
-              : colorScheme.outline.withOpacity(0.1),
+                  ? colorScheme.primary.withValues(alpha: 0.3)
+                  : colorScheme.outline.withValues(alpha: 0.2))
+              : colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -509,7 +509,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: isAvailable
                         ? colorScheme.onSurface
-                        : colorScheme.onSurface.withOpacity(0.5),
+                        : colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -537,8 +537,8 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
             toggle.description,
             style: theme.textTheme.bodySmall?.copyWith(
               color: isAvailable
-                  ? colorScheme.onSurface.withOpacity(0.8)
-                  : colorScheme.onSurface.withOpacity(0.5),
+                  ? colorScheme.onSurface.withValues(alpha: 0.8)
+                  : colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
           if (toggle.example != null) ...[
@@ -546,7 +546,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -554,14 +554,14 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                   Icon(
                     AppIcons.tip,
                     size: 16,
-                    color: colorScheme.onSurface.withOpacity(0.6),
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       toggle.example!,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurface.withOpacity(0.7),
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
                         fontStyle: FontStyle.italic,
                       ),
                     ),

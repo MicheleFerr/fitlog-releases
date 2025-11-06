@@ -3,7 +3,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_analyzer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Rep Continuum Distribution Card
 ///
@@ -96,7 +97,7 @@ class RepContinuumCard extends StatelessWidget {
             l10n.strengthZone,
             data.strengthPercentage,
             data.strengthSets,
-            Colors.red,
+            context.colors.error,
             l10n.strengthZoneDesc,
           ),
           const SizedBox(height: 12),
@@ -118,7 +119,7 @@ class RepContinuumCard extends StatelessWidget {
             l10n.enduranceZone,
             data.endurancePercentage,
             data.enduranceSets,
-            Colors.green,
+            context.colors.success,
             l10n.enduranceZoneDesc,
           ),
           const SizedBox(height: 20),
@@ -214,13 +215,13 @@ class RepContinuumCard extends StatelessWidget {
               Expanded(
                 flex: (data.strengthPercentage * 100).toInt(),
                 child: Container(
-                  color: Colors.red,
+                  color: context.colors.error,
                   alignment: Alignment.center,
                   child: data.strengthPercentage > 15
                       ? Text(
                           '${data.strengthPercentage.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -237,8 +238,8 @@ class RepContinuumCard extends StatelessWidget {
                   child: data.hypertrophyPercentage > 15
                       ? Text(
                           '${data.hypertrophyPercentage.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -250,13 +251,13 @@ class RepContinuumCard extends StatelessWidget {
               Expanded(
                 flex: (data.endurancePercentage * 100).toInt(),
                 child: Container(
-                  color: Colors.green,
+                  color: context.colors.success,
                   alignment: Alignment.center,
                   child: data.endurancePercentage > 15
                       ? Text(
                           '${data.endurancePercentage.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -280,16 +281,16 @@ class RepContinuumCard extends StatelessWidget {
 
     if (data.hypertrophyPercentage >= 60) {
       recommendation = l10n.repContinuumRecommendationBalanced;
-      icon = AppIcons.complete;
-      iconColor = Colors.green;
+      icon = Icons.check_circle;
+      iconColor = context.colors.success;
     } else if (data.strengthPercentage > 50) {
       recommendation = l10n.repContinuumRecommendationStrength;
-      icon = AppIcons.workout;
-      iconColor = Colors.red;
+      icon = Icons.fitness_center;
+      iconColor = context.colors.error;
     } else if (data.endurancePercentage > 50) {
       recommendation = l10n.repContinuumRecommendationEndurance;
-      icon = AppIcons.timer;
-      iconColor = Colors.green;
+      icon = Icons.timer;
+      iconColor = context.colors.success;
     } else {
       recommendation = l10n.repContinuumRecommendationMixed;
       icon = AppIcons.info;
@@ -448,8 +449,8 @@ class RepContinuumCard extends StatelessWidget {
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding1,
-                      AppIcons.workout,
-                      Colors.red,
+                      Icons.fitness_center,
+                      context.colors.error,
                     ),
                     const SizedBox(height: 8),
                     _buildFindingItem(
@@ -462,8 +463,8 @@ class RepContinuumCard extends StatelessWidget {
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding3,
-                      AppIcons.timer,
-                      Colors.green,
+                      Icons.timer,
+                      context.colors.success,
                     ),
                     const SizedBox(height: 20),
 

@@ -12,12 +12,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseVersionService {
 
-  ExerciseVersionService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  ExerciseVersionService({
+    FirebaseFirestore? firestore,
+    HiveBoxManagerEnhanced? boxManager,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _boxManager = boxManager ?? HiveBoxManagerEnhanced();
   final FirebaseFirestore _firestore;
+  final HiveBoxManagerEnhanced _boxManager;
   static const String _metadataCollection = 'exercises_metadata';
   static const String _versionDocId = 'version_info';
   static const String _cacheBoxName = 'exercise_version_cache';
@@ -30,7 +35,7 @@ class ExerciseVersionService {
     if (_initialized) return;
 
     try {
-      _cacheBox = await Hive.openBox<Map>(_cacheBoxName);
+      _cacheBox = await _boxManager.openBox<Map>(_cacheBoxName);
       _initialized = true;
       debugPrint('✅ ExerciseVersionService initialized');
     } catch (e) {
@@ -260,8 +265,27 @@ class ExerciseVersionInfo {
   });
 
   factory ExerciseVersionInfo.fromFirestore(Map<String, dynamic> data) {
+    // Parse version field (supports both String and Map formats)
+    String version;
+    final versionField = data['current_version'];
+
+    if (versionField is String) {
+      // Direct string format: "1.0.3"
+      version = versionField;
+    } else if (versionField is Map) {
+      // Map format: {"major": 1, "minor": 0, "patch": 3}
+      final major = versionField['major'] ?? 1;
+      final minor = versionField['minor'] ?? 0;
+      final patch = versionField['patch'] ?? 0;
+      version = '$major.$minor.$patch';
+    } else {
+      // Fallback if format is unexpected
+      version = '1.0.0';
+      debugPrint('⚠️ Unexpected version format in Firestore: $versionField (type: ${versionField.runtimeType})');
+    }
+
     return ExerciseVersionInfo(
-      version: data['current_version'] as String? ?? '1.0.0',
+      version: version,
       lastUpdated: (data['last_updated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       totalExercises: data['total_exercises'] as int? ?? 0,
       changelog: List<String>.from(data['changelog'] as List? ?? []),

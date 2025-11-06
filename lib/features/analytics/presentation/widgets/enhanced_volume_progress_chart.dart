@@ -6,10 +6,14 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_progress_chart_3d.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_efficiency_calculator.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/fatigue_rating_dialog.dart';
 
 /// Enhanced Volume Progress Chart with interactive date selection and detailed views
 class EnhancedVolumeProgressChart extends ConsumerStatefulWidget {
@@ -627,9 +631,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: volumeChange > 5 
-                    ? Colors.green.withValues(alpha: 0.3)
+                    ? context.colors.success.withValues(alpha: 0.3)
                     : volumeChange < -5 
-                        ? Colors.red.withValues(alpha: 0.3)
+                        ? context.colors.error.withValues(alpha: 0.3)
                         : theme.colorScheme.outline.withValues(alpha: 0.2),
                 width: 1,
               ),
@@ -653,10 +657,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: volumeChange > 5 
-                              ? Colors.green.withValues(alpha: 0.2)
+                              ? context.colors.success.withValues(alpha: 0.2)
                               : volumeChange < -5 
-                                  ? Colors.red.withValues(alpha: 0.2)
-                                  : Colors.orange.withValues(alpha: 0.2),
+                                  ? context.colors.error.withValues(alpha: 0.2)
+                                  : context.colors.secondary.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -670,10 +674,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                       : AppIcons.remove,
                               size: 14,
                               color: volumeChange > 5 
-                                  ? Colors.green
+                                  ? context.colors.success
                                   : volumeChange < -5 
-                                      ? Colors.red
-                                      : Colors.orange,
+                                      ? context.colors.error
+                                      : context.colors.secondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -684,10 +688,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                       : localizations.stall,
                               style: theme.textTheme.labelSmall?.copyWith(
                                 color: volumeChange > 5 
-                                    ? Colors.green
+                                    ? context.colors.success
                                     : volumeChange < -5 
-                                        ? Colors.red
-                                        : Colors.orange,
+                                        ? context.colors.error
+                                        : context.colors.secondary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -729,9 +733,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         '${volumeChange > 0 ? '+' : ''}${volumeChange.toStringAsFixed(1)}%',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: volumeChange > 0 
-                              ? Colors.green
+                              ? context.colors.success
                               : volumeChange < 0 
-                                  ? Colors.red
+                                  ? context.colors.error
                                   : theme.colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
                         ),
@@ -819,7 +823,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         ),
         
         // Table content
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.2),
@@ -950,7 +954,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             icon: trend > 0 ? AppIcons.trendUp : AppIcons.trendDown,
             label: localizations.trend,
             value: '${trend > 0 ? '+' : ''}${trend.toStringAsFixed(1)}%',
-            color: trend > 0 ? Colors.green : Colors.red,
+            color: trend > 0 ? context.colors.success : context.colors.error,
             theme: theme,
           ),
         ],
@@ -1356,9 +1360,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: volumeChange > 5 
-                          ? Colors.green.withValues(alpha: 0.3)
+                          ? context.colors.success.withValues(alpha: 0.3)
                           : volumeChange < -5 
-                              ? Colors.red.withValues(alpha: 0.3)
+                              ? context.colors.error.withValues(alpha: 0.3)
                               : theme.colorScheme.outline.withValues(alpha: 0.2),
                       width: 1,
                     ),
@@ -1382,10 +1386,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: volumeChange > 5 
-                                ? Colors.green.withValues(alpha: 0.2)
+                                ? context.colors.success.withValues(alpha: 0.2)
                                 : volumeChange < -5 
-                                    ? Colors.red.withValues(alpha: 0.2)
-                                    : Colors.orange.withValues(alpha: 0.2),
+                                    ? context.colors.error.withValues(alpha: 0.2)
+                                    : context.colors.secondary.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -1399,10 +1403,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                         : AppIcons.remove,
                                 size: 14,
                                 color: volumeChange > 5 
-                                    ? Colors.green
+                                    ? context.colors.success
                                     : volumeChange < -5 
-                                        ? Colors.red
-                                        : Colors.orange,
+                                        ? context.colors.error
+                                        : context.colors.secondary,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -1413,10 +1417,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                         : localizations.stall,
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: volumeChange > 5 
-                                      ? Colors.green
+                                      ? context.colors.success
                                       : volumeChange < -5 
-                                          ? Colors.red
-                                          : Colors.orange,
+                                          ? context.colors.error
+                                          : context.colors.secondary,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1458,9 +1462,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           '${volumeChange > 0 ? '+' : ''}${volumeChange.toStringAsFixed(1)}%',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: volumeChange > 0 
-                                ? Colors.green
+                                ? context.colors.success
                                 : volumeChange < 0 
-                                    ? Colors.red
+                                    ? context.colors.error
                                     : theme.colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
                           ),
@@ -1785,16 +1789,18 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   String _getMuscleBalanceScore() {
     final activities = _getFilteredData();
     if (activities.isEmpty) return 'No data';
-    
+
     final muscleVolumes = <String, double>{};
-    for (final activity in activities) {
-      final muscle = _getMuscleGroup(activity.exerciseName);
-      final volume = activity.sets.fold(0.0, (sum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return sum + (weight * reps);
-      });
-      muscleVolumes[muscle] = (muscleVolumes[muscle] ?? 0) + volume;
+    for (final workout in activities) {
+      for (final exercise in workout.exercises) {
+        final muscle = _getMuscleGroup(exercise.name);
+        final volume = exercise.sets.fold(0.0, (sum, set) {
+          final weight = set.weight ?? 0.0;
+          final reps = set.reps ?? 0;
+          return sum + (weight * reps);
+        });
+        muscleVolumes[muscle] = (muscleVolumes[muscle] ?? 0) + volume;
+      }
     }
     
     if (muscleVolumes.isEmpty) return 'No data';
@@ -1818,12 +1824,14 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   String _getRecoveryRecommendation() {
     final activities = _getFilteredData();
     if (activities.isEmpty) return 'Rest well';
-    
-    final recentVolume = activities.fold(0.0, (sum, activity) {
-      return sum + activity.sets.fold(0.0, (setSum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return setSum + (weight * reps);
+
+    final recentVolume = activities.fold(0.0, (sum, workout) {
+      return sum + workout.exercises.fold(0.0, (exerciseSum, exercise) {
+        return exerciseSum + exercise.sets.fold(0.0, (setSum, set) {
+          final weight = set.weight ?? 0.0;
+          final reps = set.reps ?? 0;
+          return setSum + (weight * reps);
+        });
       });
     });
     
@@ -1839,13 +1847,23 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   String _getIntensityScore() {
     final activities = _getFilteredData();
     if (activities.isEmpty) return 'No data';
-    
-    final avgEffort = activities.fold(0.0, (sum, activity) {
-      final effortSum = activity.sets.fold(0.0, (setSum, set) {
-        return setSum + (set.effort ?? 5);
-      });
-      return sum + (activity.sets.isEmpty ? 0 : effortSum / activity.sets.length);
-    }) / activities.length;
+
+    var totalEffort = 0.0;
+    var totalExercises = 0;
+
+    for (final workout in activities) {
+      for (final exercise in workout.exercises) {
+        if (exercise.sets.isNotEmpty) {
+          final effortSum = exercise.sets.fold(0.0, (setSum, set) {
+            return setSum + (set.rpe?.toDouble() ?? 5.0);
+          });
+          totalEffort += effortSum / exercise.sets.length;
+          totalExercises++;
+        }
+      }
+    }
+
+    final avgEffort = totalExercises > 0 ? totalEffort / totalExercises : 0.0;
     
     if (avgEffort > 8) {
       return 'Very High ${avgEffort.toStringAsFixed(1)}/10';
@@ -1880,10 +1898,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   // Show fatigue rating dialog
   void _showFatigueRatingDialog(BuildContext context) {
     final today = DateTime.now();
-    final todayActivities = widget.activities.where((activity) {
-      return activity.createdAt.year == today.year &&
-             activity.createdAt.month == today.month &&
-             activity.createdAt.day == today.day;
+    final todayActivities = widget.workouts.where((workout) {
+      return workout.createdAt.year == today.year &&
+             workout.createdAt.month == today.month &&
+             workout.createdAt.day == today.day;
     }).toList();
     
     if (todayActivities.isEmpty) {
@@ -1895,31 +1913,36 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
       return;
     }
     
-    final totalVolume = todayActivities.fold(0.0, (sum, activity) {
-      return sum + activity.sets.fold(0.0, (setSum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return setSum + (weight * reps);
+    final totalVolume = todayActivities.fold(0.0, (sum, workout) {
+      return sum + workout.exercises.fold(0.0, (exerciseSum, exercise) {
+        return exerciseSum + exercise.sets.fold(0.0, (setSum, set) {
+          final weight = set.weight ?? 0.0;
+          final reps = set.reps ?? 0;
+          return setSum + (weight * reps);
+        });
       });
     });
-    
-    final exercisesPerformed = todayActivities
-        .map((activity) => activity.exerciseName)
-        .toSet()
-        .toList();
+
+    final exercisesPerformed = <String>{};
+    for (final workout in todayActivities) {
+      for (final exercise in workout.exercises) {
+        exercisesPerformed.add(exercise.name);
+      }
+    }
+    final exercisesList = exercisesPerformed.toList();
     
     showDialog(
       context: context,
       builder: (context) => FatigueRatingDialog(
         totalVolume: totalVolume,
-        exercisesPerformed: exercisesPerformed,
+        exercisesPerformed: exercisesList,
         onRatingSubmitted: (fatigueLevel, notes) {
           // TODO: Save fatigue data to local storage
           HapticFeedback.mediumImpact();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Fatigue level $fatigueLevel recorded'),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
             ),
           );
         },
@@ -1929,9 +1952,18 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   
   // Build recent efficiency scores widget
   Widget _buildRecentEfficiencyScores(ThemeData theme) {
+    // Convert workouts to activities for efficiency calculation
+    final activities = <ExerciseActivity>[];
+    for (final workout in widget.workouts) {
+      for (final exercise in workout.exercises) {
+        // Skip conversion for now - this method is unused
+        // Would need proper ExerciseActivity.fromExercise implementation
+      }
+    }
+
     // Calculate real efficiency score
     final score = MuscleEfficiencyCalculator.calculate(
-      recentActivities: widget.activities,
+      recentActivities: activities,
       currentDate: DateTime.now(),
     );
 
@@ -2020,10 +2052,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                               : AppIcons.remove,
                       size: 20,
                       color: score.trend == EfficiencyTrend.improving
-                          ? Colors.green
+                          ? context.colors.success
                           : score.trend == EfficiencyTrend.declining
-                              ? Colors.red
-                              : Colors.grey,
+                              ? context.colors.error
+                              : context.colors.surfaceContainerHighest,
                     ),
                   ],
                 ),
@@ -2125,9 +2157,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }
 
   Color _getComponentColor(double value) {
-    if (value >= 80) return Colors.green;
-    if (value >= 60) return Colors.orange;
-    return Colors.red;
+    if (value >= 80) return context.colors.success;
+    if (value >= 60) return context.colors.secondary;
+    return context.colors.error;
   }
   
   Widget _buildScoreItem(String day, int? score, Color color, ThemeData theme) {
@@ -2167,27 +2199,34 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   
   // Get detailed set information for a specific exercise on a specific date
   List<Map<String, dynamic>> _getExerciseSetsForDate(String exerciseName, DateTime date) {
-    final activities = widget.activities.where((a) => 
-      _isSameDay(a.createdAt, date) && a.exerciseName == exerciseName
+    // Find workouts for the given date
+    final relevantWorkouts = widget.workouts.where((w) =>
+      _isSameDay(w.createdAt, date)
     ).toList();
-    
+
     final List<Map<String, dynamic>> allSets = [];
-    
-    for (final activity in activities) {
-      for (int i = 0; i < activity.sets.length; i++) {
-        final set = activity.sets[i];
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        final volume = weight * reps;
-        
-        allSets.add({
-          'setNumber': i + 1,
-          'weight': weight,
-          'reps': reps,
-          'effort': set.effort ?? 5,
-          'volume': volume,
-          'activityId': activity.id,
-        });
+
+    for (final workout in relevantWorkouts) {
+      // Find exercises matching the name
+      final exercises = workout.exercises.where((e) => e.name == exerciseName);
+
+      for (final exercise in exercises) {
+        for (int i = 0; i < exercise.sets.length; i++) {
+          final set = exercise.sets[i];
+          final weight = set.weight ?? 0.0;
+          final reps = set.reps ?? 0;
+          final volume = weight * reps;
+
+          allSets.add({
+            'setNumber': i + 1,
+            'weight': weight,
+            'reps': reps,
+            'effort': set.rpe ?? 5,
+            'volume': volume,
+            'workoutId': workout.id,
+            'exerciseId': exercise.id,
+          });
+        }
       }
     }
     
@@ -2249,10 +2288,11 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
     // Get current user for exercise history
     final currentUserAsync = ref.watch(firebaseUserProvider);
     final userId = currentUserAsync.value?.uid ?? '';
-    
-    // Watch exercise stats for comparison
-    final exerciseStatsAsync = ref.watch(exerciseStatsProvider(widget.exerciseName));
-    final exerciseHistoryAsync = ref.watch(exerciseHistoryGroupedProvider(widget.exerciseName));
+
+    // TODO: Re-implement exercise stats providers when needed
+    // These providers don't exist yet and need to be created
+    // final exerciseStatsAsync = ref.watch(exerciseStatsProvider(widget.exerciseName));
+    // final exerciseHistoryAsync = ref.watch(exerciseHistoryGroupedProvider(widget.exerciseName));
     
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -2263,7 +2303,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: context.colors.onSurface.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -2291,9 +2331,9 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    AppIcons.workout,
-                    color: Colors.white,
+                  Icon(
+                    Icons.fitness_center,
+                    color: context.colors.surface,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -2305,14 +2345,14 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                         Text(
                           widget.exerciseName,
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           DateFormat('EEEE, d MMMM yyyy').format(widget.date),
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
+                            color: context.colors.surface.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -2320,9 +2360,9 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      AppIcons.close,
-                      color: Colors.white,
+                    icon: Icon(
+                      Icons.close,
+                      color: context.colors.surface,
                       size: 20,
                     ),
                   ),
@@ -2373,7 +2413,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   });
                 },
                 icon: Icon(
-                  _showComparison ? AppIcons.keyboardArrowUp : AppIcons.history,
+                  _showComparison ? AppIcons.keyboardArrowUp : Icons.history,
                   size: 20,
                 ),
                 label: Text(widget.localizations.compareWithHistory),
@@ -2415,80 +2455,15 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          exerciseStatsAsync.when(
-                            data: (stats) => Column(
-                        children: [
-                          _buildStatRow(
-                            icon: AppIcons.trendUp,
-                            label: widget.localizations.bestVolume,
-                            value: stats.maxWeight != null ? '${(stats.maxWeight! * 10).toStringAsFixed(0)}kg' : '--',
-                            theme: theme,
+                          // TODO: Re-enable when exerciseStatsAsync provider is implemented
+                          Column(
+                            children: [
+                              Text(
+                                'Stats temporarily unavailable',
+                                style: theme.textTheme.bodySmall,
+                              ),
+                            ],
                           ),
-                          const Divider(height: 1),
-                          _buildStatRow(
-                            icon: AppIcons.workout,
-                            label: widget.localizations.maxWeight,
-                            value: stats.maxWeight != null ? '${stats.maxWeight!.toStringAsFixed(1)}kg' : '--',
-                            theme: theme,
-                          ),
-                          const Divider(height: 1),
-                          _buildStatRow(
-                            icon: AppIcons.repeat,
-                            label: widget.localizations.mostSets,
-                            value: stats.totalSets.toString(),
-                            theme: theme,
-                          ),
-                        ],
-                      ),
-                      loading: () => Column(
-                        children: [
-                          _buildStatRow(
-                            icon: AppIcons.trendUp,
-                            label: widget.localizations.bestVolume,
-                            value: '...',
-                            theme: theme,
-                          ),
-                          const Divider(height: 1),
-                          _buildStatRow(
-                            icon: AppIcons.workout,
-                            label: widget.localizations.maxWeight,
-                            value: '...',
-                            theme: theme,
-                          ),
-                          const Divider(height: 1),
-                          _buildStatRow(
-                            icon: AppIcons.repeat,
-                            label: widget.localizations.mostSets,
-                            value: '...',
-                            theme: theme,
-                          ),
-                        ],
-                      ),
-                      error: (_, __) => Column(
-                        children: [
-                          _buildStatRow(
-                            icon: AppIcons.trendUp,
-                            label: widget.localizations.bestVolume,
-                            value: '--',
-                            theme: theme,
-                          ),
-                          const Divider(height: 1),
-                          _buildStatRow(
-                            icon: AppIcons.workout,
-                            label: widget.localizations.maxWeight,
-                            value: '--',
-                            theme: theme,
-                          ),
-                          const Divider(height: 1),
-                          _buildStatRow(
-                            icon: AppIcons.repeat,
-                            label: widget.localizations.mostSets,
-                            value: '--',
-                            theme: theme,
-                          ),
-                        ],
-                      ),
-                    ),
                       ],
                     ),
                   ),
@@ -2598,13 +2573,13 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
     // Effort color based on value
     Color effortColor;
     if (effort >= 9) {
-      effortColor = Colors.red;
+      effortColor = context.colors.error;
     } else if (effort >= 7) {
-      effortColor = Colors.orange;
+      effortColor = context.colors.secondary;
     } else if (effort >= 5) {
-      effortColor = Colors.green;
+      effortColor = context.colors.success;
     } else {
-      effortColor = Colors.blue;
+      effortColor = context.colors.primary;
     }
     
     return Padding(

@@ -607,116 +607,106 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
   // === WORKOUT SUGGESTION ===
 
   Widget _buildWorkoutSuggestionCard(BuildContext context, WidgetRef ref) {
-    // 🔥 NEW: Check for active routine first (same method as CTA)
-    final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
+    final suggestionAsync = ref.watch(workoutSuggestionProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: activeRoutineAsync.when(
-        data: (activeRoutine) {
-          // If active routine exists, use getTodayWorkout() directly (no cache!)
-          if (activeRoutine != null) {
-            return _buildRoutineBasedSuggestion(context, ref, activeRoutine);
-          }
-
-          // No active routine - fallback to AI prediction provider
-          return _buildAIPredictionSuggestion(context, ref);
-        },
-        loading: () => const WorkoutSuggestionLoadingState(),
-        error: (error, stack) => const SizedBox.shrink(),
-      ),
-    );
-  }
-
-  /// Build suggestion from active routine (same method as CTA - always fresh!)
-  Widget _buildRoutineBasedSuggestion(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-  ) {
-    final todayWorkout = routine.getTodayWorkout();
-
-    // Rest day - show rest message
-    if (todayWorkout == null || todayWorkout.isRestDay) {
-      return WorkoutSuggestionCard(
-        suggestion: WorkoutSuggestion(
-          level: SuggestionLevel.routine,
-          workoutName: 'Rest Day',
-          confidence: 1.0,
-          reason: 'Your routine schedule shows rest day today',
-          generatedAt: DateTime.now(),
-        ),
-        onStartWorkout: null, // No action on rest day
-        onShowAlternatives: () {
-          SnackBarService.showInfo(
-            context,
-            'Enjoy your rest day!',
-          );
-        },
-      );
-    }
-
-    // Has workout scheduled - load template and show
-    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
-
-    return templatesAsync.when(
-      data: (templates) {
-        // Find template by ID
-        final template = templates
-            .where((t) => t.id == todayWorkout.templateId)
-            .firstOrNull;
-
-        if (template == null) {
-          // Template not found - show error
-          return WorkoutSuggestionCard(
-            suggestion: WorkoutSuggestion(
-              level: SuggestionLevel.routine,
-              workoutName: 'Template Not Found',
-              confidence: 0.5,
-              reason: 'The scheduled template could not be found',
-              generatedAt: DateTime.now(),
-            ),
-            onStartWorkout: null,
-          );
-        }
-
-        // ✅ Show workout from routine (synchronized with CTA!)
-        return WorkoutSuggestionCard(
-          suggestion: WorkoutSuggestion(
-            level: SuggestionLevel.routine,
-            workoutName: template.name,
-            confidence: 0.95, // High confidence from routine
-            reason: 'Following your active routine: ${routine.name}',
-            generatedAt: DateTime.now(),
-          ),
+      child: suggestionAsync.when(
+        data: (suggestion) => WorkoutSuggestionCard(
+          suggestion: suggestion,
           onStartWorkout: (workoutName) async {
+            // Haptic feedback
             await HapticFeedback.mediumImpact();
 
-            // Navigate to workout screen with template ID (same as CTA)
-            if (context.mounted) {
-              context.goNamed(
-                'workout',
-                queryParameters: {
-                  'templateId': template.id,
-                  'fromSmartCTA': 'true', // Mark as routine-based
-                },
-              );
-            }
+            // Get template by name
+            final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+
+            await templatesAsync.when(
+              data: (templates) async {
+                // Find template by normalized name (case-insensitive)
+                final template = templates.firstWhere(
+                  (t) => t.name.toLowerCase() == workoutName.toLowerCase(),
+                  orElse: () => templates.first, // Fallback to first template if not found
+                );
+
+                // Start workout from template
+                ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+
+                // Navigate to workout screen
+                if (context.mounted) {
+                  context.goNamed('workout');
+                }
+              },
+              loading: () {
+                SnackBarService.showInfo(
+                  context,
+                  'Loading template...',
+                );
+              },
+              error: (error, _) {
+                SnackBarService.showError(
+                  context,
+                  'Failed to load template: $error',
+                );
+              },
+            );
           },
           onShowAlternatives: () {
+            // TODO: Show alternatives dialog with other suggestions
             SnackBarService.showInfo(
               context,
               'Alternatives feature coming soon!',
             );
           },
           onWhyThisSuggestion: () {
+            // Show explanation of why this workout was suggested
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Why This Suggestion?'),
-                content: Text(
-                  'This workout is scheduled in your active routine "${routine.name}".\n\n'
-                  'Confidence: 95% (from routine schedule)',
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Suggestion Level: ${_getLevelName(suggestion.level)}',
+                        style: context.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        suggestion.reason,
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      if (suggestion.patternInfo != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          suggestion.patternInfo!,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                      if (suggestion.frequencyData != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          suggestion.frequencyData!,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 16),
+                      Text(
+                        'Confidence: ${suggestion.displayConfidence}',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 actions: [
                   TextButton(
@@ -727,142 +717,26 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               ),
             );
           },
-        );
-      },
-      loading: () => const WorkoutSuggestionLoadingState(),
-      error: (error, stack) => const SizedBox.shrink(),
-    );
-  }
+        ),
+        loading: () => const WorkoutSuggestionLoadingState(),
+        error: (error, stack) {
+          // If <6 workouts, show empty state instead of error
+          if (error.toString().contains('Insufficient')) {
+            return WorkoutSuggestionEmptyState(
+              onCreateWorkout: () {
+                // TODO: Navigate to create workout screen
+                SnackBarService.showInfo(
+                  context,
+                  'Create workout feature coming soon!',
+                );
+              },
+            );
+          }
 
-  /// Build suggestion from AI prediction provider (fallback when no routine)
-  Widget _buildAIPredictionSuggestion(BuildContext context, WidgetRef ref) {
-    final suggestionAsync = ref.watch(workoutSuggestionProvider);
-
-    return suggestionAsync.when(
-      data: (suggestion) => WorkoutSuggestionCard(
-        suggestion: suggestion,
-        onStartWorkout: (workoutName) async {
-          // Haptic feedback
-          await HapticFeedback.mediumImpact();
-
-          // Get template by name
-          final templatesAsync = ref.read(customWorkoutTemplatesProvider);
-
-          await templatesAsync.when(
-            data: (templates) async {
-              // Find template by normalized name (case-insensitive)
-              final template = templates.firstWhere(
-                (t) => t.name.toLowerCase() == workoutName.toLowerCase(),
-                orElse: () => templates.first, // Fallback to first template if not found
-              );
-
-              // Start workout from template
-              ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
-
-              // Navigate to workout screen
-              if (context.mounted) {
-                context.goNamed('workout');
-              }
-            },
-            loading: () {
-              SnackBarService.showInfo(
-                context,
-                'Loading template...',
-              );
-            },
-            error: (error, _) {
-              SnackBarService.showError(
-                context,
-                'Failed to load template: $error',
-              );
-            },
-          );
-        },
-        onShowAlternatives: () {
-          // TODO: Show alternatives dialog with other suggestions
-          SnackBarService.showInfo(
-            context,
-            'Alternatives feature coming soon!',
-          );
-        },
-        onWhyThisSuggestion: () {
-          // Show explanation of why this workout was suggested
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Why This Suggestion?'),
-              content: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Suggestion Level: ${_getLevelName(suggestion.level)}',
-                      style: context.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      suggestion.reason,
-                      style: context.textTheme.bodyMedium,
-                    ),
-                    if (suggestion.patternInfo != null) ...[
-                      const SizedBox(height: 12),
-                      Text(
-                        suggestion.patternInfo!,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ],
-                    if (suggestion.frequencyData != null) ...[
-                      const SizedBox(height: 12),
-                      Text(
-                        suggestion.frequencyData!,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 16),
-                    Text(
-                      'Confidence: ${suggestion.displayConfidence}',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Got it'),
-                ),
-              ],
-            ),
-          );
+          // For other errors, don't show card at all
+          return const SizedBox.shrink();
         },
       ),
-      loading: () => const WorkoutSuggestionLoadingState(),
-      error: (error, stack) {
-        // If <6 workouts, show empty state instead of error
-        if (error.toString().contains('Insufficient')) {
-          return WorkoutSuggestionEmptyState(
-            onCreateWorkout: () {
-              // TODO: Navigate to create workout screen
-              SnackBarService.showInfo(
-                context,
-                'Create workout feature coming soon!',
-              );
-            },
-          );
-        }
-
-        // For other errors, don't show card at all
-        return const SizedBox.shrink();
-      },
     );
   }
 

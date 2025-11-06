@@ -259,6 +259,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 data: (workouts) => filteredWorkouts.isEmpty
                     ? _buildEmptyState(context, l10n, colorScheme)
                     : ListView.builder(
+                        key: const PageStorageKey('workout_history_list'),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: filteredWorkouts.length,
                         itemBuilder: (context, index) {
@@ -282,7 +283,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   }
 
   Widget _buildSearchBar(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
@@ -896,6 +897,7 @@ class WorkoutDetailModal extends StatelessWidget {
           // Exercise Details
           Expanded(
             child: ListView.builder(
+              key: PageStorageKey('workout_detail_exercises_${workout.id}'),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: workout.exercises.length,
               itemBuilder: (context, index) {

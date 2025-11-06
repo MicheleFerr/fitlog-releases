@@ -45,8 +45,8 @@ void main() {
     });
     
     test('Stream subscription tracking', () async {
-      final controller = StreamController<int>();
-      
+      final controller = StreamController<int>.broadcast();
+
       // Track subscriptions
       final sub1 = controller.stream.listen((_) {}).trackMemoryLeaks('test-sub-1');
       final sub2 = controller.stream.listen((_) {}).trackMemoryLeaks('test-sub-2');

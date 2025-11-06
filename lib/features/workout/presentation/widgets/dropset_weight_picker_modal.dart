@@ -171,7 +171,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
+              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -267,7 +267,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
 
     // Show detected equipment type
     return Card(
-      color: context.colors.primaryContainer.withOpacity(0.3),
+      color: context.colors.primaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -276,8 +276,8 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
               _effectiveEquipmentType == EquipmentType.barbell
                   ? AppIcons.workout
                   : _effectiveEquipmentType == EquipmentType.machine
-                      ? AppIcons.settings
-                      : AppIcons.gymnastics,
+                      ? Icons.settings
+                      : AppIcons.sportsGymnastics,
               color: context.colors.primary,
             ),
             const SizedBox(width: 12),
@@ -330,7 +330,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
 
   Widget _buildEquipmentSelector() {
     return Card(
-      color: context.colors.tertiaryContainer.withOpacity(0.3),
+      color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -357,7 +357,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                 Expanded(
                   child: _buildEquipmentCard(
                     type: EquipmentType.dumbbell,
-                    icon: AppIcons.gymnastics,
+                    icon: AppIcons.sportsGymnastics,
                     title: context.l10n.dumbbell,
                     subtitle: '2.5kg',
                   ),
@@ -411,7 +411,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? context.colors.primary.withOpacity(0.1)
+              ? context.colors.primary.withValues(alpha: 0.1)
               : context.colors.surface,
           border: Border.all(
             color: isSelected ? context.colors.primary : context.colors.outline,
@@ -451,7 +451,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
 
   Widget _buildPercentageSelector() {
     return Card(
-      color: context.colors.secondaryContainer.withOpacity(0.3),
+      color: context.colors.secondaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -500,7 +500,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.primary.withOpacity(0.1),
+                  color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: context.colors.primary),
                 ),
@@ -557,32 +557,37 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
           ),
         ),
         const SizedBox(height: 8),
-        ...DumbbellIncrement.values.map((increment) {
-          final isSelected = _dumbbellIncrement == increment;
-          return RadioListTile<DumbbellIncrement>(
-            value: increment,
-            groupValue: _dumbbellIncrement,
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  _dumbbellIncrement = value;
-                  // Recalculate weight with new increment
-                  if (_selectedDropPercentage != null) {
-                    _calculateDroppedWeight();
-                  }
-                });
-              }
-            },
-            title: Text(
-              _getIncrementDisplayName(increment),
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: isSelected ? FontWeight.bold : null,
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-          );
-        }),
+        RadioGroup<DumbbellIncrement>(
+          groupValue: _dumbbellIncrement,
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                _dumbbellIncrement = value;
+                // Recalculate weight with new increment
+                if (_selectedDropPercentage != null) {
+                  _calculateDroppedWeight();
+                }
+              });
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: DumbbellIncrement.values.map((increment) {
+              final isSelected = _dumbbellIncrement == increment;
+              return RadioListTile<DumbbellIncrement>(
+                value: increment,
+                title: Text(
+                  _getIncrementDisplayName(increment),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: isSelected ? FontWeight.bold : null,
+                  ),
+                ),
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+              );
+            }).toList(),
+          ),
+        ),
       ],
     );
   }

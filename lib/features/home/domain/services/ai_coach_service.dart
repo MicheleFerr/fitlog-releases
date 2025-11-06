@@ -132,8 +132,6 @@ class AIInsight { // IDs of anomalies affecting this insight
         return InsightSeverity.info; // 🔵 Informational
       case InsightType.motivational:
         return InsightSeverity.success; // 🟢 Positive
-      default:
-        return InsightSeverity.info;
     }
   }
 

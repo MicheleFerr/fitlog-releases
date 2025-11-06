@@ -16,12 +16,12 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercis
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FeedbackDetailScreen extends ConsumerStatefulWidget {
-  final ExerciseFeedback feedback;
 
   const FeedbackDetailScreen({
     super.key,
     required this.feedback,
   });
+  final ExerciseFeedback feedback;
 
   @override
   ConsumerState<FeedbackDetailScreen> createState() => _FeedbackDetailScreenState();
@@ -111,7 +111,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.2),
+              color: statusColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: statusColor, width: 1.5),
             ),
@@ -367,9 +367,9 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -447,7 +447,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
     return OutlinedButton(
       onPressed: _isSaving || isSelected ? null : () => _updateSeverity(severity),
       style: OutlinedButton.styleFrom(
-        backgroundColor: isSelected ? color.withOpacity(0.2) : null,
+        backgroundColor: isSelected ? color.withValues(alpha: 0.2) : null,
         side: BorderSide(
           color: isSelected ? color : context.colors.outline,
           width: isSelected ? 2 : 1,

@@ -2239,11 +2239,11 @@ abstract class AppLocalizations {
   /// **'Load settings from JSON file'**
   String get importSettingsDesc;
 
-  /// Reset settings to default values
+  /// Button text to reset to mode defaults
   ///
   /// In en, this message translates to:
-  /// **'Reset to Defaults'**
-  String get resetToDefaults;
+  /// **'Reset to {mode} Defaults'**
+  String resetToDefaults(String mode);
 
   /// Reset to defaults description
   ///
@@ -3575,7 +3575,7 @@ abstract class AppLocalizations {
   /// **'Edit Set {percentage}%'**
   String editSet(String percentage);
 
-  /// Coming soon dialog title
+  /// Coming soon label
   ///
   /// In en, this message translates to:
   /// **'Coming Soon'**
@@ -4493,6 +4493,18 @@ abstract class AppLocalizations {
   /// **'Community'**
   String get community;
 
+  /// Community feature coming soon dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Community Feature Coming Soon'**
+  String get communityComingSoonTitle;
+
+  /// Community feature coming soon dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re working on building an amazing community feature where you can connect with other athletes, share your progress, and learn from each other. Stay tuned!'**
+  String get communityComingSoonDescription;
+
   /// General information section title
   ///
   /// In en, this message translates to:
@@ -4769,6 +4781,12 @@ abstract class AppLocalizations {
   /// **'match'**
   String get match;
 
+  /// Label for workout already linked to another date
+  ///
+  /// In en, this message translates to:
+  /// **'Linked to'**
+  String get linkedTo;
+
   /// Button to skip current exercise
   ///
   /// In en, this message translates to:
@@ -4798,6 +4816,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discover'**
   String get discover;
+
+  /// Placeholder text for contribution search in community discovery
+  ///
+  /// In en, this message translates to:
+  /// **'Search contributions...'**
+  String get searchContributions;
+
+  /// Sort button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// Message when no contributions match search/filters
+  ///
+  /// In en, this message translates to:
+  /// **'No contributions found'**
+  String get noContributionsFound;
+
+  /// Hint message when no contributions are found
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your search or filters'**
+  String get tryDifferentSearch;
+
+  /// Error message when contributions fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading contributions'**
+  String get errorLoadingContributions;
 
   /// Tab label for trending templates
   ///
@@ -6665,10 +6713,10 @@ abstract class AppLocalizations {
   /// **'Rest time after completing all exercises'**
   String get restTimeAfterRound;
 
-  /// Message shown when a set is completed
+  /// Label for set completion status (used in toggle and messages)
   ///
   /// In en, this message translates to:
-  /// **'Set completed!'**
+  /// **'Set completed'**
   String get setCompleted;
 
   /// Next button
@@ -6826,6 +6874,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Verify Weight & Reps'**
   String get verifyWeightReps;
+
+  /// Toggle text to verify time before RPE (time counting mode)
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Minutes & Seconds'**
+  String get verifyTime;
+
+  /// Toggle text to verify reps before RPE (reps-only counting mode)
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Reps'**
+  String get verifyReps;
 
   /// Title for exercise history bottom sheet
   ///
@@ -7745,7 +7805,7 @@ abstract class AppLocalizations {
   /// **'Tip'**
   String get tip;
 
-  /// Warning type filter option
+  /// Warning dialog title
   ///
   /// In en, this message translates to:
   /// **'Warning'**
@@ -8591,6 +8651,66 @@ abstract class AppLocalizations {
   /// **'Use your 10 rep max weight'**
   String get apreProtocol10Helper;
 
+  /// Title for APRE protocol change preview
+  ///
+  /// In en, this message translates to:
+  /// **'Protocol Change Preview'**
+  String get apreProtocolPreview;
+
+  /// Description for protocol preview feature
+  ///
+  /// In en, this message translates to:
+  /// **'Preview how your weights will change with the new protocol'**
+  String get aprePreviewDescription;
+
+  /// Label for current protocol in preview
+  ///
+  /// In en, this message translates to:
+  /// **'Current (APRE {protocol})'**
+  String apreCurrentProtocol(int protocol);
+
+  /// Label for new protocol in preview
+  ///
+  /// In en, this message translates to:
+  /// **'New (APRE {protocol})'**
+  String apreNewProtocol(int protocol);
+
+  /// Label for Set 1 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 1 (50%)'**
+  String get apreSet1Preview;
+
+  /// Label for Set 2 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 2 (75%)'**
+  String get apreSet2Preview;
+
+  /// Label for Set 3 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 3 (100%)'**
+  String get apreSet3Preview;
+
+  /// Label for Set 4 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 4'**
+  String get apreSet4Preview;
+
+  /// Description for Set 4 adjustment in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Adjusted based on performance'**
+  String get apreAdjustedBasedOnPerformance;
+
+  /// Button to apply protocol changes in preview
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Changes'**
+  String get apreApplyChanges;
+
   /// Label for automatic load adjustment feature
   ///
   /// In en, this message translates to:
@@ -9238,6 +9358,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'RPE (Rate of Perceived Exertion) helps you track how hard each set feels, enabling smart auto-regulation based on your fatigue level.'**
   String get enableRpeTooltip;
+
+  /// V4 dialog title for dependency warning
+  ///
+  /// In en, this message translates to:
+  /// **'Attention'**
+  String get attentionRequired;
+
+  /// V4 dialog button to enable feature
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enable;
+
+  /// V4 essentials section title
+  ///
+  /// In en, this message translates to:
+  /// **'Essentials'**
+  String get essentialsSection;
+
+  /// V4 essentials section description
+  ///
+  /// In en, this message translates to:
+  /// **'Core settings to get started'**
+  String get essentialsSectionDesc;
+
+  /// V4 advanced section title
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advancedSection;
+
+  /// V4 advanced section description
+  ///
+  /// In en, this message translates to:
+  /// **'Customizations for experienced users'**
+  String get advancedSectionDesc;
+
+  /// V4 visualization subcategory title
+  ///
+  /// In en, this message translates to:
+  /// **'Visualization'**
+  String get visualizationCategory;
+
+  /// V4 auto-regulation subcategory title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-regulation'**
+  String get autoRegulationCategory;
+
+  /// V4 interface subcategory title
+  ///
+  /// In en, this message translates to:
+  /// **'Interface'**
+  String get interfaceCategory;
 
   /// Enable TUT toggle title
   ///
@@ -11249,10 +11423,10 @@ abstract class AppLocalizations {
   /// **'Better recovery between sessions and higher quality sets'**
   String get strategyHighvolumeincreasefreqOutcome;
 
-  /// Filter label for recommendation type filter
+  /// Filter label for contribution type
   ///
   /// In en, this message translates to:
-  /// **'Filter by Type'**
+  /// **'Type'**
   String get filterByType;
 
   /// Filter label for recommendation priority filter
@@ -20226,22 +20400,22 @@ abstract class AppLocalizations {
   /// **'{category} disabled'**
   String debugLogsCategoryDisabled(String category);
 
-  /// Exercise counting mode for weighted exercises (with weight)
+  /// Counting mode for weighted exercises
   ///
   /// In en, this message translates to:
-  /// **'Weighted'**
+  /// **'Weight + Reps'**
   String get countingModeWeighted;
 
-  /// Exercise counting mode for bodyweight exercises (reps only)
+  /// Counting mode for bodyweight exercises
   ///
   /// In en, this message translates to:
-  /// **'Reps'**
+  /// **'Reps Only'**
   String get countingModeReps;
 
-  /// Exercise counting mode for time-based exercises
+  /// Counting mode for time-based exercises
   ///
   /// In en, this message translates to:
-  /// **'Time'**
+  /// **'Time-based'**
   String get countingModeTime;
 
   /// Data refreshed successfully status message
@@ -20814,7 +20988,7 @@ abstract class AppLocalizations {
   /// **'Level'**
   String get level;
 
-  /// Current status indicator
+  /// Badge label indicating current selection
   ///
   /// In en, this message translates to:
   /// **'Current'**
@@ -21552,29 +21726,833 @@ abstract class AppLocalizations {
   /// **'Last {n} days'**
   String lastNDays(int n);
 
-  /// Error when workout template is not found
+  /// Header for workout selector sheet
   ///
   /// In en, this message translates to:
-  /// **'Template not found'**
-  String get templateNotFound;
+  /// **'Complete Day with Workout'**
+  String get completeDayWithWorkout;
 
-  /// Error loading workout template
+  /// Subtitle for workout selector sheet
   ///
   /// In en, this message translates to:
-  /// **'Error loading template: {error}'**
-  String templateLoadError(String error);
+  /// **'Select workout to link to'**
+  String get selectWorkoutToLinkTo;
 
-  /// Loading workout template message
+  /// Fallback button to complete day without linking a workout
   ///
   /// In en, this message translates to:
-  /// **'Loading template...'**
-  String get loadingTemplate;
+  /// **'Complete without workout'**
+  String get completeWithoutWorkout;
 
-  /// Generic unexpected error message
+  /// Empty state message when no recent workouts available
   ///
   /// In en, this message translates to:
-  /// **'Unexpected error: {error}'**
-  String unexpectedError(String error);
+  /// **'No recent workouts found'**
+  String get noRecentWorkoutsFound;
+
+  /// Empty state description for completing without workout
+  ///
+  /// In en, this message translates to:
+  /// **'Complete this day without linking a workout'**
+  String get completeDayWithoutWorkout;
+
+  /// Button to complete day in empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Day'**
+  String get completeDay;
+
+  /// Error message when workout loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load workouts'**
+  String get failedToLoadWorkouts;
+
+  /// Success message when day is completed with a linked workout
+  ///
+  /// In en, this message translates to:
+  /// **'Day completed with workout!'**
+  String get dayCompletedWithWorkout;
+
+  /// Success message when day is completed without a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Day completed manually'**
+  String get dayCompletedManually;
+
+  /// Error message when day completion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to complete day'**
+  String get failedToCompleteDay;
+
+  /// Button to change exercise counting format during workout
+  ///
+  /// In en, this message translates to:
+  /// **'Change counting format'**
+  String get changeCountingFormat;
+
+  /// Label showing the current counting format
+  ///
+  /// In en, this message translates to:
+  /// **'Current format'**
+  String get currentFormat;
+
+  /// Description for weighted counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Input: Weight (kg/lb) + Reps'**
+  String get countingModeWeightedDesc;
+
+  /// Example for weighted counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 80kg × 10 reps'**
+  String get countingModeWeightedExample;
+
+  /// Description for reps-only counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Input: Reps only (no weight)'**
+  String get countingModeRepsDesc;
+
+  /// Example for reps-only counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 15 reps'**
+  String get countingModeRepsExample;
+
+  /// Description for time-based counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Input: Duration (mm:ss)'**
+  String get countingModeTimeDesc;
+
+  /// Example for time-based counting mode
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 1:30 (90 seconds)'**
+  String get countingModeTimeExample;
+
+  /// Button to confirm a change action
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm change'**
+  String get confirmChange;
+
+  /// Title for counting mode change warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get countingModeWarningTitle;
+
+  /// Warning message when changing counting mode with completed sets
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} completed sets with format \"{fromMode}\".\n\nChanging to \"{toMode}\" may invalidate existing data.'**
+  String countingModeWarningMessage(int count, String fromMode, String toMode);
+
+  /// Additional info in counting mode warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Changing format during a workout is not recommended. Consider finishing the workout first.'**
+  String get countingModeWarningInfo;
+
+  /// Button to keep existing data when changing format
+  ///
+  /// In en, this message translates to:
+  /// **'Keep data'**
+  String get keepData;
+
+  /// Button to reset all data when changing format
+  ///
+  /// In en, this message translates to:
+  /// **'Reset all'**
+  String get resetAll;
+
+  /// Success message after counting mode change
+  ///
+  /// In en, this message translates to:
+  /// **'Counting format updated!'**
+  String get countingModeChanged;
+
+  /// Thank you message after submitting analytics feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your feedback!'**
+  String get analyticsFeedbackThankYou;
+
+  /// Subtitle for thank you message
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback helps us improve the analytics experience'**
+  String get analyticsFeedbackThankYouSubtitle;
+
+  /// Question asking if analytics is helpful
+  ///
+  /// In en, this message translates to:
+  /// **'Is this analytics view helpful?'**
+  String get analyticsFeedbackQuestion;
+
+  /// Button for positive feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Helpful'**
+  String get analyticsFeedbackHelpful;
+
+  /// Button for negative feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Not helpful'**
+  String get analyticsFeedbackNotHelpful;
+
+  /// Placeholder for comment text field
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us more (optional)'**
+  String get analyticsFeedbackCommentPlaceholder;
+
+  /// Button text while submitting feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting...'**
+  String get analyticsFeedbackSubmitting;
+
+  /// Button text to submit feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Submit feedback'**
+  String get analyticsFeedbackSubmit;
+
+  /// Error message when feedback submission fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not submit feedback. Please try again.'**
+  String get analyticsFeedbackError;
+
+  /// Success message after feedback submission
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback submitted successfully!'**
+  String get analyticsFeedbackSuccess;
+
+  /// Snackbar message when master toggle is auto-enabled
+  ///
+  /// In en, this message translates to:
+  /// **'✅ {masterName} auto-enabled (required for this feature)'**
+  String autoEnabledMaster(String masterName);
+
+  /// Snackbar message when dependent toggles are auto-disabled
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ {count} dependent features auto-disabled'**
+  String dependentsDisabled(int count);
+
+  /// Title for quick info icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Info Icon'**
+  String get quickInfoIconTitle;
+
+  /// Description for quick info icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for exercise details'**
+  String get quickInfoIconDescription;
+
+  /// Tooltip for quick info icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Shows exercise information modal with form cues and tips'**
+  String get quickInfoIconTooltip;
+
+  /// Title for warmup icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Icon'**
+  String get quickWarmupIconTitle;
+
+  /// Description for warmup icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for warmup suggestions'**
+  String get quickWarmupIconDescription;
+
+  /// Tooltip for warmup icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Displays warmup sets recommendation based on working weight'**
+  String get quickWarmupIconTooltip;
+
+  /// Title for prevention icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Prevention Icon'**
+  String get quickPreventionIconTitle;
+
+  /// Description for prevention icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for injury prevention tips'**
+  String get quickPreventionIconDescription;
+
+  /// Tooltip for prevention icon toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Shows injury prevention advice and mobility exercises'**
+  String get quickPreventionIconTooltip;
+
+  /// Title for exercise notes toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Notes'**
+  String get exerciseNotesTitle;
+
+  /// Description for exercise notes toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes about form and cues'**
+  String get exerciseNotesDescription;
+
+  /// Tooltip for exercise notes toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Personal notes visible only to you during workouts'**
+  String get exerciseNotesTooltip;
+
+  /// Title for exercise insights toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Insights'**
+  String get exerciseInsightsTitle;
+
+  /// Description for exercise insights toggle
+  ///
+  /// In en, this message translates to:
+  /// **'View charts and statistics'**
+  String get exerciseInsightsDescription;
+
+  /// Tooltip for exercise insights toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics charts showing volume, PRs, and progress trends'**
+  String get exerciseInsightsTooltip;
+
+  /// Performance warning for insights charts
+  ///
+  /// In en, this message translates to:
+  /// **'ℹ️ Charts may slow down on older devices'**
+  String get insightsPerformanceWarning;
+
+  /// Title for mode switch confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to {mode} Mode?'**
+  String modeSwitchWarningTitle(String mode);
+
+  /// Message for mode switch confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset your custom settings to {mode} defaults.'**
+  String modeSwitchWarningMessage(String mode);
+
+  /// Hint about undo feature in mode switch dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll have 5 seconds to undo after confirming.'**
+  String get modeSwitchUndoHint;
+
+  /// Snackbar message when undo is successful
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Settings restored'**
+  String get undoSuccessful;
+
+  /// Sort option for most helpful contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Most Helpful'**
+  String get sortByHelpful;
+
+  /// Sort option for most recent contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Most Recent'**
+  String get sortByRecent;
+
+  /// Sort option for most saved contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Most Saved'**
+  String get sortBySaved;
+
+  /// Sort option for trending contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get sortByTrending;
+
+  /// Filter label for difficulty level
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get filterByDifficulty;
+
+  /// Filter label for author tier
+  ///
+  /// In en, this message translates to:
+  /// **'Author'**
+  String get filterByAuthorTier;
+
+  /// Filter label for date range
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get filterByDateRange;
+
+  /// Button to reset filters to default
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetFilters;
+
+  /// Label for start date in date range filter
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get dateFrom;
+
+  /// Label for end date in date range filter
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get dateTo;
+
+  /// Contribution type: correction to exercise information
+  ///
+  /// In en, this message translates to:
+  /// **'Correction'**
+  String get contributionTypeCorrection;
+
+  /// Contribution type: helpful tip or advice
+  ///
+  /// In en, this message translates to:
+  /// **'Tip'**
+  String get contributionTypeTip;
+
+  /// Contribution type: safety warning or caution
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get contributionTypeWarning;
+
+  /// Contribution type: exercise variant or alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Variant'**
+  String get contributionTypeVariant;
+
+  /// Contribution type: translation improvement
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get contributionTypeTranslation;
+
+  /// Contribution type: technique advice or form tip
+  ///
+  /// In en, this message translates to:
+  /// **'Technique'**
+  String get contributionTypeTechnique;
+
+  /// Difficulty level: beginner
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get difficultyBeginner;
+
+  /// Difficulty level: intermediate
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get difficultyIntermediate;
+
+  /// Difficulty level: advanced
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get difficultyAdvanced;
+
+  /// Author tier: community member
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get authorTierCommunity;
+
+  /// Author tier: verified expert
+  ///
+  /// In en, this message translates to:
+  /// **'Expert'**
+  String get authorTierExpert;
+
+  /// Author tier: administrator
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get authorTierAdmin;
+
+  /// Label for number of times a contribution was saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saves'**
+  String get saves;
+
+  /// Label for number of views on a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Views'**
+  String get views;
+
+  /// Label for number of comments on a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get comments;
+
+  /// Label for number of upvotes on a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Upvotes'**
+  String get upvotes;
+
+  /// Semantic label for bookmark contribution button
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark contribution'**
+  String get bookmarkContribution;
+
+  /// Button to save a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveContribution;
+
+  /// Button to remove a saved contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Unsave'**
+  String get unsaveContribution;
+
+  /// Label indicating a contribution is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get saved;
+
+  /// Title for the legal disclaimer modal
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Disclaimer'**
+  String get legalDisclaimerTitle;
+
+  /// Content text for the legal disclaimer modal
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.'**
+  String get legalDisclaimerContent;
+
+  /// Accept button for legal disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'I Accept'**
+  String get legalDisclaimerAccept;
+
+  /// Decline button for legal disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'I Decline'**
+  String get legalDisclaimerDecline;
+
+  /// Title for legal documents screen
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Documents'**
+  String get legalDocuments;
+
+  /// Privacy Policy title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Privacy Policy subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'How we handle your data (GDPR compliant)'**
+  String get privacyPolicySubtitle;
+
+  /// Terms of Service title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// Terms of Service subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'User agreements and liability limitations'**
+  String get tosSubtitle;
+
+  /// Medical Disclaimer subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Important safety information'**
+  String get disclaimerSubtitle;
+
+  /// Error message when document fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading document. Please try again.'**
+  String get errorLoadingDocument;
+
+  /// Header for APRE calculation metadata display
+  ///
+  /// In en, this message translates to:
+  /// **'Calculation Analysis'**
+  String get apreCalculationMetadata;
+
+  /// Button to expand calculation metadata banner
+  ///
+  /// In en, this message translates to:
+  /// **'Show Calculation Details'**
+  String get apreShowCalculationDetails;
+
+  /// Button to collapse calculation metadata banner
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Calculation Details'**
+  String get apreHideCalculationDetails;
+
+  /// Label for 1RM calculation formula
+  ///
+  /// In en, this message translates to:
+  /// **'Formula'**
+  String get apreFormula;
+
+  /// Label for number of sets analyzed
+  ///
+  /// In en, this message translates to:
+  /// **'Data Points'**
+  String get apreDataPoints;
+
+  /// Label for age of data used in calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Data Age'**
+  String get apreDataAge;
+
+  /// Label for standard deviation of estimates
+  ///
+  /// In en, this message translates to:
+  /// **'Variability'**
+  String get apreStandardDeviation;
+
+  /// Label for confidence level of calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get apreConfidence;
+
+  /// Label for last calculation date
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated'**
+  String get apreLastCalculation;
+
+  /// Format for displaying days since data
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}'**
+  String apreDaysAgo(int days);
+
+  /// Title when user has no APRE historical data
+  ///
+  /// In en, this message translates to:
+  /// **'No Historical Data'**
+  String get apreNoHistory;
+
+  /// Description when user has no APRE historical data
+  ///
+  /// In en, this message translates to:
+  /// **'No historical data available for APRE calculations. Please select how you\'d like to estimate your 1RM to get started.'**
+  String get apreNoHistoryDescription;
+
+  /// Option to use last workout weight/reps as estimate
+  ///
+  /// In en, this message translates to:
+  /// **'From Last Workout'**
+  String get apreOptionFromLastWorkout;
+
+  /// Option to manually enter estimated 1RM
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Estimate'**
+  String get apreOptionManualEstimate;
+
+  /// Option to guide user to do a test set
+  ///
+  /// In en, this message translates to:
+  /// **'Test Set'**
+  String get apreOptionTestSet;
+
+  /// Description for from last workout option
+  ///
+  /// In en, this message translates to:
+  /// **'Use last set weight/reps as estimate'**
+  String get apreOptionFromLastWorkoutDescription;
+
+  /// Description for manual estimate option
+  ///
+  /// In en, this message translates to:
+  /// **'Enter estimated 1RM directly'**
+  String get apreOptionManualEstimateDescription;
+
+  /// Description for test set option
+  ///
+  /// In en, this message translates to:
+  /// **'Guide to do a test set first'**
+  String get apreOptionTestSetDescription;
+
+  /// Label for 1RM input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Estimated 1RM (kg)'**
+  String get apreEnter1RM;
+
+  /// Label for weight preview section
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Weights'**
+  String get aprePreviewWeights;
+
+  /// Continue button in APRE modal
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get apreContinue;
+
+  /// Cancel button in APRE modal
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get apreCancel;
+
+  /// Title for age verification screen
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Age'**
+  String get ageGateTitle;
+
+  /// Instructions for age verification
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your date of birth to continue.'**
+  String get ageGateInstructions;
+
+  /// Label for birth date selection
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get ageGateBirthDate;
+
+  /// Continue button on age gate
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get ageGateContinue;
+
+  /// Title for age restriction dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Age Restriction'**
+  String get ageRestrictionTitle;
+
+  /// Message explaining age restriction
+  ///
+  /// In en, this message translates to:
+  /// **'You must be at least 14 years old to use FITlog Pro.\n\nThis requirement is mandated by GDPR (EU Regulation 2016/679) and Italian privacy laws.'**
+  String get ageRestrictionMessage;
+
+  /// OK button on age restriction dialog
+  ///
+  /// In en, this message translates to:
+  /// **'I Understand'**
+  String get ageRestrictionOk;
+
+  /// Title for minor warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Important Notice for Minors'**
+  String get ageMinorWarningTitle;
+
+  /// Warning message for minors
+  ///
+  /// In en, this message translates to:
+  /// **'If you are between 14 and 17 years old:\n\n• You MUST have parental consent to use this app\n• You MUST consult a physician before training\n• You MUST be supervised by an adult during workouts\n• Your parents are legally responsible for your use of this app\n\nDo you confirm you have parental consent?'**
+  String get ageMinorWarningMessage;
+
+  /// Confirm button for minor consent
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I Have Consent'**
+  String get ageMinorWarningConfirm;
+
+  /// Decline button for minor consent
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get ageMinorWarningDecline;
+
+  /// Short disclaimer text for footer
+  ///
+  /// In en, this message translates to:
+  /// **'NOT medical advice • Consult physician • Use at your own risk'**
+  String get footerDisclaimerShort;
+
+  /// Hint text to tap footer for full disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for full disclaimer'**
+  String get footerDisclaimerTapHint;
+
+  /// Title for APRE protocol change warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Workout in Progress'**
+  String get apreProtocolChangeWarningTitle;
+
+  /// Message explaining why APRE protocol cannot be changed during workout
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot change APRE protocol during an active workout. Please finish your current workout first, then return to adjust protocol settings.'**
+  String get apreProtocolChangeWarningMessage;
+
+  /// Button to dismiss APRE workout-in-progress warning
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get apreGotIt;
+
+  /// Title for APRE calculation method setting
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Calculation Method'**
+  String get apreCalculationMethodTitle;
+
+  /// Description explaining APRE calculation method options
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.'**
+  String get apreCalculationMethodDescription;
 }
 
 class _AppLocalizationsDelegate

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tooltip overlay showing exercises in a superset with detailed info
@@ -31,7 +33,7 @@ class SupersetExercisesTooltip extends ConsumerStatefulWidget {
   }) {
     return showDialog(
       context: context,
-      barrierColor: Colors.black26,
+      barrierColor: context.colors.onSurface26,
       builder: (context) => SupersetExercisesTooltip(
         supersetExercise: supersetExercise,
         onExerciseInfo: onExerciseInfo,
@@ -248,7 +250,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
+                            color: context.colors.onSurface.withValues(alpha: 0.2),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -445,7 +447,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: context.colors.onSurface.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -615,21 +617,21 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
   Color _getCategoryColor(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return Colors.red;
+        return context.colors.error;
       case ExerciseCategory.back:
-        return Colors.blue;
+        return context.colors.primary;
       case ExerciseCategory.shoulders:
-        return Colors.orange;
+        return context.colors.secondary;
       case ExerciseCategory.arms:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ExerciseCategory.legs:
-        return Colors.green;
+        return context.colors.success;
       case ExerciseCategory.abs:
-        return Colors.amber;
+        return context.colors.warning;
       case ExerciseCategory.cardio:
         return Colors.pink;
       case ExerciseCategory.other:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
   

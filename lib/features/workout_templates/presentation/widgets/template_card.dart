@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class TemplateCard extends StatelessWidget {
@@ -58,8 +60,8 @@ class TemplateCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    _getCategoryColor(template.category),
-                    _getCategoryColor(template.category).withOpacity(0.7),
+                    _getCategoryColor(context, template.category),
+                    _getCategoryColor(context, template.category).withValues(alpha: 0.7),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -72,7 +74,7 @@ class TemplateCard extends StatelessWidget {
                 children: [
                   Icon(
                     _getCategoryIcon(template.category),
-                    color: Colors.white,
+                    color: context.colors.surface,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -80,7 +82,7 @@ class TemplateCard extends StatelessWidget {
                     child: Text(
                       template.category.name.toUpperCase(),
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -92,7 +94,7 @@ class TemplateCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: context.colors.surface.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -101,13 +103,13 @@ class TemplateCard extends StatelessWidget {
                           const Icon(
                             AppIcons.public,
                             size: 12,
-                            color: Colors.white,
+                            color: context.colors.surface,
                           ),
                           const SizedBox(width: 2),
                           Text(
                             'PUBLIC',
                             style: theme.textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
+                              color: context.colors.surface,
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                             ),
@@ -180,7 +182,7 @@ class TemplateCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(16),
                 ),
@@ -250,18 +252,18 @@ class TemplateCard extends StatelessWidget {
     );
   }
   
-  Color _getCategoryColor(TemplateCategory category) {
+  Color _getCategoryColor(BuildContext context, TemplateCategory category) {
     switch (category) {
       case TemplateCategory.strength:
-        return Colors.red;
+        return context.colors.error;
       case TemplateCategory.hypertrophy:
-        return Colors.blue;
+        return context.colors.primary;
       case TemplateCategory.endurance:
-        return Colors.green;
+        return context.colors.success;
       case TemplateCategory.powerlifting:
-        return Colors.deepPurple;
+        return context.colors.tertiary;
       case TemplateCategory.bodybuilding:
-        return Colors.orange;
+        return context.colors.secondary;
       case TemplateCategory.crossfit:
         return Colors.teal;
       case TemplateCategory.calisthenics:
@@ -269,9 +271,9 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.cardio:
         return Colors.pink;
       case TemplateCategory.mixed:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
       case TemplateCategory.custom:
-        return Colors.blueGrey;
+        return context.colors.primaryGrey;
     }
   }
   

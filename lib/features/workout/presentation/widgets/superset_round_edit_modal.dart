@@ -96,7 +96,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

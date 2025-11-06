@@ -177,15 +177,12 @@ class FirebaseInitService {
       await _setVersionMetadata('1.0.1-fixed', allExercises.length);
 
       final summary = 'Fixed ${missingExercises.length} missing exercises';
-      final details = 'Missing exercises have been added to database. '
-          'Total exercises: ${allExercises.length}';
-
       debugPrint('✅ Missing data fix completed');
 
       return FirebaseInitResult.success(
         message: summary,
         exerciseCount: allExercises.length,
-        batchCount: batchResult.batchCount ?? 0,
+        batchCount: batchResult.batchCount,
         duration: DateTime.now().difference(startTime),
         details: {
           'missingFixed': missingExercises.length,

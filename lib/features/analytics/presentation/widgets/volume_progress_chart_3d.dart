@@ -4,6 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grafico 3D interattivo per visualizzare il volume di allenamento
@@ -304,11 +306,11 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
     double currentY = 0;
     
     final colors = [
-      Colors.blue,
-      Colors.red,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
+      context.colors.primary,
+      context.colors.error,
+      context.colors.success,
+      context.colors.secondary,
+      context.colors.tertiary,
       Colors.teal,
     ];
     
@@ -366,7 +368,7 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
             icon: trend > 0 ? AppIcons.trendUp : AppIcons.trendDown,
             label: 'Trend',
             value: '${trend > 0 ? '+' : ''}${trend.toStringAsFixed(1)}%',
-            color: trend > 0 ? Colors.green : Colors.red,
+            color: trend > 0 ? context.colors.success : context.colors.error,
             theme: theme,
           ),
         ],
@@ -420,7 +422,7 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
         ),
         if (widget.showTrend)
           _buildLegendItem(
-            color: Colors.orange,
+            color: context.colors.secondary,
             label: 'Trend Line',
             isDashed: true,
             theme: theme,

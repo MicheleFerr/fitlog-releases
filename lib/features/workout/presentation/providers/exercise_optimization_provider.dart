@@ -125,23 +125,23 @@ class SetNotifier extends StateNotifier<ExerciseSet?> {
       rpe: rpe,
       notes: notes,
     );
-    
+
     // Update in workout
-    ref.read(currentWorkoutProvider.notifier).updateSet(exerciseId, state!);
+    ref.read(currentWorkoutProvider.notifier).updateExerciseSet(exerciseId, state!);
   }
-  
+
   void toggleComplete() {
     if (state == null) return;
-    
+
     final now = DateTime.now();
     state = state!.copyWith(
       isCompleted: !state!.isCompleted,
       completedAt: !state!.isCompleted ? now : null,
       actualReps: !state!.isCompleted ? state!.reps : null,
     );
-    
+
     // Update in workout
-    ref.read(currentWorkoutProvider.notifier).updateSet(exerciseId, state!);
+    ref.read(currentWorkoutProvider.notifier).updateExerciseSet(exerciseId, state!);
   }
 }
 
@@ -254,12 +254,12 @@ class UpdateSetCommand extends WorkoutCommand {
   
   @override
   void execute(Ref ref) {
-    ref.read(currentWorkoutProvider.notifier).updateSet(exerciseId, newSet);
+    ref.read(currentWorkoutProvider.notifier).updateExerciseSet(exerciseId, newSet);
   }
-  
+
   @override
   void undo(Ref ref) {
-    ref.read(currentWorkoutProvider.notifier).updateSet(exerciseId, oldSet);
+    ref.read(currentWorkoutProvider.notifier).updateExerciseSet(exerciseId, oldSet);
   }
 }
 
@@ -343,13 +343,13 @@ class BatchOperations {
       )
     ).toList();
     
+    // ✅ Note: isCompleted and completedAt are computed getters
+    // They are automatically calculated from the completed sets
     final updatedExercise = exercise.copyWith(
       sets: updatedSets,
-      isCompleted: true,
-      completedAt: now,
     );
-    
-    ref.read(currentWorkoutProvider.notifier).updateExercise(updatedExercise);
+
+    ref.read(currentWorkoutProvider.notifier).updateExercise(exerciseId, updatedExercise);
   }
   
   /// Clear all sets for an exercise
@@ -367,13 +367,13 @@ class BatchOperations {
       )
     ).toList();
     
+    // ✅ Note: isCompleted and completedAt are computed getters
+    // They are automatically calculated from the completed sets
     final updatedExercise = exercise.copyWith(
       sets: updatedSets,
-      isCompleted: false,
-      completedAt: null,
     );
-    
-    ref.read(currentWorkoutProvider.notifier).updateExercise(updatedExercise);
+
+    ref.read(currentWorkoutProvider.notifier).updateExercise(exerciseId, updatedExercise);
   }
   
   /// Copy sets from previous workout
@@ -391,16 +391,17 @@ class BatchOperations {
     
     if (exercise == null) return;
     
-    final updatedSets = exercise.sets.map((set) => 
+    // ✅ Null-safe: weight and reps are nullable
+    final updatedSets = exercise.sets.map((set) =>
       set.copyWith(
-        weight: set.weight + weightIncrease,
-        reps: set.reps + repsIncrease,
+        weight: set.weight != null ? set.weight! + weightIncrease : null,
+        reps: set.reps != null ? set.reps! + repsIncrease : null,
       )
     ).toList();
-    
+
     final updatedExercise = exercise.copyWith(sets: updatedSets);
-    
-    ref.read(currentWorkoutProvider.notifier).updateExercise(updatedExercise);
+
+    ref.read(currentWorkoutProvider.notifier).updateExercise(exerciseId, updatedExercise);
   }
 }
 

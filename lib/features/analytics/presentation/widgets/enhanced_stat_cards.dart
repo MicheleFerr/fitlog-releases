@@ -33,7 +33,7 @@ class EnhancedStatCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -115,7 +115,7 @@ class EnhancedStatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: trendColor.withOpacity(0.1),
+        color: trendColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
@@ -205,7 +205,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: rank == 1 ? colorScheme.primary.withOpacity(0.3) : Colors.transparent,
+          color: rank == 1 ? colorScheme.primary.withValues(alpha: 0.3) : Colors.transparent,
           width: 2,
         ),
       ),
@@ -281,7 +281,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
             Icon(
               AppIcons.workout,
               size: 48,
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -397,8 +397,8 @@ class EnhancedStreakCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.orange.withOpacity(0.2),
-            Colors.red.withOpacity(0.1),
+            Colors.orange.withValues(alpha: 0.2),
+            Colors.red.withValues(alpha: 0.1),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -493,7 +493,7 @@ class EnhancedStreakCard extends StatelessWidget {
             final hasWorkout = workoutDays.contains(day);
             final isToday = day == DateTime.now().day;
             
-            return Container(
+            return DecoratedBox(
               decoration: BoxDecoration(
                 color: hasWorkout
                     ? Colors.green

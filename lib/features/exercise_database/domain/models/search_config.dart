@@ -7,7 +7,6 @@
 /// Configuration models for exercise fuzzy search
 library;
 
-import 'package:flutter/foundation.dart';
 
 /// Configuration object for exercise search parameters
 ///
@@ -35,6 +34,16 @@ import 'package:flutter/foundation.dart';
 /// );
 /// ```
 class SearchConfig {
+
+  /// Create search configuration
+  const SearchConfig({
+    this.strictThreshold = 0.65,
+    this.typeThreshold = 0.50,
+    this.maxResults = 50,
+    this.enableUserBoost = true,
+    this.enableCategoryBoost = true,
+    this.mlWeights,
+  });
   /// Threshold for strict matches (exact name/alias matching)
   ///
   /// Range: 0.0 - 1.0
@@ -82,16 +91,6 @@ class SearchConfig {
   ///
   /// Default: 50% fuzzy, 30% user, 20% category
   final MLFormulaWeights? mlWeights;
-
-  /// Create search configuration
-  const SearchConfig({
-    this.strictThreshold = 0.65,
-    this.typeThreshold = 0.50,
-    this.maxResults = 50,
-    this.enableUserBoost = true,
-    this.enableCategoryBoost = true,
-    this.mlWeights,
-  });
 
   /// Default configuration for autocomplete (tighter limits)
   static const autocomplete = SearchConfig(
@@ -191,6 +190,13 @@ class SearchConfig {
 /// MLFormulaWeights.categoryFocused // 40% fuzzy, 20% user, 40% category
 /// ```
 class MLFormulaWeights {
+
+  /// Create ML formula weights
+  const MLFormulaWeights({
+    this.fuzzyWeight = 0.5,
+    this.userWeight = 0.3,
+    this.categoryWeight = 0.2,
+  });
   /// Weight for fuzzy matching score (0.0 - 1.0)
   ///
   /// Default: 0.5 (50%)
@@ -211,13 +217,6 @@ class MLFormulaWeights {
   ///
   /// Higher values = prioritize exercises matching workout category
   final double categoryWeight;
-
-  /// Create ML formula weights
-  const MLFormulaWeights({
-    this.fuzzyWeight = 0.5,
-    this.userWeight = 0.3,
-    this.categoryWeight = 0.2,
-  });
 
   /// Balanced preset (default)
   static const balanced = MLFormulaWeights(

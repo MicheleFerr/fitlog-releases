@@ -27,8 +27,26 @@ final workoutTemplateRepositoryProvider = Provider<dynamic>((ref) {
 
 // Tutti i template (predefiniti + personalizzati)
 final allWorkoutTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) async {
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [ALL_TEMPLATES] Provider called');
+  }
+
   final repository = ref.watch(workoutTemplateRepositoryProvider);
-  return repository.getAllTemplates();
+
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [ALL_TEMPLATES] Repository type: ${repository.runtimeType}');
+  }
+
+  final templates = await repository.getAllTemplates();
+
+  if (kDebugMode || kProfileMode) {
+    debugPrint('🔍 [ALL_TEMPLATES] Got ${templates.length} templates from repository');
+    for (final template in templates) {
+      debugPrint('  - ${template.name} (${template.id})');
+    }
+  }
+
+  return templates;
 });
 
 // Solo template personalizzati
@@ -440,14 +458,18 @@ final availableTemplateTagsProvider = FutureProvider<List<String>>((ref) async {
 });
 
 /// Family provider to get a single template by ID
+/// FIX: Use customWorkoutTemplatesProvider to include templates from unified repository
 final templateByIdProvider = FutureProvider.family<WorkoutTemplate?, String>((ref, templateId) async {
-  final repository = ref.watch(workoutTemplateRepositoryProvider);
-  final templates = await repository.getAllTemplates();
+  // Use customWorkoutTemplatesProvider which includes both legacy and unified repository templates
+  final templates = await ref.watch(customWorkoutTemplatesProvider.future);
 
   try {
     return templates.firstWhere((template) => template.id == templateId);
   } catch (e) {
-    debugPrint('⚠️ Template with ID $templateId not found');
+    debugPrint('⚠️ Template with ID $templateId not found in ${templates.length} available templates');
+    if (kDebugMode) {
+      debugPrint('   Available template IDs: ${templates.map((t) => t.id).take(5).join(", ")}${templates.length > 5 ? "..." : ""}');
+    }
     return null;
   }
 });

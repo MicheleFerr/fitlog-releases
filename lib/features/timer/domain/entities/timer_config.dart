@@ -42,34 +42,59 @@ class TimerConfig {
 }
 
 /// Personalizzazioni colore per il timer
+/// Note: Domain layer uses const colors since BuildContext isn't available.
+/// These semantic colors match the app's theme for consistency.
 class TimerColors {
-  /// Colori per stato normale
+  // Semantic const colors for domain layer (no BuildContext access)
+  // These match the app's semantic color system:
+  // - Info: Blue for normal/running state
+  // - Warning: Orange for paused/low time state
+  // - Success: Green for completed state
+  // - Error: Red for critical state
+
+  /// Info state colors (timer running normally)
+  static const Color infoLight = Color(0xFF2196F3);  // Blue 500
+  static const Color infoDark = Color(0xFF1976D2);   // Blue 700
+
+  /// Warning state colors (paused or time running low)
+  static const Color warningLight = Color(0xFFFF9800); // Orange 500
+  static const Color warningDark = Color(0xFFF57C00);  // Orange 800
+
+  /// Success state colors (timer completed)
+  static const Color successLight = Color(0xFF4CAF50); // Green 500
+  static const Color successDark = Color(0xFF388E3C);  // Green 700
+
+  /// Error/Critical state colors (very low time remaining)
+  static const Color errorLight = Color(0xFFF44336); // Red 500
+  static const Color errorDark = Color(0xFFD32F2F);  // Red 700
+
+  /// Colori per stato normale (info)
   static const List<Color> normalGradient = [
-    Color(0xFF2196F3),
-    Color(0xFF1976D2),
+    infoLight,
+    infoDark,
   ];
-  
-  /// Colori per stato paused
+
+  /// Colori per stato paused (warning)
   static const List<Color> pausedGradient = [
-    Color(0xFFFF9800),
-    Color(0xFFF57C00),
+    warningLight,
+    warningDark,
   ];
-  
-  /// Colori per stato completato
+
+  /// Colori per stato completato (success)
   static const List<Color> completedGradient = [
-    Color(0xFF4CAF50),
-    Color(0xFF388E3C),
+    successLight,
+    successDark,
   ];
-  
-  /// Colori per stato critico (< 30 secondi)
+
+  /// Colori per stato critico (error - < 30 secondi)
   static const List<Color> criticalGradient = [
-    Color(0xFFF44336),
-    Color(0xFFD32F2F),
+    errorLight,
+    errorDark,
   ];
-  
+
   /// Colori per stato warning (< 60 secondi)
   static const List<Color> warningGradient = [
-    Color(0xFFFF9800),
-    Color(0xFFF57C00),
+    warningLight,
+    warningDark,
   ];
 }

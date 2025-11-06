@@ -17,7 +17,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget to display sync status for premium users
 class SyncStatusCard extends ConsumerWidget {
@@ -104,7 +105,7 @@ class SyncStatusCard extends ConsumerWidget {
                             : AppIcons.error,
                         size: 16,
                         color: syncStatus.lastSyncResult!.success
-                            ? Colors.green
+                            ? context.colors.success
                             : theme.colorScheme.error,
                       ),
                       const SizedBox(width: 4),
@@ -132,7 +133,7 @@ class SyncStatusCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(

@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.dart';
 import 'package:gymbro_flutter_new/shared/data/datasources/history_view_settings_datasource.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// DataSource Provider
 final historyViewSettingsDataSourceProvider = Provider<HistoryViewSettingsDataSource>((ref) {
-  return HistoryViewSettingsDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return HistoryViewSettingsDataSource(boxManager);
 });
 
 /// History View Settings Provider (StateNotifier)

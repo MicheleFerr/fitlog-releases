@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -37,14 +38,14 @@ class ContextualTrainingAdvisor extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: _getGradientColors(category),
+            colors: _getGradientColors(context, category),
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: _getGradientColors(category).first.withValues(alpha: 0.3),
+              color: _getGradientColors(context, category).first.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -188,18 +189,18 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     );
   }
 
-  List<Color> _getGradientColors(AdviceCategory category) {
+  List<Color> _getGradientColors(BuildContext context, AdviceCategory category) {
     switch (category) {
       case AdviceCategory.pushHard:
-        return [Colors.green.shade400, Colors.green.shade600];
+        return [context.successColor.withOpacity(0.7), context.successColor];
       case AdviceCategory.maintainPace:
-        return [Colors.blue.shade400, Colors.blue.shade600];
+        return [context.colors.tertiary.withOpacity(0.7), context.colors.tertiary];
       case AdviceCategory.beCareful:
-        return [Colors.orange.shade400, Colors.orange.shade600];
+        return [context.warningColor.withOpacity(0.7), context.warningColor];
       case AdviceCategory.takeRest:
-        return [Colors.red.shade400, Colors.red.shade600];
+        return [context.errorColor.withOpacity(0.7), context.errorColor];
       case AdviceCategory.recovery:
-        return [Colors.purple.shade400, Colors.purple.shade600];
+        return [context.colors.primary.withOpacity(0.7), context.colors.primary];
     }
   }
 
@@ -375,7 +376,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
       initialChildSize: 0.7,
       minChildSize: 0.5,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -409,8 +410,8 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Volume Training',
               'Il volume è ${volumeChange > 0 ? "aumentato" : "diminuito"} del ${volumeChange.abs().toStringAsFixed(1)}%',
               _getVolumeExplanation(),
-              volumeChange > 0 ? AppIcons.trendUp : AppIcons.trendDown,
-              volumeChange > 0 ? Colors.green : Colors.orange,
+              volumeChange > 0 ? Icons.trending_up : Icons.trending_down,
+              volumeChange > 0 ? context.successColor : context.warningColor,
             ),
             
             _buildExplanationCard(
@@ -418,17 +419,17 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Intensità Media',
               'RPE ${(6 + (avgIntensity - 1) * 4 / 9).toStringAsFixed(1)} su 10',
               _getIntensityExplanation(),
-              AppIcons.flashOn,
-              _getIntensityColor(),
+              Icons.flash_on,
+              _getIntensityColor(context),
             ),
-            
+
             _buildExplanationCard(
               context,
               'Stato di Recupero',
               'Fatica media: ${avgFatigue.toStringAsFixed(1)}/5',
               _getRecoveryExplanation(),
-              AppIcons.hotel,
-              _getFatigueColor(),
+              Icons.hotel,
+              _getFatigueColor(context),
             ),
             
             _buildExplanationCard(
@@ -436,8 +437,8 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Frequenza',
               '$workoutCount allenamenti questa settimana',
               _getFrequencyExplanation(),
-              AppIcons.calendar,
-              Colors.blue,
+              Icons.calendar_today,
+              context.infoColor,
             ),
             
             if (!isPremium) ...[
@@ -625,19 +626,19 @@ class _DetailedExplanationSheet extends StatelessWidget {
     }
   }
 
-  Color _getIntensityColor() {
+  Color _getIntensityColor(BuildContext context) {
     final rpe = 6 + (avgIntensity - 1) * 4 / 9;
-    if (rpe >= 9) return Colors.red;
-    if (rpe >= 7.5) return Colors.orange;
-    if (rpe >= 6.5) return Colors.blue;
-    return Colors.grey;
+    if (rpe >= 9) return context.errorColor;
+    if (rpe >= 7.5) return context.warningColor;
+    if (rpe >= 6.5) return context.colors.tertiary;
+    return context.colors.outline;
   }
 
-  Color _getFatigueColor() {
-    if (avgFatigue < 2) return Colors.green;
-    if (avgFatigue < 3) return Colors.blue;
-    if (avgFatigue < 4) return Colors.orange;
-    return Colors.red;
+  Color _getFatigueColor(BuildContext context) {
+    if (avgFatigue < 2) return context.successColor;
+    if (avgFatigue < 3) return context.colors.tertiary;
+    if (avgFatigue < 4) return context.warningColor;
+    return context.errorColor;
   }
 }
 

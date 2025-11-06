@@ -19,7 +19,6 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:csv/csv.dart';
 import 'package:uuid/uuid.dart';
 
@@ -350,9 +349,8 @@ class WorkoutImportService {
           sets: _parseSets(exerciseJson['sets'] ?? []),
           notes: exerciseJson['notes'],
           restTime: exerciseJson['restTimeSeconds'],
-          isCompleted: exerciseJson['isCompleted'] ?? false,
-          isSkipped: exerciseJson['isSkipped'] ?? false,
-          skipReason: exerciseJson['skipReason'],
+          // Note: isCompleted is a computed getter based on sets completion
+          // isSkipped and skipReason are not part of Exercise entity
         );
         exercises.add(exercise);
       } catch (e) {
@@ -448,12 +446,14 @@ class WorkoutImportService {
     } catch (_) {}
     
     return Workout(
+      id: DateTime.now().millisecondsSinceEpoch.toString(), // Generate unique ID
       name: workoutName,
       exercises: exercises,
       status: WorkoutStatus.completed,
       startTime: workoutDate,
       endTime: workoutDate,
       createdAt: workoutDate ?? DateTime.now(),
+      updatedAt: workoutDate ?? DateTime.now(),
     );
   }
   

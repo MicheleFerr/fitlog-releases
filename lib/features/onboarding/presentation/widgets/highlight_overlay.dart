@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class HighlightOverlay extends StatefulWidget {
 
@@ -164,6 +165,7 @@ class _HighlightOverlayState extends State<HighlightOverlay>
                       overlayColor: widget.overlayColor,
                       shape: widget.shape,
                       pulseAnimation: _pulseAnimation,
+                      highlightColor: context.colors.surface,
                     ),
                   )
                 : Container(color: widget.overlayColor),
@@ -184,8 +186,8 @@ class _HighlightOverlayState extends State<HighlightOverlay>
               child: TextButton(
                 onPressed: widget.onSkip,
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.black.withOpacity(0.3),
+                  foregroundColor: context.colors.surface,
+                  backgroundColor: context.colors.onSurface.withValues(alpha: 0.3),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -220,7 +222,7 @@ class _HighlightOverlayState extends State<HighlightOverlay>
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: context.colors.onSurface.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -244,7 +246,7 @@ class _HighlightOverlayState extends State<HighlightOverlay>
                 Text(
                   widget.description!,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                     height: 1.4,
                   ),
                 ),
@@ -279,11 +281,13 @@ class HighlightPainter extends CustomPainter {
     required this.overlayColor,
     required this.shape,
     required this.pulseAnimation,
+    required this.highlightColor,
   }) : super(repaint: pulseAnimation);
   final Rect targetRect;
   final Color overlayColor;
   final HighlightShape shape;
   final Animation<double> pulseAnimation;
+  final Color highlightColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -292,7 +296,7 @@ class HighlightPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final highlightPaint = Paint()
-      ..color = Colors.white
+      ..color = highlightColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0 * pulseAnimation.value;
 

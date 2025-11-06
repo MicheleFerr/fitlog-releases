@@ -12,9 +12,10 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Cloud sync state
 class CloudSyncState {
@@ -89,18 +90,19 @@ class SyncSummary {
 
 /// Cloud sync provider
 class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
-  
-  CloudSyncNotifier(this._ref) : super(const CloudSyncState()) {
+
+  CloudSyncNotifier(this._ref, this._boxManager) : super(const CloudSyncState()) {
     _loadLastSyncTime();
   }
   final Ref _ref;
+  final HiveBoxManagerEnhanced _boxManager;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   
   /// Load last sync time from local storage
   Future<void> _loadLastSyncTime() async {
     try {
-      final box = await Hive.openBox('sync_preferences');
+      final box = await _boxManager.openBox('sync_preferences');
       final lastSync = box.get('last_cloud_sync_time');
       if (lastSync != null) {
         state = state.copyWith(lastSyncTime: lastSync);
@@ -113,7 +115,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
   /// Save last sync time to local storage
   Future<void> _saveLastSyncTime(String time) async {
     try {
-      final box = await Hive.openBox('sync_preferences');
+      final box = await _boxManager.openBox('sync_preferences');
       await box.put('last_cloud_sync_time', time);
     } catch (e) {
       debugPrint('Failed to save last sync time: $e');
@@ -235,7 +237,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
   /// Sync workouts from Firestore to local
   Future<int> _syncWorkouts(String userId) async {
     try {
-      final box = await Hive.openBox<Map>('workouts_data');
+      final box = await _boxManager.openBox<Map>('workouts_data');
       
       // Get workouts from Firestore
       final snapshot = await _firestore
@@ -284,7 +286,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
   /// Sync templates from Firestore to local
   Future<int> _syncTemplates(String userId) async {
     try {
-      final box = await Hive.openBox<Map>('templates_data');
+      final box = await _boxManager.openBox<Map>('templates_data');
       
       // Get user's templates
       final snapshot = await _firestore
@@ -328,7 +330,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
   /// Sync custom exercises from Firestore to local
   Future<int> _syncExercises(String userId) async {
     try {
-      final box = await Hive.openBox<Map>('exercises_data');
+      final box = await _boxManager.openBox<Map>('exercises_data');
       
       // Get user's custom exercises
       final snapshot = await _firestore
@@ -365,7 +367,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
   /// Sync personal records from Firestore to local
   Future<int> _syncPersonalRecords(String userId) async {
     try {
-      final box = await Hive.openBox<Map>('personal_records_data');
+      final box = await _boxManager.openBox<Map>('personal_records_data');
       
       // Get user's PRs
       final snapshot = await _firestore
@@ -416,15 +418,15 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
         _convertTimestampsToStrings(profileData);
         
         // Save profile to local cache
-        final profileBox = await Hive.openBox<Map>('user_profile_cache');
+        final profileBox = await _boxManager.openBox<Map>('user_profile_cache');
         await profileBox.put('profile', {
           'profile': profileData,
           'cacheTime': DateTime.now().toIso8601String(),
         });
-        
+
         // Save settings if present
         if (data['settings'] != null) {
-          final settingsBox = await Hive.openBox('app_settings');
+          final settingsBox = await _boxManager.openBox('app_settings');
           final settings = data['settings'] as Map<String, dynamic>;
           
           // Save each setting
@@ -449,21 +451,21 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
   Future<void> clearLocalData() async {
     try {
       debugPrint('🗑️ Clearing local data...');
-      
+
       // Clear workout data
-      final workoutsBox = await Hive.openBox<Map>('workouts_data');
+      final workoutsBox = await _boxManager.openBox<Map>('workouts_data');
       await workoutsBox.clear();
-      
+
       // Clear templates
-      final templatesBox = await Hive.openBox<Map>('templates_data');
+      final templatesBox = await _boxManager.openBox<Map>('templates_data');
       await templatesBox.clear();
-      
+
       // Clear exercises
-      final exercisesBox = await Hive.openBox<Map>('exercises_data');
+      final exercisesBox = await _boxManager.openBox<Map>('exercises_data');
       await exercisesBox.clear();
-      
+
       // Clear personal records
-      final prsBox = await Hive.openBox<Map>('personal_records_data');
+      final prsBox = await _boxManager.openBox<Map>('personal_records_data');
       await prsBox.clear();
       
       debugPrint('✅ Local data cleared');
@@ -540,7 +542,8 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
 
 /// Cloud sync provider
 final cloudSyncProvider = StateNotifierProvider<CloudSyncNotifier, CloudSyncState>((ref) {
-  return CloudSyncNotifier(ref);
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return CloudSyncNotifier(ref, boxManager);
 });
 
 /// Check if user can sync

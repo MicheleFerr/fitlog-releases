@@ -24,14 +24,22 @@ class TimerSoundSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSound = selectedSound;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: TimerSound.allSounds.map((sound) => _buildSoundOption(
-        context,
-        ref,
-        sound,
-        isSelected: sound == currentSound,
-      )).toList(),
+    return RadioGroup<TimerSound>(
+      groupValue: selectedSound,
+      onChanged: (value) {
+        if (value != null) {
+          onSoundSelected(value);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: TimerSound.allSounds.map((sound) => _buildSoundOption(
+          context,
+          ref,
+          sound,
+          isSelected: sound == currentSound,
+        )).toList(),
+      ),
     );
   }
 
@@ -44,12 +52,6 @@ class TimerSoundSelector extends ConsumerWidget {
     return RadioListTile<TimerSound>(
       title: Text(sound.displayName),
       value: sound,
-      groupValue: selectedSound,
-      onChanged: (value) {
-        if (value != null) {
-          onSoundSelected(value);
-        }
-      },
       secondary: IconButton(
         onPressed: () => _playPreview(context, sound),
         icon: const Icon(AppIcons.play, size: 20),

@@ -1,395 +1,624 @@
-# 🤖 CLAUDE.md - Istruzioni per Assistenti AI
+# 🤖 CLAUDE.md - Istruzioni Progetto
 
-> **IMPORTANTE**: Questo file contiene le regole OBBLIGATORIE per qualsiasi assistente AI che lavora su questo progetto Flutter. Leggi SEMPRE questo file prima di fare modifiche al codice.
+> **IMPORTANTE**: Questo file contiene le regole obbligatorie per lavorare su questo progetto Flutter.
 
 ## 📱 Progetto: FitLog Pro
-**Framework**: Flutter
-**Architettura**: Clean Architecture + Riverpod
-**Stato**: Produzione attiva con utenti iOS/Android
+**Framework**: Flutter | **Architettura**: Clean Architecture + Riverpod | **Stato**: ⚠️ **TESTING PHASE** - Solo utente sviluppatore
 
-## 🚀 EXERCISE DATABASE IMPLEMENTATION PROJECT
-
-> **STATUS**: In Development (Ready to Start)
-> **CURRENT PHASE**: 1 - Foundational (Weeks 1-4)
-> **PROGRESS**: 0% - Ready for implementation
-
-### 📋 Project Overview
-
-Building a comprehensive exercise database system with:
-- ✅ 1,567 corrected Italian exercises (Sept 2025)
-- ✅ Automatic validation and testing
-- ✅ User feedback collection
-- ✅ Version control system
-- ✅ Smart sync (delta-only downloads)
-- ✅ Backup & disaster recovery
-
-### 📚 Documentation (Start Here!)
-
-**⭐ ALL DOCUMENTATION IS HERE**: [`📚 docs/INDEX.md`](./docs/INDEX.md)
-
-**QUICK START** (Choose your path):
-
-1. **New Developer?** Start here (15 min):
-   ```
-   docs/QUICK_REFERENCE.md
-   📍 docs/INDEX.md (complete navigation)
-   ```
-
-2. **Need Architecture?** Read this (30 min):
-   ```
-   docs/EXERCISE_DATABASE_SYNC_ARCHITECTURE.md
-   ```
-
-3. **Ready to Implement?** Follow this (2-3 hours):
-   ```
-   docs/EXERCISE_IMPLEMENTATION_PLAYBOOK.md
-   ```
-
-4. **Hit an Error?** Check here:
-   ```
-   docs/ERROR_KB.md
-   docs/TIMER_AUDIO_KB.md
-   docs/LIVE_ACTIVITY_KB.md
-   docs/NOTIFICATION_SYSTEM_KB.md
-   ```
-
-5. **Track Progress** (Update weekly!):
-   ```
-   docs/IMPLEMENTATION_STATUS.json
-   ```
-
-**📖 For complete documentation index and navigation**: [`📚 docs/INDEX.md`](./docs/INDEX.md)
-
-### 🎯 How to Resume After Break
-
-```bash
-# 1. Check where you left off:
-cat docs/IMPLEMENTATION_STATUS.json | jq '.overall_progress_percent, .current_phase'
-
-# 2. Open quick reference:
-open docs/QUICK_REFERENCE.md
-
-# 3. Jump to your phase in PLAYBOOK:
-open docs/EXERCISE_IMPLEMENTATION_PLAYBOOK.md
-# Then Ctrl+F for "FASE 2" or "FASE 3" etc.
-
-# 4. Continue from where you stopped
-```
-
-### ⏭️ Next Steps
-
-**This Week:**
-- [ ] Read QUICK_REFERENCE.md (15 min)
-- [ ] Read ARCHITECTURE doc Executive Summary (20 min)
-- [ ] Start Task 1.1: Validation & Testing
-- [ ] Update IMPLEMENTATION_STATUS.json
-
-**Timeline:** ~20 weeks total (4 phases)
-- Phase 1: 4 weeks (Foundational)
-- Phase 2: 6 weeks (Infrastructure)
-- Phase 3: 6 weeks (Visibility & Scale)
-- Phase 4: 6+ weeks (Expansion)
+> **🧪 NOTA TESTING**: L'app è attualmente in fase di sviluppo e testing con UN SOLO UTENTE (lo sviluppatore).
+> **Non esiste base utenti** → Possiamo fare **breaking changes** e **migrazioni dati** senza preoccupazioni di compatibilità retroattiva.
+> **Refactoring aggressivi sono permessi** per migliorare architettura e performance.
 
 ---
 
-## 🛡️ ENFORCEMENT ATTIVO
+## 📚 STEP 0: LEGGI LA DOCUMENTAZIONE PRIMA DI IMPLEMENTARE
 
-**⚠️ CRITICAL**: Tutte le modifiche al codice DEVONO rispettare:
+**⚠️ OBBLIGATORIO PRIMA DI QUALSIASI MODIFICA:**
 
-1. **`CODE_QUALITY_RULES.md`** - Regole obbligatorie con enforcement automatico
-2. **Questo file (CLAUDE.md)** - Guidelines specifiche del progetto
-3. **Pre-commit hooks** - Check automatici prima di ogni commit
+### 🔍 Prima di implementare una feature:
 
-```bash
-# BEFORE OGNI MODIFICA
-./scripts/quality_dashboard.sh  # Vedi stato corrente
-flutter analyze                 # DEVE essere 0 errors
+1. **LEGGI** [`docs/NAVIGATION/INDEX.md`](docs/NAVIGATION/INDEX.md) - Mappa completa della documentazione
+2. **TROVA** la documentazione della feature che devi implementare/modificare
+3. **LEGGI** tutta la documentazione correlata (architettura, esempi, best practices)
+4. **IMPLEMENTA** seguendo i pattern documentati
+5. **AGGIORNA** la documentazione se necessario
 
-# DURING sviluppo
-- NO hardcoded strings → usa context.l10n.*
-- NO hardcoded colors → usa context.colors.*
-- NO raw components → usa LoadingIndicator, SnackBarService, ModalService
+### 📖 Documentazione Disponibile per Feature:
 
-# BEFORE commit
-git add .
-# Pre-commit hook runs automatically
-git commit -m "..."
+| Feature | Documentazione | Quando Leggerla |
+|---------|----------------|-----------------|
+| **📚 Comprehensive App Docs** | `docs/STRUTTURA_DATI.md`, `ARCHITETTURA_APP.md`, `SCHERMATE_PRINCIPALI.md`, `FLUSSI_UTENTE.md`, `FEATURES_IMPLEMENTATE.md`, `PROBLEMATICHE_LIMITAZIONI.md` | **ONBOARDING** - Per capire l'intera app (5,445 righe totali) |
+| **🎨 Design System** | `docs/DESIGN_GUIDELINES.md` | **SEMPRE** - Prima di creare widget, colori, spacing, animazioni |
+| **🎯 UI Flows & Components** | `docs/GymBro-UI-Flows.md` | **UI/UX DEVELOPMENT** - User flows dettagliati, componenti UI con codice Dart completo, interaction patterns |
+| **🏋️ Design & Architecture Report** | `docs/GymBro-Design-Report.md` | **ARCHITECTURE REVIEW** - Executive summary, issues identificati, soluzioni proposte, KPIs, roadmap |
+| **Timer & Rest Timer** | `docs/UX_FLOWS/notifications_background/TIMER_SYSTEM_DOCUMENTATION.md` | Prima di modificare timer, Live Activities, audio feedback |
+| **Analytics & Progress** | `docs/UX_FLOWS/home_dashboard/ANALYTICS_SYSTEM_DOCUMENTATION.md` | Prima di modificare metriche, PR detection, chart data |
+| **User Profile & Auth** | `docs/UX_FLOWS/user_account/USER_PROFILE_DOCUMENTATION.md` | Prima di modificare auth, account tiers, quota |
+| **Premium & IAP** | `docs/UX_FLOWS/user_account/PREMIUM_IAP_DOCUMENTATION.md` | Prima di modificare subscriptions, IAP, sync premium |
+| **Workout History** | `docs/UX_FLOWS/home_dashboard/WORKOUT_HISTORY_DOCUMENTATION.md` | Prima di modificare history, editing, export |
+| **Workout Session** | `docs/UX_FLOWS/workout_session/WORKOUT_SYSTEM_OVERVIEW.md` | Prima di modificare workout flow principale |
+| **Exercise Database** | `docs/UX_FLOWS/exercise_database/EXERCISE_DATABASE_SYNC_ARCHITECTURE.md` | Prima di modificare esercizi, feedback, sync |
+| **Routine Center** | `docs/UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md` | Prima di modificare routine, swap flow, templates |
+| **APRE System** | `docs/APRE/APRE_INDEX.md` → Start here, poi `APRE_SYSTEM_EXPLORATION.md` (sistema completo), `APRE_ACTION_ITEMS.md` (implementazione) | Prima di modificare APRE protocol, 1RM calculation, auto-adjustment |
+
+### 🎯 Workflow Completo:
+
+```
+1. Ricevi richiesta di implementare feature X
+   ↓
+2. LEGGI docs/NAVIGATION/INDEX.md
+   ↓
+3. TROVA sezione "Quick Navigation by Task"
+   ↓
+4. SEGUI link alla documentazione di feature X
+   ↓
+5. LEGGI documentazione completa (architettura + esempi)
+   ↓
+6. LEGGI documentazione correlata (se presente)
+   ↓
+7. IMPLEMENTA seguendo pattern documentati
+   ↓
+8. TESTA secondo guida di testing
+   ↓
+9. AGGIORNA documentazione se hai fatto modifiche significative
+   ↓
+10. COMMIT con messaggio descrittivo
+```
+
+**❌ MAI**: Implementare una feature senza aver letto la documentazione esistente
+**✅ SEMPRE**: Consultare INDEX.md → Trovare docs → Leggere → Implementare → Aggiornare
+
+---
+
+## 🛡️ ENFORCEMENT REGOLE CRITICHE
+
+**Tutte le modifiche DEVONO rispettare:**
+1. **Icon Design System Tier-1** 🆕:
+   - `AppIcons.*` per tutte le icone (MAI `Icons.*` inline)
+   - `AppIconSize.*` per sizing (MAI magic numbers 24, 28)
+   - `context.icon*` per colors (MAI `Colors.blue/red/green`)
+   - `SemanticIcon` preferito (accessibility screen readers)
+2. **Nessun testo hardcoded** → `context.l10n.*`
+3. **Nessun colore hardcoded** → `context.colors.*`
+4. **No componenti raw** → usa `LoadingIndicator`, `SnackBarService`, `ModalService`
+5. **`flutter analyze` deve passare** prima di commit
+
+**Pre-commit hook BLOCCA automaticamente violazioni di regole 1-3.**
+
+---
+
+## 🎯 REGOLA #0: TIER-1 ICON DESIGN SYSTEM (MANDATORY)
+
+> **⚠️ CRITICAL**: Sistema icone completo con centralizzazione, semantic sizing, colors, accessibility, animations e badges.
+
+### 📐 1. AppIcons Centralizzate (100% Coverage)
+
+**SEMPRE** usa `AppIcons.*` - MAI `Icons.*` direttamente
+
+```dart
+// ✅ CORRETTO - Icona centralizzata
+Icon(AppIcons.workout)
+Icon(AppIcons.analytics)
+Icon(AppIcons.settings)
+
+// ❌ SBAGLIATO - Icona inline (Material Icons diretti)
+Icon(Icons.fitness_center)
+Icon(Icons.bar_chart)
+Icon(Icons.settings)
+```
+
+**Status**: ~445 icone centralizzate (Phase 1+2+3 COMPLETE)
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';`
+
+### 📏 2. AppIconSize - Semantic Sizing (NEW)
+
+**SEMPRE** usa `AppIconSize.*` constants - MAI magic numbers
+
+```dart
+// ✅ CORRETTO - Semantic sizing
+Icon(AppIcons.workout, size: AppIconSize.medium)
+Icon(AppIcons.timer, size: AppIconSize.large)
+Icon(AppIcons.badge, size: AppIconSize.tiny)
+
+// ❌ SBAGLIATO - Magic numbers
+Icon(AppIcons.workout, size: 24)
+Icon(AppIcons.timer, size: 28)
+Icon(AppIcons.badge, size: 16)
+```
+
+**Available Sizes**:
+- `tiny` (16dp) - Badge icons, small indicators
+- `small` (20dp) - Chip icons, compact UI
+- `medium` (24dp) - **Default**, standard icons
+- `large` (28dp) - Featured icons, emphasis
+- `xlarge` (32dp) - Header icons, primary actions
+- `xxlarge` (48dp) - Empty states, hero sections
+
+**Context-Specific**: `tabBar`, `buttonPrimary`, `card`, `listTile`, `emptyState`, `loading`
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';`
+
+### 🎨 3. Semantic Icon Colors (NEW)
+
+**SEMPRE** usa `context.icon*` - MAI hardcoded colors
+
+```dart
+// ✅ CORRETTO - Semantic colors
+Icon(AppIcons.workout, color: context.iconPrimary)
+Icon(AppIcons.success, color: context.iconSuccess)
+Icon(AppIcons.error, color: context.iconError)
+
+// ❌ SBAGLIATO - Hardcoded colors
+Icon(AppIcons.workout, color: Colors.blue)
+Icon(AppIcons.success, color: Colors.green)
+Icon(AppIcons.error, color: Colors.red)
+```
+
+**Available Colors**:
+- **Primary**: `iconPrimary`, `iconSecondary`, `iconTertiary`
+- **Semantic**: `iconSuccess`, `iconError`, `iconWarning`, `iconInfo`
+- **Emphasis**: `iconDefault`, `iconMediumEmphasis`, `iconLowEmphasis`, `iconDisabled`
+- **Inverse**: `iconOnPrimary`, `iconOnSecondary`
+- **Workout**: `iconWorkoutActive`, `iconRestTimer`, `iconPersonalRecord`, `iconProgress`
+
+**Helpers**:
+- `context.iconStateActive(bool)` - Green if active, gray if not
+- `context.iconProgressColor(double %)` - Red/orange/green based on %
+- `context.iconPriority(String)` - Error/warning/normal based on priority
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';`
+
+### ♿ 4. SemanticIcon - Accessibility (NEW)
+
+**SEMPRE** usa `SemanticIcon` per accessibilità screen readers
+
+```dart
+// ✅ CORRETTO - Accessible icon
+SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: context.l10n.startWorkout,
+  size: AppIconSize.medium,
+  color: context.iconPrimary,
+)
+
+// ✅ CORRETTO - Shorthand extension
+AppIcons.workout.semantic(
+  label: context.l10n.startWorkout,
+  size: AppIconSize.large,
+)
+
+// ❌ SBAGLIATO - Icon senza semantic label (screen reader non lo legge)
+Icon(AppIcons.workout)
+```
+
+**Factory Constructors**:
+- `SemanticIcon.button()` - For interactive icons (isButton: true)
+- `SemanticIcon.state()` - For toggle states (active/inactive labels)
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';`
+
+### 🎬 5. AnimatedIconPatterns - Reusable Animations (NEW)
+
+Usa pattern riusabili invece di duplicare animation code
+
+```dart
+// ✅ CORRETTO - Reusable pattern
+AnimatedIconPatterns.rotating(
+  icon: AppIcons.loading,
+  duration: Duration(seconds: 2),
+  color: context.iconPrimary,
+)
+
+AnimatedIconPatterns.pulsing(
+  icon: AppIcons.notification,
+  scaleAmount: 0.2,
+  color: context.iconError,
+)
+
+AnimatedIconPatterns.shaking(
+  icon: AppIcons.error,
+  trigger: hasError,
+  color: context.iconError,
+)
+
+// ❌ SBAGLIATO - Animation code duplicato ovunque
+RotationTransition(...) // ogni volta diverso
+```
+
+**Available Patterns**:
+- `rotating()` - Infinite spin (loading indicators)
+- `pulsing()` - Scale animation (call-to-action)
+- `bouncing()` - Elastic entrance (notifications)
+- `fading()` - Opacity transitions (state changes)
+- `shaking()` - Horizontal shake (errors)
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/widgets/animated_icon_patterns.dart';`
+
+### 🔴 6. BadgedIcon - Unified Badges/Counters (NEW)
+
+Usa `BadgedIcon` per notification counts e dot indicators
+
+```dart
+// ✅ CORRETTO - Notification badge
+BadgedIcon.notification(
+  icon: AppIcons.notifications,
+  count: 5,
+)
+
+// ✅ CORRETTO - Dot indicator
+BadgedIcon.dot(
+  icon: AppIcons.mail,
+  showDot: hasUnread,
+)
+
+// ✅ CORRETTO - Shorthand extension
+AppIcons.notifications.withBadge(count: 3)
+AppIcons.mail.withDot(showDot: true)
+
+// ❌ SBAGLIATO - Badge code duplicato ovunque
+Stack(
+  children: [
+    Icon(...),
+    Positioned(top: -2, right: -4, child: Container(...)), // ogni volta diverso
+  ],
+)
+```
+
+**Features**:
+- Auto-sizing (dot: 8dp, single digit: 16dp, multi-digit: 20dp)
+- Handles counts > 99 as "99+"
+- Border for separation from background
+- Customizable position with offset
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/widgets/badged_icon.dart';`
+
+### 🔍 7. Icon Showcase - Discovery Tool (NEW)
+
+**Per sviluppatori**: Screen per esplorare tutte le 445 icone
+
+```dart
+// Navigate to showcase
+Navigator.push(
+  context,
+  MaterialPageRoute(builder: (_) => IconShowcaseScreen()),
+);
+```
+
+**Features**:
+- Search/filter per nome
+- Category grouping (11 categorie)
+- Tap to copy "AppIcons.iconName"
+- Visual preview di tutte le icone
+
+**Location**: `lib/shared/presentation/screens/icon_showcase_screen.dart`
+
+### 📦 8. AppIconCategory - Type-Safe Organization (NEW - Priority 3)
+
+**Enum-based categories** per organizzare le 445 icone in modo type-safe
+
+```dart
+// ✅ CORRETTO - Type-safe category access
+final workoutIcons = AppIconCategory.workout.icons;
+final timerIcons = AppIconCategory.timer.icons;
+
+// ✅ CORRETTO - Check icon category
+if (AppIcons.workout.category == AppIconCategory.workout) {
+  // This icon belongs to workout category
+}
+
+// ✅ CORRETTO - Find category for any icon
+final category = AppIconCategory.categoryFor(AppIcons.timer);
+print(category?.displayName); // "Timer"
+
+// ❌ SBAGLIATO - String-based categories (no compile-time safety)
+final icons = getCategoryIcons('workout'); // typo = runtime error
+```
+
+**Available Categories** (11 total):
+- `workout` - Exercise and training icons
+- `timer` - Time tracking and scheduling
+- `analytics` - Data visualization and metrics
+- `status` - State and feedback indicators
+- `action` - User actions and CRUD operations
+- `navigation` - Navigation and directional
+- `social` - Social and user interaction
+- `settings` - Configuration and settings
+- `premium` - Premium features
+- `media` - Media playback and capture
+- `misc` - Utility and miscellaneous
+
+**Methods**:
+- `category.icons` - Get all icons in category as `Map<String, IconData>`
+- `category.contains(icon)` - Check if icon belongs to category
+- `AppIconCategory.categoryFor(icon)` - Get category for any icon
+- `AppIconCategory.allIcons` - Get all icons across all categories
+- `icon.category` - Extension to get category from IconData
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_category.dart';`
+
+### 🔄 9. AppIconVariants - Outlined/Filled Alternatives (NEW - Priority 3)
+
+**Factory system** per icone con varianti filled/outlined (perfetto per toggle states)
+
+```dart
+// ✅ CORRETTO - Toggle between filled/outlined
+Icon(
+  isActive
+    ? AppIconVariants.star.filled
+    : AppIconVariants.star.outlined,
+)
+
+// ✅ CORRETTO - Using ToggleIcon widget
+ToggleIcon(
+  isActive: isFavorite,
+  variant: AppIconVariants.star,
+  activeColor: context.iconSuccess,
+  inactiveColor: context.iconDisabled,
+)
+
+// ✅ CORRETTO - Extension toggle
+Icon(AppIcons.star.toggled) // Switch between filled/outlined
+
+// ❌ SBAGLIATO - Hardcoding both variants
+Icon(isFavorite ? Icons.star : Icons.star_border)
+```
+
+**Available Variants** (13 pre-defined):
+- **Status**: `checkCircle`, `star`, `info`, `error`
+- **Action**: `addCircle`, `delete`
+- **Social**: `people`, `thumbUp`, `thumbDown`
+- **Media**: `playCircle`, `pauseCircle`
+- **Navigation**: `home`, `settings`
+
+**Features**:
+- `variant.filled` - Get filled variant
+- `variant.outlined` - Get outlined variant (nullable)
+- `variant.outlinedOrFilled` - Fallback to filled if no outlined
+- `variant.hasOutlined` - Check if outlined variant exists
+- `icon.outlined` / `icon.filled` - Extensions for dynamic lookup
+- `icon.toggled` - Smart toggle between variants
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_variants.dart';`
+
+### 📚 10. AppIconMetadata - Rich Discovery System (NEW - Priority 3)
+
+**Metadata completo** per ogni icona: descrizioni, use cases, keywords, semantic labels suggeriti
+
+```dart
+// ✅ CORRETTO - Get metadata
+final metadata = AppIcons.workout.metadata;
+print(metadata?.description); // "Exercise and workout tracking"
+print(metadata?.suggestedSemanticLabel); // "Workout"
+
+// ✅ CORRETTO - Search by keyword
+final results = AppIconMetadata.search('timer');
+for (final entry in results) {
+  print(entry.key); // IconData
+  print(entry.value.description); // IconMetadata
+}
+
+// ✅ CORRETTO - Get related icons
+final relatedIcons = AppIcons.cardio.relatedIcons;
+// Returns: [AppIcons.workout, AppIcons.speed]
+
+// ✅ CORRETTO - Get suggested semantic label
+SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: AppIcons.timer.suggestedSemanticLabel ?? 'Timer',
+)
+```
+
+**Metadata Fields**:
+- `description` - Human-readable description
+- `useCases` - Suggested use cases (List<String>)
+- `relatedIcons` - Alternative/complementary icons (List<IconData>)
+- `suggestedSemanticLabel` - WCAG 2.1 AA accessibility label
+- `keywords` - Search keywords/tags (List<String>)
+- `platformNotes` - iOS/Android specific notes (optional)
+- `exampleUsage` - Code example (optional)
+
+**Methods**:
+- `AppIconMetadata.metadataFor(icon)` - Get metadata for specific icon
+- `AppIconMetadata.search(query)` - Search by keyword/description
+- `AppIconMetadata.byCategory(category)` - Get metadata by category
+- `AppIconMetadata.byKeyword(keyword)` - Filter by specific keyword
+- `AppIconMetadata.relatedTo(icon)` - Get related icons
+- `icon.metadata` - Extension to get metadata from IconData
+- `icon.hasMetadata` - Check if metadata exists
+
+**Coverage**: ~30 core icons have rich metadata (workout, timer, analytics, status, action, navigation, social, settings, premium, media, misc)
+
+**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_metadata.dart';`
+
+### 🚫 Enforcement Automatico
+
+- ✅ **Pre-commit hook** blocca `Icons.*` inline
+- ✅ **Pre-commit hook** warn su `Icon()` senza SemanticIcon
+- ✅ **Pre-commit hook** warn su hardcoded sizes
+- ✅ **100% coverage** - ~445 icone centralizzate
+- ✅ **Zero tolleranza** - Qualsiasi `Icons.*` deve essere in `AppIcons`
+
+### 📊 Perché Tier-1 Design System?
+
+1. **Consistency** - Stessi size/color ovunque (no magic numbers)
+2. **Accessibility** - Screen readers leggono tutte le icone (WCAG 2.1 AA compliant)
+3. **Reusability** - Animation/badge patterns riusabili (no duplication)
+4. **Developer Experience** - Icon showcase + auto-complete + metadata search
+5. **Maintainability** - Refactoring facile (semantic constants)
+6. **Performance** - Widget ottimizzati con const
+7. **Type Safety** - Enum-based categories (compile-time safety) 🆕
+8. **Discoverability** - Rich metadata system (search by keyword/use case) 🆕
+9. **Flexibility** - Icon variants (filled/outlined toggle states) 🆕
+10. **Documentation** - Every icon has description, use cases, related icons 🆕
+
+### ⚡ Quick Examples
+
+```dart
+// 🎯 Perfect icon usage (tier-1)
+SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: context.l10n.startWorkout,
+  size: AppIconSize.large,
+  color: context.iconPrimary,
+)
+
+// 🔴 Notification badge
+AppIcons.notifications.withBadge(count: unreadCount)
+
+// 🎬 Loading animation
+AnimatedIconPatterns.rotating(
+  icon: AppIcons.loading,
+  color: context.iconPrimary,
+)
+
+// 🎨 State-based icon color
+Icon(
+  AppIcons.wifi,
+  size: AppIconSize.medium,
+  color: context.iconStateActive(isConnected),
+)
+
+// 📦 Type-safe category access (Priority 3)
+final timerIcons = AppIconCategory.timer.icons;
+final category = AppIcons.workout.category;
+
+// 🔄 Icon variants for toggle states (Priority 3)
+ToggleIcon(
+  isActive: isFavorite,
+  variant: AppIconVariants.star,
+  activeColor: context.iconSuccess,
+)
+
+// 📚 Rich metadata discovery (Priority 3)
+final metadata = AppIcons.timer.metadata;
+final suggestedLabel = AppIcons.workout.suggestedSemanticLabel;
+final results = AppIconMetadata.search('workout');
 ```
 
 ---
 
 ## 🌍 REGOLA #1: MULTILINGUA OBBLIGATORIO
 
-### ❌ NON FARE MAI:
-```dart
-// ❌ SBAGLIATO - Testo hardcoded
-Text('Welcome to GymBro!')
-AppBar(title: Text('Settings'))
-SnackBar(content: Text('Success!'))
-```
+✅ **SEMPRE**: `context.l10n.keyName` (BuildContext extensions)
+- Importa: `build_context_extensions.dart`
+- Aggiungi traduzioni in `assets/i18n/app_en.arb` e `app_it.arb`
+- Rigenera: `flutter gen-l10n`
 
-### ✅ FARE SEMPRE (con BuildContext Extensions):
-```dart
-// ✅ CORRETTO - Usa context.l10n (più conciso)
-Text(context.l10n.welcomeToGymBro)
-AppBar(title: Text(context.l10n.settings))
-SnackBar(content: Text(context.l10n.successMessage))
-
-// ⚠️ DEPRECATO (ancora valido ma verboso)
-Text(AppLocalizations.of(context)!.welcomeToGymBro)
-```
-
-### 🔧 Setup Richiesto in OGNI Schermata:
-```dart
-// IMPORT OBBLIGATORIO - BuildContext Extensions
-import '../../../../shared/presentation/extensions/build_context_extensions.dart';
-
-// O il percorso corretto in base alla posizione del file
-```
-
-### 📝 Processo per Nuove Traduzioni:
-1. **Aggiungi in `assets/i18n/app_en.arb`**:
-   ```json
-   {
-     "myNewKey": "English Text",
-     "@myNewKey": {
-       "description": "What this text is for"
-     }
-   }
-   ```
-
-2. **Aggiungi in `assets/i18n/app_it.arb`**:
-   ```json
-   {
-     "myNewKey": "Testo Italiano"
-   }
-   ```
-
-3. **Rigenera**:
-   ```bash
-   flutter gen-l10n
-   ```
-
-4. **Usa nel codice**:
-   ```dart
-   Text(AppLocalizations.of(context)!.myNewKey)
-   ```
+❌ **MAI**: Testi hardcoded o `AppLocalizations.of(context)!`
 
 ---
 
-## 🎨 REGOLA #2: TEMA SCURO/CHIARO
+## 🎨 REGOLA #2: TEMA SCURO/CHIARO (TEMA CENTRALIZZATO OBBLIGATORIO)
 
-### 🚫 NON Definire Colori Hardcoded:
-```dart
-// ❌ SBAGLIATO
-Container(color: Colors.blue)
-Text(style: TextStyle(color: Colors.black))
-```
+### 📖 Sistema Tema
 
-### ✅ USA SEMPRE il ColorScheme del Tema (con BuildContext Extensions):
+L'app usa un **sistema tema centralizzato** in `lib/shared/presentation/theme/app_theme.dart` che supporta:
+- ✅ Dark/Light mode automatico
+- ✅ Material 3 design system
+- ✅ Colori custom estesi (success, warning)
+- ✅ Rebranding istantaneo (cambia 5 colori → intera app aggiornata)
+
+### ✅ SEMPRE Usa Theme-Aware Colors
+
 ```dart
-// ✅ CORRETTO - Usa context.colors (più conciso)
+// ✅ CORRETTO - Theme-aware
 Container(color: context.colors.primary)
-Text(style: TextStyle(color: context.colors.onSurface))
-Icon(color: context.colors.secondary)
+Icon(Icons.check, color: context.colors.success)
+Text('Error', style: TextStyle(color: context.colors.error))
 
-// ⚠️ DEPRECATO (ancora valido ma verboso)
-Container(color: Theme.of(context).colorScheme.primary)
+// ❌ SBAGLIATO - Hardcoded
+Container(color: Colors.blue)
+Icon(Icons.check, color: Colors.green)
+Text('Error', style: TextStyle(color: Colors.red))
 ```
 
-### 🎯 Colori Disponibili nel ColorScheme:
-- `primary` / `onPrimary`
-- `secondary` / `onSecondary`
-- `surface` / `onSurface`
-- `background` / `onBackground`
-- `error` / `onError`
-- `outline` / `outlineVariant`
+### 📋 Color Mapping Reference
 
-### 📱 Il Sistema di Tema:
-- **L'utente può scegliere**: Chiaro, Scuro, Sistema
-- **Configurazione**: `lib/shared/presentation/providers/app_config_provider.dart`
-- **Temi**: `lib/shared/presentation/theme/app_theme.dart`
+| Hardcoded | Theme Alternative | Uso |
+|-----------|-------------------|-----|
+| `Colors.blue` | `context.colors.primary` | Brand color, pulsanti principali |
+| `Colors.orange` | `context.colors.secondary` | Accent, azioni secondarie |
+| `Colors.green` | `context.colors.success` | Success, completato, positivo |
+| `Colors.red` | `context.colors.error` | Errore, danger, elimina |
+| `Colors.amber` / `Colors.yellow` | `context.colors.warning` | Warning, attenzione |
+| `Colors.purple` / `Colors.deepPurple` | `context.colors.tertiary` | Azioni terziarie, info |
+| `Colors.white` | `context.colors.surface` | Sfondi, card |
+| `Colors.grey` | `context.colors.surfaceVariant` | Sfondi sottili |
+| `Colors.black` | `context.colors.onSurface` | Testo primario |
+
+**⚠️ Eccezione**: `Colors.transparent` è permesso (universale, valido in tutti i temi)
+
+### 📦 Import Richiesti
+
+```dart
+// Per context.colors.*
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+
+// Per .success, .warning custom extensions
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+```
+
+### 🛠️ Tool Automatici Disponibili
+
+**Fixare violazioni automaticamente**:
+```bash
+# Single file
+./scripts/fix_theme_violations.sh --file path/to/file.dart
+
+# Dry-run (anteprima)
+./scripts/fix_theme_violations.sh --dry-run --file path/to/file.dart
+
+# All files (163 file automatici, ~1110 sostituzioni)
+./scripts/fix_theme_violations.sh
+```
+
+**Rollback se necessario**:
+```bash
+./scripts/rollback_theme_fixes.sh --file path/to/file.dart
+```
+
+### 🔒 Pre-Commit Hook Integrato
+
+Il pre-commit hook automaticamente:
+- ✅ Scansiona ogni file .dart staged
+- ✅ Rileva hardcoded `Colors.*` violations
+- ❌ **BLOCCA commit** se trova violazioni
+- 💡 Mostra fix automatico suggerito
+
+**⚠️ Bypass (NON RACCOMANDATO)**: `git commit --no-verify`
+
+### 📚 Documentazione Completa
+
+Vedi: `scripts/THEME_FIX_README.md` per:
+- Guida completa utilizzo script
+- Test results e statistics
+- FAQ e troubleshooting
+- Color mapping dettagliato
 
 ---
 
 ## 🏗️ REGOLA #3: ARCHITETTURA RIVERPOD
 
-### 📂 Struttura Obbligatoria:
-```
-lib/
-├── features/
-│   └── [feature_name]/
-│       ├── domain/
-│       ├── data/
-│       └── presentation/
-│           ├── screens/
-│           ├── widgets/
-│           └── providers/
-├── shared/
-│   ├── presentation/
-│   │   ├── l10n/
-│   │   ├── theme/
-│   │   └── providers/
-│   └── domain/
-└── app/
-```
-
-### 🔧 Pattern Provider:
-```dart
-// Provider
-final myProvider = StateNotifierProvider<MyNotifier, MyState>((ref) {
-  return MyNotifier();
-});
-
-// Utilizzo in Widget
-class MyWidget extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(myProvider);
-    return Text(AppLocalizations.of(context)!.myText);
-  }
-}
-```
+Struttura: `features/[name]/{domain,data,presentation}` + `shared/`
+Widget pattern: `ConsumerWidget` + `ref.watch()`/`ref.read()`
 
 ---
 
-## 🚨 REGOLE CRITICHE
+## 🔧 WIDGET PATTERN ESSENZIALI
 
-### 1. 🌍 Localizzazione:
-- **SEMPRE** usare `AppLocalizations.of(context)!.keyName`
-- **MAI** testi hardcoded in italiano o inglese
-- **SEMPRE** aggiungere traduzioni EN e IT
-
-### 2. 🎨 Temi:
-- **SEMPRE** usare `Theme.of(context).colorScheme.colorName`
-- **MAI** colori hardcoded come `Colors.blue`
-- **TESTARE** in entrambi i temi (chiaro/scuro)
-
-### 3. 📱 Widget:
-- **PREFERIRE** `ConsumerWidget` per accesso ai provider
-- **USARE** `const` quando possibile per performance
-- **SEGUIRE** Material Design 3 guidelines
-
-### 4. 🔧 Import:
-- **SEMPRE** import assoluti da `package:`
-- **MAI** import relativi con `../`
+- ✅ Usa `const` quando possibile
+- ✅ Import assoluti: `package:...` (mai `../`)
+- ✅ Usa `select()` per evitare rebuild inutili: `ref.watch(provider.select((x) => x.field))`
+- ✅ Manage resources: cancella `Timer`, `StreamSubscription`, `Controller`
+- ✅ Testa in entrambi i temi (chiaro/scuro)
 
 ---
 
-## 🛠️ COMANDI UTILI
+## 🍎 REGOLA #4: iOS SPECIFICO
 
-```bash
-# Trova testi hardcoded
-./scripts/find_hardcoded_strings.sh
-
-# Rigenera localizzazioni  
-flutter gen-l10n
-
-# Analizza codice
-flutter analyze
-
-# Setup completo
-make dev-setup
-
-# Controlli pre-commit
-make pre-commit
-```
-
----
-
-## 📚 RISORSE
-
-### Documentazione Generale
-- **Guida Localizzazione**: `docs/LOCALIZATION_GUIDE.md`
-- **Snippet VSCode**: `.vscode/dart.code-snippets`
-- **Script Automatici**: `scripts/`
-- **Configurazione Tema**: `lib/shared/presentation/theme/app_theme.dart`
-
-### 🏋️‍♂️ Documentazione Feature Workout (OBBLIGATORIA)
-- **📋 Rules of Engagement (ROE)**: `docs/WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md`
-  - **LEGGERE PRIMA di ogni modifica al sistema workout**
-  - Template architettura obbligatori (Clean Architecture + Riverpod)
-  - Pattern hybrid storage (Hive local-first + Firebase cloud-sync)
-  - Atomic operations e race condition prevention
-  - Test requirements (unit/widget/integration templates)
-  - Performance metrics da rispettare (80-90% miglioramenti)
-  - Sicurezza: input sanitization e Firestore rules
-  - iOS integration: Live Activities, background tasks
-  - Pre-commit checklist (40+ verifiche obbligatorie)
-
-- **📖 Overview Non-Tecnico**: `docs/WORKOUT_SYSTEM_OVERVIEW.md`
-  - Comprensione del sistema per stakeholders
-  - Workflow completo: pianificazione → esecuzione → completamento
-  - Strategia data persistence (local + cloud sync)
-  - Timer system e iOS features
-  - FAQ per domande comuni
-
-### 📋 Documentazione Exercise Card (OBBLIGATORIA)
-- **📋 Rules of Engagement (ROE)**: `docs/EXERCISE_CARD_DEVELOPMENT_GUIDE.md`
-  - **LEGGERE PRIMA di modificare le card degli esercizi**
-  - Template componenti (ExerciseListItem, QuickEdit, Stats, Selector)
-  - Widget performance patterns (debounce, pagination, virtualization)
-  - BuildContext extensions (colori, temi, localizzazione)
-  - Hybrid storage strategy (Hive + Firebase)
-  - Search e filter optimization
-  - Test templates completi (unit, widget, integration)
-  - Input sanitization e sicurezza
-  - Pre-commit checklist (30+ verifiche)
-
-- **📖 Overview Non-Tecnico**: `docs/EXERCISE_CARD_SYSTEM_OVERVIEW.md`
-  - Comprensione UI exercise card per non-dev
-  - Ciclo di vita della card (creazione → visualizzazione → modifica → esecuzione)
-  - Struttura dati (20 campi per esercizio)
-  - Metodi di ricerca e filtro
-  - Design e tema (colori per categoria)
-  - Performance e caching strategy
-  - FAQ per domande comuni
-
-### 🔧 Documentazione Exercise Insertion System (OBBLIGATORIA)
-- **📋 Rules of Engagement (ROE)**: `docs/EXERCISE_INSERTION_DEVELOPMENT_GUIDE.md`
-  - **LEGGERE PRIMA di modificare il flusso di inserimento**
-  - Modal architecture template (Single tab + Advanced sub-tabs)
-  - Advanced exercise types: Superset, Drop Set, Rest-Pause (con implementazione template)
-  - State management per inserimento (Riverpod providers)
-  - APRE calculation, caching e invalidation
-  - Customization settings storage (Hive + Firebase)
-  - Performance optimization (debounce, caching, pagination)
-  - Test templates completi (unit, widget, integration)
-  - Pre-commit checklist (20+ verifiche)
-
-- **⚙️ Customization & Toggles Guide**: `docs/EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md`
-  - **LEGGERE PER CAPIRE TUTTI I TOGGLE**
-  - Global settings (unit system, rest times, database source)
-  - APRE settings (enable/disable, protocols, base weight, cache invalidation)
-  - Per-exercise customization (sets, weight increments, reps presets)
-  - Advanced type settings (superset, drop set, rest-pause)
-  - UI/UX customization (modal layout, filters, display modes)
-  - Storage locations e sync strategy
-  - Troubleshooting guide
-
-- **📖 Overview Non-Tecnico**: `docs/EXERCISE_INSERTION_SYSTEM_OVERVIEW.md`
-  - Comprensione del flusso di inserimento per non-dev
-  - Fase per fase: Accesso → Tipo → Ricerca → Personalizzazione → Salvataggio
-  - Spiegazione esercizi avanzati (Superset, Drop Set, Rest-Pause)
-  - Toggle e personalizzazioni spiegate semplicemente
-  - APRE auto-regulation spiegato
-  - FAQ domande comuni
-  - Storage e sincronizzazione dati
-
-### Ottimizzazioni Architetturali
-- **📊 Report Completo**: `ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`
-  - Dettagli implementazione BuildContext Extensions
-  - Metriche di impatto (27,000+ righe ottimizzate)
-  - Esempi prima/dopo per ogni ottimizzazione
-  - Guida migrazione file esistenti
-  - Script automatici disponibili
-
-### Componenti e Servizi Unificati
-- **BuildContext Extensions**: `lib/shared/presentation/extensions/build_context_extensions.dart`
-- **Loading Component**: `lib/shared/presentation/widgets/loading_indicator.dart`
-- **Snackbar Service**: `lib/shared/presentation/services/snackbar_service.dart`
-- **Modal Service**: `lib/shared/presentation/services/modal_service.dart`
-- **Script Migrazione**: `scripts/migrate_to_context_extensions.sh`
+- Live Activities (iOS 16.1+), Dynamic Island, Background Tasks
+- Controlla sempre `Platform.isIOS` prima di codice iOS-only
+- Files nativi in `ios/Runner/LiveActivityTimer/` e `BackgroundTaskManager/` - NON modificare
 
 ---
 
@@ -410,10 +639,11 @@ docs: update localization guide with new patterns
 - File IDE specifici (`.vscode/settings.json` personali)
 
 ### ✅ Pre-commit Automatici:
-- Lint check (`flutter analyze`)
-- Hardcoded strings check
-- Localizations regen se necessario
-- Test execution
+- ✅ Lint check (`flutter analyze`)
+- ✅ **Theme violations check** (hardcoded Colors.* detection) 🆕
+- ✅ Hardcoded strings check
+- ✅ Localizations regen se necessario
+- ✅ Test execution
 
 ---
 
@@ -421,18 +651,35 @@ docs: update localization guide with new patterns
 
 Prima di ogni modifica, verifica:
 
-- [ ] 🌍 Nessun testo hardcoded (usa `context.l10n`)
-- [ ] 🎨 Nessun colore hardcoded (usa `context.colors`)
-- [ ] 📱 Import di `build_context_extensions.dart` aggiunto
-- [ ] 🖨️ **Nessun print() - usa debugPrint() + kDebugMode**
-- [ ] 🔤 Traduzioni aggiunte in EN e IT
-- [ ] ⚙️ `flutter gen-l10n` eseguito se aggiunte traduzioni
-- [ ] 🔍 `flutter analyze` passa senza errori
-- [ ] 🧪 Widget testato in entrambi i temi (chiaro/scuro)
-- [ ] 📱 Funzionalità testata su iOS E Android (se applicabile)
-- [ ] 🔒 Autenticazione controllata se usa Firebase
-- [ ] ⚡ Performance ottimizzata (const, select, dispose)
-- [ ] 🧭 Named routes usate (non path hardcoded)
+### 🎯 Icon Design System (CRITICO - Bloccato da pre-commit hook)
+- [ ] ✅ **Nessun `Icons.*` inline** (usa `AppIcons.*`)
+- [ ] ✅ **Usa `AppIconSize.*`** (non magic numbers: 24, 28, etc.)
+- [ ] ✅ **Usa `context.icon*` colors** (non `Colors.blue/green/red`)
+- [ ] ✅ **Preferisci `SemanticIcon`** (per accessibility)
+- [ ] ✅ Import necessari: `app_icons.dart`, `app_icon_size.dart`, `app_icon_colors.dart`
+
+### 🌍 Localizzazione
+- [ ] ✅ Nessun testo hardcoded (usa `context.l10n`)
+- [ ] ✅ Traduzioni aggiunte in EN e IT (`assets/i18n/*.arb`)
+- [ ] ✅ `flutter gen-l10n` eseguito se aggiunte traduzioni
+
+### 🎨 Tema (CRITICO - Bloccato da pre-commit hook)
+- [ ] ✅ **Nessun `Colors.blue/red/green/etc.`** (usa `context.colors.primary/error/success`)
+- [ ] ✅ **Nessun `Color(0xFF...)`** (usa tema, o giustifica)
+- [ ] ✅ Import `build_context_extensions.dart` + `color_scheme_extensions.dart`
+- [ ] ✅ Widget testato in **Dark E Light mode** (cambia tema in settings)
+- [ ] ✅ Solo `Colors.transparent` è permesso (eccezione universale)
+
+### 🔧 Code Quality
+- [ ] ✅ **Nessun print()** - usa `debugPrint() + kDebugMode`
+- [ ] ✅ `flutter analyze` passa senza errori
+- [ ] ✅ Performance ottimizzata (`const`, `select`, `dispose`)
+- [ ] ✅ Named routes usate (non path hardcoded)
+
+### 🧪 Testing & Platform
+- [ ] ✅ Funzionalità testata su iOS E Android (se applicabile)
+- [ ] ✅ Autenticazione controllata se usa Firebase
+- [ ] ✅ Platform-specific: `Platform.isIOS` check prima di iOS-only code
 
 ---
 
@@ -466,786 +713,357 @@ await _startLiveActivity(); // Crash su Android!
 
 ## 🔥 REGOLA #5: FIREBASE & SICUREZZA
 
-### 🔐 Sicurezza Obbligatoria:
-```dart
-// ✅ CORRETTO - Valida sempre input utente
-final userId = FirebaseAuth.instance.currentUser?.uid;
-if (userId == null) return; // Controlla autenticazione
-
-// ❌ SBAGLIATO - Fidarsi dell'input
-await firestore.collection('workouts').doc(inputId).update(data);
-```
-
-### 📊 Provider Firebase:
-- **AuthProvider**: `lib/features/auth/presentation/providers/auth_provider.dart`
-- **Workout Data**: Provider specifici per feature
-- **SEMPRE** controllare stato autenticazione
-
-### 🚨 Regole Firestore:
-- **Ogni documento** deve avere `userId` per sicurezza
-- **Validazione** sempre lato client E server
-- **Error handling** obbligatorio per operazioni async
+- Valida SEMPRE input utente e stato autenticazione
+- Ogni documento Firestore deve avere `userId` per sicurezza
+- Validazione lato client E server
+- Error handling obbligatorio per operazioni async
 
 ---
 
-## ⚡ REGOLA #6: PERFORMANCE & MEMORIA
+## 🧪 REGOLA #6: TESTING & DEBUG
 
-### 🏃‍♂️ Widget Performance:
-```dart
-// ✅ CORRETTO - Usa const quando possibile
-const Text('Static text')
-const SizedBox(height: 16)
-
-// ✅ CORRETTO - Evita rebuild inutili
-final workout = ref.watch(currentWorkoutProvider.select((w) => w?.name));
-
-// ❌ SBAGLIATO - Rebuild eccessivi
-final workout = ref.watch(currentWorkoutProvider); // Rebuild per ogni cambio
-```
-
-### 💾 Gestione Memoria:
-- **Timer**: Sempre cancellare con `timer.cancel()`
-- **StreamSubscription**: Sempre cancellare con `subscription.cancel()`
-- **Controller**: Sempre `dispose()` in StatefulWidget
-
-### 📱 Background Tasks:
-- **iOS**: Usare Background App Refresh
-- **Limite tempo**: Max 30 secondi background
-- **Battery**: Ottimizzare per consumo batteria
+- ✅ Testa con localizzazione (IT/EN)
+- ✅ Usa `debugPrint()` + `kDebugMode` (mai `print()`)
+- ✅ Testa in Release mode prima di deploy
+- ❌ MAI usare `print()` in production
 
 ---
 
-## 🧪 REGOLA #7: TESTING & DEBUGGING
+## 🏋️‍♂️ REGOLA #7: DOMINIO FITNESS
 
-### ✅ Test Obbligatori:
-```dart
-// Widget test con localizzazione
-testWidgets('should show Italian text', (tester) async {
-  await tester.pumpWidget(
-    MaterialApp(
-      locale: const Locale('it', 'IT'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      home: MyWidget(),
-    ),
-  );
-
-  expect(find.text('Testo Italiano'), findsOneWidget);
-});
-```
-
-### 🖨️ Debug Printing (OBBLIGATORIO)
-
-**❌ MAI usare print() in production:**
-```dart
-// ❌ SBAGLIATO - print() rallenta production e riempie i log
-print('User ID: $userId');
-print('Debug: Loading workouts...');
-```
-
-**✅ SEMPRE usare debugPrint() con kDebugMode:**
-```dart
-// ✅ CORRETTO - Solo in debug mode
-import 'package:flutter/foundation.dart';
-
-if (kDebugMode) {
-  debugPrint('User ID: $userId');
-}
-
-// ✅ ALTERNATIVA - Per log critici (errori)
-if (kDebugMode) {
-  debugPrint('❌ Error loading workout: $error');
-}
-```
-
-**📋 Regole debugPrint:**
-1. **SEMPRE** importare `package:flutter/foundation.dart`
-2. **SEMPRE** wrappare `debugPrint()` in `if (kDebugMode)`
-3. **MAI** usare `print()` (rallenta performance production)
-4. **Script disponibile**: `scripts/fix_print_statements.py` per fix automatici
-
-**💡 Perché debugPrint invece di print:**
-- `debugPrint()` non rallenta production (viene rimosso in release)
-- `kDebugMode` check previene output in production
-- Migliore per performance (no I/O bloccante in release)
-- Log più puliti e professionali
-
-### 🐛 Debug Mode:
-- **SEMPRE** testare in Release mode prima del deploy
-- **Performance**: Profile mode per test performance
-- **Memory**: Controllare memory leaks con DevTools
+Entità: Workout, Exercise, ExerciseCard, WorkoutTemplate, Analytics
+Terminologia: Set/Serie, Rep, Rest, Superset, Drop Set, Rest-Pause
+Timer: Rest Timer (tra serie), Workout Timer, Live Activity (iOS), Background
 
 ---
 
-## 📱 REGOLA #8: NAVIGATION & ROUTING
+## 🚫 REGOLA #8: COSA NON TOCCARE
 
-### 🧭 GoRouter Pattern:
-```dart
-// ✅ CORRETTO - Named routes
-context.goNamed('workout');
-context.goNamed('settings');
-
-// ❌ SBAGLIATO - Path hardcoded
-context.go('/workout');
-```
-
-### 🔒 Protezione Rotte:
-- **Auth Guard**: Automatic redirect se non autenticato
-- **Deep Links**: Supporto iOS/Android
-- **State Management**: Router integrato con Riverpod
-
----
-
-## 🏋️‍♂️ REGOLA #9: DOMINIO SPECIFICO (FITNESS APP)
-
-### 📊 Entità Principali:
-- **Workout**: Allenamento con timer e live activities
-- **Exercise**: Esercizio con sets, reps, peso
-- **ExerciseCard**: UI card per visualizzare esercizi
-- **WorkoutTemplate**: Template riutilizzabili
-- **Analytics**: Progressi e statistiche
-
-### ⏱️ Timer System:
-- **Rest Timer**: Tra serie di esercizi
-- **Workout Timer**: Durata totale allenamento
-- **Live Activity**: Timer visibile in lockscreen (iOS)
-- **Background**: Continua anche se app in background
-
-### 💪 Terminologia Fitness:
-- **Set/Serie**: Gruppo di ripetizioni
-- **Rep/Ripetizioni**: Singola esecuzione movimento
-- **Rest/Riposo**: Pausa tra serie
-- **Superset**: Esercizi consecutivi senza riposo
-- **Drop set**: Riduzione peso a cedimento
-- **Rest-pause**: Brevi pause durante serie
-
-### 🚨 IMPORTANTE: Modifiche al Sistema Workout
-
-**PRIMA di implementare/modificare feature workout, DEVI:**
-
-1. **Leggere OBBLIGATORIAMENTE**:
-   - `docs/WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md` - ROE complete per workout features
-   - `docs/WORKOUT_SYSTEM_OVERVIEW.md` - Comprensione sistema (opzionale)
-
-2. **Seguire le ROE (Rules of Engagement)**:
-   - Template architettura obbligatori
-   - Pattern hybrid storage (local-first + cloud-sync)
-   - Atomic operations per completion flow
-   - Test requirements (unit/widget/integration)
-   - Performance metrics da rispettare
-
-**Esempi Trigger per Leggere la Guida:**
-- Aggiungere un nuovo tipo di esercizio (es: superset, dropset)
-- Modificare il flusso di completamento workout
-- Cambiare il sistema di persistenza
-- Aggiungere analytics o tracking
-- Modificare il timer system o Live Activities
-- Integrare con routine/programmi
-
-**Se l'utente dice**:
-- "Voglio aggiungere..." → Leggi WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md
-- "Posso modificare il workout..." → Leggi WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md
-- "Come implemento..." → Leggi WORKOUT_FEATURE_DEVELOPMENT_GUIDE.md
-
-### 📋 IMPORTANTE: Modifiche alle Exercise Card
-
-**PRIMA di implementare/modificare feature delle exercise card, DEVI:**
-
-1. **Leggere OBBLIGATORIAMENTE**:
-   - `docs/EXERCISE_CARD_DEVELOPMENT_GUIDE.md` - ROE complete per exercise card
-   - `docs/EXERCISE_CARD_SYSTEM_OVERVIEW.md` - Comprensione sistema (opzionale)
-
-2. **Seguire le ROE (Rules of Engagement)**:
-   - Template architettura obbligatori (ExerciseListItem, QuickEdit, Stats, Selector)
-   - Pattern hybrid storage (Hive local-first + Firebase cloud-sync)
-   - Widget performance requirements (debounce, pagination, virtualization)
-   - BuildContext extensions per colori, temi e localizzazione
-   - Test requirements (unit/widget/integration test templates)
-   - Performance metrics da rispettare (60 FPS, < 50MB memory)
-   - Sicurezza: input sanitization per nomi esercizi
-   - iOS integration: fallback per Android
-
-**Esempi Trigger per Leggere la Guida:**
-- Modificare card degli esercizi (colori, layout, campi)
-- Aggiungere campi all'esercizio (difficulty, technique, etc)
-- Cambiare il sistema di ricerca/filtro esercizi
-- Ottimizzare performance della lista esercizi
-- Integrare con sistema di categorie
-- Aggiungere selettore di esercizi
-- Modificare cache strategy per esercizi
-
-**Se l'utente dice**:
-- "Modifica le card degli esercizi..." → Leggi EXERCISE_CARD_DEVELOPMENT_GUIDE.md
-- "Voglio aggiungere campi all'esercizio..." → Leggi EXERCISE_CARD_DEVELOPMENT_GUIDE.md
-- "Come miglioro la ricerca esercizi..." → Leggi EXERCISE_CARD_DEVELOPMENT_GUIDE.md
-
-### 🔧 IMPORTANTE: Modifiche al Sistema di Inserimento Esercizi
-
-**PRIMA di implementare/modificare il flusso di inserimento esercizi o i toggle, DEVI:**
-
-1. **Leggere OBBLIGATORIAMENTE**:
-   - `docs/EXERCISE_INSERTION_DEVELOPMENT_GUIDE.md` - ROE complete
-   - `docs/EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md` - Tutti i toggle e settings
-   - `docs/EXERCISE_INSERTION_SYSTEM_OVERVIEW.md` - Comprensione sistema (opzionale)
-
-2. **Seguire le ROE (Rules of Engagement)**:
-   - Template modal architecture (Single tab, Advanced tab con sub-tabs)
-   - Advanced exercise types: Superset, Drop Set, Rest-Pause
-   - State management patterns (Riverpod providers)
-   - APRE calculation e caching
-   - Customization settings storage
-   - Test templates obbligatori
-   - Performance requirements
-
-**Esempi Trigger per Leggere la Guida:**
-- Modificare il flusso di aggiunta esercizi
-- Aggiungere nuovi toggle o impostazioni
-- Cambiar il sistema di APRE (Auto-Programmed Resistance)
-- Implementare advanced exercise types
-- Personalizzare UI della modal
-- Modificare storage delle preferenze
-- Aggiungere nuove customization options
-
-**Se l'utente dice**:
-- "Modifica il flusso di inserimento esercizi..." → Leggi EXERCISE_INSERTION_DEVELOPMENT_GUIDE.md
-- "Aggiungi un toggle per..." → Leggi EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md
-- "Come funziona APRE..." → Leggi EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md
-- "Voglio aggiungere una opzione di personalizzazione..." → Leggi EXERCISE_INSERTION_CUSTOMIZATION_GUIDE.md
-
----
-
-## 🚫 REGOLA #10: COSA NON TOCCARE
-
-### ⛔ File da NON Modificare:
-- `ios/Runner/LiveActivityTimer/` (Swift nativo)
-- `ios/Runner/BackgroundTaskManager/` (Swift nativo)
+- `ios/Runner/LiveActivityTimer/` e `BackgroundTaskManager/` (Swift nativo)
 - `lib/shared/presentation/l10n/generated/` (File generati)
-- `.dart_tool/` e `build/` (Build artifacts)
-
-### 🔐 Configurazioni Sensibili:
-- `firebase_options.dart` (API keys)
-- `ios/Runner/GoogleService-Info.plist`
-- `android/app/google-services.json`
-
-### 📱 Capability iOS:
-- Background App Refresh
-- Live Activities
-- Push Notifications
-- Apple Health (se implementato)
+- `.dart_tool/`, `build/`, `firebase_options.dart`, plist, keys
 
 ---
 
-## 🔨 REGOLA #12: BUILD & COMPILATION
+## 🔨 REGOLA #9: BUILD & COMPILATION
 
-### 🚫 NON Fare Build Automatici:
-- **MAI** eseguire `flutter build ios` o `flutter build android` automaticamente
-- **MAI** fare rebuild dopo modifiche al codice senza esplicita richiesta
-- **SOLO** fare build se:
-  - L'utente lo richiede esplicitamente
-  - È necessario per risolvere un errore di compilazione specifico
-  - Fa parte della risoluzione di un problema critico
+❌ **MAI** fare build automatici
+- ✅ Solo se esplicitamente richiesto
+- ✅ Solo per fix critici di compilazione
+- ✅ Sempre lasciar fare build a Xcode/Android Studio per preferenza utente
 
-### ✅ Quando È Permesso:
+---
+
+## 🎯 REGOLA #10: BUILDCONTEXT EXTENSIONS (OBBLIGATORIO)
+
+Importa: `build_context_extensions.dart`
+- `context.l10n.*` - Localizzazioni
+- `context.colors.*` - Colori tema
+- `context.textTheme`, `context.screenHeight`, `context.isDarkMode` etc.
+
+---
+
+## 🧩 REGOLA #11: COMPONENTI UNIFICATI (OBBLIGATORIO)
+
+**LoadingIndicator** per loading states (mai `CircularProgressIndicator` diretto)
+**SnackBarService** per messaggi (mai `ScaffoldMessenger.showSnackBar` diretto)
+**ModalService** per modals/dialogs (mai `showModalBottomSheet` diretto)
+
+---
+
+## 📝 REGOLA #12: DOCUMENTAZIONE AUTOMATICA POST-IMPLEMENTAZIONE (COMPORTAMENTO AUTOMATICO)
+
+**⚠️ COMPORTAMENTO OBBLIGATORIO DI CLAUDE DOPO OGNI IMPLEMENTAZIONE:**
+
+### 🤖 Workflow Automatico (Claude lo fa SEMPRE):
+
+```
+Appena finita un'implementazione di feature/modifica significativa
+                    ↓
+Claude AUTOMATICAMENTE rileva che hai implementato qualcosa
+                    ↓
+Claude CHIEDE: "🤖 Ho notato che hai implementato [nome-feature].
+                Vuoi che generi automaticamente la documentazione
+                completa e la colleghi a INDEX.md e CLAUDE.md?"
+                    ↓
+            [Sì]              [No/Dopo]
+             ↓                     ↓
+    Claude AUTOMATICAMENTE    Salta per ora
+    esegue tutto:             (ma ricorda)
+    1. Analizza git diff
+    2. Genera docs completa
+    3. Aggiorna INDEX.md
+    4. Aggiorna CLAUDE.md
+    5. Cross-references
+    6. Commit documentazione
+             ↓
+    ✅ FATTO: Feature documentata e interconnessa
+```
+
+### 🎯 Cosa Fa Claude AUTOMATICAMENTE (senza comandi):
+
+**Quando**: Dopo ogni implementazione significativa (nuova feature, modifica importante, nuovo screen/provider/repository)
+
+**Claude automaticamente**:
+
+1. **🔍 RILEVA**: Analizza i file modificati/creati
+   ```
+   - git diff --cached
+   - git status
+   - Nuovi file in lib/features/
+   ```
+
+2. **💬 CHIEDE**: "Vuoi che documenti questa implementazione?"
+   - Se sì → procede automaticamente
+   - Se no → ricorda per dopo
+
+3. **📝 GENERA**: Crea documentazione completa
+   ```markdown
+   docs/UX_FLOWS/[category]/[FEATURE]_DOCUMENTATION.md
+   - Overview
+   - Architecture (domain/data/presentation)
+   - Key features
+   - Implementation details
+   - UI components
+   - Related documentation
+   ```
+
+4. **🔗 INTERCONNETTE**: Aggiorna tutto
+   - **INDEX.md**: Aggiunge "Quick Navigation by Feature" entry
+   - **CLAUDE.md**: Aggiunge feature mapping table entry
+   - **Cross-refs**: Link bidirezionali con docs correlate
+
+5. **💾 COMMIT**: Salva tutto
+   ```bash
+   git commit -m "docs: add [feature] documentation with interconnection"
+   ```
+
+### 📖 Esempio Conversazione Automatica:
+
+```
+User: "Implementa una pagina A/B testing dinamica"
+       ↓
+Claude: [implementa il codice]
+       ↓
+Claude: "✅ Implementazione completata!
+
+        🤖 Ho notato che hai implementato una nuova feature:
+           'Dynamic A/B Testing Page'
+
+        Vuoi che generi automaticamente:
+        - Documentazione completa (450+ righe)
+        - Aggiornamento INDEX.md con link
+        - Aggiornamento CLAUDE.md con mapping
+        - Cross-references con docs correlate
+        - Commit della documentazione
+
+        Risposta: sì/no"
+       ↓
+User: "sì"
+       ↓
+Claude: [AUTOMATICAMENTE esegue tutto]
+       ↓
+Claude: "✅ Documentazione completata!
+
+        📄 Creato: docs/UX_FLOWS/ab_testing/AB_TESTING_PAGE_DOCUMENTATION.md (450 righe)
+        🔗 Aggiornato: INDEX.md (nuovo link in Quick Navigation)
+        🔗 Aggiornato: CLAUDE.md (nuovo mapping feature)
+        🔗 Cross-referenced: Analytics, User Profile, Firebase docs
+        💾 Commit: docs: add A/B testing page documentation
+
+        ✨ Ora la feature è completamente documentata e interconnessa!
+           CLAUDE.md → INDEX.md → AB Testing docs"
+```
+
+### ⚙️ Regole di Rilevamento Automatico:
+
+Claude rileva automaticamente quando hai implementato qualcosa se:
+
+| Condizione | Claude chiede documentazione |
+|-----------|------------------------------|
+| ✅ Nuovi file in `lib/features/` | SÌ - Nuova feature |
+| ✅ Nuovi screen `*_screen.dart` | SÌ - Nuova UI |
+| ✅ Nuovi provider `*_provider.dart` | SÌ - Nuovo state management |
+| ✅ Nuovi repository `*_repository.dart` | SÌ - Nuovo data layer |
+| ✅ Modifiche significative (>100 righe) | SÌ - Major refactor |
+| ❌ Piccoli fix (<50 righe) | NO - Non necessario |
+| ❌ Solo commenti/formattazione | NO - Non necessario |
+
+### 🎯 Nessun Comando Manuale Necessario:
+
+**PRIMA (manuale)**:
 ```bash
-# SOLO se richiesto dall'utente o per fix critici
-flutter build ios --release  # Solo se esplicitamente richiesto
-flutter run                  # Solo per debug se richiesto
+# Implementa
+# Ricordati di documentare
+/finalize-feature "nome"  ← Devi ricordartelo!
 ```
 
-### 💡 Motivazione:
-- Risparmio token nella conversazione
-- L'utente preferisce fare build da Xcode/Android Studio
-- Build più veloce con IDE native
-- Migliore controllo del processo di build
+**ORA (automatico)**:
+```bash
+# Implementa
+# Claude automaticamente chiede e fa tutto
+✨ Zero sforzo - tutto automatico
+```
+
+### ⚠️ Importante per Claude:
+
+- **SEMPRE** chiedi dopo ogni implementazione significativa
+- **MAI** committare senza aver offerto di documentare
+- **SEMPRE** aspetta conferma dell'utente prima di procedere
+- **MAI** documentare piccoli fix o refactor minori
 
 ---
 
-## 🎯 REGOLA #13: BUILDCONTEXT EXTENSIONS (OBBLIGATORIO)
+## 🎨 REGOLA #13: DESIGN SYSTEM (COMPORTAMENTO AUTOMATICO)
 
-### 📝 Overview
-Per ridurre verbosità e migliorare leggibilità, **SEMPRE** usare le BuildContext extensions invece degli accessor verbosi.
+**⚠️ COMPORTAMENTO OBBLIGATORIO DI CLAUDE QUANDO LAVORA SU UI:**
 
-### ✅ Extensions Disponibili
+Ogni volta che crei o modifici UI (widget, screen, dialog, card, button), devi **AUTOMATICAMENTE**:
 
+### 📋 PRIMA di Scrivere Codice:
+
+1. **Leggi** `docs/DESIGN_GUIDELINES.md` (sezione rilevante)
+2. **Identifica** pattern standard da riutilizzare
+3. **Crea TODO** con checklist design completa
+
+### 🔧 DURANTE l'Implementazione:
+
+**SEMPRE usa**:
+- `context.colors.*` (MAI colori hardcoded)
+- `context.textTheme.*` (MAI TextStyle hardcoded)
+- `context.l10n.*` (MAI stringhe hardcoded)
+- Spacing = multipli di 4 (4, 8, 12, 16, 20, 24, 32)
+- Border radius = 8, 12, 16, 20, 24
+- HapticFeedback su azioni interattive
+- LoadingIndicator (MAI CircularProgressIndicator diretto)
+- SnackBarService (MAI ScaffoldMessenger diretto)
+
+**Pattern Standard** (vedi DESIGN_GUIDELINES.md):
 ```dart
-// SEMPRE importare le extensions
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-
-// 🎨 Theme & Colors
-context.colors           // invece di Theme.of(context).colorScheme
-context.textTheme        // invece di Theme.of(context).textTheme
-context.theme            // invece di Theme.of(context)
-
-// 🌍 Localizzazione
-context.l10n             // invece di AppLocalizations.of(context)!
-
-// 📱 Media Query
-context.mediaQuery       // invece di MediaQuery.of(context)
-context.screenWidth      // invece di MediaQuery.of(context).size.width
-context.screenHeight     // invece di MediaQuery.of(context).size.height
-
-// 🔦 Utility
-context.isDarkMode       // verifica se tema scuro attivo
-context.isLightMode      // verifica se tema chiaro attivo
-context.topPadding       // safe area top (notch, ecc.)
-context.bottomPadding    // safe area bottom (home indicator)
-context.isKeyboardVisible // verifica se tastiera è visibile
-```
-
-### 📊 Prima vs Dopo
-
-**❌ DEPRECATO (Verboso):**
-```dart
+// Standard Card
 Container(
-  height: MediaQuery.of(context).size.height * 0.9,
-  color: Theme.of(context).colorScheme.surface,
-  child: Column(
-    children: [
-      Text(
-        AppLocalizations.of(context)!.title,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
+  decoration: BoxDecoration(
+    color: context.colors.surfaceContainerHighest,
+    borderRadius: BorderRadius.circular(16),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.1),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
       ),
-      if (Theme.of(context).brightness == Brightness.dark)
-        Icon(Icons.dark_mode),
     ],
   ),
-)
-```
-
-**✅ CORRETTO (Conciso con Extensions):**
-```dart
-Container(
-  height: context.screenHeight * 0.9,
-  color: context.colors.surface,
-  child: Column(
-    children: [
-      Text(
-        context.l10n.title,
-        style: context.textTheme.headlineSmall?.copyWith(
-          color: context.colors.primary,
-        ),
-      ),
-      if (context.isDarkMode)
-        Icon(Icons.dark_mode),
-    ],
+  child: Padding(
+    padding: const EdgeInsets.all(16),
+    child: /* Content */,
   ),
 )
 ```
 
-### 📈 Benefici Misurabili
+### ✅ DOPO l'Implementazione:
 
-- **Leggibilità**: 40-60% meno caratteri per accesso tema/localizzazioni
-- **Manutenibilità**: Cambio centralizzato se cambia API Flutter
-- **Performance**: Stesso identico costo (zero overhead)
-- **Developer Experience**: IntelliSense più veloce e chiaro
+**Aggiungi SEMPRE al TODO questa checklist** (copiala letteralmente):
 
-### 🚨 Regole di Utilizzo
+```
+Design System Checklist:
+- [ ] ✅ `context.colors.*` (NO hardcoded colors)
+- [ ] ✅ `context.textTheme.*` (NO hardcoded TextStyle)
+- [ ] ✅ `context.l10n.*` (NO hardcoded strings)
+- [ ] ✅ Spacing = multipli di 4
+- [ ] ✅ Border radius = 8/12/16/20/24
+- [ ] ✅ Testato in light AND dark themes
+- [ ] ✅ Traduzioni in app_en.arb + app_it.arb
+- [ ] ✅ `flutter gen-l10n` eseguito
+- [ ] ✅ Date con DateFormat + locale
+- [ ] ✅ HapticFeedback su azioni
+- [ ] ✅ Touch targets ≥ 44x44
+- [ ] ✅ LoadingIndicator (non CircularProgressIndicator)
+- [ ] ✅ SnackBarService (non ScaffoldMessenger)
+- [ ] ✅ `const` dove possibile
+- [ ] ✅ `flutter analyze` passa (0 errori)
+```
 
-1. **SEMPRE** importare le extensions in OGNI file che usa Theme, Localizations o MediaQuery
-2. **SEMPRE** preferire `context.colors` invece di `Theme.of(context).colorScheme`
-3. **SEMPRE** preferire `context.l10n` invece di `AppLocalizations.of(context)!`
-4. **SEMPRE** preferire `context.screenWidth/Height` invece di `MediaQuery.of(context).size`
-5. **MAI** usare la forma verbosa in nuovo codice (solo per compatibilità legacy)
+**NON marcare il task come completato** finché TUTTI i punti non sono verificati.
 
-### 📂 Dove Trovarle
+### 🚨 Violazioni Comuni da Evitare:
 
-- **File**: `lib/shared/presentation/extensions/build_context_extensions.dart`
-- **Esempio Migrato**: `lib/features/workout/presentation/widgets/add_exercise_modal.dart`
-- **Script Migrazione**: `scripts/migrate_to_context_extensions.sh`
+| ❌ SBAGLIATO | ✅ CORRETTO |
+|--------------|-------------|
+| `color: Colors.blue` | `color: context.colors.primary` |
+| `Text('Welcome')` | `Text(context.l10n.welcome)` |
+| `TextStyle(fontSize: 16)` | `context.textTheme.bodyMedium` |
+| `padding: EdgeInsets.all(15)` | `padding: const EdgeInsets.all(16)` |
+| `'Today', 'Yesterday'` | `context.l10n.today, context.l10n.yesterday` |
+| `CircularProgressIndicator()` | `LoadingIndicator()` |
+| `ScaffoldMessenger.of(context)` | `SnackBarService.showSuccess(context, msg)` |
 
-### 🔄 Migrazione Graduale
+### 📚 Risorse:
 
-- **Nuovo codice**: DEVE usare extensions
-- **Codice esistente**: Migrare opportunisticamente quando si tocca il file
-- **Compatibilità**: Entrambe le forme funzionano, ma preferire extensions
+- **Guida completa**: `docs/DESIGN_GUIDELINES.md` (600+ righe)
+- **Pattern standard**: Cerca in DESIGN_GUIDELINES.md sezioni:
+  - Cards (3 pattern)
+  - Dialogs & Modals
+  - Buttons (4 tipi)
+  - Empty States
+  - Animations
+- **Esempio reale**: `lib/features/routine/presentation/widgets/skip_recovery_dialog.dart`
 
-### 📖 Documentazione Dettagliata
+### 🎯 Golden Rule:
 
-Per informazioni complete su implementazione, metriche di impatto e guida alla migrazione, consulta:
-**`ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`** - Sezione "FASE 1: BuildContext Extensions"
+**"Se tocchi UI, applica DESIGN_GUIDELINES.md. NO eccezioni."**
+
+Quando in dubbio:
+1. Cerca widget simile già esistente
+2. Copia pattern da DESIGN_GUIDELINES.md
+3. Chiedi conferma all'utente se non trovi pattern
 
 ---
 
-## 🧩 REGOLA #14: COMPONENTI E SERVIZI UNIFICATI (OBBLIGATORIO)
+## ⚡ CHECKLIST COMPLETA
 
-### 📝 Overview
-Per ridurre duplicazione e garantire UX consistente, **SEMPRE** usare i componenti e servizi unificati invece di implementazioni sparse.
+### 📖 PRIMA di Implementare:
+- [ ] ✅ Letto `docs/NAVIGATION/INDEX.md`
+- [ ] ✅ Trovata e letta documentazione della feature
+- [ ] ✅ Letta documentazione correlata
 
-### 🔄 Loading States
+### 🔧 DURANTE l'Implementazione:
+- [ ] ✅ **Nessun `Icons.*` inline** (usa `AppIcons.*`)
+- [ ] ✅ **Usa `AppIconSize.*` constants** (no magic numbers)
+- [ ] ✅ **Usa `context.icon*` per colori** (no hardcoded)
+- [ ] ✅ **Preferisci `SemanticIcon`** per accessibility
+- [ ] ✅ Nessun testo hardcoded (`context.l10n.*`)
+- [ ] ✅ Nessun colore hardcoded (`context.colors.*`)
+- [ ] ✅ Import necessari: `app_icons.dart`, `app_icon_size.dart`, `app_icon_colors.dart`, `build_context_extensions.dart`
+- [ ] ✅ Nessun `print()` → usa `debugPrint() + kDebugMode`
+- [ ] ✅ Traduzioni aggiunte (EN + IT)
+- [ ] ✅ `flutter gen-l10n` eseguito
+- [ ] ✅ `flutter analyze` senza errori
+- [ ] ✅ Testato in chiaro/scuro
+- [ ] ✅ iOS E Android (se applicabile)
+- [ ] ✅ Autenticazione controllata (se Firebase)
+- [ ] ✅ Performance ottimizzata (`const`, `select`, `dispose`)
+- [ ] ✅ Named routes usate
 
-**❌ NON Usare Direttamente:**
-```dart
-// ❌ SBAGLIATO - CircularProgressIndicator diretto
-Center(child: CircularProgressIndicator())
-
-// ❌ SBAGLIATO - LinearProgressIndicator custom
-LinearProgressIndicator(
-  color: Theme.of(context).colorScheme.primary,
-  backgroundColor: Colors.grey,
-)
-```
-
-**✅ USA LoadingIndicator:**
-```dart
-// ✅ CORRETTO - Loading semplice
-LoadingIndicator()
-
-// ✅ CORRETTO - Loading con messaggio
-LoadingIndicator(message: context.l10n.loadingWorkouts)
-
-// ✅ CORRETTO - Loading overlay fullscreen
-LoadingIndicator.overlay(message: context.l10n.savingChanges)
-
-// ✅ CORRETTO - Progress bar
-LoadingIndicator.linear(progress: 0.75)
-
-// ✅ CORRETTO - Wrapper condizionale
-LoadingWrapper(
-  isLoading: isLoading,
-  child: MyContent(),
-)
-
-// ✅ CORRETTO - Con mixin per async operations
-class MyWidget extends ConsumerWidget with LoadingMixin {
-  Future<void> saveWorkout() async {
-    await withLoading(context, () async {
-      // Operazione async
-    }, message: context.l10n.saving);
-  }
-}
-```
-
-**Importare:**
-```dart
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-```
+### 📝 DOPO l'Implementazione (AUTOMATICO):
+- [ ] ✅ **Claude chiede automaticamente di documentare** ← Claude lo fa SEMPRE
+- [ ] ✅ Rispondo "sì" → Claude genera tutto automaticamente
+- [ ] ✅ Documentazione generata e verificata (automatico)
+- [ ] ✅ INDEX.md aggiornato (automatico)
+- [ ] ✅ CLAUDE.md aggiornato (automatico)
+- [ ] ✅ Cross-references create (automatico)
+- [ ] ✅ Commit documentazione (automatico)
 
 ---
 
-### 📢 Snackbar Messages
+## 🆘 RISORSE
 
-**❌ NON Usare Direttamente:**
-```dart
-// ❌ SBAGLIATO - ScaffoldMessenger diretto
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(
-    content: Text('Success!'),
-    backgroundColor: Colors.green,
-  ),
-);
-```
-
-**✅ USA SnackBarService:**
-```dart
-// ✅ CORRETTO - Success message
-SnackBarService.showSuccess(context, context.l10n.workoutSaved);
-
-// ✅ CORRETTO - Error message
-SnackBarService.showError(context, context.l10n.errorSavingWorkout);
-
-// ✅ CORRETTO - Warning message
-SnackBarService.showWarning(context, context.l10n.unsavedChanges);
-
-// ✅ CORRETTO - Info message
-SnackBarService.showInfo(context, context.l10n.tipOfTheDay);
-
-// ✅ CORRETTO - Custom con azione
-SnackBarService.showCustom(
-  context,
-  message: 'Exercise deleted',
-  actionLabel: 'UNDO',
-  onAction: () => undoDelete(),
-);
-
-// ✅ CORRETTO - Con mixin
-class MyWidget extends ConsumerWidget with SnackBarMixin {
-  void save() {
-    // ...
-    showSuccess(context, context.l10n.saved);
-  }
-}
-```
-
-**Importare:**
-```dart
-import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-```
+- **Icon System**: `app_icons.dart` (445 icons), `app_icon_size.dart`, `app_icon_colors.dart`, `semantic_icon.dart`, `badged_icon.dart`, `animated_icon_patterns.dart`
+- **Icon Showcase**: `IconShowcaseScreen()` per esplorare tutte le icone con search/copy
+- **Locale/Tema**: `build_context_extensions.dart`
+- **Loading/Snackbar/Modal**: Usa i servizi unificati
+- **Documentazione**: Vedi `docs/INDEX.md`
+- **Script**: `scripts/find_hardcoded_strings.sh`, `flutter analyze`
 
 ---
 
-### 🪟 Modals & Bottom Sheets
-
-**❌ NON Usare Direttamente:**
-```dart
-// ❌ SBAGLIATO - showModalBottomSheet custom
-showModalBottomSheet(
-  context: context,
-  backgroundColor: Theme.of(context).colorScheme.surface,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  ),
-  builder: (_) => MyContent(),
-);
-```
-
-**✅ USA ModalService:**
-```dart
-// ✅ CORRETTO - Bottom sheet standard
-final result = await ModalService.showBottomSheet(
-  context,
-  child: MyContentWidget(),
-);
-
-// ✅ CORRETTO - Bottom sheet fullscreen
-await ModalService.showFullScreenSheet(
-  context,
-  child: EditWorkoutScreen(),
-);
-
-// ✅ CORRETTO - Dialog di conferma
-final confirmed = await ModalService.showConfirmDialog(
-  context,
-  title: context.l10n.deleteWorkout,
-  message: context.l10n.deleteWorkoutConfirmation,
-  isDangerous: true,  // Red button per azioni pericolose
-);
-
-if (confirmed) {
-  // Delete workout
-}
-
-// ✅ CORRETTO - Dialog informativo
-await ModalService.showInfoDialog(
-  context,
-  title: context.l10n.tip,
-  message: context.l10n.restTimerExplanation,
-  icon: Icons.info,
-);
-
-// ✅ CORRETTO - Dialog con lista
-final selected = await ModalService.showListDialog<Exercise>(
-  context,
-  title: context.l10n.selectExercise,
-  items: exercises,
-  itemLabel: (ex) => ex.name,
-);
-
-// ✅ CORRETTO - Con mixin
-class MyWidget extends ConsumerWidget with ModalMixin {
-  Future<void> delete() async {
-    final confirmed = await showConfirm(
-      context,
-      title: context.l10n.delete,
-      message: context.l10n.confirmDelete,
-      isDangerous: true,
-    );
-    // ...
-  }
-}
-```
-
-**Importare:**
-```dart
-import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
-```
-
----
-
-### 📈 Benefici dei Componenti Unificati
-
-| Componente | Prima | Dopo | Beneficio |
-|-----------|-------|------|-----------|
-| Loading | 178 implementazioni diverse | 1 componente | UX consistente |
-| Snackbar | 258 implementazioni diverse | 1 servizio | Branding unificato |
-| Modal | 259 implementazioni diverse | 1 servizio | Manutenzione semplificata |
-
-### 🚨 Regole di Utilizzo
-
-1. **SEMPRE** usare `LoadingIndicator` invece di `CircularProgressIndicator` diretto
-2. **SEMPRE** usare `SnackBarService` invece di `ScaffoldMessenger.showSnackBar`
-3. **SEMPRE** usare `ModalService` invece di `showModalBottomSheet`/`showDialog`
-4. **MAI** creare implementazioni custom senza motivazione tecnica forte
-5. **SEMPRE** usare i preset semantici (success/error/warning/info)
-
-### 📂 Dove Trovarli
-
-- **LoadingIndicator**: `lib/shared/presentation/widgets/loading_indicator.dart`
-- **SnackBarService**: `lib/shared/presentation/services/snackbar_service.dart`
-- **ModalService**: `lib/shared/presentation/services/modal_service.dart`
-
-### 📖 Documentazione Dettagliata
-
-Per esempi completi, API reference e best practices, consulta:
-**`ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`** - Sezioni "FASE 2-4: Componenti Unificati"
-
-Il report include:
-- 🎯 Esempi d'uso completi per ogni componente
-- 📊 Metriche di impatto (178-259 implementazioni → 3 componenti)
-- 🔄 Pattern di migrazione da codice legacy
-- ✅ Checklist per adozione nei nuovi PR
-
----
-
-## 🤖 AUTO-CATEGORIZATION HOOK: Report & Documentation
-
-### 📝 Cosa Significa "Scrivi un Report" o "Crea la Documentazione"
-
-Quando l'utente chiede:
-- **"Scrivi un report"** - Fine di una task, voglio un summary/documentazione
-- **"Crea la documentazione"** - Voglio docs categorizzate e salvate automaticamente
-- **"Documenta questo"** - Crea docs per il lavoro appena fatto
-
-### 🤖 Come Claude Deve Rispondere (AUTOMATICO)
-
-**Step 1: Riconosci la Richiesta**
-```
-User: "Fatto! Scrivi un report con quello che abbiamo fatto"
-```
-
-**Step 2: Categorizz automaticamente usando Decision Tree**
-1. È relativo a una feature UX? → Va in `docs/UX_FLOWS/[feature]/`
-2. È tecnico/architetturale? → Va in `docs/TECHNICAL_FOUNDATION/`
-3. È un report di progress? → Va in root `/docs/` o archival
-
-**Step 3: Crea il file nella cartella corretta**
-- NON chiedere conferma su dove metterlo
-- Crea il file con nome appropriato (es: `FEATURE_IMPLEMENTATION_REPORT.md`)
-- Usa la struttura del progetto (vedi `.claude/hooks/document-categorization-guide.md`)
-
-**Step 4: Aggiorna NAVIGATION/INDEX.md**
-- Aggiungi il riferimento al nuovo file
-- Link alla cartella appropriata
-
-### ✅ Workflow Automatico
-
-```
-User: "Scrivi un report su quello che abbiamo fatto oggi"
-↓
-Claude: Analizza il contenuto della session
-↓
-Claude: Decide la categoria (UX_FLOWS/workout_session, TECHNICAL_FOUNDATION, etc.)
-↓
-Claude: Crea il file con nome descrittivo
-↓
-Claude: Salva in docs/[categoria]/[nome_file].md
-↓
-Claude: Aggiorna docs/NAVIGATION/INDEX.md
-↓
-Claude: Mostra all'utente dove è stato salvato
-```
-
-### 📍 Esempi di Categorizzazione Automatica
-
-| Richiesta | Categoria | Risultato |
-|-----------|-----------|-----------|
-| "Scrivi report timer fixes" | workout_session | `docs/UX_FLOWS/workout_session/TIMER_FIXES_REPORT.md` |
-| "Documenta la nuova architettura" | TECHNICAL_FOUNDATION | `docs/TECHNICAL_FOUNDATION/NEW_ARCHITECTURE_REPORT.md` |
-| "Crea docs per exercise database" | exercise_database | `docs/UX_FLOWS/exercise_database/[nome_report].md` |
-| "Report session progress" | root/archived | `docs/SESSION_PROGRESS_REPORT.md` |
-
-### 🔄 Smart Update - Se il Doc Esiste Già
-
-**Step 1: Riconosci se il file esiste**
-```
-User: "Scrivi un report sul timer system"
-Claude: "Aspetta, c'è già docs/UX_FLOWS/workout_session/TIMER_AUDIO_KB.md?"
-→ Sì, esiste
-```
-
-**Step 2: Leggi il file esistente**
-- Analizza il contenuto attuale
-- Nota l'ultimo aggiornamento (data nel file)
-- Identifica le sezioni principali
-
-**Step 3: Confronta con il Codice Attuale**
-- Esegui una verifica codice-doc
-- Identifica: Cosa è cambiato? Cosa è deprecato? Cosa è nuovo?
-- Marcare come: ✅ CURRENT, ⚠️ OUTDATED, 🆕 NEW INFO
-
-**Step 4: Decidi l'Azione**
-- **Se CURRENT**: "✅ Già aggiornato (Oct 18, 2025)"
-- **Se OUTDATED**: Aggiorna intelligentemente (mantieni custom, aggiorna tecnico)
-- **Se ha NEW INFO**: Aggiungi le nuove sezioni
-
-**Step 5: Comunica l'Azione**
-```
-"✅ UPDATED: docs/UX_FLOWS/workout_session/TIMER_AUDIO_KB.md
-- Sezione 'iOS Audio Session' aggiornata (nuove patterns)
-- Aggiunto: LiveActivity integration notes
-- Rimosso: Deprecated AppLocalizations pattern
-- Data: Oct 18, 2025"
-```
-
-### 🚨 IMPORTANTE
-
-- **MAI** chiedere "dove vuoi il file?" - Decidi tu basato sul contenuto
-- **SEMPRE** aggiungi il file a NAVIGATION/INDEX.md se nuovo
-- **SEMPRE** crea con nome descrittivo e data se è un report
-- **SEMPRE** verifica che vada nella cartella corretta della struttura UX flows
-- **SE ESISTE**: Leggi, analizza, paragona, aggiorna intelligentemente
-
----
-
-## 🔄 Slash Command: `/sync-docs` - Sincronizza Automaticamente TUTTI i Docs
-
-### Cosa Fa
-```
-/sync-docs
-↓ Legge TUTTI i docs
-↓ Analizza il codice attuale
-↓ Per ogni doc: UPDATE / DELETE / CREATE / ARCHIVE
-↓ Commit automatico con report
-```
-
-### Quando Usare
-- **Dopo grandi refactoring**: `/sync-docs` per aggiornare tutta la doc
-- **Prima di release**: Sincronizza tutto prima di taggare
-- **Trimestrale**: Ogni 3 mesi per evitare drift
-- **Manualmente**: Quando senti che i docs sono outdated
-
-### Azioni Automatiche
-
-| Situazione | Azione | Risultato |
-|-----------|--------|-----------|
-| Doc matchato col codice | ✅ KEEP | "Already current" |
-| Doc outdated ma rilevante | 🔄 UPDATE | Aggiorna intelligentemente |
-| Codice senza documentazione | ➕ CREATE | Crea doc in cartella corretta |
-| Documentazione di feature rimossa | 🗑️ DELETE | Rimuove il file |
-| Documentazione speculativa | 📦 ARCHIVE | Sposta in `archived/` |
-
-### Esempio Uso
-```
-User: "Fammi un sync-docs per verificare che tutto sia aggiornato"
-Claude: "✅ SYNC-DOCS REPORT: Scanned 32 docs, 24 current, 5 updated, 2 created, 1 deleted"
-```
-
-**Vedi**: `.claude/commands/sync-docs.md` per dettagli completi
-
----
-
-## 🆘 IN CASO DI DUBBI
-
-### 📖 Documentazione da Consultare (in ordine)
-
-1. **Questo file CLAUDE.md** - Regole obbligatorie e quick reference
-2. **`ARCHITECTURAL_OPTIMIZATIONS_REPORT.md`** - Guida completa alle ottimizzazioni:
-   - BuildContext Extensions (esempi, migrazione, metriche)
-   - Loading Component (API completa, use cases)
-   - Snackbar Service (preset semantici, custom options)
-   - Modal Service (bottom sheets, dialogs, confirm flows)
-3. **`docs/LOCALIZATION_GUIDE.md`** - Guida localizzazione dettagliata
-4. **File esistenti come esempi**:
-   - `lib/features/workout/presentation/widgets/add_exercise_modal.dart` (migrato)
-   - `lib/features/workout/presentation/widgets/exercise_list_item.dart` (migrato)
-   - Altri top 10 file migrati (vedi report)
-
-### 🔧 Script e Tool Utili
-
-- `./scripts/find_hardcoded_strings.sh` - Trova testi hardcoded
-- `./scripts/migrate_to_context_extensions.sh <file>` - Migra file a extensions
-- `flutter analyze` - Verifica qualità codice
-
----
-
-> **⚠️ ATTENZIONE**: Questo progetto è in produzione. Ogni violazione di queste regole può causare problemi agli utenti. SEMPRE seguire le linee guida sopra indicate.
+> **⚠️ TESTING PHASE**: App in sviluppo con solo lo sviluppatore come utente. Breaking changes e migrazioni aggressive sono permesse. Seguire SEMPRE le regole di clean code sopra.

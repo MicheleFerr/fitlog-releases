@@ -134,7 +134,7 @@ class GlassmorphismCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
@@ -150,7 +150,7 @@ class GlassmorphismCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: color.withValues(alpha: opacity),
           ),
@@ -211,7 +211,7 @@ class _PulsatingCTAButtonState extends State<PulsatingCTAButton>
       builder: (context, child) {
         return Transform.scale(
           scale: _pulseAnimation.value,
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
@@ -507,7 +507,7 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
     return AnimatedBuilder(
       animation: _elevationAnimation,
       builder: (context, child) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             gradient: LinearGradient(

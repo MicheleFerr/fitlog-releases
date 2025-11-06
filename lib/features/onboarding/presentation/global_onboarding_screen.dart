@@ -194,7 +194,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                           Text(
                             l10n.onboardingStepOf(state.currentStep + 1, OnboardingState.totalSteps),
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onSurface.withOpacity(0.7),
+                              color: colorScheme.onSurface.withValues(alpha: 0.7),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -213,7 +213,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                       TextButton(
                         onPressed: _skipOnboarding,
                         style: TextButton.styleFrom(
-                          foregroundColor: colorScheme.onSurface.withOpacity(0.7),
+                          foregroundColor: colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                         child: Text(
                           l10n.onboardingSkip,
@@ -230,7 +230,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                   height: 6,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
-                    color: colorScheme.outline.withOpacity(0.2),
+                    color: colorScheme.outline.withValues(alpha: 0.2),
                   ),
                   child: Stack(
                     children: [
@@ -240,7 +240,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                         height: 6,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
-                          color: colorScheme.outline.withOpacity(0.1),
+                          color: colorScheme.outline.withValues(alpha: 0.1),
                         ),
                       ),
                       // Progress
@@ -287,7 +287,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                                 ? colorScheme.primary
                                 : isAccessible
                                     ? colorScheme.outline
-                                    : colorScheme.outline.withOpacity(0.3),
+                                    : colorScheme.outline.withValues(alpha: 0.3),
                           ),
                         ),
                       );

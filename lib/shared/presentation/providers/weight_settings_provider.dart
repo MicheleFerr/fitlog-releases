@@ -3,10 +3,12 @@ import 'package:gymbro_flutter_new/shared/domain/entities/weight_settings.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/weight_increment.dart';
 import 'package:gymbro_flutter_new/shared/data/datasources/weight_settings_datasource.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// DataSource Provider
 final weightSettingsDataSourceProvider = Provider<WeightSettingsDataSource>((ref) {
-  return WeightSettingsDataSource();
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return WeightSettingsDataSource(boxManager);
 });
 
 /// Weight Settings Provider (StateNotifier)

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
-import 'package:gymbro_flutter_new/features/shared/presentation/extensions/context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
@@ -197,7 +197,7 @@ class _SupersetSequentialExecutionSheetState
     // Show QuickEditOverlayV2
     showDialog(
       context: context,
-      barrierColor: Colors.black26,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.26),
       builder: (context) => Stack(
         children: [
           // Dismiss on tap outside
@@ -287,7 +287,7 @@ class _SupersetSequentialExecutionSheetState
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: context.colors.outline.withOpacity(0.3),
+                  color: context.colors.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -348,14 +348,14 @@ class _SupersetSequentialExecutionSheetState
                     border: Border.all(
                       color: isCompleted
                           ? context.colors.secondary
-                          : context.colors.outline.withOpacity(0.2),
+                          : context.colors.outline.withValues(alpha: 0.2),
                       width: 2,
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
-                        isCompleted ? AppIcons.complete : AppIcons.radioButtonUnchecked,
+                        isCompleted ? Icons.check_circle : AppIcons.radioButtonUnchecked,
                         color: isCompleted
                             ? context.colors.secondary
                             : context.colors.outline,
@@ -379,7 +379,7 @@ class _SupersetSequentialExecutionSheetState
                                 Icon(
                                   AppIcons.edit,
                                   size: 14,
-                                  color: context.colors.outline.withOpacity(0.5),
+                                  color: context.colors.outline.withValues(alpha: 0.5),
                                 ),
                               ],
                             ),
@@ -405,7 +405,7 @@ class _SupersetSequentialExecutionSheetState
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withOpacity(0.5),
+                color: context.colors.primaryContainer.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

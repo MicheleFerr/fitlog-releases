@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart'; // ✅ NUOVO
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Extension for easy modal showing
@@ -19,13 +22,14 @@ extension UnifiedSetInputModalExtension on BuildContext {
     String? exerciseName,
     bool isInWorkout = true,
     Exercise? exercise,
+    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) async {
     // Validate inputs
     if (exerciseSet == null) {
       ScaffoldMessenger.of(this).showSnackBar(
-        const SnackBar(
-          content: Text('Error: Unable to edit this set'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('Error: Unable to edit this set'),
+          backgroundColor: colors.error,
         ),
       );
       return;
@@ -43,6 +47,7 @@ extension UnifiedSetInputModalExtension on BuildContext {
       exerciseName: exerciseName ?? 'Exercise',
       isInWorkout: isInWorkout,
       exercise: exercise,
+      countingMode: countingMode, // ✅ NUOVO
     );
   }
 }
@@ -65,6 +70,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
     this.supersetExerciseSets,
     this.onSupersetSave,
     this.initialExerciseIndex = 0,
+    this.countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   });
   final ExerciseSet exerciseSet;
   final Function(ExerciseSet) onSave;
@@ -73,6 +79,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
   final String exerciseName;
   final bool isInWorkout; // True if editing during workout, false if editing history
   final Exercise? exercise; // Full exercise entity for APRE suggestions
+  final ExerciseCountingMode countingMode; // ✅ NUOVO: Determines which fields to show/edit
 
   // Superset support
   final bool isSuperset;
@@ -89,12 +96,13 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
     required String exerciseName,
     bool isInWorkout = true,
     Exercise? exercise,
+    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black54,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
@@ -105,6 +113,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
         exerciseName: exerciseName,
         isInWorkout: isInWorkout,
         exercise: exercise,
+        countingMode: countingMode, // ✅ NUOVO
       ),
     );
   }
@@ -125,7 +134,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black54,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
@@ -157,13 +166,15 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   
   late FixedExtentScrollController _weightController;
   late FixedExtentScrollController _repsController;
-  
+  late FixedExtentScrollController _secondsController; // ✅ NUOVO: For time-based exercises
+
   // Tab controller for superset
   late TabController? _tabController;
-  
+
   // Single exercise state
   double _selectedWeight = 0.0;
   int _selectedReps = 0;
+  int _selectedSeconds = 0; // ✅ NUOVO: For time-based exercises (in seconds)
   int? _selectedRpe;
   int? _calculatedRir;
   bool _isCompleted = false;
@@ -175,6 +186,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   // Superset state - maps exercise name to its values
   final Map<String, double> _supersetWeights = {};
   final Map<String, int> _supersetReps = {};
+  final Map<String, int> _supersetSeconds = {}; // ✅ NUOVO: For time-based exercises in supersets
   final Map<String, int?> _supersetRpes = {};
   final Map<String, bool> _supersetCompleted = {};
   int _currentTabIndex = 0;
@@ -182,6 +194,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   // Quick adjustment values
   static const List<double> _weightIncrements = [-5, -2.5, -1, 1, 2.5, 5];
   static const List<int> _repsIncrements = [-3, -2, -1, 1, 2, 3];
+  static const List<int> _secondsIncrements = [-30, -15, -5, 5, 15, 30]; // ✅ NUOVO: For time adjustments
   
   @override
   void initState() {
@@ -202,32 +215,37 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
         final exerciseSet = widget.supersetExerciseSets![exerciseName];
         _supersetWeights[exerciseName] = exerciseSet?.weight ?? 20.0;
         _supersetReps[exerciseName] = exerciseSet?.reps ?? 10;
+        _supersetSeconds[exerciseName] = exerciseSet?.seconds ?? 60; // ✅ NUOVO
         _supersetRpes[exerciseName] = exerciseSet?.rpe;
         _supersetCompleted[exerciseName] = exerciseSet?.isCompleted ?? false;
       }
-      
+
       // Set current values to first exercise
       final firstExercise = widget.supersetExerciseNames!.first;
       _selectedWeight = _supersetWeights[firstExercise]!;
       _selectedReps = _supersetReps[firstExercise]!;
+      _selectedSeconds = _supersetSeconds[firstExercise]!; // ✅ NUOVO
       _selectedRpe = _supersetRpes[firstExercise];
       _isCompleted = _supersetCompleted[firstExercise]!;
     } else {
       // Initialize single exercise values
       _selectedWeight = widget.exerciseSet.weight ?? widget.previousSet?.weight ?? 20.0;
       _selectedReps = widget.exerciseSet.reps ?? widget.previousSet?.reps ?? 10;
+      _selectedSeconds = widget.exerciseSet.seconds ?? widget.previousSet?.seconds ?? 60; // ✅ NUOVO: Default 60 seconds
       _selectedRpe = widget.exerciseSet.rpe;
       _isCompleted = widget.exerciseSet.isCompleted;
     }
-    
+
     _updateRir();
-    
-    // Initialize scroll controllers
+
+    // Initialize scroll controllers based on counting mode
     final weightIndex = (_selectedWeight * 2).round().clamp(0, 400);
     final repsIndex = (_selectedReps - 1).clamp(0, 49);
-    
+    final secondsIndex = _selectedSeconds.clamp(0, 600); // ✅ NUOVO: Up to 600 seconds (10 minutes)
+
     _weightController = FixedExtentScrollController(initialItem: weightIndex);
     _repsController = FixedExtentScrollController(initialItem: repsIndex);
+    _secondsController = FixedExtentScrollController(initialItem: secondsIndex); // ✅ NUOVO
     
     // Setup animations
     _animationController = AnimationController(
@@ -276,6 +294,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   void dispose() {
     _weightController.dispose();
     _repsController.dispose();
+    _secondsController.dispose(); // ✅ NUOVO
     _animationController.dispose();
     _pulseController.dispose();
     _tabController?.dispose();
@@ -284,27 +303,30 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   
   void _onTabChanged() {
     if (!widget.isSuperset || widget.supersetExerciseNames == null) return;
-    
+
     // Save current exercise values
     final currentExercise = widget.supersetExerciseNames![_currentTabIndex];
     _supersetWeights[currentExercise] = _selectedWeight;
     _supersetReps[currentExercise] = _selectedReps;
+    _supersetSeconds[currentExercise] = _selectedSeconds; // ✅ NUOVO
     _supersetRpes[currentExercise] = _selectedRpe;
     _supersetCompleted[currentExercise] = _isCompleted;
-    
+
     // Switch to new exercise
     _currentTabIndex = _tabController!.index;
     final newExercise = widget.supersetExerciseNames![_currentTabIndex];
-    
+
     setState(() {
       _selectedWeight = _supersetWeights[newExercise]!;
       _selectedReps = _supersetReps[newExercise]!;
+      _selectedSeconds = _supersetSeconds[newExercise]!; // ✅ NUOVO
       _selectedRpe = _supersetRpes[newExercise];
       _isCompleted = _supersetCompleted[newExercise]!;
-      
+
       // Update controllers
       final weightIndex = (_selectedWeight * 2).round().clamp(0, 400);
       final repsIndex = (_selectedReps - 1).clamp(0, 49);
+      final secondsIndex = _selectedSeconds.clamp(0, 600); // ✅ NUOVO
       _weightController.animateToItem(
         weightIndex,
         duration: const Duration(milliseconds: 200),
@@ -315,7 +337,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
       );
-      
+      _secondsController.animateToItem(
+        secondsIndex,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      ); // ✅ NUOVO
+
       _updateRir();
     });
   }
@@ -340,6 +367,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
           _selectedReps = widget.previousSet!.reps!;
           final repsIndex = (_selectedReps - 1).clamp(0, 49);
           _repsController.jumpToItem(repsIndex);
+        }
+        // ✅ NUOVO: Copy seconds for time-based exercises
+        if (widget.previousSet!.seconds != null) {
+          _selectedSeconds = widget.previousSet!.seconds!;
+          final secondsIndex = _selectedSeconds.clamp(0, 600);
+          _secondsController.jumpToItem(secondsIndex);
         }
       });
       HapticFeedback.mediumImpact();
@@ -371,6 +404,20 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
     });
     HapticFeedback.lightImpact();
   }
+
+  // ✅ NUOVO: Quick adjustment for seconds (time-based exercises)
+  void _quickAdjustSeconds(int increment) {
+    setState(() {
+      _selectedSeconds = (_selectedSeconds + increment).clamp(1, 600);
+      final secondsIndex = _selectedSeconds.clamp(0, 600);
+      _secondsController.animateToItem(
+        secondsIndex,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    });
+    HapticFeedback.lightImpact();
+  }
   
   void _selectRecentWeight(double weight) {
     setState(() {
@@ -394,10 +441,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   }
   
   void _saveSingleExercise() {
+    // ✅ NUOVO: Build set data based on counting mode
     final updatedSet = widget.exerciseSet.copyWith(
-      weight: _selectedWeight,
-      reps: _selectedReps,
-      actualReps: _isCompleted ? _selectedReps : null,
+      weight: widget.countingMode.requiresWeight ? _selectedWeight : null,
+      reps: widget.countingMode.requiresReps ? _selectedReps : null,
+      actualReps: _isCompleted && widget.countingMode.requiresReps ? _selectedReps : null,
+      seconds: widget.countingMode.requiresTime ? _selectedSeconds : null, // ✅ NUOVO
       rpe: _selectedRpe,
       isCompleted: _isCompleted,
       completedAt: _isCompleted ? DateTime.now() : null,
@@ -443,25 +492,28 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
   
   void _saveSuperset() {
     if (widget.supersetExerciseNames == null || widget.onSupersetSave == null) return;
-    
+
     // Save current exercise values before saving
     final currentExercise = widget.supersetExerciseNames![_currentTabIndex];
     _supersetWeights[currentExercise] = _selectedWeight;
     _supersetReps[currentExercise] = _selectedReps;
+    _supersetSeconds[currentExercise] = _selectedSeconds; // ✅ NUOVO
     _supersetRpes[currentExercise] = _selectedRpe;
     _supersetCompleted[currentExercise] = _isCompleted;
-    
+
     // Build exercise sets map
     final Map<String, ExerciseSet> exerciseSets = {};
     for (final exerciseName in widget.supersetExerciseNames!) {
       final originalSet = widget.supersetExerciseSets![exerciseName];
       final isCompleted = _supersetCompleted[exerciseName] ?? false;
       final reps = _supersetReps[exerciseName] ?? 0;
-      
+      final seconds = _supersetSeconds[exerciseName] ?? 0; // ✅ NUOVO
+
       exerciseSets[exerciseName] = originalSet?.copyWith(
         weight: _supersetWeights[exerciseName],
         reps: reps,
         actualReps: isCompleted ? reps : null,
+        seconds: seconds, // ✅ NUOVO
         rpe: _supersetRpes[exerciseName],
         isCompleted: isCompleted,
         completedAt: isCompleted ? DateTime.now() : null,
@@ -470,6 +522,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
         weight: _supersetWeights[exerciseName] ?? 0.0,
         reps: reps,
         actualReps: isCompleted ? reps : null,
+        seconds: seconds, // ✅ NUOVO
         rpe: _supersetRpes[exerciseName],
         isCompleted: isCompleted,
         completedAt: isCompleted ? DateTime.now() : null,
@@ -496,13 +549,13 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
           offset: Offset(0, MediaQuery.of(context).size.height * _slideAnimation.value),
           child: Opacity(
             opacity: _fadeAnimation.value,
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: context.colors.onSurface.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, -2),
                   ),
@@ -589,7 +642,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             },
                                             icon: Icon(
                                               _isCompleted 
-                                                ? AppIcons.complete 
+                                                ? Icons.check_circle 
                                                 : AppIcons.radioButtonUnchecked,
                                               color: _isCompleted 
                                                 ? colorScheme.tertiary 
@@ -619,7 +672,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                               if (widget.isSuperset && widget.supersetExerciseNames != null && _tabController != null)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 12),
-                                  child: Container(
+                                  child: DecoratedBox(
                                     decoration: BoxDecoration(
                                       color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(12),
@@ -808,8 +861,9 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                           padding: const EdgeInsets.all(20),
                           child: Row(
                             children: [
-                              // Weight section
-                              Expanded(
+                              // ✅ NUOVO: Conditional weight section (only for weighted exercises)
+                              if (widget.countingMode.requiresWeight)
+                                Expanded(
                                 child: Column(
                                   children: [
                                     Row(
@@ -948,11 +1002,15 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                   ],
                                 ),
                               ),
-                              
-                              const SizedBox(width: 20),
-                              
-                              // Reps section
-                              Expanded(
+
+                              // ✅ NUOVO: Conditional spacing (only when both weight and reps/time are shown)
+                              if (widget.countingMode.requiresWeight &&
+                                  (widget.countingMode.requiresReps || widget.countingMode.requiresTime))
+                                const SizedBox(width: 20),
+
+                              // ✅ NUOVO: Conditional reps section (only for weighted/reps exercises)
+                              if (widget.countingMode.requiresReps)
+                                Expanded(
                                 child: Column(
                                   children: [
                                     Row(
@@ -1089,6 +1147,150 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                   ],
                                 ),
                               ),
+
+                              // ✅ NUOVO: Time/Duration section (only for time-based exercises)
+                              if (widget.countingMode.requiresTime)
+                                Expanded(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.timer,
+                                          size: 18,
+                                          color: colorScheme.tertiary,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Duration',
+                                          style: theme.textTheme.titleSmall?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: colorScheme.tertiary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+
+                                    // Duration display
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: colorScheme.tertiary.withValues(alpha: 0.5),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        _selectedSeconds < 60
+                                            ? '${_selectedSeconds}s'
+                                            : '${_selectedSeconds ~/ 60}m ${_selectedSeconds % 60}s',
+                                        style: theme.textTheme.headlineMedium?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: colorScheme.tertiary,
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'seconds',
+                                      style: theme.textTheme.labelMedium?.copyWith(
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 12),
+
+                                    // Seconds wheel picker
+                                    Container(
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: ListWheelScrollView.useDelegate(
+                                        controller: _secondsController,
+                                        itemExtent: 32,
+                                        perspective: 0.005,
+                                        diameterRatio: 2.0,
+                                        physics: const FixedExtentScrollPhysics(),
+                                        childDelegate: ListWheelChildBuilderDelegate(
+                                          childCount: 601, // 0-600 seconds (10 minutes)
+                                          builder: (context, index) {
+                                            final seconds = index;
+                                            final isSelected = seconds == _selectedSeconds;
+                                            return Center(
+                                              child: Text(
+                                                seconds < 60
+                                                    ? '${seconds}s'
+                                                    : '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}',
+                                                style: theme.textTheme.bodyLarge?.copyWith(
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.bold
+                                                      : FontWeight.normal,
+                                                  color: isSelected
+                                                      ? colorScheme.tertiary
+                                                      : colorScheme.onSurface.withValues(alpha: 0.5),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        onSelectedItemChanged: (index) {
+                                          setState(() {
+                                            _selectedSeconds = index;
+                                          });
+                                          HapticFeedback.selectionClick();
+                                        },
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 12),
+
+                                    // Quick seconds adjustments
+                                    Wrap(
+                                      spacing: 6,
+                                      runSpacing: 6,
+                                      alignment: WrapAlignment.center,
+                                      children: _secondsIncrements.map((increment) {
+                                        final isNegative = increment < 0;
+                                        return Material(
+                                          color: isNegative
+                                              ? colorScheme.errorContainer.withValues(alpha: 0.3)
+                                              : colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: InkWell(
+                                            onTap: () => _quickAdjustSeconds(increment),
+                                            borderRadius: BorderRadius.circular(8),
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                                vertical: 6,
+                                              ),
+                                              child: Text(
+                                                '${increment > 0 ? '+' : ''}${increment}s',
+                                                style: theme.textTheme.labelSmall?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: isNegative
+                                                      ? colorScheme.error
+                                                      : colorScheme.tertiary,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -1137,15 +1339,15 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     // Color based on RPE value
                                     Color chipColor;
                                     if (rpe <= 6) {
-                                      chipColor = Colors.green;
+                                      chipColor = context.colors.success;
                                     } else if (rpe <= 7) {
-                                      chipColor = Colors.lightGreen;
+                                      chipColor = context.colors.success;
                                     } else if (rpe <= 8) {
-                                      chipColor = Colors.orange;
+                                      chipColor = context.colors.secondary;
                                     } else if (rpe <= 9) {
-                                      chipColor = Colors.deepOrange;
+                                      chipColor = context.colors.warning;
                                     } else {
-                                      chipColor = Colors.red;
+                                      chipColor = context.colors.error;
                                     }
                                     
                                     return Material(
@@ -1237,7 +1439,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                             ),
                           ),
                         
-                        // Volume calculation display
+                        // ✅ NUOVO: Conditional summary display (volume for weighted, duration for time-based)
                         Container(
                           margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                           padding: const EdgeInsets.all(12),
@@ -1249,13 +1451,19 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                AppIcons.calculate,
+                                widget.countingMode == ExerciseCountingMode.time
+                                    ? Icons.timer
+                                    : Icons.calculate,
                                 size: 16,
                                 color: colorScheme.tertiary,
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Volume: ${(_selectedWeight * _selectedReps).toStringAsFixed(0)}${config.measurementUnit}',
+                                widget.countingMode == ExerciseCountingMode.time
+                                    ? 'Duration: ${_selectedSeconds < 60 ? '${_selectedSeconds}s' : '${_selectedSeconds ~/ 60}m ${_selectedSeconds % 60}s'}'
+                                    : widget.countingMode == ExerciseCountingMode.reps
+                                        ? 'Reps: $_selectedReps'
+                                        : 'Volume: ${(_selectedWeight * _selectedReps).toStringAsFixed(0)}${config.measurementUnit}',
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   color: colorScheme.tertiary,
                                   fontWeight: FontWeight.bold,
@@ -1274,18 +1482,18 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                               gradient: LinearGradient(
                                 colors: [
                                   _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                    ? Colors.orange.withValues(alpha: 0.15)
-                                    : Colors.green.withValues(alpha: 0.15),
+                                    ? context.colors.secondary.withValues(alpha: 0.15)
+                                    : context.colors.success.withValues(alpha: 0.15),
                                   _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                    ? Colors.deepOrange.withValues(alpha: 0.1)
-                                    : Colors.lightGreen.withValues(alpha: 0.1),
+                                    ? context.colors.warning.withValues(alpha: 0.1)
+                                    : context.colors.success.withValues(alpha: 0.1),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                  ? Colors.orange.withValues(alpha: 0.5)
-                                  : Colors.green.withValues(alpha: 0.5),
+                                  ? context.colors.secondary.withValues(alpha: 0.5)
+                                  : context.colors.success.withValues(alpha: 0.5),
                                 width: 2,
                               ),
                             ),
@@ -1299,8 +1507,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         ? AppIcons.trendUp
                                         : AppIcons.trendDown,
                                       color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                        ? Colors.orange
-                                        : Colors.green,
+                                        ? context.colors.secondary
+                                        : context.colors.success,
                                       size: 24,
                                     ),
                                     const SizedBox(width: 12),
@@ -1313,8 +1521,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             style: theme.textTheme.titleSmall?.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                                ? Colors.orange
-                                                : Colors.green,
+                                                ? context.colors.secondary
+                                                : context.colors.success,
                                             ),
                                           ),
                                           const SizedBox(height: 4),
@@ -1383,8 +1591,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                       label: Text(l10n.accept),
                                       style: FilledButton.styleFrom(
                                         backgroundColor: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                          ? Colors.orange
-                                          : Colors.green,
+                                          ? context.colors.secondary
+                                          : context.colors.success,
                                       ),
                                     ),
                                   ],

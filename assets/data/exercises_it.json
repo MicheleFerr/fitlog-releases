@@ -34,7 +34,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "fl"
+      "abs",
+      "addominale",
+      "core",
+      "fl",
+      "flessione laterale"
     ]
   },
   {
@@ -59,7 +63,15 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "pushdown",
+      "tric",
+      "triceps"
+    ]
   },
   {
     "id": "advanced_dumbbell_stiff_leg_deadlift",
@@ -103,7 +115,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "bc"
+      "abs",
+      "addominale",
+      "bc",
+      "bicycle crunch",
+      "core"
     ]
   },
   {
@@ -129,7 +145,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "aiq"
+      "aiq",
+      "allungamento in",
+      "allungamento in quadrupedia"
     ]
   },
   {
@@ -183,6 +201,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "tocca talloni",
+      "tocca talloni alternato",
       "tta"
     ]
   },
@@ -236,7 +259,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "bc"
+      "bc",
+      "bear crawl"
     ]
   },
   {
@@ -254,7 +278,10 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "rc"
+      "cable",
+      "cavo",
+      "rc",
+      "rotazioni caviglie"
     ]
   },
   {
@@ -272,7 +299,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "ta"
+      "ta",
+      "trazione arciere"
     ]
   },
   {
@@ -298,7 +326,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pa"
+      "pa",
+      "piegamento arciere"
     ]
   },
   {
@@ -324,7 +353,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "sga"
+      "abs",
+      "addominale",
+      "core",
+      "sga",
+      "sollevamento ginocchia",
+      "sollevamento ginocchia appeso"
     ]
   },
   {
@@ -342,7 +376,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgts"
+      "abs",
+      "addominale",
+      "core",
+      "sgts",
+      "sollevamento gambe",
+      "sollevamento gambe tese sospeso"
     ]
   },
   {
@@ -360,6 +399,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "tocca punte",
+      "tocca punte circolare",
       "tpc"
     ]
   },
@@ -425,7 +466,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sga"
+      "abs",
+      "addominale",
+      "core",
+      "sga",
+      "sollevamento ginocchia",
+      "sollevamento ginocchia appeso"
     ]
   },
   {
@@ -443,7 +489,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgacl"
+      "abs",
+      "addominale",
+      "core",
+      "sgacl",
+      "sollevamento ginocchia",
+      "sollevamento ginocchia appeso con lancio"
     ]
   },
   {
@@ -461,6 +512,7 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "allungamento polpacci",
       "ap"
     ]
   },
@@ -479,7 +531,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "ag"
+      "ag",
+      "allungamento glutei"
     ]
   },
   {
@@ -497,7 +550,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "ageps"
+      "ageps",
+      "allungamento glutei",
+      "allungamento glutei e piriforme sdraiato"
     ]
   },
   {
@@ -515,7 +570,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgls"
+      "abs",
+      "addominale",
+      "core",
+      "sgls",
+      "sollevamento gambe",
+      "sollevamento gambe laterale sdraiato"
     ]
   },
   {
@@ -533,7 +593,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgscl"
+      "abs",
+      "addominale",
+      "core",
+      "sgscl",
+      "sollevamento gambe",
+      "sollevamento gambe sdraiato con lancio"
     ]
   },
   {
@@ -551,6 +616,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "torsione russa",
       "tr"
     ]
   },
@@ -631,6 +700,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "allungamento quadricipiti",
       "aq"
     ]
   },
@@ -657,7 +727,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "arp"
+      "abs",
+      "addominale",
+      "allungamento rettifemorale",
+      "allungamento rettifemorale prono",
+      "arp",
+      "core"
     ]
   },
   {
@@ -675,7 +750,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "pull up"
+      "pull up",
+      "trazioni"
     ]
   },
   {
@@ -720,7 +796,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "apscf"
+      "allungamento pettorali",
+      "allungamento pettorali seduto con fitball",
+      "apscf",
+      "chest",
+      "panca",
+      "petto"
     ]
   },
   {
@@ -738,7 +819,9 @@
     "mobilitaPre": "Lateral lunges 2x8, cossack squats 2x6, lateral leg swings 2x10",
     "attivazionePre": "Side-lying adduction 2x15, ball squeezes 2x20 (3sec hold)",
     "aliases": [
-      "aas"
+      "aas",
+      "allungamento adduttori",
+      "allungamento adduttori sdraiato"
     ]
   },
   {
@@ -774,7 +857,9 @@
     "noteTecniche": "Passo 1: Regola la macchina al livello di assistenza desiderato. | Passo 2: Stai in piedi sulla pedana e afferra le maniglie con presa prona, leggermente più larga della larghezza delle spalle. | Passo 3: Mantieni il petto in alto e le spalle indietro, attiva il core e piega leggermente le ginocchia. | Passo 4: Tira il corpo verso l'alto flettendo i gomiti e portando i gomiti verso i fianchi. | Passo 5: Continua a tirarti finché il mento è sopra la sbarra. | Passo 6: Fermati un momento in alto, poi abbassa lentamente il corpo tornando alla posizione di partenza. | Passo 7: Ripeti per il numero desiderato di ripetizioni.",
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
-    "aliases": []
+    "aliases": [
+      "trazione"
+    ]
   },
   {
     "id": "assisted_standing_chin_up_with_focused",
@@ -791,7 +876,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "tf"
+      "tf",
+      "trazione focalizzata"
     ]
   },
   {
@@ -937,7 +1023,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "sagd"
+      "sagd",
+      "salti a",
+      "salti a gambe divaricate"
     ]
   },
   {
@@ -955,7 +1043,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "ecc"
+      "ecc",
+      "esercizio con",
+      "esercizio con corde"
     ]
   },
   {
@@ -973,7 +1063,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "saei"
+      "saei",
+      "step avanti",
+      "step avanti e indietro"
     ]
   },
   {
@@ -999,7 +1091,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "elsf"
+      "elsf",
+      "estensione lombare",
+      "estensione lombare su fitball"
     ]
   },
   {
@@ -1025,6 +1119,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "leva posteriore",
       "lp"
     ]
   },
@@ -1079,6 +1174,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "salto dorsale",
       "sd"
     ]
   },
@@ -1105,6 +1201,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "tavola di",
+      "tavola di equilibrio",
       "tde"
     ]
   },
@@ -1254,7 +1352,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "rcawde"
+      "abs",
+      "addominale",
+      "core",
+      "rcawde",
+      "rollout con",
+      "rollout con ab wheel da elastico"
     ]
   },
   {
@@ -1280,6 +1383,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "distensione su",
+      "distensione su panca con elastici",
       "dspce"
     ]
   },
@@ -1659,7 +1764,7 @@
   },
   {
     "id": "band_one_arm_single_leg_split_squat",
-    "nome": "Squat Un Braccio Diviso a Gamba Singola a con Elastico",
+    "nome": "Squat Un Braccio Diviso Singola Elastico",
     "focus": null,
     "imageUrl": "https://static.exercisedb.dev/media/arsYEd3.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -1715,7 +1820,7 @@
   },
   {
     "id": "band_one_arm_standing_low_row_lateral_variation",
-    "nome": "Rematore in Piedi Un Braccio Basso a - Variazione Laterale con Elastico",
+    "nome": "Rematore in Piedi Un Braccio Basso Laterale",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/pgIdT6i.gif",
     "muscoliSecondari": "DELT",
@@ -1772,7 +1877,7 @@
   },
   {
     "id": "band_one_arm_twisting_seated_row",
-    "nome": "Rematore Seduto Un Braccio a con Rotazione con Elastico",
+    "nome": "Rematore Seduto Un Braccio Rotazione",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/DKBwJrL.gif",
     "muscoliSecondari": "DELT",
@@ -2305,7 +2410,7 @@
   },
   {
     "id": "band_two_legs_calf_raise_band_under_both_legs_v_2",
-    "nome": "Calf Raise a Due Gambe(Elastico Sotto Entrambe le Gambe)V.2 con Elastico",
+    "nome": "Calf Raise Gambe(Elastico Sotto Entrambe le Gambe)",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/jl6uxZV.gif",
     "muscoliSecondari": null,
@@ -2420,7 +2525,7 @@
   },
   {
     "id": "band_vertical_pallof_press_seated_variation",
-    "nome": "Seduto Pallof Press Verticale - Variazione da con Elastico",
+    "nome": "Seduto Pallof Press Verticale Variazione Elastico",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/kLiIFdB.gif",
     "muscoliSecondari": "GLUT",
@@ -2605,7 +2710,7 @@
   },
   {
     "id": "barbell_bent_arm_pullover_powerful_variation",
-    "nome": "Pullover Braccia Piegate Variante Potente con Bilanciere",
+    "nome": "Pullover Braccia Piegate Variante Potente",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/EnPivTL.gif",
     "muscoliSecondari": "PETT",
@@ -2831,7 +2936,7 @@
   },
   {
     "id": "barbell_decline_close_grip_to_skull_press",
-    "nome": "Presa Stretta Panca Declinata a Skull Press con Bilanciere",
+    "nome": "Presa Stretta Panca Declinata Press",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/LMGXZn8.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -2973,6 +3078,10 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "barbell",
+      "bilanciere",
+      "calf raise",
+      "calf raise al bilanciere a terra",
       "crabat"
     ]
   },
@@ -3171,7 +3280,7 @@
   },
   {
     "id": "barbell_glute_bridge_two_legs_on_bench_male",
-    "nome": "Ponte Glutei Due Gambe su Panca Maschile con Bilanciere",
+    "nome": "Ponte Glutei Due Gambe su Panca Maschile",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/qg2PGl6.gif",
     "muscoliSecondari": "CORE, FEMOR",
@@ -3577,7 +3686,7 @@
   },
   {
     "id": "barbell_lying_back_of_the_head_tricep_extension",
-    "nome": "Estensione Sdraiato Tricipiti Dietro la Testa da con Bilanciere",
+    "nome": "Estensione Sdraiato Tricipiti Dietro la Testa Bila",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/yg8Totb.gif",
     "muscoliSecondari": "DELT",
@@ -3633,7 +3742,7 @@
   },
   {
     "id": "barbell_lying_close_grip_triceps_extension",
-    "nome": "Estensione Sdraiato Presa Stretta Tricipiti da con Bilanciere",
+    "nome": "Estensione Sdraiato Presa Stretta Tricipiti Bilanc",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/gAc7ZDH.gif",
     "muscoliSecondari": null,
@@ -3709,6 +3818,10 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "barbell",
+      "bilanciere",
+      "sdraiato liftingcon",
+      "sdraiato liftingcon al bilanciere",
       "slab"
     ]
   },
@@ -3761,7 +3874,7 @@
   },
   {
     "id": "barbell_lying_triceps_extension_double",
-    "nome": "Estensione Sdraiato Tricipiti Doppio con Bilanciere",
+    "nome": "Estensione Sdraiato Tricipiti Doppio",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/1TVoin7.gif",
     "muscoliSecondari": "DELT",
@@ -3789,7 +3902,7 @@
   },
   {
     "id": "barbell_lying_triceps_extension_skull_crusher",
-    "nome": "Estensione Sdraiato Skullcrusher Tricipiti con Bilanciere",
+    "nome": "Estensione Sdraiato Skullcrusher Tricipiti",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/h8LFzo9.gif",
     "muscoliSecondari": "DELT",
@@ -4095,7 +4208,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "dcbab"
+      "barbell",
+      "biceps",
+      "bici",
+      "bilanciere",
+      "curl",
+      "dcbab",
+      "dip",
+      "distensioni con",
+      "distensioni con blocchi al bilanciere"
     ]
   },
   {
@@ -4331,7 +4452,7 @@
   },
   {
     "id": "barbell_reverse_close_grip_bench_press",
-    "nome": "Distensioni Piana Presa Stretta Inversa con Bilanciere",
+    "nome": "Distensioni Piana Presa Stretta Inversa",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/YqJw82s.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -4459,7 +4580,7 @@
   },
   {
     "id": "barbell_reverse_grip_incline_bench_row",
-    "nome": "Rematore Presa Inversa su Panca Inclinata con Bilanciere",
+    "nome": "Rematore Presa Inversa su Panca Inclinata",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/8d8qJQI.gif",
     "muscoliSecondari": null,
@@ -4624,7 +4745,14 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "rabdp"
+      "abs",
+      "addominale",
+      "barbell",
+      "bilanciere",
+      "core",
+      "rabdp",
+      "rollout al",
+      "rollout al bilanciere da panca"
     ]
   },
   {
@@ -4649,7 +4777,7 @@
   },
   {
     "id": "barbell_seated_behind_head_military_press",
-    "nome": "Seduto Military Press Dietro la Testa con Bilanciere",
+    "nome": "Seduto Military Press Dietro la Testa",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/ngPpyRS.gif",
     "muscoliSecondari": null,
@@ -4707,7 +4835,7 @@
   },
   {
     "id": "barbell_seated_close_grip_behind_neck_triceps_extension",
-    "nome": "Estensione Seduto Presa Stretta Tricipiti Dietro la Nuca da con Bilanciere",
+    "nome": "Estensione Seduto Presa Stretta Tricipiti Dietro l",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/4CBIBOM.gif",
     "muscoliSecondari": "DELT",
@@ -4735,7 +4863,7 @@
   },
   {
     "id": "barbell_seated_close_grip_concentration_curl",
-    "nome": "Curl Seduto Presa Stretta di Concentrazione con al Bilanciere",
+    "nome": "Curl Seduto Presa Stretta Bilanciere",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/1V1gj1u.gif",
     "muscoliSecondari": null,
@@ -4792,7 +4920,7 @@
   },
   {
     "id": "barbell_seated_overhead_triceps_extension",
-    "nome": "Estensione Seduto Tricipiti Sopra la Testa da con Bilanciere",
+    "nome": "Estensione Seduto Tricipiti Sopra la Testa Bilanci",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/5uFK1xr.gif",
     "muscoliSecondari": "DELT",
@@ -5023,7 +5151,7 @@
   },
   {
     "id": "barbell_sitted_alternate_leg_raise_female",
-    "nome": "Alternato Sollevamento Gambe da Sedutacon Bilanciere",
+    "nome": "Alternato Sollevamento Gambe Bilanciere",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/BCs0G2F.gif",
     "muscoliSecondari": "QUAD",
@@ -5042,7 +5170,7 @@
   },
   {
     "id": "barbell_sitted_alternate_leg_raise_female_with_intermediate",
-    "nome": "Alternato Sollevamento Gambe da Seduta - Variazione Intermedia con Bilanciere",
+    "nome": "Alternato Sollevamento Gambe Variazione Intermedia",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/ntjtCfu.gif",
     "muscoliSecondari": "QUAD",
@@ -5243,6 +5371,13 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "barbell",
+      "bilanciere",
+      "core",
+      "in piedi",
+      "in piedi rollout addominali al bilanciere",
       "ipraab"
     ]
   },
@@ -5325,7 +5460,7 @@
   },
   {
     "id": "barbell_standing_close_grip_military_press",
-    "nome": "Spinta in Piedi Presa Stretta Military con Bilanciere",
+    "nome": "Spinta in Piedi Presa Stretta Military",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/wdRZISl.gif",
     "muscoliSecondari": null,
@@ -5371,7 +5506,7 @@
   },
   {
     "id": "barbell_standing_front_raise_over_head",
-    "nome": "Alzate in Piedi Frontali Sopra la Testa con Bilanciere",
+    "nome": "Alzate in Piedi Frontali Sopra la Testa",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/S8mo30S.gif",
     "muscoliSecondari": null,
@@ -5409,7 +5544,7 @@
   },
   {
     "id": "barbell_standing_overhead_triceps_extension",
-    "nome": "Estensione in Piedi Overhead Tricipiti con Bilanciere",
+    "nome": "Estensione in Piedi Overhead Tricipiti",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/dZl9Q27.gif",
     "muscoliSecondari": "DELT",
@@ -5456,7 +5591,7 @@
   },
   {
     "id": "barbell_standing_reverse_grip_curl_resistance",
-    "nome": "Curl in Piedi Presa Inversa al Bilanciere Resistenza",
+    "nome": "Curl in Piedi Presa Inversa Resistenza",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/AdxxqfF.gif",
     "muscoliSecondari": null,
@@ -5475,7 +5610,7 @@
   },
   {
     "id": "barbell_standing_rocking_leg_calf_raise",
-    "nome": "Alzate in Piedi Rocking Gambe Polpacci con Bilanciere",
+    "nome": "Alzate in Piedi Rocking Gambe Polpacci",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/6HiHHe0.gif",
     "muscoliSecondari": "FEMOR, QUAD",
@@ -5816,7 +5951,7 @@
   },
   {
     "id": "barbell_wide_reverse_grip_bench_press",
-    "nome": "Presa Supina Distensione su Panca Larga con Bilanciere",
+    "nome": "Presa Supina Distensione su Panca Larga",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/945zpRg.gif",
     "muscoliSecondari": "DELT",
@@ -5843,7 +5978,7 @@
   },
   {
     "id": "barbell_wide_reverse_grip_bench_press_horizontal",
-    "nome": "Distensione Presa Inversa Larga Orizzontale con Bilanciere",
+    "nome": "Distensione Presa Inversa Larga Orizzontale",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/3QgteDK.gif",
     "muscoliSecondari": "DELT",
@@ -5963,6 +6098,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "tocco punte",
+      "tocco punte base maschile",
       "tpbm"
     ]
   },
@@ -5981,7 +6118,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "cdb"
+      "cdb",
+      "corde da",
+      "corde da battaglia"
     ]
   },
   {
@@ -5999,7 +6138,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "bc"
+      "bc",
+      "bear crawl"
     ]
   },
   {
@@ -6025,7 +6165,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "apdlt"
+      "allungamento petto",
+      "allungamento petto dietro la testa",
+      "apdlt",
+      "chest",
+      "panca",
+      "petto"
     ]
   },
   {
@@ -6105,7 +6250,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ebh"
+      "ebh",
+      "estensione bench",
+      "estensione bench hip"
     ]
   },
   {
@@ -6142,6 +6289,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "sdraiato torsione",
+      "sdraiato torsione ginocchia piegate maschile",
       "stgpm"
     ]
   },
@@ -6444,7 +6593,7 @@
   },
   {
     "id": "bodyweight_standing_close_grip_one_arm_row",
-    "nome": "Rematore in Piedi Un Braccio Presa Stretta a a Corpo Libero",
+    "nome": "Rematore in Piedi Un Braccio Presa Stretta Corpo L",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/v2DfH14.gif",
     "muscoliSecondari": null,
@@ -6528,7 +6677,7 @@
   },
   {
     "id": "bodyweight_standing_one_arm_row_with_towel",
-    "nome": "Rematore in Piedi Un Braccio a con Asciugamano a Corpo Libero",
+    "nome": "Rematore in Piedi Un Braccio Asciugamano Libero",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/O4oIqQD.gif",
     "muscoliSecondari": null,
@@ -6644,6 +6793,11 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "gamba",
+      "leg",
+      "quad",
+      "salto giù",
+      "salto giù da box con stabilizzazione a una gamba",
       "sgdbcsaug"
     ]
   },
@@ -6681,7 +6835,9 @@
     "noteTecniche": "Passo 1: Inizia in posizione eretta con i piedi alla larghezza delle spalle. | Passo 2: Abbassa il corpo in posizione di squat piegando le ginocchia e posizionando le mani sul pavimento davanti a te. | Passo 3: Fai ripartire i piedi in posizione di push-up. | Passo 4: Esegui un push-up, mantenendo il corpo in linea retta. | Passo 5: Fai saltare i piedi tornando in posizione di squat. | Passo 6: Salta esplosivamente verso l'alto, portando le braccia sopra la testa. | Passo 7: Atterra dolcemente e abbassati immediatamente in posizione di squat per iniziare la ripetizione successiva.",
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
-    "aliases": []
+    "aliases": [
+      "burpee"
+    ]
   },
   {
     "id": "butt_ups",
@@ -6725,6 +6881,8 @@
     "mobilitaPre": "Lateral lunges 2x8, cossack squats 2x6, lateral leg swings 2x10",
     "attivazionePre": "Side-lying adduction 2x15, ball squeezes 2x20 (3sec hold)",
     "aliases": [
+      "posizione yoga",
+      "posizione yoga farfalla",
       "pyf"
     ]
   },
@@ -7289,7 +7447,7 @@
   },
   {
     "id": "cable_high_pulley_overhead_tricep_extension",
-    "nome": "Estensione Tricipiti Sopra la Testa Puleggia Alta ai Cavi",
+    "nome": "Estensione Tricipiti Sopra la Testa Puleggia Alta",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/F9nPCh7.gif",
     "muscoliSecondari": null,
@@ -7419,7 +7577,7 @@
   },
   {
     "id": "cable_incline_bench_row_elite_variation",
-    "nome": "Rematore su Panca Inclinata - Variazione Elite ai Cavi",
+    "nome": "Rematore su Panca Inclinata Variazione Elite ai Ca",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/dAJscVq.gif",
     "muscoliSecondari": null,
@@ -7677,7 +7835,7 @@
   },
   {
     "id": "cable_kneeling_rear_delt_row_with_rope_male",
-    "nome": "Rematore in Ginocchio Rear Delt(con Corda) (Male)ai Cavi",
+    "nome": "Rematore in Ginocchio Rear Delt(con Corda) (Male)a",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/G61cXLk.gif",
     "muscoliSecondari": null,
@@ -7705,7 +7863,7 @@
   },
   {
     "id": "cable_kneeling_rear_delt_row_with_rope_male_expanded",
-    "nome": "Rematore Deltoide Posteriore in Ginocchio con Corda Espanso ai Cavi",
+    "nome": "Rematore Deltoide Posteriore in Ginocchio Espanso",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/eZ79rbI.gif",
     "muscoliSecondari": null,
@@ -8075,7 +8233,7 @@
   },
   {
     "id": "cable_lying_triceps_extension_v_bar",
-    "nome": "Estensione Sdraiato Tricipiti da con Barra V ai Cavi",
+    "nome": "Estensione Sdraiato Tricipiti Barra V ai Cavi",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/zLK0cjp.gif",
     "muscoliSecondari": null,
@@ -8232,7 +8390,7 @@
   },
   {
     "id": "cable_one_arm_incline_fly_on_exercise_ball",
-    "nome": "Croci Inclinato Un Braccio On Exercise Fitball ai Cavi",
+    "nome": "Croci Inclinato Un Braccio On Exercise Fitball ai",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/P14Dz9D.gif",
     "muscoliSecondari": null,
@@ -8286,7 +8444,7 @@
   },
   {
     "id": "cable_one_arm_incline_press_on_exercise_ball",
-    "nome": "Un Braccio Distensione Inclinata a su Swiss Fitball ai Cavi",
+    "nome": "Un Braccio Distensione Inclinata Swiss Fitball ai",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/6t00BsF.gif",
     "muscoliSecondari": "DELT",
@@ -8585,7 +8743,7 @@
   },
   {
     "id": "cable_overhead_triceps_extension_rope_attachment",
-    "nome": "Estensione Tricipiti Sopra la Testa con Corda ai Cavi",
+    "nome": "Estensione Tricipiti Sopra la Testa ai Cavi",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/K1tLaFj.gif",
     "muscoliSecondari": null,
@@ -9105,7 +9263,7 @@
   },
   {
     "id": "cable_reverse_grip_triceps_pushdown_sz_bar_with_arm_blaster",
-    "nome": "Pushdown Tricipiti Presa Inversa(Barra Sz)con Arm Blaster ai Cavi",
+    "nome": "Pushdown Tricipiti Presa Inversa(Barra Sz)con Arm",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/ThKP69G.gif",
     "muscoliSecondari": null,
@@ -9305,7 +9463,7 @@
   },
   {
     "id": "cable_rope_high_pulley_overhead_tricep_extension",
-    "nome": "Estensione Corda High Pulley Overhead Tricep ai Cavi",
+    "nome": "Estensione Corda High Pulley Overhead Tricep ai Ca",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/NN8nSNT.gif",
     "muscoliSecondari": "DELT",
@@ -9359,7 +9517,7 @@
   },
   {
     "id": "cable_rope_incline_tricep_extension_reverse_variation",
-    "nome": "Estensione Tricipiti Inclinati con Corda - Variazione Inversa ai Cavi",
+    "nome": "Estensione Tricipiti Inclinati Variazione Inversa",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/vNPJbDA.gif",
     "muscoliSecondari": "DELT",
@@ -9416,7 +9574,7 @@
   },
   {
     "id": "cable_rope_one_arm_hammer_preacher_curl",
-    "nome": "Curl Un Braccio Preacher Hammer a con Corda ai Cavi",
+    "nome": "Curl Un Braccio Preacher Hammer Corda ai Cavi",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/4hATdoB.gif",
     "muscoliSecondari": null,
@@ -9436,7 +9594,7 @@
   },
   {
     "id": "cable_rope_overhead_triceps_extension",
-    "nome": "Estensione Tricipiti Sopra la Testa con Corda ai Cavi",
+    "nome": "Estensione Tricipiti Sopra la Testa ai Cavi",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/Yy5VGIy.gif",
     "muscoliSecondari": null,
@@ -10303,7 +10461,7 @@
   },
   {
     "id": "cable_standing_rear_delt_row_with_rope",
-    "nome": "Rematore in Piedi Deltoide Posteriore con Corda ai Cavi",
+    "nome": "Rematore in Piedi Deltoide Posteriore ai Cavi",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/ZfyAGhK.gif",
     "muscoliSecondari": null,
@@ -10323,7 +10481,7 @@
   },
   {
     "id": "cable_standing_reverse_grip_one_arm_overhead_tricep_extension",
-    "nome": "Estensione in Piedi Un Braccio Presa Supina Overhead Tricep ai Cavi",
+    "nome": "Estensione in Piedi Un Braccio Presa Supina Overhe",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/i11JWU7.gif",
     "muscoliSecondari": "DELT",
@@ -10609,7 +10767,7 @@
   },
   {
     "id": "cable_triceps_pushdown_v_bar_with_arm_blaster",
-    "nome": "Pushdown Tricipiti con Barra V e Arm Blaster ai Cavi",
+    "nome": "Pushdown Tricipiti V e Arm Blaster ai Cavi",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/OxJk1fg.gif",
     "muscoliSecondari": null,
@@ -10946,12 +11104,14 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "spinta stretching",
+      "spinta stretching polpacci con mani contro muro",
       "sspcmcm"
     ]
   },
   {
     "id": "calf_push_stretch_with_hands_against_wall_elite",
-    "nome": "Spinta Stretching Polpacci con Mani Contro Muro Elite",
+    "nome": "Spinta Stretching Polpacci Contro Muro Elite",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/vobtVkm.gif",
     "muscoliSecondari": "FEMOR",
@@ -10964,6 +11124,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "spinta stretching",
+      "spinta stretching polpacci contro muro elite",
       "sspcmcme"
     ]
   },
@@ -10982,7 +11144,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "spcmcm"
+      "spcmcm",
+      "stretching polpacci",
+      "stretching polpacci con mani contro muro"
     ]
   },
   {
@@ -11000,7 +11164,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "spcc"
+      "spcc",
+      "stretching polpacci",
+      "stretching polpacci con corda"
     ]
   },
   {
@@ -11046,7 +11212,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgtacc"
+      "abs",
+      "addominale",
+      "core",
+      "sgtacc",
+      "sollevamento gambe",
+      "sollevamento gambe tese alla captain's chair"
     ]
   },
   {
@@ -11072,7 +11243,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "cges"
+      "cges",
+      "chair gambe",
+      "chair gambe extended stretch"
     ]
   },
   {
@@ -11098,7 +11271,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "agesscm"
+      "agesscm",
+      "allungamento gamba",
+      "allungamento gamba estesa su sedia con modifica",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -11124,7 +11302,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pafoss"
+      "chest",
+      "deltoid",
+      "pafoss",
+      "panca",
+      "petto",
+      "petto and",
+      "petto and front of spalla stretch",
+      "shoulder",
+      "spalla"
     ]
   },
   {
@@ -11150,7 +11336,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pafossm"
+      "chest",
+      "deltoid",
+      "pafossm",
+      "panca",
+      "petto",
+      "petto and",
+      "petto and front of spalla stretch micro",
+      "shoulder",
+      "spalla"
     ]
   },
   {
@@ -11259,7 +11453,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "adpcsf"
+      "adpcsf",
+      "allungamento del",
+      "allungamento del petto con swiss fitball",
+      "chest",
+      "panca",
+      "petto"
     ]
   },
   {
@@ -11277,7 +11476,12 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, scorrimenti al muro 2x12",
     "attivazionePre": "Piegamenti 2x10-15, spinte con elastico 2x15, distensioni a terra (leggere) 2x12",
     "aliases": [
-      "apcsfp"
+      "allungamento petto",
+      "allungamento petto con swiss fitball parziale",
+      "apcsfp",
+      "chest",
+      "panca",
+      "petto"
     ]
   },
   {
@@ -11303,7 +11507,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pctp"
+      "chest",
+      "panca",
+      "pctp",
+      "petto",
+      "piegamento con",
+      "piegamento con tocco petto"
     ]
   },
   {
@@ -11388,7 +11597,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "sgic"
+      "sgic",
+      "stretching ginocchia",
+      "stretching ginocchia in cerchio"
     ]
   },
   {
@@ -11414,7 +11625,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pc"
+      "pc",
+      "piegamenti clap"
     ]
   },
   {
@@ -11440,7 +11652,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pao"
+      "pao",
+      "piegamento a",
+      "piegamento a orologio"
     ]
   },
   {
@@ -11458,6 +11672,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, scorrimenti al muro 2x12",
     "attivazionePre": "Piegamenti 2x10-15, spinte con elastico 2x15, distensioni a terra (leggere) 2x12",
     "aliases": [
+      "piegamento orologio",
+      "piegamento orologio estremo",
       "poe"
     ]
   },
@@ -11504,7 +11720,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "psp"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "presa stretta",
+      "presa stretta piegamento",
+      "psp",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -11557,7 +11781,12 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "abs",
+      "addominale",
+      "cocoons",
+      "core"
+    ]
   },
   {
     "id": "cocoons_with_mega",
@@ -11581,7 +11810,7 @@
   },
   {
     "id": "complete_style_ez_bar_lying_close_grip_triceps_extension_behind_head",
-    "nome": "Estensione Sdraiato Presa Stretta Complete Style Ez Bar Tricipiti Behind Head",
+    "nome": "Estensione Sdraiato Presa Stretta Complete Style E",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/I6Ca0a7.gif",
     "muscoliSecondari": "DELT",
@@ -11608,7 +11837,7 @@
   },
   {
     "id": "contracted_kettlebell_extended_range_one_arm_press_on_floor",
-    "nome": "Un Braccio Distensione Contratta a Range Esteso a Terra con Kettlebell",
+    "nome": "Un Braccio Distensione Contratta Esteso",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/j6uIfep.gif",
     "muscoliSecondari": "DELT",
@@ -11627,7 +11856,7 @@
   },
   {
     "id": "controlled_band_straight_back_stiff_leg_deadlift",
-    "nome": "Stacco Gambe Tese Schiena Dritta Controllato con Elastico",
+    "nome": "Stacco Gambe Tese Schiena Dritta Controllato",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/PDHE73u.gif",
     "muscoliSecondari": "FEMOR",
@@ -11659,6 +11888,8 @@
     "mobilitaPre": "Cerchi polsi 2x10 per direzione, flessione/estensione dita 2x15, rotazioni polsi 2x10",
     "attivazionePre": "Curl polsi (leggero) 2x15, curl polsi inversi 2x15, farmer walk (leggero) 2x30sec",
     "aliases": [
+      "roller polsi",
+      "roller polsi controllato",
       "rpc"
     ]
   },
@@ -11684,7 +11915,7 @@
   },
   {
     "id": "crab_twist_toe_touch",
-    "nome": "Tocco delle Dita in Posizione Granchio con Torsione",
+    "nome": "Tocco delle Dita in Posizione Granchio",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/xgsGFVM.gif",
     "muscoliSecondari": null,
@@ -11697,7 +11928,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "tddipgct"
+      "abs",
+      "addominale",
+      "core",
+      "tddipgct",
+      "tocco delle",
+      "tocco delle dita in posizione granchio"
     ]
   },
   {
@@ -11715,7 +11951,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cci"
+      "abs",
+      "addominale",
+      "cci",
+      "core",
+      "croci crunch",
+      "croci crunch inato"
     ]
   },
   {
@@ -11733,7 +11974,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cat"
+      "abs",
+      "addominale",
+      "cat",
+      "core",
+      "crunch a",
+      "crunch a terra"
     ]
   },
   {
@@ -11751,7 +11997,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "ccmslt"
+      "abs",
+      "addominale",
+      "ccmslt",
+      "core",
+      "crunch con",
+      "crunch con mani sopra la testa"
     ]
   },
   {
@@ -11769,6 +12020,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "crunch su",
+      "crunch su swiss fitball",
       "cssf"
     ]
   },
@@ -11787,6 +12043,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "crunch su",
+      "crunch su swiss fitball con braccia dritte",
       "cssfcbd"
     ]
   },
@@ -11845,6 +12106,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "cross trainer",
+      "cross trainer ciclico",
       "ctc"
     ]
   },
@@ -11871,7 +12134,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "db"
+      "abs",
+      "addominale",
+      "core",
+      "db",
+      "dead bug"
     ]
   },
   {
@@ -11897,7 +12164,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "dc"
+      "abs",
+      "addominale",
+      "core",
+      "dc",
+      "declinato crunch"
     ]
   },
   {
@@ -11923,6 +12194,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "declinato piegamento",
       "dp"
     ]
   },
@@ -11969,12 +12241,13 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento profondo",
       "pp"
     ]
   },
   {
     "id": "deep_smith_machine_reverse_decline_close_grip_bench_press",
-    "nome": "Distensioni Declinato Presa Stretta Deep alla Macchina Reverse su Panca alla smith",
+    "nome": "Distensioni Declinato Presa Stretta Deep alla Macc",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/Gu2ENkm.gif",
     "muscoliSecondari": "DELT",
@@ -12022,7 +12295,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pd"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "pd",
+      "piegamenti diamante",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -12040,7 +12320,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "dcr"
+      "dcr",
+      "donkey calf",
+      "donkey calf raise"
     ]
   },
   {
@@ -12066,7 +12348,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pac"
+      "pac",
+      "piegamento a",
+      "piegamento a caduta"
     ]
   },
   {
@@ -12092,7 +12376,7 @@
   },
   {
     "id": "dumbbell_alternate_biceps_curl_with_arm_blaster",
-    "nome": "Curl Alternato Bicipiti(Con Arm Blaster)con Manubri",
+    "nome": "Curl Alternato Bicipiti(Con Arm Blaster)con Manubr",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/CfKsRbG.gif",
     "muscoliSecondari": null,
@@ -12192,7 +12476,7 @@
   },
   {
     "id": "dumbbell_alternating_bicep_curl_with_leg_raised_on_exercise_ball",
-    "nome": "Curl Alternato Bicipiti con Gamba Sollevata su Palla da Esercizio con Manubri",
+    "nome": "Curl Alternato Bicipiti Sollevata su Palla",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/Zwiw7XR.gif",
     "muscoliSecondari": "DELT",
@@ -12213,7 +12497,7 @@
   },
   {
     "id": "dumbbell_alternating_seated_bicep_curl_on_exercise_ball",
-    "nome": "Curl Seduto Alternato Bicipiti su Palla da Esercizio con Manubri",
+    "nome": "Curl Seduto Alternato Bicipiti su Palla",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/J74XlNf.gif",
     "muscoliSecondari": null,
@@ -12442,7 +12726,7 @@
   },
   {
     "id": "dumbbell_bicep_curl_lunge_with_bowling_motion",
-    "nome": "Curl Affondo con Bicipiti e Movimento di Bowling con Manubri",
+    "nome": "Curl Affondo e Movimento",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/1VpF8db.gif",
     "muscoliSecondari": "DELT",
@@ -12463,7 +12747,7 @@
   },
   {
     "id": "dumbbell_bicep_curl_on_exercise_ball_with_leg_raised",
-    "nome": "Curl Bicipiti su Palla da Esercizio con Gamba Sollevata con Manubri",
+    "nome": "Curl Bicipiti su Palla Sollevata",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/2NImIAG.gif",
     "muscoliSecondari": "DELT",
@@ -12914,7 +13198,7 @@
   },
   {
     "id": "dumbbell_decline_one_arm_hammer_press",
-    "nome": "Distensioni Un Braccio Hammer a Declinata o con Manubri",
+    "nome": "Distensioni Un Braccio Hammer o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/SHUMp5H.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -12968,7 +13252,7 @@
   },
   {
     "id": "dumbbell_decline_shrug_rigid_variation",
-    "nome": "Scrollate Declinate - Variazione Rigida con Manubri",
+    "nome": "Scrollate Declinate Variazione Rigida con Manubri",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/IH2kr7n.gif",
     "muscoliSecondari": "DELT",
@@ -13024,7 +13308,7 @@
   },
   {
     "id": "dumbbell_decline_triceps_extension",
-    "nome": "Estensione Tricipiti su Panca Declinata con Manubri",
+    "nome": "Estensione Tricipiti su Panca Declinata",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/OTgkHwR.gif",
     "muscoliSecondari": "DELT",
@@ -13153,7 +13437,7 @@
   },
   {
     "id": "dumbbell_forward_lunge_triceps_extension",
-    "nome": "Estensione Affondo Avanti con Tricipiti con Manubri",
+    "nome": "Estensione Affondo Avanti",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/XalXcvM.gif",
     "muscoliSecondari": "CORE, DELT",
@@ -13646,7 +13930,7 @@
   },
   {
     "id": "dumbbell_incline_hammer_press_on_exercise_ball",
-    "nome": "Distensioni Hammer su Panca Inclinata con Fitball e Manubri",
+    "nome": "Distensioni Hammer su Panca Inclinata e Manubri",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/ABzd9Vf.gif",
     "muscoliSecondari": null,
@@ -13667,12 +13951,20 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "dhspicfem"
+      "biceps",
+      "bici",
+      "curl",
+      "dhspicfem",
+      "dip",
+      "distensioni hammer",
+      "distensioni hammer su panca inclinata e manubri",
+      "tric",
+      "triceps"
     ]
   },
   {
     "id": "dumbbell_incline_inner_biceps_curl",
-    "nome": "Curl Bicipiti Interno su Panca Inclinata con Manubri",
+    "nome": "Curl Bicipiti Interno su Panca Inclinata",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/LCtQPn8.gif",
     "muscoliSecondari": null,
@@ -13720,7 +14012,7 @@
   },
   {
     "id": "dumbbell_incline_one_arm_fly_on_exercise_ball",
-    "nome": "Un Braccio Apertura Inclinata a o su Swiss Fitball con Manubri",
+    "nome": "Un Braccio Apertura Inclinata su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/LLNh6q5.gif",
     "muscoliSecondari": "DELT",
@@ -13747,7 +14039,7 @@
   },
   {
     "id": "dumbbell_incline_one_arm_hammer_press",
-    "nome": "Distensioni Un Braccio Hammer a Inclinata o con Manubri",
+    "nome": "Distensioni Un Braccio Hammer o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/LL1UiTX.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -13774,7 +14066,7 @@
   },
   {
     "id": "dumbbell_incline_one_arm_hammer_press_on_exercise_ball",
-    "nome": "Spinta Inclinato Un Braccio Hammer On Exercise Fitball con Manubri",
+    "nome": "Spinta Inclinato Un Braccio Hammer On Exercise Fit",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/jDnrkar.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -13801,7 +14093,7 @@
   },
   {
     "id": "dumbbell_incline_one_arm_lateral_raise",
-    "nome": "Inclinato Un Braccio Alzata Laterale a o con Manubri",
+    "nome": "Inclinato Un Braccio Alzata Laterale",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/aTNKZiC.gif",
     "muscoliSecondari": null,
@@ -13847,7 +14139,7 @@
   },
   {
     "id": "dumbbell_incline_one_arm_press_on_exercise_ball",
-    "nome": "Un Braccio Distensione Inclinata a o su Swiss Fitball con Manubri",
+    "nome": "Un Braccio Distensione Inclinata su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/Bg5JKSH.gif",
     "muscoliSecondari": "DELT",
@@ -13874,7 +14166,7 @@
   },
   {
     "id": "dumbbell_incline_one_arm_press_on_exercise_ball_modified",
-    "nome": "Un Braccio Distensione Inclinata a o su Swiss Fitball Modificata con Manubri",
+    "nome": "Un Braccio Distensione Inclinata su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/sJElUUI.gif",
     "muscoliSecondari": "DELT",
@@ -13893,7 +14185,7 @@
   },
   {
     "id": "dumbbell_incline_one_arm_press_on_exercise_ball_with_extended",
-    "nome": "Spinta Inclinato Un Braccio On Exercise Fitball con Extended con Manubri",
+    "nome": "Spinta Inclinato Un Braccio On Exercise Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/qlZUaZ8.gif",
     "muscoliSecondari": "DELT",
@@ -14115,7 +14407,7 @@
   },
   {
     "id": "dumbbell_incline_triceps_extension",
-    "nome": "Estensione Tricipiti su Panca Inclinata con Manubri",
+    "nome": "Estensione Tricipiti su Panca Inclinata",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/A9Rv1zB.gif",
     "muscoliSecondari": null,
@@ -14318,7 +14610,7 @@
   },
   {
     "id": "dumbbell_kneeling_bicep_curl_exercise_ball",
-    "nome": "Curl Bicipiti in Ginocchio su Palla da Esercizio con Manubri",
+    "nome": "Curl Bicipiti in Ginocchio su Palla",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/2JCuFTU.gif",
     "muscoliSecondari": null,
@@ -14598,7 +14890,7 @@
   },
   {
     "id": "dumbbell_lying_on_floor_rear_delt_raise",
-    "nome": "Alzate Sdraiato Deltoide Posteriore a Terra con Manubri",
+    "nome": "Alzate Sdraiato Deltoide Posteriore",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/Ion0XWz.gif",
     "muscoliSecondari": null,
@@ -14617,7 +14909,7 @@
   },
   {
     "id": "dumbbell_lying_one_arm_deltoid_rear",
-    "nome": "Sdraiato Un Braccio Deltoide Posteriore a o con Manubri",
+    "nome": "Sdraiato Un Braccio Deltoide Posteriore",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/gSw59a4.gif",
     "muscoliSecondari": null,
@@ -14690,7 +14982,7 @@
   },
   {
     "id": "dumbbell_lying_one_arm_pronated_triceps_extension",
-    "nome": "Estensione Sdraiato Un Braccio Tricipiti Prono a o con Manubri",
+    "nome": "Estensione Sdraiato Un Braccio Tricipiti Prono",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/wyaqzOS.gif",
     "muscoliSecondari": "DELT",
@@ -14718,7 +15010,7 @@
   },
   {
     "id": "dumbbell_lying_one_arm_rear_lateral_raise",
-    "nome": "Sdraiato Un Braccio Alzata Laterale Posteriore a o con Manubri",
+    "nome": "Sdraiato Un Braccio Alzata Laterale Posteriore",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/KwFGiEP.gif",
     "muscoliSecondari": null,
@@ -14737,7 +15029,7 @@
   },
   {
     "id": "dumbbell_lying_one_arm_supinated_triceps_extension",
-    "nome": "Estensione Sdraiato Un Braccio Supinated Tricipiti con Manubri",
+    "nome": "Estensione Sdraiato Un Braccio Supinated Tricipiti",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/zZlORz6.gif",
     "muscoliSecondari": null,
@@ -14830,7 +15122,7 @@
   },
   {
     "id": "dumbbell_lying_rear_delt_row",
-    "nome": "Rematore Sdraiato per Deltoidi Posteriori con Manubri",
+    "nome": "Rematore Sdraiato per Deltoidi Posteriori",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/XUUD0Fs.gif",
     "muscoliSecondari": "DELT",
@@ -15106,7 +15398,7 @@
   },
   {
     "id": "dumbbell_one_arm_chest_fly_on_exercise_ball",
-    "nome": "Un Braccio Aperture Petto a o su Swiss Fitball con Manubri",
+    "nome": "Un Braccio Aperture Petto su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/Bpkf41o.gif",
     "muscoliSecondari": "DELT",
@@ -15133,7 +15425,7 @@
   },
   {
     "id": "dumbbell_one_arm_concentration_curl_on_stability_ball",
-    "nome": "Curl Un Braccio di Concentrazione a su Palla di Stabilità o con Manubri",
+    "nome": "Curl Un Braccio Palla o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/k5IpyHg.gif",
     "muscoliSecondari": null,
@@ -15153,7 +15445,7 @@
   },
   {
     "id": "dumbbell_one_arm_decline_chest_press",
-    "nome": "Un Braccio Distensione Petto Declinata a o con Manubri",
+    "nome": "Un Braccio Distensione Petto Declinata",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/REGM1dE.gif",
     "muscoliSecondari": "DELT",
@@ -15180,7 +15472,7 @@
   },
   {
     "id": "dumbbell_one_arm_fly_on_exercise_ball",
-    "nome": "Un Braccio Apertura a o su Swiss Fitball con Manubri",
+    "nome": "Un Braccio Apertura su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/Am02iPd.gif",
     "muscoliSecondari": "DELT",
@@ -15207,7 +15499,7 @@
   },
   {
     "id": "dumbbell_one_arm_fly_on_exercise_ball_improved",
-    "nome": "Croci Un Braccio On Exercise Fitball Improved con Manubri",
+    "nome": "Croci Un Braccio On Exercise Fitball Improved",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/r4RZKpF.gif",
     "muscoliSecondari": "DELT",
@@ -15282,7 +15574,7 @@
   },
   {
     "id": "dumbbell_one_arm_hammer_press_on_exercise_ball",
-    "nome": "Distensioni Un Braccio Hammer a su Fitball o con Manubri",
+    "nome": "Distensioni Un Braccio Hammer Fitball o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/VYmYxK5.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -15382,7 +15674,7 @@
   },
   {
     "id": "dumbbell_one_arm_lateral_raise_with_support",
-    "nome": "Un Braccio Alzata Laterale a con Supporto o con Manubri",
+    "nome": "Un Braccio Alzata Laterale Supporto o",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/Yg7MJAT.gif",
     "muscoliSecondari": null,
@@ -15401,7 +15693,7 @@
   },
   {
     "id": "dumbbell_one_arm_press_on_exercise_ball",
-    "nome": "Un Braccio Distensione a o su Swiss Fitball con Manubri",
+    "nome": "Un Braccio Distensione su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/QZFv5ui.gif",
     "muscoliSecondari": "CORE, DELT",
@@ -15468,7 +15760,7 @@
   },
   {
     "id": "dumbbell_one_arm_prone_hammer_curl_macro_variation",
-    "nome": "Curl Un Braccio Hammer Prono a o - Variante Macro con Manubri",
+    "nome": "Curl Un Braccio Hammer Prono Variante Macro",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/XqYQ9JA.gif",
     "muscoliSecondari": null,
@@ -15490,7 +15782,7 @@
   },
   {
     "id": "dumbbell_one_arm_pullover_on_exercise_ball",
-    "nome": "Un Braccio Pullover a o su Swiss Fitball con Manubri",
+    "nome": "Un Braccio Pullover su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/bQHPBU3.gif",
     "muscoliSecondari": null,
@@ -15509,7 +15801,7 @@
   },
   {
     "id": "dumbbell_one_arm_reverse_fly_with_support",
-    "nome": "Un Braccio Reverse Fly a con Supporto o con Manubri",
+    "nome": "Un Braccio Reverse Fly Supporto o",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/e25F58f.gif",
     "muscoliSecondari": null,
@@ -15528,7 +15820,7 @@
   },
   {
     "id": "dumbbell_one_arm_reverse_grip_press",
-    "nome": "Un Braccio Presa Supina Distensione a o con Manubri",
+    "nome": "Un Braccio Presa Supina Distensione",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/Ze7MoIb.gif",
     "muscoliSecondari": "DELT",
@@ -15615,7 +15907,7 @@
   },
   {
     "id": "dumbbell_one_arm_seated_bicep_curl_on_exercise_ball",
-    "nome": "Curl Seduto Un Braccio Bicipiti a su Palla da Esercizio o con Manubri",
+    "nome": "Curl Seduto Un Braccio Bicipiti Palla o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/s999Hdo.gif",
     "muscoliSecondari": null,
@@ -15656,7 +15948,7 @@
   },
   {
     "id": "dumbbell_one_arm_seated_neutral_wrist_curl",
-    "nome": "Curl Seduto Un Braccio Polsi Neutro a o con Manubri",
+    "nome": "Curl Seduto Un Braccio Polsi Neutro",
     "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/YtaCTYl.gif",
     "muscoliSecondari": null,
@@ -15781,7 +16073,7 @@
   },
   {
     "id": "dumbbell_one_arm_triceps_extension_on_bench",
-    "nome": "Estensione Un Braccio Tricipiti a su Panca o con Manubri",
+    "nome": "Estensione Un Braccio Tricipiti Panca o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/nAuHPcD.gif",
     "muscoliSecondari": "DELT",
@@ -15928,7 +16220,7 @@
   },
   {
     "id": "dumbbell_over_bench_one_arm_neutral_wrist_curl",
-    "nome": "Curl Un Braccio Polso Neutrale a su Panca o con Manubri",
+    "nome": "Curl Un Braccio Polso Neutrale Panca o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/IvV6C9M.gif",
     "muscoliSecondari": null,
@@ -15948,7 +16240,7 @@
   },
   {
     "id": "dumbbell_over_bench_one_arm_reverse_wrist_curl",
-    "nome": "Curl Un Braccio Over Bench Reverse Wrist con Manubri",
+    "nome": "Curl Un Braccio Over Bench Reverse Wrist",
     "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/4Jc36XM.gif",
     "muscoliSecondari": null,
@@ -15996,7 +16288,7 @@
   },
   {
     "id": "dumbbell_over_bench_one_arm_wrist_curl_strength_variation",
-    "nome": "Curl Un Braccio Polsi a su Panca o Variazione Forza con Manubri",
+    "nome": "Curl Un Braccio Polsi Panca o Variazione Forza",
     "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/7AnZtSv.gif",
     "muscoliSecondari": "DELT",
@@ -16305,7 +16597,7 @@
   },
   {
     "id": "dumbbell_pullover_hip_extension_on_exercise_ball",
-    "nome": "Pullover o Ed Estensione Anca su Swiss Fitball con Manubri",
+    "nome": "Pullover o Ed Estensione Anca su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/lI7easp.gif",
     "muscoliSecondari": "CORE, DELT",
@@ -16597,7 +16889,7 @@
   },
   {
     "id": "dumbbell_reverse_grip_incline_bench_one_arm_row",
-    "nome": "Rematore Un Braccio a o Presa Inversa su Panca Inclinata con Manubri",
+    "nome": "Rematore Un Braccio Presa Inversa su Panca Inclina",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/ZIViNh1.gif",
     "muscoliSecondari": "DELT",
@@ -16625,7 +16917,7 @@
   },
   {
     "id": "dumbbell_reverse_grip_incline_bench_two_arm_row",
-    "nome": "Rematore Presa Inversa su Panca Inclinata a Due Braccia con Manubri",
+    "nome": "Rematore Presa Inversa su Panca Inclinata Braccia",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/9pQSkH8.gif",
     "muscoliSecondari": null,
@@ -16810,6 +17102,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "reverse fly",
+      "reverse fly con rotazione manubri",
       "rfcrm"
     ]
   },
@@ -16853,7 +17147,7 @@
   },
   {
     "id": "dumbbell_seated_alternate_hammer_curl_on_exercise_ball",
-    "nome": "Curl Seduto Alternato Hammer su Palla da Esercizio con Manubri",
+    "nome": "Curl Seduto Alternato Hammer su Palla",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/QLRmNeT.gif",
     "muscoliSecondari": null,
@@ -16984,7 +17278,7 @@
   },
   {
     "id": "dumbbell_seated_bent_over_triceps_extension",
-    "nome": "Estensione Seduto Tricipiti da Piegato in Avanti con Manubri",
+    "nome": "Estensione Seduto Tricipiti in Avanti",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/4ievMJ9.gif",
     "muscoliSecondari": "DELT, LAT, TRAP",
@@ -17033,7 +17327,7 @@
   },
   {
     "id": "dumbbell_seated_biceps_curl_on_stability_ball",
-    "nome": "Curl Seduto Bicipiti su Palla di Stabilità con Manubri",
+    "nome": "Curl Seduto Bicipiti su Palla",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/WgJnBH5.gif",
     "muscoliSecondari": null,
@@ -17267,7 +17561,7 @@
   },
   {
     "id": "dumbbell_seated_one_arm_bicep_curl_on_exercise_ball_with_leg_raised",
-    "nome": "Curl Seduto Un Braccio Bicipiti a su Palla da Esercizio con Gamba Sollevata o con Manubri",
+    "nome": "Curl Seduto Un Braccio Bicipiti Palla Sollevata o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/84sESNy.gif",
     "muscoliSecondari": "DELT",
@@ -17361,7 +17655,7 @@
   },
   {
     "id": "dumbbell_seated_one_leg_calf_raise_hammer_grip",
-    "nome": "Seduto Calf Raise a Una Gamba o - Presa a Martello con Manubri",
+    "nome": "Seduto Calf Raise Gamba o Presa",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/FxhcxUW.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -17382,7 +17676,7 @@
   },
   {
     "id": "dumbbell_seated_one_leg_calf_raise_hammer_grip_deep",
-    "nome": "Seduto Calf Raise a Una Gamba o - Presa a Martello Profonda con Manubri",
+    "nome": "Seduto Calf Raise Gamba o Presa Profonda",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/UoX77uR.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -17403,7 +17697,7 @@
   },
   {
     "id": "dumbbell_seated_one_leg_calf_raise_palm_up",
-    "nome": "Alzate Seduto One Gambe Polpacci - Palm Up con Manubri",
+    "nome": "Alzate Seduto One Gambe Polpacci Palm Up",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/VW88JNd.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -17472,7 +17766,7 @@
   },
   {
     "id": "dumbbell_seated_revers_grip_concentration_curl",
-    "nome": "Curl Seduto di Concentrazione con Presa Inversa con Manubri",
+    "nome": "Curl Seduto Inversa",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/lyKCLmK.gif",
     "muscoliSecondari": null,
@@ -17492,7 +17786,7 @@
   },
   {
     "id": "dumbbell_seated_reverse_grip_one_arm_overhead_tricep_extension",
-    "nome": "Estensione Seduto Un Braccio Tricipiti Sopra la Testa a Presa Inversa da o con Manubri",
+    "nome": "Estensione Seduto Un Braccio Tricipiti Sopra la Te",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/5fKX7wi.gif",
     "muscoliSecondari": "DELT",
@@ -17632,7 +17926,7 @@
   },
   {
     "id": "dumbbell_side_lying_one_hand_raise",
-    "nome": "Sdraiato Alzata a Una Mano su Un Fianco o con Manubri",
+    "nome": "Sdraiato Alzata Mano su Un Fianco o",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/fTlkJop.gif",
     "muscoliSecondari": null,
@@ -17743,7 +18037,7 @@
   },
   {
     "id": "dumbbell_single_leg_deadlift_with_stepbox_support",
-    "nome": "Stacco Single Gambe con Stepbox Support con Manubri",
+    "nome": "Stacco Single Gambe Support",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/daBmy1Y.gif",
     "muscoliSecondari": "FEMOR",
@@ -17838,7 +18132,7 @@
   },
   {
     "id": "dumbbell_standing_alternate_hammer_curl_and_press",
-    "nome": "Curl Spinta in Piedi Alternato Hammer e con Manubri",
+    "nome": "Curl Spinta in Piedi Alternato Hammer e",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/LeaZOIz.gif",
     "muscoliSecondari": "DELT",
@@ -17858,7 +18152,7 @@
   },
   {
     "id": "dumbbell_standing_alternate_overhead_press",
-    "nome": "Spinta in Piedi Sopra la Testa Alternata con Manubri",
+    "nome": "Spinta in Piedi Sopra la Testa Alternata",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/bBi35y3.gif",
     "muscoliSecondari": "CORE",
@@ -17943,7 +18237,7 @@
   },
   {
     "id": "dumbbell_standing_bent_over_one_arm_triceps_extension",
-    "nome": "Estensione in Piedi Un Braccio Bent Over Tricipiti con Manubri",
+    "nome": "Estensione in Piedi Un Braccio Bent Over Tricipiti",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/CJwa0vD.gif",
     "muscoliSecondari": "DELT, LAT, TRAP",
@@ -17971,7 +18265,7 @@
   },
   {
     "id": "dumbbell_standing_bent_over_two_arm_triceps_extension",
-    "nome": "Estensione in Piedi Bent Over Due Braccia Tricipiti con Manubri",
+    "nome": "Estensione in Piedi Bent Over Due Braccia Tricipit",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/3T12T87.gif",
     "muscoliSecondari": "DELT, LAT, TRAP",
@@ -18142,7 +18436,7 @@
   },
   {
     "id": "dumbbell_standing_one_arm_concentration_curl",
-    "nome": "Curl in Piedi Un Braccio di Concentrazione a o con Manubri",
+    "nome": "Curl in Piedi Un Braccio",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/8fgqP5a.gif",
     "muscoliSecondari": null,
@@ -18162,7 +18456,7 @@
   },
   {
     "id": "dumbbell_standing_one_arm_curl_over_incline_bench",
-    "nome": "Curl in Piedi Un Braccio a Sopra Panca Inclinata o con Manubri",
+    "nome": "Curl in Piedi Un Braccio Panca Inclinata o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/BIb1tGo.gif",
     "muscoliSecondari": null,
@@ -18209,7 +18503,7 @@
   },
   {
     "id": "dumbbell_standing_one_arm_palm_in_press",
-    "nome": "Spinta in Piedi Un Braccio a Palmo Interno o con Manubri",
+    "nome": "Spinta in Piedi Un Braccio Interno o",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/ocYc6Db.gif",
     "muscoliSecondari": "CORE",
@@ -18446,7 +18740,7 @@
   },
   {
     "id": "dumbbell_step_up_single_leg_balance_with_bicep_curl",
-    "nome": "Curl Step Up Gamba Singola con Equilibrio e Bicipiti con Manubri",
+    "nome": "Curl Step Up Gamba Singola e Bicipiti",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/76vfTdU.gif",
     "muscoliSecondari": "FEMOR, GLUT, QUAD",
@@ -18467,7 +18761,7 @@
   },
   {
     "id": "dumbbell_step_up_single_leg_balance_with_bicep_curl_chair_variation",
-    "nome": "Curl Step Up Gamba Singola con Equilibrio e Bicipiti - Variante Sedia con Manubri",
+    "nome": "Curl Step Up Gamba Singola e Bicipiti Variante Sed",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/XE93sQZ.gif",
     "muscoliSecondari": "FEMOR, GLUT, QUAD",
@@ -18667,7 +18961,7 @@
   },
   {
     "id": "dumbbell_tricep_kickback_with_stork_stance",
-    "nome": "Kickback Tricipiti o in Posizione Cicogna con Manubri",
+    "nome": "Kickback Tricipiti o in Posizione Cicogna",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/4HVc1sE.gif",
     "muscoliSecondari": null,
@@ -18928,12 +19222,17 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "adp"
+      "adp",
+      "allungamento dinamico",
+      "allungamento dinamico petto",
+      "chest",
+      "panca",
+      "petto"
     ]
   },
   {
     "id": "dynamic_style_band_side_triceps_extension",
-    "nome": "Estensione Tricipiti Laterali Stile Dinamico con Elastico",
+    "nome": "Estensione Tricipiti Laterali Stile Dinamico",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/omsF3RN.gif",
     "muscoliSecondari": "DELT",
@@ -18961,7 +19260,7 @@
   },
   {
     "id": "dynamic_style_barbell_lying_back_of_the_head_tricep_extension",
-    "nome": "Estensione Sdraiato Dynamic Style Dorso Of The Head Tricep con Bilanciere",
+    "nome": "Estensione Sdraiato Dynamic Style Dorso Of The Hea",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/OJFgZJ0.gif",
     "muscoliSecondari": "DELT",
@@ -19056,7 +19355,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "gag"
+      "abs",
+      "addominale",
+      "core",
+      "gag",
+      "gomito al",
+      "gomito al ginocchio"
     ]
   },
   {
@@ -19081,7 +19385,9 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "elevatore"
+    ]
   },
   {
     "id": "endurance_style_one_arm_dip",
@@ -19125,12 +19431,14 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "sbassf"
+      "sbassf",
+      "sollevamento braccia",
+      "sollevamento braccia alternati su swiss fitball"
     ]
   },
   {
     "id": "exercise_ball_alternating_arm_ups_with_fast",
-    "nome": "Sollevamento Alternati Braccia su Swiss Fitball Veloci",
+    "nome": "Sollevamento Alternati Braccia su Swiss Fitball Ve",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/b5uBMv2.gif",
     "muscoliSecondari": "CORE, DELT",
@@ -19143,7 +19451,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "sabssfv"
+      "sabssfv",
+      "sollevamento alternati",
+      "sollevamento alternati braccia su swiss fitball ve"
     ]
   },
   {
@@ -19169,12 +19479,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "elsfcbe"
+      "elsfcbe",
+      "estensione lombari",
+      "estensione lombari su fitball con braccia estese"
     ]
   },
   {
     "id": "exercise_ball_back_extension_with_hands_behind_head",
-    "nome": "Estensione Lombari su Fitball con Mani Dietro la Testa",
+    "nome": "Estensione Lombari su Fitball Dietro la Testa",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/o1HGDSq.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -19195,12 +19507,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "elsfcmdlt"
+      "elsfcmdlt",
+      "estensione lombari",
+      "estensione lombari su fitball dietro la testa"
     ]
   },
   {
     "id": "exercise_ball_back_extension_with_knees_off_ground",
-    "nome": "Estensione Lombari su Fitball con Ginocchia Sollevate",
+    "nome": "Estensione Lombari su Fitball Sollevate",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/WME869U.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -19221,7 +19535,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "elsfcgs"
+      "elsfcgs",
+      "estensione lombari",
+      "estensione lombari su fitball sollevate"
     ]
   },
   {
@@ -19247,7 +19563,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "elsfcr"
+      "elsfcr",
+      "estensione lombari",
+      "estensione lombari su fitball con rotazione"
     ]
   },
   {
@@ -19292,7 +19610,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "afacf"
+      "afacf",
+      "allungamento flessori",
+      "allungamento flessori anche con fitball"
     ]
   },
   {
@@ -19310,7 +19630,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "afacfp"
+      "afacfp",
+      "allungamento flessori",
+      "allungamento flessori anche con fitball puntato"
     ]
   },
   {
@@ -19336,6 +19658,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "abbraccio fitball",
       "af"
     ]
   },
@@ -19362,12 +19685,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "efls"
+      "efls",
+      "exercise fitball",
+      "exercise fitball lat stretch"
     ]
   },
   {
     "id": "exercise_ball_lower_back_stretch_pyramid",
-    "nome": "Allungamento Zona Lombare su Swiss Fitball Piramide",
+    "nome": "Allungamento Zona Lombare su Swiss Fitball Piramid",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/yU7w7CA.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -19380,6 +19705,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
+      "allungamento zona",
+      "allungamento zona lombare su swiss fitball piramid",
       "azlssfp"
     ]
   },
@@ -19406,6 +19733,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "sdraiato exercise",
+      "sdraiato exercise fitball side lat stretch",
       "sefsls"
     ]
   },
@@ -19424,12 +19753,14 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "calf raise",
+      "calf raise con palla da esercizio al muro",
       "crcpdeam"
     ]
   },
   {
     "id": "exercise_ball_on_the_wall_calf_raise_tennis_ball_between_ankles",
-    "nome": "Calf Raise con Palla da Esercizio al Muro(Pallina da Tennis tra le Caviglie)",
+    "nome": "Calf Raise(Pallina tra le Caviglie)",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/FY3UdNT.gif",
     "muscoliSecondari": "FEMOR, QUAD",
@@ -19442,12 +19773,16 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "cable",
+      "calf raise(pallina",
+      "calf raise(pallina tra le caviglie)",
+      "cavo",
       "crcpdeamdttlc"
     ]
   },
   {
     "id": "exercise_ball_on_the_wall_calf_raise_tennis_ball_between_knees",
-    "nome": "Calf Raise con Palla da Esercizio al Muro(Pallina da Tennis tra le Ginocchia)",
+    "nome": "Calf Raise(Pallina tra le Ginocchia)",
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/j74M6Zn.gif",
     "muscoliSecondari": "FEMOR, QUAD",
@@ -19460,12 +19795,14 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "calf raise(pallina",
+      "calf raise(pallina tra le ginocchia)",
       "crcpdeamdttlg"
     ]
   },
   {
     "id": "exercise_ball_one_leg_prone_lower_body_rotation",
-    "nome": "Rotazione Parte Inferiore Corpo Prona a Una Gamba su Swiss Fitball",
+    "nome": "Rotazione Parte Inferiore Corpo Prona Gamba su Swi",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/M72BExt.gif",
     "muscoliSecondari": "CORE, FEMOR, QUAD",
@@ -19478,12 +19815,17 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "gamba",
+      "leg",
+      "quad",
+      "rotazione parte",
+      "rotazione parte inferiore corpo prona gamba su swi",
       "rpicpaugssf"
     ]
   },
   {
     "id": "exercise_ball_one_leg_prone_lower_body_rotation_fierce",
-    "nome": "Rotazione Corpo Inferiore Prono a Una Gamba con Fitball Fierce",
+    "nome": "Rotazione Corpo Inferiore Prono Gamba Fierce",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/kKYTkjJ.gif",
     "muscoliSecondari": "CORE, FEMOR, QUAD",
@@ -19496,12 +19838,17 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "rcipaugcff"
+      "gamba",
+      "leg",
+      "quad",
+      "rcipaugcff",
+      "rotazione corpo",
+      "rotazione corpo inferiore prono gamba fierce"
     ]
   },
   {
     "id": "exercise_ball_one_legged_diagonal_kick_hamstring_curl",
-    "nome": "Curl Femorali con Calcio Diagonale a Una Gamba su Swiss Fitball",
+    "nome": "Curl Femorali Diagonale Gamba su Swiss Fitball",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/GOJKFfO.gif",
     "muscoliSecondari": "FEMOR, POLP",
@@ -19541,7 +19888,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pefp"
+      "pefp",
+      "piegamenti exercise",
+      "piegamenti exercise fitball pike"
     ]
   },
   {
@@ -19567,7 +19916,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "sgpsf"
+      "sgpsf",
+      "sollevamento gambe",
+      "sollevamento gambe proni su fitball"
     ]
   },
   {
@@ -19585,7 +19936,9 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
-      "safssf"
+      "safssf",
+      "seduto allungamento",
+      "seduto allungamento femorali su swiss fitball"
     ]
   },
   {
@@ -19774,7 +20127,7 @@
   },
   {
     "id": "ez_bar_lying_bent_arms_pullover",
-    "nome": "Sdraiato Pullover Braccia Piegate Ez con Bilanciere",
+    "nome": "Sdraiato Pullover Braccia Piegate Ez",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/nDK1HJ0.gif",
     "muscoliSecondari": "PETT",
@@ -19793,7 +20146,7 @@
   },
   {
     "id": "ez_bar_lying_close_grip_triceps_extension_behind_head",
-    "nome": "Estensione Sdraiato Presa Stretta Tricipiti Dietro la Testa da Ez con Bilanciere",
+    "nome": "Estensione Sdraiato Presa Stretta Tricipiti Dietro",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/6CKUx7o.gif",
     "muscoliSecondari": "DELT",
@@ -19849,7 +20202,7 @@
   },
   {
     "id": "ez_bar_seated_close_grip_concentration_curl",
-    "nome": "Curl Seduto Presa Stretta di Concentrazione con al Bilanciere Ez",
+    "nome": "Curl Seduto Presa Stretta Bilanciere Ez",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/Dsfz0Id.gif",
     "muscoliSecondari": null,
@@ -19955,7 +20308,7 @@
   },
   {
     "id": "ez_barbell_close_grip_preacher_curl_precision_variation",
-    "nome": "Curl Presa Stretta Preacher al Bilanciere Ez - Variante Precision",
+    "nome": "Curl Presa Stretta Preacher Ez Variante Precision",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/M8IolhQ.gif",
     "muscoliSecondari": null,
@@ -19995,7 +20348,7 @@
   },
   {
     "id": "ez_barbell_decline_close_grip_face_press",
-    "nome": "Distensioni Presa Stretta Faccia Declinata Ez con Bilanciere",
+    "nome": "Distensioni Presa Stretta Faccia Declinata Ez",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/DgZQ11d.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -20022,7 +20375,7 @@
   },
   {
     "id": "ez_barbell_decline_close_grip_face_press_mini_variation",
-    "nome": "Distensioni Presa Stretta Faccia Declinata Ez - Mini Variazione con Bilanciere",
+    "nome": "Distensioni Presa Stretta Faccia Declinata Ez Mini",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/TBNaSNs.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -20051,7 +20404,7 @@
   },
   {
     "id": "ez_barbell_decline_triceps_extension",
-    "nome": "Estensione Tricipiti su Panca Declinata Ez con Bilanciere",
+    "nome": "Estensione Tricipiti su Panca Declinata Ez",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/CQHoDm0.gif",
     "muscoliSecondari": "DELT",
@@ -20079,7 +20432,7 @@
   },
   {
     "id": "ez_barbell_incline_triceps_extension",
-    "nome": "Estensione Tricipiti su Panca Inclinata Ez con Bilanciere",
+    "nome": "Estensione Tricipiti su Panca Inclinata Ez",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/KyLtiLT.gif",
     "muscoliSecondari": "DELT",
@@ -20239,7 +20592,7 @@
   },
   {
     "id": "ez_barbell_standing_wide_grip_biceps_curl",
-    "nome": "Curl in Piedi Presa Larga Bicipiti con al Bilanciere Ez",
+    "nome": "Curl in Piedi Presa Larga Bicipiti Bilanciere Ez",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/OVTZ65k.gif",
     "muscoliSecondari": null,
@@ -20280,6 +20633,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "farmers walk",
       "fw"
     ]
   },
@@ -20312,7 +20666,7 @@
   },
   {
     "id": "fast_style_resistance_band_seated_hip_abduction",
-    "nome": "Seduto Abduzione Anca da - Stile Veloce con Elastico",
+    "nome": "Seduto Abduzione Anca da Stile Veloce con Elastico",
     "focus": "ADD",
     "imageUrl": "https://static.exercisedb.dev/media/Qj0HRAZ.gif",
     "muscoliSecondari": "FEMOR, GLUT",
@@ -20354,6 +20708,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "fierce style",
+      "fierce style forward lunge",
       "fsfl"
     ]
   },
@@ -20405,7 +20761,7 @@
   },
   {
     "id": "firm_style_hanging_oblique_knee_raise",
-    "nome": "Sollevamento Ginocchia Obliquo Appeso - Stile Fermo",
+    "nome": "Sollevamento Ginocchia Obliquo Appeso Stile Fermo",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/lFBTISi.gif",
     "muscoliSecondari": null,
@@ -20437,7 +20793,12 @@
     "noteTecniche": "Passo 1: Inizia afferrando un palo verticale con entrambe le mani, palmi rivolti l'uno verso l'altro, e braccia completamente estese. | Passo 2: Attiva il core e solleva le gambe da terra, mantenendole dritte. | Passo 3: Usando la forza del core e della parte superiore del corpo, solleva le gambe fino a quando sono parallele al suolo. | Passo 4: Mantieni questa posizione il più a lungo possibile, mantenendo una linea corporea dritta. | Passo 5: Abbassa lentamente le gambe tornando alla posizione iniziale. | Passo 6: Ripeti per il numero desiderato di ripetizioni.",
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
-    "aliases": []
+    "aliases": [
+      "abs",
+      "addominale",
+      "bandiera",
+      "core"
+    ]
   },
   {
     "id": "flexible_assisted_prone_hamstring",
@@ -20454,6 +20815,8 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
+      "femorali proni",
+      "femorali proni assistiti flessibili",
       "fpaf"
     ]
   },
@@ -20500,7 +20863,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "adif"
+      "adif",
+      "allungamento dorsali",
+      "allungamento dorsali in flessione"
     ]
   },
   {
@@ -20612,6 +20977,7 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "calci flutter",
       "cf"
     ]
   },
@@ -20638,6 +21004,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "salto in",
+      "salto in avanti",
       "sia"
     ]
   },
@@ -20656,6 +21024,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "affondo in",
+      "affondo in avanti maschile",
       "aiam"
     ]
   },
@@ -20674,6 +21044,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "affondo in",
+      "affondo in avanti maschile con panca",
       "aiamcp"
     ]
   },
@@ -20711,7 +21083,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "fc"
+      "abs",
+      "addominale",
+      "core",
+      "fc",
+      "frog crunch"
     ]
   },
   {
@@ -20729,6 +21105,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "planche rana",
       "pr"
     ]
   },
@@ -20747,7 +21127,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "fl"
+      "abs",
+      "addominale",
+      "core",
+      "fl",
+      "front lever"
     ]
   },
   {
@@ -20793,7 +21177,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "pfct"
+      "abs",
+      "addominale",
+      "core",
+      "pfct",
+      "plank frontale",
+      "plank frontale con torsione"
     ]
   },
   {
@@ -20811,6 +21200,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "maltese completa",
       "mc"
     ]
   },
@@ -20837,7 +21230,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "fp"
+      "abs",
+      "addominale",
+      "core",
+      "fp",
+      "full planche"
     ]
   },
   {
@@ -20863,6 +21260,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento planche",
+      "piegamento planche completo",
       "ppc"
     ]
   },
@@ -20908,7 +21307,7 @@
   },
   {
     "id": "gentle_style_dumbbell_one_leg_fly_on_exercise_ball",
-    "nome": "Aperture Stile Gentile a Una Gamba su Swiss Fitball con Manubri",
+    "nome": "Aperture Stile Gentile Gamba su Swiss Fitball",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/vocve3e.gif",
     "muscoliSecondari": "DELT",
@@ -20960,6 +21359,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "marcia ponte",
+      "marcia ponte glutei",
       "mpg"
     ]
   },
@@ -20978,7 +21379,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "pgdgspm"
+      "pgdgspm",
+      "ponte glutei",
+      "ponte glutei due gambe su panca maschile"
     ]
   },
   {
@@ -21035,7 +21438,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cd"
+      "abs",
+      "addominale",
+      "cd",
+      "core",
+      "crunch dell'inguine"
     ]
   },
   {
@@ -21091,7 +21498,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "pgam"
+      "pgam",
+      "piegamenti ginocchia",
+      "piegamenti ginocchia a metà"
     ]
   },
   {
@@ -21117,6 +21526,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "half knee",
+      "half knee bendswith blunt",
       "hkbb"
     ]
   },
@@ -21163,6 +21574,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "femorali stretch",
       "fs"
     ]
   },
@@ -21189,7 +21601,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ccm"
+      "ccm",
+      "cyclette con",
+      "cyclette con mani"
     ]
   },
   {
@@ -21207,12 +21621,14 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "tocco punte",
+      "tocco punte circolare mani giunte maschile",
       "tpcmgm"
     ]
   },
   {
     "id": "hands_reversed_clasped_circular_toe_touch_male",
-    "nome": "Croci Tocco Punte Circolare Mani Inate Rovesciate Maschile",
+    "nome": "Croci Tocco Punte Circolare Mani Inate Rovesciate",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/yq3GAJX.gif",
     "muscoliSecondari": "FEMOR, POLP, QUAD",
@@ -21225,6 +21641,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "croci tocco",
+      "croci tocco punte circolare mani inate rovesciate",
       "ctpcmirm"
     ]
   },
@@ -21250,7 +21668,15 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "tric",
+      "triceps",
+      "verticale"
+    ]
   },
   {
     "id": "handstand_push_up",
@@ -21275,7 +21701,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "piv"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "piegamenti in",
+      "piegamenti in verticale",
+      "piv",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -21293,7 +21727,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgefs"
+      "abs",
+      "addominale",
+      "core",
+      "sgefs",
+      "sollevamento gambe",
+      "sollevamento gambe e fianchi sospeso"
     ]
   },
   {
@@ -21311,7 +21750,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sga"
+      "abs",
+      "addominale",
+      "core",
+      "sga",
+      "sollevamento gambe",
+      "sollevamento gambe appeso"
     ]
   },
   {
@@ -21337,7 +21781,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ahok"
+      "abs",
+      "addominale",
+      "ahok",
+      "alzate hanging",
+      "alzate hanging oblique knee",
+      "core"
     ]
   },
   {
@@ -21355,6 +21804,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "pike sospeso",
       "ps"
     ]
   },
@@ -21421,7 +21874,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ahsgh"
+      "abs",
+      "addominale",
+      "ahsgh",
+      "alzate hanging",
+      "alzate hanging straight gambe hip",
+      "core"
     ]
   },
   {
@@ -21439,12 +21897,17 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgts"
+      "abs",
+      "addominale",
+      "core",
+      "sgts",
+      "sollevamento gambe",
+      "sollevamento gambe tese sospeso"
     ]
   },
   {
     "id": "hanging_straight_leg_raise_with_elevated",
-    "nome": "Sollevamento Gambe Dritte Appeso - Variazione Elevata",
+    "nome": "Sollevamento Gambe Dritte Appeso Variazione Elevat",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/6vcvsLS.gif",
     "muscoliSecondari": null,
@@ -21464,7 +21927,7 @@
   },
   {
     "id": "hanging_straight_twisting_leg_hip_raise",
-    "nome": "Sollevamento Gambe e Fianchi Sospeso con Torsione(Gambe Tese)",
+    "nome": "Sollevamento Gambe e Fianchi Sospeso(Gambe Tese)",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/Q6bvyen.gif",
     "muscoliSecondari": null,
@@ -21477,12 +21940,17 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgefsctt"
+      "abs",
+      "addominale",
+      "core",
+      "sgefsctt",
+      "sollevamento gambe",
+      "sollevamento gambe e fianchi sospeso(gambe tese)"
     ]
   },
   {
     "id": "hanging_straight_twisting_leg_hip_raise_with_compound",
-    "nome": "Sollevamento Gambe e Fianchi Appeso con Torsione - Variazione Compound",
+    "nome": "Sollevamento Gambe e Fianchi Appeso Variazione Com",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/WFucoe6.gif",
     "muscoliSecondari": null,
@@ -21515,7 +21983,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "gacm"
+      "gacm",
+      "ginocchia alte",
+      "ginocchia alte contro muro"
     ]
   },
   {
@@ -21569,12 +22039,17 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ahk"
+      "abs",
+      "addominale",
+      "ahk",
+      "alzate hip(bent",
+      "alzate hip(bent knee)",
+      "core"
     ]
   },
   {
     "id": "hold_style_dumbbell_alternating_seated_bicep_curl_on_exercise_ball",
-    "nome": "Curl Seduto Alternato Bicipiti su Palla da Esercizio Stile Hold con Manubri",
+    "nome": "Curl Seduto Alternato Bicipiti su Palla Stile Hold",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/xmWQIlT.gif",
     "muscoliSecondari": null,
@@ -21595,7 +22070,7 @@
   },
   {
     "id": "horizontal_dumbbell_standing_alternate_overhead_press",
-    "nome": "Spinta in Piedi Sopra la Testa Alternata Orizzontale con Manubri",
+    "nome": "Spinta in Piedi Sopra la Testa Alternata Orizzonta",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/gWcZD4q.gif",
     "muscoliSecondari": "CORE",
@@ -21614,7 +22089,7 @@
   },
   {
     "id": "horizontal_style_band_overhead_triceps_extension",
-    "nome": "Estensione Tricipiti Sopra la Testa - Stile Orizzontale con Elastico",
+    "nome": "Estensione Tricipiti Sopra la Testa Stile Orizzont",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/ydQGKPQ.gif",
     "muscoliSecondari": "DELT",
@@ -21657,7 +22132,12 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "agap"
+      "abbraccia ginocchia",
+      "abbraccia ginocchia al petto",
+      "agap",
+      "chest",
+      "panca",
+      "petto"
     ]
   },
   {
@@ -21710,7 +22190,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ei"
+      "ei",
+      "estensione iper"
     ]
   },
   {
@@ -21736,7 +22217,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "eisp"
+      "eisp",
+      "estensione iper",
+      "estensione iper su panca"
     ]
   },
   {
@@ -21789,6 +22272,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "sfinge migliorata",
       "sm"
     ]
   },
@@ -21806,7 +22290,12 @@
     "noteTecniche": "Passo 1: Inizia in posizione eretta con i piedi alla larghezza dei fianchi. | Passo 2: Piegati in avanti dalla vita e posiziona le mani a terra davanti a te. | Passo 3: Cammina con le mani in avanti fino a raggiungere una posizione di plank alto, con il corpo in linea retta dalla testa ai piedi. | Passo 4: Fai una pausa per un momento, poi cammina con le mani indietro verso i piedi, mantenendo le gambe il più dritte possibile. | Passo 5: Una volta che le mani raggiungono i piedi, rialzati tornando alla posizione iniziale. | Passo 6: Ripeti per il numero desiderato di ripetizioni.",
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
-    "aliases": []
+    "aliases": [
+      "abs",
+      "addominale",
+      "bruco",
+      "core"
+    ]
   },
   {
     "id": "inchworm_v_2",
@@ -21823,6 +22312,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "inchworm v.",
+      "inchworm v. 2",
       "iv2"
     ]
   },
@@ -21856,7 +22350,7 @@
   },
   {
     "id": "incline_leg_hip_raise_leg_straight",
-    "nome": "Sollevamento Gambe e Fianchi su Panca Inclinata(Gambe Tese)",
+    "nome": "Sollevamento Gambe e Fianchi su Panca Inclinata(Ga",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/eVxAzgz.gif",
     "muscoliSecondari": null,
@@ -21869,7 +22363,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgefspit"
+      "abs",
+      "addominale",
+      "core",
+      "sgefspit",
+      "sollevamento gambe",
+      "sollevamento gambe e fianchi su panca inclinata(ga"
     ]
   },
   {
@@ -21895,6 +22394,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "inclinato piegamento",
       "ip"
     ]
   },
@@ -21921,6 +22421,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "inclinato piegamento",
+      "inclinato piegamento con salto in profondità",
       "ipcsip"
     ]
   },
@@ -21947,7 +22449,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pidjcc"
+      "pidjcc",
+      "piegamenti inclinato",
+      "piegamenti inclinato depth jump con complex"
     ]
   },
   {
@@ -21973,6 +22477,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "inclinato piegamento",
+      "inclinato piegamento su box",
       "ipsb"
     ]
   },
@@ -21991,6 +22497,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, scorrimenti al muro 2x12",
     "attivazionePre": "Piegamenti 2x10-15, spinte con elastico 2x15, distensioni a terra (leggere) 2x12",
     "aliases": [
+      "inclinato piegamento",
+      "inclinato piegamento su box variazione attiva",
       "ipsbva"
     ]
   },
@@ -22009,6 +22517,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, scorrimenti al muro 2x12",
     "attivazionePre": "Piegamenti 2x10-15, spinte con elastico 2x15, distensioni a terra (leggere) 2x12",
     "aliases": [
+      "inclinato piegamento",
+      "inclinato piegamento presa inversa",
       "ippi"
     ]
   },
@@ -22035,6 +22545,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamenti scapolari",
+      "piegamenti scapolari inclinati",
       "psi"
     ]
   },
@@ -22073,7 +22585,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "iipips"
+      "iipips",
+      "inclinato inclinazione",
+      "inclinato inclinazione pelvica in ponte stile"
     ]
   },
   {
@@ -22125,7 +22639,7 @@
   },
   {
     "id": "intensified_style_kettlebell_extended_range_one_arm_press_on_floor",
-    "nome": "Spinta Un Braccio Intensified Style con Extended Range On Floor con Kettlebell",
+    "nome": "Spinta Un Braccio Intensified Style Range On Floor",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/o80Xu9C.gif",
     "muscoliSecondari": "DELT",
@@ -22173,12 +22687,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ihfaqs"
+      "ihfaqs",
+      "intermediate hip",
+      "intermediate hip flexor and quad stretch"
     ]
   },
   {
     "id": "intermediate_style_dumbbell_preacher_curl_over_exercise_ball",
-    "nome": "Curl Preacher su Palla da Esercizio Stile Intermedio con Manubri",
+    "nome": "Curl Preacher su Palla Stile Intermedio",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/QQwxa8g.gif",
     "muscoliSecondari": null,
@@ -22198,7 +22714,7 @@
   },
   {
     "id": "intermediate_style_kneeling_plank_tap_shoulder_male",
-    "nome": "Plank in Ginocchio con Tap Spalla - Stile Intermedio",
+    "nome": "Plank in Ginocchio con Tap Spalla Stile Intermedio",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/tuIZFDt.gif",
     "muscoliSecondari": "DELT",
@@ -22393,7 +22909,7 @@
   },
   {
     "id": "inverted_style_inverse_leg_curl_on_pull_up_cable_machine",
-    "nome": "Trazioni Curl Leg Inverso Stile Invertito su Macchina ai Cavi",
+    "nome": "Trazioni Curl Leg Inverso Stile Invertito su Macch",
     "focus": "FEMOR",
     "imageUrl": "https://static.exercisedb.dev/media/fjjY3N4.gif",
     "muscoliSecondari": "GLUT, POLP",
@@ -22414,7 +22930,7 @@
   },
   {
     "id": "inverted_style_smith_seated_shoulder_press",
-    "nome": "Spinta Seduto Spalle con smith Macchina Stile Invertito",
+    "nome": "Spinta Seduto Spalle Macchina Stile Invertito",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/MRaFiZP.gif",
     "muscoliSecondari": null,
@@ -22427,6 +22943,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "spinta seduto",
+      "spinta seduto spalle macchina stile invertito",
       "ssscsmsi"
     ]
   },
@@ -22445,7 +22963,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "acdf"
+      "acdf",
+      "allungamento croce",
+      "allungamento croce di ferro"
     ]
   },
   {
@@ -22499,6 +23019,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "seduto isolation",
       "si"
     ]
   },
@@ -22525,7 +23046,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "cidp"
+      "chest",
+      "cidp",
+      "contrazione isometrica",
+      "contrazione isometrica del petto",
+      "panca",
+      "petto"
     ]
   },
   {
@@ -22551,6 +23077,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "tergicristalli isometrici",
       "ti"
     ]
   },
@@ -22569,6 +23096,7 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "jack burpee",
       "jb"
     ]
   },
@@ -22587,6 +23115,7 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "salto jack",
       "sj"
     ]
   },
@@ -22645,6 +23174,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "salto della",
+      "salto della corda",
       "sdc"
     ]
   },
@@ -22847,7 +23378,7 @@
   },
   {
     "id": "kettlebell_arnold_press_beginner_variation",
-    "nome": "Arnold Press - Variazione Principiante con Kettlebell",
+    "nome": "Arnold Press Variazione Principiante",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/Mr8d4KA.gif",
     "muscoliSecondari": null,
@@ -22887,7 +23418,7 @@
   },
   {
     "id": "kettlebell_bottoms_up_clean_from_the_hang_position",
-    "nome": "Con Bottoms Up Clean From The Hang Position con Kettlebell",
+    "nome": "Con Bottoms Up Clean From The Hang Position",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/4KJEpzb.gif",
     "muscoliSecondari": "DELT",
@@ -23017,7 +23548,7 @@
   },
   {
     "id": "kettlebell_extended_range_one_arm_press_on_floor",
-    "nome": "Un Braccio Distensione a Range Esteso a Terra con Kettlebell",
+    "nome": "Un Braccio Distensione Esteso",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/rseLfH3.gif",
     "muscoliSecondari": "DELT",
@@ -23135,7 +23666,11 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "acpk"
+      "acpk",
+      "affondo con",
+      "affondo con passaggio kettlebell",
+      "kb",
+      "kettlebell"
     ]
   },
   {
@@ -23205,7 +23740,7 @@
   },
   {
     "id": "kettlebell_one_arm_military_press_to_the_side",
-    "nome": "Un Braccio Military Press a Laterale con Kettlebell",
+    "nome": "Un Braccio Military Press",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/yCvYdi7.gif",
     "muscoliSecondari": "CORE",
@@ -23395,7 +23930,7 @@
   },
   {
     "id": "kettlebell_seated_two_arm_military_press",
-    "nome": "Spinta Seduto con Due Braccia Military con Kettlebell",
+    "nome": "Spinta Seduto Braccia Military",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/ZEkjZDi.gif",
     "muscoliSecondari": null,
@@ -23635,6 +24170,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "kick out",
+      "kick out sit",
       "kos"
     ]
   },
@@ -23653,7 +24190,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "muk"
+      "muk",
+      "muscle up",
+      "muscle up kipping"
     ]
   },
   {
@@ -23671,7 +24210,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "mukt"
+      "mukt",
+      "muscle up",
+      "muscle up kipping triplo"
     ]
   },
   {
@@ -23689,7 +24230,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cctdg"
+      "abs",
+      "addominale",
+      "cctdg",
+      "core",
+      "crunch con",
+      "crunch con tocco delle ginocchia"
     ]
   },
   {
@@ -23726,7 +24272,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "adig"
+      "adig",
+      "allungamento dorsali",
+      "allungamento dorsali in ginocchio"
     ]
   },
   {
@@ -23744,7 +24292,15 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "pigcts"
+      "abs",
+      "addominale",
+      "core",
+      "deltoid",
+      "pigcts",
+      "plank in",
+      "plank in ginocchio con tocco spalla",
+      "shoulder",
+      "spalla"
     ]
   },
   {
@@ -23770,6 +24326,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento in",
+      "piegamento in ginocchio(uomo)",
       "pig"
     ]
   },
@@ -23854,7 +24412,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "l1"
+      "abs",
+      "addominale",
+      "core",
+      "l1",
+      "landmine 180"
     ]
   },
   {
@@ -23872,7 +24434,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "all"
+      "all",
+      "alzate laterali",
+      "alzate laterali landmine"
     ]
   },
   {
@@ -23890,7 +24454,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "pi"
+      "abs",
+      "addominale",
+      "core",
+      "pi",
+      "planche inclinata"
     ]
   },
   {
@@ -23936,7 +24504,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pgpib"
+      "abs",
+      "addominale",
+      "core",
+      "pgpib",
+      "piana gambe",
+      "piana gambe pull in bench"
     ]
   },
   {
@@ -23954,7 +24527,12 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
-      "afga"
+      "afga",
+      "allungamento femorali",
+      "allungamento femorali gamba alzata",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -23986,7 +24564,7 @@
   },
   {
     "id": "lever_alternating_narrow_grip_seated_row",
-    "nome": "Rematore Seduto Alternato Presa Stretta con Macchina a Leva e",
+    "nome": "Rematore Seduto Alternato Presa Stretta e",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/w2oRpuH.gif",
     "muscoliSecondari": null,
@@ -24033,7 +24611,9 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "lever"
+    ]
   },
   {
     "id": "lever_assisted_chin_up_with_twisted",
@@ -24465,7 +25045,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "silp"
+      "chest",
+      "panca",
+      "petto",
+      "silp",
+      "spinta inclinato",
+      "spinta inclinato lever petto"
     ]
   },
   {
@@ -24549,7 +25134,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "alal"
+      "alal",
+      "alzate laterali",
+      "alzate laterali a leva"
     ]
   },
   {
@@ -24689,7 +25276,7 @@
   },
   {
     "id": "lever_narrow_grip_seated_row_strength_variation",
-    "nome": "Rematore Seduto Presa Stretta alla Macchina - Variazione Forza",
+    "nome": "Rematore Seduto Presa Stretta alla Macchina Variaz",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/iCPqbki.gif",
     "muscoliSecondari": null,
@@ -24814,6 +25401,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "spinta un",
+      "spinta un braccio spalle a a leva",
       "subsaal"
     ]
   },
@@ -24953,7 +25542,7 @@
   },
   {
     "id": "lever_reverse_grip_preacher_curl_with_precision",
-    "nome": "Curl Preacher Presa Inversa alla Leva con Precisione",
+    "nome": "Curl Preacher Presa Inversa alla Leva",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/7y9JIMj.gif",
     "muscoliSecondari": null,
@@ -24972,7 +25561,7 @@
   },
   {
     "id": "lever_reverse_grip_vertical_row",
-    "nome": "Rematore Verticale con Macchina a Leva e Presa Inversa",
+    "nome": "Rematore Verticale e Presa Inversa",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/ZqNOWQ6.gif",
     "muscoliSecondari": null,
@@ -25126,12 +25715,17 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "seduto lever",
+      "seduto lever crunch",
       "slc"
     ]
   },
   {
     "id": "lever_seated_crunch_chest_pad",
-    "nome": "Seduto crunch alla Macchina(Con Cuscinetto Toracico)",
+    "nome": "Seduto crunch alla Macchina(Con Cuscinetto Toracic",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/ZnJHhMk.gif",
     "muscoliSecondari": null,
@@ -25275,7 +25869,9 @@
     "mobilitaPre": "Lateral lunges 2x8, cossack squats 2x6, lateral leg swings 2x10",
     "attivazionePre": "Side-lying adduction 2x15, ball squeezes 2x20 (3sec hold)",
     "aliases": [
-      "saaal"
+      "saaal",
+      "seduto adduzione",
+      "seduto adduzione anca alla leva"
     ]
   },
   {
@@ -25340,6 +25936,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "croci seduto",
+      "croci seduto lever reverse",
       "cslr"
     ]
   },
@@ -25366,6 +25964,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "croci seduto",
+      "croci seduto lever reverse(parallel grip)",
       "cslrg"
     ]
   },
@@ -25431,6 +26031,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "spinta spalle",
+      "spinta spalle a leva",
       "ssal"
     ]
   },
@@ -25468,6 +26070,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "spinta spalle",
+      "spinta spalle a leva v. 3",
       "ssalv3"
     ]
   },
@@ -25702,7 +26306,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pdl"
+      "pdl",
+      "ponte di",
+      "ponte di londra"
     ]
   },
   {
@@ -25720,7 +26326,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "pgbat"
+      "pgbat",
+      "ponte glutei",
+      "ponte glutei basso a terra"
     ]
   },
   {
@@ -25765,7 +26373,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "acs"
+      "acs",
+      "affondo con",
+      "affondo con salto"
     ]
   },
   {
@@ -25783,7 +26393,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "act"
+      "abs",
+      "act",
+      "addominale",
+      "affondo con",
+      "affondo con torsione",
+      "core"
     ]
   },
   {
@@ -25801,6 +26416,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "sdraiato gomito",
+      "sdraiato gomito al ginocchio",
       "sgag"
     ]
   },
@@ -25819,12 +26439,17 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "sdraiato sollevamento",
+      "sdraiato sollevamento gambe e fianchi",
       "ssgef"
     ]
   },
   {
     "id": "lying_leg_hip_raise_contracted_variation",
-    "nome": "Sdraiato Sollevamento Gambe e Fianchi - Variazione Contratta",
+    "nome": "Sdraiato Sollevamento Gambe e Fianchi Variazione C",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/mpYUPkA.gif",
     "muscoliSecondari": null,
@@ -25865,7 +26490,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "apsgb"
+      "abs",
+      "addominale",
+      "alzate piana",
+      "alzate piana sdraiato gambe bench",
+      "apsgb",
+      "core"
     ]
   },
   {
@@ -25891,6 +26521,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "sdraiato(side)quads stretch",
       "ss"
     ]
   },
@@ -25991,6 +26622,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "march sit(wall)",
       "ms"
     ]
   },
@@ -26042,7 +26674,7 @@
   },
   {
     "id": "medicine_ball_chest_push_from_3_point_stance",
-    "nome": "Spinta Petto con Palla Medica da Posizione a 3 Punti",
+    "nome": "Spinta Petto Medica Punti",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/dCJnuVq.gif",
     "muscoliSecondari": "DELT",
@@ -26136,7 +26768,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "mfppcrr"
+      "chest",
+      "medicine fitball",
+      "medicine fitball petto push con run release",
+      "mfppcrr",
+      "panca",
+      "petto"
     ]
   },
   {
@@ -26339,6 +26976,7 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "camminata monster",
       "cm"
     ]
   },
@@ -26357,7 +26995,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "mc"
+      "mc",
+      "mountain climber"
     ]
   },
   {
@@ -26375,7 +27014,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "mu"
+      "mu",
+      "muscle up"
     ]
   },
   {
@@ -26393,6 +27033,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
+      "muscle up",
+      "muscle up su sbarra verticale",
       "mussv"
     ]
   },
@@ -26461,7 +27103,9 @@
     "mobilitaPre": "Allungamento dinamico generale 5-7 minuti, lavoro mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "alc"
+      "alc",
+      "allungamento laterale",
+      "allungamento laterale collo"
     ]
   },
   {
@@ -26479,7 +27123,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cn"
+      "abs",
+      "addominale",
+      "cn",
+      "core",
+      "crunch negativo"
     ]
   },
   {
@@ -26497,7 +27145,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cov2"
+      "abs",
+      "addominale",
+      "core",
+      "cov2",
+      "crunch obliquo",
+      "crunch obliquo v. 2"
     ]
   },
   {
@@ -26523,6 +27176,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "oblique crunches",
+      "oblique crunches floor",
       "ocf"
     ]
   },
@@ -26588,7 +27246,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "ubcm"
+      "ubcm",
+      "un braccio",
+      "un braccio contro muro"
     ]
   },
   {
@@ -26606,7 +27266,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "ubcimc"
+      "ubcimc",
+      "un braccio",
+      "un braccio contro il muro compresso"
     ]
   },
   {
@@ -26717,7 +27379,12 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "dcraug"
+      "dcraug",
+      "donkey calf",
+      "donkey calf raise a una gamba",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -26735,7 +27402,12 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "craugat"
+      "calf raise",
+      "calf raise a una gamba a terra",
+      "craugat",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -26801,6 +27473,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "otis up",
       "ou"
     ]
   },
@@ -26819,7 +27495,12 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "fccge"
+      "fccge",
+      "flessione con",
+      "flessione con calcio gamba esterno",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -26864,7 +27545,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "bp"
+      "abs",
+      "addominale",
+      "basculamento pelvico",
+      "bp",
+      "core"
     ]
   },
   {
@@ -26882,6 +27567,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "inclinazione pelvica",
+      "inclinazione pelvica in ponte",
       "ipip"
     ]
   },
@@ -26900,7 +27587,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "smp"
+      "smp",
+      "stretching muscoli",
+      "stretching muscoli peroneali"
     ]
   },
   {
@@ -26946,6 +27635,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento pliometrico",
       "pp"
     ]
   },
@@ -26992,6 +27682,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "passo posteriore",
+      "passo posteriore con estensione sopra la testa",
       "ppceslt"
     ]
   },
@@ -27010,7 +27705,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "stp"
+      "stp",
+      "stretching tibiale",
+      "stretching tibiale posteriore"
     ]
   },
   {
@@ -27066,7 +27763,8 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
-      "pc"
+      "pc",
+      "power clean"
     ]
   },
   {
@@ -27092,12 +27790,17 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "power point",
+      "power point plank",
       "ppp"
     ]
   },
   {
     "id": "precision_style_lever_bent_over_row_with_v_bar",
-    "nome": "Rematore Piegato Stile Precision con V-bar alla Macchina",
+    "nome": "Rematore Piegato Stile Precision bar alla Macchina",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/KWyEjtI.gif",
     "muscoliSecondari": null,
@@ -27147,7 +27850,7 @@
   },
   {
     "id": "prone_dumbbell_upright_shoulder_external_rotation",
-    "nome": "Rotazione Esterna Spalla Verticale Prona con Manubri",
+    "nome": "Rotazione Esterna Spalla Verticale Prona",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/u1iHcoD.gif",
     "muscoliSecondari": null,
@@ -27187,7 +27890,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ppspspm"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "piegamenti presa",
+      "piegamenti presa stretta proni su palla medica",
+      "ppspspm",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -27205,6 +27916,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "torsione prona",
+      "torsione prona su swiss fitball",
       "tpssf"
     ]
   },
@@ -27297,7 +28013,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pswect"
+      "pswect",
+      "pulse style",
+      "pulse style walk elliptical cross trainer"
     ]
   },
   {
@@ -27362,7 +28080,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "ptr"
+      "ptr",
+      "push to",
+      "push to run"
     ]
   },
   {
@@ -27387,7 +28107,9 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "piegamenti"
+    ]
   },
   {
     "id": "push_up_bosu_ball",
@@ -27440,7 +28162,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ppssm"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "piegamenti presa",
+      "piegamenti presa stretta su manubri",
+      "ppssm",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -27458,7 +28188,12 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "fccgi"
+      "fccgi",
+      "flessione con",
+      "flessione con calcio gamba interno",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -27476,6 +28211,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, scorrimenti al muro 2x12",
     "attivazionePre": "Piegamenti 2x10-15, spinte con elastico 2x15, distensioni a terra (leggere) 2x12",
     "aliases": [
+      "piegamento su",
+      "piegamento su palla medica",
       "pspm"
     ]
   },
@@ -27502,6 +28239,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento su",
+      "piegamento su bosu fitball",
       "psbf"
     ]
   },
@@ -27528,6 +28267,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamenti su",
+      "piegamenti su bosu fitball con improved",
       "psbfci"
     ]
   },
@@ -27610,6 +28351,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento su",
+      "piegamento su swiss fitball",
       "pssf"
     ]
   },
@@ -27636,6 +28379,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento plus",
       "pp"
     ]
   },
@@ -27654,12 +28398,17 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "fctapl"
+      "abs",
+      "addominale",
+      "core",
+      "fctapl",
+      "flessione con",
+      "flessione con transizione a plank laterale"
     ]
   },
   {
     "id": "push_up_to_side_plank_athletic_variation",
-    "nome": "Flessione con Transizione a plank Laterale - Variazione Atletica",
+    "nome": "Flessione Laterale Variazione Atletica",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/kk39rUy.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -27727,7 +28476,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pamv2"
+      "pamv2",
+      "piegamento al",
+      "piegamento al muro v. 2"
     ]
   },
   {
@@ -27780,7 +28531,9 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "quads"
+    ]
   },
   {
     "id": "quads_complex",
@@ -27805,7 +28558,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "qc"
+      "qc",
+      "quadricipiti complessi"
     ]
   },
   {
@@ -27851,6 +28605,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piedi veloci",
+      "piedi veloci v. 2",
       "pvv2"
     ]
   },
@@ -27877,6 +28633,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piedi veloci",
+      "piedi veloci v. 2 con piegamento",
       "pvv2cp"
     ]
   },
@@ -27903,7 +28661,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pcbs"
+      "pcbs",
+      "piegamento con",
+      "piegamento con braccio sollevato"
     ]
   },
   {
@@ -27921,6 +28681,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "declinato ponte",
+      "declinato ponte posteriore",
       "dpp"
     ]
   },
@@ -27939,7 +28701,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "sdp"
+      "sdp",
+      "stretching deltoide",
+      "stretching deltoide posteriore"
     ]
   },
   {
@@ -27985,7 +28749,9 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
-      "parcc"
+      "parcc",
+      "posizione alluce",
+      "posizione alluce reclinata con corda"
     ]
   },
   {
@@ -28057,7 +28823,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "edgdce"
+      "edgdce",
+      "estensione declinato",
+      "estensione declinato gambe d con elastici"
     ]
   },
   {
@@ -28104,6 +28872,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "chest",
+      "panca",
+      "petto",
+      "spinta seduto",
+      "spinta seduto petto con elastici",
       "sspce"
     ]
   },
@@ -28147,7 +28920,7 @@
   },
   {
     "id": "resistance_band_seated_shoulder_press_with_declined",
-    "nome": "Spinta Seduto Spalle con Controllo in Discesa con Elastico",
+    "nome": "Spinta Seduto Spalle in Discesa",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/hTLtkXL.gif",
     "muscoliSecondari": null,
@@ -28207,7 +28980,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "ci"
+      "abs",
+      "addominale",
+      "ci",
+      "core",
+      "crunch inverso"
     ]
   },
   {
@@ -28300,7 +29077,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "iissf"
+      "iissf",
+      "iperestensione inversa",
+      "iperestensione inversa su swiss fitball"
     ]
   },
   {
@@ -28337,7 +29116,15 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "picsg"
+      "abs",
+      "addominale",
+      "core",
+      "gamba",
+      "leg",
+      "picsg",
+      "plank inverso",
+      "plank inverso con sollevamento gamba",
+      "quad"
     ]
   },
   {
@@ -28382,6 +29169,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "allungamento rana",
+      "allungamento rana a dondolo",
       "arad"
     ]
   },
@@ -28428,7 +29217,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "adcr"
+      "adcr",
+      "allungamento dorsale",
+      "allungamento dorsale con rullo"
     ]
   },
   {
@@ -28446,7 +29237,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sccr"
+      "abs",
+      "addominale",
+      "core",
+      "sccr",
+      "sega corporea",
+      "sega corporea con rullo"
     ]
   },
   {
@@ -28464,7 +29260,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "aaedcr"
+      "aaedcr",
+      "allungamento anche",
+      "allungamento anche e dorsali con rullo"
     ]
   },
   {
@@ -28482,7 +29280,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "aacr"
+      "aacr",
+      "allungamento anche",
+      "allungamento anche con rullo"
     ]
   },
   {
@@ -28500,7 +29300,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cicr"
+      "abs",
+      "addominale",
+      "cicr",
+      "core",
+      "crunch inverso",
+      "crunch inverso con rullo"
     ]
   },
   {
@@ -28526,12 +29331,17 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "deltoid",
+      "seduto roller",
+      "seduto roller spalla flexor depresor retractor",
+      "shoulder",
+      "spalla",
       "srsfdr"
     ]
   },
   {
     "id": "roller_seated_single_leg_shoulder_flexor_depresor_retractor",
-    "nome": "Seduto Rullo Gamba Singola Flessore Depressore Retrattore Spalla",
+    "nome": "Seduto Rullo Gamba Singola Flessore Depressore Ret",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/CjETvlw.gif",
     "muscoliSecondari": null,
@@ -28552,6 +29362,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "gamba",
+      "leg",
+      "quad",
+      "seduto rullo",
+      "seduto rullo gamba singola flessore depressore ret",
       "srgsfdrs"
     ]
   },
@@ -28578,6 +29393,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "roller side",
+      "roller side lat stretch",
       "rsls"
     ]
   },
@@ -28604,12 +29421,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "arrampicata su",
+      "arrampicata su corda",
       "asc"
     ]
   },
   {
     "id": "rotated_dumbbell_pronate_grip_triceps_extension",
-    "nome": "Estensione Presa Prona Tricipiti Ruotato o con Manubri",
+    "nome": "Estensione Presa Prona Tricipiti Ruotato o",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/syUwUKY.gif",
     "muscoliSecondari": null,
@@ -28696,7 +29515,7 @@
   },
   {
     "id": "rough_cable_standing_one_arm_triceps_extension",
-    "nome": "Estensione in Piedi Un Braccio Rough Tricipiti ai Cavi",
+    "nome": "Estensione in Piedi Un Braccio Rough Tricipiti ai",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/qU8bYp7.gif",
     "muscoliSecondari": "DELT",
@@ -28737,7 +29556,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgcta"
+      "abs",
+      "addominale",
+      "core",
+      "sgcta",
+      "sollevamento gambe",
+      "sollevamento gambe con torsione arrotondata"
     ]
   },
   {
@@ -28754,7 +29578,9 @@
     "noteTecniche": "Passo 1: Inizia stando dritto con i piedi alla larghezza dei fianchi. | Passo 2: Attiva il core e mantieni la parte superiore del corpo rilassata. | Passo 3: Inizia a correre sul posto, sollevando le ginocchia verso il petto e atterrando dolcemente sulla pianta dei piedi. | Passo 4: Mantieni un ritmo costante e continua a correre per la durata o distanza desiderata. | Passo 5: Ricorda di respirare profondamente e mantenere una buona postura durante l'esercizio.",
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
-    "aliases": []
+    "aliases": [
+      "corsa"
+    ]
   },
   {
     "id": "run_equipment",
@@ -28771,7 +29597,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "cca"
+      "cca",
+      "corsa con",
+      "corsa con attrezzatura"
     ]
   },
   {
@@ -28797,7 +29625,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "rs"
+      "rs",
+      "runners stretch"
     ]
   },
   {
@@ -28815,7 +29644,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "rt"
+      "abs",
+      "addominale",
+      "core",
+      "rt",
+      "russian twist"
     ]
   },
   {
@@ -28868,6 +29701,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamenti scapolari",
       "ps"
     ]
   },
@@ -28914,7 +29748,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "saf"
+      "saf",
+      "salti a",
+      "salti a forbice"
     ]
   },
   {
@@ -28932,6 +29768,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "seduto stretching",
+      "seduto stretching polpacci da",
       "sspd"
     ]
   },
@@ -28950,7 +29788,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "sag"
+      "sag",
+      "seduto allungamento",
+      "seduto allungamento glutei"
     ]
   },
   {
@@ -28968,6 +29808,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "seduto sollevamento",
+      "seduto sollevamento gambe",
       "ssg"
     ]
   },
@@ -28986,7 +29831,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "sazl"
+      "sazl",
+      "seduto allungamento",
+      "seduto allungamento zona lombare"
     ]
   },
   {
@@ -29012,6 +29859,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "seduto piriformis",
+      "seduto piriformis stretch",
       "sps"
     ]
   },
@@ -29030,7 +29879,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sclam"
+      "abs",
+      "addominale",
+      "core",
+      "sclam",
+      "seduto crunch",
+      "seduto crunch laterale al muro"
     ]
   },
   {
@@ -29048,6 +29902,8 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
+      "sequenza posizione",
+      "sequenza posizione seduta ad angolo largo",
       "spsaal"
     ]
   },
@@ -29146,7 +30002,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "capc"
+      "capc",
+      "corsa a",
+      "corsa a passi corti"
     ]
   },
   {
@@ -29192,6 +30050,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "shoulder tap",
       "st"
     ]
   },
@@ -29218,7 +30080,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pcts"
+      "deltoid",
+      "pcts",
+      "piegamento con",
+      "piegamento con tocco spalla",
+      "shoulder",
+      "spalla"
     ]
   },
   {
@@ -29236,7 +30103,9 @@
     "mobilitaPre": "Fire hydrants 2x12, lateral band walks 2x15, clamshells 2x12",
     "attivazionePre": "Lateral band walks 2x15, clamshells 2x15, side-lying abduction 2x15",
     "aliases": [
-      "aaipl"
+      "aaipl",
+      "abduzione anca",
+      "abduzione anca in ponte laterale"
     ]
   },
   {
@@ -29254,7 +30123,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "plv"
+      "abs",
+      "addominale",
+      "core",
+      "plv",
+      "ponte laterale",
+      "ponte laterale v.2"
     ]
   },
   {
@@ -29300,7 +30174,9 @@
     "mobilitaPre": "Fire hydrants 2x12, lateral band walks 2x15, clamshells 2x12",
     "attivazionePre": "Lateral band walks 2x15, clamshells 2x15, side-lying abduction 2x15",
     "aliases": [
-      "aal"
+      "aal",
+      "abduzione anca",
+      "abduzione anca laterale"
     ]
   },
   {
@@ -29326,7 +30202,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "shpb"
+      "abs",
+      "addominale",
+      "core",
+      "shpb",
+      "side hip(su",
+      "side hip(su parallel bars)"
     ]
   },
   {
@@ -29344,7 +30225,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "aatsul"
+      "aatsul",
+      "allungamento a",
+      "allungamento a terra su un lato"
     ]
   },
   {
@@ -29362,7 +30245,9 @@
     "mobilitaPre": "Lateral lunges 2x8, cossack squats 2x6, lateral leg swings 2x10",
     "attivazionePre": "Side-lying adduction 2x15, ball squeezes 2x20 (3sec hold)",
     "aliases": [
-      "saad"
+      "saad",
+      "sdraiato adduzione",
+      "sdraiato adduzione anca da(uomo)"
     ]
   },
   {
@@ -29380,7 +30265,9 @@
     "mobilitaPre": "Lateral lunges 2x8, cossack squats 2x6, lateral leg swings 2x10",
     "attivazionePre": "Side-lying adduction 2x15, ball squeezes 2x20 (3sec hold)",
     "aliases": [
-      "plaa"
+      "plaa",
+      "plank laterale",
+      "plank laterale adduzione anca"
     ]
   },
   {
@@ -29398,7 +30285,9 @@
     "mobilitaPre": "Allungamento dinamico generale 5-7 minuti, lavoro mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "sacl"
+      "sacl",
+      "spinta allungamento",
+      "spinta allungamento collo laterale"
     ]
   },
   {
@@ -29424,7 +30313,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pl"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "piegamenti laterali",
+      "pl",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -29482,6 +30378,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "tocco punta",
+      "tocco punta piede laterale",
       "tppl"
     ]
   },
@@ -29500,6 +30401,8 @@
     "mobilitaPre": "Cerchi polsi 2x10 per direzione, flessione/estensione dita 2x15, rotazioni polsi 2x10",
     "attivazionePre": "Curl polsi (leggero) 2x15, curl polsi inversi 2x15, farmer walk (leggero) 2x30sec",
     "aliases": [
+      "allungamento polso",
+      "allungamento polso laterale a trazione",
       "aplat"
     ]
   },
@@ -29526,7 +30429,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ubpa"
+      "ubpa",
+      "un braccio",
+      "un braccio piegamento a"
     ]
   },
   {
@@ -29544,7 +30449,12 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "paugcge"
+      "gamba",
+      "leg",
+      "paugcge",
+      "ponte a",
+      "ponte a una gamba con gamba estesa",
+      "quad"
     ]
   },
   {
@@ -29562,7 +30472,14 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "craugsm"
+      "calf raise",
+      "calf raise a una gamba su manubrio",
+      "craugsm",
+      "dumbbell",
+      "gamba",
+      "leg",
+      "manubrio",
+      "quad"
     ]
   },
   {
@@ -29580,6 +30497,11 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
+      "gamba",
+      "leg",
+      "quad",
+      "scivolamento piattaforma",
+      "scivolamento piattaforma a una gamba",
       "spaug"
     ]
   },
@@ -29617,6 +30539,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "spinta spalle",
+      "spinta spalle singola con smith macchina",
       "ssscsm"
     ]
   },
@@ -29770,7 +30694,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "sh"
+      "sh",
+      "skater hops"
     ]
   },
   {
@@ -29796,7 +30721,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "se"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "se",
+      "ski ergometer",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -29814,6 +30746,7 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "ski step",
       "ss"
     ]
   },
@@ -29840,6 +30773,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "skin the",
+      "skin the cat",
       "stc"
     ]
   },
@@ -29858,7 +30793,12 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "lpaug4gcs"
+      "gamba",
+      "leg",
+      "leg press",
+      "leg press a una gamba 45 gradi con slitta",
+      "lpaug4gcs",
+      "quad"
     ]
   },
   {
@@ -29876,7 +30816,12 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "lpaug4gcsp"
+      "gamba",
+      "leg",
+      "leg press",
+      "leg press a una gamba 45 gradi con slitta puntato",
+      "lpaug4gcsp",
+      "quad"
     ]
   },
   {
@@ -29894,6 +30839,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "leg press",
+      "leg press 45° con slitta vista laterale",
       "lp4csvl"
     ]
   },
@@ -29912,6 +30859,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "calf press",
+      "calf press a 45° alla slitta",
       "cpa4as"
     ]
   },
@@ -29930,6 +30879,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "leg press",
+      "leg press 45° con slitta",
       "lp4cs"
     ]
   },
@@ -29948,6 +30899,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "leg press",
+      "leg press 45° con slitta vista posteriore",
       "lp4csvp"
     ]
   },
@@ -29966,12 +30919,14 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "leg press",
+      "leg press 45° ampio con slitta",
       "lp4acs"
     ]
   },
   {
     "id": "sled_45в°_leg_wide_press_blunt_variation",
-    "nome": "Leg Press 45° Stance Larga con Slitta Variazione Blunt",
+    "nome": "Leg Press 45° Stance Larga Variazione Blunt",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/p0OCXGb.gif",
     "muscoliSecondari": "FEMOR, POLP, QUAD",
@@ -29984,6 +30939,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "leg press",
+      "leg press 45° stance larga variazione blunt",
       "lp4slcsvb"
     ]
   },
@@ -30002,6 +30959,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "calf press",
+      "calf press alla leg press",
       "cpalp"
     ]
   },
@@ -30039,6 +30998,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "calf raise",
+      "calf raise angolato in avanti alla slitta",
       "craiaas"
     ]
   },
@@ -30076,7 +31037,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "scpas"
+      "scpas",
+      "sdraiato calf",
+      "sdraiato calf press alla slitta"
     ]
   },
   {
@@ -30121,7 +31084,12 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "cpaugalp"
+      "calf press",
+      "calf press a una gamba alla leg press",
+      "cpaugalp",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -30139,6 +31107,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "martello pneumatico",
       "mp"
     ]
   },
@@ -30157,6 +31129,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "raccolta gambe",
+      "raccolta gambe lenta su panca piatta",
       "rglspp"
     ]
   },
@@ -30183,6 +31160,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "scrollate dorsali",
+      "scrollate dorsali macchina alla smith",
       "sdmas"
     ]
   },
@@ -30201,7 +31180,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "sdlncsm"
+      "sdlncsm",
+      "spinta dietro",
+      "spinta dietro la nuca con smith macchina"
     ]
   },
   {
@@ -30227,6 +31208,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "distensione su",
+      "distensione su panca smith",
       "dsps"
     ]
   },
@@ -30245,7 +31228,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "gmgpmas"
+      "gmgpmas",
+      "good morning",
+      "good morning ginocchia piegate macchina alla smith"
     ]
   },
   {
@@ -30372,7 +31357,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "smas"
+      "smas",
+      "stacco macchina",
+      "stacco macchina alla smith"
     ]
   },
   {
@@ -30398,7 +31385,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ddssp"
+      "ddssp",
+      "distensioni declinato",
+      "distensioni declinato smith su panca"
     ]
   },
   {
@@ -30424,7 +31413,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ddpis"
+      "ddpis",
+      "distensione declinata",
+      "distensione declinata presa inversa smith"
     ]
   },
   {
@@ -30507,7 +31498,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sfmas"
+      "abs",
+      "addominale",
+      "core",
+      "sfmas",
+      "sollevamento fianchi",
+      "sollevamento fianchi macchina alla smith"
     ]
   },
   {
@@ -30533,7 +31529,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "dis"
+      "dis",
+      "distensione inclinata",
+      "distensione inclinata smith"
     ]
   },
   {
@@ -30559,7 +31557,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "dipis"
+      "dipis",
+      "distensione inclinata",
+      "distensione inclinata presa inversa smith"
     ]
   },
   {
@@ -30585,6 +31585,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "alzate spalle",
+      "alzate spalle inclinate macchina alla smith",
       "asimas"
     ]
   },
@@ -30603,6 +31605,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "leg press",
+      "leg press macchina alla smith",
       "lpmas"
     ]
   },
@@ -30647,7 +31651,7 @@
   },
   {
     "id": "smith_machine_decline_close_grip_bench_press",
-    "nome": "Distensioni Presa Stretta Declinate Macchina alla smith",
+    "nome": "Distensioni Presa Stretta Declinate Macchina alla",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/yB9SvIF.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -30668,12 +31672,20 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "dpsdmas"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "distensioni presa",
+      "distensioni presa stretta declinate macchina alla",
+      "dpsdmas",
+      "tric",
+      "triceps"
     ]
   },
   {
     "id": "smith_machine_incline_tricep_extension",
-    "nome": "Estensione Inclinato alla Macchina Tricep alla smith",
+    "nome": "Estensione Inclinato alla Macchina Tricep alla smi",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/o8aOcrz.gif",
     "muscoliSecondari": "DELT",
@@ -30700,7 +31712,7 @@
   },
   {
     "id": "smith_machine_incline_tricep_extension_straight_variation",
-    "nome": "Estensione Inclinato alla Macchina Tricep - Straight Variation alla smith",
+    "nome": "Estensione Inclinato alla Macchina Tricep Straight",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/7WcQgkm.gif",
     "muscoliSecondari": "DELT",
@@ -30750,6 +31762,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "presa stretta",
+      "presa stretta distensione declinata inversa smith",
       "psddis"
     ]
   },
@@ -30849,7 +31863,12 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "craugatmas"
+      "calf raise",
+      "calf raise a una gamba a terra macchina alla smith",
+      "craugatmas",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -30886,6 +31905,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "calf raise",
+      "calf raise inverso macchina alla smith",
       "crimas"
     ]
   },
@@ -30904,6 +31925,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "calf raise",
+      "calf raise inverso macchina v.2 alla smith",
       "crimvas"
     ]
   },
@@ -30977,7 +32000,12 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "scraugmas"
+      "gamba",
+      "leg",
+      "quad",
+      "scraugmas",
+      "seduto calf",
+      "seduto calf raise a una gamba macchina alla smith"
     ]
   },
   {
@@ -30995,6 +32023,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "spinta seduto",
+      "spinta seduto spalle macchina alla smith",
       "sssmas"
     ]
   },
@@ -31048,6 +32078,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "deltoid",
+      "shoulder",
+      "spalla",
+      "spinta smith",
+      "spinta smith spalla",
       "sss"
     ]
   },
@@ -31074,6 +32109,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "scrollate macchina",
+      "scrollate macchina alla smith",
       "smas"
     ]
   },
@@ -31127,6 +32164,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "smith sprint",
+      "smith sprint lunge",
       "ssl"
     ]
   },
@@ -31170,7 +32209,7 @@
   },
   {
     "id": "smith_standing_behind_head_military_press",
-    "nome": "In Piedi Military Press Dietro la Testa Macchina alla smith",
+    "nome": "In Piedi Military Press Dietro la Testa Macchina a",
     "focus": "DELT",
     "imageUrl": "https://static.exercisedb.dev/media/ht8xDrP.gif",
     "muscoliSecondari": null,
@@ -31202,6 +32241,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "in piedi",
+      "in piedi calf raise alle gambe macchina alla smith",
       "ipcragmas"
     ]
   },
@@ -31228,7 +32269,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "sipsm"
+      "sipsm",
+      "spinta in",
+      "spinta in piedi smith military"
     ]
   },
   {
@@ -31265,6 +32308,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "toe raise",
+      "toe raise macchina alla smith",
       "trmas"
     ]
   },
@@ -31310,7 +32355,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "plds"
+      "plds",
+      "presa larga",
+      "presa larga distensione smith"
     ]
   },
   {
@@ -31336,7 +32383,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pldds"
+      "pldds",
+      "presa larga",
+      "presa larga distensione declinata smith"
     ]
   },
   {
@@ -31362,7 +32411,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "gas"
+      "gas",
+      "girata allo",
+      "girata allo strappo"
     ]
   },
   {
@@ -31379,7 +32430,12 @@
     "noteTecniche": "Passo 1: Stai in piedi con i piedi alla larghezza delle spalle e tieni un manubrio in una mano. | Passo 2: Piega leggermente le ginocchia e inclinati in avanti dalla vita, mantenendo la schiena dritta. | Passo 3: Estendi il braccio con il manubrio verso il piede opposto, ruotando il torso mentre lo fai. | Passo 4: Torna alla posizione iniziale e ripeti sull'altro lato. | Passo 5: Continua ad alternare i lati per il numero desiderato di ripetizioni.",
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
-    "aliases": []
+    "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "incantatore"
+    ]
   },
   {
     "id": "sphinx",
@@ -31403,7 +32459,9 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
-    "aliases": []
+    "aliases": [
+      "sfinge"
+    ]
   },
   {
     "id": "spider_crawl_push_up",
@@ -31420,7 +32478,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "fccr"
+      "fccr",
+      "flessione con",
+      "flessione con camminata ragno"
     ]
   },
   {
@@ -31446,7 +32506,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "adc"
+      "adc",
+      "allungamento della",
+      "allungamento della colonna"
     ]
   },
   {
@@ -31464,7 +32526,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "tdc"
+      "abs",
+      "addominale",
+      "core",
+      "tdc",
+      "torsione della",
+      "torsione della colonna"
     ]
   },
   {
@@ -31496,7 +32563,7 @@
   },
   {
     "id": "squared_reverse_grip_machine_lat_pulldown",
-    "nome": "Pulldown Dorsali Presa Inversa Squadrato alla Macchina",
+    "nome": "Pulldown Dorsali Presa Inversa Squadrato alla Macc",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/AwAIlSo.gif",
     "muscoliSecondari": null,
@@ -31624,7 +32691,7 @@
   },
   {
     "id": "stability_ball_crunch_full_range_hands_behind_head",
-    "nome": "Crunch Completo su Swiss Fitball con Mani Dietro la Testa",
+    "nome": "Crunch Completo su Swiss Fitball Dietro la Testa",
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/Gn5FwYT.gif",
     "muscoliSecondari": null,
@@ -31637,12 +32704,17 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "ccssfcmdlt"
+      "abs",
+      "addominale",
+      "ccssfcmdlt",
+      "core",
+      "crunch completo",
+      "crunch completo su swiss fitball dietro la testa"
     ]
   },
   {
     "id": "stability_lever_narrow_grip_seated_row",
-    "nome": "Rematore Seduto Presa Stretta Stabilità alla Macchina",
+    "nome": "Rematore Seduto Presa Stretta Stabilità alla Macch",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/1u36hhy.gif",
     "muscoliSecondari": null,
@@ -31670,7 +32742,7 @@
   },
   {
     "id": "stability_style_band_kneeling_one_arm_pulldown",
-    "nome": "Un Braccio Pulldown a in Ginocchio Stile Stabilità con Elastico",
+    "nome": "Un Braccio Pulldown Ginocchio Stile Stabilità",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/JxrY9mC.gif",
     "muscoliSecondari": null,
@@ -31711,7 +32783,14 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "ss"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "spinta stalder",
+      "ss",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -31737,6 +32816,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "in piedi",
+      "in piedi arciere",
       "ipa"
     ]
   },
@@ -31755,7 +32836,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "sipdln"
+      "sipdln",
+      "spinta in",
+      "spinta in piedi dietro la nuca"
     ]
   },
   {
@@ -31773,6 +32856,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "in piedi",
+      "in piedi calf raise su scala",
       "ipcrss"
     ]
   },
@@ -31791,6 +32876,8 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "in piedi",
+      "in piedi polpacci",
       "ipp"
     ]
   },
@@ -31809,12 +32896,14 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
+      "in piedi",
+      "in piedi stretching polpacci",
       "ipsp"
     ]
   },
   {
     "id": "standing_hamstring_and_calf_stretch_with_strap",
-    "nome": "In Piedi Allungamento Femorali e Polpacci con Cinghia",
+    "nome": "In Piedi Allungamento Femorali e Polpacci",
     "focus": "FEMOR",
     "imageUrl": "https://static.exercisedb.dev/media/xTjr103.gif",
     "muscoliSecondari": "POLP",
@@ -31827,6 +32916,8 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
+      "in piedi",
+      "in piedi allungamento femorali e polpacci",
       "ipafepcc"
     ]
   },
@@ -31845,6 +32936,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
+      "in piedi",
+      "in piedi allungamento laterale",
       "ipal"
     ]
   },
@@ -31871,6 +32964,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "in piedi",
+      "in piedi inclinazione pelvica",
       "ipip"
     ]
   },
@@ -31908,6 +33003,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "in piedi",
+      "in piedi rollout con ruota",
       "iprcr"
     ]
   },
@@ -31934,7 +33034,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "sj"
+      "sj",
+      "star jump"
     ]
   },
   {
@@ -31952,6 +33053,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "corsa su",
+      "corsa su cyclette",
       "csc"
     ]
   },
@@ -31970,6 +33073,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "camminata su",
+      "camminata su cyclette",
       "csc"
     ]
   },
@@ -31988,6 +33093,10 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "maltese divaricata",
       "md"
     ]
   },
@@ -32006,7 +33115,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sp"
+      "abs",
+      "addominale",
+      "core",
+      "sp",
+      "straddle planche"
     ]
   },
   {
@@ -32024,7 +33137,12 @@
     "mobilitaPre": "Fire hydrants 2x12, lateral band walks 2x15, clamshells 2x12",
     "attivazionePre": "Lateral band walks 2x15, clamshells 2x15, side-lying abduction 2x15",
     "aliases": [
-      "aeaagd"
+      "abduttore esterno",
+      "abduttore esterno anca a gamba dritta",
+      "aeaagd",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -32042,6 +33160,8 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, scorrimenti al muro 2x12",
     "attivazionePre": "Piegamenti 2x10-15, spinte con elastico 2x15, distensioni a terra (leggere) 2x12",
     "aliases": [
+      "piegamento planche",
+      "piegamento planche completo allungato",
       "ppca"
     ]
   },
@@ -32068,6 +33188,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento superman",
       "ps"
     ]
   },
@@ -32107,6 +33228,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "fallout addominale",
+      "fallout addominale sospeso",
       "fas"
     ]
   },
@@ -32172,6 +33298,7 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento sospeso",
       "ps"
     ]
   },
@@ -32190,7 +33317,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "cis"
+      "abs",
+      "addominale",
+      "cis",
+      "core",
+      "crunch inverso",
+      "crunch inverso sospeso"
     ]
   },
   {
@@ -32262,6 +33394,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "calci nuotatore",
+      "calci nuotatore v. 2 maschile",
       "cnv2m"
     ]
   },
@@ -32280,7 +33414,8 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "o3"
+      "o3",
+      "oscillazione 360"
     ]
   },
   {
@@ -32298,12 +33433,19 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "craugsmsm"
+      "calf raise",
+      "calf raise a una gamba su manubrio stile mirato",
+      "craugsmsm",
+      "dumbbell",
+      "gamba",
+      "leg",
+      "manubrio",
+      "quad"
     ]
   },
   {
     "id": "targeted_style_smith_close_grip_bench_press",
-    "nome": "Distensioni Piana Presa Stretta Stile Mirato Macchina alla smith",
+    "nome": "Distensioni Piana Presa Stretta Stile Mirato Macch",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/C8Crfa4.gif",
     "muscoliSecondari": "DELT, PETT",
@@ -32324,7 +33466,15 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "dppssmmas"
+      "biceps",
+      "bici",
+      "curl",
+      "dip",
+      "distensioni piana",
+      "distensioni piana presa stretta stile mirato macch",
+      "dppssmmas",
+      "tric",
+      "triceps"
     ]
   },
   {
@@ -32369,6 +33519,7 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
+      "ribaltamento pneumatico",
       "rp"
     ]
   },
@@ -32426,7 +33577,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "sctb"
+      "sctb",
+      "stacco con",
+      "stacco con trap bar"
     ]
   },
   {
@@ -32640,7 +33793,12 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "cpaugalpst"
+      "calf press",
+      "calf press a una gamba alla leg press stile triplo",
+      "cpaugalpst",
+      "gamba",
+      "leg",
+      "quad"
     ]
   },
   {
@@ -32666,12 +33824,16 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "tc"
+      "abs",
+      "addominale",
+      "core",
+      "tc",
+      "tuck crunch"
     ]
   },
   {
     "id": "twin_handle_parallel_grip_lat_pulldown",
-    "nome": "Pulldown Dorsali Presa Parallela con Maniglie Doppie",
+    "nome": "Pulldown Dorsali Presa Parallela Doppie",
     "focus": "LAT, TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/rRiuEXz.gif",
     "muscoliSecondari": null,
@@ -32703,7 +33865,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "sact"
+      "sact",
+      "sollevamento anche",
+      "sollevamento anche con torsione"
     ]
   },
   {
@@ -32721,7 +33885,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgct"
+      "abs",
+      "addominale",
+      "core",
+      "sgct",
+      "sollevamento gambe",
+      "sollevamento gambe con torsione"
     ]
   },
   {
@@ -32739,7 +33908,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgct"
+      "abs",
+      "addominale",
+      "core",
+      "sgct",
+      "sollevamento gambe",
+      "sollevamento gambe con torsione"
     ]
   },
   {
@@ -32785,7 +33959,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "tadp"
+      "tadp",
+      "tocco a",
+      "tocco a due punte(uomo)"
     ]
   },
   {
@@ -32811,7 +33987,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "spas"
+      "back",
+      "dorso",
+      "spas",
+      "stretching parte",
+      "stretching parte alta schiena",
+      "trazione"
     ]
   },
   {
@@ -32837,6 +34018,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "distensioni inclinato",
+      "distensioni inclinato upright smith su panca",
       "diussp"
     ]
   },
@@ -32863,6 +34046,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "cane con",
+      "cane con testa in su",
       "cctis"
     ]
   },
@@ -32909,7 +34094,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgvap"
+      "abs",
+      "addominale",
+      "core",
+      "sgvap",
+      "sollevamento gambe",
+      "sollevamento gambe verticale alle parallele"
     ]
   },
   {
@@ -32935,6 +34125,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "walk elliptical",
+      "walk elliptical cross trainer",
       "wect"
     ]
   },
@@ -32989,6 +34181,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "walking high",
+      "walking high knees lunge",
       "whkl"
     ]
   },
@@ -33007,7 +34201,8 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "ac"
+      "ac",
+      "affondo camminato"
     ]
   },
   {
@@ -33025,7 +34220,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "icstr"
+      "icstr",
+      "inclinato camminata",
+      "inclinato camminata su tapis roulant"
     ]
   },
   {
@@ -33043,12 +34240,14 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
+      "camminata su",
+      "camminata su stepmill",
       "css"
     ]
   },
   {
     "id": "wall_style_dumbbell_one_arm_french_press_on_exercise_ball",
-    "nome": "Un Braccio French Press a o su Fitball - Stile Muro con Manubri",
+    "nome": "Un Braccio French Press su Fitball Stile Muro",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/W7yh3Yo.gif",
     "muscoliSecondari": "DELT",
@@ -33078,7 +34277,7 @@
   },
   {
     "id": "wall_style_dumbbell_pullover_hip_extension_on_exercise_ball",
-    "nome": "Pullover Stile Muro o e Estensione Anca su Swiss Fitball con Manubri",
+    "nome": "Pullover Stile Muro o e Estensione Anca su Swiss F",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/ookVu2D.gif",
     "muscoliSecondari": "CORE, DELT",
@@ -33177,7 +34376,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "ccp"
+      "abs",
+      "addominale",
+      "ccp",
+      "core",
+      "crunch con",
+      "crunch con peso"
     ]
   },
   {
@@ -33215,7 +34419,9 @@
     "mobilitaPre": "Ankle circles 2x15, calf raises (light) 2x20, tibialis raises 2x15",
     "attivazionePre": "Calf raises 2x20, single-leg calf raises 2x12, tibialis raises 2x15",
     "aliases": [
-      "dcrcz"
+      "dcrcz",
+      "donkey calf",
+      "donkey calf raise con zavorra"
     ]
   },
   {
@@ -33241,6 +34447,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamenti weighted",
+      "piegamenti weighted drop",
       "pwd"
     ]
   },
@@ -33259,7 +34467,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "pfcp"
+      "abs",
+      "addominale",
+      "core",
+      "pfcp",
+      "plank frontale",
+      "plank frontale con peso"
     ]
   },
   {
@@ -33277,7 +34490,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "afcp"
+      "afcp",
+      "alzate frontali",
+      "alzate frontali con pesi"
     ]
   },
   {
@@ -33295,7 +34510,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sgefscp"
+      "abs",
+      "addominale",
+      "core",
+      "sgefscp",
+      "sollevamento gambe",
+      "sollevamento gambe e fianchi sospeso con peso"
     ]
   },
   {
@@ -33321,7 +34541,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "eicpsf"
+      "eicpsf",
+      "estensione iper",
+      "estensione iper con peso su fitball"
     ]
   },
   {
@@ -33339,7 +34561,9 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
-      "sigcsep"
+      "sigcsep",
+      "step in",
+      "step in ginocchio con swing e pesi"
     ]
   },
   {
@@ -33357,7 +34581,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "aczeo"
+      "aczeo",
+      "affondo con",
+      "affondo con zavorra e oscillazione"
     ]
   },
   {
@@ -33375,7 +34601,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "aczeor"
+      "aczeor",
+      "affondo con",
+      "affondo con zavorre e oscillazione ruotata"
     ]
   },
   {
@@ -33393,7 +34621,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "mucz"
+      "mucz",
+      "muscle up",
+      "muscle up con zavorra"
     ]
   },
   {
@@ -33411,7 +34641,9 @@
     "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
     "attivazionePre": "Pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
     "aliases": [
-      "muczss"
+      "muczss",
+      "muscle up",
+      "muscle up con zavorra su sbarra"
     ]
   },
   {
@@ -33475,6 +34707,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "crunch sopra",
+      "crunch sopra la testa con peso su swiss fitball",
       "csltcpssf"
     ]
   },
@@ -33521,6 +34758,8 @@
     "mobilitaPre": "Cerchi braccia 2x15 per direzione, dislocazioni spalle 2x12, aperture con elastico 2x20",
     "attivazionePre": "Alzate laterali (leggero) 2x15, alzate frontali (leggero) 2x12, aperture con elastico 2x20",
     "aliases": [
+      "braccia rotonde",
+      "braccia rotonde con pesi",
       "brcp"
     ]
   },
@@ -33539,7 +34778,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "rtcp"
+      "abs",
+      "addominale",
+      "core",
+      "rtcp",
+      "russian twist",
+      "russian twist con peso"
     ]
   },
   {
@@ -33565,6 +34809,11 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "weighted russian",
+      "weighted russian twist(gambe up)",
       "wrtu"
     ]
   },
@@ -33583,12 +34832,17 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "rtcpv2"
+      "abs",
+      "addominale",
+      "core",
+      "rtcpv2",
+      "russian twist",
+      "russian twist con peso v. 2"
     ]
   },
   {
     "id": "weighted_seated_bicep_curl_on_stability_ball",
-    "nome": "Curl Seduto Bicipiti con Pesi su Palla da Stabilità",
+    "nome": "Curl Seduto Bicipiti su Palla",
     "focus": "BICI, TRIC",
     "imageUrl": "https://static.exercisedb.dev/media/b4b6afT.gif",
     "muscoliSecondari": null,
@@ -33621,6 +34875,11 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "torsione seduta",
+      "torsione seduta con peso su swiss fitball",
       "tscpssf"
     ]
   },
@@ -33639,7 +34898,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "flcpssf"
+      "abs",
+      "addominale",
+      "core",
+      "flcpssf",
+      "flessione laterale",
+      "flessione laterale con peso su swiss fitball"
     ]
   },
   {
@@ -33722,6 +34986,8 @@
     "mobilitaPre": "Cerchi polsi 2x10 per direzione, flessione/estensione dita 2x15, rotazioni polsi 2x10",
     "attivazionePre": "Curl polsi (leggero) 2x15, curl polsi inversi 2x15, farmer walk (leggero) 2x30sec",
     "aliases": [
+      "in piedi",
+      "in piedi stretta mani con pesi",
       "ipsmcp"
     ]
   },
@@ -33767,7 +35033,9 @@
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
     "aliases": [
-      "adacz"
+      "adacz",
+      "affondo di",
+      "affondo di allungamento con zavorra"
     ]
   },
   {
@@ -33793,7 +35061,9 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "spcp"
+      "spcp",
+      "svend press",
+      "svend press con peso"
     ]
   },
   {
@@ -33901,6 +35171,10 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "abs",
+      "addominale",
+      "core",
+      "wheel rollerout",
       "wr"
     ]
   },
@@ -33919,7 +35193,9 @@
     "mobilitaPre": "Stretching dinamico generale 5-7 minuti, lavoro di mobilità articolare",
     "attivazionePre": "Attivazione leggera muscolo target 2-3 serie, 12-15 ripetizioni",
     "aliases": [
-      "ccr"
+      "ccr",
+      "corsa con",
+      "corsa con ruota"
     ]
   },
   {
@@ -33953,7 +35229,7 @@
   },
   {
     "id": "wide_grip_chest_dip_on_high_parallel_bars_low_variation",
-    "nome": "Wide-grip Petto Dip su High Parallel Bars - Low Variation",
+    "nome": "Wide grip Petto Dip su High Parallel Bars Low Vari",
     "focus": "PETT",
     "imageUrl": "https://static.exercisedb.dev/media/FSF9WOs.gif",
     "muscoliSecondari": "DELT",
@@ -34041,6 +35317,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "piegamento mani",
+      "piegamento mani larghe",
       "pml"
     ]
   },
@@ -34059,7 +35337,12 @@
     "mobilitaPre": "Cat-cow 2x10, bird dogs 2x8, dead bugs 2x10, torso rotations 2x12",
     "attivazionePre": "Planks 2x30sec, dead bugs 2x10, bird dogs 2x8 per side, pallof press 2x12",
     "aliases": [
-      "sav"
+      "abs",
+      "addominale",
+      "core",
+      "sav",
+      "scatti al",
+      "scatti al vento"
     ]
   },
   {
@@ -34077,6 +35360,8 @@
     "mobilitaPre": "Oscillazioni gambe 2x10, good morning leggeri 2x12, allungamento femorali dinamico 2x8",
     "attivazionePre": "Ponte glutei 2x15, leg curl sdraiati leggeri 2x15, good morning 2x12",
     "aliases": [
+      "allungamento più",
+      "allungamento più completo al mondo",
       "apcam"
     ]
   },
@@ -34103,7 +35388,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "wc"
+      "wc",
+      "wrist circles"
     ]
   },
   {
@@ -34121,6 +35407,7 @@
     "mobilitaPre": "Cerchi polsi 2x10 per direzione, flessione/estensione dita 2x15, rotazioni polsi 2x10",
     "attivazionePre": "Curl polsi (leggero) 2x15, curl polsi inversi 2x15, farmer walk (leggero) 2x30sec",
     "aliases": [
+      "roller polsi",
       "rp"
     ]
   },
@@ -34476,6 +35763,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "pectoral reverse",
+      "pectoral reverse macchina",
       "prm"
     ]
   },
@@ -34694,6 +35983,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
+      "pectoral macchina",
+      "pectoral macchina (butterfly)",
       "pm("
     ]
   },
@@ -34774,7 +36065,8 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pd"
+      "pd",
+      "piegamenti declinati"
     ]
   },
   {
@@ -34800,7 +36092,12 @@
     "tempoEsecuzione": null,
     "tempoNote": null,
     "aliases": [
-      "pad"
+      "dip",
+      "pad",
+      "piegamenti a",
+      "piegamenti a diamante",
+      "tric",
+      "triceps"
     ]
   },
   {

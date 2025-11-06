@@ -62,7 +62,7 @@ class _TutSelectorState extends State<TutSelector> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              AppIcons.timerOffOutlined,
+              AppIcons.timer,
               size: 14,
               color: theme.colorScheme.primary,
             ),
@@ -112,7 +112,7 @@ class _TutSelectorState extends State<TutSelector> {
           Row(
             children: [
               Icon(
-                AppIcons.timerOffOutlined,
+                AppIcons.timer,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
@@ -289,7 +289,7 @@ class _TutSelectorState extends State<TutSelector> {
         const SizedBox(height: 8),
 
         // Value Selector
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.3),

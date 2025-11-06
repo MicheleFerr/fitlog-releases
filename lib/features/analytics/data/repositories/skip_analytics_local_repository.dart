@@ -13,13 +13,20 @@ library;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/shared/data/repositories/rate_limited_firestore_mixin.dart';
 
-class SkipAnalyticsLocalRepository {
+/// 🔒 RATE LIMITING: Firebase sync operations are rate-limited to prevent quota exhaustion
+class SkipAnalyticsLocalRepository with RateLimitedFirestoreMixin {
+  SkipAnalyticsLocalRepository([HiveBoxManagerEnhanced? boxManager])
+      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+
   static const String _boxName = 'skip_analytics';
   static const String _pendingSkipsKey = 'pending_skips';
   static const String _localAnalyticsKey = 'local_analytics';
   static const String _lastSyncKey = 'last_sync';
-  
+
+  final HiveBoxManagerEnhanced _boxManager;
   late Box _box;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
@@ -28,7 +35,7 @@ class SkipAnalyticsLocalRepository {
   static const Duration _syncInterval = Duration(hours: 24);
   
   Future<void> init() async {
-    _box = await Hive.openBox(_boxName);
+    _box = await _boxManager.openBox(_boxName);
   }
   
   // 📱 LOCAL SAVE (Immediate, no cost)
@@ -150,16 +157,18 @@ class SkipAnalyticsLocalRepository {
       
       // Aggregate data for efficient storage
       final aggregatedData = _aggregateSkipData(pendingSkips);
-      
+
       // Single Firestore write (cost = 1 write)
       // We need to merge the counts manually since FieldValue.increment doesn't work with maps
-      final doc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('analytics')
-          .doc('skip_data')
-          .get();
-      
+      final doc = await rateLimitedRead(() async {
+        return await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('analytics')
+            .doc('skip_data')
+            .get();
+      });
+
       final existingData = doc.exists ? doc.data() ?? {} : {};
       
       // Merge reason counts
@@ -195,23 +204,25 @@ class SkipAnalyticsLocalRepository {
           mergedDayPatterns[day]![reason] = (mergedDayPatterns[day]![reason] ?? 0) + count;
         });
       });
-      
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('analytics')
-          .doc('skip_data')
-          .set({
-        'skipReasonCounts': mergedReasonCounts,
-        'exerciseSkipCounts': mergedExerciseCounts,
-        'hourlyPatterns': mergedHourlyPatterns,
-        'dayPatterns': mergedDayPatterns,
-        'totalSkips': (existingData['totalSkips'] ?? 0) + pendingSkips.length,
-        'lastSkipDate': aggregatedData['lastSkipDate'],
-        'lastSync': FieldValue.serverTimestamp(),
-        'syncedSkips': FieldValue.arrayUnion(pendingSkips),
-      }, SetOptions(merge: true));
-      
+
+      await rateLimitedWrite(() async {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('analytics')
+            .doc('skip_data')
+            .set({
+          'skipReasonCounts': mergedReasonCounts,
+          'exerciseSkipCounts': mergedExerciseCounts,
+          'hourlyPatterns': mergedHourlyPatterns,
+          'dayPatterns': mergedDayPatterns,
+          'totalSkips': (existingData['totalSkips'] ?? 0) + pendingSkips.length,
+          'lastSkipDate': aggregatedData['lastSkipDate'],
+          'lastSync': FieldValue.serverTimestamp(),
+          'syncedSkips': FieldValue.arrayUnion(pendingSkips),
+        }, SetOptions(merge: true));
+      });
+
       // Clear pending skips after successful sync
       await _box.put(_pendingSkipsKey, []);
       await _box.put(_lastSyncKey, DateTime.now().toIso8601String());

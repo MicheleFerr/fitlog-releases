@@ -76,7 +76,7 @@ class ModalService {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: context.colors.onSurfaceVariant.withOpacity(0.4),
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -342,10 +342,6 @@ class ModalService {
 
 /// Rappresenta un'azione in un dialog con azioni multiple
 class DialogAction {
-  final String label;
-  final VoidCallback onPressed;
-  final bool isDangerous;
-  final bool isPrimary;
 
   const DialogAction({
     required this.label,
@@ -353,6 +349,10 @@ class DialogAction {
     this.isDangerous = false,
     this.isPrimary = false,
   });
+  final String label;
+  final VoidCallback onPressed;
+  final bool isDangerous;
+  final bool isPrimary;
 }
 
 /// Mixin per aggiungere metodi helper di modali ai widget

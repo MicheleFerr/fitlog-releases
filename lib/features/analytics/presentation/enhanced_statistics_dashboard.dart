@@ -97,7 +97,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         gradient: LinearGradient(
           colors: [
             colorScheme.primaryContainer,
-            colorScheme.primaryContainer.withOpacity(0.7),
+            colorScheme.primaryContainer.withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -129,7 +129,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
                     Text(
                       _getProgressSummary(stats, localizations),
                       style: textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onPrimaryContainer.withOpacity(0.8),
+                        color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -193,7 +193,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         Text(
           label,
           style: textTheme.bodySmall?.copyWith(
-            color: colorScheme.onPrimaryContainer.withOpacity(0.8),
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -381,9 +381,9 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.analyticsOutlined,
+            AppIcons.analytics,
             size: 120,
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 24),
           Text(

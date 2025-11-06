@@ -12,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminStatsCard extends ConsumerWidget {
@@ -100,7 +102,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: AppIcons.workout,
                 title: l10n.exerciseCountLabel,
                 value: exerciseCount.toString(),
-                color: exerciseCount > 0 ? Colors.green : Colors.orange,
+                color: exerciseCount > 0 ? context.colors.success : context.colors.secondary,
               ),
             ),
             Expanded(
@@ -108,7 +110,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: AppIcons.infoIcon,
                 title: l10n.versionMetadata,
                 value: hasVersionMetadata ? l10n.present : l10n.missing,
-                color: hasVersionMetadata ? Colors.green : Colors.red,
+                color: hasVersionMetadata ? context.colors.success : context.colors.error,
               ),
             ),
             Expanded(
@@ -116,7 +118,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: AppIcons.search,
                 title: l10n.searchIndex,
                 value: hasSearchIndex ? l10n.present : l10n.missing,
-                color: hasSearchIndex ? Colors.green : Colors.red,
+                color: hasSearchIndex ? context.colors.success : context.colors.error,
               ),
             ),
           ],
@@ -148,7 +150,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: AppIcons.feedback,
                 title: l10n.pendingCorrections,
                 value: stats.pendingCorrections.toString(),
-                color: stats.pendingCorrections > 0 ? Colors.orange : Colors.green,
+                color: stats.pendingCorrections > 0 ? context.colors.secondary : context.colors.success,
               ),
             ),
             Expanded(
@@ -156,7 +158,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: AppIcons.complete,
                 title: l10n.approvedCorrections,
                 value: stats.approvedCorrections.toString(),
-                color: Colors.green,
+                color: context.colors.success,
               ),
             ),
             Expanded(
@@ -164,7 +166,7 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: AppIcons.cancel,
                 title: l10n.rejectedCorrections,
                 value: stats.rejectedCorrections.toString(),
-                color: Colors.red,
+                color: context.colors.error,
               ),
             ),
           ],
@@ -177,15 +179,15 @@ class AdminStatsCard extends ConsumerWidget {
                 icon: AppIcons.people,
                 title: l10n.totalUsers,
                 value: stats.totalUsers.toString(),
-                color: Colors.blue,
+                color: context.colors.primary,
               ),
             ),
             Expanded(
               child: _StatItem(
-                icon: AppIcons.updateIcon,
+                icon: AppIcons.update,
                 title: l10n.lastUpdate,
                 value: _formatDate(stats.lastUpdate),
-                color: Colors.purple,
+                color: context.colors.tertiary,
               ),
             ),
             const Expanded(child: SizedBox()), // Spacer
@@ -281,9 +283,9 @@ class _StatItem extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -334,10 +336,10 @@ class _VersionInfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Column(

@@ -140,7 +140,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
               Text(
                 _getDateRangeText(l10n),
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -190,7 +190,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -227,7 +227,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
             day,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -258,7 +258,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
                   ? Text(
                       _getMonthLabel(week.first.date),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         fontWeight: FontWeight.w500,
                       ),
                     )
@@ -300,7 +300,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
             : null,
           boxShadow: isSelected
             ? [BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                 blurRadius: 4,
                 spreadRadius: 1,
               )]
@@ -328,7 +328,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         Text(
           l10n.less,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
         const SizedBox(width: 8),
@@ -350,7 +350,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         Text(
           l10n.more,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
         const Spacer(),
@@ -370,10 +370,10 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.colorScheme.primary.withOpacity(0.3),
+          color: theme.colorScheme.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -439,7 +439,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
       ],
@@ -455,20 +455,20 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
             Icon(
               AppIcons.gridView,
               size: 64,
-              color: theme.colorScheme.onSurface.withOpacity(0.3),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
               l10n.noPerformanceData,
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               l10n.startWorkoutToSeeData,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.5),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
               textAlign: TextAlign.center,
             ),

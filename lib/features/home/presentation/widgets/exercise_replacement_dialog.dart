@@ -168,29 +168,36 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                     ),
                     const SizedBox(height: 12),
 
-                    RadioListTile<String>(
-                      value: 'keep',
+                    RadioGroup<String>(
                       groupValue: weightOption,
-                      onChanged: (value) => setState(() => weightOption = value!),
-                      title: Text(l10n.keepCurrentWeight),
-                      dense: true,
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    RadioListTile<String>(
-                      value: 'reset',
-                      groupValue: weightOption,
-                      onChanged: (value) => setState(() => weightOption = value!),
-                      title: Text(l10n.resetWeight),
-                      dense: true,
-                      controlAffinity: ListTileControlAffinity.leading,
-                    ),
-                    RadioListTile<String>(
-                      value: 'manual',
-                      groupValue: weightOption,
-                      onChanged: (value) => setState(() => weightOption = value!),
-                      title: Text(l10n.setManually),
-                      dense: true,
-                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => weightOption = value);
+                        }
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RadioListTile<String>(
+                            value: 'keep',
+                            title: Text(l10n.keepCurrentWeight),
+                            dense: true,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                          RadioListTile<String>(
+                            value: 'reset',
+                            title: Text(l10n.resetWeight),
+                            dense: true,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                          RadioListTile<String>(
+                            value: 'manual',
+                            title: Text(l10n.setManually),
+                            dense: true,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -203,7 +210,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 border: Border(
-                  top: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+                  top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
                 ),
               ),
               child: Row(
@@ -273,8 +280,8 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                       ExerciseReplacementService.getExerciseDetails(exercise),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: isSelected
-                            ? colorScheme.onPrimaryContainer.withOpacity(0.7)
-                            : colorScheme.onSurfaceVariant.withOpacity(0.7),
+                            ? colorScheme.onPrimaryContainer.withValues(alpha: 0.7)
+                            : colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                       ),
                     ),
                   ],

@@ -203,7 +203,7 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                   children: [
                     Flexible(
                       child: _buildInfoItem(
-                        icon: AppIcons.timerOffOutlined,
+                        icon: AppIcons.timer,
                         text: _formatTut(tut!),
                         color: theme.colorScheme.primary,
                         theme: theme,
@@ -381,7 +381,7 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
       case ExerciseCategory.shoulders:
         return AppIcons.accessibility;
       case ExerciseCategory.back:
-        return AppIcons.gymnastics;
+        return AppIcons.sportsGymnastics;
       case ExerciseCategory.arms:
         return AppIcons.sportsMma;
       case ExerciseCategory.legs:

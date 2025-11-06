@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/shared/domain/entities/unified_workout_template.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Debug logger for hybrid template repository (TEMPORARY FOR DEBUGGING)
 class _HybridTemplateLogger {
@@ -69,10 +70,12 @@ class _HybridTemplateLogger {
 class HybridTemplateRepository {
 
   HybridTemplateRepository({
+    required HiveBoxManagerEnhanced boxManager,
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
     Ref? ref,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+  })  : _boxManager = boxManager,
+        _firestore = firestore ?? FirebaseFirestore.instance,
         _auth = auth ?? FirebaseAuth.instance,
         _ref = ref {
     _HybridTemplateLogger.log('🚀 HybridTemplateRepository constructor called');
@@ -84,6 +87,7 @@ class HybridTemplateRepository {
     // Store the initialization future to await it later
     _initializationFuture = _initializeBoxes();
   }
+  final HiveBoxManagerEnhanced _boxManager;
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   final Ref? _ref; // Optional ref for accessing user profile provider
@@ -98,11 +102,11 @@ class HybridTemplateRepository {
     _HybridTemplateLogger.step('HIVE_INIT', 'Starting Hive box initialization...');
     try {
       _HybridTemplateLogger.hive('Opening templates box...');
-      _templatesBox = await Hive.openBox<Map>('templates');
+      _templatesBox = await _boxManager.openBox<Map>('templates');
       _HybridTemplateLogger.hive('✅ Templates box opened: ${_templatesBox.keys.length} existing entries');
 
       _HybridTemplateLogger.hive('Opening template sync queue box...');
-      _templateSyncBox = await Hive.openBox<Map>('template_sync_queue');
+      _templateSyncBox = await _boxManager.openBox<Map>('template_sync_queue');
       _HybridTemplateLogger.hive('✅ Template sync box opened: ${_templateSyncBox.keys.length} pending syncs');
 
       _HybridTemplateLogger.step('HIVE_INIT', '✅ Hive initialization completed successfully');

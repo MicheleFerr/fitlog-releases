@@ -95,8 +95,8 @@ class RoutineMatchingService {
     for (final entry in routine.schedule.entries) {
       final scheduledDay = entry.value;
 
-      // Filtro 1: Il templateId deve corrispondere
-      if (scheduledDay.templateId != templateId) {
+      // Filtro 1: Il templateId deve corrispondere (case-insensitive)
+      if (scheduledDay.templateId?.toLowerCase() != templateId.toLowerCase()) {
         continue;
       }
 
@@ -164,8 +164,8 @@ class RoutineMatchingService {
       return null;
     }
 
-    // Il template di oggi è diverso da quello completato?
-    if (todayScheduledDay.templateId == completedWorkout.templateId) {
+    // Il template di oggi è diverso da quello completato? (case-insensitive)
+    if (todayScheduledDay.templateId?.toLowerCase() == completedWorkout.templateId?.toLowerCase()) {
       if (kDebugMode) {
         debugPrint(
           '❌ [Swap Detection] Today template matches completed workout, no swap needed',

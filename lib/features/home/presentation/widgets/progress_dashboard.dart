@@ -92,7 +92,7 @@ class ProgressDashboard extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(

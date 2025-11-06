@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class XPDisplayWidget extends ConsumerStatefulWidget {
@@ -78,13 +80,13 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  theme.colorScheme.primary.withOpacity(0.1),
-                  theme.colorScheme.secondary.withOpacity(0.1),
+                  theme.colorScheme.primary.withValues(alpha: 0.1),
+                  theme.colorScheme.secondary.withValues(alpha: 0.1),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -103,12 +105,12 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                         gradient: RadialGradient(
                           colors: [
                             theme.colorScheme.primary,
-                            theme.colorScheme.primary.withOpacity(_glowAnimation.value),
+                            theme.colorScheme.primary.withValues(alpha: _glowAnimation.value),
                           ],
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: theme.colorScheme.primary.withOpacity(_glowAnimation.value),
+                            color: theme.colorScheme.primary.withValues(alpha: _glowAnimation.value),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -121,14 +123,14 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Icon(
-                                AppIcons.star,
-                                color: Colors.white,
+                                Icons.star,
+                                color: context.colors.surface,
                                 size: 28,
                               ),
                               Text(
                                 'Lv.$level',
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -216,19 +218,19 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                         icon: AppIcons.edit,
                         label: 'Contributi',
                         value: stats.totalContributions.toString(),
-                        color: Colors.blue,
+                        color: context.colors.primary,
                       ),
                       _StatItem(
                         icon: AppIcons.complete,
                         label: 'Approvati',
                         value: stats.approvedContributions.toString(),
-                        color: Colors.green,
+                        color: context.colors.success,
                       ),
                       _StatItem(
                         icon: AppIcons.thumbUp,
                         label: 'Voti',
                         value: stats.totalVotes.toString(),
-                        color: Colors.orange,
+                        color: context.colors.secondary,
                       ),
                     ],
                   ),
@@ -259,10 +261,10 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withOpacity(0.2),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Row(
@@ -334,7 +336,7 @@ class _StatItem extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -376,23 +378,23 @@ class _BadgeChip extends StatelessWidget {
     
     switch (badge) {
       case 'first_contribution':
-        icon = AppIcons.celebration;
-        color = Colors.purple;
+        icon = Icons.celebration;
+        color = context.colors.tertiary;
         label = 'Prima Contribuzione';
         break;
       case 'verified_contributor':
-        icon = AppIcons.verified;
-        color = Colors.blue;
+        icon = Icons.verified;
+        color = context.colors.primary;
         label = 'Contributore Verificato';
         break;
       case 'top_contributor':
-        icon = AppIcons.expert;
-        color = Colors.orange;
+        icon = Icons.military_tech;
+        color = context.colors.secondary;
         label = 'Top Contributor';
         break;
       case 'expert':
-        icon = AppIcons.education;
-        color = Colors.green;
+        icon = Icons.school;
+        color = context.colors.success;
         label = 'Esperto';
         break;
       default:
@@ -406,13 +408,13 @@ class _BadgeChip extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            color.withOpacity(0.2),
-            color.withOpacity(0.1),
+            color.withValues(alpha: 0.2),
+            color.withValues(alpha: 0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: color.withOpacity(0.5),
+          color: color.withValues(alpha: 0.5),
         ),
       ),
       child: Row(

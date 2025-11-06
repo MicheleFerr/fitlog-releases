@@ -22,10 +22,12 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart'; // Import for hybridExerciseActivityRepositoryProvider
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 // Service provider (OLD - uses Hive local storage)
 final exerciseHistoryServiceProvider = Provider<ExerciseHistoryService>((ref) {
-  return const ExerciseHistoryService(enableDebugLogging: true);
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  return ExerciseHistoryService(boxManager: boxManager, enableDebugLogging: true);
 });
 
 // Repository provider (OLD - uses only Firestore)
@@ -267,44 +269,27 @@ final lastExerciseDataProvider = FutureProvider.family<({double? weight, DateTim
   }
 });
 
-// Exercise history provider
+/// ⚠️ MIGRATED: Now reads from 'workouts' collection instead of Hive
+/// Redirects to exerciseHistoryDataGroupedProvider which uses WorkoutHistoryService
 final exerciseHistoryProvider = FutureProvider.family<List<ExerciseHistoryData>, String>((ref, exerciseName) async {
   try {
-    // Input validation
-    if (exerciseName.trim().isEmpty) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [ExerciseHistory] exerciseHistory: Empty exercise name');
-      }
-      return [];
+    // MIGRATION: Use new workouts-based provider
+    final grouped = await ref.watch(exerciseHistoryDataGroupedProvider(exerciseName).future);
+
+    // Flatten grouped data to list
+    final allHistory = <ExerciseHistoryData>[];
+    for (final dayHistory in grouped.values) {
+      allHistory.addAll(dayHistory);
     }
 
-    final service = ref.read(exerciseHistoryServiceProvider);
-    final userState = ref.read(currentUserStateProvider);
-
-    final uid = userState.profileOrNull?.uid;
-    if (uid == null) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [ExerciseHistory] exerciseHistory: No user ID');
-      }
-      return [];
-    }
-
-    final result = await service.getExerciseHistory(exerciseName, uid, limit: 50)
-        .timeout(
-          const Duration(seconds: 15),
-          onTimeout: () {
-            if (kDebugMode) {
-              debugPrint('⚠️ [ExerciseHistory] exerciseHistory: Timeout after 15s');
-            }
-            return <ExerciseHistoryData>[];
-          },
-        );
+    // Sort by date descending
+    allHistory.sort((a, b) => b.date.compareTo(a.date));
 
     if (kDebugMode) {
-      debugPrint('✅ [ExerciseHistory] exerciseHistory: Found ${result.length} entries for "$exerciseName"');
+      debugPrint('✅ [ExerciseHistory] exerciseHistory (MIGRATED): Found ${allHistory.length} entries for "$exerciseName"');
     }
 
-    return result;
+    return allHistory;
   } catch (e, stackTrace) {
     if (kDebugMode) {
       debugPrint('❌ [ExerciseHistory] exerciseHistory error: $e');
@@ -314,41 +299,15 @@ final exerciseHistoryProvider = FutureProvider.family<List<ExerciseHistoryData>,
   }
 });
 
-// Exercise history grouped provider (OLD - uses Hive)
+/// ⚠️ MIGRATED: Now reads from 'workouts' collection instead of Hive
+/// Redirects to exerciseHistoryDataGroupedProvider which uses WorkoutHistoryService
 final exerciseHistoryGroupedProvider = FutureProvider.family<Map<DateTime, List<ExerciseHistoryData>>, String>((ref, exerciseName) async {
   try {
-    // Input validation
-    if (exerciseName.trim().isEmpty) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [ExerciseHistory] exerciseHistoryGrouped: Empty exercise name');
-      }
-      return {};
-    }
-
-    final service = ref.read(exerciseHistoryServiceProvider);
-    final userState = ref.read(currentUserStateProvider);
-
-    final uid = userState.profileOrNull?.uid;
-    if (uid == null) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [ExerciseHistory] exerciseHistoryGrouped: No user ID');
-      }
-      return {};
-    }
-
-    final result = await service.getExerciseHistoryGrouped(exerciseName, uid, limit: 50)
-        .timeout(
-          const Duration(seconds: 15),
-          onTimeout: () {
-            if (kDebugMode) {
-              debugPrint('⚠️ [ExerciseHistory] exerciseHistoryGrouped: Timeout after 15s');
-            }
-            return <DateTime, List<ExerciseHistoryData>>{};
-          },
-        );
+    // MIGRATION: Direct redirect to new workouts-based provider
+    final result = await ref.watch(exerciseHistoryDataGroupedProvider(exerciseName).future);
 
     if (kDebugMode) {
-      debugPrint('✅ [ExerciseHistory] exerciseHistoryGrouped: Found ${result.length} days for "$exerciseName"');
+      debugPrint('✅ [ExerciseHistory] exerciseHistoryGrouped (MIGRATED): Found ${result.length} days for "$exerciseName"');
     }
 
     return result;
@@ -501,7 +460,7 @@ final exerciseActivitiesGroupedProvider = FutureProvider.family<Map<DateTime, Li
   }
 });
 
-// NEW: Convert ExerciseActivity to ExerciseHistoryData format (using LOCAL data)
+// NEW: Convert ExerciseActivity to ExerciseHistoryData format (using NEW WORKOUTS collection)
 final exerciseHistoryDataGroupedProvider = FutureProvider.family<Map<DateTime, List<ExerciseHistoryData>>, String>((ref, exerciseName) async {
   try {
     // Input validation
@@ -512,42 +471,52 @@ final exerciseHistoryDataGroupedProvider = FutureProvider.family<Map<DateTime, L
       return {};
     }
 
-    final activities = await ref.watch(exerciseActivitiesLocalProvider(exerciseName).future);
+    // NEW: Use the new workout history service that reads from 'workouts' collection
+    final service = ref.read(workoutHistoryServiceProvider);
 
-    // Convert activities to ExerciseHistoryData and group by date
+    // Get UID directly from Firebase Auth (not from provider which might be loading)
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [ExerciseHistory] exerciseHistoryDataGrouped: No user UID');
+      }
+      return {};
+    }
+
+    // Fetch history data from new 'workouts' collection
+    final historyDataList = await service.getExerciseHistory(
+      exerciseName: exerciseName,
+      userId: uid,
+      limit: 100,
+    );
+
+    if (kDebugMode) {
+      debugPrint('✅ [ExerciseHistory] exerciseHistoryDataGrouped: Found ${historyDataList.length} history items from workouts collection');
+    }
+
+    // ✅ FIX: Trigger fallback if new collection has no data (might be incomplete migration)
+    if (historyDataList.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [ExerciseHistory] No data in workouts collection, triggering fallback to old collection');
+      }
+      throw Exception('Empty history from workouts collection, trying fallback');
+    }
+
+    // Group by date
     final Map<DateTime, List<ExerciseHistoryData>> grouped = {};
 
-    for (final activity in activities) {
+    for (final historyData in historyDataList) {
       final dateOnly = DateTime(
-        activity.createdAt.year,
-        activity.createdAt.month,
-        activity.createdAt.day,
+        historyData.date.year,
+        historyData.date.month,
+        historyData.date.day,
       );
 
-      // Convert each set to ExerciseHistoryData
-      final historyDataList = <ExerciseHistoryData>[];
-
-      for (final setData in activity.sets) {
-        if (setData.done) { // Only include completed sets
-          final weight = double.tryParse(setData.weight);
-          final reps = int.tryParse(setData.actualReps ?? setData.reps);
-
-          historyDataList.add(ExerciseHistoryData(
-            weight: weight,
-            reps: reps,
-            date: activity.createdAt,
-            workoutName: activity.schedaName, // Use schedaName as workoutName
-          ));
-        }
-      }
-
-      if (historyDataList.isNotEmpty) {
-        grouped.putIfAbsent(dateOnly, () => []).addAll(historyDataList);
-      }
+      grouped.putIfAbsent(dateOnly, () => []).add(historyData);
     }
 
     if (kDebugMode) {
-      debugPrint('✅ [ExerciseHistory] exerciseHistoryDataGrouped: Converted ${activities.length} activities to ${grouped.length} days');
+      debugPrint('✅ [ExerciseHistory] exerciseHistoryDataGrouped: Grouped ${historyDataList.length} items into ${grouped.length} days');
     }
 
     return grouped;
@@ -556,7 +525,59 @@ final exerciseHistoryDataGroupedProvider = FutureProvider.family<Map<DateTime, L
       debugPrint('❌ [ExerciseHistory] exerciseHistoryDataGrouped error: $e');
       debugPrint('📍 Stack trace: $stackTrace');
     }
-    return {};
+
+    // FALLBACK: Try the old method if new method fails
+    if (kDebugMode) {
+      debugPrint('🔄 [ExerciseHistory] Falling back to old exerciseActivitiesLocal method...');
+    }
+
+    try {
+      final activities = await ref.watch(exerciseActivitiesLocalProvider(exerciseName).future);
+
+      // Convert activities to ExerciseHistoryData and group by date
+      final Map<DateTime, List<ExerciseHistoryData>> groupedFallback = {};
+
+      for (final activity in activities) {
+        final dateOnly = DateTime(
+          activity.createdAt.year,
+          activity.createdAt.month,
+          activity.createdAt.day,
+        );
+
+        // Convert each set to ExerciseHistoryData
+        final historyDataList = <ExerciseHistoryData>[];
+
+        for (final setData in activity.sets) {
+          if (setData.done) { // Only include completed sets
+            final weight = double.tryParse(setData.weight);
+            final reps = int.tryParse(setData.actualReps ?? setData.reps);
+
+            historyDataList.add(ExerciseHistoryData(
+              weight: weight,
+              reps: reps,
+              date: activity.createdAt,
+              workoutName: activity.schedaName, // Use schedaName as workoutName
+            ));
+          }
+        }
+
+        if (historyDataList.isNotEmpty) {
+          groupedFallback.putIfAbsent(dateOnly, () => []).addAll(historyDataList);
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ [ExerciseHistory] exerciseHistoryDataGrouped FALLBACK: Converted ${activities.length} activities to ${groupedFallback.length} days');
+      }
+
+      return groupedFallback;
+    } catch (fallbackError, fallbackStackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [ExerciseHistory] exerciseHistoryDataGrouped FALLBACK error: $fallbackError');
+        debugPrint('📍 Stack trace: $fallbackStackTrace');
+      }
+      return {};
+    }
   }
 });
 
@@ -637,7 +658,7 @@ final exerciseStatsProvider = FutureProvider.family<({
   }
 });
 
-// NEW: Exercise stats provider using LOCAL data
+// NEW: Exercise stats provider using NEW WORKOUTS collection
 final exerciseStatsFromActivitiesProvider = FutureProvider.family<({
   double? maxWeight,
   int totalSets,
@@ -660,11 +681,14 @@ final exerciseStatsFromActivitiesProvider = FutureProvider.family<({
       );
     }
 
-    final activities = await ref.watch(exerciseActivitiesLocalProvider(exerciseName).future);
+    // NEW: Use the new workout history service that reads from 'workouts' collection
+    final service = ref.read(workoutHistoryServiceProvider);
 
-    if (activities.isEmpty) {
+    // Get UID directly from Firebase Auth
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
       if (kDebugMode) {
-        debugPrint('⚠️ [ExerciseHistory] exerciseStatsFromActivities: No activities found');
+        debugPrint('⚠️ [ExerciseHistory] exerciseStatsFromActivities: No user UID');
       }
       return (
         maxWeight: null,
@@ -675,44 +699,53 @@ final exerciseStatsFromActivitiesProvider = FutureProvider.family<({
       );
     }
 
-    // Calculate stats from activities
+    // Fetch history data from new 'workouts' collection
+    final historyDataList = await service.getExerciseHistory(
+      exerciseName: exerciseName,
+      userId: uid,
+      limit: 100,
+    );
+
+    // ✅ FIX: Trigger fallback if new collection has no data (might be incomplete migration)
+    if (historyDataList.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [ExerciseHistory] No data in workouts collection, triggering fallback to old collection');
+      }
+      throw Exception('Empty history from workouts collection, trying fallback');
+    }
+
+    // Calculate stats from history data
     double maxWeight = 0;
-    int totalSets = 0;
+    final int totalSets = historyDataList.length; // Each history item is a set
     double totalWeightSum = 0;
     int weightCount = 0;
     DateTime? firstWorkout;
     DateTime? lastWorkout;
 
-    for (final activity in activities) {
+    for (final historyData in historyDataList) {
       // Update first/last workout dates
-      if (firstWorkout == null || activity.createdAt.isBefore(firstWorkout)) {
-        firstWorkout = activity.createdAt;
+      if (firstWorkout == null || historyData.date.isBefore(firstWorkout)) {
+        firstWorkout = historyData.date;
       }
-      if (lastWorkout == null || activity.createdAt.isAfter(lastWorkout)) {
-        lastWorkout = activity.createdAt;
+      if (lastWorkout == null || historyData.date.isAfter(lastWorkout)) {
+        lastWorkout = historyData.date;
       }
 
-      // Calculate weight stats from sets
-      for (final set in activity.sets) {
-        if (set.done) {
-          totalSets++;
-
-          final weight = double.tryParse(set.weight);
-          if (weight != null && weight > 0) {
-            if (weight > maxWeight) {
-              maxWeight = weight;
-            }
-            totalWeightSum += weight;
-            weightCount++;
-          }
+      // Calculate weight stats
+      final weight = historyData.weight;
+      if (weight != null && weight > 0) {
+        if (weight > maxWeight) {
+          maxWeight = weight;
         }
+        totalWeightSum += weight;
+        weightCount++;
       }
     }
 
     final avgWeight = weightCount > 0 ? totalWeightSum / weightCount : 0.0;
 
     if (kDebugMode) {
-      debugPrint('✅ [ExerciseHistory] exerciseStatsFromActivities: "$exerciseName" - max: ${maxWeight}kg, sets: $totalSets, avg: ${avgWeight.toStringAsFixed(1)}kg');
+      debugPrint('✅ [ExerciseHistory] exerciseStatsFromActivities: Stats - max: ${maxWeight}kg, sets: $totalSets, avg: ${avgWeight.toStringAsFixed(1)}kg');
     }
 
     return (
@@ -727,13 +760,88 @@ final exerciseStatsFromActivitiesProvider = FutureProvider.family<({
       debugPrint('❌ [ExerciseHistory] exerciseStatsFromActivities error: $e');
       debugPrint('📍 Stack trace: $stackTrace');
     }
-    return (
-      maxWeight: null,
-      totalSets: 0,
-      avgWeight: 0.0,
-      firstWorkout: null,
-      lastWorkout: null,
-    );
+
+    // FALLBACK: Try the old method
+    if (kDebugMode) {
+      debugPrint('🔄 [ExerciseHistory] Falling back to old method for stats...');
+    }
+
+    try {
+      final activities = await ref.watch(exerciseActivitiesLocalProvider(exerciseName).future);
+
+      if (activities.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [ExerciseHistory] exerciseStatsFromActivities FALLBACK: No activities found');
+        }
+        return (
+          maxWeight: null,
+          totalSets: 0,
+          avgWeight: 0.0,
+          firstWorkout: null,
+          lastWorkout: null,
+        );
+      }
+
+      // Calculate stats from activities
+      double maxWeight = 0;
+      int totalSets = 0;
+      double totalWeightSum = 0;
+      int weightCount = 0;
+      DateTime? firstWorkout;
+      DateTime? lastWorkout;
+
+      for (final activity in activities) {
+        // Update first/last workout dates
+        if (firstWorkout == null || activity.createdAt.isBefore(firstWorkout)) {
+          firstWorkout = activity.createdAt;
+        }
+        if (lastWorkout == null || activity.createdAt.isAfter(lastWorkout)) {
+          lastWorkout = activity.createdAt;
+        }
+
+        // Calculate weight stats from sets
+        for (final set in activity.sets) {
+          if (set.done) {
+            totalSets++;
+
+            final weight = double.tryParse(set.weight);
+            if (weight != null && weight > 0) {
+              if (weight > maxWeight) {
+                maxWeight = weight;
+              }
+              totalWeightSum += weight;
+              weightCount++;
+            }
+          }
+        }
+      }
+
+      final avgWeight = weightCount > 0 ? totalWeightSum / weightCount : 0.0;
+
+      if (kDebugMode) {
+        debugPrint('✅ [ExerciseHistory] exerciseStatsFromActivities FALLBACK: "$exerciseName" - max: ${maxWeight}kg, sets: $totalSets, avg: ${avgWeight.toStringAsFixed(1)}kg');
+      }
+
+      return (
+        maxWeight: maxWeight > 0 ? maxWeight : null,
+        totalSets: totalSets,
+        avgWeight: avgWeight,
+        firstWorkout: firstWorkout,
+        lastWorkout: lastWorkout,
+      );
+    } catch (fallbackError, fallbackStackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [ExerciseHistory] exerciseStatsFromActivities FALLBACK error: $fallbackError');
+        debugPrint('📍 Stack trace: $fallbackStackTrace');
+      }
+      return (
+        maxWeight: null,
+        totalSets: 0,
+        avgWeight: 0.0,
+        firstWorkout: null,
+        lastWorkout: null,
+      );
+    }
   }
 });
 

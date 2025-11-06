@@ -231,7 +231,7 @@
   "addSet": "Aggiungi Serie",
   "weight": "Peso",
   "reps": "rip",
-  "notes": "Note (opzionale)",
+  "notes": "Note",
   "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
   "exerciseTypeSingle": "Singolo",
   "exerciseTypeSuperset": "Superset",
@@ -613,7 +613,7 @@
   "volume": "Volume",
   "startWorkoutQuick": "INIZIA ALLENAMENTO",
   "suggestedForToday": "Suggerito per oggi",
-  "yourProgress": "I tuoi progressi",
+  "yourProgress": "I Tuoi Progressi",
   "pushDay": "Push Day",
   "pullDay": "Pull Day",
   "legDay": "Leg Day",
@@ -705,7 +705,7 @@
   "muscleGroupShoulders": "Spalle",
   "muscleGroupArms": "Braccia",
   "muscleGroupOther": "Altro",
-  "days": "{count, plural, =0{0 giorni} =1{1 giorno} other{{count} giorni}}",
+  "days": "giorni",
   "perWeek": "/settimana",
   "target": "Target",
   "frequency": "Frequenza",
@@ -728,6 +728,9 @@
   "weeklyFrequencyInfo": "Numero medio di giorni di allenamento per settimana nelle ultime 4 settimane.",
   "retry": "Riprova",
   "community": "Community",
+  "comingSoon": "Prossimamente",
+  "communityComingSoonTitle": "Funzionalità Community in Arrivo",
+  "communityComingSoonDescription": "Stiamo lavorando per creare una fantastica funzionalità community dove potrai connetterti con altri atleti, condividere i tuoi progressi e imparare gli uni dagli altri. Resta sintonizzato!",
   "generalInformation": "Informazioni Generali",
   "technicalNotesAndTut": "Note Tecniche & TuT",
   "warmupAndPreparation": "Riscaldamento & Preparazione",
@@ -774,11 +777,17 @@
   "originalExercise": "Esercizio originale",
   "suggestedMatches": "Corrispondenze suggerite",
   "match": "corrispondenza",
+  "linkedTo": "Collegato a",
   "skipExercise": "Salta Esercizio",
   "createNewExercise": "Crea Nuovo",
   "useSelectedExercise": "Usa Selezionato",
   "workoutTemplates": "Schede Allenamento",
   "discover": "Scopri",
+  "searchContributions": "Cerca contributi...",
+  "sort": "Ordina",
+  "noContributionsFound": "Nessun contributo trovato",
+  "tryDifferentSearch": "Prova a modificare la ricerca o i filtri",
+  "errorLoadingContributions": "Errore caricamento contributi",
   "trending": "Tendenze",
   "avgRating": "Valut. Media",
   "newTemplate": "Nuova Scheda",
@@ -1028,7 +1037,7 @@
   "setsCount": "{count} serie",
   "setLabel": "Serie {number}",
   "weightLabel": "Peso (kg)",
-  "repsLabel": "Ripetizioni",
+  "repsLabel": "rip",
   "effortLabel": "Sforzo",
   "importedTemplate": "Template Importato",
   "noExercisesFoundInJSON": "Nessun esercizio trovato nel JSON",
@@ -1090,7 +1099,7 @@
   "restTimeBetweenExercises": "Tempo di riposo tra ogni esercizio in un round",
   "afterRound": "Dopo Round",
   "restTimeAfterRound": "Tempo di riposo dopo aver completato tutti gli esercizi",
-  "setCompleted": "Serie completata!",
+  "setCompleted": "Serie completata",
   "next": "Avanti",
   "single": "Singolo",
   "superset": "Superset",
@@ -1118,6 +1127,8 @@
   "rateYourEffort": "Valuta il tuo sforzo",
   "completeSet": "Completa Serie",
   "verifyWeightReps": "Verifica Peso e Ripetizioni",
+  "verifyTime": "Verifica Minuti e Secondi",
+  "verifyReps": "Verifica Ripetizioni",
   "exerciseHistory": "Storico Esercizio",
   "errorLoadingHistory": "Errore nel caricamento della cronologia",
   "statistics": "Statistiche",
@@ -1195,7 +1206,7 @@
   "perfectEffort": "Sforzo perfetto",
   "tooHeavy": "Troppo pesante",
   "editTemplate": "Modifica Template",
-  "useTemplate": "Usa Questa Scheda",
+  "useTemplate": "Usa Template",
   "saveAsTemplate": "Salva come Template",
   "templateName": "Nome Template",
   "templateDescription": "Descrizione Scheda",
@@ -1405,7 +1416,6 @@
   "status": "Stato",
   "databaseManager": "Gestione Database",
   "publishNewVersion": "Pubblica Nuova Versione",
-  "currentVersion": "Versione Attuale",
   "lastPublished": "Ultima Pubblicazione",
   "totalExercisesInDb": "Esercizi Totali nel Database",
   "versionHistory": "Cronologia Versioni",
@@ -1697,6 +1707,58 @@
   "@apreProtocol10Helper": {
     "description": "Helper text for APRE 10 protocol"
   },
+  "apreProtocolPreview": "Anteprima Cambio Protocollo",
+  "@apreProtocolPreview": {
+    "description": "Title for APRE protocol change preview"
+  },
+  "aprePreviewDescription": "Vedi come cambieranno i tuoi pesi con il nuovo protocollo",
+  "@aprePreviewDescription": {
+    "description": "Description for protocol preview feature"
+  },
+  "apreCurrentProtocol": "Attuale (APRE {protocol})",
+  "@apreCurrentProtocol": {
+    "description": "Label for current protocol in preview",
+    "placeholders": {
+      "protocol": {
+        "type": "int",
+        "description": "Current protocol number (3, 6, or 10)"
+      }
+    }
+  },
+  "apreNewProtocol": "Nuovo (APRE {protocol})",
+  "@apreNewProtocol": {
+    "description": "Label for new protocol in preview",
+    "placeholders": {
+      "protocol": {
+        "type": "int",
+        "description": "New protocol number (3, 6, or 10)"
+      }
+    }
+  },
+  "apreSet1Preview": "Serie 1 (50%)",
+  "@apreSet1Preview": {
+    "description": "Label for Set 1 in protocol preview"
+  },
+  "apreSet2Preview": "Serie 2 (75%)",
+  "@apreSet2Preview": {
+    "description": "Label for Set 2 in protocol preview"
+  },
+  "apreSet3Preview": "Serie 3 (100%)",
+  "@apreSet3Preview": {
+    "description": "Label for Set 3 in protocol preview"
+  },
+  "apreSet4Preview": "Serie 4",
+  "@apreSet4Preview": {
+    "description": "Label for Set 4 in protocol preview"
+  },
+  "apreAdjustedBasedOnPerformance": "Adattato in base alla performance",
+  "@apreAdjustedBasedOnPerformance": {
+    "description": "Description for Set 4 adjustment in protocol preview"
+  },
+  "apreApplyChanges": "Applica Modifiche",
+  "@apreApplyChanges": {
+    "description": "Button to apply protocol changes in preview"
+  },
   "autoAdjustment": "Regolazione Automatica",
   "@autoAdjustment": {
     "description": "Label for automatic load adjustment feature"
@@ -1850,6 +1912,15 @@
   "enableRpeTitle": "Abilita Monitoraggio RPE",
   "enableRpeDescription": "Richiedi lo sforzo percepito dopo ogni serie",
   "enableRpeTooltip": "RPE (Rate of Perceived Exertion) ti aiuta a tracciare quanto è impegnativa ogni serie, permettendo un'auto-regolazione intelligente basata sul tuo livello di affaticamento.",
+  "attentionRequired": "Attenzione",
+  "enable": "Abilita",
+  "essentialsSection": "Essenziali",
+  "essentialsSectionDesc": "Impostazioni fondamentali per iniziare",
+  "advancedSection": "Avanzate",
+  "advancedSectionDesc": "Personalizzazioni per utenti esperti",
+  "visualizationCategory": "Visualizzazione",
+  "autoRegulationCategory": "Auto-regolazione",
+  "interfaceCategory": "Interfaccia",
   "enableTutTitle": "Abilita Monitoraggio TUT",
   "enableTutDescription": "Traccia il Tempo Sotto Tensione per ogni serie",
   "enableTutTooltip": "TUT (Tempo Sotto Tensione) misura quanto dura ogni serie, aiutandoti a ottimizzare la crescita muscolare tracciando velocità di esecuzione e tempi di riposo.",
@@ -2341,7 +2412,7 @@
   "coreMuscle": "Core",
   "cancelButton": "Annulla",
   "remappingComingSoon": "Funzionalità in arrivo: salveremo \"{exerciseName}\" come {muscleGroup}",
-  "exerciseCategorizedSuccess": "✅ \"{exerciseName}\" categorizzato come {muscleGroup}",
+  "exerciseCategorizedSuccess": "\"{exerciseName}\" categorizzato come {muscleGroupName}",
   "undo": "Annulla",
   "categorizationUndone": "Categorizzazione rimossa",
   "setsPerWeek": "serie/sett",
@@ -3809,7 +3880,7 @@
   "@averageRPE": {
     "description": "Average RPE label"
   },
-  "totalSessions": "Sessioni",
+  "totalSessions": "Sessioni Totali",
   "@totalSessions": {
     "description": "Total sessions label"
   },
@@ -4950,13 +5021,8 @@
   "editFunctionalityComingSoon": "Funzionalità di modifica in arrivo",
   "deleteRecordTitle": "Elimina Record",
   "deleteRecordConfirmation": "Sei sicuro di voler eliminare questo record personale?",
-  "totalSessions": "Sessioni Totali",
-  "totalSets": "Serie Totali",
-  "avgWeight": "Peso Medio",
-  "totalVolume": "Volume Totale",
   "bodyweightMultiplier": "Moltiplicatore Peso Corporeo",
   "estimatedOneRM": "1RM Stimato",
-  "volume": "Volume",
   "relativeToBodyweight": "Relativo a {weight} kg di peso corporeo",
   "usingBrzyckiFormula": "Usando formula Brzycki",
   "totalWeightReps": "Peso totale × ripetizioni",
@@ -4964,15 +5030,12 @@
   "timeRangeLabel30D": "30G",
   "timeRangeLabel90D": "90G",
   "timeRangeLabelAll": "Tutto",
-  "today": "Oggi",
-  "yesterday": "Ieri",
   "daysAgo": "{days} giorni fa",
   "weeksAgo": "{weeks} settimane fa",
   "monthsAgo": "{months} mesi fa",
   "dAgo": "{days}g fa",
   "setsCountShort": "{count} serie",
   "volumeInTons": "{value}t volume",
-  "repsLabel": "rip",
   "kgLabel": "kg",
   "debugLogsTitle": "Log di Debug",
   "debugLogsSubtitle": "Configura categorie di log",
@@ -5006,12 +5069,8 @@
   "homeEmptyExpertTitle": "Nessun allenamento attivo",
   "homeEmptyExpertDescription": "Inizia un allenamento veloce o usa un template",
   "homeEmptyExpertCTA": "Inizia Allenamento",
-  "useTemplate": "Usa Template",
   "bullet": "Punto elenco",
-  "back": "Indietro",
   "skipTour": "Salta Tour",
-  "next": "Avanti",
-  "done": "Fatto",
   "autoAdvance": "Avanzamento automatico",
   "autoAdvanceIn": "Avanza automaticamente tra {seconds}s",
   "tourAiCoachTitle": "AI Coach 👋",
@@ -5079,15 +5138,10 @@
   "conflictingWorkoutsMessage": "Hai {count} allenamenti programmati durante questa pausa. Verranno saltati automaticamente.",
   "confirmAndPause": "Conferma e Metti in Pausa",
   "selectDate": "Seleziona Data",
-  "pause": "Pausa",
   "routinePaused": "Routine messa in pausa con successo",
   "routineTemplateCreatedSuccess": "Template creato! Selezionalo qui sotto per continuare.",
-  "duration": "Durata",
-  "days": "giorni",
-  "notes": "Note",
   "levelSystem": "Sistema Livelli",
   "currentLevel": "Livello Attuale",
-  "yourProgress": "I Tuoi Progressi",
   "toNextLevel": "al prossimo livello",
   "level": "Livello",
   "current": "Attuale",
@@ -5213,8 +5267,560 @@
   "shade400": "Tonalità 400",
   "lastNMonths": "Ultimi {n} mesi",
   "lastNDays": "Ultimi {n} giorni",
-  "templateNotFound": "Template non trovato",
-  "templateLoadError": "Errore caricamento template: {error}",
-  "loadingTemplate": "Caricamento template...",
-  "unexpectedError": "Errore imprevisto: {error}"
+  "completeDayWithWorkout": "Completa Giorno con Workout",
+  "@completeDayWithWorkout": {
+    "description": "Header for workout selector sheet"
+  },
+  "selectWorkoutToLinkTo": "Seleziona workout da collegare a",
+  "@selectWorkoutToLinkTo": {
+    "description": "Subtitle for workout selector sheet"
+  },
+  "completeWithoutWorkout": "Completa senza workout",
+  "@completeWithoutWorkout": {
+    "description": "Fallback button to complete day without linking a workout"
+  },
+  "noRecentWorkoutsFound": "Nessun workout recente trovato",
+  "@noRecentWorkoutsFound": {
+    "description": "Empty state message when no recent workouts available"
+  },
+  "completeDayWithoutWorkout": "Completa questo giorno senza collegare un workout",
+  "@completeDayWithoutWorkout": {
+    "description": "Empty state description for completing without workout"
+  },
+  "completeDay": "Completa Giorno",
+  "@completeDay": {
+    "description": "Button to complete day in empty state"
+  },
+  "failedToLoadWorkouts": "Impossibile caricare i workout",
+  "@failedToLoadWorkouts": {
+    "description": "Error message when workout loading fails"
+  },
+  "dayCompletedWithWorkout": "Giorno completato con workout!",
+  "@dayCompletedWithWorkout": {
+    "description": "Success message when day is completed with a linked workout"
+  },
+  "dayCompletedManually": "Giorno completato manualmente",
+  "@dayCompletedManually": {
+    "description": "Success message when day is completed without a workout"
+  },
+  "failedToCompleteDay": "Impossibile completare il giorno",
+  "@failedToCompleteDay": {
+    "description": "Error message when day completion fails"
+  },
+  "changeCountingFormat": "Cambia formato counting",
+  "currentFormat": "Formato attuale",
+  "countingModeWeighted": "Peso + Reps",
+  "countingModeWeightedDesc": "Input: Peso (kg/lb) + Ripetizioni",
+  "countingModeWeightedExample": "Esempio: 80kg × 10 rip",
+  "countingModeReps": "Solo Reps",
+  "countingModeRepsDesc": "Input: Solo ripetizioni (senza peso)",
+  "countingModeRepsExample": "Esempio: 15 rip",
+  "countingModeTime": "Basato su tempo",
+  "countingModeTimeDesc": "Input: Durata (mm:ss)",
+  "countingModeTimeExample": "Esempio: 1:30 (90 secondi)",
+  "confirmChange": "Conferma cambio",
+  "current": "Attuale",
+  "warning": "Attenzione",
+  "countingModeWarningTitle": "Attenzione",
+  "countingModeWarningMessage": "Hai {count} serie completate con formato \"{fromMode}\".\n\nCambiare in \"{toMode}\" potrebbe invalidare i dati esistenti.",
+  "countingModeWarningInfo": "Cambiare formato durante un workout non è consigliato. Considera di finire prima il workout.",
+  "keepData": "Mantieni dati",
+  "resetAll": "Resetta tutto",
+  "countingModeChanged": "Formato counting aggiornato!",
+  "analyticsFeedbackThankYou": "Grazie per il tuo feedback!",
+  "@analyticsFeedbackThankYou": {
+    "description": "Messaggio di ringraziamento dopo l'invio del feedback"
+  },
+  "analyticsFeedbackThankYouSubtitle": "Il tuo feedback ci aiuta a migliorare l'esperienza delle analitiche",
+  "@analyticsFeedbackThankYouSubtitle": {
+    "description": "Sottotitolo per il messaggio di ringraziamento"
+  },
+  "analyticsFeedbackQuestion": "Questa vista delle analitiche è utile?",
+  "@analyticsFeedbackQuestion": {
+    "description": "Domanda se le analitiche sono utili"
+  },
+  "analyticsFeedbackHelpful": "Utile",
+  "@analyticsFeedbackHelpful": {
+    "description": "Pulsante per feedback positivo"
+  },
+  "analyticsFeedbackNotHelpful": "Non utile",
+  "@analyticsFeedbackNotHelpful": {
+    "description": "Pulsante per feedback negativo"
+  },
+  "analyticsFeedbackCommentPlaceholder": "Raccontaci di più (opzionale)",
+  "@analyticsFeedbackCommentPlaceholder": {
+    "description": "Placeholder per il campo di testo del commento"
+  },
+  "analyticsFeedbackSubmitting": "Invio in corso...",
+  "@analyticsFeedbackSubmitting": {
+    "description": "Testo del pulsante durante l'invio del feedback"
+  },
+  "analyticsFeedbackSubmit": "Invia feedback",
+  "@analyticsFeedbackSubmit": {
+    "description": "Testo del pulsante per inviare il feedback"
+  },
+  "analyticsFeedbackError": "Impossibile inviare il feedback. Riprova.",
+  "@analyticsFeedbackError": {
+    "description": "Messaggio di errore quando l'invio del feedback fallisce"
+  },
+  "analyticsFeedbackSuccess": "Feedback inviato con successo!",
+  "@analyticsFeedbackSuccess": {
+    "description": "Messaggio di successo dopo l'invio del feedback"
+  },
+  "autoEnabledMaster": "✅ {masterName} auto-abilitato (richiesto per questa funzione)",
+  "@autoEnabledMaster": {
+    "description": "Messaggio snackbar quando il toggle master viene auto-abilitato",
+    "placeholders": {
+      "masterName": {
+        "type": "String",
+        "description": "Nome del toggle master che è stato abilitato"
+      }
+    }
+  },
+  "dependentsDisabled": "⚠️ {count} funzioni dipendenti auto-disabilitate",
+  "@dependentsDisabled": {
+    "description": "Messaggio snackbar quando i toggle dipendenti vengono auto-disabilitati",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Numero di funzioni dipendenti disabilitate"
+      }
+    }
+  },
+  "quickInfoIconTitle": "Icona Info Rapida",
+  "@quickInfoIconTitle": {
+    "description": "Titolo per toggle icona info rapida"
+  },
+  "quickInfoIconDescription": "Tocca per dettagli esercizio",
+  "@quickInfoIconDescription": {
+    "description": "Descrizione per toggle icona info rapida"
+  },
+  "quickInfoIconTooltip": "Mostra modal con informazioni esercizio, cues e suggerimenti",
+  "@quickInfoIconTooltip": {
+    "description": "Tooltip per toggle icona info rapida"
+  },
+  "quickWarmupIconTitle": "Icona Riscaldamento",
+  "@quickWarmupIconTitle": {
+    "description": "Titolo per toggle icona riscaldamento"
+  },
+  "quickWarmupIconDescription": "Tocca per suggerimenti riscaldamento",
+  "@quickWarmupIconDescription": {
+    "description": "Descrizione per toggle icona riscaldamento"
+  },
+  "quickWarmupIconTooltip": "Mostra raccomandazioni serie di riscaldamento basate sul peso di lavoro",
+  "@quickWarmupIconTooltip": {
+    "description": "Tooltip per toggle icona riscaldamento"
+  },
+  "quickPreventionIconTitle": "Icona Prevenzione",
+  "@quickPreventionIconTitle": {
+    "description": "Titolo per toggle icona prevenzione"
+  },
+  "quickPreventionIconDescription": "Tocca per consigli prevenzione infortuni",
+  "@quickPreventionIconDescription": {
+    "description": "Descrizione per toggle icona prevenzione"
+  },
+  "quickPreventionIconTooltip": "Mostra consigli prevenzione infortuni ed esercizi mobilità",
+  "@quickPreventionIconTooltip": {
+    "description": "Tooltip per toggle icona prevenzione"
+  },
+  "exerciseNotesTitle": "Note Esercizio",
+  "@exerciseNotesTitle": {
+    "description": "Titolo per toggle note esercizio"
+  },
+  "exerciseNotesDescription": "Aggiungi note su tecnica e cues",
+  "@exerciseNotesDescription": {
+    "description": "Descrizione per toggle note esercizio"
+  },
+  "exerciseNotesTooltip": "Note personali visibili solo a te durante allenamenti",
+  "@exerciseNotesTooltip": {
+    "description": "Tooltip per toggle note esercizio"
+  },
+  "exerciseInsightsTitle": "Analisi Esercizio",
+  "@exerciseInsightsTitle": {
+    "description": "Titolo per toggle analisi esercizio"
+  },
+  "exerciseInsightsDescription": "Visualizza grafici e statistiche",
+  "@exerciseInsightsDescription": {
+    "description": "Descrizione per toggle analisi esercizio"
+  },
+  "exerciseInsightsTooltip": "Grafici analytics con volume, PR e trend progresso",
+  "@exerciseInsightsTooltip": {
+    "description": "Tooltip per toggle analisi esercizio"
+  },
+  "insightsPerformanceWarning": "ℹ️ I grafici potrebbero rallentare su dispositivi meno recenti",
+  "@insightsPerformanceWarning": {
+    "description": "Avviso performance per grafici analisi"
+  },
+  "modeSwitchWarningTitle": "Passare a Modalità {mode}?",
+  "@modeSwitchWarningTitle": {
+    "description": "Titolo per dialog conferma cambio modalità",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Nome modalità (Base o Pro)"
+      }
+    }
+  },
+  "modeSwitchWarningMessage": "Questo resetterà le tue impostazioni personalizzate ai default {mode}.",
+  "@modeSwitchWarningMessage": {
+    "description": "Messaggio per dialog conferma cambio modalità",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Nome modalità (Base o Pro)"
+      }
+    }
+  },
+  "modeSwitchUndoHint": "Avrai 5 secondi per annullare dopo la conferma.",
+  "@modeSwitchUndoHint": {
+    "description": "Suggerimento sulla funzione annulla nel dialog cambio modalità"
+  },
+  "resetToDefaults": "Resetta a Default {mode}",
+  "@resetToDefaults": {
+    "description": "Testo pulsante per resettare ai default della modalità",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Nome modalità (Base o Pro)"
+      }
+    }
+  },
+  "undoSuccessful": "✅ Impostazioni ripristinate",
+  "@undoSuccessful": {
+    "description": "Messaggio snackbar quando l'annullamento ha successo"
+  },
+  "sortByHelpful": "Più Utili",
+  "@sortByHelpful": {
+    "description": "Opzione ordinamento per contributi più utili"
+  },
+  "sortByRecent": "Più Recenti",
+  "@sortByRecent": {
+    "description": "Opzione ordinamento per contributi più recenti"
+  },
+  "sortBySaved": "Più Salvati",
+  "@sortBySaved": {
+    "description": "Opzione ordinamento per contributi più salvati"
+  },
+  "sortByTrending": "Trending",
+  "@sortByTrending": {
+    "description": "Opzione ordinamento per contributi trending"
+  },
+  "filterByDifficulty": "Difficoltà",
+  "@filterByDifficulty": {
+    "description": "Etichetta filtro per livello di difficoltà"
+  },
+  "filterByType": "Tipo",
+  "@filterByType": {
+    "description": "Etichetta filtro per tipo di contributo"
+  },
+  "filterByAuthorTier": "Autore",
+  "@filterByAuthorTier": {
+    "description": "Etichetta filtro per livello autore"
+  },
+  "filterByDateRange": "Periodo",
+  "@filterByDateRange": {
+    "description": "Etichetta filtro per intervallo di date"
+  },
+  "resetFilters": "Ripristina",
+  "@resetFilters": {
+    "description": "Pulsante per ripristinare i filtri ai valori predefiniti"
+  },
+  "dateFrom": "Da",
+  "@dateFrom": {
+    "description": "Etichetta per data di inizio nell'intervallo di date"
+  },
+  "dateTo": "A",
+  "@dateTo": {
+    "description": "Etichetta per data di fine nell'intervallo di date"
+  },
+  "contributionTypeCorrection": "Correzione",
+  "@contributionTypeCorrection": {
+    "description": "Tipo di contributo: correzione di informazioni sull'esercizio"
+  },
+  "contributionTypeTip": "Consiglio",
+  "@contributionTypeTip": {
+    "description": "Tipo di contributo: consiglio utile o suggerimento"
+  },
+  "contributionTypeWarning": "Avviso",
+  "@contributionTypeWarning": {
+    "description": "Tipo di contributo: avviso di sicurezza o attenzione"
+  },
+  "contributionTypeVariant": "Variante",
+  "@contributionTypeVariant": {
+    "description": "Tipo di contributo: variante o alternativa dell'esercizio"
+  },
+  "contributionTypeTranslation": "Traduzione",
+  "@contributionTypeTranslation": {
+    "description": "Tipo di contributo: miglioramento della traduzione"
+  },
+  "contributionTypeTechnique": "Tecnica",
+  "@contributionTypeTechnique": {
+    "description": "Tipo di contributo: consiglio sulla tecnica o forma"
+  },
+  "difficultyBeginner": "Principiante",
+  "@difficultyBeginner": {
+    "description": "Livello di difficoltà: principiante"
+  },
+  "difficultyIntermediate": "Intermedio",
+  "@difficultyIntermediate": {
+    "description": "Livello di difficoltà: intermedio"
+  },
+  "difficultyAdvanced": "Avanzato",
+  "@difficultyAdvanced": {
+    "description": "Livello di difficoltà: avanzato"
+  },
+  "authorTierCommunity": "Community",
+  "@authorTierCommunity": {
+    "description": "Livello autore: membro della community"
+  },
+  "authorTierExpert": "Esperto",
+  "@authorTierExpert": {
+    "description": "Livello autore: esperto verificato"
+  },
+  "authorTierAdmin": "Admin",
+  "@authorTierAdmin": {
+    "description": "Livello autore: amministratore"
+  },
+  "saves": "Salvati",
+  "@saves": {
+    "description": "Etichetta per numero di volte che un contributo è stato salvato"
+  },
+  "views": "Visualizzazioni",
+  "@views": {
+    "description": "Etichetta per numero di visualizzazioni di un contributo"
+  },
+  "comments": "Commenti",
+  "@comments": {
+    "description": "Etichetta per numero di commenti su un contributo"
+  },
+  "upvotes": "Mi piace",
+  "@upvotes": {
+    "description": "Etichetta per numero di mi piace su un contributo"
+  },
+  "bookmarkContribution": "Salva contributo",
+  "@bookmarkContribution": {
+    "description": "Etichetta semantica per pulsante salva contributo"
+  },
+  "saveContribution": "Salva",
+  "@saveContribution": {
+    "description": "Pulsante per salvare un contributo"
+  },
+  "unsaveContribution": "Rimuovi",
+  "@unsaveContribution": {
+    "description": "Pulsante per rimuovere un contributo salvato"
+  },
+  "saved": "Salvato",
+  "@saved": {
+    "description": "Etichetta che indica che un contributo è salvato"
+  },
+  "legalDisclaimerTitle": "Disclaimer Medico",
+  "@legalDisclaimerTitle": {
+    "description": "Titolo per il modal del disclaimer legale"
+  },
+  "legalDisclaimerContent": "⚠️ AVVISO IMPORTANTE\n\nFITlog Pro è uno strumento di tracciamento workout.\n\nNON è sostituto di:\n• Consulenza medica\n• Personal trainer\n• Medico sportivo\n• Consulente fitness\n\nDEVI:\n✓ Consultare un medico prima di iniziare qualsiasi programma di allenamento\n✓ Interrompere immediatamente in caso di dolore o disagio\n✓ Assumerti la piena responsabilità per la tua sicurezza durante l'allenamento\n\nIl fornitore NON è responsabile per:\n• Infortuni fisici\n• Peggioramento condizioni mediche\n• Mancato raggiungimento obiettivi fitness\n\nAccettando, riconosci questi rischi e accetti i Termini di Servizio e l'Informativa Privacy.",
+  "@legalDisclaimerContent": {
+    "description": "Testo del contenuto per il modal del disclaimer legale"
+  },
+  "legalDisclaimerAccept": "Accetto",
+  "@legalDisclaimerAccept": {
+    "description": "Pulsante di accettazione per il disclaimer legale"
+  },
+  "legalDisclaimerDecline": "Rifiuto",
+  "@legalDisclaimerDecline": {
+    "description": "Pulsante di rifiuto per il disclaimer legale"
+  },
+  "legalDocuments": "Documenti Legali",
+  "@legalDocuments": {
+    "description": "Titolo della schermata dei documenti legali"
+  },
+  "privacyPolicy": "Informativa sulla Privacy",
+  "@privacyPolicy": {
+    "description": "Titolo dell'Informativa sulla Privacy"
+  },
+  "privacyPolicySubtitle": "Come gestiamo i tuoi dati (conforme GDPR)",
+  "@privacyPolicySubtitle": {
+    "description": "Sottotitolo dell'Informativa sulla Privacy"
+  },
+  "termsOfService": "Termini di Servizio",
+  "@termsOfService": {
+    "description": "Titolo dei Termini di Servizio"
+  },
+  "tosSubtitle": "Accordi utente e limitazioni di responsabilità",
+  "@tosSubtitle": {
+    "description": "Sottotitolo dei Termini di Servizio"
+  },
+  "disclaimerSubtitle": "Informazioni importanti sulla sicurezza",
+  "@disclaimerSubtitle": {
+    "description": "Sottotitolo del Disclaimer Medico"
+  },
+  "errorLoadingDocument": "Errore nel caricamento del documento. Riprova.",
+  "@errorLoadingDocument": {
+    "description": "Messaggio di errore quando il caricamento del documento fallisce"
+  },
+  "apreCalculationMetadata": "Analisi Calcolo",
+  "@apreCalculationMetadata": {
+    "description": "Intestazione per il display dei metadati di calcolo APRE"
+  },
+  "apreShowCalculationDetails": "Mostra Dettagli Calcolo",
+  "@apreShowCalculationDetails": {
+    "description": "Pulsante per espandere il banner dei metadati di calcolo"
+  },
+  "apreHideCalculationDetails": "Nascondi Dettagli Calcolo",
+  "@apreHideCalculationDetails": {
+    "description": "Pulsante per comprimere il banner dei metadati di calcolo"
+  },
+  "apreFormula": "Formula",
+  "@apreFormula": {
+    "description": "Etichetta per la formula di calcolo 1RM"
+  },
+  "apreDataPoints": "Dati Analizzati",
+  "@apreDataPoints": {
+    "description": "Etichetta per il numero di serie analizzate"
+  },
+  "apreDataAge": "Età Dati",
+  "@apreDataAge": {
+    "description": "Etichetta per l'età dei dati utilizzati nel calcolo"
+  },
+  "apreStandardDeviation": "Variabilità",
+  "@apreStandardDeviation": {
+    "description": "Etichetta per la deviazione standard delle stime"
+  },
+  "apreConfidence": "Affidabilità",
+  "@apreConfidence": {
+    "description": "Etichetta per il livello di confidenza del calcolo"
+  },
+  "apreLastCalculation": "Ultimo Aggiornamento",
+  "@apreLastCalculation": {
+    "description": "Etichetta per la data dell'ultimo calcolo"
+  },
+  "apreDaysAgo": "{days, plural, =0{Oggi} =1{Ieri} other{{days} giorni fa}}",
+  "@apreDaysAgo": {
+    "description": "Formato per visualizzare i giorni dall'ultimo dato",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "apreNoHistory": "Nessuno Storico Disponibile",
+  "@apreNoHistory": {
+    "description": "Titolo quando l'utente non ha dati storici APRE"
+  },
+  "apreNoHistoryDescription": "Nessun dato storico disponibile per i calcoli APRE. Seleziona come vuoi stimare il tuo 1RM per iniziare.",
+  "@apreNoHistoryDescription": {
+    "description": "Descrizione quando l'utente non ha dati storici APRE"
+  },
+  "apreOptionFromLastWorkout": "Dall'Ultimo Allenamento",
+  "@apreOptionFromLastWorkout": {
+    "description": "Opzione per usare peso/ripetizioni dell'ultimo allenamento come stima"
+  },
+  "apreOptionManualEstimate": "Stima Manuale",
+  "@apreOptionManualEstimate": {
+    "description": "Opzione per inserire manualmente il 1RM stimato"
+  },
+  "apreOptionTestSet": "Serie di Test",
+  "@apreOptionTestSet": {
+    "description": "Opzione per guidare l'utente a fare una serie di test"
+  },
+  "apreOptionFromLastWorkoutDescription": "Usa peso/ripetizioni dell'ultima serie come stima",
+  "@apreOptionFromLastWorkoutDescription": {
+    "description": "Descrizione per l'opzione dall'ultimo allenamento"
+  },
+  "apreOptionManualEstimateDescription": "Inserisci direttamente il 1RM stimato",
+  "@apreOptionManualEstimateDescription": {
+    "description": "Descrizione per l'opzione stima manuale"
+  },
+  "apreOptionTestSetDescription": "Guida per fare prima una serie di test",
+  "@apreOptionTestSetDescription": {
+    "description": "Descrizione per l'opzione serie di test"
+  },
+  "apreEnter1RM": "Inserisci 1RM Stimato (kg)",
+  "@apreEnter1RM": {
+    "description": "Etichetta per il campo di input 1RM"
+  },
+  "aprePreviewWeights": "Anteprima Pesi",
+  "@aprePreviewWeights": {
+    "description": "Etichetta per la sezione anteprima pesi"
+  },
+  "apreContinue": "Continua",
+  "@apreContinue": {
+    "description": "Pulsante continua nel modal APRE"
+  },
+  "apreCancel": "Annulla",
+  "@apreCancel": {
+    "description": "Pulsante annulla nel modal APRE"
+  },
+  "ageGateTitle": "Verifica la Tua Età",
+  "@ageGateTitle": {
+    "description": "Titolo per schermata di verifica età"
+  },
+  "ageGateInstructions": "Inserisci la tua data di nascita per continuare.",
+  "@ageGateInstructions": {
+    "description": "Istruzioni per verifica età"
+  },
+  "ageGateBirthDate": "Data di Nascita",
+  "@ageGateBirthDate": {
+    "description": "Etichetta per selezione data di nascita"
+  },
+  "ageGateContinue": "Continua",
+  "@ageGateContinue": {
+    "description": "Pulsante continua su age gate"
+  },
+  "ageRestrictionTitle": "Limitazione di Età",
+  "@ageRestrictionTitle": {
+    "description": "Titolo per dialog limitazione età"
+  },
+  "ageRestrictionMessage": "Devi avere almeno 14 anni per usare FITlog Pro.\n\nQuesto requisito è richiesto dal GDPR (Regolamento UE 2016/679) e dalle leggi italiane sulla privacy.",
+  "@ageRestrictionMessage": {
+    "description": "Messaggio che spiega limitazione età"
+  },
+  "ageRestrictionOk": "Ho Capito",
+  "@ageRestrictionOk": {
+    "description": "Pulsante OK su dialog limitazione età"
+  },
+  "ageMinorWarningTitle": "Avviso Importante per Minori",
+  "@ageMinorWarningTitle": {
+    "description": "Titolo per dialog avviso minori"
+  },
+  "ageMinorWarningMessage": "Se hai tra 14 e 17 anni:\n\n• DEVI avere il consenso dei genitori per usare questa app\n• DEVI consultare un medico prima di allenarti\n• DEVI essere supervisionato da un adulto durante gli allenamenti\n• I tuoi genitori sono legalmente responsabili per il tuo uso di questa app\n\nConfermi di avere il consenso dei genitori?",
+  "@ageMinorWarningMessage": {
+    "description": "Messaggio di avviso per minori"
+  },
+  "ageMinorWarningConfirm": "Sì, Ho il Consenso",
+  "@ageMinorWarningConfirm": {
+    "description": "Pulsante conferma per consenso minori"
+  },
+  "ageMinorWarningDecline": "No",
+  "@ageMinorWarningDecline": {
+    "description": "Pulsante rifiuta per consenso minori"
+  },
+  "footerDisclaimerShort": "NON è consulenza medica • Consulta un medico • Uso a tuo rischio",
+  "@footerDisclaimerShort": {
+    "description": "Testo breve del disclaimer per footer"
+  },
+  "footerDisclaimerTapHint": "Tocca per disclaimer completo",
+  "@footerDisclaimerTapHint": {
+    "description": "Suggerimento per toccare il footer per il disclaimer completo"
+  },
+  "apreProtocolChangeWarningTitle": "Allenamento in Corso",
+  "@apreProtocolChangeWarningTitle": {
+    "description": "Titolo del dialog di avviso cambio protocollo APRE"
+  },
+  "apreProtocolChangeWarningMessage": "Non puoi cambiare protocollo APRE durante un allenamento attivo. Completa prima l'allenamento corrente, poi torna per modificare le impostazioni del protocollo.",
+  "@apreProtocolChangeWarningMessage": {
+    "description": "Messaggio che spiega perché il protocollo APRE non può essere cambiato durante l'allenamento"
+  },
+  "apreGotIt": "Ho capito",
+  "@apreGotIt": {
+    "description": "Pulsante per chiudere l'avviso allenamento in corso"
+  },
+  "apreCalculationMethodTitle": "Metodo Calcolo APRE",
+  "@apreCalculationMethodTitle": {
+    "description": "Titolo per impostazione metodo calcolo APRE"
+  },
+  "apreCalculationMethodDescription": "Scegli come vengono selezionate le serie storiche per la stima del 1RM negli allenamenti APRE. Strategie diverse ottimizzano recency, volume dati o stabilità.",
+  "@apreCalculationMethodDescription": {
+    "description": "Descrizione che spiega le opzioni del metodo calcolo APRE"
+  }
 }

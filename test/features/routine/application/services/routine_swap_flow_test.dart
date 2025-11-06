@@ -211,8 +211,8 @@ void main() {
         };
 
         // Find and swap
-        final day1Key = 'day1';
-        final day2Key = 'day2';
+        const day1Key = 'day1';
+        const day2Key = 'day2';
 
         expect(schedule.containsKey(day1Key), true);
         expect(schedule.containsKey(day2Key), true);
@@ -233,7 +233,7 @@ void main() {
           ),
         };
 
-        final dayKey = 'day1';
+        const dayKey = 'day1';
         expect(schedule.containsKey(dayKey), true);
 
         final day = schedule[dayKey]!;

@@ -526,7 +526,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
 
     final icon = type == 'warning' ? AppIcons.warningAmberRounded
                 : type == 'success' ? AppIcons.completeOutline
-                : AppIcons.info;
+                : Icons.info_outline;
 
     final color = type == 'warning' ? Colors.orange
                  : type == 'success' ? Colors.green

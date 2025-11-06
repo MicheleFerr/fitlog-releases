@@ -5,6 +5,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class DropSetExecutionSheet extends ConsumerStatefulWidget {
@@ -110,7 +112,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -118,7 +120,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -154,7 +156,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.error
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         );
@@ -212,7 +214,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -220,7 +222,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -256,7 +258,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.error
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         );
@@ -292,7 +294,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -307,7 +309,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -328,10 +330,10 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                                  color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(6),
                                   border: Border.all(
-                                    color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+                                    color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                                   ),
                                 ),
                                 child: Text(
@@ -414,7 +416,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     color: isCompleted 
-                        ? Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.3)
+                        ? Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.3)
                         : null,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -430,7 +432,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 decoration: BoxDecoration(
                                   color: isCompleted
                                       ? Theme.of(context).colorScheme.secondary
-                                      : Theme.of(context).colorScheme.error.withOpacity(0.15),
+                                      : Theme.of(context).colorScheme.error.withValues(alpha: 0.15),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
@@ -468,7 +470,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 onPressed: () => _toggleDropCompletion(index),
                                 icon: Icon(
                                   isCompleted 
-                                      ? AppIcons.complete 
+                                      ? Icons.check_circle 
                                       : AppIcons.radioButtonUnchecked,
                                   color: isCompleted
                                       ? Theme.of(context).colorScheme.secondary
@@ -491,11 +493,11 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                       color: isCompleted
-                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
                                           : null,
                                     ),
                                     child: Row(
@@ -533,11 +535,11 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                       color: isCompleted
-                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                                          ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
                                           : null,
                                     ),
                                     child: Row(
@@ -619,7 +621,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                                 ? FontWeight.bold
                                                 : FontWeight.normal,
                                             color: _rpes[index] == rpe
-                                                ? Colors.white
+                                                ? context.colors.surface
                                                 : null,
                                           ),
                                         ),
@@ -637,7 +639,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.3),
+                                color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
@@ -693,10 +695,10 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   }
   
   Color _getRPEColor(int rpe) {
-    if (rpe <= 6) return Colors.green;
-    if (rpe <= 7) return Colors.lightGreen;
-    if (rpe <= 8) return Colors.orange;
-    if (rpe <= 9) return Colors.deepOrange;
-    return Colors.red;
+    if (rpe <= 6) return context.colors.success;
+    if (rpe <= 7) return context.colors.success;
+    if (rpe <= 8) return context.colors.secondary;
+    if (rpe <= 9) return context.colors.warning;
+    return context.colors.error;
   }
 }

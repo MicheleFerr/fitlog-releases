@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:collection/collection.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class ExerciseStatsCard extends StatelessWidget {
 
@@ -49,12 +49,12 @@ class ExerciseStatsCard extends StatelessWidget {
             const SizedBox(height: 12),
             
             if (exerciseStats.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(32.0),
                   child: Text(
                     'No exercise data available',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: context.colors.surfaceContainerHighest),
                   ),
                 ),
               )
@@ -169,7 +169,7 @@ class ExerciseStatsCard extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

@@ -108,8 +108,8 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
 
     // Se overlay, aggiungi sfondo semi-trasparente
     if (overlay) {
-      return Container(
-        color: context.colors.surface.withOpacity(0.8),
+      return ColoredBox(
+        color: context.colors.surface.withValues(alpha: 0.8),
         child: indicator,
       );
     }
@@ -145,12 +145,12 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
                   value: progress,
                   color: indicatorColor,
                   backgroundColor:
-                      context.colors.surfaceContainerHighest.withOpacity(0.3),
+                      context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                 )
               : LinearProgressIndicator(
                   color: indicatorColor,
                   backgroundColor:
-                      context.colors.surfaceContainerHighest.withOpacity(0.3),
+                      context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                 ),
         );
 

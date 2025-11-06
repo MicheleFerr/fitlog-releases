@@ -17,7 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_match.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class MatchesPreviewBar extends StatelessWidget {
 
@@ -143,7 +144,7 @@ class MatchesPreviewBar extends StatelessWidget {
                             const Icon(
                               AppIcons.favorite,
                               size: 14,
-                              color: Colors.red,
+                              color: context.colors.error,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -164,7 +165,7 @@ class MatchesPreviewBar extends StatelessWidget {
                             const Icon(
                               AppIcons.handshake,
                               size: 14,
-                              color: Colors.green,
+                              color: context.colors.success,
                             ),
                             const SizedBox(width: 4),
                             Text(

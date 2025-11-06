@@ -13,6 +13,7 @@
 /// - Hive: None
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/empty_matches_view.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/location_permission_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/screens/edit_buddy_profile_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
@@ -255,8 +257,8 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
             
             return Positioned.fill(
               child: IgnorePointer(
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.3 * _celebrationAnimation.value),
+                child: ColoredBox(
+                  color: context.colors.onSurface.withValues(alpha: 0.3 * _celebrationAnimation.value),
                   child: Center(
                     child: Transform.scale(
                       scale: _celebrationAnimation.value,
@@ -272,13 +274,13 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                             const Icon(
                               AppIcons.favorite,
                               size: 48,
-                              color: Colors.white,
+                              color: context.colors.surface,
                             ),
                             const SizedBox(height: 12),
                             Text(
                               l10n.itsAMatch,
                               style: theme.textTheme.headlineSmall?.copyWith(
-                                color: Colors.white,
+                                color: context.colors.surface,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -401,21 +403,21 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
   }
 
   void _handleDislike() async {
-    HapticFeedback.lightImpact();
+    unawaited(HapticFeedback.lightImpact());
     await ref.read(matchingProvider.notifier).dislikeCurrentProfile();
   }
 
   void _handleLike() async {
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     final match = await ref.read(matchingProvider.notifier).likeCurrentProfile();
-    
+
     if (match != null && match.isMutualMatch) {
       _showMatchCelebration();
     }
   }
 
   void _handleSuperLike() async {
-    HapticFeedback.heavyImpact();
+    unawaited(HapticFeedback.heavyImpact());
     // Super like implementation
     _handleLike();
   }

@@ -43,7 +43,7 @@ void main() {
 
     Widget createTestWidget({required Widget child}) {
       return ProviderScope(
-        overrides: [
+        overrides: const [
           // Mock providers to prevent real data dependencies
         ],
         child: MaterialApp(

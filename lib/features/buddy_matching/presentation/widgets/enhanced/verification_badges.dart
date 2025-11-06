@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VerificationBadges extends ConsumerWidget {
@@ -63,8 +64,8 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.isPhotoVerified) {
       badges.add(_buildBadge(
         context,
-        icon: AppIcons.photoCamera,
-        color: const Color(0xFF4CAF50), // Green
+        icon: Icons.photo_camera,
+        color: context.successColor, // Success
         text: AppLocalizations.of(context).photoVerified,
         tooltip: 'Foto del profilo verificata',
       ));
@@ -74,8 +75,8 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.isCurrentlyBoosted) {
       badges.add(_buildBadge(
         context,
-        icon: AppIcons.rocket,
-        color: const Color(0xFFFF9800), // Orange
+        icon: Icons.rocket_launch,
+        color: context.warningColor, // Warning
         text: AppLocalizations.of(context).boosted,
         tooltip: 'Profilo in evidenza',
       ));
@@ -97,13 +98,13 @@ class VerificationBadges extends ConsumerWidget {
   }) {
     return Tooltip(
       message: tooltip,
-      child: showText 
+      child: showText
           ? _buildBadgeWithText(context, icon, color, text)
-          : _buildBadgeIcon(icon, color),
+          : _buildBadgeIcon(context, icon, color),
     );
   }
 
-  Widget _buildBadgeIcon(IconData icon, Color color) {
+  Widget _buildBadgeIcon(BuildContext context, IconData icon, Color color) {
     return Container(
       width: size,
       height: size,
@@ -112,7 +113,7 @@ class VerificationBadges extends ConsumerWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -121,7 +122,7 @@ class VerificationBadges extends ConsumerWidget {
       child: Icon(
         icon,
         size: size * 0.6,
-        color: Colors.white,
+        color: context.colors.surface,
       ),
     );
   }
@@ -130,9 +131,9 @@ class VerificationBadges extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -195,16 +196,16 @@ class TrustScoreIndicator extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     
     Color getScoreColor() {
-      if (trustScore >= 80) return const Color(0xFF4CAF50); // Green
-      if (trustScore >= 60) return const Color(0xFFFF9800); // Orange
-      if (trustScore >= 40) return const Color(0xFFFFC107); // Amber
-      return const Color(0xFFF44336); // Red
+      if (trustScore >= 80) return context.successColor; // Success
+      if (trustScore >= 60) return context.warningColor; // Warning
+      if (trustScore >= 40) return context.warningColor; // Warning
+      return context.errorColor; // Error
     }
 
     IconData getScoreIcon() {
-      if (trustScore >= 80) return AppIcons.shieldOutlined;
+      if (trustScore >= 80) return Icons.shield_outlined;
       if (trustScore >= 60) return AppIcons.verifiedUserOutlined;
-      if (trustScore >= 40) return AppIcons.security;
+      if (trustScore >= 40) return Icons.security;
       return AppIcons.reportProblemOutlined;
     }
 
@@ -218,9 +219,9 @@ class TrustScoreIndicator extends ConsumerWidget {
             ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
             : const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -279,8 +280,8 @@ class ConnectionTypeBadges extends ConsumerWidget {
         context,
         emoji: '🤝',
         text: compact ? '' : l10n.openToFriendship,
-        color: const Color(0xFF4CAF50).withOpacity(0.1),
-        textColor: const Color(0xFF4CAF50),
+        color: context.successContainer,
+        textColor: context.successColor,
       ));
     }
 
@@ -289,8 +290,8 @@ class ConnectionTypeBadges extends ConsumerWidget {
         context,
         emoji: '❤️',
         text: compact ? '' : l10n.openToDating,
-        color: const Color(0xFFF44336).withOpacity(0.1),
-        textColor: const Color(0xFFF44336),
+        color: context.errorContainer,
+        textColor: context.errorColor,
       ));
     }
 

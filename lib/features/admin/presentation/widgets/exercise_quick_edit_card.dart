@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
@@ -45,7 +46,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
     return Card(
       elevation: widget.isSelected ? 4 : 1,
       color: widget.isSelected
-          ? context.colors.primaryContainer.withOpacity(0.3)
+          ? context.colors.primaryContainer.withValues(alpha: 0.3)
           : null,
       child: InkWell(
         onTap: widget.onTap,
@@ -277,7 +278,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             onChanged: (value) => _updateField('tempoEsecuzione', value),
             tooltip: l10n.tempoEsecuzione,
             width: 120,
-            color: Colors.purple,
+            color: context.colors.tertiary,
           ),
       ],
     );
@@ -373,8 +374,8 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                 muscle,
                 style: const TextStyle(fontSize: 10),
               ),
-              backgroundColor: color.withOpacity(0.1),
-              side: BorderSide(color: color.withOpacity(0.3)),
+              backgroundColor: color.withValues(alpha: 0.1),
+              side: BorderSide(color: color.withValues(alpha: 0.3)),
               padding: EdgeInsets.zero,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
@@ -389,10 +390,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest.withOpacity(0.3),
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.2),
+          color: context.colors.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -438,10 +439,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: context.colors.primaryContainer.withOpacity(0.3),
+          color: context.colors.primaryContainer.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: context.colors.primary.withOpacity(0.3),
+            color: context.colors.primary.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -483,7 +484,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     'Tieni premuto per anteprima',
                     style: TextStyle(
                       fontSize: 10,
-                      color: context.colors.onSurfaceVariant.withOpacity(0.7),
+                      color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -625,11 +626,11 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
   Color? _getDifficultyColor(String difficulty) {
     switch (difficulty) {
       case 'Principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'Intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'Avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
         return null;
     }
@@ -667,12 +668,12 @@ class _QuickDropdown extends StatelessWidget {
         border: Border.all(
           color: isHighlighted
               ? context.colors.secondary
-              : context.colors.outline.withOpacity(0.3),
+              : context.colors.outline.withValues(alpha: 0.3),
           width: isHighlighted ? 2 : 1,
         ),
         borderRadius: BorderRadius.circular(8),
         color: isHighlighted
-            ? context.colors.secondary.withOpacity(0.1)
+            ? context.colors.secondary.withValues(alpha: 0.1)
             : null,
       ),
       child: Tooltip(

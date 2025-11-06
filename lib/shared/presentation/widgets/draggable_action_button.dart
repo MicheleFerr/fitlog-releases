@@ -168,7 +168,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -201,7 +201,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -224,7 +224,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -247,7 +247,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: (option.color ?? Theme.of(context).colorScheme.tertiary).withOpacity(0.1),
+                    color: (option.color ?? Theme.of(context).colorScheme.tertiary).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -268,10 +268,10 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               margin: const EdgeInsets.symmetric(horizontal: 16),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                 ),
               ),
               child: Row(
@@ -358,7 +358,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: colorScheme.primary.withOpacity(0.5),
+                        color: colorScheme.primary.withValues(alpha: 0.5),
                         width: 2,
                       ),
                     ),
@@ -376,7 +376,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                       width: 4,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: colorScheme.onSurface.withOpacity(0.2),
+                        color: colorScheme.onSurface.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -392,7 +392,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                       width: 4,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: colorScheme.onSurface.withOpacity(0.2),
+                        color: colorScheme.onSurface.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),

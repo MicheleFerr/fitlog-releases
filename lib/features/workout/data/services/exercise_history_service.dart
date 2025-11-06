@@ -15,26 +15,39 @@ library;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseHistoryData {
 
   const ExerciseHistoryData({
     this.weight,
     this.reps,
+    this.rpe,  // ✅ Include RPE from set
+    this.tut,  // ✅ Include TUT from exercise level
+    this.setDurationMillis,  // ✅ Include actual set duration
     required this.date,
     required this.workoutName,
   });
   final double? weight;
   final int? reps;
+  final int? rpe;  // Rate of Perceived Exertion (5-10)
+  final String? tut;  // Time Under Tension from Exercise level
+  final double? setDurationMillis;  // Actual set duration in milliseconds
   final DateTime date;
   final String workoutName;
 }
 
 class ExerciseHistoryService {
-  
-  const ExerciseHistoryService({this.enableDebugLogging = true});
+
+  const ExerciseHistoryService({
+    required HiveBoxManagerEnhanced boxManager,
+    this.enableDebugLogging = true,
+  }) : _boxManager = boxManager;
+
   static const String _workoutsBoxName = 'workouts';
-  
+
+  final HiveBoxManagerEnhanced _boxManager;
+
   /// Enable debug logging (useful for troubleshooting)
   final bool enableDebugLogging;
   
@@ -100,7 +113,12 @@ class ExerciseHistoryService {
   /// Internal method to get exercise history from Hive storage
   Future<List<ExerciseHistoryData>> _getExerciseHistory(String exerciseName, String userId, {int limit = 50}) async {
     try {
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+      // ✅ DEBUG: Log query
+      if (enableDebugLogging && kDebugMode) {
+        debugPrint('🔍 [HISTORY QUERY] Searching for exercise: "$exerciseName" (userId: $userId, limit: $limit)');
+      }
+
+      final box = await _boxManager.openBox<Map>(_workoutsBoxName);
       final historyData = <ExerciseHistoryData>[];
 
       // Get all workouts for this user
@@ -190,12 +208,22 @@ class ExerciseHistoryService {
             }
 
             for (final set in setsToProcess) {
-              historyData.add(ExerciseHistoryData(
+              final historyEntry = ExerciseHistoryData(
                 weight: (set.weight ?? 0) > 0 ? set.weight : null,
                 reps: (set.reps ?? 0) > 0 ? set.reps : null,
+                rpe: set.rpe,  // ✅ Include RPE from set
+                tut: exercise.tut,  // ✅ Include TUT from exercise level
+                setDurationMillis: set.setDurationMillis,  // ✅ Include actual set duration
                 date: workoutDate,
                 workoutName: workout.name,
-              ));
+              );
+
+              // ✅ DEBUG: Log RPE extraction
+              if (enableDebugLogging && kDebugMode && set.rpe != null) {
+                debugPrint('📊 [HISTORY] Found RPE: exercise=${exercise.name}, RPE=${set.rpe}, weight=${set.weight}, reps=${set.reps}, workout=${workout.name}');
+              }
+
+              historyData.add(historyEntry);
             }
           }
         }
@@ -203,6 +231,16 @@ class ExerciseHistoryService {
 
       // Sort by date (newest first) before limiting
       historyData.sort((a, b) => b.date.compareTo(a.date));
+
+      // ✅ DEBUG: Log summary
+      if (enableDebugLogging && kDebugMode) {
+        final withRPE = historyData.where((d) => d.rpe != null).length;
+        final withWeight = historyData.where((d) => d.weight != null).length;
+        final withReps = historyData.where((d) => d.reps != null).length;
+        final withTUT = historyData.where((d) => d.setDurationMillis != null).length;
+        debugPrint('📊 [HISTORY SUMMARY] Found ${historyData.length} total sets for "$exerciseName"');
+        debugPrint('   → With RPE: $withRPE, With Weight: $withWeight, With Reps: $withReps, With TUT: $withTUT');
+      }
 
       return historyData.take(limit).toList();
     } catch (e, stackTrace) {
@@ -221,7 +259,7 @@ class ExerciseHistoryService {
   /// Debug method to get all exercise names for a user
   Future<List<String>> getAllExerciseNames(String userId) async {
     try {
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+      final box = await _boxManager.openBox<Map>(_workoutsBoxName);
       final exerciseNames = <String>{};
       
       final userKeys = box.keys.where((key) => key.toString().startsWith('${userId}_'));
@@ -263,7 +301,7 @@ class ExerciseHistoryService {
   /// Debug method to get workout count for a user
   Future<int> getWorkoutCount(String userId) async {
     try {
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+      final box = await _boxManager.openBox<Map>(_workoutsBoxName);
       final userKeys = box.keys.where((key) => key.toString().startsWith('${userId}_'));
       return userKeys.length;
     } catch (e) {
@@ -337,5 +375,24 @@ class ExerciseHistoryService {
       firstWorkout: dates.isNotEmpty ? dates.first : null,
       lastWorkout: dates.isNotEmpty ? dates.last : null,
     );
+  }
+
+  /// MEMORY LEAK FIX: Close workouts box to free memory
+  /// Note: This service opens boxes in multiple methods.
+  /// A better approach would be to open once and reuse, but that requires refactoring.
+  /// For now, this static method allows manual cleanup when needed.
+  static Future<void> dispose() async {
+    try {
+      if (Hive.isBoxOpen(_workoutsBoxName)) {
+        await Hive.box<Map>(_workoutsBoxName).close();
+        if (kDebugMode) {
+          debugPrint('✅ ExerciseHistoryService: Closed workouts box');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error disposing ExerciseHistoryService: $e');
+      }
+    }
   }
 }

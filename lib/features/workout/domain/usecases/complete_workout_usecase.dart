@@ -130,28 +130,11 @@ class CompleteWorkoutUseCase {
       endTime: now,
       updatedAt: now,
     );
-    
-    // Clean up exercise data and calculate final metrics
-    final processedExercises = result.exercises.map((exercise) {
-      // Calculate exercise-level metrics
-      final completedSets = exercise.sets.where((set) => set.isCompleted).toList();
-      final totalVolume = completedSets.fold<double>(
-        0.0, 
-        (sum, set) => sum + set.volume,
-      );
-      
-      // Mark exercise as completed if all sets are done
-      final isExerciseComplete = exercise.sets.isNotEmpty && 
-        exercise.sets.every((set) => set.isCompleted);
-      
-      return exercise.copyWith(
-        isCompleted: isExerciseComplete,
-        totalVolume: totalVolume,
-        completedAt: isExerciseComplete ? now : null,
-      );
-    }).toList();
-    
-    return result.copyWith(exercises: processedExercises);
+
+    // ✅ Note: isCompleted, totalVolume, and completedAt are computed getters in Exercise
+    // They are automatically calculated from the completed sets, so no need to explicitly set them
+    // Just return the workout as-is, the getters will compute the values on-the-fly
+    return result;
   }
   
   /// Calculate comprehensive workout statistics

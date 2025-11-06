@@ -12,6 +12,8 @@
 /// - Demo profiles loader
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -229,10 +231,10 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
     await _performDemoAction(() async {
       final loader = ref.read(demoProfilesLoaderProvider);
       await loader.loadDemoProfiles();
-      
+
       // Refresh matches after loading
-      ref.read(matchingProvider.notifier).refreshMatches();
-      
+      unawaited(ref.read(matchingProvider.notifier).refreshMatches());
+
       _showSuccessMessage('✅ Profili demo caricati con successo!');
     });
   }
@@ -241,10 +243,10 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
     await _performDemoAction(() async {
       final loader = ref.read(demoProfilesLoaderProvider);
       await loader.loadDemoProfilesNearCurrentUser();
-      
+
       // Refresh matches after loading
-      ref.read(matchingProvider.notifier).refreshMatches();
-      
+      unawaited(ref.read(matchingProvider.notifier).refreshMatches());
+
       _showSuccessMessage('✅ Profili demo caricati nella tua area!');
     });
   }
@@ -253,10 +255,10 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
     await _performDemoAction(() async {
       final loader = ref.read(demoProfilesLoaderProvider);
       await loader.reloadDemoProfiles();
-      
+
       // Refresh matches after loading
-      ref.read(matchingProvider.notifier).refreshMatches();
-      
+      unawaited(ref.read(matchingProvider.notifier).refreshMatches());
+
       _showSuccessMessage('✅ Profili demo ricaricati!');
     });
   }
@@ -267,16 +269,16 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
       title: 'Conferma Rimozione',
       message: 'Sei sicuro di voler rimuovere tutti i profili demo?',
     );
-    
+
     if (!confirmed) return;
 
     await _performDemoAction(() async {
       final loader = ref.read(demoProfilesLoaderProvider);
       await loader.clearDemoProfiles();
-      
+
       // Refresh matches after clearing
-      ref.read(matchingProvider.notifier).refreshMatches();
-      
+      unawaited(ref.read(matchingProvider.notifier).refreshMatches());
+
       _showSuccessMessage('✅ Profili demo rimossi!');
     });
   }

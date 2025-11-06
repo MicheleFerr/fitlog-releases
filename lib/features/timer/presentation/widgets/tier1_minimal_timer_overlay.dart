@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_ui_state_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Minimal Timer Overlay - Refactored for Consolidated Provider System
@@ -166,7 +167,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                     onPanStart: _handlePanStart,
                     onPanUpdate: _handlePanUpdate,
                     onPanEnd: _handlePanEnd,
-                    child: Container(
+                    child: DecoratedBox(
                       decoration: _buildDecoration(timerState, progress),
                       child: _buildContent(timerState, remainingSeconds, progress),
                     ),
@@ -245,14 +246,14 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withValues(alpha: _isDragging ? 0.25 : 0.12),
+          color: context.colors.onSurface.withValues(alpha: _isDragging ? 0.25 : 0.12),
           blurRadius: _isDragging ? 10 : 6,
           offset: const Offset(0, 3),
           spreadRadius: _isDragging ? 1 : 0,
         ),
       ],
       border: _isDragging 
-        ? Border.all(color: Colors.white.withValues(alpha: 0.35), width: 1)
+        ? Border.all(color: context.colors.surface.withValues(alpha: 0.35), width: 1)
         : null,
     );
   }
@@ -273,11 +274,11 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
     return Center(
       child: Text(
         timeText,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: context.colors.surface,
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          fontFeatures: [FontFeature.tabularFigures()],
+          fontFeatures: const [FontFeature.tabularFigures()],
           height: 1.0,
           letterSpacing: 0.5,
         ),
@@ -304,11 +305,11 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
               children: [
                 Text(
                   _formatTime(remainingSeconds),
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.colors.surface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    fontFeatures: [FontFeature.tabularFigures()],
+                    fontFeatures: const [FontFeature.tabularFigures()],
                     height: 1.1,
                   ),
                 ),
@@ -317,7 +318,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                   Text(
                     timerState.exerciseName!,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.85),
+                      color: context.colors.surface.withValues(alpha: 0.85),
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                       height: 1.0,
@@ -350,7 +351,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             size: const Size(28, 28),
             painter: _ProgressRingPainter(
               progress: 1.0,
-              color: Colors.white.withValues(alpha: 0.25),
+              color: context.colors.surface.withValues(alpha: 0.25),
               strokeWidth: 2.5,
             ),
           ),
@@ -359,15 +360,15 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             size: const Size(28, 28),
             painter: _ProgressRingPainter(
               progress: progress,
-              color: Colors.white,
+              color: context.colors.surface,
               strokeWidth: 2.5,
             ),
           ),
           // Center icon
-          const Center(
+          Center(
             child: Icon(
-              AppIcons.timerOffOutlined,
-              color: Colors.white,
+              AppIcons.timer,
+              color: context.colors.surface,
               size: 14,
             ),
           ),
@@ -406,7 +407,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       label: semanticLabel,
       button: true,
       child: Material(
-        color: Colors.white.withValues(alpha: 0.18),
+        color: context.colors.surface.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
           onTap: () {
@@ -420,7 +421,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             alignment: Alignment.center,
             child: Icon(
               icon,
-              color: Colors.white,
+              color: context.colors.surface,
               size: 16,
             ),
           ),

@@ -7,17 +7,6 @@ part 'weight_settings_model.g.dart';
 /// Hive Model for WeightSettings
 @HiveType(typeId: 50) // ⚠️ Ensure unique typeId
 class WeightSettingsModel extends HiveObject {
-  @HiveField(0)
-  double defaultIncrement;
-
-  @HiveField(1)
-  double customIncrement;
-
-  @HiveField(2)
-  bool useCustomIncrement;
-
-  @HiveField(3)
-  List<PlateOptionModel> availablePlates;
 
   WeightSettingsModel({
     required this.defaultIncrement,
@@ -38,6 +27,29 @@ class WeightSettingsModel extends HiveObject {
     );
   }
 
+  /// From JSON (for Firebase)
+  factory WeightSettingsModel.fromJson(Map<String, dynamic> json) {
+    return WeightSettingsModel(
+      defaultIncrement: (json['defaultIncrement'] as num).toDouble(),
+      customIncrement: (json['customIncrement'] as num).toDouble(),
+      useCustomIncrement: json['useCustomIncrement'] as bool,
+      availablePlates: (json['availablePlates'] as List)
+          .map((p) => PlateOptionModel.fromJson(p as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+  @HiveField(0)
+  double defaultIncrement;
+
+  @HiveField(1)
+  double customIncrement;
+
+  @HiveField(2)
+  bool useCustomIncrement;
+
+  @HiveField(3)
+  List<PlateOptionModel> availablePlates;
+
   /// To Domain Entity
   WeightSettings toEntity() {
     return WeightSettings(
@@ -57,27 +69,10 @@ class WeightSettingsModel extends HiveObject {
       'availablePlates': availablePlates.map((p) => p.toJson()).toList(),
     };
   }
-
-  /// From JSON (for Firebase)
-  factory WeightSettingsModel.fromJson(Map<String, dynamic> json) {
-    return WeightSettingsModel(
-      defaultIncrement: (json['defaultIncrement'] as num).toDouble(),
-      customIncrement: (json['customIncrement'] as num).toDouble(),
-      useCustomIncrement: json['useCustomIncrement'] as bool,
-      availablePlates: (json['availablePlates'] as List)
-          .map((p) => PlateOptionModel.fromJson(p as Map<String, dynamic>))
-          .toList(),
-    );
-  }
 }
 
 @HiveType(typeId: 51)
 class PlateOptionModel extends HiveObject {
-  @HiveField(0)
-  double weight;
-
-  @HiveField(1)
-  int count;
 
   PlateOptionModel({
     required this.weight,
@@ -91,6 +86,18 @@ class PlateOptionModel extends HiveObject {
     );
   }
 
+  factory PlateOptionModel.fromJson(Map<String, dynamic> json) {
+    return PlateOptionModel(
+      weight: (json['weight'] as num).toDouble(),
+      count: json['count'] as int,
+    );
+  }
+  @HiveField(0)
+  double weight;
+
+  @HiveField(1)
+  int count;
+
   PlateOption toEntity() {
     return PlateOption(
       weight: weight,
@@ -103,12 +110,5 @@ class PlateOptionModel extends HiveObject {
       'weight': weight,
       'count': count,
     };
-  }
-
-  factory PlateOptionModel.fromJson(Map<String, dynamic> json) {
-    return PlateOptionModel(
-      weight: (json['weight'] as num).toDouble(),
-      count: json['count'] as int,
-    );
   }
 }

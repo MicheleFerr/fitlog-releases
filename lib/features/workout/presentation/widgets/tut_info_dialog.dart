@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Shows TUT (Time Under Tension) information in a bottom sheet modal
@@ -30,7 +31,7 @@ class TutInfoBottomSheet extends StatelessWidget {
       initialChildSize: 0.7,
       minChildSize: 0.5,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -43,7 +44,7 @@ class TutInfoBottomSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withOpacity(0.2),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -57,7 +58,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        AppIcons.timerOffOutlined,
+                        AppIcons.timer,
                         color: theme.colorScheme.primary,
                         size: 24,
                       ),
@@ -203,7 +204,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                 color: theme.colorScheme.surface,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, -2),
                   ),

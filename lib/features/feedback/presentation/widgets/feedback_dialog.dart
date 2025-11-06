@@ -19,7 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feedback_providers.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dialog for submitting feedback
 class FeedbackDialog extends ConsumerStatefulWidget {
@@ -152,9 +152,9 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                       },
                       icon: Icon(
                         _rating != null && starValue <= _rating!
-                            ? AppIcons.star
-                            : AppIcons.starOutline,
-                        color: Colors.amber,
+                            ? Icons.star
+                            : Icons.star_border,
+                        color: context.colors.warning,
                         size: 32,
                       ),
                     );

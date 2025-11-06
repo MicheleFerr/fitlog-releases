@@ -17,7 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -74,14 +74,14 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     }
     
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.primary.withOpacity(0.1),
-              colorScheme.secondary.withOpacity(0.05),
+              colorScheme.primary.withValues(alpha: 0.1),
+              colorScheme.secondary.withValues(alpha: 0.05),
             ],
           ),
         ),
@@ -145,7 +145,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     
     return Card(
       elevation: 0,
-      color: colorScheme.primaryContainer.withOpacity(0.3),
+      color: colorScheme.primaryContainer.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -281,7 +281,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(
             color: isPopular ? colorScheme.primary : colorScheme.outline,
@@ -289,7 +289,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
           ),
           borderRadius: BorderRadius.circular(16),
           color: isPopular 
-              ? colorScheme.primaryContainer.withOpacity(0.1)
+              ? colorScheme.primaryContainer.withValues(alpha: 0.1)
               : colorScheme.surface,
         ),
         child: Stack(
@@ -336,7 +336,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: colorScheme.tertiary.withOpacity(0.2),
+                              color: colorScheme.tertiary.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -411,7 +411,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 margin: const EdgeInsets.only(right: 16),
                 child: Card(
                   elevation: 0,
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -501,7 +501,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         color: theme.scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -530,7 +530,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                       width: 24,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                        valueColor: AlwaysStoppedAnimation(context.colors.surface),
                       ),
                     )
                   : Row(
@@ -644,51 +644,51 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         // Immediately refresh profile
         debugPrint('✅ Purchase successful - refreshing profile immediately');
         await ref.read(currentUserProvider.notifier).forceRefreshProfile();
-        
+
+        if (!context.mounted) return;
+
         // Show success
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Row(
-                children: [
-                  Icon(AppIcons.complete, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text('Welcome to Premium! 🎉'),
-                ],
-              ),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text('Welcome to Premium! 🎉'),
+              ],
             ),
-          );
-          
-          // Navigate back or to premium features
-          Navigator.of(context).pop(true);
-        }
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+
+        // Navigate back or to premium features
+        Navigator.of(context).pop(true);
       } else {
         // Purchase cancelled or failed
         debugPrint('❌ Purchase cancelled/failed - 2-minute timer still active');
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Purchase cancelled'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      debugPrint('❌ Purchase error: $e');
-      
-      if (mounted) {
+
+        if (!context.mounted) return;
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
+          const SnackBar(
+            content: Text('Purchase cancelled'),
             behavior: SnackBarBehavior.floating,
           ),
         );
       }
+    } catch (e) {
+      debugPrint('❌ Purchase error: $e');
+
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() {

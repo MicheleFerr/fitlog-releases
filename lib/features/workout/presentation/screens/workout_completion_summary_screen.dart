@@ -37,13 +37,13 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen di riepilogo workout completato
 class WorkoutCompletionSummaryScreen extends ConsumerWidget {
-  /// Workout completato da mostrare
-  final Workout workout;
 
   const WorkoutCompletionSummaryScreen({
     super.key,
     required this.workout,
   });
+  /// Workout completato da mostrare
+  final Workout workout;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -135,7 +135,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                     children: [
                       // Durata
                       _StatCard(
-                        icon: AppIcons.timerOffOutlined,
+                        icon: AppIcons.timer,
                         label: context.l10n.duration,
                         value: durationText,
                         color: context.colors.primary,
@@ -199,7 +199,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                       // TODO: Navigate to workout history detail
                       context.pop();
                     },
-                    icon: const Icon(AppIcons.analyticsOutlined),
+                    icon: const Icon(AppIcons.analytics),
                     label: Text(context.l10n.viewDetails),
                   ),
                   const SizedBox(height: 12),
@@ -243,10 +243,6 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
 
 /// Card statistica singola
 class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
 
   const _StatCard({
     required this.icon,
@@ -254,6 +250,10 @@ class _StatCard extends StatelessWidget {
     required this.value,
     required this.color,
   });
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

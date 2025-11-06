@@ -294,35 +294,70 @@
             <key>SKAdNetworkIdentifier</key>
             <string>44jx6755aq.skadnetwork</string>
         </dict>
-        <!-- Pubmatic -->
+        <!-- Pubmatic (existing) -->
         <dict>
             <key>SKAdNetworkIdentifier</key>
             <string>9rd848q2bz.skadnetwork</string>
         </dict>
-        <!-- StackAdapt -->
+        <!-- Pubmatic (additional ID requested by Google) -->
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>prcb7njmu6.skadnetwork</string>
+        </dict>
+        <!-- StackAdapt (existing) -->
         <dict>
             <key>SKAdNetworkIdentifier</key>
             <string>6964rsfnh4.skadnetwork</string>
         </dict>
-        <!-- Verve -->
+        <!-- Verve (existing) -->
         <dict>
             <key>SKAdNetworkIdentifier</key>
             <string>6g9af3uyq4.skadnetwork</string>
         </dict>
-        <!-- Viant -->
+        <!-- Viant (existing) -->
         <dict>
             <key>SKAdNetworkIdentifier</key>
             <string>7953jerfzd.skadnetwork</string>
         </dict>
-        <!-- YouAppi -->
+        <!-- Viant (additional ID requested by Google) -->
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>6xzpu9s2p4.skadnetwork</string>
+        </dict>
+        <!-- YouAppi (existing) -->
         <dict>
             <key>SKAdNetworkIdentifier</key>
             <string>3l6bd9hu43.skadnetwork</string>
         </dict>
-        <!-- Zemanta -->
+        <!-- Zemanta (existing) -->
         <dict>
             <key>SKAdNetworkIdentifier</key>
             <string>7rz58n8ntl.skadnetwork</string>
+        </dict>
+        <!-- Missing IDs from Google AdMob official list (added Oct 2025) -->
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>k674qkevps.skadnetwork</string>
+        </dict>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>kbmxgpxpgc.skadnetwork</string>
+        </dict>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>tl55sbb4fm.skadnetwork</string>
+        </dict>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>c3frkrj4fj.skadnetwork</string>
+        </dict>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>3rd42ekr43.skadnetwork</string>
+        </dict>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>97r2b46745.skadnetwork</string>
         </dict>
     </array>
     <!-- Export Compliance: App uses only standard encryption (HTTPS/TLS) -->

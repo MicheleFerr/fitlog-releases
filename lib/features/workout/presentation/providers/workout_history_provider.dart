@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// State class for workout history management
 class WorkoutHistoryState {
@@ -344,8 +345,8 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
         for (final set in exercise.sets) {
           if (set.isCompleted) {
             totalSets++;
-            final weight = set.weight;
-            final reps = set.reps;
+            final weight = set.weight ?? 0.0;
+            final reps = set.reps ?? 0;
             totalVolume += weight * reps;
           }
         }
@@ -467,8 +468,9 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
 /// Main provider for workout history
 final workoutHistoryProvider = StateNotifierProvider<WorkoutHistoryNotifier, AsyncValue<List<Workout>>>((ref) {
   final user = ref.watch(firebaseUserProvider).valueOrNull;
-  final dataSource = HiveWorkoutDataSource();
-  
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  final dataSource = HiveWorkoutDataSource(boxManager);
+
   return WorkoutHistoryNotifier(
     dataSource: dataSource,
     userId: user?.uid,

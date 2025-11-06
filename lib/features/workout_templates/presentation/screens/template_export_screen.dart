@@ -223,7 +223,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           Text(
             '${_selectedTemplates.length} ${l10n.templatesSelected}',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -242,7 +242,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withOpacity(0.1),
+            color: theme.colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, -2),
           ),

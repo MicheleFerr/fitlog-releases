@@ -183,139 +183,144 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               ),
             ),
             const SizedBox(height: 12),
-            
-            // Default timer option
-            Card(
-              child: ListTile(
-                leading: Icon(
-                  AppIcons.timerOffOutlined,
-                  color: !_useCustomRestTime && _selectedRestTime == null
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                title: Text(l10n.useDefaultRestTime),
-                subtitle: const Text('120s'),
-                trailing: Radio<bool>(
-                  value: false,
-                  groupValue: _useCustomRestTime || _selectedRestTime != null,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedRestTime = null;
-                      _useCustomRestTime = false;
-                      _restTimeController.clear();
-                    });
-                  },
-                ),
-                onTap: () {
+
+            RadioGroup<bool>(
+              groupValue: _useCustomRestTime,
+              onChanged: (value) {
+                if (value != null) {
                   setState(() {
-                    _selectedRestTime = null;
-                    _useCustomRestTime = false;
-                    _restTimeController.clear();
-                  });
-                },
-              ),
-            ),
-            
-            // Predefined rest times
-            Text(
-              l10n.quickTimerOptions,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children: _predefinedRestTimes.map((seconds) {
-                final isSelected = _selectedRestTime == seconds && !_useCustomRestTime;
-                return FilterChip(
-                  label: Text('${seconds}s'),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      _selectedRestTime = selected ? seconds : null;
-                      _useCustomRestTime = false;
+                    _useCustomRestTime = value;
+                    if (!value) {
+                      _selectedRestTime = null;
                       _restTimeController.clear();
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-            
-            // Custom rest time
-            Card(
+                    } else {
+                      _selectedRestTime = null;
+                    }
+                  });
+                }
+              },
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  ListTile(
-                    leading: Icon(
-                      AppIcons.tune,
-                      color: _useCustomRestTime
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                    title: Text(l10n.customRestTime),
-                    trailing: Radio<bool>(
-                      value: true,
-                      groupValue: _useCustomRestTime,
-                      onChanged: (value) {
-                        debugPrint('📝 Radio changed to: $value');
+                  // Default timer option
+                  Card(
+                    child: ListTile(
+                      leading: Icon(
+                        AppIcons.timer,
+                        color: !_useCustomRestTime && _selectedRestTime == null
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      title: Text(l10n.useDefaultRestTime),
+                      subtitle: const Text('120s'),
+                      trailing: const Radio<bool>(
+                        value: false,
+                      ),
+                      onTap: () {
                         setState(() {
-                          _useCustomRestTime = value ?? false;
-                          if (_useCustomRestTime) {
-                            _selectedRestTime = null;
-                          }
+                          _selectedRestTime = null;
+                          _useCustomRestTime = false;
+                          _restTimeController.clear();
                         });
                       },
                     ),
-                    onTap: () {
-                      setState(() {
-                        _useCustomRestTime = !_useCustomRestTime;
-                        if (_useCustomRestTime) {
-                          _selectedRestTime = null;
-                        }
-                      });
-                    },
                   ),
-                  if (_useCustomRestTime) ...[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: TextField(
-                        controller: _restTimeController,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.done,
-                        decoration: InputDecoration(
-                          labelText: '${l10n.exerciseRestTime} (${l10n.restTimeSeconds})',
-                          hintText: '90',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          isDense: true,
-                          suffixText: 's',
-                        ),
-                        onChanged: (value) {
-                          // Safely parse the value
-                          if (value.isNotEmpty) {
-                            final seconds = int.tryParse(value);
-                            if (seconds != null && seconds > 0 && seconds <= 3600) {
-                              setState(() {
-                                _selectedRestTime = seconds;
-                              });
-                            }
-                          } else {
-                            setState(() {
-                              _selectedRestTime = null;
-                            });
-                          }
-                        },
-                        onSubmitted: (_) {
-                          // Dismiss keyboard when done
-                          FocusScope.of(context).unfocus();
-                        },
-                      ),
+                  const SizedBox(height: 16),
+
+                  // Predefined rest times
+                  Text(
+                    l10n.quickTimerOptions,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                  ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: _predefinedRestTimes.map((seconds) {
+                      final isSelected = _selectedRestTime == seconds && !_useCustomRestTime;
+                      return FilterChip(
+                        label: Text('${seconds}s'),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          setState(() {
+                            _selectedRestTime = selected ? seconds : null;
+                            _useCustomRestTime = false;
+                            _restTimeController.clear();
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Custom rest time
+                  Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            AppIcons.tune,
+                            color: _useCustomRestTime
+                                ? Theme.of(context).colorScheme.secondary
+                                : Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                          title: Text(l10n.customRestTime),
+                          trailing: const Radio<bool>(
+                            value: true,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _useCustomRestTime = !_useCustomRestTime;
+                              if (_useCustomRestTime) {
+                                _selectedRestTime = null;
+                              }
+                            });
+                          },
+                        ),
+                        if (_useCustomRestTime) ...[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                            child: TextField(
+                              controller: _restTimeController,
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.done,
+                              decoration: InputDecoration(
+                                labelText: '${l10n.exerciseRestTime} (${l10n.restTimeSeconds})',
+                                hintText: '90',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                isDense: true,
+                                suffixText: 's',
+                              ),
+                              onChanged: (value) {
+                                // Safely parse the value
+                                if (value.isNotEmpty) {
+                                  final seconds = int.tryParse(value);
+                                  if (seconds != null && seconds > 0 && seconds <= 3600) {
+                                    setState(() {
+                                      _selectedRestTime = seconds;
+                                    });
+                                  }
+                                } else {
+                                  setState(() {
+                                    _selectedRestTime = null;
+                                  });
+                                }
+                              },
+                              onSubmitted: (_) {
+                                // Dismiss keyboard when done
+                                FocusScope.of(context).unfocus();
+                              },
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

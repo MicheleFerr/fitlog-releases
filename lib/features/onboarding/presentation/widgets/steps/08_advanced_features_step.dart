@@ -38,7 +38,7 @@ class AdvancedFeaturesStep extends StatelessWidget {
           Text(
             AppLocalizations.of(context).onboardingAdvancedFeaturesDescription,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.8),
+              color: colorScheme.onSurface.withValues(alpha: 0.8),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -49,8 +49,8 @@ class AdvancedFeaturesStep extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  colorScheme.primary.withOpacity(0.1),
-                  colorScheme.secondary.withOpacity(0.1),
+                  colorScheme.primary.withValues(alpha: 0.1),
+                  colorScheme.secondary.withValues(alpha: 0.1),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
@@ -74,7 +74,7 @@ class AdvancedFeaturesStep extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context).onboardingCompletedMessage,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.8),
+                    color: colorScheme.onSurface.withValues(alpha: 0.8),
                   ),
                   textAlign: TextAlign.center,
                 ),

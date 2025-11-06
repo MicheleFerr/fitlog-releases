@@ -116,7 +116,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
           Text(
             l10n.createWorkoutStepDescription,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.8),
+              color: colorScheme.onSurface.withValues(alpha: 0.8),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -130,9 +130,9 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               border: Border.all(
-                color: colorScheme.outline.withOpacity(0.3),
+                color: colorScheme.outline.withValues(alpha: 0.3),
               ),
             ),
             child: Column(
@@ -141,13 +141,13 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
                 Icon(
                   AppIcons.videoLibraryOutlined,
                   size: 64,
-                  color: colorScheme.onSurface.withOpacity(0.4),
+                  color: colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   AppLocalizations.of(context).onboardingVideoPlaceholder,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.6),
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -155,7 +155,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
                 Text(
                   AppLocalizations.of(context).onboardingVideoComingSoon,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.5),
+                    color: colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ],
@@ -171,9 +171,9 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.3),
+                    color: colorScheme.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -185,9 +185,9 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: colorScheme.surface.withOpacity(0.3),
+                          color: colorScheme.surface.withValues(alpha: 0.3),
                           border: Border.all(
-                            color: colorScheme.outline.withOpacity(0.2),
+                            color: colorScheme.outline.withValues(alpha: 0.2),
                           ),
                         ),
                         child: Stack(
@@ -199,7 +199,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
                                     ? 'Schermata Allenamento'
                                     : 'Workout Screen',
                                 style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: colorScheme.onSurface.withOpacity(0.3),
+                                  color: colorScheme.onSurface.withValues(alpha: 0.3),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -242,7 +242,7 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
                             ? 'Tocca il pulsante + per iniziare'
                             : 'Tap the + button to start',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.6),
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ] else ...[
@@ -382,7 +382,7 @@ class _FabOption extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withOpacity(0.1),
+                  color: colorScheme.shadow.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -431,12 +431,12 @@ class _MockWorkoutCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           color: isCompleted ? colorScheme.primaryContainer : colorScheme.surface,
           border: Border.all(
-            color: isCompleted ? colorScheme.primary : colorScheme.outline.withOpacity(0.3),
+            color: isCompleted ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.3),
             width: isCompleted ? 2 : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: colorScheme.shadow.withOpacity(0.1),
+              color: colorScheme.shadow.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -450,7 +450,7 @@ class _MockWorkoutCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.1),
+                    color: colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -475,8 +475,8 @@ class _MockWorkoutCard extends StatelessWidget {
                         isItalian ? 'Upper Body • Push' : 'Upper Body • Push',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: isCompleted
-                            ? colorScheme.onPrimaryContainer.withOpacity(0.7)
-                            : colorScheme.onSurface.withOpacity(0.6),
+                            ? colorScheme.onPrimaryContainer.withValues(alpha: 0.7)
+                            : colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -494,7 +494,7 @@ class _MockWorkoutCard extends StatelessWidget {
             Row(
               children: [
                 _InfoChip(
-                  icon: AppIcons.timerOffOutlined,
+                  icon: AppIcons.timer,
                   label: '45 min',
                   colorScheme: colorScheme,
                   theme: theme,
@@ -537,8 +537,8 @@ class _InfoChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isCompleted
-          ? colorScheme.primary.withOpacity(0.1)
-          : colorScheme.outline.withOpacity(0.1),
+          ? colorScheme.primary.withValues(alpha: 0.1)
+          : colorScheme.outline.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
@@ -549,7 +549,7 @@ class _InfoChip extends StatelessWidget {
             size: 14,
             color: isCompleted
               ? colorScheme.primary
-              : colorScheme.onSurface.withOpacity(0.6),
+              : colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(width: 4),
           Text(
@@ -557,7 +557,7 @@ class _InfoChip extends StatelessWidget {
             style: theme.textTheme.bodySmall?.copyWith(
               color: isCompleted
                 ? colorScheme.primary
-                : colorScheme.onSurface.withOpacity(0.6),
+                : colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
             ),
           ),

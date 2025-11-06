@@ -4,7 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Grafico interattivo per tracciare il progresso del peso
 /// con gesture support per zoom, pan e dettagli on-tap
@@ -316,7 +317,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
               FlSpot(_maxX, widget.targetWeight!),
             ],
             isCurved: false,
-            color: Colors.green.withValues(alpha: 0.6),
+            color: context.colors.success.withValues(alpha: 0.6),
             barWidth: 2,
             isStrokeCapRound: true,
             dashArray: [5, 5],
@@ -400,8 +401,8 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
             label: 'Variazione',
             value: '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)} kg',
             subtitle: '${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(1)}%',
-            icon: change >= 0 ? AppIcons.trendUp : AppIcons.trendDown,
-            color: change >= 0 ? Colors.red : Colors.green,
+            icon: change >= 0 ? Icons.trending_up : Icons.trending_down,
+            color: change >= 0 ? context.colors.error : context.colors.success,
             theme: theme,
           ),
         ],
@@ -464,7 +465,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
           if (widget.targetWeight != null) ...[
             const SizedBox(width: 24),
             _buildLegendItem(
-              color: Colors.green,
+              color: context.colors.success,
               label: 'Obiettivo',
               isDashed: true,
               theme: theme,

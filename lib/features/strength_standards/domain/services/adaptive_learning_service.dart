@@ -17,8 +17,11 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/questionnaire_analytics_datasource.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/suggestion_accuracy.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Adaptive learning service for improving suggestions
+///
+/// ✅ UPDATED for HiveBoxManagerEnhanced pattern (Oct 2025)
 class AdaptiveLearningService {
   const AdaptiveLearningService._();
 
@@ -39,9 +42,10 @@ class AdaptiveLearningService {
     required String userId,
     required String exerciseId,
     required double baseWeight,
+    required HiveBoxManagerEnhanced boxManager,
   }) async {
     try {
-      final datasource = QuestionnaireAnalyticsDataSource();
+      final datasource = QuestionnaireAnalyticsDataSource(boxManager);
 
       // Get accuracy metrics for this exercise
       final metrics = await datasource.getAccuracyMetrics(userId, exerciseId);
@@ -145,9 +149,10 @@ class AdaptiveLearningService {
   /// Returns a summary of how well suggestions are performing.
   static Future<AdaptiveLearningStats> getAdaptiveStats({
     required String userId,
+    required HiveBoxManagerEnhanced boxManager,
   }) async {
     try {
-      final datasource = QuestionnaireAnalyticsDataSource();
+      final datasource = QuestionnaireAnalyticsDataSource(boxManager);
       final allRecords = await datasource.getAllAccuracyForUser(userId);
 
       if (allRecords.isEmpty) {
@@ -206,18 +211,25 @@ class AdaptiveLearningService {
   }
 
   /// Check if adaptive learning is ready for a specific exercise
+  ///
+  /// NOTE: This method cannot use HiveBoxManagerEnhanced without breaking the static API.
+  /// It's recommended to use the provider-based approach instead:
+  /// ```dart
+  /// final datasource = ref.read(questionnaireAnalyticsDataSourceProvider);
+  /// final metrics = await datasource.getAccuracyMetrics(userId, exerciseId);
+  /// ```
+  @Deprecated('Use provider-based approach for proper dependency injection')
   static Future<bool> isAdaptiveReady({
     required String userId,
     required String exerciseId,
   }) async {
-    final datasource = QuestionnaireAnalyticsDataSource();
-    final metrics = await datasource.getAccuracyMetrics(userId, exerciseId);
-
-    if (metrics == null) return false;
-
-    return metrics.isReliable &&
-           metrics.confidence >= _confidenceThreshold &&
-           metrics.sampleSize >= _minSamplesForAdjustment;
+    // This method is deprecated - cannot inject boxManager into static method
+    // Users should use the provider approach instead
+    throw UnimplementedError(
+      'This static method is deprecated. Use provider-based approach:\n'
+      'final datasource = ref.read(questionnaireAnalyticsDataSourceProvider);\n'
+      'final metrics = await datasource.getAccuracyMetrics(userId, exerciseId);',
+    );
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced modal for displaying exercise details with improved aesthetics
@@ -30,7 +31,7 @@ class ExerciseDetailsModal extends StatelessWidget {
       initialChildSize: 0.7,
       maxChildSize: 0.9,
       minChildSize: 0.5,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -78,7 +79,7 @@ class ExerciseDetailsModal extends StatelessWidget {
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: context.colors.onSurface.withOpacity(0.2),
+        color: context.colors.onSurface.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(2),
       ),
     );
@@ -120,7 +121,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         // Equipment
         _buildInfoChip(
           context,
-          icon: AppIcons.gymnastics,
+          icon: AppIcons.sportsGymnastics,
           label: exercise.attrezzatura,
           color: context.colors.tertiary,
         ),
@@ -137,10 +138,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -166,10 +167,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -186,11 +187,11 @@ class ExerciseDetailsModal extends StatelessWidget {
   Color _getDifficultyColor(BuildContext context) {
     switch (exercise.difficolta.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
         return context.colors.onSurface;
     }
@@ -200,10 +201,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest.withOpacity(0.3),
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.1),
+          color: context.colors.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -248,10 +249,10 @@ class ExerciseDetailsModal extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.secondaryContainer.withOpacity(0.2),
+        color: context.colors.secondaryContainer.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.1),
+          color: context.colors.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -354,7 +355,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.1),
+          color: context.colors.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -383,7 +384,7 @@ class ExerciseDetailsModal extends StatelessWidget {
           Text(
             content,
             style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.8),
+              color: context.colors.onSurface.withValues(alpha: 0.8),
               fontFamily: isMonospace ? 'monospace' : null,
               height: 1.4,
             ),
@@ -405,7 +406,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         Text(
           text,
           style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colors.onSurface.withOpacity(0.8),
+            color: context.colors.onSurface.withValues(alpha: 0.8),
             height: 1.5,
           ),
         ),
@@ -437,7 +438,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               child: Text(
                 step,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.onSurface.withOpacity(0.8),
+                  color: context.colors.onSurface.withValues(alpha: 0.8),
                   height: 1.5,
                 ),
               ),

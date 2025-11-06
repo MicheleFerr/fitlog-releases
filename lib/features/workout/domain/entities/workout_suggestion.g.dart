@@ -16,6 +16,9 @@ _$WorkoutSuggestionImpl _$$WorkoutSuggestionImplFromJson(
       patternInfo: json['patternInfo'] as String?,
       routineTemplateId: json['routineTemplateId'] as String?,
       frequencyData: json['frequencyData'] as String?,
+      scheduledDate: json['scheduledDate'] == null
+          ? null
+          : DateTime.parse(json['scheduledDate'] as String),
       generatedAt: json['generatedAt'] == null
           ? null
           : DateTime.parse(json['generatedAt'] as String),
@@ -31,6 +34,7 @@ Map<String, dynamic> _$$WorkoutSuggestionImplToJson(
       'patternInfo': instance.patternInfo,
       'routineTemplateId': instance.routineTemplateId,
       'frequencyData': instance.frequencyData,
+      'scheduledDate': instance.scheduledDate?.toIso8601String(),
       'generatedAt': instance.generatedAt?.toIso8601String(),
     };
 

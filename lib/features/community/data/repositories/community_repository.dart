@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
+import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/foundation.dart';
 
@@ -31,6 +32,26 @@ abstract class CommunityRepository {
 
   Future<List<CommunityContribution>> searchContributions(String query);
   Future<UserContributionStats> calculateUserStats(String userId);
+
+  // Discovery & Search (Task 3)
+  Stream<List<CommunityContribution>> searchContributionsStream({
+    required String query,
+    ContributionFilters? filters,
+    int limit = 20,
+  });
+
+  Stream<List<CommunityContribution>> filterContributions({
+    required ContributionFilters filters,
+    int limit = 20,
+  });
+
+  // Save/unsave contributions
+  Future<void> saveContribution(String contributionId, String userId);
+  Future<void> unsaveContribution(String contributionId, String userId);
+  Future<List<String>> getSavedContributionIds(String userId);
+
+  // Analytics
+  Future<void> incrementViewCount(String contributionId);
 }
 
 class FirestoreCommunityRepository implements CommunityRepository {
@@ -519,5 +540,284 @@ class FirestoreCommunityRepository implements CommunityRepository {
     });
 
     // No XP awarded for rejected contributions
+  }
+
+  // ============================================================================
+  // Discovery & Search Implementation (Task 4)
+  // ============================================================================
+
+  @override
+  Stream<List<CommunityContribution>> searchContributionsStream({
+    required String query,
+    ContributionFilters? filters,
+    int limit = 20,
+  }) async* {
+    // CLIENT-SIDE SEARCH STRATEGY (no Firestore full-text search)
+
+    // Step 1: Get base query
+    Query baseQuery = _firestore.collection(_contributionsCollection);
+
+    // Step 2: Apply filters if provided
+    if (filters != null) {
+      baseQuery = _applyFilters(baseQuery, filters);
+    } else {
+      // Default: only approved contributions
+      baseQuery = baseQuery.where('status', isEqualTo: ContributionStatus.approved.name);
+    }
+
+    // Step 3: Fetch contributions (over-fetch for client filtering)
+    final snapshot = await baseQuery.limit(limit * 3).get();
+
+    // Step 4: Parse contributions
+    final contributions = _mapSnapshotToContributions(snapshot);
+
+    // Step 5: Client-side search filtering
+    final searchResults = _filterBySearchQuery(contributions, query);
+
+    // Step 6: Limit results
+    yield searchResults.take(limit).toList();
+  }
+
+  @override
+  Stream<List<CommunityContribution>> filterContributions({
+    required ContributionFilters filters,
+    int limit = 20,
+  }) async* {
+    // Step 1: Get base query
+    Query baseQuery = _firestore.collection(_contributionsCollection);
+
+    // Step 2: Apply Firestore filters
+    baseQuery = _applyFilters(baseQuery, filters);
+
+    // Step 3: Fetch and map
+    final snapshot = await baseQuery.limit(limit).get();
+    final contributions = _mapSnapshotToContributions(snapshot);
+
+    // Step 4: Client-side sorting (if needed)
+    final sortedContributions = _applySorting(contributions, filters.sortBy);
+
+    yield sortedContributions;
+  }
+
+  @override
+  Future<void> saveContribution(String contributionId, String userId) async {
+    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+      if (!snapshot.exists) return;
+
+      // Increment saves count
+      transaction.update(docRef, {
+        'saves': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    });
+
+    // Store in user's saved collection
+    await _firestore
+        .collection('user_saved_contributions')
+        .doc(userId)
+        .set({
+          'contributionIds': FieldValue.arrayUnion([contributionId]),
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+  }
+
+  @override
+  Future<void> unsaveContribution(String contributionId, String userId) async {
+    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+      if (!snapshot.exists) return;
+
+      // Decrement saves count (min 0)
+      final currentSaves = snapshot.data()?['saves'] ?? 0;
+      if (currentSaves > 0) {
+        transaction.update(docRef, {
+          'saves': FieldValue.increment(-1),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+    });
+
+    // Remove from user's saved collection
+    await _firestore
+        .collection('user_saved_contributions')
+        .doc(userId)
+        .set({
+          'contributionIds': FieldValue.arrayRemove([contributionId]),
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+  }
+
+  @override
+  Future<List<String>> getSavedContributionIds(String userId) async {
+    final doc = await _firestore
+        .collection('user_saved_contributions')
+        .doc(userId)
+        .get();
+
+    if (!doc.exists || doc.data() == null) return [];
+
+    final data = doc.data()!;
+    return List<String>.from(data['contributionIds'] ?? []);
+  }
+
+  @override
+  Future<void> incrementViewCount(String contributionId) async {
+    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+
+    await docRef.update({
+      'viewCount': FieldValue.increment(1),
+      'lastActivityAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // ============================================================================
+  // Helper Methods for Search & Filters
+  // ============================================================================
+
+  /// Apply Firestore-level filters to base query
+  Query _applyFilters(Query baseQuery, ContributionFilters filters) {
+    // Exercise IDs filter
+    if (filters.exerciseIds.isNotEmpty) {
+      baseQuery = baseQuery.where('exerciseId', whereIn: filters.exerciseIds);
+    }
+
+    // Type filter
+    if (filters.type != null && filters.type!.isNotEmpty) {
+      baseQuery = baseQuery.where('type', isEqualTo: filters.type);
+    }
+
+    // Date range filters
+    if (filters.dateFrom != null) {
+      baseQuery = baseQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(filters.dateFrom!));
+    }
+    if (filters.dateTo != null) {
+      baseQuery = baseQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(filters.dateTo!));
+    }
+
+    // Default: only approved contributions (unless already filtered)
+    if (filters.exerciseIds.isEmpty && filters.type == null) {
+      baseQuery = baseQuery.where('status', isEqualTo: ContributionStatus.approved.name);
+    }
+
+    return baseQuery;
+  }
+
+  /// Client-side search filtering
+  List<CommunityContribution> _filterBySearchQuery(
+    List<CommunityContribution> contributions,
+    String query,
+  ) {
+    if (query.isEmpty) return contributions;
+
+    final lowerQuery = query.toLowerCase();
+
+    return contributions.where((contrib) {
+      // Search in: title, description, exerciseName, tags
+      final titleMatch = contrib.title.toLowerCase().contains(lowerQuery);
+      final descMatch = contrib.description.toLowerCase().contains(lowerQuery);
+      final exerciseMatch = contrib.exerciseName.toLowerCase().contains(lowerQuery);
+      final tagsMatch = contrib.tags.any((tag) => tag.toLowerCase().contains(lowerQuery));
+
+      return titleMatch || descMatch || exerciseMatch || tagsMatch;
+    }).toList()
+      ..sort((a, b) {
+        // Relevance scoring: title > tags > description
+        final int scoreA = _calculateRelevanceScore(a, lowerQuery);
+        final int scoreB = _calculateRelevanceScore(b, lowerQuery);
+        return scoreB.compareTo(scoreA);
+      });
+  }
+
+  /// Calculate relevance score for search result ranking
+  int _calculateRelevanceScore(CommunityContribution contrib, String query) {
+    int score = 0;
+
+    // Title match = highest priority (100 points)
+    if (contrib.title.toLowerCase().contains(query)) score += 100;
+
+    // Tags match = high priority (50 points)
+    if (contrib.tags.any((tag) => tag.toLowerCase().contains(query))) score += 50;
+
+    // Exercise name match = medium priority (30 points)
+    if (contrib.exerciseName.toLowerCase().contains(query)) score += 30;
+
+    // Description match = low priority (10 points)
+    if (contrib.description.toLowerCase().contains(query)) score += 10;
+
+    // Boost by quality metrics
+    score += contrib.upvotes - contrib.downvotes; // Net votes
+    score += contrib.saves; // Saves count
+
+    return score;
+  }
+
+  /// Client-side sorting by different criteria
+  List<CommunityContribution> _applySorting(
+    List<CommunityContribution> contributions,
+    String sortBy,
+  ) {
+    final sorted = List<CommunityContribution>.from(contributions);
+
+    switch (sortBy) {
+      case 'helpful':
+        // Sort by net votes (upvotes - downvotes)
+        sorted.sort((a, b) {
+          final scoreA = a.upvotes - a.downvotes;
+          final scoreB = b.upvotes - b.downvotes;
+          return scoreB.compareTo(scoreA);
+        });
+        break;
+
+      case 'recent':
+        // Sort by creation date (newest first)
+        sorted.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+
+      case 'saved':
+        // Sort by save count
+        sorted.sort((a, b) => b.saves.compareTo(a.saves));
+        break;
+
+      case 'trending':
+        // Sort by recent activity + engagement
+        sorted.sort((a, b) {
+          final scoreA = _calculateTrendingScore(a);
+          final scoreB = _calculateTrendingScore(b);
+          return scoreB.compareTo(scoreA);
+        });
+        break;
+
+      default:
+        // Default: helpful
+        sorted.sort((a, b) {
+          final scoreA = a.upvotes - a.downvotes;
+          final scoreB = b.upvotes - b.downvotes;
+          return scoreB.compareTo(scoreA);
+        });
+    }
+
+    return sorted;
+  }
+
+  /// Calculate trending score based on recent activity
+  double _calculateTrendingScore(CommunityContribution contrib) {
+    final now = DateTime.now();
+    final daysSinceCreated = now.difference(contrib.createdAt).inDays;
+    final daysSinceActivity = contrib.lastActivityAt != null
+        ? now.difference(contrib.lastActivityAt!).inDays
+        : daysSinceCreated;
+
+    // Engagement score
+    final engagementScore = contrib.upvotes + contrib.saves + contrib.comments.length;
+
+    // Time decay (recent = higher score)
+    final timeFactor = 1.0 / (1.0 + daysSinceActivity * 0.1);
+
+    return engagementScore * timeFactor;
   }
 }

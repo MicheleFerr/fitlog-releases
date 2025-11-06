@@ -16,16 +16,18 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseHistoryDebug {
   static const String _workoutsBoxName = 'workouts';
 
   /// Debug method to inspect all workout data in Hive
-  static Future<void> inspectHiveData({String? userId}) async {
+  static Future<void> inspectHiveData({String? userId, HiveBoxManagerEnhanced? boxManager}) async {
     try {
       debugPrint('🔍 === EXERCISE HISTORY DEBUG INSPECTION ===');
-      
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+
+      final manager = boxManager ?? HiveBoxManagerEnhanced();
+      final box = await manager.openBox<Map>(_workoutsBoxName);
       debugPrint('📦 Total keys in workouts box: ${box.keys.length}');
       
       if (box.keys.isEmpty) {
@@ -101,7 +103,7 @@ class ExerciseHistoryDebug {
           debugPrint('     - Category: ${exercise.category}');
           debugPrint('     - Total sets: ${exercise.sets.length}');
           debugPrint('     - Completed sets: ${exercise.sets.where((s) => s.isCompleted).length}');
-          debugPrint('     - Sets with weight > 0: ${exercise.sets.where((s) => s.weight > 0).length}');
+          debugPrint('     - Sets with weight > 0: ${exercise.sets.where((s) => (s.weight ?? 0) > 0).length}');
           
           // Show first few sets
           final setsToShow = exercise.sets.take(3);
@@ -133,7 +135,7 @@ class ExerciseHistoryDebug {
       debugPrint('🔍 Exercise: $exerciseName');
       debugPrint('🔍 User: $userId');
       
-      const service = ExerciseHistoryService();
+      final service = ExerciseHistoryService(boxManager: HiveBoxManagerEnhanced());
       
       // Test different methods
       debugPrint('\n📊 Testing getExerciseHistory...');
@@ -171,12 +173,14 @@ class ExerciseHistoryDebug {
   /// Test with common exercise name variations
   static Future<void> testExerciseNameVariations({
     required String userId,
+    HiveBoxManagerEnhanced? boxManager,
   }) async {
     try {
       debugPrint('🔍 === TESTING EXERCISE NAME VARIATIONS ===');
-      
+
       // First, get all unique exercise names from the database
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+      final manager = boxManager ?? HiveBoxManagerEnhanced();
+      final box = await manager.openBox<Map>(_workoutsBoxName);
       final uniqueExercises = <String>{};
       
       final userWorkouts = box.keys
@@ -230,13 +234,15 @@ class ExerciseHistoryDebug {
   static Future<void> findWorkoutsWithExercise({
     required String exerciseName,
     required String userId,
+    HiveBoxManagerEnhanced? boxManager,
   }) async {
     try {
       debugPrint('🔍 === FINDING WORKOUTS WITH EXERCISE ===');
       debugPrint('🔍 Looking for: "$exerciseName"');
       debugPrint('🔍 User: $userId');
-      
-      final box = await Hive.openBox<Map>(_workoutsBoxName);
+
+      final manager = boxManager ?? HiveBoxManagerEnhanced();
+      final box = await manager.openBox<Map>(_workoutsBoxName);
       final matchingWorkouts = <String, List<String>>{};
       
       for (final key in box.keys) {

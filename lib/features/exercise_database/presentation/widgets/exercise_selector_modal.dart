@@ -120,7 +120,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
   }
 
   Widget _buildTabBar(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: Theme.of(context).colorScheme.surface,
       child: TabBar(
         controller: _tabController,
@@ -214,7 +214,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: _getCategoryColor(exercise.category).withOpacity(0.1),
+            color: _getCategoryColor(exercise.category).withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(

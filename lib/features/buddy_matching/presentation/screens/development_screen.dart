@@ -464,7 +464,7 @@ class _DevelopmentScreenState extends ConsumerState<DevelopmentScreen> {
       child: Row(
         children: [
           Icon(
-            isImplemented ? AppIcons.complete : AppIcons.radioButtonUnchecked,
+            isImplemented ? Icons.check_circle : AppIcons.radioButtonUnchecked,
             size: 16,
             color: isImplemented ? const Color(0xFF4CAF50) : colorScheme.onSurfaceVariant,
           ),

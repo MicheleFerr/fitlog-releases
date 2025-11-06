@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_suggestion.dart';
 import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget that displays smart training suggestions
 class SmartSuggestionsWidget extends ConsumerWidget {
@@ -25,7 +25,7 @@ class SmartSuggestionsWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -91,7 +91,7 @@ class SmartSuggestionTile extends ConsumerWidget {
                 child: Text(
                   _getPriorityText(l10n, suggestion.priority),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -215,13 +215,13 @@ class SmartSuggestionTile extends ConsumerWidget {
   Color _getPriorityColor(BuildContext context, SuggestionPriority priority) {
     switch (priority) {
       case SuggestionPriority.critical:
-        return Colors.red;
+        return context.colors.error;
       case SuggestionPriority.high:
-        return Colors.orange;
+        return context.colors.secondary;
       case SuggestionPriority.medium:
-        return Colors.blue;
+        return context.colors.primary;
       case SuggestionPriority.low:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
 

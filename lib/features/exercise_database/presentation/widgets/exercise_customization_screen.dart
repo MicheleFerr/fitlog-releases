@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -11,6 +12,8 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/providers/weight_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: Add callback parameter
@@ -33,16 +36,42 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   @override
   void initState() {
     super.initState();
-    _customizations = widget.selectedExercises.map((exercise) => 
-      ExerciseCustomization(
+    _customizations = widget.selectedExercises.map((exercise) {
+      // ✅ Default to weighted mode (DatabaseExercise → Exercise conversion needed for full detection)
+      const countingMode = ExerciseCountingMode.weighted;
+
+      // ✅ NUOVO: Create default sets based on counting mode
+      List<SetCustomization> defaultSets;
+      switch (countingMode) {
+        case ExerciseCountingMode.weighted:
+          defaultSets = [
+            SetCustomization(setNumber: 1, weight: 0, reps: 10),
+            SetCustomization(setNumber: 2, weight: 0, reps: 10),
+            SetCustomization(setNumber: 3, weight: 0, reps: 10),
+          ];
+          break;
+        case ExerciseCountingMode.reps:
+          defaultSets = [
+            SetCustomization(setNumber: 1, weight: 0, reps: 15),
+            SetCustomization(setNumber: 2, weight: 0, reps: 15),
+            SetCustomization(setNumber: 3, weight: 0, reps: 15),
+          ];
+          break;
+        case ExerciseCountingMode.time:
+          defaultSets = [
+            SetCustomization(setNumber: 1, seconds: 60),
+            SetCustomization(setNumber: 2, seconds: 60),
+            SetCustomization(setNumber: 3, seconds: 60),
+          ];
+          break;
+      }
+
+      return ExerciseCustomization(
         exercise: exercise,
-        sets: [
-          SetCustomization(setNumber: 1, weight: 0, reps: 10),
-          SetCustomization(setNumber: 2, weight: 0, reps: 10),
-          SetCustomization(setNumber: 3, weight: 0, reps: 10),
-        ],
-      )
-    ).toList();
+        sets: defaultSets,
+        countingMode: countingMode,
+      );
+    }).toList();
   }
 
   @override
@@ -106,7 +135,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                       Text(
                         customization.exercise.focusDisplayName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -115,7 +144,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: _getDifficultyColor(customization.exercise.difficolta).withOpacity(0.2),
+                              color: _getDifficultyColor(customization.exercise.difficolta).withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -144,9 +173,14 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
+            // ✅ NUOVO: Counting Mode Selector
+            _buildCountingModeSelector(customization, exerciseIndex),
+
+            const SizedBox(height: 16),
+
             // Sets Section
             Row(
               children: [
@@ -215,7 +249,136 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     );
   }
 
+  // ✅ MIGLIORATO: Counting Mode Selector Widget (HIG-compliant)
+  Widget _buildCountingModeSelector(ExerciseCustomization customization, int exerciseIndex) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+
+    return SegmentedButton<ExerciseCountingMode>(
+      segments: [
+        ButtonSegment<ExerciseCountingMode>(
+          value: ExerciseCountingMode.weighted,
+          label: Text(
+            '${l10n.weight} × ${l10n.reps}',
+            style: theme.textTheme.labelSmall?.copyWith(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          icon: const Icon(Icons.fitness_center, size: 16),
+        ),
+        ButtonSegment<ExerciseCountingMode>(
+          value: ExerciseCountingMode.reps,
+          label: Text(
+            l10n.reps,
+            style: theme.textTheme.labelSmall?.copyWith(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          icon: const Icon(Icons.repeat, size: 16),
+        ),
+        ButtonSegment<ExerciseCountingMode>(
+          value: ExerciseCountingMode.time,
+          label: Text(
+            l10n.duration,
+            style: theme.textTheme.labelSmall?.copyWith(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          icon: const Icon(Icons.timer, size: 16),
+        ),
+      ],
+      selected: {customization.countingMode},
+      onSelectionChanged: (Set<ExerciseCountingMode> newSelection) {
+        _changeCountingMode(exerciseIndex, newSelection.first);
+      },
+      style: ButtonStyle(
+        visualDensity: VisualDensity.compact,
+        padding: WidgetStateProperty.all(
+          const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        ),
+        side: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return BorderSide(
+              color: theme.colorScheme.primary.withValues(alpha: 0.5),
+              width: 1.5,
+            );
+          }
+          return BorderSide(
+            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            width: 1,
+          );
+        }),
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return theme.colorScheme.primaryContainer.withValues(alpha: 0.3);
+          }
+          return theme.colorScheme.surface;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return theme.colorScheme.onPrimaryContainer;
+          }
+          return theme.colorScheme.onSurfaceVariant;
+        }),
+      ),
+    );
+  }
+
+  // ✅ NUOVO: Change Counting Mode Handler
+  void _changeCountingMode(int exerciseIndex, ExerciseCountingMode newMode) {
+    setState(() {
+      // Update counting mode
+      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
+        countingMode: newMode,
+      );
+
+      // Reset sets to default values for new counting mode
+      final List<SetCustomization> newSets;
+      switch (newMode) {
+        case ExerciseCountingMode.weighted:
+          newSets = _customizations[exerciseIndex].sets.map((set) {
+            return SetCustomization(
+              setNumber: set.setNumber,
+              weight: set.weight, // Keep existing weight
+              reps: set.reps, // Keep existing reps
+              seconds: null, // Clear seconds
+            );
+          }).toList();
+          break;
+        case ExerciseCountingMode.reps:
+          newSets = _customizations[exerciseIndex].sets.map((set) {
+            return SetCustomization(
+              setNumber: set.setNumber,
+              weight: 0, // Clear weight (set to 0)
+              reps: set.reps, // Keep existing reps
+              seconds: null, // Clear seconds
+            );
+          }).toList();
+          break;
+        case ExerciseCountingMode.time:
+          newSets = _customizations[exerciseIndex].sets.map((set) {
+            return SetCustomization(
+              setNumber: set.setNumber,
+              weight: 0, // Clear weight (set to 0)
+              reps: 1, // Set to 1 (will be ignored in time mode)
+              seconds: set.seconds ?? 60, // Use existing or default to 60s
+            );
+          }).toList();
+          break;
+      }
+
+      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
+        sets: newSets,
+      );
+    });
+  }
+
   Widget _buildSetRow(int exerciseIndex, int setIndex, SetCustomization setCustomization) {
+    final countingMode = _customizations[exerciseIndex].countingMode;
+
     return Row(
       children: [
         // Set Number
@@ -239,37 +402,53 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
         const SizedBox(width: 12),
 
-        // Weight Picker Button
-        Expanded(
-          child: _buildPickerButton(
-            label: AppLocalizations.of(context).weight,
-            value: setCustomization.weight == 0
-                ? '-'
-                : setCustomization.weight.toStringAsFixed(1),
-            icon: AppIcons.workout,
-            color: Theme.of(context).colorScheme.primary,
-            onTap: () => _showWeightPicker(
-              exerciseIndex,
-              setIndex,
-              setCustomization,
+        // ✅ MODIFICATO: Mostra campi in base al counting mode
+        if (countingMode == ExerciseCountingMode.weighted) ...[
+          // Weight Picker Button (solo per weighted)
+          Expanded(
+            child: _buildPickerButton(
+              label: AppLocalizations.of(context).weight,
+              value: setCustomization.weight == 0
+                  ? '-'
+                  : setCustomization.weight.toStringAsFixed(1),
+              icon: Icons.fitness_center,
+              color: Theme.of(context).colorScheme.primary,
+              onTap: () => _showWeightPicker(
+                exerciseIndex,
+                setIndex,
+                setCustomization,
+              ),
             ),
           ),
-        ),
+          const SizedBox(width: 8),
+          const Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(width: 8),
+        ],
 
-        const SizedBox(width: 8),
-        const Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(width: 8),
-
-        // Reps Picker Button
-        Expanded(
-          child: _buildPickerButton(
-            label: AppLocalizations.of(context).reps,
-            value: '${setCustomization.reps}',
-            icon: AppIcons.repeat,
-            color: Theme.of(context).colorScheme.secondary,
-            onTap: () => _showRepsPicker(exerciseIndex, setIndex, setCustomization),
+        // Reps Picker Button (per weighted e reps)
+        if (countingMode == ExerciseCountingMode.weighted ||
+            countingMode == ExerciseCountingMode.reps)
+          Expanded(
+            child: _buildPickerButton(
+              label: AppLocalizations.of(context).reps,
+              value: '${setCustomization.reps}',
+              icon: Icons.repeat,
+              color: Theme.of(context).colorScheme.secondary,
+              onTap: () => _showRepsPicker(exerciseIndex, setIndex, setCustomization),
+            ),
           ),
-        ),
+
+        // Duration Picker Button (solo per time)
+        if (countingMode == ExerciseCountingMode.time)
+          Expanded(
+            child: _buildPickerButton(
+              label: AppLocalizations.of(context).duration,
+              value: _formatDuration(setCustomization.seconds ?? 60),
+              icon: Icons.timer,
+              color: Theme.of(context).colorScheme.tertiary,
+              onTap: () => _showDurationPicker(exerciseIndex, setIndex, setCustomization),
+            ),
+          ),
 
         const SizedBox(width: 8),
 
@@ -282,6 +461,16 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
           ),
       ],
     );
+  }
+
+  // ✅ NUOVO: Format duration in mm:ss
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    if (minutes > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    }
+    return '${seconds}s';
   }
 
   void _addSet(int exerciseIndex) {
@@ -343,7 +532,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('✅ ${customization.exercise.nome} aggiunto al template!'),
-          backgroundColor: Colors.green,
+          backgroundColor: context.colors.success,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -387,12 +576,13 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   }
 
   WorkoutExercise.Exercise _convertToWorkoutExercise(ExerciseCustomization customization) {
-    // Convert custom sets to workout sets
+    // ✅ NUOVO: Convert custom sets to workout sets with counting mode awareness
     final sets = customization.sets.map((setCustomization) =>
       WorkoutExercise.ExerciseSet(
         setNumber: setCustomization.setNumber,
         weight: setCustomization.weight,
         reps: setCustomization.reps,
+        seconds: setCustomization.seconds, // ✅ NUOVO: Include seconds for time-based exercises
       )
     ).toList();
 
@@ -402,9 +592,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
       sets,
     );
 
-    // Override notes ONLY if user wrote custom notes (NO fallback to noteTecniche)
+    // ✅ NUOVO: Override notes AND counting mode
     return exercise.copyWith(
       notes: customization.notes, // Note utente separate - non usare noteTecniche
+      countingMode: customization.countingMode, // ✅ NUOVO: Include counting mode
     );
   }
 
@@ -416,13 +607,13 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
 
@@ -447,7 +638,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -500,7 +691,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -593,6 +784,121 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     );
   }
 
+  /// ✅ NUOVO: Show duration picker dialog with quick select buttons
+  void _showDurationPicker(int exerciseIndex, int setIndex, SetCustomization setCustomization) {
+    final theme = Theme.of(context);
+    int selectedSeconds = setCustomization.seconds ?? 60;
+    final controller = FixedExtentScrollController(
+      initialItem: (selectedSeconds / 5).round() - 1, // 5s increments
+    );
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          height: 350,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Title
+              Text(
+                AppLocalizations.of(context).duration,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // ✅ Quick select buttons (common durations)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [15, 30, 45, 60, 90].map((seconds) {
+                  final isSelected = selectedSeconds == seconds;
+                  return FilterChip(
+                    label: Text(_formatDuration(seconds)),
+                    selected: isSelected,
+                    onSelected: (_) {
+                      setModalState(() => selectedSeconds = seconds);
+                      controller.animateToItem(
+                        (seconds / 5).round() - 1,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    backgroundColor: theme.colorScheme.surface,
+                    selectedColor: theme.colorScheme.tertiaryContainer,
+                    labelStyle: TextStyle(
+                      color: isSelected
+                          ? theme.colorScheme.onTertiaryContainer
+                          : theme.colorScheme.onSurface,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 16),
+              // Picker (5s increments, 5s to 5min)
+              Expanded(
+                child: ListWheelScrollView.useDelegate(
+                  controller: controller,
+                  itemExtent: 50,
+                  perspective: 0.005,
+                  diameterRatio: 1.2,
+                  physics: const FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 60, // 5s to 300s (5min)
+                    builder: (context, index) {
+                      final seconds = (index + 1) * 5;
+                      final isSelected = seconds == selectedSeconds;
+                      return Center(
+                        child: Text(
+                          _formatDuration(seconds),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected
+                                ? theme.colorScheme.tertiary
+                                : theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setModalState(() => selectedSeconds = (index + 1) * 5);
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Confirm button
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () {
+                    _updateSet(exerciseIndex, setIndex, setCustomization.copyWith(seconds: selectedSeconds));
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(context).confirm),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Show weight picker dialog with unit support (kg/lbs)
   void _showWeightPicker(
     int exerciseIndex,
@@ -622,7 +928,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -838,20 +1144,24 @@ class ExerciseCustomization {
     required this.exercise,
     required this.sets,
     this.notes,
+    required this.countingMode, // ✅ NUOVO: Counting mode dell'esercizio
   });
   final Exercise exercise;
   final List<SetCustomization> sets;
   final String? notes;
+  final ExerciseCountingMode countingMode; // ✅ NUOVO
 
   ExerciseCustomization copyWith({
     Exercise? exercise,
     List<SetCustomization>? sets,
     String? notes,
+    ExerciseCountingMode? countingMode, // ✅ NUOVO
   }) {
     return ExerciseCustomization(
       exercise: exercise ?? this.exercise,
       sets: sets ?? this.sets,
       notes: notes ?? this.notes,
+      countingMode: countingMode ?? this.countingMode, // ✅ NUOVO
     );
   }
 }
@@ -860,22 +1170,26 @@ class SetCustomization {
 
   SetCustomization({
     required this.setNumber,
-    required this.weight,
-    required this.reps,
+    this.weight = 0, // Optional for bodyweight/time exercises
+    this.reps = 10, // Optional for time exercises
+    this.seconds, // ✅ NUOVO: Per esercizi a tempo
   });
   final int setNumber;
   final double weight;
   final int reps;
+  final int? seconds; // ✅ NUOVO: Secondi per esercizi a tempo (plank, etc.)
 
   SetCustomization copyWith({
     int? setNumber,
     double? weight,
     int? reps,
+    int? seconds, // ✅ NUOVO
   }) {
     return SetCustomization(
       setNumber: setNumber ?? this.setNumber,
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
+      seconds: seconds ?? this.seconds, // ✅ NUOVO
     );
   }
 }

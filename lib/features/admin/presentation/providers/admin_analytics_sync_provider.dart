@@ -17,6 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// Admin analytics sync state
 class AdminAnalyticsSyncState {
@@ -218,7 +219,8 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
       }
 
       // Open Hive box with timeout
-      _adminPrefsBox = await Hive.openBox('admin_preferences').timeout(
+      final boxManager = _ref.read(hiveBoxManagerProvider);
+      _adminPrefsBox = await boxManager.openBox('admin_preferences').timeout(
         const Duration(seconds: 10),
         onTimeout: () {
           if (kDebugMode) {

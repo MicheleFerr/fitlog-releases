@@ -198,7 +198,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
   Widget _buildTypeSelector(BuildContext context, RoutineType selectedType) {
     final types = [
       (RoutineType.weekly, AppIcons.calendarViewWeek, context.l10n.routineTypeWeekly, context.l10n.routineTypeWeeklyDuration),
-      (RoutineType.monthly, AppIcons.calendarMonth, context.l10n.routineTypeMonthly, context.l10n.routineTypeMonthlyDuration),
+      (RoutineType.monthly, Icons.calendar_month, context.l10n.routineTypeMonthly, context.l10n.routineTypeMonthlyDuration),
       (RoutineType.bimonthly, AppIcons.dateRange, context.l10n.routineTypeBimonthly, context.l10n.routineTypeBimonthlyDuration),
       (RoutineType.semester, AppIcons.eventNote, context.l10n.routineTypeSemester, context.l10n.routineTypeSemesterDuration),
       (RoutineType.custom, AppIcons.tune, context.l10n.routineTypeCustom, context.l10n.routineTypeCustomDuration),

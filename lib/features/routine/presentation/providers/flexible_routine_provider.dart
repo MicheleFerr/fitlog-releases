@@ -194,11 +194,12 @@ final dayAutoCompleteStatusProvider =
     );
   }
 
-  // Check if any completed workout matches the scheduled template
+  // Check if any completed workout matches the scheduled template (case-insensitive)
   for (final workout in completedWorkouts) {
     final workoutTemplateId = workout['templateId'] as String?;
 
-    if (workoutTemplateId != null && workoutTemplateId == params.scheduledTemplateId) {
+    if (workoutTemplateId != null &&
+        workoutTemplateId.toLowerCase() == params.scheduledTemplateId?.toLowerCase()) {
       return DayAutoCompleteStatus(
         shouldAutoComplete: true,
         reason: 'Completed workout matches scheduled template',

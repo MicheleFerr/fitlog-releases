@@ -23,7 +23,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_exp
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_header.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_card.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
@@ -37,6 +37,10 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/contextual_overlay_manager.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
+import 'package:uuid/uuid.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   /// Optional template ID to pre-load when opening the screen
@@ -63,6 +67,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
   bool _isReorderMode = false;
   final _interstitialAdService = InterstitialAdService();
 
+  // PHASE 2: GlobalKeys for contextual overlays
+  final GlobalKey _addExerciseFABKey = GlobalKey();
+  final GlobalKey _completeWorkoutButtonKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -72,11 +80,40 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     // 💾 Add lifecycle observer for force-saving when app goes to background
     WidgetsBinding.instance.addObserver(this);
 
-    // 🚀 Auto-load template from Smart CTA if provided
-    if (widget.initialTemplateId != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _loadTemplateAndStart(widget.initialTemplateId!);
-      });
+    // PHASE 2: Show welcome overlay for beginners on first workout
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showFirstWorkoutWelcomeIfNeeded();
+    });
+  }
+
+  /// PHASE 2: Show welcome overlay to guide beginner through first workout
+  Future<void> _showFirstWorkoutWelcomeIfNeeded() async {
+    if (!mounted) return;
+
+    final onboardingState = ref.read(onboardingProvider);
+    final currentWorkout = ref.read(currentWorkoutProvider);
+
+    // Show only if:
+    // 1. User is beginner
+    // 2. In first workout flow (hasn't completed first workout yet)
+    // 3. Workout has no exercises yet (empty state)
+    // 4. Hasn't seen this overlay before
+    if (onboardingState.isInGuidedFirstWorkout &&
+        (currentWorkout == null || currentWorkout.exercises.isEmpty) &&
+        !onboardingState.hasSeenOverlay('firstWorkoutWelcome')) {
+      // Wait a bit for UI to settle
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      if (mounted) {
+        await ContextualOverlayManager.show(
+          context: context,
+          ref: ref,
+          overlayId: 'firstWorkoutWelcome',
+          targetKey: _addExerciseFABKey,
+          message: ContextualOverlayManager.commonOverlays['firstWorkoutWelcome']!.message,
+          actionLabel: ContextualOverlayManager.commonOverlays['firstWorkoutWelcome']!.actionLabel,
+        );
+      }
     }
   }
 
@@ -85,16 +122,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     // 💾 Remove lifecycle observer
     WidgetsBinding.instance.removeObserver(this);
 
-    // 💾 Force save any pending modifications before disposing
-    final cacheService = ref.read(workoutTemplateCacheServiceProvider);
-    cacheService.forceSave();
-
-    // 💾 Emergency save current workout if active
-    final currentWorkout = ref.read(currentWorkoutProvider);
-    if (currentWorkout != null && currentWorkout.isActive) {
-      final autoSave = ref.read(workoutAutoSaveProvider.notifier);
-      autoSave.emergencySave(currentWorkout);
-    }
+    // NOTE: Cannot use ref.read() in dispose() as widget is already unmounted
+    // The auto-save is already handled by the lifecycle observer in didChangeAppLifecycleState
+    // Emergency saves should be triggered there, not in dispose()
 
     super.dispose();
   }
@@ -132,24 +162,115 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       debugPrint('🏗️ WorkoutScreen.build called');
     }
 
+    // ⚡ OPTIMIZATION: Use .select() for granular rebuilds
+    // Only rebuild when specific properties change, not entire workout object
     final currentWorkout = ref.watch(currentWorkoutProvider);
+    final sessionId = (GoRouterState.of(context).extra as Map?)?['sessionId'] as String?;
+
+    final workoutName = ref.watch(
+      currentWorkoutProvider.select((workout) => workout?.name),
+    );
+    final isActive = ref.watch(
+      currentWorkoutProvider.select((workout) => workout?.isActive ?? false),
+    );
+    final hasExercises = ref.watch(
+      currentWorkoutProvider.select((workout) => workout?.exercises.isNotEmpty ?? false),
+    );
+    final hasWorkout = ref.watch(
+      currentWorkoutProvider.select((workout) => workout != null),
+    );
+
+    // Check if this is a pre-loaded workout
+    final isPreloaded = ref.watch(
+      currentWorkoutProvider.select((workout) => workout?.isPreloaded ?? false),
+    );
+
+    // ✅ FIX #7: Track workout_screen_viewed when workout is loaded
+    ref.listen(
+      currentWorkoutProvider,
+      (previous, next) {
+        // Track when workout first appears (null → non-null transition)
+        if (previous == null && next != null) {
+          WorkoutAnalytics.trackEvent(
+            'workout_screen_viewed',
+            properties: {
+              'sessionId': sessionId ?? next.sessionId ?? _generateSessionId(),
+              'sourceFlow': next.isPreloaded ? 'smart_cta' : 'fab',
+              'exerciseCount': next.exercises.length,
+              'timestamp': DateTime.now().toIso8601String(),
+            },
+          );
+        }
+      },
+    );
+
+    // PHASE 2: Listen for first exercise added to show "addFirstSet" overlay
+    ref.listen(
+      currentWorkoutProvider.select((workout) => workout?.exercises.length ?? 0),
+      (previous, current) {
+        final onboardingState = ref.read(onboardingProvider);
+
+        // Show overlay when first exercise is added (0 → 1 transition)
+        if (previous == 0 && current == 1 && onboardingState.shouldShowAddFirstExercise) {
+          // Wait for UI to settle and modal to close
+          Future.delayed(const Duration(milliseconds: 800), () {
+            if (mounted) {
+              ContextualOverlayManager.show(
+                context: context,
+                ref: ref,
+                overlayId: 'addFirstSet',
+                targetKey: _addExerciseFABKey,
+                message: ContextualOverlayManager.commonOverlays['addFirstSet']!.message,
+                actionLabel: ContextualOverlayManager.commonOverlays['addFirstSet']!.actionLabel,
+              );
+            }
+          });
+        }
+      },
+    );
+
+    // PHASE 2: Listen for first set completed to show "completeFirstWorkout" overlay
+    ref.listen(
+      onboardingProvider.select((state) => state.hasCompletedFirstSet),
+      (previous, current) {
+        final onboardingState = ref.read(onboardingProvider);
+
+        // Show overlay when first set is completed AND user should see complete workout overlay
+        if (previous == false && current == true && onboardingState.shouldShowCompleteWorkout) {
+          // Wait for rest timer overlay to dismiss and UI to settle
+          Future.delayed(const Duration(milliseconds: 2500), () {
+            if (mounted) {
+              ContextualOverlayManager.show(
+                context: context,
+                ref: ref,
+                overlayId: 'completeFirstWorkout',
+                targetKey: _completeWorkoutButtonKey,
+                message: ContextualOverlayManager.commonOverlays['completeFirstWorkout']!.message,
+                actionLabel: ContextualOverlayManager.commonOverlays['completeFirstWorkout']!.actionLabel,
+              );
+            }
+          });
+        }
+      },
+    );
+
     if (kDebugMode) {
-      debugPrint('🏗️ Current workout: ${currentWorkout?.name}, exercises: ${currentWorkout?.exercises.length}');
+      debugPrint('🏗️ Current workout: $workoutName, hasExercises: $hasExercises');
     }
-    
+
     // Add error boundary for debugging
     try {
       final scaffold = PopScope(
         canPop: false, // Prevent default back navigation
-        onPopInvoked: (didPop) {
-          if (!didPop) {
-            _handleBackNavigation(context, ref);
-          }
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(currentWorkout?.name ?? context.l10n.myWorkouts),
-            leading: currentWorkout != null && currentWorkout.isActive
+          onPopInvoked: (didPop) {
+            if (!didPop) {
+              _handleBackNavigation(context, ref);
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(workoutName ?? context.l10n.myWorkouts),
+              leading: isActive
                 ? IconButton(
                     icon: const Icon(AppIcons.home),
                     onPressed: () => _handleBackNavigation(context, ref),
@@ -160,53 +281,73 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     onPressed: () => context.goNamed('home'),
                     tooltip: context.l10n.backToHome,
                   ),
-            actions: [
-            if (currentWorkout != null && currentWorkout.isActive && currentWorkout.exercises.isNotEmpty)
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isReorderMode = !_isReorderMode;
-                  });
-                  if (!_isReorderMode) {
-                    // Show feedback when exiting reorder mode
-                    SnackBarService.showSuccess(
-                      context,
-                      context.l10n.orderSaved,
-                    );
-                  }
-                },
-                icon: Icon(_isReorderMode ? AppIcons.done : AppIcons.swapVert),
-                tooltip: _isReorderMode ? context.l10n.confirmReorder : context.l10n.reorderExercises,
-              ),
-            if (currentWorkout != null && currentWorkout.isActive)
-              IconButton(
-                onPressed: () => _completeWorkout(context, ref),
-                icon: const Icon(AppIcons.complete),
-                tooltip: context.l10n.completeWorkout,
-              ),
-            IconButton(
-              onPressed: () => _showSettingsMenu(context, ref),
-              icon: const Icon(AppIcons.moreVert),
+              actions: [
+                if (isActive && hasExercises)
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isReorderMode = !_isReorderMode;
+                      });
+                      if (!_isReorderMode) {
+                        // Show feedback when exiting reorder mode
+                        SnackBarService.showSuccess(
+                          context,
+                          context.l10n.orderSaved,
+                        );
+                      }
+                    },
+                    icon: Icon(_isReorderMode ? AppIcons.done : Icons.swap_vert),
+                    tooltip: _isReorderMode ? context.l10n.confirmReorder : context.l10n.reorderExercises,
+                  ),
+                if (isActive)
+                  IconButton(
+                    key: _completeWorkoutButtonKey, // PHASE 2: GlobalKey for contextual overlay
+                    onPressed: () => _completeWorkout(context, ref),
+                    icon: const Icon(Icons.check_circle),
+                    tooltip: context.l10n.completeWorkout,
+                  ),
+                IconButton(
+                  onPressed: () => _showSettingsMenu(context, ref),
+                  icon: const Icon(AppIcons.moreVert),
+                ),
+              ],
             ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            currentWorkout == null 
-                ? _buildWelcomeView(context, ref)
-                : _buildWorkoutView(context, ref, currentWorkout),
-            // Timer Overlay
-            Consumer(
-              builder: (context, ref, child) {
-                final shouldShow = ref.watch(shouldShowTier1TimerProvider);
-                return shouldShow ? const Tier1MinimalTimerOverlay() : const SizedBox.shrink();
-              },
+            body: Stack(
+              children: [
+                // Conditional rendering based on workout state
+                if (!hasWorkout)
+                  _buildWelcomeView(context, ref)
+                else if (isPreloaded && hasExercises)
+                  _buildPreloadedView(context, ref, currentWorkout!, sessionId ?? _generateSessionId())
+                else
+                  Consumer(
+                    builder: (context, ref, child) {
+                      // ⚡ OPTIMIZATION: Watch full workout only in body builder
+                      // This isolates rebuilds to this section when exercise data changes
+                      final currentWorkout = ref.watch(currentWorkoutProvider);
+
+                      // 🐛 DEBUG: Log exercise counting modes on rebuild (SENZA kDebugMode per profile mode)
+                      if (currentWorkout != null) {
+                        for (final ex in currentWorkout.exercises) {
+                          print('🔍 [WorkoutScreen Consumer] Exercise: ${ex.name}, CountingMode: ${ex.countingMode.name}');
+                        }
+                      }
+
+                      return _buildWorkoutView(context, ref, currentWorkout!);
+                    },
+                  ),
+                // Timer Overlay
+                Consumer(
+                  builder: (context, ref, child) {
+                    final shouldShow = ref.watch(shouldShowTier1TimerProvider);
+                    return shouldShow ? const Tier1MinimalTimerOverlay() : const SizedBox.shrink();
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-        ),
-      );
-      
+          ),
+        );
+
       // Wrap con il button draggabile e tutorial
       return DraggableTutorialOverlay(
         tutorialKey: 'workout_fab',
@@ -214,7 +355,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           children: [
             scaffold,
             // Mostra ExpandableFAB quando non c'è workout attivo, DraggableActionButton altrimenti
-            if (currentWorkout == null)
+            if (!hasWorkout)
               ExpandableFAB(
                 icon: AppIcons.noteAdd,
                 label: AppLocalizations.of(context).createTemplate,
@@ -223,7 +364,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     icon: AppIcons.flashOn,
                     label: context.l10n.startNow,
                     onTap: () => _startQuickWorkout(context, ref),
-                    backgroundColor: Colors.green,
+                    backgroundColor: context.successColor,
                     foregroundColor: Colors.white,
                   ),
                   ExpandableFabOption(
@@ -233,17 +374,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     backgroundColor: context.colors.primary,
                     foregroundColor: context.colors.onPrimary,
                   ),
-                  ExpandableFabOption(
-                    icon: AppIcons.uploadFile,
-                    label: AppLocalizations.of(context).importFromJSON,
-                    onTap: () => _showImportFromJson(context),
-                    backgroundColor: context.colors.secondary,
-                    foregroundColor: context.colors.onSecondary,
-                  ),
                 ],
               )
             else
               DraggableActionButton(
+                key: _addExerciseFABKey, // PHASE 2: GlobalKey for contextual overlay
                 onPressed: () => _showAddExercise(context, ref),
                 icon: AppIcons.add,
                 label: AppLocalizations.of(context).addExercise,
@@ -268,7 +403,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         ),
                       );
                     },
-                    color: Colors.orange,
+                    color: context.warningColor,
                   ),
                   DraggableActionOption(
                     icon: AppIcons.save,
@@ -280,7 +415,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         context.l10n.saveTemplateFunctionComingSoon,
                       );
                     },
-                    color: Colors.blue,
+                    color: context.infoColor,
                   ),
                 ],
               ),
@@ -304,7 +439,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(AppIcons.error, size: 64, color: Colors.red),
+              Icon(Icons.error_outline, size: 64, color: context.errorColor),
               const SizedBox(height: 16),
               Text(context.l10n.errorOccurred),
               const SizedBox(height: 8),
@@ -328,11 +463,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tab Bar
-          Container(
+          ColoredBox(
             color: context.colors.surface,
             child: TabBar(
               labelColor: context.colors.primary,
-              unselectedLabelColor: context.colors.onSurface.withOpacity(0.6),
+              unselectedLabelColor: context.colors.onSurface.withValues(alpha: 0.6),
               indicatorColor: context.colors.primary,
               indicatorWeight: 3,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -412,22 +547,22 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              isCustomTab ? AppIcons.noteAdd : AppIcons.inventory2Outlined,
+              isCustomTab ? AppIcons.noteAdd : Icons.inventory_2_outlined,
               size: 64,
-              color: context.colors.onSurface.withOpacity(0.3),
+              color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
               isCustomTab ? context.l10n.noCustomTemplates : context.l10n.noPredefinedWorkouts,
               style: context.textTheme.titleMedium?.copyWith(
-                color: context.colors.onSurface.withOpacity(0.5),
+                color: context.colors.onSurface.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               isCustomTab ? context.l10n.createFirstTemplate : context.l10n.predefinedWorkoutsComingSoon,
               style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurface.withOpacity(0.4),
+                color: context.colors.onSurface.withValues(alpha: 0.4),
               ),
             ),
             if (isCustomTab) ...[
@@ -454,7 +589,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       itemCount: templates.length,
       itemBuilder: (context, index) {
         final template = templates[index];
-        return _buildGridTemplateCard(context, ref, template);
+        // ⚡ OPTIMIZATION: Add key for better grid performance
+        return KeyedSubtree(
+          key: ValueKey(template.id),
+          child: _buildGridTemplateCard(context, ref, template),
+        );
       },
     );
   }
@@ -487,7 +626,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 gradient: LinearGradient(
                   colors: [
                     baseColor,
-                    baseColor.withOpacity(0.7),
+                    baseColor.withValues(alpha: 0.7),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -529,7 +668,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                             Icon(
                               AppIcons.formatListBulleted,
                               size: 14,
-                              color: theme.colorScheme.onSurface.withOpacity(0.6),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -543,9 +682,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         Row(
                           children: [
                             Icon(
-                              AppIcons.timerOffOutlined,
+                              AppIcons.timer,
                               size: 14,
-                              color: theme.colorScheme.onSurface.withOpacity(0.6),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -560,7 +699,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withOpacity(0.1),
+                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -603,7 +742,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
+                color: context.colors.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -637,14 +776,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            Icon(AppIcons.formatListBulleted, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withOpacity(0.6)),
+                            Icon(Icons.format_list_bulleted, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
                             const SizedBox(width: 4),
                             Text(
                               '${template.exercises.length} ${AppLocalizations.of(modalContext).exercises}',
                               style: Theme.of(modalContext).textTheme.bodySmall,
                             ),
                             const SizedBox(width: 12),
-                            Icon(AppIcons.timerOffOutlined, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withOpacity(0.6)),
+                            Icon(AppIcons.timer, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
                             const SizedBox(width: 4),
                             Text(
                               '~${template.estimatedDuration} min',
@@ -667,10 +806,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
+                  color: context.successContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(AppIcons.play, color: Colors.green),
+                child: Icon(Icons.play_arrow, color: context.successColor),
               ),
               title: Text(AppLocalizations.of(modalContext).startWorkout, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).startWorkoutWithTemplate),
@@ -686,10 +825,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
+                    color: context.infoContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(AppIcons.edit, color: Colors.blue),
+                  child: Icon(Icons.edit, color: context.infoColor),
                 ),
                 title: Text(AppLocalizations.of(modalContext).editTemplate, style: const TextStyle(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).editTemplateSubtitle),
@@ -705,10 +844,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.1),
+                  color: context.warningContainer,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(AppIcons.share, color: Colors.orange),
+                child: Icon(Icons.share, color: context.warningColor),
               ),
               title: Text(AppLocalizations.of(modalContext).sharePdf, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).sharePdfSubtitle),
@@ -723,10 +862,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: context.colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(AppIcons.print, color: Colors.purple),
+                child: Icon(Icons.print, color: context.colors.primary),
               ),
               title: Text(AppLocalizations.of(modalContext).print, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).printTemplate),
@@ -742,10 +881,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: context.errorContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(AppIcons.delete, color: Colors.red),
+                  child: Icon(Icons.delete, color: context.errorColor),
                 ),
                 title: Text(AppLocalizations.of(modalContext).deleteTemplate, style: const TextStyle(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).deleteTemplateSubtitle),
@@ -900,10 +1039,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         context: context,
         builder: (context) => AlertDialog(
           title: Text(context.l10n.keepWorkoutActive),
-          content: const Text(
-            'Do you want to go back to Home and keep your workout running in the background?\n\n'
-            'You can return to continue your workout anytime.',
-          ),
+          content: Text(context.l10n.keepWorkoutActiveMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -936,6 +1072,258 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     }
   }
 
+  String _generateSessionId() => const Uuid().v4();
+
+  Widget _buildPreloadedView(
+    BuildContext context,
+    WidgetRef ref,
+    Workout workout,
+    String sessionId,
+  ) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(workout.name),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    AppIcons.autoAwesome,
+                    size: 14,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Suggerito',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          // "Cambio Programma" banner
+          _buildChangeWorkoutBanner(context, ref, sessionId),
+
+          // Exercise list
+          Expanded(
+            child: ListView.builder(
+              itemCount: workout.exercises.length,
+              itemBuilder: (_, i) {
+                final exercise = workout.exercises[i];
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text('${i + 1}'),
+                  ),
+                  title: Text(exercise.name),
+                  subtitle: Text(exercise.category.toString().split('.').last),
+                );
+              },
+            ),
+          ),
+
+          // Start button
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton.icon(
+              onPressed: () => _onStartWorkout(context, ref, workout, sessionId),
+              icon: const Icon(AppIcons.playArrowRounded),
+              label: Text(context.l10n.startWorkout),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.successColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChangeWorkoutBanner(
+    BuildContext context,
+    WidgetRef ref,
+    String sessionId,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: context.colors.primary.withValues(alpha: 0.1),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.3),
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              '💡 Non è quello che volevi?',
+              style: context.textTheme.bodySmall,
+            ),
+          ),
+          TextButton(
+            onPressed: () => _showTemplateSelection(context, ref, sessionId),
+            child: const Text('Sfoglia Template'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showTemplateSelection(
+    BuildContext context,
+    WidgetRef ref,
+    String sessionId,
+  ) async {
+    // Pause cleanup timer while user browses templates
+    ref.read(currentWorkoutProvider.notifier).pauseCleanupTimer();
+
+    try {
+      // Show template selection modal
+      final templates = await ref.read(customWorkoutTemplatesProvider.future);
+
+      if (context.mounted) {
+        await showModalBottomSheet(
+          context: context,
+          isDismissible: true,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          builder: (modalContext) => DraggableScrollableSheet(
+            initialChildSize: 0.7,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            expand: false,
+            builder: (_, scrollController) => Column(
+              children: [
+                // Handle bar
+                Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 8),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.outline.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Seleziona Template',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                // Template list
+                Expanded(
+                  child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: templates.length,
+                    itemBuilder: (_, index) {
+                      final template = templates[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+                          child: Icon(
+                            AppIcons.workout,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                        title: Text(template.name),
+                        subtitle: Text('${template.exercises.length} esercizi • ~${template.estimatedDuration} min'),
+                        trailing: const Icon(AppIcons.arrowForwardRounded, size: 16),
+                        onTap: () async {
+                          // Replace exercises with selected template
+                          await ref
+                              .read(currentWorkoutProvider.notifier)
+                              .replaceExercisesFromTemplate(template);
+
+                          // Track modification
+                          await WorkoutAnalytics.trackEvent(
+                            'workout_template_changed',
+                            properties: {
+                              'sessionId': sessionId,
+                              'newTemplateName': template.name,
+                              'exerciseCount': template.exercises.length,
+                              'timestamp': DateTime.now().toIso8601String(),
+                            },
+                          );
+
+                          if (modalContext.mounted) {
+                            Navigator.pop(modalContext);
+                            // Resume cleanup timer
+                            ref.read(currentWorkoutProvider.notifier).resumeCleanupTimer();
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    } finally {
+      // Ensure timer resumed even if error occurs
+      ref.read(currentWorkoutProvider.notifier).resumeCleanupTimer();
+    }
+  }
+
+  Future<void> _onStartWorkout(
+    BuildContext context,
+    WidgetRef ref,
+    Workout workout,
+    String sessionId,
+  ) async {
+    // Track analytics
+    await WorkoutAnalytics.trackEvent(
+      'workout_started',
+      properties: {
+        'sessionId': sessionId,
+        'sourceFlow': workout.isPreloaded ? 'smart_cta' : 'fab',
+        'exercisesModified': workout.exercisesModified ?? false,
+        'exerciseCount': workout.exercises.length,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+    );
+
+    // Update workout status to active
+    ref.read(currentWorkoutProvider.notifier).startWorkout();
+
+    // Show success feedback
+    SnackBarService.showSuccess(
+      context,
+      '⚡ ${context.l10n.workoutStarted(workout.name)}',
+    );
+
+    // The UI will rebuild based on workout status
+  }
+
   Widget _buildWelcomeView(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Padding(
@@ -946,7 +1334,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             // Quick Start Card - Most prominent
             Card(
               elevation: 4,
-              color: Colors.green.shade50,
+              color: context.successContainer,
               child: InkWell(
                 onTap: () => _startQuickWorkout(context, ref),
                 borderRadius: BorderRadius.circular(12),
@@ -958,7 +1346,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: context.successColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
@@ -976,22 +1364,22 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                               context.l10n.startNow,
                               style: context.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green.shade900,
+                                color: context.textOnSuccess,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               context.l10n.startImmediately,
                               style: context.textTheme.bodyMedium?.copyWith(
-                                color: Colors.green.shade700,
+                                color: context.textOnSuccess,
                               ),
                             ),
                           ],
                         ),
                       ),
                       Icon(
-                        AppIcons.forwardIos,
-                        color: Colors.green.shade700,
+                        Icons.arrow_forward_ios,
+                        color: context.textOnSuccess,
                       ),
                     ],
                   ),
@@ -1011,6 +1399,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
   }
 
   Widget _buildWorkoutView(BuildContext context, WidgetRef ref, Workout workout) {
+    // 🐛 DEBUG: Log exercises in _buildWorkoutView (SENZA kDebugMode per profile mode)
+    print('🏗️ [_buildWorkoutView] Building view with ${workout.exercises.length} exercises');
+    for (final ex in workout.exercises) {
+      print('   - ${ex.name}: countingMode=${ex.countingMode.name}');
+    }
+
     return SafeArea(
       child: Column(
         children: [
@@ -1116,7 +1510,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         itemCount: workout.exercises.length,
                         itemBuilder: (context, index) {
                           final exercise = workout.exercises[index];
+
+                          // 🐛 DEBUG: Log exercise being passed to ExerciseListItem (SENZA kDebugMode per profile mode)
+                          print('📋 [ListView.builder] Creating ExerciseListItem for: ${exercise.name}, countingMode=${exercise.countingMode.name}');
+
                           return Padding(
+                            key: ValueKey(exercise.id), // ⚡ OPTIMIZATION: Key for better performance on list changes
                             padding: const EdgeInsets.only(bottom: 12),
                             child: exercise.type == ExerciseType.superset && exercise is SupersetExercise
                                 ? SupersetCard(
@@ -1170,20 +1569,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           Icon(
             AppIcons.workout,
             size: 64,
-            color: context.colors.onSurface.withOpacity(0.3),
+            color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
             context.l10n.noExercisesYet,
             style: context.textTheme.headlineSmall?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.5),
+              color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             context.l10n.tapToAddExercise,
             style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.5),
+              color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
         ],
@@ -1311,101 +1710,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     );
   }
 
-  void _showImportFromJson(BuildContext context) {
-    final l10n = context.l10n;
-    final TextEditingController jsonController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.importFromJSON),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: context.colors.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            AppIcons.info,
-                            color: context.colors.primary,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            context.l10n.jsonFormat,
-                            style: context.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: context.colors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        context.l10n.pasteJsonHere,
-                        style: context.textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  height: 200,
-                  child: TextField(
-                    controller: jsonController,
-                    maxLines: null,
-                    expands: true,
-                    decoration: const InputDecoration(
-                      hintText: '{\n  "name": "My Workout",\n  "description": "...",\n  "exercises": [...]\n}',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              if (jsonController.text.trim().isNotEmpty) {
-                // Naviga alla schermata template per processare l'import
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const WorkoutTemplatesScreen(),
-                  ),
-                );
-
-                // Mostra feedback temporaneo
-                SnackBarService.showInfo(
-                  context,
-                  context.l10n.useImportFunctionInTemplateScreen,
-                );
-              }
-            },
-            child: Text(context.l10n.import),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _editExercise(BuildContext context, WidgetRef ref, Exercise exercise) {
     // TODO: Implement exercise editing
     SnackBarService.showInfo(
@@ -1426,8 +1730,39 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     );
   }
 
-  void _updateExerciseSet(WidgetRef ref, String exerciseId, ExerciseSet updatedSet) {
+  Future<void> _updateExerciseSet(WidgetRef ref, String exerciseId, ExerciseSet updatedSet) async {
     ref.read(currentWorkoutProvider.notifier).updateExerciseSet(exerciseId, updatedSet);
+
+    // PHASE 2: Track first set completed for beginner guidance
+    if (updatedSet.isCompleted) {
+      final onboardingState = ref.read(onboardingProvider);
+      if (onboardingState.isInGuidedFirstWorkout && !onboardingState.hasCompletedFirstSet) {
+        await ref.read(onboardingProvider.notifier).markFirstSetCompleted();
+
+        // Show rest timer explanation overlay after first set
+        if (mounted) {
+          Future.delayed(const Duration(milliseconds: 500), () async {
+            if (mounted) {
+              await ContextualOverlayManager.show(
+                context: context,
+                ref: ref,
+                overlayId: 'restTimerExplain',
+                targetKey: _addExerciseFABKey, // TODO: Should target timer widget if visible
+                message: ContextualOverlayManager.commonOverlays['restTimerExplain']!.message,
+                actionLabel: ContextualOverlayManager.commonOverlays['restTimerExplain']!.actionLabel,
+              );
+
+              // Mark rest timer explanation as seen
+              await ref.read(onboardingProvider.notifier).markRestTimerExplanationSeen();
+            }
+          });
+        }
+
+        if (kDebugMode) {
+          debugPrint('✅ PHASE 2: First set completed, rest timer explanation shown');
+        }
+      }
+    }
   }
 
   void _updateSupersetSet(WidgetRef ref, String exerciseId, SupersetSet updatedSupersetSet) {
@@ -1460,52 +1795,76 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     }
   }
 
-  void _completeWorkout(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.completeWorkout),
-        content: Text(context.l10n.completeWorkoutConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () async {
-              ref.read(currentWorkoutProvider.notifier).completeWorkout();
-              Navigator.pop(context);
-              SnackBarService.showSuccess(
-                context,
-                context.l10n.workoutCompletedSuccess,
-              );
+  Future<void> _completeWorkout(BuildContext context, WidgetRef ref) async {
+    // PHASE 2: Track first workout completed for beginner guidance
+    final onboardingState = ref.read(onboardingProvider);
+    if (onboardingState.isInGuidedFirstWorkout) {
+      await ref.read(onboardingProvider.notifier).markFirstWorkoutCompleted();
 
-              // 📱 Show interstitial ad after workout completion
-              await Future.delayed(const Duration(milliseconds: 500));
+      if (kDebugMode) {
+        debugPrint('🎉 PHASE 2: First workout completed! Phase 2 complete');
+      }
+    }
 
-              _interstitialAdService.showAdIfReady(
-                onAdClosed: () {
-                  // Clear workout and navigate after ad is closed (or not shown)
-                  ref.read(currentWorkoutProvider.notifier).clearWorkout();
-                  if (context.mounted) {
-                    context.goNamed('home');
-                  }
-                },
-              );
+    // ✅ NEW: Immediate completion without confirmation dialog
+    // Save workout immediately
+    ref.read(currentWorkoutProvider.notifier).completeWorkout(context);
 
-              // If ad didn't show, navigate after a short delay
-              Future.delayed(const Duration(seconds: 2), () {
-                if (context.mounted) {
-                  ref.read(currentWorkoutProvider.notifier).clearWorkout();
-                  context.goNamed('home');
-                }
-              });
-            },
-            child: Text(context.l10n.complete),
-          ),
-        ],
+    // Haptic feedback for completion
+    HapticFeedback.mediumImpact();
+
+    // Show SnackBar with Undo button (5 seconds)
+    final snackBar = SnackBar(
+      content: Text('✅ ${context.l10n.workoutCompletedSuccess}'),
+      duration: const Duration(seconds: 5),
+      backgroundColor: context.colors.primary,
+      action: SnackBarAction(
+        label: context.l10n.undo,
+        textColor: context.colors.onPrimary,
+        onPressed: () {
+          // Undo completion - restore workout to "in progress"
+          ref.read(currentWorkoutProvider.notifier).undoCompletion();
+          SnackBarService.showInfo(
+            context,
+            context.l10n.workoutResumed,
+          );
+        },
       ),
     );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    // Schedule final cleanup after undo window expires
+    Future.delayed(const Duration(seconds: 5), () async {
+      // Check if workout is still completed (not undone)
+      final currentWorkout = ref.read(currentWorkoutProvider);
+      if (currentWorkout != null && currentWorkout.isCompleted) {
+        // Completion is final - show ad and navigate
+        // 📱 Show interstitial ad after workout completion
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        _interstitialAdService.showAdIfReady(
+          onAdClosed: () {
+            // Clear workout and navigate after ad is closed (or not shown)
+            ref.read(currentWorkoutProvider.notifier).clearWorkout();
+            if (context.mounted) {
+              context.goNamed('home');
+            }
+          },
+        );
+
+        // If ad didn't show, navigate after a short delay
+        Future.delayed(const Duration(seconds: 2), () {
+          if (context.mounted) {
+            final stillCompleted = ref.read(currentWorkoutProvider);
+            if (stillCompleted != null && stillCompleted.isCompleted) {
+              ref.read(currentWorkoutProvider.notifier).clearWorkout();
+              context.goNamed('home');
+            }
+          }
+        });
+      }
+    });
   }
 
   void _showSettingsMenu(BuildContext context, WidgetRef ref) {
@@ -1522,7 +1881,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
+              color: context.colors.outline.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -1547,7 +1906,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               },
             ),
             ListTile(
-              leading: const Icon(AppIcons.stop, color: Colors.red),
+              leading: Icon(Icons.stop, color: context.errorColor),
               title: Text(context.l10n.endWorkout),
               onTap: () {
                 Navigator.pop(context);
@@ -1562,7 +1921,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             subtitle: Text(context.l10n.rpeTimerMore),
             onTap: () {
               Navigator.pop(context);
-              WorkoutCustomizationModalV2.show(context);
+              WorkoutCustomizationModalV3.show(context);
             },
           ),
           ListTile(
@@ -1767,7 +2126,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 }
               }
             },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(backgroundColor: context.errorColor),
             child: Text(context.l10n.delete),
           ),
         ],
@@ -1806,7 +2165,7 @@ class _QuickStartCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -1830,15 +2189,15 @@ class _QuickStartCard extends StatelessWidget {
                     Text(
                       subtitle,
                       style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurface.withOpacity(0.6),
+                        color: context.colors.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
                 ),
               ),
               Icon(
-                AppIcons.forwardIos,
-                color: context.colors.onSurface.withOpacity(0.3),
+                Icons.arrow_forward_ios,
+                color: context.colors.onSurface.withValues(alpha: 0.3),
                 size: 16,
               ),
             ],
@@ -2001,7 +2360,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: context.colors.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -2079,12 +2438,12 @@ class _TemplateQuickStartCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
+                    color: context.errorContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    AppIcons.delete,
-                    color: Colors.red,
+                  child: Icon(
+                    Icons.delete,
+                    color: context.errorColor,
                   ),
                 ),
                 title: Text(context.l10n.deleteTemplate),
@@ -2184,8 +2543,8 @@ class _SaveTemplateHelper {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: usedTemplates >= maxTemplates - 2
-                    ? Colors.orange.withOpacity(0.2)
-                    : context.colors.primaryContainer.withOpacity(0.5),
+                    ? context.warningColor.withValues(alpha: 0.2)
+                    : context.colors.primaryContainer.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -2194,7 +2553,7 @@ class _SaveTemplateHelper {
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: usedTemplates >= maxTemplates - 2
-                      ? Colors.orange
+                      ? context.warningColor
                       : context.colors.primary,
                 ),
               ),
@@ -2211,26 +2570,26 @@ class _SaveTemplateHelper {
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: context.warningContainer,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Colors.orange.withOpacity(0.3),
+                      color: context.warningColor.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         AppIcons.warningAmberRounded,
-                        color: Colors.orange,
+                        color: context.warningColor,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Solo ${maxTemplates - usedTemplates} template rimanenti nel piano Free',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Colors.orange,
+                            color: context.warningColor,
                           ),
                         ),
                       ),
@@ -2263,10 +2622,10 @@ class _SaveTemplateHelper {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.primaryContainer.withOpacity(0.3),
+                  color: context.colors.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: context.colors.primary.withOpacity(0.3),
+                    color: context.colors.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -2344,7 +2703,7 @@ class _SaveTemplateHelper {
                 SnackBarService.showCustom(
                   context,
                   message: '✅ ${context.l10n.templateSavedSuccessfully(name)}',
-                  backgroundColor: Colors.green,
+                  backgroundColor: context.successColor,
                   actionLabel: context.l10n.view,
                   onAction: () => context.push('/templates'),
                 );
@@ -2363,10 +2722,10 @@ class _SaveTemplateHelper {
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
-                            AppIcons.package,
+                          Icon(
+                            Icons.inventory_2,
                             size: 48,
-                            color: Colors.orange,
+                            color: context.warningColor,
                           ),
                           const SizedBox(height: 16),
                           Text(errorMessage.replaceAll('Exception: ', '')),

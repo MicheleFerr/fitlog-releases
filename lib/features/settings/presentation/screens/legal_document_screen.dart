@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class LegalDocumentScreen extends ConsumerStatefulWidget { // 'privacy' or 'terms'
@@ -279,7 +280,7 @@ Version 1.0.0 | EU Compliant
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        colorScheme.primary.withOpacity(0.05),
+                        colorScheme.primary.withValues(alpha: 0.05),
                         colorScheme.surface,
                       ],
                     ),
@@ -291,7 +292,7 @@ Version 1.0.0 | EU Compliant
                   padding: const EdgeInsets.all(20),
                   child: Card(
                     elevation: 0,
-                    color: colorScheme.surface.withOpacity(0.9),
+                    color: colorScheme.surface.withValues(alpha: 0.9),
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: _buildFormattedContent(context),
@@ -411,8 +412,8 @@ Version 1.0.0 | EU Compliant
             margin: const EdgeInsets.symmetric(vertical: 12),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.1),
-              border: Border.all(color: Colors.orange.withOpacity(0.3)),
+              color: context.colors.secondary.withValues(alpha: 0.1),
+              border: Border.all(color: context.colors.secondary.withValues(alpha: 0.3)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -437,7 +438,7 @@ Version 1.0.0 | EU Compliant
         widgets.add(
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Divider(color: colorScheme.outline.withOpacity(0.3)),
+            child: Divider(color: colorScheme.outline.withValues(alpha: 0.3)),
           ),
         );
       } else if (line.trim().isNotEmpty) {

@@ -95,16 +95,16 @@ class RepPresetChips extends ConsumerWidget {
                     avatar: Icon(
                       preset.icon,
                       size: 16,
-                      color: isSelected ? Colors.white : preset.color,
+                      color: isSelected ? context.colors.surface : preset.color,
                     ),
                     label: Text(label),
                     selected: isSelected,
                     selectedColor: preset.color,
-                    backgroundColor: preset.color.withOpacity(0.1),
-                    checkmarkColor: Colors.white,
+                    backgroundColor: preset.color.withValues(alpha: 0.1),
+                    checkmarkColor: context.colors.surface,
                     labelStyle: TextStyle(
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected ? Colors.white : context.colors.onSurface,
+                      color: isSelected ? context.colors.surface : context.colors.onSurface,
                       fontSize: 13,
                     ),
                     onSelected: (_) async {
@@ -240,8 +240,8 @@ class SetCountPresetChips extends ConsumerWidget {
                 return FilterChip(
                   avatar: CircleAvatar(
                     backgroundColor: isSelected
-                        ? Colors.white
-                        : context.colors.primary.withOpacity(0.2),
+                        ? context.colors.surface
+                        : context.colors.primary.withValues(alpha: 0.2),
                     radius: 10,
                     child: Text(
                       '${preset.sets}',
@@ -258,10 +258,10 @@ class SetCountPresetChips extends ConsumerWidget {
                   selected: isSelected,
                   selectedColor: context.colors.primary,
                   backgroundColor: context.colors.surfaceContainerHighest,
-                  checkmarkColor: Colors.white,
+                  checkmarkColor: context.colors.surface,
                   labelStyle: TextStyle(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: isSelected ? Colors.white : context.colors.onSurface,
+                    color: isSelected ? context.colors.surface : context.colors.onSurface,
                     fontSize: 13,
                   ),
                   onSelected: (_) async {

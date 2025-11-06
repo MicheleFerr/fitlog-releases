@@ -146,7 +146,7 @@ class _MissingExercisesRequestsScreenState
           setState(() => _selectedFilter = status);
         },
         selectedColor: Theme.of(context).colorScheme.primaryContainer,
-        backgroundColor: color.withOpacity(0.1),
+        backgroundColor: color.withValues(alpha: 0.1),
       ),
     );
   }
@@ -160,7 +160,7 @@ class _MissingExercisesRequestsScreenState
             Icon(
               AppIcons.completeOutline,
               size: 64,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -255,7 +255,7 @@ class _MissingExercisesRequestsScreenState
                   color: Theme.of(context)
                       .colorScheme
                       .surfaceContainerHighest
-                      .withOpacity(0.5),
+                      .withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -303,7 +303,7 @@ class _MissingExercisesRequestsScreenState
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: () => _markAsCompleted(request),
-                  icon: const Icon(AppIcons.allDone),
+                  icon: const Icon(AppIcons.doneAll),
                   label: const Text('Segna come Completato'),
                 ),
               ),
@@ -508,7 +508,7 @@ class _MissingExercisesRequestsScreenState
       case RequestStatus.rejected:
         return AppIcons.cancelOutlined;
       case RequestStatus.completed:
-        return AppIcons.allDone;
+        return AppIcons.doneAll;
     }
   }
 

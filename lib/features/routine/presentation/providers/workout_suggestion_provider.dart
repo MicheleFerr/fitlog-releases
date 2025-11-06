@@ -20,12 +20,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart'; // 🔧 FIX: Import for SuggestionLevel enum
 import 'package:gymbro_flutter_new/features/workout/domain/services/routine_prediction_engine.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_detection_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_viability_checker.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart'; // ✅ Explicit import for extension
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 
 /// Provider for current user ID from Firebase Auth
@@ -90,19 +90,26 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
     }
   }
 
-  // Get active routine (full entity, not just ID)
+  // Get active routine and next uncompleted workout (if any)
   final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
-  final activeRoutine = activeRoutineAsync.maybeWhen(
-    data: (routine) => routine,
+  final activeRoutineTemplateId = activeRoutineAsync.maybeWhen(
+    data: (routine) => routine?.id,
     orElse: () => null,
   );
 
+  // ✅ NEW: Get next uncompleted workout from active routine
+  final nextUncompletedWorkout = activeRoutineAsync.maybeWhen(
+    data: (routine) => routine?.getNextUncompletedWorkout(),
+    orElse: () => null,
+  );
+
+  final nextWorkoutTemplateId = nextUncompletedWorkout?.templateId;
+  final nextWorkoutScheduledDate = nextUncompletedWorkout?.date;
+
   if (kDebugMode || kProfileMode) {
-    debugPrint('🔍 [WORKOUT_SUGGESTION] Active routine: ${activeRoutine?.name ?? "None"}');
-    if (activeRoutine != null) {
-      debugPrint('🔍 [WORKOUT_SUGGESTION] Routine ID: ${activeRoutine.id}');
-      debugPrint('🔍 [WORKOUT_SUGGESTION] Pattern: ${activeRoutine.pattern.sequence}');
-    }
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Active routine template ID: $activeRoutineTemplateId');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Next uncompleted workout template ID: $nextWorkoutTemplateId');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Next workout scheduled date: $nextWorkoutScheduledDate');
   }
 
   // Get available template names for validation
@@ -114,28 +121,21 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
   final templates = await ref.watch(customWorkoutTemplatesProvider.future);
   final availableTemplateNames = templates.map((t) => t.name).toList();
 
-  // 🔧 FIX: Create ID → Name mapping for routine-based predictions
-  // Routine predictions return template IDs, need to convert to names for display
-  final templateIdToName = <String, String>{
-    for (final template in templates) template.id: template.name,
-  };
-
   if (kDebugMode || kProfileMode) {
     debugPrint('🔍 [WORKOUT_SUGGESTION] Available template names: $availableTemplateNames');
     debugPrint('🔍 [WORKOUT_SUGGESTION] Template count: ${availableTemplateNames.length}');
-    debugPrint('🔍 [WORKOUT_SUGGESTION] Template ID→Name mapping: $templateIdToName');
   }
 
   // Get prediction engine
   final predictionEngine = ref.watch(_routinePredictionEngineProvider);
 
-  // Predict next workout (with template validation and routine)
-  // 🔥 CRITICAL: Pass active routine entity (not just ID) for Level 2 prediction
+  // Predict next workout (with template validation)
   final suggestion = await predictionEngine.predictNextWorkout(
     workoutHistory: workouts,
-    activeRoutineTemplateId: activeRoutine?.id, // Keep for backward compatibility
+    activeRoutineTemplateId: activeRoutineTemplateId,
+    nextWorkoutTemplateId: nextWorkoutTemplateId, // ✅ NEW: Pass next workout from routine
+    nextWorkoutScheduledDate: nextWorkoutScheduledDate, // ✅ NEW: Pass scheduled date
     availableTemplateNames: availableTemplateNames,
-    activeRoutine: activeRoutine, // 🔥 NEW: Pass full routine entity
     useCache: true,
   );
 
@@ -144,21 +144,6 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
     debugPrint('🔍 [WORKOUT_SUGGESTION] Suggestion level: ${suggestion.level}');
     debugPrint('🔍 [WORKOUT_SUGGESTION] Confidence: ${suggestion.confidence}');
     debugPrint('🔍 [WORKOUT_SUGGESTION] Reason: ${suggestion.reason}');
-  }
-
-  // 🔧 FIX: If routine-based prediction, convert template ID → Name
-  if (suggestion.level == SuggestionLevel.routine) {
-    final templateName = templateIdToName[suggestion.workoutName];
-    if (templateName != null) {
-      if (kDebugMode || kProfileMode) {
-        debugPrint('🔍 [WORKOUT_SUGGESTION] ✅ Converted template ID "${suggestion.workoutName}" → Name "$templateName"');
-      }
-      return suggestion.copyWith(workoutName: templateName);
-    } else {
-      if (kDebugMode || kProfileMode) {
-        debugPrint('⚠️ [WORKOUT_SUGGESTION] Template ID "${suggestion.workoutName}" not found in mapping!');
-      }
-    }
   }
 
   return suggestion;

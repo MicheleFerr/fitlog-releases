@@ -146,7 +146,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -161,7 +161,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -223,7 +223,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     color: isCompleted 
-                      ? Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.3)
+                      ? Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.3)
                       : null,
                     child: Padding(
                       padding: const EdgeInsets.all(12),
@@ -404,7 +404,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                 color: Theme.of(context).colorScheme.surface,
                 border: Border(
                   top: BorderSide(
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
                   ),
                 ),
               ),
@@ -423,7 +423,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                         LinearProgressIndicator(
                           value: _exerciseCompleted.values.where((c) => c).length / 
                                  _exerciseCompleted.length,
-                          backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                          backgroundColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
                           valueColor: AlwaysStoppedAnimation<Color>(
                             Theme.of(context).colorScheme.secondary,
                           ),

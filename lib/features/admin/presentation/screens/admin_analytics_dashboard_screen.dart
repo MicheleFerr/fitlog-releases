@@ -903,7 +903,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
     if (eventName.contains('workout')) {
       return AppIcons.workout;
     } else if (eventName.contains('exercise')) {
-      return AppIcons.gymnastics;
+      return AppIcons.sportsGymnastics;
     } else if (eventName.contains('set')) {
       return AppIcons.complete;
     } else if (eventName.contains('timer') || eventName.contains('rest')) {

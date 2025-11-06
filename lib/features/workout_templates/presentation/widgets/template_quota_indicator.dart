@@ -15,7 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class TemplateQuotaIndicator extends StatelessWidget {
   
@@ -42,15 +42,15 @@ class TemplateQuotaIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            colorScheme.primaryContainer.withOpacity(0.5),
-            colorScheme.secondaryContainer.withOpacity(0.5),
+            colorScheme.primaryContainer.withValues(alpha: 0.5),
+            colorScheme.secondaryContainer.withValues(alpha: 0.5),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -77,7 +77,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -121,7 +121,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: colorScheme.tertiaryContainer.withOpacity(0.3),
+                color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -198,7 +198,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
                 color: isFull 
                     ? colorScheme.error 
                     : isAlmostFull 
-                        ? Colors.orange 
+                        ? context.colors.secondary 
                         : colorScheme.onSurface,
               ),
             ),
@@ -215,7 +215,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
               isFull 
                   ? colorScheme.error 
                   : isAlmostFull 
-                      ? Colors.orange 
+                      ? context.colors.secondary 
                       : color,
             ),
           ),

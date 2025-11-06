@@ -1,20 +1,21 @@
 /// Test script to verify the enhanced exercise matching functionality
-/// 
+///
 /// This script demonstrates how the intelligent exercise matching system works
 /// with various exercise names and similarity algorithms.
 library;
 
+import 'package:flutter/foundation.dart';
 import 'lib/features/workout_templates/data/services/exercise_matching_service.dart';
 
 Future<void> main() async {
-  print('🏋️‍♂️ Testing Enhanced Exercise Matching System');
-  print('=' * 50);
+  debugPrint('🏋️‍♂️ Testing Enhanced Exercise Matching System');
+  debugPrint('=' * 50);
   
   final service = ExerciseMatchingService.instance;
   
   // Load the exercise database
   await service.loadExerciseDatabase();
-  print('✅ Exercise database loaded\n');
+  debugPrint('✅ Exercise database loaded\n');
   
   // Test cases with various exercise names
   final testCases = [
@@ -56,37 +57,37 @@ Future<void> main() async {
   ];
   
   for (final testCase in testCases) {
-    print('🔍 Testing: "$testCase"');
-    
+    debugPrint('🔍 Testing: "$testCase"');
+
     // Try exact match first
     final exactMatch = await service.findExactMatch(testCase);
     if (exactMatch != null) {
-      print('  ✅ EXACT MATCH: ${exactMatch.nome} (${exactMatch.focus})');
+      debugPrint('  ✅ EXACT MATCH: ${exactMatch.nome} (${exactMatch.focus})');
       continue;
     }
-    
+
     // Find similar matches
     final matches = await service.findMatches(testCase, maxResults: 3);
     if (matches.isNotEmpty) {
-      print('  📊 SIMILAR MATCHES:');
+      debugPrint('  📊 SIMILAR MATCHES:');
       for (final match in matches) {
         final percentage = (match.similarity * 100).round();
-        print('    • ${match.exercise.nome} ($percentage% - ${match.matchReason})');
-        print('      Focus: ${match.exercise.focus}');
+        debugPrint('    • ${match.exercise.nome} ($percentage% - ${match.matchReason})');
+        debugPrint('      Focus: ${match.exercise.focus}');
       }
     } else {
-      print('  ❌ NO MATCHES FOUND');
+      debugPrint('  ❌ NO MATCHES FOUND');
     }
-    
-    print('');
+
+    debugPrint('');
   }
   
-  print('🎯 Exercise Matching Test Complete!');
-  print('📈 Enhanced features demonstrated:');
-  print('  • Multi-algorithm similarity (Levenshtein + Jaccard + Substring + Initials)');
-  print('  • Italian/English translation normalization');
-  print('  • Fuzzy matching with typo tolerance');
-  print('  • Muscle focus bonus matching');
-  print('  • Match reason explanations');
-  print('  • Configurable similarity thresholds');
+  debugPrint('🎯 Exercise Matching Test Complete!');
+  debugPrint('📈 Enhanced features demonstrated:');
+  debugPrint('  • Multi-algorithm similarity (Levenshtein + Jaccard + Substring + Initials)');
+  debugPrint('  • Italian/English translation normalization');
+  debugPrint('  • Fuzzy matching with typo tolerance');
+  debugPrint('  • Muscle focus bonus matching');
+  debugPrint('  • Match reason explanations');
+  debugPrint('  • Configurable similarity thresholds');
 }

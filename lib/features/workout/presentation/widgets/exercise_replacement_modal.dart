@@ -5,6 +5,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_compatibility_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
@@ -334,14 +336,14 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     IconData compatibilityIcon;
     
     if (suggestion.compatibilityScore >= 80) {
-      compatibilityColor = Colors.green;
-      compatibilityIcon = AppIcons.star;
+      compatibilityColor = context.colors.success;
+      compatibilityIcon = Icons.star;
     } else if (suggestion.compatibilityScore >= 60) {
-      compatibilityColor = Colors.orange;
-      compatibilityIcon = AppIcons.starHalfIcon;
+      compatibilityColor = context.colors.secondary;
+      compatibilityIcon = Icons.star_half;
     } else if (suggestion.compatibilityScore >= 40) {
-      compatibilityColor = Colors.amber;
-      compatibilityIcon = AppIcons.starOutlineIcon;
+      compatibilityColor = context.colors.warning;
+      compatibilityIcon = AppIcons.star;
     } else {
       compatibilityColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
       compatibilityIcon = AppIcons.starOutline;
@@ -549,7 +551,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       case ExerciseCategory.shoulders:
         return AppIcons.accessibility;
       case ExerciseCategory.arms:
-        return AppIcons.gymnastics;
+        return AppIcons.sportsGymnastics;
       case ExerciseCategory.legs:
         return AppIcons.cardio;
       case ExerciseCategory.abs:
@@ -571,13 +573,13 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       case ExerciseCategory.shoulders:
         return colors.tertiary;
       case ExerciseCategory.arms:
-        return Colors.orange;
+        return context.colors.secondary;
       case ExerciseCategory.legs:
-        return Colors.green;
+        return context.colors.success;
       case ExerciseCategory.abs:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ExerciseCategory.cardio:
-        return Colors.red;
+        return context.colors.error;
       case ExerciseCategory.other:
         return colors.onSurface.withValues(alpha: 0.5);
     }

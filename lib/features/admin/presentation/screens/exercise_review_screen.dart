@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import '../providers/exercise_review_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_review_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Admin screen for viewing monthly exercise review reports
 class ExerciseReviewScreen extends ConsumerWidget {
-  const ExerciseReviewScreen({Key? key}) : super(key: key);
+  const ExerciseReviewScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -193,7 +194,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: AppIcons.scheduleOutlined,
               label: 'Esercizi Obsoleti',
               value: staleCount.toString(),
-              color: Colors.orange,
+              color: context.colors.secondary,
               subtitle: '>90 giorni',
             ),
             _buildStatCard(
@@ -201,7 +202,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: AppIcons.flagOutlined,
               label: 'Esercizi Flaggati',
               value: flaggedCount.toString(),
-              color: Colors.amber,
+              color: context.colors.warning,
               subtitle: '≥3 feedback',
             ),
             _buildStatCard(
@@ -209,7 +210,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: AppIcons.commentOutlined,
               label: 'Feedback Totali',
               value: totalFeedback.toString(),
-              color: Colors.blue,
+              color: context.colors.primary,
               subtitle: 'flaggati',
             ),
             _buildStatCard(
@@ -217,7 +218,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               icon: AppIcons.error,
               label: 'Problemi Critici',
               value: criticalCount.toString(),
-              color: Colors.red,
+              color: context.colors.error,
               subtitle: 'severità ≥4',
             ),
           ],
@@ -288,7 +289,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         Card(
-          color: context.colors.surfaceVariant,
+          color: context.colors.surfaceContainerHighest,
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -351,7 +352,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             Icon(
               AppIcons.scheduleOutlined,
-              color: Colors.orange,
+              color: context.colors.secondary,
               size: 20,
             ),
           ],
@@ -373,8 +374,8 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     'Modificato ${exercise['lastModifiedDaysAgo'] ?? 0} giorni fa',
-                icon: AppIcons.schedule,
-                color: Colors.orange,
+                icon: Icons.schedule,
+                color: context.colors.secondary,
               );
             },
           ),
@@ -406,7 +407,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             Icon(
               AppIcons.flagOutlined,
-              color: Colors.amber,
+              color: context.colors.warning,
               size: 20,
             ),
           ],
@@ -432,7 +433,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 subtitle:
                     '$feedbackCount feedback${criticalCount > 0 ? ' ($criticalCount critici)' : ''}',
                 icon: AppIcons.flag,
-                color: criticalCount > 0 ? Colors.red : Colors.amber,
+                color: criticalCount > 0 ? context.colors.error : context.colors.warning,
               );
             },
           ),

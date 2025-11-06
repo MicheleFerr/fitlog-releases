@@ -19,14 +19,17 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Enhanced repository for workout history with Firebase integration
 class WorkoutHistoryRepositoryEnhanced {
 
   WorkoutHistoryRepositoryEnhanced({
+    required HiveBoxManagerEnhanced boxManager,
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+  }) : _boxManager = boxManager,
+       _firestore = firestore ?? FirebaseFirestore.instance,
        _auth = auth ?? FirebaseAuth.instance {
     _initialize();
   }
@@ -34,6 +37,7 @@ class WorkoutHistoryRepositoryEnhanced {
   static const String _syncQueueBoxName = 'workout_history_sync_queue';
   static const String _metadataBoxName = 'workout_history_metadata';
 
+  final HiveBoxManagerEnhanced _boxManager;
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
 
@@ -60,9 +64,9 @@ class WorkoutHistoryRepositoryEnhanced {
 
     try {
       // Open Hive boxes
-      _historyBox = await Hive.openBox(_historyBoxName);
-      _syncQueueBox = await Hive.openBox(_syncQueueBoxName);
-      _metadataBox = await Hive.openBox<dynamic>(_metadataBoxName);
+      _historyBox = await _boxManager.openBox(_historyBoxName);
+      _syncQueueBox = await _boxManager.openBox(_syncQueueBoxName);
+      _metadataBox = await _boxManager.openBox<dynamic>(_metadataBoxName);
 
       _isInitialized = true;
 

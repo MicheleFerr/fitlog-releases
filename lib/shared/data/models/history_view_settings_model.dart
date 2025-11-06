@@ -66,6 +66,16 @@ class HistoryViewSettingsModel extends HiveObject {
     required this.showExerciseCount,
   });
 
+  /// Create from domain entity
+  factory HistoryViewSettingsModel.fromDomain(HistoryViewSettings settings) {
+    return HistoryViewSettingsModel(
+      viewMode: settings.viewMode.toModel(),
+      showThumbnails: settings.showThumbnails,
+      showDuration: settings.showDuration,
+      showExerciseCount: settings.showExerciseCount,
+    );
+  }
+
   @HiveField(0)
   HistoryViewModeModel viewMode;
 
@@ -85,16 +95,6 @@ class HistoryViewSettingsModel extends HiveObject {
       showThumbnails: showThumbnails,
       showDuration: showDuration,
       showExerciseCount: showExerciseCount,
-    );
-  }
-
-  /// Create from domain entity
-  factory HistoryViewSettingsModel.fromDomain(HistoryViewSettings settings) {
-    return HistoryViewSettingsModel(
-      viewMode: settings.viewMode.toModel(),
-      showThumbnails: settings.showThumbnails,
-      showDuration: settings.showDuration,
-      showExerciseCount: settings.showExerciseCount,
     );
   }
 }

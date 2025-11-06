@@ -50,17 +50,6 @@ import 'package:gymbro_flutter_new/shared/domain/services/i_analytics_service.da
 /// );
 /// ```
 class MLExerciseSearchService implements IExerciseSearchService {
-  /// Repository for ML user boost data (injected)
-  final IExerciseUsageRepository _usageRepository;
-
-  /// Analytics service for tracking (injected)
-  final IAnalyticsService _analytics;
-
-  /// Persistent isolate service for fuzzy search
-  final ExerciseFuzzySearchIsolate _isolateService;
-
-  /// Flag to track initialization state
-  bool _isInitialized = false;
 
   /// Create ML search service with dependencies
   ///
@@ -74,6 +63,17 @@ class MLExerciseSearchService implements IExerciseSearchService {
   })  : _usageRepository = usageRepository,
         _analytics = analytics,
         _isolateService = isolateService ?? ExerciseFuzzySearchIsolate();
+  /// Repository for ML user boost data (injected)
+  final IExerciseUsageRepository _usageRepository;
+
+  /// Analytics service for tracking (injected)
+  final IAnalyticsService _analytics;
+
+  /// Persistent isolate service for fuzzy search
+  final ExerciseFuzzySearchIsolate _isolateService;
+
+  /// Flag to track initialization state
+  bool _isInitialized = false;
 
   @override
   Future<void> initialize() async {

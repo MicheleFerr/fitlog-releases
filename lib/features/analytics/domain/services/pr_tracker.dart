@@ -2,17 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:flutter/foundation.dart';
-
-/// Types of personal records
-enum PRType {
-  weight,     // Heaviest weight lifted
-  reps,       // Most reps at a weight
-  volume,     // Highest volume in session
-  oneRM,      // Calculated 1RM
-  totalSets,  // Most sets in session
-  duration,   // Longest workout
-}
 
 /// Personal Record entity
 class PersonalRecord {

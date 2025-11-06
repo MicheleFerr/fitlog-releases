@@ -4,7 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Debug screen to show fitness profile status and weight suggestions
 class FitnessProfileDebugScreen extends ConsumerWidget {
@@ -34,8 +34,8 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        questionnaire != null ? AppIcons.complete : AppIcons.warning,
-                        color: questionnaire != null ? Colors.green : Colors.orange,
+                        questionnaire != null ? Icons.check_circle : Icons.warning,
+                        color: questionnaire != null ? context.colors.success : context.colors.secondary,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -93,8 +93,8 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        medicalClearance != null ? AppIcons.complete : AppIcons.warning,
-                        color: medicalClearance != null ? Colors.green : Colors.orange,
+                        medicalClearance != null ? Icons.check_circle : Icons.warning,
+                        color: medicalClearance != null ? context.colors.success : context.colors.secondary,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -130,8 +130,8 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        suggestionsEnabled ? AppIcons.complete : AppIcons.error,
-                        color: suggestionsEnabled ? Colors.green : Colors.red,
+                        suggestionsEnabled ? Icons.check_circle : Icons.error,
+                        color: suggestionsEnabled ? context.colors.success : context.colors.error,
                       ),
                       const SizedBox(width: 8),
                       Text(

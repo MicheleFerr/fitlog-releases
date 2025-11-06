@@ -117,7 +117,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
           Text(
             l10n.onboardingModeInfluenceDescription,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.7),
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 16,
             ),
             textAlign: TextAlign.center,
@@ -228,10 +228,10 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer.withOpacity(0.3),
+                        color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: colorScheme.primary.withOpacity(0.3),
+                          color: colorScheme.primary.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
@@ -287,19 +287,19 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withOpacity(0.1)
+              ? color.withValues(alpha: 0.1)
               : colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected
                 ? color
-                : colorScheme.outline.withOpacity(0.3),
+                : colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: color.withOpacity(0.2),
+                    color: color.withValues(alpha: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -315,7 +315,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -349,7 +349,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                                 gradient: LinearGradient(
                                   colors: [
                                     colorScheme.tertiary,
-                                    colorScheme.tertiary.withOpacity(0.7),
+                                    colorScheme.tertiary.withValues(alpha: 0.7),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(8),
@@ -370,7 +370,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       Text(
                         description,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.7),
+                          color: colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -403,8 +403,8 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       feature.substring(2), // Remove ✓ or ✗
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: feature.startsWith('✓')
-                            ? colorScheme.onSurface.withOpacity(0.8)
-                            : colorScheme.onSurface.withOpacity(0.5),
+                            ? colorScheme.onSurface.withValues(alpha: 0.8)
+                            : colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
                   ),
@@ -436,7 +436,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                       child: Text(
                         toggle,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurface.withOpacity(0.8),
+                          color: colorScheme.onSurface.withValues(alpha: 0.8),
                         ),
                       ),
                     ),
@@ -449,7 +449,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                 Text(
                   'Toggle Disattivi:',
                   style: theme.textTheme.titleSmall?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.7),
+                    color: colorScheme.onSurface.withValues(alpha: 0.7),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -464,7 +464,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                         child: Text(
                           toggle,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurface.withOpacity(0.5),
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ),
                       ),

@@ -532,7 +532,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          color: context.colors.surfaceContainerHighest.withOpacity(0.5),
+          color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
           child: Text(
             '${exercises.length} ${l10n.exercisesFound}',
             style: context.textTheme.bodySmall,
@@ -542,6 +542,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         // Exercise List + Missing Exercise Widget
         Expanded(
           child: ListView.builder(
+            key: const PageStorageKey('exercise_search_list'),
             itemCount: exercises.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
               // Show missing exercise widget as last item
@@ -569,7 +570,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          color: context.colors.primaryContainer.withOpacity(0.3),
+          color: context.colors.primaryContainer.withValues(alpha: 0.3),
           child: Row(
             children: [
               Icon(
@@ -589,7 +590,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               Text(
                 '(Smart Search)',
                 style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurface.withOpacity(0.6),
+                  color: context.colors.onSurface.withValues(alpha: 0.6),
                   fontStyle: FontStyle.italic,
                 ),
               ),
@@ -600,6 +601,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         // Fuzzy Exercise List + Missing Exercise Widget
         Expanded(
           child: ListView.builder(
+            key: const PageStorageKey('exercise_fuzzy_search_list'),
             itemCount: _fuzzyResults.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
               // Show missing exercise widget as last item
@@ -634,7 +636,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: context.colors.outline.withOpacity(0.3),
+          color: context.colors.outline.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -754,9 +756,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               final temporaryExercise = Exercise(
                 id: exerciseId,
                 nome: exerciseName,
-                focus: ['VARIO'],
+                focus: const ['VARIO'],
                 imageUrl: null,
-                muscoliSecondari: [],
+                muscoliSecondari: const [],
                 difficolta: 'Intermedio',
                 tipoEsercizio: 'Compound',
                 attrezzatura: 'Vario',
@@ -1238,7 +1240,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: _getDifficultyColor(exercise.difficolta).withOpacity(0.2),
+                    color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -1260,8 +1262,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ],
         ),
         trailing: isSelected
-            ? Icon(AppIcons.complete, color: context.colors.primary)
-            : (widget.selectionMode ? const Icon(AppIcons.forwardIos, size: 16) : const Icon(AppIcons.radioButtonUnchecked)),
+            ? Icon(Icons.check_circle, color: context.colors.primary)
+            : (widget.selectionMode ? const Icon(Icons.arrow_forward_ios, size: 16) : const Icon(AppIcons.radioButtonUnchecked)),
         onTap: () {
           // Selection mode: return exercise and close
           if (widget.selectionMode) {
@@ -1318,7 +1320,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: hasCategoryMatch
-            ? BorderSide(color: Colors.green, width: 2)
+            ? const BorderSide(color: Colors.green, width: 2)
             : BorderSide.none,
       ),
       child: ListTile(
@@ -1337,10 +1339,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: matchColor.withOpacity(0.2),
+                color: matchColor.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: matchColor.withOpacity(0.5),
+                  color: matchColor.withValues(alpha: 0.5),
                   width: 1,
                 ),
               ),
@@ -1376,10 +1378,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: Colors.amber.withOpacity(0.2),
+                        color: Colors.amber.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.amber.withOpacity(0.4),
+                          color: Colors.amber.withValues(alpha: 0.4),
                           width: 1,
                         ),
                       ),
@@ -1403,10 +1405,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: Colors.deepOrange.withOpacity(0.2),
+                        color: Colors.deepOrange.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.deepOrange.withOpacity(0.4),
+                          color: Colors.deepOrange.withValues(alpha: 0.4),
                           width: 1,
                         ),
                       ),
@@ -1436,7 +1438,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: _getDifficultyColor(exercise.difficolta).withOpacity(0.2),
+                    color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -1473,7 +1475,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     child: Icon(
                       AppIcons.close,
                       size: 16,
-                      color: context.colors.error.withOpacity(0.7),
+                      color: context.colors.error.withValues(alpha: 0.7),
                     ),
                   ),
                 ),
@@ -1483,7 +1485,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               isSelected
                   ? Icon(AppIcons.complete, color: context.colors.primary)
                   : (widget.selectionMode
-                      ? const Icon(AppIcons.forwardIos, size: 16)
+                      ? const Icon(Icons.arrow_forward_ios, size: 16)
                       : const Icon(AppIcons.radioButtonUnchecked)),
             ],
           ),
@@ -1522,7 +1524,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         Icon(
           AppIcons.searchOff,
           size: 64,
-          color: context.colors.onSurface.withOpacity(0.5),
+          color: context.colors.onSurface.withValues(alpha: 0.5),
         ),
         const SizedBox(height: 16),
         Text(
@@ -1534,7 +1536,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         Text(
           l10n.tryModifyingFilters,
           style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colors.onSurface.withOpacity(0.7),
+            color: context.colors.onSurface.withValues(alpha: 0.7),
           ),
           textAlign: TextAlign.center,
         ),

@@ -4,7 +4,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/lazy_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Lazy loading version of RecentWorkoutsCard with progressive data fetching
 class LazyRecentWorkoutsCard extends ConsumerStatefulWidget {
@@ -207,19 +208,19 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
     switch (phase) {
       case LoadingPhase.initial:
         phaseText = 'Last 30 days';
-        phaseColor = Colors.green;
+        phaseColor = context.colors.success;
         break;
       case LoadingPhase.extended:
         phaseText = 'Last 3 months';
-        phaseColor = Colors.blue;
+        phaseColor = context.colors.primary;
         break;
       case LoadingPhase.full:
         phaseText = 'Last year';
-        phaseColor = Colors.orange;
+        phaseColor = context.colors.secondary;
         break;
       case LoadingPhase.complete:
         phaseText = 'All time';
-        phaseColor = Colors.purple;
+        phaseColor = context.colors.tertiary;
         break;
     }
     
@@ -470,7 +471,7 @@ class _WorkoutDetailsSheet extends StatelessWidget {
       minChildSize: 0.4,
       expand: false,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

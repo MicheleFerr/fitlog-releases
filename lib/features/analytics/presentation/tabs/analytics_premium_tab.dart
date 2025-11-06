@@ -80,7 +80,7 @@ class AnalyticsPremiumTab extends ConsumerWidget {
             context,
             l10n.tutVelocityAnalytics,
             l10n.tutVelocityDesc,
-            AppIcons.timerOffOutlined,
+            AppIcons.timer,
           ),
           const SizedBox(height: 16),
 

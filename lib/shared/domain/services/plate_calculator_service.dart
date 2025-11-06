@@ -31,11 +31,7 @@ class PlateCalculatorService {
     // Greedy algorithm: use heaviest plates first
     double remainingWeight = weightPerSide;
     final platesUsed = <PlateUsage>[];
-    final availableCounts = Map<double, int>.fromIterable(
-      sortedPlates,
-      key: (p) => (p as PlateOption).weight,
-      value: (p) => (p as PlateOption).count,
-    );
+    final availableCounts = { for (var p in sortedPlates) (p).weight : (p).count };
 
     for (final plate in sortedPlates) {
       if (remainingWeight <= 0) break;

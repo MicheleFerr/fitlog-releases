@@ -51,6 +51,14 @@ class FeedbackSettingsModel extends HiveObject {
     required this.hapticIntensity,
   });
 
+  /// Create from domain entity
+  factory FeedbackSettingsModel.fromEntity(FeedbackSettings entity) {
+    return FeedbackSettingsModel(
+      hapticEnabled: entity.hapticEnabled,
+      hapticIntensity: entity.hapticIntensity.toModel(),
+    );
+  }
+
   @HiveField(0)
   bool hapticEnabled;
 
@@ -62,14 +70,6 @@ class FeedbackSettingsModel extends HiveObject {
     return FeedbackSettings(
       hapticEnabled: hapticEnabled,
       hapticIntensity: hapticIntensity.toDomain(),
-    );
-  }
-
-  /// Create from domain entity
-  factory FeedbackSettingsModel.fromEntity(FeedbackSettings entity) {
-    return FeedbackSettingsModel(
-      hapticEnabled: entity.hapticEnabled,
-      hapticIntensity: entity.hapticIntensity.toModel(),
     );
   }
 }

@@ -194,7 +194,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
           Text(
             l10n.addExerciseStepDescription,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.8),
+              color: colorScheme.onSurface.withValues(alpha: 0.8),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -220,9 +220,9 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.3),
+                    color: colorScheme.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -231,7 +231,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
                     Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -258,7 +258,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
                               child: Text(
                                 'Custom',
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.onSurface.withOpacity(0.6),
+                                  color: colorScheme.onSurface.withValues(alpha: 0.6),
                                 ),
                               ),
                             ),
@@ -269,7 +269,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
                               child: Text(
                                 'Superset',
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.onSurface.withOpacity(0.6),
+                                  color: colorScheme.onSurface.withValues(alpha: 0.6),
                                 ),
                               ),
                             ),
@@ -366,12 +366,12 @@ class _MockSearchBarState extends State<_MockSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: widget.colorScheme.surface,
         border: Border.all(
-          color: widget.colorScheme.outline.withOpacity(0.3),
+          color: widget.colorScheme.outline.withValues(alpha: 0.3),
         ),
       ),
       child: TextField(
@@ -380,8 +380,8 @@ class _MockSearchBarState extends State<_MockSearchBar> {
         decoration: InputDecoration(
           hintText: widget.l10n.onboardingSearchExercises,
           prefixIcon: Icon(
-            AppIcons.search,
-            color: widget.colorScheme.onSurface.withOpacity(0.6),
+            Icons.search,
+            color: widget.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           suffixIcon: widget.isSearching
             ? Padding(
@@ -399,7 +399,7 @@ class _MockSearchBarState extends State<_MockSearchBar> {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           hintStyle: widget.theme.textTheme.bodyMedium?.copyWith(
-            color: widget.colorScheme.onSurface.withOpacity(0.6),
+            color: widget.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ),
@@ -432,7 +432,7 @@ class _MockSearchResults extends StatelessWidget {
         Text(
           '${exercises.length} risultati trovati / results found',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 12),
@@ -452,7 +452,7 @@ class _MockSearchResults extends StatelessWidget {
           Text(
             l10n.onboardingTapToComplete,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.6),
+              color: colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             textAlign: TextAlign.center,
           ),
@@ -491,7 +491,7 @@ class _ExerciseResultCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: isCompleted ? colorScheme.primaryContainer : colorScheme.surface,
           border: Border.all(
-            color: isCompleted ? colorScheme.primary : colorScheme.outline.withOpacity(0.3),
+            color: isCompleted ? colorScheme.primary : colorScheme.outline.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -499,7 +499,7 @@ class _ExerciseResultCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(
@@ -524,16 +524,16 @@ class _ExerciseResultCard extends StatelessWidget {
                     '${exercise['focus']} • ${isItalian ? exercise['difficolta'] : exercise['difficoltaEn']}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: isCompleted
-                        ? colorScheme.onPrimaryContainer.withOpacity(0.7)
-                        : colorScheme.onSurface.withOpacity(0.6),
+                        ? colorScheme.onPrimaryContainer.withValues(alpha: 0.7)
+                        : colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                   Text(
                     '${isItalian ? exercise['tipoEsercizio'] : exercise['tipoEsercizioEn']} • ${isItalian ? exercise['attrezzatura'] : exercise['attrezzaturaEn']}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: isCompleted
-                        ? colorScheme.onPrimaryContainer.withOpacity(0.5)
-                        : colorScheme.onSurface.withOpacity(0.4),
+                        ? colorScheme.onPrimaryContainer.withValues(alpha: 0.5)
+                        : colorScheme.onSurface.withValues(alpha: 0.4),
                     ),
                   ),
                 ],

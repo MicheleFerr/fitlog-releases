@@ -16,6 +16,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Schermata per analizzare le statistiche di singoli esercizi
@@ -172,7 +174,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
   }
 
   Widget _buildSearchBar(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
@@ -239,7 +241,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.onSurface.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -461,12 +463,12 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
 
     switch (trend) {
       case _Trend.increasing:
-        icon = AppIcons.trendUp;
-        color = Colors.green;
+        icon = Icons.trending_up;
+        color = context.colors.success;
         break;
       case _Trend.decreasing:
-        icon = AppIcons.trendDown;
-        color = Colors.red;
+        icon = Icons.trending_down;
+        color = context.colors.error;
         break;
       case _Trend.stable:
         icon = AppIcons.trendFlat;
@@ -518,7 +520,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         maxChildSize: 0.9,
         minChildSize: 0.5,
         builder: (context, scrollController) {
-          return Container(
+          return DecoratedBox(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

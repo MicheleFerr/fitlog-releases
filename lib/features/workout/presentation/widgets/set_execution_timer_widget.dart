@@ -139,7 +139,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
     } else if (widget.isTracking) {
       return Theme.of(context).colorScheme.primary;
     } else {
-      return Theme.of(context).colorScheme.outline.withOpacity(0.5);
+      return Theme.of(context).colorScheme.outline.withValues(alpha: 0.5);
     }
   }
   
@@ -170,7 +170,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: _getTimerColor().withOpacity(0.1),
+                color: _getTimerColor().withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: _getTimerColor(),
@@ -320,7 +320,7 @@ class VelocityIndicatorWidget extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -350,7 +350,7 @@ class VelocityIndicatorWidget extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentage / 100,
               minHeight: 8,
-              backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+              backgroundColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
               valueColor: AlwaysStoppedAnimation<Color>(_getVelocityColor(context)),
             ),
           ),
@@ -407,7 +407,7 @@ class SetTimesChartWidget extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -445,8 +445,8 @@ class SetTimesChartWidget extends StatelessWidget {
                       color: isCurrentSet
                         ? Theme.of(context).colorScheme.primary
                         : isCompleted
-                          ? Theme.of(context).colorScheme.primary.withOpacity(0.5)
-                          : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)
+                          : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),

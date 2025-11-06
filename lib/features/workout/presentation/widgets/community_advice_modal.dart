@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityAdviceModal extends ConsumerStatefulWidget {
@@ -45,7 +46,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
       initialChildSize: 0.7,
       minChildSize: 0.5,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -58,7 +59,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -162,7 +163,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             Icon(
               AppIcons.tip,
               size: 64,
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -176,7 +177,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             Text(
               l10n.beFirstToShare,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -259,7 +260,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -291,7 +292,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               Text(
                 l10n.peopleFoundHelpful(contribution.upvotes),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -304,16 +305,16 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
   Widget _getTypeIcon(ContributionType type, ThemeData theme) {
     switch (type) {
       case ContributionType.tip:
-        return const Icon(
-          AppIcons.lightbulb,
+        return Icon(
+          Icons.lightbulb,
           size: 20,
-          color: Colors.amber,
+          color: context.colors.warning,
         );
       case ContributionType.warning:
-        return const Icon(
-          AppIcons.warning,
+        return Icon(
+          Icons.warning,
           size: 20,
-          color: Colors.orange,
+          color: context.colors.secondary,
         );
       case ContributionType.correction:
         return Icon(
@@ -322,22 +323,22 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
           color: theme.colorScheme.primary,
         );
       case ContributionType.variant:
-        return const Icon(
-          AppIcons.altRoute,
+        return Icon(
+          Icons.alt_route,
           size: 20,
-          color: Colors.purple,
+          color: context.colors.tertiary,
         );
       case ContributionType.translation:
-        return const Icon(
+        return Icon(
           AppIcons.translate,
           size: 20,
-          color: Colors.blue,
+          color: context.colors.primary,
         );
       case ContributionType.technique:
-        return const Icon(
-          AppIcons.workout,
+        return Icon(
+          Icons.fitness_center,
           size: 20,
-          color: Colors.green,
+          color: context.colors.success,
         );
     }
   }

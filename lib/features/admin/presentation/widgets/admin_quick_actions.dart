@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/firebase_init_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminQuickActions extends ConsumerWidget {
@@ -72,7 +74,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: AppIcons.flagCircle,
                   title: 'Exercise Feedback',
                   subtitle: 'Segnalazioni e bug utenti',
-                  color: Colors.deepPurple,
+                  color: context.colors.tertiary,
                   onTap: () => _navigateToExerciseFeedback(context),
                   badgeProvider: unreadFeedbackCountProvider,
                 ),
@@ -82,7 +84,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: AppIcons.rateReview,
                   title: l10n.communityContributions,
                   subtitle: l10n.reviewContributionsDescription,
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                   onTap: () => _navigateToCommunityCorrections(context),
                 ),
 
@@ -91,7 +93,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: AppIcons.workout,
                   title: 'Esercizi Mancanti',
                   subtitle: 'Gestisci richieste esercizi',
-                  color: Colors.deepOrange,
+                  color: context.colors.warning,
                   onTap: () => _navigateToMissingExercises(context),
                 ),
 
@@ -100,7 +102,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: AppIcons.buildCircle,
                   title: l10n.fixMissingData,
                   subtitle: l10n.fixMissingDataDescription,
-                  color: Colors.blue,
+                  color: context.colors.primary,
                   onTap: () => _fixMissingData(context, ref),
                 ),
 
@@ -109,7 +111,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: AppIcons.analytics,
                   title: l10n.userAnalytics,
                   subtitle: l10n.userAnalyticsDescription,
-                  color: Colors.green,
+                  color: context.colors.success,
                   onTap: () => _showComingSoon(context, l10n),
                 ),
 
@@ -118,7 +120,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: AppIcons.backup,
                   title: l10n.databaseBackup,
                   subtitle: l10n.databaseBackupDescription,
-                  color: Colors.purple,
+                  color: context.colors.tertiary,
                   onTap: () => _showComingSoon(context, l10n),
                 ),
 
@@ -127,7 +129,7 @@ class AdminQuickActions extends ConsumerWidget {
                   icon: AppIcons.notifications,
                   title: l10n.pushNotifications,
                   subtitle: l10n.pushNotificationsDescription,
-                  color: Colors.red,
+                  color: context.colors.error,
                   onTap: () => _showComingSoon(context, l10n),
                 ),
               ],
@@ -147,7 +149,7 @@ class AdminQuickActions extends ConsumerWidget {
         maxChildSize: 0.9,
         minChildSize: 0.5,
         expand: false,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -159,7 +161,7 @@ class AdminQuickActions extends ConsumerWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -301,7 +303,7 @@ class _QuickActionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -377,7 +379,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
+                      color: color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -397,7 +399,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: context.colors.error,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         constraints: const BoxConstraints(
@@ -406,8 +408,8 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                         ),
                         child: Text(
                           badgeCount > 99 ? '99+' : badgeCount.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),

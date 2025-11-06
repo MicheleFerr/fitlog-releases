@@ -204,7 +204,6 @@ class TemplateMigrationHelpers {
       case ExerciseCategory.cardio:
         return UnifiedTemplateCategory.cardio;
       case ExerciseCategory.other:
-      default:
         return UnifiedTemplateCategory.strength;
     }
   }

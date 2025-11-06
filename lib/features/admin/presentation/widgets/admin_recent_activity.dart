@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Provider per le attività recenti
@@ -296,7 +298,7 @@ class _ActivityItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -344,9 +346,9 @@ class _ActivityItem extends StatelessWidget {
 
   Color _getStatusColor(BuildContext context, String status) {
     return switch (status) {
-      'pending' => Colors.orange,
-      'approved' => Colors.green,
-      'rejected' => Colors.red,
+      'pending' => context.colors.secondary,
+      'approved' => context.colors.success,
+      'rejected' => context.colors.error,
       _ => Theme.of(context).colorScheme.primary,
     };
   }
@@ -354,9 +356,9 @@ class _ActivityItem extends StatelessWidget {
   IconData _getStatusIcon(String status) {
     return switch (status) {
       'pending' => AppIcons.pending,
-      'approved' => AppIcons.complete,
+      'approved' => Icons.check_circle,
       'rejected' => AppIcons.cancel,
-      _ => AppIcons.infoIcon,
+      _ => Icons.info,
     };
   }
 

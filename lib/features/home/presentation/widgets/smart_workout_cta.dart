@@ -5,6 +5,8 @@ import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Smart workout CTA button that pre-loads workouts from active routines
@@ -24,8 +26,8 @@ class SmartWorkoutCTA extends ConsumerWidget {
         'Errore caricamento',
       ),
       data: (routine) {
-        // Guard 1: Check if routine exists and has today scheduled
-        if (routine == null || !routine.hasProgrammedWorkoutToday()) {
+        // Guard 1: Check if routine exists and has uncompleted workout
+        if (routine == null || !routine.hasUncompletedWorkout()) {
           return _buildDisabledState(
             context,
             theme,
@@ -33,9 +35,9 @@ class SmartWorkoutCTA extends ConsumerWidget {
           );
         }
 
-        // Guard 2: Get today's workout
-        final todayWorkout = routine.getTodayWorkout();
-        if (todayWorkout == null || todayWorkout.templateId == null) {
+        // Guard 2: Get next uncompleted workout
+        final nextWorkout = routine.getNextUncompletedWorkout();
+        if (nextWorkout == null || nextWorkout.templateId == null) {
           return _buildDisabledState(
             context,
             theme,
@@ -48,7 +50,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
           context,
           ref,
           theme,
-          todayWorkout.templateId!,
+          nextWorkout.templateId!,
         );
       },
     );
@@ -221,54 +223,53 @@ class SmartWorkoutCTA extends ConsumerWidget {
     // Guard 1: Check AsyncValue state
     final routineAsync = ref.read(activeFlexibleRoutineProvider);
     if (routineAsync is! AsyncData) {
-      if (context.mounted) {
-        // Fallback: Navigate to workout with template ID
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
       return;
     }
 
     final routine = routineAsync.value;
 
     // Guard 2: Routine null check
-    if (routine == null || !routine.hasProgrammedWorkoutToday()) {
-      if (context.mounted) {
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
+    if (routine == null || !routine.hasUncompletedWorkout()) {
       return;
     }
 
-    // Guard 3: getTodayWorkout() null check
-    final todayWorkoutFresh = routine.getTodayWorkout();
-    if (todayWorkoutFresh == null || todayWorkoutFresh.templateId == null) {
-      if (context.mounted) {
-        context.goNamed('workout', queryParameters: {'templateId': templateId});
-      }
+    // Guard 3: getNextUncompletedWorkout() null check
+    final nextWorkoutFresh = routine.getNextUncompletedWorkout();
+    if (nextWorkoutFresh == null || nextWorkoutFresh.templateId == null) {
       return;
     }
 
-    // Analytics: CTA tapped
-    // Note: WorkoutAnalytics import removed - analytics will be tracked in workout screen
-    // await WorkoutAnalytics.trackEvent(
-    //   'smart_cta_tapped',
-    //   properties: {
-    //     'sessionId': sessionId,
-    //     'templateName': templateName,
-    //     'timestamp': DateTime.now().toIso8601String(),
-    //   },
-    // );
+    // Fetch template to get exercises
+    final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+    if (templatesAsync is! AsyncData) {
+      return;
+    }
 
-    // Navigate to workout screen with template ID and session ID
-    // The workout screen will handle loading the template and creating the workout
+    final templates = templatesAsync.value ?? [];
+    final template = templates.where((t) => t.id == templateId).firstOrNull;
+    if (template == null) {
+      return;
+    }
+
+    // ✅ Analytics tracking BEFORE starting workout
+    await WorkoutAnalytics.trackEvent(
+      'smart_cta_tapped',
+      properties: {
+        'sessionId': sessionId,
+        'templateName': templateName,
+        'templateId': templateId,
+        'exerciseCount': template.exercises.length,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+    );
+
+    // ✅ Start workout from template (same as DayDetailSheet)
+    // This creates an active workout, not a preloaded one
+    ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+
+    // ✅ Navigate directly to workout screen (no extra needed)
     if (context.mounted) {
-      context.goNamed(
-        'workout',
-        queryParameters: {
-          'templateId': templateId,
-          'sessionId': sessionId,
-          'fromSmartCTA': 'true',
-        },
-      );
+      context.goNamed('workout');
     }
   }
 }

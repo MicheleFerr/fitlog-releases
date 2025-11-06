@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class TemplateQuickStartCard extends StatelessWidget {
 
@@ -170,7 +170,7 @@ class TemplateQuickStartCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildHandleBar(),
+          _buildHandleBar(context),
           const SizedBox(height: 16),
           _buildSheetHeader(context),
           const SizedBox(height: 20),
@@ -215,12 +215,12 @@ class TemplateQuickStartCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHandleBar() {
+  Widget _buildHandleBar(BuildContext context) {
     return Container(
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.3),
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: const BorderRadius.all(Radius.circular(2)),
       ),
     );

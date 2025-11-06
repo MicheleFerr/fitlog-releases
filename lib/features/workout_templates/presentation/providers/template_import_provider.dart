@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/services/pe
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as workout_domain;
 
 part 'template_import_provider.freezed.dart';
 
@@ -337,7 +336,7 @@ class TemplateImportNotifier extends StateNotifier<TemplateImportState> {
     if (unresolved.isNotEmpty) {
       state = state.copyWith(
         errors: [
-          ImportError(
+          const ImportError(
             message: 'Please select exercises for all disambiguations',
             field: 'disambiguation',
             isBlocking: false,
@@ -472,7 +471,7 @@ class TemplateImportNotifier extends StateNotifier<TemplateImportState> {
       createdAt: DateTime.now(),
       tags: importData.tags ?? [],
       estimatedDurationMinutes: importData.estimatedDurationMinutes,
-      difficultyLevel: importData.difficulty != null ? importData.difficulty.toString() : null,
+      difficultyLevel: importData.difficulty?.toString(),
       requiredEquipment: importData.requiredEquipment ?? [],
       targetMuscles: importData.targetMuscles ?? [],
     );

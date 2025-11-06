@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/utils/contrast_checker.dart';
 
 class AppTheme {
   // Gym-inspired color palette
@@ -9,16 +11,25 @@ class AppTheme {
   static const Color errorRed = Color(0xFFE53935);
   
   static ThemeData get lightTheme {
+    // Create color scheme
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryBlue,
+      brightness: Brightness.light,
+      primary: const Color(0xFF1565C0), // Darker blue for WCAG
+      secondary: const Color(0xFFE65100), // Darker orange for WCAG
+      tertiary: successGreen,
+      error: const Color(0xFFC62828), // Darker red for WCAG
+    );
+
+    // Verify WCAG 2.2 Level AA compliance (Issue #2 - P1)
+    if (kDebugMode) {
+      final report = ContrastChecker.verifyColorScheme(colorScheme);
+      ContrastChecker.logComplianceReport(report);
+    }
+
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        brightness: Brightness.light,
-        primary: primaryBlue,
-        secondary: secondaryOrange,
-        tertiary: successGreen,
-        error: errorRed,
-      ),
+      colorScheme: colorScheme,
       
       // App Bar Theme
       appBarTheme: const AppBarTheme(
@@ -104,16 +115,25 @@ class AppTheme {
   }
 
   static ThemeData get darkTheme {
+    // Create color scheme
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primaryBlue,
+      brightness: Brightness.dark,
+      primary: const Color(0xFF90CAF9), // Lighter blue for dark theme
+      secondary: const Color(0xFFFFAB91), // Lighter orange for dark theme
+      tertiary: successGreen,
+      error: const Color(0xFFEF9A9A), // Lighter red for dark theme
+    );
+
+    // Verify WCAG 2.2 Level AA compliance (Issue #2 - P1)
+    if (kDebugMode) {
+      final report = ContrastChecker.verifyColorScheme(colorScheme);
+      ContrastChecker.logComplianceReport(report);
+    }
+
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        brightness: Brightness.dark,
-        primary: primaryBlue,
-        secondary: secondaryOrange,
-        tertiary: successGreen,
-        error: errorRed,
-      ),
+      colorScheme: colorScheme,
       
       // App Bar Theme
       appBarTheme: const AppBarTheme(

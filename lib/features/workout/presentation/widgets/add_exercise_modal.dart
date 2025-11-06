@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
   
@@ -99,6 +100,20 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     super.dispose();
   }
 
+  /// PHASE 2: Track first exercise added for beginner guidance
+  Future<void> _trackFirstExerciseAdded() async {
+    final onboardingState = ref.read(onboardingProvider);
+
+    // Only track if user is beginner in first workout flow
+    if (onboardingState.isInGuidedFirstWorkout && !onboardingState.hasAddedFirstExercise) {
+      await ref.read(onboardingProvider.notifier).markFirstExerciseAdded();
+
+      if (kDebugMode) {
+        debugPrint('✅ PHASE 2: First exercise added, beginner guidance active');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -115,7 +130,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
+              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -249,25 +264,30 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     );
   }
 
-  void _createSupersetFromConfiguration(SupersetConfiguration config) {
+  Future<void> _createSupersetFromConfiguration(SupersetConfiguration config) async {
     // Convert SupersetConfiguration to SupersetExercise
     final supersetExercise = SupersetConverter.configurationToSupersetExercise(config);
-    
+
     // Add the superset to the workout
     if (widget.onExerciseAdded != null) {
       widget.onExerciseAdded!(supersetExercise);
     } else {
       ref.read(currentWorkoutProvider.notifier).addExercise(supersetExercise);
     }
-    
+
+    // PHASE 2: Track first exercise added for beginner guidance
+    await _trackFirstExerciseAdded();
+
     // Close the modal
-    Navigator.of(context).pop();
-    
-    // Show success message
-    SnackBarService.showSuccess(
-      context,
-      '✅ ${context.l10n.exerciseAddedToWorkout(supersetExercise.name)}',
-    );
+    if (mounted) {
+      Navigator.of(context).pop();
+
+      // Show success message
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${context.l10n.exerciseAddedToWorkout(supersetExercise.name)}',
+      );
+    }
   }
 
   Widget _buildDropSetTab() {
@@ -309,7 +329,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           // Show selected exercise
           if (_selectedDropSetExercise != null)
             Card(
-              color: context.colors.primaryContainer.withOpacity(0.3),
+              color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
                 leading: Icon(AppIcons.complete, color: context.colors.primary),
                 title: Text(_selectedDropSetExercise!.nome),
@@ -441,7 +461,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           // Show selected exercise
           if (_selectedRestPauseExercise != null)
             Card(
-              color: context.colors.primaryContainer.withOpacity(0.3),
+              color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
                 leading: Icon(AppIcons.complete, color: context.colors.primary),
                 title: Text(_selectedRestPauseExercise!.nome),
@@ -611,14 +631,14 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           child: ExpansionTile(
             tilePadding: const EdgeInsets.symmetric(horizontal: 16),
             leading: Icon(
-              AppIcons.addCircleOutline,
-              color: context.colors.onSurfaceVariant.withOpacity(0.7),
+              Icons.add_circle_outline,
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
             ),
             title: Text(
               'Non trovi l\'esercizio? Creane uno personalizzato',
               style: TextStyle(
                 fontSize: 14,
-                color: context.colors.onSurfaceVariant.withOpacity(0.8),
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.8),
               ),
             ),
             children: [
@@ -681,7 +701,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
     return Card(
       color: _useAPRE
-        ? context.colors.primaryContainer.withOpacity(0.1)
+        ? context.colors.primaryContainer.withValues(alpha: 0.1)
         : context.colors.surfaceContainerHighest,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -774,7 +794,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.tertiaryContainer.withOpacity(0.3),
+                  color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -1090,7 +1110,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                         : '${stageData.weightController.text} kg',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: stageData.weightController.text.isEmpty
-                          ? context.colors.onSurfaceVariant.withOpacity(0.5)
+                          ? context.colors.onSurfaceVariant.withValues(alpha: 0.5)
                           : context.colors.onSurface,
                     ),
                   ),
@@ -1180,7 +1200,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     return _nameController.text.trim().isNotEmpty;
   }
 
-  void _addExercise() {
+  Future<void> _addExercise() async {
     if (!_canAddExercise()) return;
 
     // Only handle single exercises (tab index 0)
@@ -1215,15 +1235,20 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
     }
 
+    // PHASE 2: Track first exercise added for beginner guidance
+    await _trackFirstExerciseAdded();
+
     // Reset the sets for next exercise
     ref.read(exerciseSetsProvider.notifier).reset();
 
-    Navigator.pop(context);
+    if (mounted) {
+      Navigator.pop(context);
 
-    SnackBarService.showSuccess(
-      context,
-      '✅ ${context.l10n.exerciseAddedToWorkout(exercise.name)}',
-    );
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${context.l10n.exerciseAddedToWorkout(exercise.name)}',
+      );
+    }
   }
 
   bool _shouldShowAddButton() {
@@ -1395,7 +1420,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     return maxSets;
   }
 
-  void _createDropSet() {
+  Future<void> _createDropSet() async {
     final selectedCategory = ref.read(selectedExerciseCategoryProvider);
 
     // Validate and parse stages from controllers
@@ -1430,15 +1455,20 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
     }
 
-    Navigator.pop(context);
+    // PHASE 2: Track first exercise added for beginner guidance
+    await _trackFirstExerciseAdded();
 
-    SnackBarService.showSuccess(
-      context,
-      '✅ ${context.l10n.exerciseAddedDropSet(exercise.name)}',
-    );
+    if (mounted) {
+      Navigator.pop(context);
+
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${context.l10n.exerciseAddedDropSet(exercise.name)}',
+      );
+    }
   }
 
-  void _createRestPause() {
+  Future<void> _createRestPause() async {
     final selectedCategory = ref.read(selectedExerciseCategoryProvider);
 
     // Validate all inputs
@@ -1482,12 +1512,17 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
     }
 
-    Navigator.pop(context);
+    // PHASE 2: Track first exercise added for beginner guidance
+    await _trackFirstExerciseAdded();
 
-    SnackBarService.showSuccess(
-      context,
-      '✅ ${context.l10n.exerciseAddedRestPause(exercise.name)}',
-    );
+    if (mounted) {
+      Navigator.pop(context);
+
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${context.l10n.exerciseAddedRestPause(exercise.name)}',
+      );
+    }
   }
 }
 

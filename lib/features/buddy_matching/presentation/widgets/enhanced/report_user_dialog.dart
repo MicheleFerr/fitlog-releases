@@ -127,7 +127,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -177,24 +177,30 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
             ),
             const SizedBox(height: 8),
 
-            ...ReportReason.values.map((reason) {
-              return RadioListTile<ReportReason>(
-                title: Text(
-                  _getReasonText(l10n, reason),
-                  style: TextStyle(color: colorScheme.onSurface, fontSize: 14),
-                ),
-                value: reason,
-                groupValue: _selectedReason,
-                onChanged: (value) {
+            RadioGroup<ReportReason>(
+              groupValue: _selectedReason,
+              onChanged: (value) {
+                if (value != null) {
                   setState(() {
                     _selectedReason = value;
                   });
-                },
-                activeColor: colorScheme.primary,
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-              );
-            }),
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: ReportReason.values.map((reason) {
+                  return RadioListTile<ReportReason>(
+                    title: Text(
+                      _getReasonText(l10n, reason),
+                      style: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+                    ),
+                    value: reason,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  );
+                }).toList(),
+              ),
+            ),
 
             const SizedBox(height: 16),
 
@@ -223,7 +229,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
                   borderSide: BorderSide(color: colorScheme.primary, width: 2),
                 ),
                 filled: true,
-                fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               ),
               style: TextStyle(color: colorScheme.onSurface),
             ),
@@ -359,7 +365,7 @@ class BlockUserDialog extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

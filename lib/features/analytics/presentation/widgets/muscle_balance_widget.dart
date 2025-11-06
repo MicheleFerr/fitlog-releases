@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing muscle group balance analysis
@@ -73,7 +75,7 @@ class MuscleBalanceWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: isBalanced ? Colors.green.withValues(alpha: 0.2) : Colors.orange.withValues(alpha: 0.2),
+        color: isBalanced ? context.colors.success.withValues(alpha: 0.2) : context.colors.secondary.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -81,13 +83,13 @@ class MuscleBalanceWidget extends StatelessWidget {
           Icon(
             isBalanced ? AppIcons.complete : AppIcons.warning,
             size: 16,
-            color: isBalanced ? Colors.green : Colors.orange,
+            color: isBalanced ? context.colors.success : context.colors.secondary,
           ),
           const SizedBox(width: 4),
           Text(
             isBalanced ? 'Balanced' : 'Imbalanced',
             style: TextStyle(
-              color: isBalanced ? Colors.green : Colors.orange,
+              color: isBalanced ? context.colors.success : context.colors.secondary,
               fontWeight: FontWeight.bold,
               fontSize: 12,
             ),
@@ -104,7 +106,7 @@ class MuscleBalanceWidget extends StatelessWidget {
     return Column(
       children: groups.map((entry) {
         final imbalanceScore = balance.imbalanceScores[entry.key] ?? 0;
-        final color = _getColorForImbalance(imbalanceScore);
+        final color = _getColorForImbalance(imbalanceScore, colorScheme);
         
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -154,15 +156,15 @@ class MuscleBalanceWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.orange.withValues(alpha: 0.1),
+        color: context.colors.secondary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+        border: Border.all(color: context.colors.secondary.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           const Icon(
             AppIcons.warningAmber,
-            color: Colors.orange,
+            color: context.colors.secondary,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -200,13 +202,13 @@ class MuscleBalanceWidget extends StatelessWidget {
               Icon(
                 AppIcons.equalizer,
                 size: 48,
-                color: Colors.grey.withValues(alpha: 0.5),
+                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 16),
               Text(
                 'No muscle group data available',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
+                  color: context.colors.surfaceContainerHighest,
                 ),
               ),
             ],
@@ -216,17 +218,17 @@ class MuscleBalanceWidget extends StatelessWidget {
     );
   }
 
-  Color _getColorForImbalance(double score) {
+  Color _getColorForImbalance(double score, ColorScheme colorScheme) {
     if (score < 0.5) {
-      return Colors.red; // Very underdeveloped
+      return colorScheme.error; // Very underdeveloped
     } else if (score < 0.7) {
-      return Colors.orange; // Underdeveloped
+      return colorScheme.secondary; // Underdeveloped
     } else if (score < 1.3) {
-      return Colors.green; // Balanced
+      return colorScheme.success; // Balanced
     } else if (score < 1.5) {
-      return Colors.orange; // Overdeveloped
+      return colorScheme.secondary; // Overdeveloped
     } else {
-      return Colors.red; // Very overdeveloped
+      return colorScheme.error; // Very overdeveloped
     }
   }
 }

@@ -57,7 +57,7 @@ class StaleProfileBanner extends ConsumerWidget {
         color: context.colors.secondaryContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: context.colors.secondary.withOpacity(0.3),
+          color: context.colors.secondary.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -66,11 +66,11 @@ class StaleProfileBanner extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: context.colors.secondary.withOpacity(0.2),
+              color: context.colors.secondary.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
-              AppIcons.updateIcon,
+              AppIcons.update,
               color: context.colors.secondary,
               size: 24,
             ),
@@ -91,7 +91,7 @@ class StaleProfileBanner extends ConsumerWidget {
                 Text(
                   _getSubtitle(context, daysSinceUpdate),
                   style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colors.onSecondaryContainer.withOpacity(0.8),
+                    color: context.colors.onSecondaryContainer.withValues(alpha: 0.8),
                   ),
                 ),
               ],

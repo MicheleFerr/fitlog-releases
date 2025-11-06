@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Volume Chart with Material 3 styling
 class EnhancedVolumeChart extends StatelessWidget {
@@ -80,7 +81,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                           drawVerticalLine: false,
                           getDrawingHorizontalLine: (value) {
                             return FlLine(
-                              color: colorScheme.outline.withOpacity(0.2),
+                              color: colorScheme.outline.withValues(alpha: 0.2),
                               strokeWidth: 1,
                             );
                           },
@@ -134,11 +135,11 @@ class EnhancedVolumeChart extends StatelessWidget {
                           show: true,
                           border: Border(
                             bottom: BorderSide(
-                              color: colorScheme.outline.withOpacity(0.2),
+                              color: colorScheme.outline.withValues(alpha: 0.2),
                               width: 1,
                             ),
                             left: BorderSide(
-                              color: colorScheme.outline.withOpacity(0.2),
+                              color: colorScheme.outline.withValues(alpha: 0.2),
                               width: 1,
                             ),
                           ),
@@ -149,7 +150,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                             gradient: LinearGradient(
                               colors: [
                                 colorScheme.primary,
-                                colorScheme.primary.withOpacity(0.7),
+                                colorScheme.primary.withValues(alpha: 0.7),
                               ],
                             ),
                             barWidth: 3,
@@ -169,8 +170,8 @@ class EnhancedVolumeChart extends StatelessWidget {
                               show: true,
                               gradient: LinearGradient(
                                 colors: [
-                                  colorScheme.primary.withOpacity(0.2),
-                                  colorScheme.primary.withOpacity(0.05),
+                                  colorScheme.primary.withValues(alpha: 0.2),
+                                  colorScheme.primary.withValues(alpha: 0.05),
                                 ],
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
@@ -288,7 +289,7 @@ class EnhancedVolumeChart extends StatelessWidget {
           Icon(
             AppIcons.barChart,
             size: 48,
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -423,7 +424,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
                                 gradient: LinearGradient(
                                   colors: [
                                     colorScheme.secondary,
-                                    colorScheme.secondary.withOpacity(0.7),
+                                    colorScheme.secondary.withValues(alpha: 0.7),
                                   ],
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
@@ -521,7 +522,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
           Icon(
             AppIcons.calendar,
             size: 48,
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -723,11 +724,11 @@ class EnhancedBodyPartChart extends StatelessWidget {
       case 'Shoulders':
         return colorScheme.tertiary;
       case 'Legs':
-        return Colors.green;
+        return colorScheme.success;
       case 'Arms':
-        return Colors.orange;
+        return colorScheme.secondary;
       default:
-        return Colors.grey;
+        return colorScheme.surfaceContainerHighest;
     }
   }
 
@@ -739,7 +740,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
           Icon(
             AppIcons.donutLarge,
             size: 48,
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(

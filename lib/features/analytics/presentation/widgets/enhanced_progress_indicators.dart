@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Progress Ring Indicator
@@ -26,7 +28,7 @@ class EnhancedProgressRing extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final effectiveProgressColor = progressColor ?? colorScheme.primary;
-    final effectiveBackgroundColor = backgroundColor ?? colorScheme.outline.withOpacity(0.2);
+    final effectiveBackgroundColor = backgroundColor ?? colorScheme.outline.withValues(alpha: 0.2);
 
     return SizedBox(
       width: size,
@@ -139,7 +141,7 @@ class EnhancedLinearProgress extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: [
                         effectiveProgressColor,
-                        effectiveProgressColor.withOpacity(0.8),
+                        effectiveProgressColor.withValues(alpha: 0.8),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(height / 2),
@@ -177,7 +179,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: colorScheme.outline.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -287,23 +289,23 @@ class EnhancedProgressIndicator extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: isImproving 
-            ? Colors.green.withOpacity(0.1)
-            : Colors.orange.withOpacity(0.1),
+            ? context.colors.success.withValues(alpha: 0.1)
+            : context.colors.secondary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isImproving ? AppIcons.trendUp : AppIcons.trendFlat,
-            color: isImproving ? Colors.green : Colors.orange,
+            isImproving ? Icons.trending_up : Icons.trending_flat,
+            color: isImproving ? context.colors.success : context.colors.secondary,
             size: 16,
           ),
           const SizedBox(width: 4),
           Text(
             isImproving ? 'Improving' : 'Steady',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isImproving ? Colors.green : Colors.orange,
+              color: isImproving ? context.colors.success : context.colors.secondary,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -322,7 +324,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -343,7 +345,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color.withOpacity(0.8),
+                    color: color.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -441,7 +443,7 @@ class GoalProgressWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: effectiveColor.withOpacity(0.1),
+                    color: effectiveColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -474,12 +476,12 @@ class GoalProgressWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: context.colors.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(
-                      AppIcons.complete,
-                      color: Colors.green,
+                    child: Icon(
+                      Icons.check_circle,
+                      color: context.colors.success,
                       size: 20,
                     ),
                   ),

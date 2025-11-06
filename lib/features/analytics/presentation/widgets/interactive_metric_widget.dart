@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget interattivo che mostra una metrica con tooltip esplicativo
@@ -153,7 +155,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
       initialChildSize: 0.6,
       minChildSize: 0.4,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -354,23 +356,23 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
     switch (_selectedLevel) {
       case 0:
         explanation = widget.beginnerExplanation;
-        levelIcon = AppIcons.rocket;
-        levelColor = Colors.green;
+        levelIcon = Icons.rocket_launch;
+        levelColor = context.colors.success;
         break;
       case 1:
         explanation = widget.intermediateExplanation;
-        levelIcon = AppIcons.workout;
-        levelColor = Colors.orange;
+        levelIcon = Icons.fitness_center;
+        levelColor = context.colors.secondary;
         break;
       case 2:
         explanation = widget.advancedExplanation;
-        levelIcon = AppIcons.achievement;
-        levelColor = Colors.red;
+        levelIcon = Icons.emoji_events;
+        levelColor = context.colors.error;
         break;
       default:
         explanation = widget.beginnerExplanation;
-        levelIcon = AppIcons.rocket;
-        levelColor = Colors.green;
+        levelIcon = Icons.rocket_launch;
+        levelColor = context.colors.success;
     }
     
     return Container(

@@ -24,13 +24,21 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
       onboardingVersion: fields[4] as int,
       lastInteraction: fields[5] as DateTime?,
       stepData: (fields[6] as Map).cast<String, dynamic>(),
+      userExperienceLevel: fields[10] as String?,
+      seenOverlays: (fields[11] as List).cast<String>(),
+      overlayVersionSeen: fields[12] as int,
+      quickStartCompletedAt: fields[13] as DateTime?,
+      hasCompletedFirstWorkout: fields[14] as bool,
+      firstExerciseAddedAt: fields[15] as DateTime?,
+      firstSetCompletedAt: fields[16] as DateTime?,
+      hasSeenRestTimerExplanation: fields[17] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, OnboardingState obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.hasSeenGlobalOnboarding)
       ..writeByte(1)
@@ -44,7 +52,23 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
       ..writeByte(5)
       ..write(obj.lastInteraction)
       ..writeByte(6)
-      ..write(obj.stepData);
+      ..write(obj.stepData)
+      ..writeByte(10)
+      ..write(obj.userExperienceLevel)
+      ..writeByte(11)
+      ..write(obj.seenOverlays)
+      ..writeByte(12)
+      ..write(obj.overlayVersionSeen)
+      ..writeByte(13)
+      ..write(obj.quickStartCompletedAt)
+      ..writeByte(14)
+      ..write(obj.hasCompletedFirstWorkout)
+      ..writeByte(15)
+      ..write(obj.firstExerciseAddedAt)
+      ..writeByte(16)
+      ..write(obj.firstSetCompletedAt)
+      ..writeByte(17)
+      ..write(obj.hasSeenRestTimerExplanation);
   }
 
   @override

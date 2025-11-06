@@ -25,7 +25,11 @@ extension Tier1TimerExtensions on StateNotifier<UnifiedTimerState?> {
 
     // DEBUG: Log what sound is being used
     if (kDebugMode) {
-      debugPrint('🔊 [TIMER SOUND DEBUG 1] Reading timer sound from config: ${config.timerSound}');
+      debugPrint('🔊 [TIMER SOUND DEBUG 1] Reading timer sound from AppConfig:');
+      debugPrint('   config.timerSound = "${config.timerSound}"');
+      debugPrint('   config.soundEnabled = ${config.soundEnabled}');
+      debugPrint('   config.vibrationsEnabled = ${config.vibrationsEnabled}');
+      debugPrint('   About to call startTimer() with customSound="${config.timerSound}"');
     }
 
     // Start timer logic - cast to access methods
@@ -39,6 +43,10 @@ extension Tier1TimerExtensions on StateNotifier<UnifiedTimerState?> {
       totalSets: totalSets,
       customSound: config.timerSound, // Pass user's sound preference
     );
+
+    if (kDebugMode) {
+      debugPrint('🔊 [TIMER SOUND DEBUG 2] startTimer() called successfully with customSound="${config.timerSound}"');
+    }
     
     // Show UI automatically
     ref.read(timerUIStateProvider.notifier).show();

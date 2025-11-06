@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -213,7 +214,7 @@ class _StaggeredListState extends State<StaggeredList>
     for (int i = 0; i < _controllers.length; i++) {
       await Future.delayed(widget.itemDelay);
       if (mounted) {
-        _controllers[i].forward();
+        unawaited(_controllers[i].forward());
       }
     }
   }

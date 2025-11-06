@@ -4,7 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_analytics_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dashboard widget for displaying notification analytics
 class NotificationAnalyticsDashboard extends ConsumerWidget {
@@ -75,24 +76,24 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           title: 'Delivered',
           value: '${metrics.totalDelivered}',
           subtitle: '${(metrics.deliveryRate * 100).toStringAsFixed(1)}%',
-          icon: AppIcons.complete,
-          color: Colors.green,
+          icon: Icons.check_circle,
+          color: context.colors.success,
           theme: theme,
         ),
         _buildMetricCard(
           title: 'Clicked',
           value: '${metrics.totalClicked}',
           subtitle: '${(metrics.clickRate * 100).toStringAsFixed(1)}% CTR',
-          icon: AppIcons.touchApp,
-          color: Colors.blue,
+          icon: Icons.touch_app,
+          color: context.colors.primary,
           theme: theme,
         ),
         _buildMetricCard(
           title: 'Failed',
           value: '${metrics.totalFailed}',
           subtitle: '${(metrics.failureRate * 100).toStringAsFixed(1)}%',
-          icon: AppIcons.error,
-          color: Colors.red,
+          icon: Icons.error,
+          color: context.colors.error,
           theme: theme,
         ),
       ],
@@ -307,7 +308,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
                       dotData: const FlDotData(show: false),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: theme.colorScheme.primary.withOpacity(0.2),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.2),
                       ),
                     ),
                   ],

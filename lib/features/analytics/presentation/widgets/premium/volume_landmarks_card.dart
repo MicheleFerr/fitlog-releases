@@ -4,6 +4,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_ana
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Volume Landmarks Dashboard
@@ -117,10 +119,10 @@ class VolumeLandmarksCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildLegendItem(context, 'MV', l10n.maintenanceVolume, Colors.grey),
-        _buildLegendItem(context, 'MEV', l10n.minEffectiveVolume, Colors.orange),
-        _buildLegendItem(context, 'MAV', l10n.maxAdaptiveVolume, Colors.green),
-        _buildLegendItem(context, 'MRV', l10n.maxRecoverableVolume, Colors.red),
+        _buildLegendItem(context, 'MV', l10n.maintenanceVolume, context.colors.surfaceContainerHighest),
+        _buildLegendItem(context, 'MEV', l10n.minEffectiveVolume, context.colors.secondary),
+        _buildLegendItem(context, 'MAV', l10n.maxAdaptiveVolume, context.colors.success),
+        _buildLegendItem(context, 'MRV', l10n.maxRecoverableVolume, context.colors.error),
       ],
     );
   }
@@ -184,7 +186,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                   '$currentSets',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: _getZoneColor(zone),
+                    color: _getZoneColor(zone, theme.colorScheme),
                   ),
                 ),
                 Text(
@@ -221,7 +223,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                     flex: landmarks.mv,
                     child: Container(
                       height: 24,
-                      color: Colors.grey.withValues(alpha: 0.3),
+                      color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                     ),
                   ),
                   // MEV to MAV zone (green gradient)
@@ -232,8 +234,8 @@ class VolumeLandmarksCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.orange.withValues(alpha: 0.3),
-                            Colors.green.withValues(alpha: 0.5),
+                            context.colors.secondary.withValues(alpha: 0.3),
+                            context.colors.success.withValues(alpha: 0.5),
                           ],
                         ),
                       ),
@@ -247,8 +249,8 @@ class VolumeLandmarksCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.green.withValues(alpha: 0.5),
-                            Colors.red.withValues(alpha: 0.3),
+                            context.colors.success.withValues(alpha: 0.5),
+                            context.colors.error.withValues(alpha: 0.3),
                           ],
                         ),
                       ),
@@ -275,7 +277,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       width: 3,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: _getZoneColor(zone),
+                        color: _getZoneColor(zone, theme.colorScheme),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -285,13 +287,13 @@ class VolumeLandmarksCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: _getZoneColor(zone),
+                        color: _getZoneColor(zone, theme.colorScheme),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text(
+                      child: Text(
                         '●',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           fontSize: 10,
                         ),
                       ),
@@ -374,36 +376,36 @@ class VolumeLandmarksCard extends StatelessWidget {
         message = l10n.volumeZoneBelowMaintenance;
         explanation = l10n.volumeBelowMaintenanceExplanation(currentSets, landmarks.mv);
         advice = l10n.volumeBelowMaintenanceAdvice(landmarks.mv - currentSets);
-        icon = AppIcons.trendDown;
-        color = Colors.grey;
+        icon = Icons.trending_down;
+        color = context.colors.surfaceContainerHighest;
         break;
       case VolumeZone.maintenance:
         message = l10n.volumeZoneMaintenance;
         explanation = l10n.volumeMaintenanceExplanation(currentSets, landmarks.mv, landmarks.mev);
         advice = l10n.volumeMaintenanceAdvice(landmarks.mev - currentSets);
         icon = AppIcons.pauseCircleOutline;
-        color = Colors.grey;
+        color = context.colors.surfaceContainerHighest;
         break;
       case VolumeZone.effective:
         message = l10n.volumeZoneEffective;
         explanation = l10n.volumeEffectiveExplanation(currentSets, landmarks.mev, landmarks.mav);
         advice = l10n.volumeEffectiveAdvice(landmarks.mav - currentSets);
-        icon = AppIcons.trendUp;
-        color = Colors.orange;
+        icon = Icons.trending_up;
+        color = context.colors.secondary;
         break;
       case VolumeZone.optimal:
         message = l10n.volumeZoneOptimal;
         explanation = l10n.volumeOptimalExplanation(currentSets, landmarks.mav, landmarks.mrv);
         advice = l10n.volumeOptimalAdvice;
-        icon = AppIcons.complete;
-        color = Colors.green;
+        icon = Icons.check_circle;
+        color = context.colors.success;
         break;
       case VolumeZone.excessive:
         message = l10n.volumeZoneExcessive;
         explanation = l10n.volumeExcessiveExplanation(currentSets, landmarks.mrv);
         advice = l10n.volumeExcessiveAdvice(currentSets - landmarks.mrv);
-        icon = AppIcons.warning;
-        color = Colors.red;
+        icon = Icons.warning;
+        color = context.colors.error;
         break;
     }
 
@@ -559,17 +561,17 @@ class VolumeLandmarksCard extends StatelessWidget {
     );
   }
 
-  Color _getZoneColor(VolumeZone zone) {
+  Color _getZoneColor(VolumeZone zone, ColorScheme colorScheme) {
     switch (zone) {
       case VolumeZone.belowMaintenance:
       case VolumeZone.maintenance:
-        return Colors.grey;
+        return colorScheme.surfaceContainerHighest;
       case VolumeZone.effective:
-        return Colors.orange;
+        return colorScheme.secondary;
       case VolumeZone.optimal:
-        return Colors.green;
+        return colorScheme.success;
       case VolumeZone.excessive:
-        return Colors.red;
+        return colorScheme.error;
     }
   }
 
@@ -839,28 +841,28 @@ class VolumeLandmarksCard extends StatelessWidget {
                       context,
                       'MV',
                       l10n.mvExplanation,
-                      Colors.grey,
+                      context.colors.surfaceContainerHighest,
                     ),
                     const SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MEV',
                       l10n.mevExplanation,
-                      Colors.orange,
+                      context.colors.secondary,
                     ),
                     const SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MAV',
                       l10n.mavExplanation,
-                      Colors.green,
+                      context.colors.success,
                     ),
                     const SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MRV',
                       l10n.mrvExplanation,
-                      Colors.red,
+                      context.colors.error,
                     ),
                     const SizedBox(height: 20),
 
@@ -1005,10 +1007,10 @@ class VolumeLandmarksCard extends StatelessWidget {
     final muscleGroups = [
       (MuscleGroup.chest, l10n.chestMuscle, AppIcons.favorite),
       (MuscleGroup.back, l10n.backMuscle, Icons.grid_4x4),
-      (MuscleGroup.shoulders, l10n.shouldersMuscle, AppIcons.north),
+      (MuscleGroup.shoulders, l10n.shouldersMuscle, Icons.north),
       (MuscleGroup.arms, l10n.armsMuscle, AppIcons.sportsMartialArts),
-      (MuscleGroup.legs, l10n.legsMuscle, AppIcons.cardio),
-      (MuscleGroup.core, l10n.coreMuscle, AppIcons.favoriteBorder),
+      (MuscleGroup.legs, l10n.legsMuscle, Icons.directions_run),
+      (MuscleGroup.core, l10n.coreMuscle, Icons.favorite_border),
     ];
 
     await showDialog(
@@ -1113,6 +1115,9 @@ class VolumeLandmarksCard extends StatelessWidget {
       ),
     ).then((selectedGroup) {
       if (selectedGroup != null) {
+        // Check if widget is still mounted before using context
+        if (!context.mounted) return;
+
         // TODO: Save mapping to SharedPreferences/Hive
         // For now, show a snackbar
         final muscleGroupName = _getMuscleGroupLocalizedName(context, selectedGroup);

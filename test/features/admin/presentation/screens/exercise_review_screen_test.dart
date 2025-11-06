@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_review_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_review_screen.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 // ============================================================================
 // TEST HELPERS
@@ -280,7 +279,7 @@ void main() {
 
         // Should contain at least one recommendation
         final textWidgets = find.byType(Text);
-        bool hasRecommendation = false;
+        const bool hasRecommendation = false;
         await tester.pumpAndSettle();
 
         // Check that recommendations card is present

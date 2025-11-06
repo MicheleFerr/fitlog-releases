@@ -412,27 +412,35 @@ class _LevelAndGoalsPage extends StatelessWidget {
   }
 
   Widget _buildLevelSelector(BuildContext context) {
-    return Column(
-      children: [
-        _buildLevelOption(
-          context,
-          FitnessLevel.beginner,
-          '🌱 Principiante',
-          '0-6 mesi di esperienza',
-        ),
-        _buildLevelOption(
-          context,
-          FitnessLevel.intermediate,
-          '💪 Intermedio',
-          '6 mesi - 2 anni',
-        ),
-        _buildLevelOption(
-          context,
-          FitnessLevel.advanced,
-          '🔥 Avanzato',
-          '2+ anni di esperienza',
-        ),
-      ],
+    return RadioGroup<FitnessLevel>(
+      groupValue: level,
+      onChanged: (value) {
+        if (value != null) {
+          onLevelChanged(value);
+        }
+      },
+      child: Column(
+        children: [
+          _buildLevelOption(
+            context,
+            FitnessLevel.beginner,
+            '🌱 Principiante',
+            '0-6 mesi di esperienza',
+          ),
+          _buildLevelOption(
+            context,
+            FitnessLevel.intermediate,
+            '💪 Intermedio',
+            '6 mesi - 2 anni',
+          ),
+          _buildLevelOption(
+            context,
+            FitnessLevel.advanced,
+            '🔥 Avanzato',
+            '2+ anni di esperienza',
+          ),
+        ],
+      ),
     );
   }
 
@@ -455,8 +463,6 @@ class _LevelAndGoalsPage extends StatelessWidget {
         subtitle: Text(subtitle),
         trailing: Radio<FitnessLevel>(
           value: optionLevel,
-          groupValue: level,
-          onChanged: (value) => onLevelChanged(value!),
         ),
         onTap: () => onLevelChanged(optionLevel),
       ),
@@ -497,7 +503,7 @@ class _LevelAndGoalsPage extends StatelessWidget {
             onGoalsChanged(newGoals);
           } : null,
           borderRadius: BorderRadius.circular(12),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: isSelected 
                 ? context.colors.primary

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget che mostra chips scrollabili per categoria, tipo e TUT dell'esercizio
@@ -69,9 +70,9 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
             label: tut == 'ISO' ? 'ISOMETRICO' : 
                    tut == 'EXP' ? 'ESPLOSIVO' : 
                    tut.toString(), // Mostra solo i numeri, più pulito
-            icon: AppIcons.info, // Icona info più chiara per il tap
-            backgroundColor: Colors.deepPurple.withValues(alpha: 0.15), // Più visibile
-            textColor: Colors.deepPurple,
+            icon: Icons.info_outline, // Icona info più chiara per il tap
+            backgroundColor: context.colors.tertiary.withValues(alpha: 0.15), // Più visibile
+            textColor: context.colors.tertiary,
             subtitle: 'TUT', // Indica che è TUT nel subtitle
             onTap: widget.onTutTap,
             isHighlighted: true, // Rende il chip più prominente
@@ -85,9 +86,9 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
         chipItems.add(
           _ChipItem(
             label: 'REP: $rangeRipetizioni',
-            icon: AppIcons.repeat,
-            backgroundColor: Colors.orange.withValues(alpha: 0.1),
-            textColor: Colors.orange,
+            icon: Icons.repeat,
+            backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
+            textColor: context.colors.secondary,
           ),
         );
       }
@@ -284,7 +285,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
       case ExerciseCategory.shoulders:
         return AppIcons.accessibility;
       case ExerciseCategory.back:
-        return AppIcons.gymnastics;
+        return AppIcons.sportsGymnastics;
       case ExerciseCategory.arms:
         return AppIcons.sportsMma;
       case ExerciseCategory.legs:

@@ -2,11 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// Simple exercise model for validation
 class Exercise {
-  final String id;
-  final String nome;
-  final String? focus;
-  final String imageUrl;
-  final String difficolta;
 
   Exercise({
     required this.id,
@@ -15,6 +10,11 @@ class Exercise {
     required this.imageUrl,
     required this.difficolta,
   });
+  final String id;
+  final String nome;
+  final String? focus;
+  final String imageUrl;
+  final String difficolta;
 
   bool isValid() {
     return id.isNotEmpty &&
@@ -155,7 +155,7 @@ void main() {
     });
 
     test('✅ TEST 8: Comma-separated focus areas can be parsed', () {
-      final focusString = 'LAT, TRAP';
+      const focusString = 'LAT, TRAP';
       final focusAreas =
           focusString.split(',').map((f) => f.trim()).toList();
 

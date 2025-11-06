@@ -16,7 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class SuperLikeButton extends ConsumerWidget {
 
@@ -42,7 +42,7 @@ class SuperLikeButton extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Super Like Button
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: canSuperLike
@@ -56,7 +56,7 @@ class SuperLikeButton extends ConsumerWidget {
             boxShadow: canSuperLike
                 ? [
                     BoxShadow(
-                      color: const Color(0xFF29B6F6).withOpacity(0.3),
+                      color: const Color(0xFF29B6F6).withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -80,8 +80,8 @@ class SuperLikeButton extends ConsumerWidget {
                     AppIcons.star,
                     size: 28,
                     color: canSuperLike 
-                        ? Colors.white 
-                        : colorScheme.onSurfaceVariant.withOpacity(0.5),
+                        ? context.colors.surface 
+                        : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -281,8 +281,8 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
       animation: _controller,
       builder: (context, child) {
         return Positioned.fill(
-          child: Container(
-            color: Colors.black.withOpacity(0.3 * _fadeAnimation.value),
+          child: ColoredBox(
+            color: context.colors.onSurface.withValues(alpha: 0.3 * _fadeAnimation.value),
             child: Center(
               child: Transform.scale(
                 scale: _scaleAnimation.value,
@@ -299,7 +299,7 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF29B6F6).withOpacity(0.4),
+                          color: const Color(0xFF29B6F6).withValues(alpha: 0.4),
                           blurRadius: 20,
                           offset: const Offset(0, 8),
                         ),
@@ -311,13 +311,13 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
                         const Icon(
                           AppIcons.star,
                           size: 64,
-                          color: Colors.white,
+                          color: context.colors.surface,
                         ),
                         const SizedBox(height: 16),
                         Text(
                           AppLocalizations.of(context).superLike,
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

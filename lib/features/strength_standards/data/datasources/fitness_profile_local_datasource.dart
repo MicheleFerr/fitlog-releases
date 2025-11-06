@@ -16,50 +16,29 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 
 /// Local Hive data source for fitness profile storage
 /// Provides persistent storage for user fitness questionnaire and medical clearance data
+///
+/// ✅ MIGRATED to HiveBoxManagerEnhanced pattern (Oct 2025)
+/// - No direct Hive.openBox() calls
+/// - Centralized box lifecycle management
 class FitnessProfileLocalDataSource {
-  static const String _fitnessProfileBoxName = 'fitness_profile';
-  static const String _medicalClearanceBoxName = 'medical_clearance';
 
-  /// Initialize Hive boxes
-  static Future<void> initialize() async {
-    try {
-      // Open fitness profile box
-      if (!Hive.isBoxOpen(_fitnessProfileBoxName)) {
-        await Hive.openBox<Map>(_fitnessProfileBoxName);
-        debugPrint('✅ Opened fitness_profile box');
-      } else {
-        debugPrint('ℹ️ Fitness profile box already open');
-      }
+  /// Constructor with dependency injection
+  FitnessProfileLocalDataSource(this._boxManager);
+  final HiveBoxManagerEnhanced _boxManager;
 
-      // Open medical clearance box
-      if (!Hive.isBoxOpen(_medicalClearanceBoxName)) {
-        await Hive.openBox<Map>(_medicalClearanceBoxName);
-        debugPrint('✅ Opened medical_clearance box');
-      } else {
-        debugPrint('ℹ️ Medical clearance box already open');
-      }
-    } catch (e, stackTrace) {
-      debugPrint('❌ Error initializing fitness profile Hive boxes: $e');
-      debugPrint('Stack trace: $stackTrace');
-      rethrow;
-    }
-  }
-
-  /// Get fitness profile box (open if needed)
+  /// Get fitness profile box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getFitnessProfileBox() async {
-    return Hive.isBoxOpen(_fitnessProfileBoxName)
-        ? Hive.box<Map>(_fitnessProfileBoxName)
-        : await Hive.openBox<Map>(_fitnessProfileBoxName);
+    return await _boxManager.openBox<Map>(HiveBoxNames.fitnessProfile);
   }
 
-  /// Get medical clearance box (open if needed)
+  /// Get medical clearance box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getMedicalClearanceBox() async {
-    return Hive.isBoxOpen(_medicalClearanceBoxName)
-        ? Hive.box<Map>(_medicalClearanceBoxName)
-        : await Hive.openBox<Map>(_medicalClearanceBoxName);
+    return await _boxManager.openBox<Map>(HiveBoxNames.medicalClearance);
   }
 
   /// Save fitness questionnaire locally

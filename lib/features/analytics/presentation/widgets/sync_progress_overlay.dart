@@ -15,7 +15,7 @@ class SyncProgressOverlay extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return Container(
+    return ColoredBox(
       color: theme.colorScheme.surface,
       child: Center(
         child: Card(

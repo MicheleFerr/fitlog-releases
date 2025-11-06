@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 enum WeightRecoveryOption {
   exact,        // Si (esatti)
@@ -119,10 +120,10 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: theme.colorScheme.outline.withOpacity(0.2),
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
               ),
             ),
             child: Row(
@@ -166,7 +167,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                 icon: AppIcons.trendUp,
                 label: 'Si +2.5%',
                 subtitle: 'Progressive overload',
-                color: Colors.green,
+                color: context.colors.success,
                 option: WeightRecoveryOption.increase,
               ),
               _buildOptionCard(
@@ -182,7 +183,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                 icon: AppIcons.trendDown,
                 label: 'Si -2.5%',
                 subtitle: 'Deload',
-                color: Colors.orange,
+                color: context.colors.secondary,
                 option: WeightRecoveryOption.decrease,
               ),
               _buildOptionCard(
@@ -237,13 +238,13 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withOpacity(0.1)
+              ? color.withValues(alpha: 0.1)
               : theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
                 ? color
-                : theme.colorScheme.outline.withOpacity(0.2),
+                : theme.colorScheme.outline.withValues(alpha: 0.2),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -292,7 +293,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: _getOptionColor(theme, _selectedOption!).withOpacity(0.1),
+            color: _getOptionColor(theme, _selectedOption!).withValues(alpha: 0.1),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Row(
@@ -396,7 +397,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -420,7 +421,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: _getOptionColor(theme, _selectedOption!).withOpacity(0.1),
+                  color: _getOptionColor(theme, _selectedOption!).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: _getOptionColor(theme, _selectedOption!),
@@ -550,11 +551,11 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
   Color _getOptionColor(ThemeData theme, WeightRecoveryOption option) {
     switch (option) {
       case WeightRecoveryOption.increase:
-        return Colors.green;
+        return context.colors.success;
       case WeightRecoveryOption.exact:
         return theme.colorScheme.primary;
       case WeightRecoveryOption.decrease:
-        return Colors.orange;
+        return context.colors.secondary;
       case WeightRecoveryOption.none:
         return theme.colorScheme.outline;
     }

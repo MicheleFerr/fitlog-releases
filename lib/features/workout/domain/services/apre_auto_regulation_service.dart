@@ -1,10 +1,85 @@
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/onerm_calculation_config.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
+
+/// 🐛 DEBUG FLAG: Enable verbose APRE calculation logs
+/// Set to true only when debugging APRE weight calculations
+const bool kEnableApreDebugLogs = false;
+
+/// Livelli di confidenza per calcolo 1RM basati su qualità e quantità dati
+enum CalculationConfidence {
+  /// ≥10 set, < 7 giorni, SD ≤ 5%
+  veryHigh,
+
+  /// 7-9 set, < 14 giorni, SD ≤ 8%
+  high,
+
+  /// 4-6 set, < 30 giorni, SD ≤ 12%
+  medium,
+
+  /// 1-3 set, < 60 giorni
+  low,
+
+  /// 0 set - richiede input manuale
+  unknown,
+}
+
+/// Estensione per helper text (colors nel presentation layer)
+extension ConfidenceHelper on CalculationConfidence {
+  String get description {
+    switch (this) {
+      case CalculationConfidence.veryHigh:
+        return 'Eccellente: dati ampi e consistenti';
+      case CalculationConfidence.high:
+        return 'Buono: dati sufficienti';
+      case CalculationConfidence.medium:
+        return 'Moderato: dati limitati';
+      case CalculationConfidence.low:
+        return 'Basso: pochi dati';
+      case CalculationConfidence.unknown:
+        return 'Non disponibile: richiesto input manuale';
+    }
+  }
+
+  String get emoji {
+    switch (this) {
+      case CalculationConfidence.veryHigh:
+      case CalculationConfidence.high:
+        return '✅';
+      case CalculationConfidence.medium:
+        return '⚠️';
+      case CalculationConfidence.low:
+        return '⚠️';
+      case CalculationConfidence.unknown:
+        return '❌';
+    }
+  }
+}
 
 /// Service to handle APRE (Autoregulatory Progressive Resistance Exercise) protocol
 /// This service manages automatic protocol selection, weight calculations, and caching
 class APREAutoRegulationService {
+  /// Formula scientifica usata per calcolo 1RM da storico
+  static const String used1RMFormula = 'Brzycki';
+
+  /// Descrizione della formula Brzycki
+  static const String formulaDescription =
+      'Brzycki (1-10 reps): 1RM = weight × (36 / (37 - reps))';
+
+  /// Range di validità della formula
+  static const int minFormulaReps = 1;
+  static const int maxFormulaReps = 10;
+
+  /// Brzycki formula coefficients: 1RM = weight × (36 / (37 - reps))
+  static const int _brzyckiNumerator = 36;
+  static const int _brzyckiDenominatorBase = 37;
+
+  /// Cache validity period (7 days)
+  static const int cacheValidityDays = 7;
+
   /// Automatically selects APRE protocol based on target reps
   /// Protocol determines adjustment aggressiveness and rest time:
   /// - 1-5 reps → APRE 3 (strength focus, aggressive adjustments, 3min rest)
@@ -41,18 +116,43 @@ class APREAutoRegulationService {
     }
   }
 
-  /// Calculates all APRE weight values from historical data
-  /// Returns a map with calculated1RM, calculated3RM, calculated6RM, calculated10RM
+  /// Calculates all APRE weight values from historical data with enhanced metadata
+  /// Returns a map with calculated RMs and detailed statistical metadata
+  ///
+  /// The [config] parameter determines which strategy to use for selecting
+  /// historical sets for calculation. Defaults to [OneRMCalculationConfig.topFiveSets].
+  ///
+  /// Note: The actual filtering logic for [config] will be implemented in T3.2.
+  /// Currently, this parameter is accepted but not yet used in filtering.
   static Map<String, dynamic> calculateAPREWeights({
     required List<dynamic> historicalSets,
     required int protocol,
     bool useMetricSystem = true,
+    int? maxSetsToUse = 10,
+    OneRMCalculationConfig config = OneRMCalculationConfig.topFiveSets,
   }) {
-    debugPrint('[APRE] Calculating weights from ${historicalSets.length} historical sets');
+    if (kEnableApreDebugLogs) {
+      debugPrint('[APRE] Calculating weights from ${historicalSets.length} historical sets');
+    }
 
+    // HANDLE: Empty history
     if (historicalSets.isEmpty) {
-      debugPrint('[APRE] No historical data available');
-      return {};
+      if (kEnableApreDebugLogs) {
+        debugPrint('[APRE] No historical data available');
+      }
+      return {
+        'calculated1RM': null,
+        'calculated3RM': null,
+        'calculated6RM': null,
+        'calculated10RM': null,
+        'confidence': CalculationConfidence.unknown,
+        'dataPoints': 0,
+        'formula': used1RMFormula,
+        'metadata': 'Nessuno storico disponibile - richiesto input manuale',
+        'requiresManualInput': true,
+        'standardDeviation': 0.0,
+        'dataAge': Duration.zero,
+      };
     }
 
     // Filter valid sets (weight > 0, reps between 1-15)
@@ -66,51 +166,71 @@ class APREAutoRegulationService {
         .toList();
 
     if (validSets.isEmpty) {
-      debugPrint('[APRE] No valid sets found for calculation');
-      return {};
+      if (kEnableApreDebugLogs) {
+        debugPrint('[APRE] No valid sets found for calculation');
+      }
+      return {
+        'calculated1RM': null,
+        'calculated3RM': null,
+        'calculated6RM': null,
+        'calculated10RM': null,
+        'confidence': CalculationConfidence.unknown,
+        'dataPoints': 0,
+        'formula': used1RMFormula,
+        'metadata': 'Nessuno storico disponibile - richiesto input manuale',
+        'requiresManualInput': true,
+        'standardDeviation': 0.0,
+        'dataAge': Duration.zero,
+      };
     }
 
-    // Sort sets by estimated 1RM (descending) to prioritize heavier lifts
-    validSets.sort((a, b) {
-      final a1RM = OneRMCalculator.calculateAverage(a.weight!, a.reps!);
-      final b1RM = OneRMCalculator.calculateAverage(b.weight!, b.reps!);
-      return b1RM.compareTo(a1RM);
-    });
-
-    // Take top sets (max 10) for calculation
-    final topSets = validSets.take(10).toList();
+    // STEP 1: Sort by weight (top N sets) - FIX: Use .toList()..sort() instead of .sorted()
+    final sortedByWeight = validSets.toList()
+      ..sort((a, b) {
+        final a1RM = OneRMCalculator.calculateAverage(a.weight!, a.reps!);
+        final b1RM = OneRMCalculator.calculateAverage(b.weight!, b.reps!);
+        return b1RM.compareTo(a1RM);
+      });
+    final topSets = sortedByWeight.take(maxSetsToUse ?? 10).toList();
 
     // Log top sets for debugging
-    debugPrint('[APRE] Top ${topSets.length} sets for calculation:');
-    for (final set in topSets.take(3)) {
-      final est1RM = OneRMCalculator.calculateAverage(set.weight!, set.reps!);
-      debugPrint('  ${set.weight}kg x ${set.reps} reps → ${est1RM.toStringAsFixed(1)}kg 1RM');
-    }
-
-    // Calculate average 1RM from top sets
-    double total1RM = 0;
-    int count = 0;
-
-    for (final set in topSets) {
-      final estimated = OneRMCalculator.calculateAverage(set.weight!, set.reps!);
-      if (estimated > 0) {
-        total1RM += estimated;
-        count++;
+    if (kEnableApreDebugLogs) {
+      debugPrint('[APRE] Top ${topSets.length} sets for calculation:');
+      for (final set in topSets.take(3)) {
+        final est1RM = OneRMCalculator.calculateAverage(set.weight!, set.reps!);
+        debugPrint('  ${set.weight}kg x ${set.reps} reps → ${est1RM.toStringAsFixed(1)}kg 1RM');
       }
     }
 
-    if (count == 0) {
-      debugPrint('[APRE] Could not calculate 1RM from sets');
-      return {};
-    }
+    // STEP 2: Calculate 1RM for each set using Brzycki
+    final estimates1RM = topSets.map((set) {
+      return OneRMCalculator.calculateBrzycki(
+        set.weight as double,
+        set.reps as int,
+      );
+    }).toList();
 
-    final estimated1RM = total1RM / count;
+    // STEP 3: Calculate statistical data
+    final dataAge = _calculateDataAge(topSets);
+    final stdDev = _calculateStandardDeviation(estimates1RM);
+    final robustAvgEstimates = _robustAverage(estimates1RM);
+
+    final calculated1RM = robustAvgEstimates.isNotEmpty
+        ? robustAvgEstimates.fold(0.0, (sum, v) => sum + v) / robustAvgEstimates.length
+        : estimates1RM.fold(0.0, (sum, v) => sum + v) / estimates1RM.length;
+
+    // STEP 4: Calculate confidence
+    final confidence = calculateConfidence(
+      dataPoints: topSets.length,
+      dataAge: dataAge,
+      standardDeviation: stdDev,
+      estimated1RM: calculated1RM,
+    );
 
     // Calculate weight for each rep range using Brzycki formula for consistency
-    // This matches the formula used in auto_adjustment_modal.dart
-    final weight3RM = OneRMCalculator.calculateWeightForReps(estimated1RM, 3);
-    final weight6RM = OneRMCalculator.calculateWeightForReps(estimated1RM, 6);
-    final weight10RM = OneRMCalculator.calculateWeightForReps(estimated1RM, 10);
+    final weight3RM = OneRMCalculator.calculateWeightForReps(calculated1RM, 3);
+    final weight6RM = OneRMCalculator.calculateWeightForReps(calculated1RM, 6);
+    final weight10RM = OneRMCalculator.calculateWeightForReps(calculated1RM, 10);
 
     // Round to nearest 2.5kg (or 5lbs if imperial)
     final roundingFactor = useMetricSystem ? 2.5 : 5.0;
@@ -118,26 +238,32 @@ class APREAutoRegulationService {
     final rounded6RM = (weight6RM / roundingFactor).round() * roundingFactor;
     final rounded10RM = (weight10RM / roundingFactor).round() * roundingFactor;
 
-    // Determine confidence level based on data points
-    final confidence = count >= 5 ? 'High' : count >= 3 ? 'Medium' : 'Low';
-    final metadata = 'Based on $count sets (Confidence: $confidence)';
+    if (kEnableApreDebugLogs) {
+      debugPrint('[APRE] Calculation complete:');
+      debugPrint('  1RM: ${calculated1RM.toStringAsFixed(1)}kg');
+      debugPrint('  3RM: ${rounded3RM.toStringAsFixed(1)}kg');
+      debugPrint('  6RM: ${rounded6RM.toStringAsFixed(1)}kg');
+      debugPrint('  10RM: ${rounded10RM.toStringAsFixed(1)}kg');
+      debugPrint('  Confidence: ${confidence.name}');
+      debugPrint('  SD: ${stdDev.toStringAsFixed(1)}kg');
+      debugPrint('  Data Age: ${dataAge.inDays} days');
+    }
 
-    debugPrint('[APRE] Calculation complete:');
-    debugPrint('  1RM: ${estimated1RM.toStringAsFixed(1)}kg');
-    debugPrint('  3RM: ${rounded3RM.toStringAsFixed(1)}kg');
-    debugPrint('  6RM: ${rounded6RM.toStringAsFixed(1)}kg');
-    debugPrint('  10RM: ${rounded10RM.toStringAsFixed(1)}kg');
-    debugPrint('  Confidence: $confidence');
-
+    // STEP 5: Return enhanced metadata
     return {
-      'calculated1RM': estimated1RM,
+      'calculated1RM': calculated1RM,
       'calculated3RM': rounded3RM,
       'calculated6RM': rounded6RM,
       'calculated10RM': rounded10RM,
       'baseWeight': protocol == 3 ? rounded3RM : protocol == 6 ? rounded6RM : rounded10RM,
-      'metadata': metadata,
       'confidence': confidence,
-      'dataPoints': count,
+      'dataPoints': topSets.length,
+      'formula': used1RMFormula,
+      'standardDeviation': stdDev,
+      'dataAge': dataAge,
+      'metadata': 'Based on ${topSets.length} sets (Formula: $used1RMFormula, '
+          'Confidence: ${confidence.name}, ±${stdDev.toStringAsFixed(1)}kg)',
+      'requiresManualInput': false,
     };
   }
 
@@ -255,5 +381,195 @@ class APREAutoRegulationService {
       default:
         return 'APRE Protocol';
     }
+  }
+
+  // ============================================================================
+  // SET SELECTION STRATEGIES
+  // ============================================================================
+
+  /// Selects subset of sets based on configuration strategy
+  ///
+  /// Applies different filtering strategies depending on user's preference:
+  /// - [OneRMCalculationConfig.topThreeSets]: 3 most recent sets (prioritizes recency)
+  /// - [OneRMCalculationConfig.topFiveSets]: 5 most recent sets (balanced, default)
+  /// - [OneRMCalculationConfig.allSetsInWindow]: All sets (comprehensive)
+  /// - [OneRMCalculationConfig.medianOfTop5]: Median of top 5 (stable estimates)
+  ///
+  /// Returns: Filtered list of sets to use for 1RM calculation
+  @visibleForTesting
+  static List<dynamic> selectTopSets(
+    List<dynamic> allSets,
+    OneRMCalculationConfig config,
+  ) {
+    if (allSets.isEmpty) return allSets;
+
+    switch (config) {
+      case OneRMCalculationConfig.topThreeSets:
+        return _selectTopNRecent(allSets, 3);
+
+      case OneRMCalculationConfig.topFiveSets:
+        return _selectTopNRecent(allSets, 5);
+
+      case OneRMCalculationConfig.allSetsInWindow:
+        return allSets; // No filtering, return everything
+
+      case OneRMCalculationConfig.medianOfTop5:
+        return _selectMedianOfTopN(allSets, 5);
+    }
+  }
+
+  /// Selects N most recent sets, sorted by timestamp descending
+  ///
+  /// If fewer than N sets available, returns all sets.
+  static List<dynamic> _selectTopNRecent(List<dynamic> sets, int n) {
+    if (sets.length <= n) return sets;
+
+    // Sort by timestamp descending (most recent first)
+    final sortedSets = List<dynamic>.from(sets);
+    sortedSets.sort((a, b) {
+      final timestampA = a['timestamp'] as Timestamp;
+      final timestampB = b['timestamp'] as Timestamp;
+      return timestampB.compareTo(timestampA); // Descending
+    });
+
+    return sortedSets.take(n).toList();
+  }
+
+  /// Selects median of top N sets for stable 1RM estimation
+  ///
+  /// Algorithm:
+  /// 1. Calculate 1RM for each set using Brzycki formula
+  /// 2. Take top N sets by 1RM value
+  /// 3. Return only the median set (middle value)
+  ///
+  /// This minimizes impact of outliers and provides stable estimates.
+  static List<dynamic> _selectMedianOfTopN(List<dynamic> sets, int n) {
+    if (sets.isEmpty) return sets;
+    if (sets.length == 1) return sets;
+
+    // Calculate 1RM for each set
+    final setsWithOneRM = sets.map((set) {
+      final weight = (set['weight'] as num).toDouble();
+      final reps = set['reps'] as int;
+      final oneRM = _calculate1RM(weight, reps);
+      return {'set': set, 'oneRM': oneRM};
+    }).toList();
+
+    // Sort by 1RM descending (highest first)
+    setsWithOneRM.sort((a, b) => (b['oneRM'] as double).compareTo(a['oneRM'] as double));
+
+    // Take top N
+    final topN = setsWithOneRM.take(n).toList();
+
+    // Sort by 1RM to find median
+    topN.sort((a, b) => (a['oneRM'] as double).compareTo(b['oneRM'] as double));
+
+    // Return median set (middle value)
+    final medianIndex = topN.length ~/ 2;
+    return [topN[medianIndex]['set']];
+  }
+
+  /// Calculates 1RM using Brzycki formula
+  ///
+  /// Formula: 1RM = weight × (36 / (37 - reps))
+  /// Valid for reps between 1-10 (most accurate 1-6 reps)
+  ///
+  /// For reps >= 37, the formula breaks down mathematically (division by zero or negative).
+  /// In this edge case, we return the weight itself as a conservative estimate.
+  static double _calculate1RM(double weight, int reps) {
+    if (reps >= _brzyckiDenominatorBase) {
+      return weight; // Formula breaks down, return weight as conservative estimate
+    }
+    return weight * (_brzyckiNumerator / (_brzyckiDenominatorBase - reps));
+  }
+
+  // ============================================================================
+  // METADATA CALCULATION HELPERS
+  // ============================================================================
+
+  /// Calcola livello di confidenza basato su qualità e quantità dati
+  @visibleForTesting
+  static CalculationConfidence calculateConfidence({
+    required int dataPoints,
+    required Duration dataAge,
+    required double standardDeviation,
+    required double estimated1RM,
+  }) {
+    if (dataPoints == 0) {
+      return CalculationConfidence.unknown;
+    }
+
+    // Calcola SD percentuale rispetto a 1RM
+    final sdPercent = (standardDeviation / estimated1RM) * 100;
+
+    // Soglie variabili per confidence
+    if (dataPoints >= 10 && dataAge.inDays <= 7 && sdPercent <= 5) {
+      return CalculationConfidence.veryHigh;
+    } else if (dataPoints >= 7 && dataAge.inDays <= 14 && sdPercent <= 8) {
+      return CalculationConfidence.high;
+    } else if (dataPoints >= 4 && dataAge.inDays <= 30 && sdPercent <= 12) {
+      return CalculationConfidence.medium;
+    } else if (dataPoints >= 1) {
+      return CalculationConfidence.low;
+    } else {
+      return CalculationConfidence.unknown;
+    }
+  }
+
+  /// Calcola età mediana dei dati (restituisce tempo trascorso dalla data mediana)
+  static Duration _calculateDataAge(List<dynamic> sets) {
+    if (sets.isEmpty) return Duration.zero;
+
+    final now = DateTime.now();
+
+    // Estrai le date e ordina
+    final dates = sets
+        .where((s) => s.date != null)
+        .map((s) => s.date as DateTime)
+        .toList()
+      ..sort();
+
+    if (dates.isEmpty) return Duration.zero;
+
+    // Prendi la data mediana
+    final midIndex = dates.length ~/ 2;
+    return now.difference(dates[midIndex]);
+  }
+
+  /// Calcola deviazione standard dei valori
+  static double _calculateStandardDeviation(List<double> values) {
+    if (values.length < 2) return 0;
+
+    final mean = values.fold(0.0, (sum, v) => sum + v) / values.length;
+    final variance = values
+            .map((v) => pow(v - mean, 2) as double)
+            .fold(0.0, (sum, v) => sum + v) /
+        values.length;
+
+    return sqrt(variance);
+  }
+
+  /// Filtra outlier usando metodo IQR (Interquartile Range)
+  /// Rimuove valori che sono troppo distanti dalla distribuzione centrale
+  static List<double> _robustAverage(List<double> values) {
+    if (values.isEmpty) return [];
+    if (values.length == 1) return values;
+
+    // Ordina i valori
+    final sorted = List<double>.from(values)..sort();
+
+    // Calcola quartili per IQR
+    final q1Index = (sorted.length / 4).floor();
+    final q3Index = ((sorted.length * 3) / 4).floor();
+    final q1 = sorted[q1Index];
+    final q3 = sorted[q3Index];
+    final iqr = q3 - q1;
+
+    // Rimuovi outlier (valori oltre 1.5 * IQR dai quartili)
+    final filtered = sorted
+        .where((v) => v >= (q1 - 1.5 * iqr) && v <= (q3 + 1.5 * iqr))
+        .toList();
+
+    return filtered;
   }
 }

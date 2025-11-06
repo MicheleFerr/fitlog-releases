@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CustomizableWorkoutCard extends ConsumerStatefulWidget {
@@ -119,14 +120,16 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
     if (preferredTemplateId != null) {
       // Carica il template preferito
       final templatesAsync = await ref.read(allWorkoutTemplatesProvider.future);
+
+      if (!mounted) return;
+
       final template = templatesAsync.firstWhere(
         (t) => t.id == preferredTemplateId,
         orElse: () => templatesAsync.first,
       );
-      
+
       // Avvia allenamento con template
       ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
-      if (!context.mounted) return;
       context.goNamed('workout');
     } else {
       // Vai alla schermata workout vuota
@@ -144,7 +147,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
       builder: (context, child) {
         return Transform.scale(
           scale: _isLongPress ? _scaleAnimation.value : 1.0,
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
@@ -241,8 +244,8 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            AppIcons.touchApp,
-                            color: Colors.white,
+                            Icons.touch_app,
+                            color: context.colors.surface,
                             size: 12,
                           ),
                         ),
@@ -260,8 +263,8 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            AppIcons.star,
-                            color: Colors.white,
+                            Icons.star,
+                            color: context.colors.surface,
                             size: 12,
                           ),
                         ),
@@ -289,7 +292,7 @@ class _CustomizationMenu extends ConsumerWidget {
     final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
     final currentPreferredId = ref.watch(preferredTemplateIdProvider);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -395,7 +398,7 @@ class _CustomizationMenu extends ConsumerWidget {
       return AppIcons.workout;
     }
     if (nameLower.contains('pull') || nameLower.contains('dorso') || nameLower.contains('back')) {
-      return AppIcons.gymnastics;
+      return AppIcons.sportsGymnastics;
     }
     if (nameLower.contains('leg') || nameLower.contains('gamb')) {
       return AppIcons.cardio;

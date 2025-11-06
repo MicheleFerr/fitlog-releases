@@ -114,21 +114,22 @@ class SaveWorkoutUseCase {
     
     // Validate sets
     for (final set in exercise.sets) {
-      if (set.weight < 0) {
+      // ✅ Null-safe: weight and reps are nullable
+      if (set.weight != null && set.weight! < 0) {
         return const ValidationFailure(
           'Weight cannot be negative',
           code: 'negative_weight',
         );
       }
-      
-      if (set.reps <= 0) {
+
+      if (set.reps != null && set.reps! <= 0) {
         return const ValidationFailure(
           'Reps must be greater than 0',
           code: 'invalid_reps',
         );
       }
-      
-      if (set.reps > 1000) {
+
+      if (set.reps != null && set.reps! > 1000) {
         return const ValidationFailure(
           'Reps cannot exceed 1000',
           code: 'reps_too_high',
@@ -151,8 +152,11 @@ class SaveWorkoutUseCase {
     // Clean up exercise data
     final cleanedExercises = workout.exercises.map((exercise) {
       // Remove empty sets or sets with invalid data
+      // ✅ Null-safe: weight and reps are nullable
       final validSets = exercise.sets
-          .where((set) => set.weight >= 0 && set.reps > 0)
+          .where((set) =>
+              (set.weight == null || set.weight! >= 0) &&
+              (set.reps == null || set.reps! > 0))
           .toList();
       
       // Renumber sets

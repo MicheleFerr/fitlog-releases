@@ -19,11 +19,6 @@ Future<List<ExerciseModel>> _loadTestData() async {
 
 /// Exercise model for validation testing
 class ExerciseModel {
-  final String id;
-  final String nome;
-  final String? focus;
-  final String imageUrl;
-  final String difficolta;
 
   ExerciseModel({
     required this.id,
@@ -42,6 +37,11 @@ class ExerciseModel {
       difficolta: json['difficolta'] as String? ?? '',
     );
   }
+  final String id;
+  final String nome;
+  final String? focus;
+  final String imageUrl;
+  final String difficolta;
 
   /// Validate that exercise has required fields
   List<String> validate() {

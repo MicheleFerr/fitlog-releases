@@ -81,7 +81,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   height: 80,
                   margin: const EdgeInsets.only(bottom: 32),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -104,7 +104,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   context.l10n.startTrackingJourney,
                   textAlign: TextAlign.center,
                   style: context.textTheme.bodyLarge?.copyWith(
-                    color: context.colors.onSurface.withOpacity(0.7),
+                    color: context.colors.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -126,7 +126,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           context.l10n.autoAccountCreation,
                           textAlign: TextAlign.center,
                           style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.onSurface.withOpacity(0.6),
+                            color: context.colors.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -186,7 +186,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       child: Text(
                         context.l10n.orDivider,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurface.withOpacity(0.6),
+                          color: context.colors.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ),
@@ -313,7 +313,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       child: Text(
                         context.l10n.orDivider,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurface.withOpacity(0.6),
+                          color: context.colors.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ),

@@ -82,7 +82,7 @@ class HapticFeedbackService {
   /// Trigger custom haptic feedback (for buttons, selections, etc.)
   /// This respects user settings but uses a lighter feedback
   /// Accepts both WidgetRef (from widgets) and Ref (from providers)
-  static void selection(Ref ref) {
+  static void selection(dynamic ref) {
     // Check if AsyncValue contains data
     final asyncValue = ref.read(feedbackSettingsProvider);
     final settings = asyncValue is AsyncData<FeedbackSettings> ? asyncValue.value : null;

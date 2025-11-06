@@ -199,7 +199,7 @@ class _CommunityContributionModalState
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.outline.withOpacity(0.3),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -216,14 +216,14 @@ class _CommunityContributionModalState
                     gradient: LinearGradient(
                       colors: [
                         theme.colorScheme.primary,
-                        theme.colorScheme.primary.withOpacity(0.7),
+                        theme.colorScheme.primary.withValues(alpha: 0.7),
                       ],
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    AppIcons.peopleOutline,
-                    color: Colors.white,
+                  child: Icon(
+                    Icons.people_outline,
+                    color: context.colors.surface,
                     size: 24,
                   ),
                 ),
@@ -337,10 +337,10 @@ class _CommunityContributionModalState
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.errorContainer.withOpacity(0.3),
+                            color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: theme.colorScheme.error.withOpacity(0.3),
+                              color: theme.colorScheme.error.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Column(
@@ -427,10 +427,10 @@ class _CommunityContributionModalState
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -462,7 +462,7 @@ class _CommunityContributionModalState
               color: theme.colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: context.colors.onSurface.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, -2),
                 ),
@@ -480,12 +480,12 @@ class _CommunityContributionModalState
                     ),
                   ),
                   child: _isSubmitting
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(context.colors.surface),
                           ),
                         )
                       : const Text(

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget per RPE Live Activity senza ombreggiature
 class RPELiveActivityWidget extends ConsumerStatefulWidget {
@@ -84,7 +87,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
         Text(
           '${widget.rpeData.weight}kg • Set ${widget.rpeData.currentSet}/${widget.rpeData.totalSets}',
           style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             fontSize: 14,
           ),
         ),
@@ -96,7 +99,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -104,7 +107,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           Text(
             '🔢 Reps Effettive',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -124,7 +127,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
                 width: 80,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -161,8 +164,8 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
       height: 44,
       decoration: BoxDecoration(
         color: onPressed != null 
-            ? Colors.white.withOpacity(0.2)
-            : Colors.white.withOpacity(0.1),
+            ? Colors.white.withValues(alpha: 0.2)
+            : Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Material(
@@ -174,7 +177,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
             icon,
             color: onPressed != null 
                 ? Colors.white
-                : Colors.white.withOpacity(0.5),
+                : Colors.white.withValues(alpha: 0.5),
             size: 20,
           ),
         ),
@@ -186,7 +189,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -194,7 +197,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           Text(
             '⚡ RPE (Rate of Perceived Exertion)',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -203,7 +206,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           Text(
             'Quanto è stato difficile questo set?',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               fontSize: 12,
             ),
           ),
@@ -222,8 +225,8 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
                   height: 45,
                   decoration: BoxDecoration(
                     color: isSelected 
-                        ? Colors.white.withOpacity(0.3)
-                        : Colors.white.withOpacity(0.1),
+                        ? Colors.white.withValues(alpha: 0.3)
+                        : Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: isSelected
                         ? Border.all(color: Colors.white, width: 2)
@@ -247,7 +250,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           Text(
             _getRPEDescription(_selectedRPE),
             style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               fontSize: 12,
               fontStyle: FontStyle.italic,
             ),
@@ -266,8 +269,8 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
         Expanded(
           child: _buildActionButton(
             label: 'Annulla',
-            icon: AppIcons.close,
-            color: Colors.white.withOpacity(0.2),
+            icon: Icons.close,
+            color: Colors.white.withValues(alpha: 0.2),
             textColor: Colors.white,
             onPressed: _isLoading ? null : _handleCancel,
           ),
@@ -279,11 +282,11 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
             label: _isLoading ? 'Salvando...' : 'Conferma Set',
             icon: _isLoading ? null : AppIcons.check,
             color: canConfirm 
-                ? Colors.white.withOpacity(0.9)
-                : Colors.white.withOpacity(0.3),
+                ? Colors.white.withValues(alpha: 0.9)
+                : Colors.white.withValues(alpha: 0.3),
             textColor: canConfirm 
                 ? Theme.of(context).colorScheme.primary
-                : Colors.white.withOpacity(0.7),
+                : Colors.white.withValues(alpha: 0.7),
             onPressed: canConfirm && !_isLoading ? _handleConfirm : null,
           ),
         ),
@@ -432,8 +435,8 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.blue.shade600,
-            Colors.purple.shade600,
+            context.infoColor,
+            context.colors.primary,
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -445,7 +448,7 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Center(
@@ -469,7 +472,7 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
                 Text(
                   'Set ${rpeData.currentSet}/${rpeData.totalSets} • ${rpeData.weight}kg',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 12,
                   ),
                 ),
@@ -479,7 +482,7 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Text(

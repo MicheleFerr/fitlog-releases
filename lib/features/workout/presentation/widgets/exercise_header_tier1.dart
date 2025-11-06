@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Exercise Header Widget with category icons, badges, and TUT timer
@@ -27,7 +29,7 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         child: Row(
           children: [
             // Category Icon
-            _buildCategoryIcon(theme),
+            _buildCategoryIcon(context, theme),
             
             const SizedBox(width: 12),
             
@@ -49,7 +51,7 @@ class ExerciseHeaderTier1 extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _buildTypeBadge(theme),
+                      _buildTypeBadge(context, theme),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -82,10 +84,10 @@ class ExerciseHeaderTier1 extends StatelessWidget {
     );
   }
   
-  Widget _buildCategoryIcon(ThemeData theme) {
+  Widget _buildCategoryIcon(BuildContext context, ThemeData theme) {
     IconData icon;
     Color color;
-    
+
     switch (exercise.category.name.toLowerCase()) {
       case 'chest':
         icon = AppIcons.workout;
@@ -96,24 +98,24 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         color = theme.colorScheme.secondary;
         break;
       case 'shoulders':
-        icon = AppIcons.gymnastics;
+        icon = AppIcons.sportsGymnastics;
         color = theme.colorScheme.tertiary;
         break;
       case 'arms':
         icon = AppIcons.sportsMartialArts;
-        color = Colors.orange;
+        color = context.colors.secondary;
         break;
       case 'legs':
-        icon = AppIcons.cardio;
-        color = Colors.green;
+        icon = Icons.directions_run;
+        color = context.colors.success;
         break;
       case 'core':
-        icon = AppIcons.flexibility;
-        color = Colors.purple;
+        icon = Icons.self_improvement;
+        color = context.colors.tertiary;
         break;
       case 'cardio':
-        icon = AppIcons.favorite;
-        color = Colors.red;
+        icon = Icons.favorite;
+        color = context.colors.error;
         break;
       default:
         icon = AppIcons.workout;
@@ -135,10 +137,10 @@ class ExerciseHeaderTier1 extends StatelessWidget {
     );
   }
   
-  Widget _buildTypeBadge(ThemeData theme) {
+  Widget _buildTypeBadge(BuildContext context, ThemeData theme) {
     String badgeText;
     Color badgeColor;
-    
+
     switch (exercise.type.name.toLowerCase()) {
       case 'single':
         badgeText = 'S';
@@ -146,15 +148,15 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         break;
       case 'superset':
         badgeText = 'SS';
-        badgeColor = Colors.orange;
+        badgeColor = context.colors.secondary;
         break;
       case 'dropset':
         badgeText = 'DS';
-        badgeColor = Colors.red;
+        badgeColor = context.colors.error;
         break;
       case 'restpause':
         badgeText = 'RS';
-        badgeColor = Colors.purple;
+        badgeColor = context.colors.tertiary;
         break;
       default:
         badgeText = 'S';

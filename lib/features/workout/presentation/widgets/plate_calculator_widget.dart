@@ -96,7 +96,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer.withOpacity(0.2),
+            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -138,7 +138,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               OutlinedButton.icon(
                 onPressed: () => _showBarbellSelector(context),
                 icon: Icon(
-                  _barbellWeight != null ? AppIcons.workout : AppIcons.block,
+                  _barbellWeight != null ? Icons.fitness_center : AppIcons.block,
                   size: 16,
                 ),
                 label: Text(
@@ -195,10 +195,10 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: theme.colorScheme.outline.withOpacity(0.2),
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
             ),
           ),
           child: Column(
@@ -274,10 +274,10 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.secondaryContainer.withOpacity(0.2),
+              color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: theme.colorScheme.secondary.withOpacity(0.3),
+                color: theme.colorScheme.secondary.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
@@ -312,10 +312,10 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: theme.colorScheme.outline.withOpacity(0.2),
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
               ),
             ),
             child: Column(
@@ -352,13 +352,13 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: isAvailable 
-                              ? _getPlateColor(plate).withOpacity(0.3)
+                              ? _getPlateColor(plate).withValues(alpha: 0.3)
                               : theme.colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: isAvailable
                                 ? _getPlateColor(plate)
-                                : theme.colorScheme.outline.withOpacity(0.3),
+                                : theme.colorScheme.outline.withValues(alpha: 0.3),
                             width: isAvailable ? 2 : 1,
                           ),
                         ),
@@ -375,7 +375,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                               Icon(
                                 AppIcons.cancel,
                                 size: 16,
-                                color: theme.colorScheme.outline.withOpacity(0.5),
+                                color: theme.colorScheme.outline.withValues(alpha: 0.5),
                               ),
                             const SizedBox(width: 4),
                             Text(
@@ -467,7 +467,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                   border: Border.all(
                     color: isSelected
                         ? theme.colorScheme.primary
-                        : theme.colorScheme.outline.withOpacity(0.3),
+                        : theme.colorScheme.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Text(
@@ -579,7 +579,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),

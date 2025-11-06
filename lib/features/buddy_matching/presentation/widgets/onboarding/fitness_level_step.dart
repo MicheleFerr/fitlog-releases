@@ -16,6 +16,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class FitnessLevelStep extends StatelessWidget {
@@ -130,12 +131,12 @@ class FitnessLevelStep extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: _getLevelColor(level).withValues(alpha: 0.2),
+                    color: _getLevelColor(level, theme.colorScheme).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     _getLevelIcon(level),
-                    color: _getLevelColor(level),
+                    color: _getLevelColor(level, theme.colorScheme),
                     size: 28,
                   ),
                 ),
@@ -188,16 +189,16 @@ class FitnessLevelStep extends StatelessWidget {
     );
   }
 
-  Color _getLevelColor(FitnessLevel level) {
+  Color _getLevelColor(FitnessLevel level, ColorScheme colorScheme) {
     switch (level) {
       case FitnessLevel.beginner:
-        return Colors.green;
+        return colorScheme.success;
       case FitnessLevel.intermediate:
-        return Colors.orange;
+        return colorScheme.secondary;
       case FitnessLevel.advanced:
-        return Colors.red;
+        return colorScheme.error;
       case FitnessLevel.expert:
-        return Colors.purple;
+        return colorScheme.tertiary;
     }
   }
 

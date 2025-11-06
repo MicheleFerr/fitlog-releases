@@ -157,7 +157,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                 Text(
                   l10n.exerciseUpdateNote,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.7),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                     fontStyle: FontStyle.italic,
                   ),
                   textAlign: TextAlign.center,

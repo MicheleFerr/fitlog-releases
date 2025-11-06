@@ -5,6 +5,8 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_initializer.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
@@ -113,13 +115,13 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
             end: Alignment.bottomRight,
             colors: [
               theme.colorScheme.primaryContainer,
-              theme.colorScheme.primaryContainer.withOpacity(0.7),
+              theme.colorScheme.primaryContainer.withValues(alpha: 0.7),
             ],
           ),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.primary.withOpacity(0.2),
+              color: theme.colorScheme.primary.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, 4),
             ),
@@ -160,7 +162,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                               _getGreeting(),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onPrimaryContainer
-                                    .withOpacity(0.8),
+                                    .withValues(alpha: 0.8),
                               ),
                             ),
                           ],
@@ -250,19 +252,19 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           icon: AppIcons.streak,
           value: stats.currentStreak.toString(),
           label: 'Streak',
-          color: Colors.orange,
+          color: context.colors.secondary,
         ),
         _StatItem(
           icon: AppIcons.star,
           value: stats.totalPoints.toString(),
           label: 'Punti',
-          color: Colors.amber,
+          color: context.colors.warning,
         ),
         _StatItem(
           icon: AppIcons.complete,
           value: stats.approvedContributions.toString(),
           label: 'Approvati',
-          color: Colors.green,
+          color: context.colors.success,
         ),
         _StatItem(
           icon: AppIcons.achievement,
@@ -283,7 +285,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           width: 60,
           height: 60,
           decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.1),
+            color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
@@ -318,7 +320,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           onPressed: widget.onViewAll,
           icon: const Icon(AppIcons.forward),
           style: IconButton.styleFrom(
-            backgroundColor: theme.colorScheme.primary.withOpacity(0.2),
+            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
             foregroundColor: theme.colorScheme.primary,
           ),
         ),
@@ -336,7 +338,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimaryContainer,
           side: BorderSide(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.3),
+            color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -400,7 +402,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
               decoration: BoxDecoration(
                 color: index == _currentIndex
                     ? theme.colorScheme.primary
-                    : theme.colorScheme.onPrimaryContainer.withOpacity(0.3),
+                    : theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -414,7 +416,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.onPrimaryContainer.withOpacity(0.1),
+        color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -436,7 +438,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
           Text(
             'Ottimo lavoro, hai reviewato tutti i contributi',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer.withOpacity(0.7),
+              color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -493,8 +495,8 @@ class _AnimatedIconState extends State<_AnimatedIcon>
             ),
           ),
           child: const Icon(
-            AppIcons.people,
-            color: Colors.white,
+            Icons.people,
+            color: context.colors.surface,
             size: 24,
           ),
         );
@@ -538,7 +540,7 @@ class _StatItem extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.6),
+            color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
           ),
         ),
       ],
@@ -565,7 +567,7 @@ class _MiniContributionCard extends StatelessWidget {
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -573,7 +575,7 @@ class _MiniContributionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              _getTypeIcon(contribution.type),
+              _getTypeIcon(context, contribution.type),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -616,8 +618,8 @@ class _MiniContributionCard extends StatelessWidget {
                 },
                 icon: const Icon(AppIcons.close),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.red.withOpacity(0.1),
-                  foregroundColor: Colors.red,
+                  backgroundColor: context.colors.error.withValues(alpha: 0.1),
+                  foregroundColor: context.colors.error,
                 ),
               ),
               IconButton.filled(
@@ -627,8 +629,8 @@ class _MiniContributionCard extends StatelessWidget {
                 },
                 icon: const Icon(AppIcons.check),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.green.withOpacity(0.1),
-                  foregroundColor: Colors.green,
+                  backgroundColor: context.colors.success.withValues(alpha: 0.1),
+                  foregroundColor: context.colors.success,
                 ),
               ),
             ],
@@ -638,37 +640,37 @@ class _MiniContributionCard extends StatelessWidget {
     );
   }
   
-  Widget _getTypeIcon(ContributionType type) {
+  Widget _getTypeIcon(BuildContext context, ContributionType type) {
     IconData icon;
     Color color;
-    
+
     switch (type) {
       case ContributionType.tip:
-        icon = AppIcons.lightbulb;
-        color = Colors.amber;
+        icon = Icons.lightbulb;
+        color = context.colors.warning;
         break;
       case ContributionType.warning:
-        icon = AppIcons.warning;
-        color = Colors.orange;
+        icon = Icons.warning;
+        color = context.colors.secondary;
         break;
       case ContributionType.correction:
-        icon = AppIcons.edit;
-        color = Colors.blue;
+        icon = Icons.edit;
+        color = context.colors.primary;
         break;
       case ContributionType.technique:
-        icon = AppIcons.workout;
-        color = Colors.purple;
+        icon = Icons.fitness_center;
+        color = context.colors.tertiary;
         break;
       default:
-        icon = AppIcons.infoIcon;
-        color = Colors.grey;
+        icon = Icons.info;
+        color = context.colors.surfaceContainerHighest;
     }
     
     return Container(
       width: 32,
       height: 32,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(

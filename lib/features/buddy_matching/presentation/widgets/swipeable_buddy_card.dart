@@ -22,7 +22,8 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/fitness_level_badge.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/workout_goals_chips.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/instagram_link_button.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class SwipeableBuddyCard extends StatefulWidget {
 
@@ -114,7 +115,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -195,7 +196,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withValues(alpha: 0.4),
+                    context.colors.onSurface.withValues(alpha: 0.4),
                   ],
                 ),
               ),
@@ -219,11 +220,11 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                             child: Text(
                               widget.profile.displayName,
                               style: theme.textTheme.headlineSmall?.copyWith(
-                                color: Colors.white,
+                                color: context.colors.surface,
                                 fontWeight: FontWeight.bold,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.black.withValues(alpha: 0.5),
+                                    color: context.colors.onSurface.withValues(alpha: 0.5),
                                     blurRadius: 4,
                                   ),
                                 ],
@@ -234,8 +235,8 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                           const SizedBox(width: 8),
                           if (widget.profile.isVerified)
                             const Icon(
-                              AppIcons.verified,
-                              color: Colors.blue,
+                              Icons.verified,
+                              color: context.colors.primary,
                               size: 20,
                             ),
                         ],
@@ -253,8 +254,8 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                               child: Row(
                                 children: [
                                   const Icon(
-                                    AppIcons.location,
-                                    color: Colors.white70,
+                                    Icons.location_on,
+                                    color: context.colors.surface70,
                                     size: 14,
                                   ),
                                   const SizedBox(width: 4),
@@ -262,7 +263,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                                     child: Text(
                                       widget.profile.preferences.locationName!,
                                       style: theme.textTheme.bodySmall?.copyWith(
-                                        color: Colors.white70,
+                                        color: context.colors.surface70,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -282,12 +283,12 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                   height: 12,
                   decoration: BoxDecoration(
                     color: widget.profile.isOnline 
-                        ? Colors.green 
+                        ? context.colors.success 
                         : widget.profile.isRecentlyActive 
-                            ? Colors.orange 
-                            : Colors.grey,
+                            ? context.colors.secondary 
+                            : context.colors.surfaceContainerHighest,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
+                    border: Border.all(color: context.colors.surface, width: 2),
                   ),
                 ),
               ],
@@ -299,7 +300,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
   }
 
   Widget _buildProfilePlaceholder(ThemeData theme) {
-    return Container(
+    return ColoredBox(
       color: theme.colorScheme.primary.withValues(alpha: 0.1),
       child: Center(
         child: Icon(
@@ -458,9 +459,9 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
     if (_dragDistance > 30) {
       // Like indicator (right swipe)
       return Positioned.fill(
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.green.withValues(alpha: 0.2 * opacity),
+            color: context.colors.success.withValues(alpha: 0.2 * opacity),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
@@ -469,13 +470,13 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.green, width: 3),
+                  border: Border.all(color: context.colors.success, width: 3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   'LIKE',
                   style: theme.textTheme.headlineMedium?.copyWith(
-                    color: Colors.green,
+                    color: context.colors.success,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -487,9 +488,9 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
     } else if (_dragDistance < -30) {
       // Dislike indicator (left swipe)
       return Positioned.fill(
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.red.withValues(alpha: 0.2 * opacity),
+            color: context.colors.error.withValues(alpha: 0.2 * opacity),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
@@ -498,13 +499,13 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red, width: 3),
+                  border: Border.all(color: context.colors.error, width: 3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   'PASS',
                   style: theme.textTheme.headlineMedium?.copyWith(
-                    color: Colors.red,
+                    color: context.colors.error,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -527,13 +528,13 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.6),
+          color: context.colors.onSurface.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
           l10n.swipeToDecide,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.white,
+            color: context.colors.surface,
           ),
         ),
       ),

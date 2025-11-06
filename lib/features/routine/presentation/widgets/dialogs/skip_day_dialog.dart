@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/skip_tracker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Result returned when user confirms skip
@@ -139,17 +140,17 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 0.1),
+                      color: context.colors.secondary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.orange.withValues(alpha: 0.3),
+                        color: context.colors.secondary.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           AppIcons.warningAmberRounded,
-                          color: Colors.orange,
+                          color: context.colors.secondary,
                           size: 24,
                         ),
                         const SizedBox(width: 12),
@@ -157,7 +158,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                           child: Text(
                             'You have ${widget.routine.skipTracker.currentSkipStreak} consecutive skip(s). Consider recovering them to maintain consistency.',
                             style: context.textTheme.bodySmall?.copyWith(
-                              color: Colors.orange[800],
+                              color: context.colors.secondary.withValues(red: context.colors.secondary.r * 0.6, green: context.colors.secondary.g * 0.6, blue: context.colors.secondary.b * 0.6),
                             ),
                           ),
                         ),
@@ -256,12 +257,12 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
 
   List<Widget> _buildReasonChips() {
     final reasons = [
-      (SkipReasons.sick, AppIcons.sick, 'Sick'),
-      (SkipReasons.injury, AppIcons.healing, 'Injury'),
-      (SkipReasons.busy, AppIcons.work, 'Busy'),
+      (SkipReasons.sick, Icons.sick, 'Sick'),
+      (SkipReasons.injury, Icons.healing, 'Injury'),
+      (SkipReasons.busy, Icons.work, 'Busy'),
       (SkipReasons.tired, AppIcons.bedtime, 'Tired'),
-      (SkipReasons.travel, AppIcons.flight, 'Travel'),
-      (SkipReasons.weather, AppIcons.cloud, 'Weather'),
+      (SkipReasons.travel, Icons.flight, 'Travel'),
+      (SkipReasons.weather, Icons.cloud, 'Weather'),
       (SkipReasons.other, AppIcons.moreHoriz, 'Other'),
     ];
 
@@ -396,14 +397,14 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           Icon(
             isNegative ? AppIcons.arrowDownward : AppIcons.arrowUpward,
             size: 14,
-            color: isNegative ? context.colors.error : Colors.green,
+            color: isNegative ? context.colors.error : context.colors.success,
           ),
           const SizedBox(width: 4),
           Text(
             change,
             style: context.textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: isNegative ? context.colors.error : Colors.green,
+              color: isNegative ? context.colors.error : context.colors.success,
             ),
           ),
         ],

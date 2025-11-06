@@ -1170,7 +1170,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importSettingsDesc => 'Carica le impostazioni da file JSON';
 
   @override
-  String get resetToDefaults => 'Ripristina Predefiniti';
+  String resetToDefaults(String mode) {
+    return 'Resetta a Default $mode';
+  }
 
   @override
   String get resetToDefaultsDesc =>
@@ -2398,6 +2400,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get community => 'Community';
 
   @override
+  String get communityComingSoonTitle => 'Funzionalità Community in Arrivo';
+
+  @override
+  String get communityComingSoonDescription =>
+      'Stiamo lavorando per creare una fantastica funzionalità community dove potrai connetterti con altri atleti, condividere i tuoi progressi e imparare gli uni dagli altri. Resta sintonizzato!';
+
+  @override
   String get generalInformation => 'Informazioni Generali';
 
   @override
@@ -2553,6 +2562,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get match => 'corrispondenza';
 
   @override
+  String get linkedTo => 'Collegato a';
+
+  @override
   String get skipExercise => 'Salta Esercizio';
 
   @override
@@ -2566,6 +2578,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get discover => 'Scopri';
+
+  @override
+  String get searchContributions => 'Cerca contributi...';
+
+  @override
+  String get sort => 'Ordina';
+
+  @override
+  String get noContributionsFound => 'Nessun contributo trovato';
+
+  @override
+  String get tryDifferentSearch => 'Prova a modificare la ricerca o i filtri';
+
+  @override
+  String get errorLoadingContributions => 'Errore caricamento contributi';
 
   @override
   String get trending => 'Tendenze';
@@ -3613,7 +3640,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tempo di riposo dopo aver completato tutti gli esercizi';
 
   @override
-  String get setCompleted => 'Serie completata!';
+  String get setCompleted => 'Serie completata';
 
   @override
   String get next => 'Avanti';
@@ -3695,6 +3722,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get verifyWeightReps => 'Verifica Peso e Ripetizioni';
+
+  @override
+  String get verifyTime => 'Verifica Minuti e Secondi';
+
+  @override
+  String get verifyReps => 'Verifica Ripetizioni';
 
   @override
   String get exerciseHistory => 'Storico Esercizio';
@@ -4188,7 +4221,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tip => 'Suggerimento';
 
   @override
-  String get warning => 'Avviso';
+  String get warning => 'Attenzione';
 
   @override
   String get variant => 'Variante';
@@ -4668,6 +4701,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get apreProtocol10Helper => 'Usa il tuo massimale per 10 ripetizioni';
 
   @override
+  String get apreProtocolPreview => 'Anteprima Cambio Protocollo';
+
+  @override
+  String get aprePreviewDescription =>
+      'Vedi come cambieranno i tuoi pesi con il nuovo protocollo';
+
+  @override
+  String apreCurrentProtocol(int protocol) {
+    return 'Attuale (APRE $protocol)';
+  }
+
+  @override
+  String apreNewProtocol(int protocol) {
+    return 'Nuovo (APRE $protocol)';
+  }
+
+  @override
+  String get apreSet1Preview => 'Serie 1 (50%)';
+
+  @override
+  String get apreSet2Preview => 'Serie 2 (75%)';
+
+  @override
+  String get apreSet3Preview => 'Serie 3 (100%)';
+
+  @override
+  String get apreSet4Preview => 'Serie 4';
+
+  @override
+  String get apreAdjustedBasedOnPerformance =>
+      'Adattato in base alla performance';
+
+  @override
+  String get apreApplyChanges => 'Applica Modifiche';
+
+  @override
   String get autoAdjustment => 'Regolazione Automatica';
 
   @override
@@ -5040,6 +5109,33 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get enableRpeTooltip =>
       'RPE (Rate of Perceived Exertion) ti aiuta a tracciare quanto è impegnativa ogni serie, permettendo un\'auto-regolazione intelligente basata sul tuo livello di affaticamento.';
+
+  @override
+  String get attentionRequired => 'Attenzione';
+
+  @override
+  String get enable => 'Abilita';
+
+  @override
+  String get essentialsSection => 'Essenziali';
+
+  @override
+  String get essentialsSectionDesc => 'Impostazioni fondamentali per iniziare';
+
+  @override
+  String get advancedSection => 'Avanzate';
+
+  @override
+  String get advancedSectionDesc => 'Personalizzazioni per utenti esperti';
+
+  @override
+  String get visualizationCategory => 'Visualizzazione';
+
+  @override
+  String get autoRegulationCategory => 'Auto-regolazione';
+
+  @override
+  String get interfaceCategory => 'Interfaccia';
 
   @override
   String get enableTutTitle => 'Abilita Monitoraggio TUT';
@@ -6358,7 +6454,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Miglior recupero tra sessioni e serie di qualità superiore';
 
   @override
-  String get filterByType => 'Filtra per Tipo';
+  String get filterByType => 'Tipo';
 
   @override
   String get filterByPriority => 'Filtra per Priorità';
@@ -11621,13 +11717,13 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get countingModeWeighted => 'Con Peso';
+  String get countingModeWeighted => 'Peso + Reps';
 
   @override
-  String get countingModeReps => 'Ripetizioni';
+  String get countingModeReps => 'Solo Reps';
 
   @override
-  String get countingModeTime => 'Tempo';
+  String get countingModeTime => 'Basato su tempo';
 
   @override
   String get refreshed => 'Aggiornato';
@@ -12352,18 +12448,463 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get templateNotFound => 'Template non trovato';
+  String get completeDayWithWorkout => 'Completa Giorno con Workout';
 
   @override
-  String templateLoadError(String error) {
-    return 'Errore caricamento template: $error';
+  String get selectWorkoutToLinkTo => 'Seleziona workout da collegare a';
+
+  @override
+  String get completeWithoutWorkout => 'Completa senza workout';
+
+  @override
+  String get noRecentWorkoutsFound => 'Nessun workout recente trovato';
+
+  @override
+  String get completeDayWithoutWorkout =>
+      'Completa questo giorno senza collegare un workout';
+
+  @override
+  String get completeDay => 'Completa Giorno';
+
+  @override
+  String get failedToLoadWorkouts => 'Impossibile caricare i workout';
+
+  @override
+  String get dayCompletedWithWorkout => 'Giorno completato con workout!';
+
+  @override
+  String get dayCompletedManually => 'Giorno completato manualmente';
+
+  @override
+  String get failedToCompleteDay => 'Impossibile completare il giorno';
+
+  @override
+  String get changeCountingFormat => 'Cambia formato counting';
+
+  @override
+  String get currentFormat => 'Formato attuale';
+
+  @override
+  String get countingModeWeightedDesc => 'Input: Peso (kg/lb) + Ripetizioni';
+
+  @override
+  String get countingModeWeightedExample => 'Esempio: 80kg × 10 rip';
+
+  @override
+  String get countingModeRepsDesc => 'Input: Solo ripetizioni (senza peso)';
+
+  @override
+  String get countingModeRepsExample => 'Esempio: 15 rip';
+
+  @override
+  String get countingModeTimeDesc => 'Input: Durata (mm:ss)';
+
+  @override
+  String get countingModeTimeExample => 'Esempio: 1:30 (90 secondi)';
+
+  @override
+  String get confirmChange => 'Conferma cambio';
+
+  @override
+  String get countingModeWarningTitle => 'Attenzione';
+
+  @override
+  String countingModeWarningMessage(int count, String fromMode, String toMode) {
+    return 'Hai $count serie completate con formato \"$fromMode\".\n\nCambiare in \"$toMode\" potrebbe invalidare i dati esistenti.';
   }
 
   @override
-  String get loadingTemplate => 'Caricamento template...';
+  String get countingModeWarningInfo =>
+      'Cambiare formato durante un workout non è consigliato. Considera di finire prima il workout.';
 
   @override
-  String unexpectedError(String error) {
-    return 'Errore imprevisto: $error';
+  String get keepData => 'Mantieni dati';
+
+  @override
+  String get resetAll => 'Resetta tutto';
+
+  @override
+  String get countingModeChanged => 'Formato counting aggiornato!';
+
+  @override
+  String get analyticsFeedbackThankYou => 'Grazie per il tuo feedback!';
+
+  @override
+  String get analyticsFeedbackThankYouSubtitle =>
+      'Il tuo feedback ci aiuta a migliorare l\'esperienza delle analitiche';
+
+  @override
+  String get analyticsFeedbackQuestion =>
+      'Questa vista delle analitiche è utile?';
+
+  @override
+  String get analyticsFeedbackHelpful => 'Utile';
+
+  @override
+  String get analyticsFeedbackNotHelpful => 'Non utile';
+
+  @override
+  String get analyticsFeedbackCommentPlaceholder =>
+      'Raccontaci di più (opzionale)';
+
+  @override
+  String get analyticsFeedbackSubmitting => 'Invio in corso...';
+
+  @override
+  String get analyticsFeedbackSubmit => 'Invia feedback';
+
+  @override
+  String get analyticsFeedbackError =>
+      'Impossibile inviare il feedback. Riprova.';
+
+  @override
+  String get analyticsFeedbackSuccess => 'Feedback inviato con successo!';
+
+  @override
+  String autoEnabledMaster(String masterName) {
+    return '✅ $masterName auto-abilitato (richiesto per questa funzione)';
   }
+
+  @override
+  String dependentsDisabled(int count) {
+    return '⚠️ $count funzioni dipendenti auto-disabilitate';
+  }
+
+  @override
+  String get quickInfoIconTitle => 'Icona Info Rapida';
+
+  @override
+  String get quickInfoIconDescription => 'Tocca per dettagli esercizio';
+
+  @override
+  String get quickInfoIconTooltip =>
+      'Mostra modal con informazioni esercizio, cues e suggerimenti';
+
+  @override
+  String get quickWarmupIconTitle => 'Icona Riscaldamento';
+
+  @override
+  String get quickWarmupIconDescription =>
+      'Tocca per suggerimenti riscaldamento';
+
+  @override
+  String get quickWarmupIconTooltip =>
+      'Mostra raccomandazioni serie di riscaldamento basate sul peso di lavoro';
+
+  @override
+  String get quickPreventionIconTitle => 'Icona Prevenzione';
+
+  @override
+  String get quickPreventionIconDescription =>
+      'Tocca per consigli prevenzione infortuni';
+
+  @override
+  String get quickPreventionIconTooltip =>
+      'Mostra consigli prevenzione infortuni ed esercizi mobilità';
+
+  @override
+  String get exerciseNotesTitle => 'Note Esercizio';
+
+  @override
+  String get exerciseNotesDescription => 'Aggiungi note su tecnica e cues';
+
+  @override
+  String get exerciseNotesTooltip =>
+      'Note personali visibili solo a te durante allenamenti';
+
+  @override
+  String get exerciseInsightsTitle => 'Analisi Esercizio';
+
+  @override
+  String get exerciseInsightsDescription => 'Visualizza grafici e statistiche';
+
+  @override
+  String get exerciseInsightsTooltip =>
+      'Grafici analytics con volume, PR e trend progresso';
+
+  @override
+  String get insightsPerformanceWarning =>
+      'ℹ️ I grafici potrebbero rallentare su dispositivi meno recenti';
+
+  @override
+  String modeSwitchWarningTitle(String mode) {
+    return 'Passare a Modalità $mode?';
+  }
+
+  @override
+  String modeSwitchWarningMessage(String mode) {
+    return 'Questo resetterà le tue impostazioni personalizzate ai default $mode.';
+  }
+
+  @override
+  String get modeSwitchUndoHint =>
+      'Avrai 5 secondi per annullare dopo la conferma.';
+
+  @override
+  String get undoSuccessful => '✅ Impostazioni ripristinate';
+
+  @override
+  String get sortByHelpful => 'Più Utili';
+
+  @override
+  String get sortByRecent => 'Più Recenti';
+
+  @override
+  String get sortBySaved => 'Più Salvati';
+
+  @override
+  String get sortByTrending => 'Trending';
+
+  @override
+  String get filterByDifficulty => 'Difficoltà';
+
+  @override
+  String get filterByAuthorTier => 'Autore';
+
+  @override
+  String get filterByDateRange => 'Periodo';
+
+  @override
+  String get resetFilters => 'Ripristina';
+
+  @override
+  String get dateFrom => 'Da';
+
+  @override
+  String get dateTo => 'A';
+
+  @override
+  String get contributionTypeCorrection => 'Correzione';
+
+  @override
+  String get contributionTypeTip => 'Consiglio';
+
+  @override
+  String get contributionTypeWarning => 'Avviso';
+
+  @override
+  String get contributionTypeVariant => 'Variante';
+
+  @override
+  String get contributionTypeTranslation => 'Traduzione';
+
+  @override
+  String get contributionTypeTechnique => 'Tecnica';
+
+  @override
+  String get difficultyBeginner => 'Principiante';
+
+  @override
+  String get difficultyIntermediate => 'Intermedio';
+
+  @override
+  String get difficultyAdvanced => 'Avanzato';
+
+  @override
+  String get authorTierCommunity => 'Community';
+
+  @override
+  String get authorTierExpert => 'Esperto';
+
+  @override
+  String get authorTierAdmin => 'Admin';
+
+  @override
+  String get saves => 'Salvati';
+
+  @override
+  String get views => 'Visualizzazioni';
+
+  @override
+  String get comments => 'Commenti';
+
+  @override
+  String get upvotes => 'Mi piace';
+
+  @override
+  String get bookmarkContribution => 'Salva contributo';
+
+  @override
+  String get saveContribution => 'Salva';
+
+  @override
+  String get unsaveContribution => 'Rimuovi';
+
+  @override
+  String get saved => 'Salvato';
+
+  @override
+  String get legalDisclaimerTitle => 'Disclaimer Medico';
+
+  @override
+  String get legalDisclaimerContent =>
+      '⚠️ AVVISO IMPORTANTE\n\nFITlog Pro è uno strumento di tracciamento workout.\n\nNON è sostituto di:\n• Consulenza medica\n• Personal trainer\n• Medico sportivo\n• Consulente fitness\n\nDEVI:\n✓ Consultare un medico prima di iniziare qualsiasi programma di allenamento\n✓ Interrompere immediatamente in caso di dolore o disagio\n✓ Assumerti la piena responsabilità per la tua sicurezza durante l\'allenamento\n\nIl fornitore NON è responsabile per:\n• Infortuni fisici\n• Peggioramento condizioni mediche\n• Mancato raggiungimento obiettivi fitness\n\nAccettando, riconosci questi rischi e accetti i Termini di Servizio e l\'Informativa Privacy.';
+
+  @override
+  String get legalDisclaimerAccept => 'Accetto';
+
+  @override
+  String get legalDisclaimerDecline => 'Rifiuto';
+
+  @override
+  String get legalDocuments => 'Documenti Legali';
+
+  @override
+  String get privacyPolicy => 'Informativa sulla Privacy';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Come gestiamo i tuoi dati (conforme GDPR)';
+
+  @override
+  String get termsOfService => 'Termini di Servizio';
+
+  @override
+  String get tosSubtitle => 'Accordi utente e limitazioni di responsabilità';
+
+  @override
+  String get disclaimerSubtitle => 'Informazioni importanti sulla sicurezza';
+
+  @override
+  String get errorLoadingDocument =>
+      'Errore nel caricamento del documento. Riprova.';
+
+  @override
+  String get apreCalculationMetadata => 'Analisi Calcolo';
+
+  @override
+  String get apreShowCalculationDetails => 'Mostra Dettagli Calcolo';
+
+  @override
+  String get apreHideCalculationDetails => 'Nascondi Dettagli Calcolo';
+
+  @override
+  String get apreFormula => 'Formula';
+
+  @override
+  String get apreDataPoints => 'Dati Analizzati';
+
+  @override
+  String get apreDataAge => 'Età Dati';
+
+  @override
+  String get apreStandardDeviation => 'Variabilità';
+
+  @override
+  String get apreConfidence => 'Affidabilità';
+
+  @override
+  String get apreLastCalculation => 'Ultimo Aggiornamento';
+
+  @override
+  String apreDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days giorni fa',
+      one: 'Ieri',
+      zero: 'Oggi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get apreNoHistory => 'Nessuno Storico Disponibile';
+
+  @override
+  String get apreNoHistoryDescription =>
+      'Nessun dato storico disponibile per i calcoli APRE. Seleziona come vuoi stimare il tuo 1RM per iniziare.';
+
+  @override
+  String get apreOptionFromLastWorkout => 'Dall\'Ultimo Allenamento';
+
+  @override
+  String get apreOptionManualEstimate => 'Stima Manuale';
+
+  @override
+  String get apreOptionTestSet => 'Serie di Test';
+
+  @override
+  String get apreOptionFromLastWorkoutDescription =>
+      'Usa peso/ripetizioni dell\'ultima serie come stima';
+
+  @override
+  String get apreOptionManualEstimateDescription =>
+      'Inserisci direttamente il 1RM stimato';
+
+  @override
+  String get apreOptionTestSetDescription =>
+      'Guida per fare prima una serie di test';
+
+  @override
+  String get apreEnter1RM => 'Inserisci 1RM Stimato (kg)';
+
+  @override
+  String get aprePreviewWeights => 'Anteprima Pesi';
+
+  @override
+  String get apreContinue => 'Continua';
+
+  @override
+  String get apreCancel => 'Annulla';
+
+  @override
+  String get ageGateTitle => 'Verifica la Tua Età';
+
+  @override
+  String get ageGateInstructions =>
+      'Inserisci la tua data di nascita per continuare.';
+
+  @override
+  String get ageGateBirthDate => 'Data di Nascita';
+
+  @override
+  String get ageGateContinue => 'Continua';
+
+  @override
+  String get ageRestrictionTitle => 'Limitazione di Età';
+
+  @override
+  String get ageRestrictionMessage =>
+      'Devi avere almeno 14 anni per usare FITlog Pro.\n\nQuesto requisito è richiesto dal GDPR (Regolamento UE 2016/679) e dalle leggi italiane sulla privacy.';
+
+  @override
+  String get ageRestrictionOk => 'Ho Capito';
+
+  @override
+  String get ageMinorWarningTitle => 'Avviso Importante per Minori';
+
+  @override
+  String get ageMinorWarningMessage =>
+      'Se hai tra 14 e 17 anni:\n\n• DEVI avere il consenso dei genitori per usare questa app\n• DEVI consultare un medico prima di allenarti\n• DEVI essere supervisionato da un adulto durante gli allenamenti\n• I tuoi genitori sono legalmente responsabili per il tuo uso di questa app\n\nConfermi di avere il consenso dei genitori?';
+
+  @override
+  String get ageMinorWarningConfirm => 'Sì, Ho il Consenso';
+
+  @override
+  String get ageMinorWarningDecline => 'No';
+
+  @override
+  String get footerDisclaimerShort =>
+      'NON è consulenza medica • Consulta un medico • Uso a tuo rischio';
+
+  @override
+  String get footerDisclaimerTapHint => 'Tocca per disclaimer completo';
+
+  @override
+  String get apreProtocolChangeWarningTitle => 'Allenamento in Corso';
+
+  @override
+  String get apreProtocolChangeWarningMessage =>
+      'Non puoi cambiare protocollo APRE durante un allenamento attivo. Completa prima l\'allenamento corrente, poi torna per modificare le impostazioni del protocollo.';
+
+  @override
+  String get apreGotIt => 'Ho capito';
+
+  @override
+  String get apreCalculationMethodTitle => 'Metodo Calcolo APRE';
+
+  @override
+  String get apreCalculationMethodDescription =>
+      'Scegli come vengono selezionate le serie storiche per la stima del 1RM negli allenamenti APRE. Strategie diverse ottimizzano recency, volume dati o stabilità.';
 }

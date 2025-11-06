@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
@@ -131,7 +130,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                 color: _isPublic
                                     ? context.colors.primary
                                     : context.colors.onSurface
-                                        .withOpacity(0.6),
+                                        .withValues(alpha: 0.6),
                               ),
                               const SizedBox(width: 8),
                               Text(
@@ -161,7 +160,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                 : 'Solo tu puoi vedere e utilizzare questo template',
                             style: context.textTheme.bodySmall?.copyWith(
                               color:
-                                  context.colors.onSurface.withOpacity(0.6),
+                                  context.colors.onSurface.withValues(alpha: 0.6),
                             ),
                           ),
                           if (_isPublic) ...[
@@ -170,11 +169,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: context.colors.primaryContainer
-                                    .withOpacity(0.3),
+                                    .withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
                                   color: context.colors.primary
-                                      .withOpacity(0.2),
+                                      .withValues(alpha: 0.2),
                                 ),
                               ),
                               child: Row(
@@ -241,20 +240,20 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           Icon(
             AppIcons.fitnessCenterOutlined,
             size: 64,
-            color: context.colors.onSurface.withOpacity(0.3),
+            color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
             context.l10n.noExercisesYet,
             style: context.textTheme.headlineSmall?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.5),
+              color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             context.l10n.tapToAddExercise,
             style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurface.withOpacity(0.5),
+              color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 24),
@@ -327,7 +326,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         index: index,
                         child: Icon(
                           AppIcons.dragHandle,
-                          color: context.colors.onSurface.withOpacity(0.5),
+                          color: context.colors.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -349,7 +348,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                   '${exerciseTemplate.sets.length} set • ${exerciseTemplate.category.name}',
                                   style: context.textTheme.bodySmall?.copyWith(
                                     color: context.colors.onSurface
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                   ),
                                 ),
                                 if (exerciseTemplate.restTime != null) ...[
@@ -359,11 +358,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                         horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: context.colors.primary
-                                          .withOpacity(0.1),
+                                          .withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
                                         color: context.colors.primary
-                                            .withOpacity(0.3),
+                                            .withValues(alpha: 0.3),
                                       ),
                                     ),
                                     child: Row(
@@ -435,7 +434,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -470,12 +469,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
 
   Widget _buildSetsEditor(
       int exerciseIndex, ExerciseTemplate exerciseTemplate) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest.withOpacity(0.3),
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         border: Border(
           top: BorderSide(
-            color: context.colors.outline.withOpacity(0.2),
+            color: context.colors.outline.withValues(alpha: 0.2),
           ),
         ),
       ),
@@ -498,10 +497,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: context.colors.primary.withOpacity(0.1),
+                        color: context.colors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: context.colors.primary.withOpacity(0.3),
+                          color: context.colors.primary.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Center(

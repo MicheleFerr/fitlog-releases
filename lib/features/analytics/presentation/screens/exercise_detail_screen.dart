@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
@@ -89,8 +90,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Weight progression chart
             _buildChartCard(
               context.l10n.weightProgression,
-              AppIcons.workout,
-              Colors.blue,
+              Icons.fitness_center,
+              context.colors.primary,
               _buildWeightChart(filteredSets),
             ),
             const SizedBox(height: 16),
@@ -98,8 +99,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Volume progression chart
             _buildChartCard(
               context.l10n.volumeProgression,
-              AppIcons.analytics,
-              Colors.orange,
+              Icons.analytics,
+              context.colors.secondary,
               _buildVolumeChart(filteredSets),
             ),
             const SizedBox(height: 16),
@@ -107,8 +108,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Reps progression chart
             _buildChartCard(
               context.l10n.repsProgression,
-              AppIcons.repeat,
-              Colors.green,
+              Icons.repeat,
+              context.colors.success,
               _buildRepsChart(filteredSets),
             ),
             const SizedBox(height: 16),
@@ -117,8 +118,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             if (filteredSets.any((s) => s.rpe != null)) ...[
               _buildChartCard(
                 context.l10n.effortProgression,
-                AppIcons.speed,
-                Colors.red,
+                Icons.speed,
+                context.colors.error,
                 _buildRPEChart(filteredSets),
               ),
               const SizedBox(height: 16),
@@ -278,7 +279,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     if (_visibleMetrics['weight']!) {
       lineBarsData.add(_createLineBarData(
         weightData,
-        Colors.blue,
+        context.colors.primary,
         'Weight',
       ));
     }
@@ -287,7 +288,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     if (_visibleMetrics['volume']!) {
       lineBarsData.add(_createLineBarData(
         volumeData,
-        Colors.orange,
+        context.colors.secondary,
         'Volume',
       ));
     }
@@ -296,7 +297,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     if (_visibleMetrics['reps']!) {
       lineBarsData.add(_createLineBarData(
         repsData,
-        Colors.green,
+        context.colors.success,
         'Reps',
       ));
     }
@@ -305,7 +306,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     if (rpeData != null && _visibleMetrics['rpe']!) {
       lineBarsData.add(_createLineBarData(
         rpeData,
-        Colors.purple,
+        context.colors.tertiary,
         'RPE',
         useGradient: true,
       ));
@@ -389,11 +390,11 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       preventCurveOverShooting: true,
       color: useGradient ? null : color,
       gradient: useGradient
-          ? const LinearGradient(
+          ? LinearGradient(
               colors: [
-                Colors.green,
-                Colors.orange,
-                Colors.red,
+                context.colors.success,
+                context.colors.secondary,
+                context.colors.error,
               ],
             )
           : null,
@@ -414,9 +415,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         gradient: useGradient
             ? LinearGradient(
                 colors: [
-                  Colors.green.withValues(alpha: 0.1),
-                  Colors.orange.withValues(alpha: 0.1),
-                  Colors.red.withValues(alpha: 0.1),
+                  context.colors.success.withValues(alpha: 0.1),
+                  context.colors.secondary.withValues(alpha: 0.1),
+                  context.colors.error.withValues(alpha: 0.1),
                 ],
               )
             : null,
@@ -444,10 +445,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       spacing: 12,
       runSpacing: 8,
       children: [
-        _buildLegendItem('weight', context.l10n.weight, Colors.blue, AppIcons.workout),
-        _buildLegendItem('volume', context.l10n.volume, Colors.orange, AppIcons.analytics),
-        _buildLegendItem('reps', context.l10n.reps, Colors.green, AppIcons.repeat),
-        if (hasRPE) _buildLegendItem('rpe', context.l10n.effort, Colors.purple, AppIcons.speed),
+        _buildLegendItem('weight', context.l10n.weight, context.colors.primary, Icons.fitness_center),
+        _buildLegendItem('volume', context.l10n.volume, context.colors.secondary, Icons.analytics),
+        _buildLegendItem('reps', context.l10n.reps, context.colors.success, Icons.repeat),
+        if (hasRPE) _buildLegendItem('rpe', context.l10n.effort, context.colors.tertiary, Icons.speed),
       ],
     );
   }
@@ -544,27 +545,27 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               _buildStatItem(
                 context.l10n.personalRecord,
                 '${periodMaxWeight.toStringAsFixed(1)} kg',
-                AppIcons.achievement,
-                Colors.amber,
+                Icons.emoji_events,
+                context.colors.warning,
               ),
               _buildStatItem(
                 context.l10n.averageWeight,
                 '${periodAvgWeight.toStringAsFixed(1)} kg',
-                AppIcons.workout,
-                Colors.blue,
+                Icons.fitness_center,
+                context.colors.primary,
               ),
               _buildStatItem(
                 context.l10n.avgReps,
                 periodAvgReps.toStringAsFixed(0),
-                AppIcons.repeat,
-                Colors.green,
+                Icons.repeat,
+                context.colors.success,
               ),
               if (periodAvgRPE > 0)
                 _buildStatItem(
                   context.l10n.averageRPE,
                   periodAvgRPE.toStringAsFixed(1),
-                  AppIcons.speed,
-                  Colors.orange,
+                  Icons.speed,
+                  context.colors.secondary,
                 ),
             ],
           ),
@@ -656,21 +657,21 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: Colors.blue,
+              color: context.colors.primary,
               barWidth: 3,
               isStrokeCapRound: true,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
                   radius: 4,
-                  color: Colors.blue,
+                  color: context.colors.primary,
                   strokeWidth: 2,
                   strokeColor: context.colors.surface,
                 ),
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: context.colors.primary.withValues(alpha: 0.1),
               ),
             ),
           ],
@@ -710,21 +711,21 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: Colors.orange,
+              color: context.colors.secondary,
               barWidth: 3,
               isStrokeCapRound: true,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
                   radius: 4,
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                   strokeWidth: 2,
                   strokeColor: context.colors.surface,
                 ),
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: context.colors.secondary.withValues(alpha: 0.1),
               ),
             ),
           ],
@@ -764,21 +765,21 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              color: Colors.green,
+              color: context.colors.success,
               barWidth: 3,
               isStrokeCapRound: true,
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
                   radius: 4,
-                  color: Colors.green,
+                  color: context.colors.success,
                   strokeWidth: 2,
                   strokeColor: context.colors.surface,
                 ),
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: Colors.green.withValues(alpha: 0.1),
+                color: context.colors.success.withValues(alpha: 0.1),
               ),
             ),
           ],
@@ -838,8 +839,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             LineChartBarData(
               spots: spots,
               isCurved: true,
-              gradient: const LinearGradient(
-                colors: [Colors.green, Colors.orange, Colors.red],
+              gradient: LinearGradient(
+                colors: [context.colors.success, context.colors.secondary, context.colors.error],
               ),
               barWidth: 3,
               isStrokeCapRound: true,
@@ -848,10 +849,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 getDotPainter: (spot, percent, barData, index) {
                   final rpe = spot.y;
                   final color = rpe >= 9
-                      ? Colors.red
+                      ? context.colors.error
                       : rpe >= 7
-                          ? Colors.orange
-                          : Colors.green;
+                          ? context.colors.secondary
+                          : context.colors.success;
                   return FlDotCirclePainter(
                     radius: 4,
                     color: color,
@@ -864,9 +865,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 show: true,
                 gradient: LinearGradient(
                   colors: [
-                    Colors.green.withValues(alpha: 0.1),
-                    Colors.orange.withValues(alpha: 0.1),
-                    Colors.red.withValues(alpha: 0.1),
+                    context.colors.success.withValues(alpha: 0.1),
+                    context.colors.secondary.withValues(alpha: 0.1),
+                    context.colors.error.withValues(alpha: 0.1),
                   ],
                 ),
               ),

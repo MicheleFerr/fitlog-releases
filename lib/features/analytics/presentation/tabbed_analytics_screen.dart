@@ -112,7 +112,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
-          child: Container(
+          child: ColoredBox(
             color: theme.colorScheme.surface,
             child: TabBar(
               controller: _tabController,
@@ -128,11 +128,11 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(AppIcons.trendingUpOutlined, size: 24),
+                  icon: Icon(AppIcons.trendUp, size: 24),
                 ),
                 Tab(
                   height: 52,
-                  icon: Icon(AppIcons.insightsOutlined, size: 24),
+                  icon: Icon(AppIcons.insights, size: 24),
                 ),
                 Tab(
                   height: 52,

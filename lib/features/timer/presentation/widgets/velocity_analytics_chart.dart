@@ -5,6 +5,8 @@ import 'dart:math' as math;
 
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// TIER-1 Velocity Analytics Chart Widget
@@ -135,7 +137,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
               Text(
                 _getTimeWindowText(l10n),
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -195,7 +197,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
             Text(
               l10n.analyzingVelocityData,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -241,7 +243,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
         height: 300,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(12),
         ),
         child: _buildChart(context, theme, l10n),
@@ -276,13 +278,13 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
           drawHorizontalLine: true,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: theme.colorScheme.outline.withOpacity(0.3),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3),
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: theme.colorScheme.outline.withOpacity(0.3),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3),
               strokeWidth: 1,
             );
           },
@@ -330,7 +332,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
         borderData: FlBorderData(
           show: true,
           border: Border.all(
-            color: theme.colorScheme.outline.withOpacity(0.3),
+            color: theme.colorScheme.outline.withValues(alpha: 0.3),
           ),
         ),
         lineBarsData: [
@@ -346,13 +348,13 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
                   radius: 4,
                   color: theme.colorScheme.primary,
                   strokeWidth: 2,
-                  strokeColor: theme.colorScheme.onSurface.withOpacity(0.1),
+                  strokeColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                 );
               },
             ),
             belowBarData: BarAreaData(
               show: true,
-              color: theme.colorScheme.primary.withOpacity(0.1),
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
             ),
           ),
           // Trend line
@@ -413,7 +415,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
           drawHorizontalLine: true,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: theme.colorScheme.outline.withOpacity(0.3),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3),
               strokeWidth: 1,
             );
           },
@@ -454,7 +456,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
         borderData: FlBorderData(
           show: true,
           border: Border.all(
-            color: theme.colorScheme.outline.withOpacity(0.3),
+            color: theme.colorScheme.outline.withValues(alpha: 0.3),
           ),
         ),
         lineBarsData: [
@@ -496,7 +498,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -552,9 +554,9 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -570,7 +572,7 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -587,13 +589,13 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
           Icon(
             AppIcons.barChartOutlined,
             size: 48,
-            color: theme.colorScheme.onSurface.withOpacity(0.3),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
             l10n.insufficientVelocityData,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -665,11 +667,11 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
     ThemeData theme,
   ) {
     final colors = [
-      Colors.red,
-      Colors.orange,
+      context.colors.error,
+      context.colors.secondary,
       theme.colorScheme.primary,
-      Colors.green,
-      Colors.blue,
+      context.colors.success,
+      context.colors.primary,
     ];
     
     return zoneData.entries.map((entry) {
@@ -696,11 +698,11 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
     AppLocalizations l10n,
   ) {
     final colors = [
-      Colors.red,
-      Colors.orange,
+      context.colors.error,
+      context.colors.secondary,
       theme.colorScheme.primary,
-      Colors.green,
-      Colors.blue,
+      context.colors.success,
+      context.colors.primary,
     ];
     
     return zoneData.entries.map((entry) {
@@ -762,8 +764,8 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
 
   Color _getVelocityLossColor(double velocityLoss, ThemeData theme) {
     if (velocityLoss > 25) return theme.colorScheme.error;
-    if (velocityLoss > 15) return Colors.orange;
-    return Colors.green;
+    if (velocityLoss > 15) return context.colors.secondary;
+    return context.colors.success;
   }
 }
 

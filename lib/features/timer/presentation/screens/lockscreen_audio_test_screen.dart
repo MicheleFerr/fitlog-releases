@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Test screen for lockscreen audio functionality
 class LockscreenAudioTestScreen extends StatelessWidget {
@@ -31,7 +31,7 @@ class LockscreenAudioTestScreen extends StatelessWidget {
               const Icon(
                 AppIcons.lockOutline,
                 size: 80,
-                color: Colors.blue,
+                color: context.colors.primary,
               ),
               const SizedBox(height: 32),
               const Text(
@@ -66,17 +66,17 @@ class LockscreenAudioTestScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Card(
-                color: Colors.orange,
+                color: context.colors.secondary,
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Icon(AppIcons.warning, color: Colors.white),
+                      Icon(Icons.warning, color: context.colors.surface),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Make sure notifications are enabled in Settings!',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: context.colors.surface),
                         ),
                       ),
                     ],

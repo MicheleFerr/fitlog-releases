@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class SmartSuggestionChip extends StatefulWidget {
   
@@ -162,15 +162,15 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                     borderRadius: BorderRadius.circular(20),
                     border: widget.isMinimal
                       ? Border.all(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
                           width: 1.5,
                         )
                       : null,
                     boxShadow: [
                       BoxShadow(
                         color: widget.isMinimal
-                          ? theme.colorScheme.primary.withOpacity(0.15)
-                          : theme.colorScheme.primary.withOpacity(0.3),
+                          ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                          : theme.colorScheme.primary.withValues(alpha: 0.3),
                         blurRadius: widget.isMinimal ? 8 : 12,
                         offset: const Offset(0, 2),
                       ),
@@ -206,8 +206,8 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                         AppIcons.info,
                         size: 16,
                         color: widget.isMinimal
-                          ? theme.colorScheme.primary.withOpacity(0.7)
-                          : theme.colorScheme.onPrimary.withOpacity(0.8),
+                          ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                          : theme.colorScheme.onPrimary.withValues(alpha: 0.8),
                       ),
                     ],
                   ),
@@ -268,7 +268,7 @@ class _PulsingIconState extends State<_PulsingIcon>
           height: 28,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.2),
+            color: context.colors.surface.withValues(alpha: 0.2),
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -282,7 +282,7 @@ class _PulsingIconState extends State<_PulsingIcon>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(1 - _animation.value),
+                      color: context.colors.surface.withValues(alpha: 1 - _animation.value),
                       width: 2,
                     ),
                   ),
@@ -292,7 +292,7 @@ class _PulsingIconState extends State<_PulsingIcon>
               Icon(
                 widget.icon,
                 size: 16,
-                color: Colors.white,
+                color: context.colors.surface,
               ),
             ],
           ),

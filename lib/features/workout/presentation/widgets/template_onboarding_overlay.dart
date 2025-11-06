@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/template_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class TemplateOnboardingOverlay extends ConsumerWidget {
 
@@ -144,6 +145,8 @@ class _OnboardingStep extends StatelessWidget {
               painter: _SpotlightPainter(
                 targetKey: targetKey,
                 spotlightPadding: 8,
+                overlayColor: context.colors.onSurface.withValues(alpha: 0.8),
+                borderColor: context.colors.surface.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -199,7 +202,7 @@ class _OnboardingStep extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: context.colors.onSurface.withValues(alpha: 0.3),
               blurRadius: 10,
               spreadRadius: 2,
             ),
@@ -293,9 +296,13 @@ class _SpotlightPainter extends CustomPainter {
   _SpotlightPainter({
     required this.targetKey,
     required this.spotlightPadding,
+    required this.overlayColor,
+    required this.borderColor,
   });
   final GlobalKey targetKey;
   final double spotlightPadding;
+  final Color overlayColor;
+  final Color borderColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -330,7 +337,7 @@ class _SpotlightPainter extends CustomPainter {
 
     canvas.drawPath(
       path,
-      Paint()..color = Colors.black.withValues(alpha: 0.8),
+      Paint()..color = overlayColor,
     );
 
     // Draw spotlight border
@@ -340,7 +347,7 @@ class _SpotlightPainter extends CustomPainter {
         const Radius.circular(8),
       ),
       Paint()
-        ..color = Colors.white.withValues(alpha: 0.8)
+        ..color = borderColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2,
     );

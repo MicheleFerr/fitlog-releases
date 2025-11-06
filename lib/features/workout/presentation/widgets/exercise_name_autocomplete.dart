@@ -17,7 +17,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/models/sear
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/providers/exercise_search_service_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Autocomplete widget for exercise name with ML-enhanced fuzzy search
 ///
@@ -186,7 +186,7 @@ class _ExerciseNameAutocompleteState
                   color: context.colors.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: context.colors.outline.withOpacity(0.3),
+                    color: context.colors.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: ListView.builder(
@@ -201,11 +201,11 @@ class _ExerciseNameAutocompleteState
                     // Match color based on score
                     Color matchColor;
                     if (fuzzyResult.score >= 0.85) {
-                      matchColor = Colors.green;
+                      matchColor = context.colors.success;
                     } else if (fuzzyResult.score >= 0.70) {
-                      matchColor = Colors.orange;
+                      matchColor = context.colors.secondary;
                     } else {
-                      matchColor = Colors.grey;
+                      matchColor = context.colors.surfaceContainerHighest;
                     }
 
                     return ListTile(
@@ -233,10 +233,10 @@ class _ExerciseNameAutocompleteState
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: matchColor.withOpacity(0.2),
+                              color: matchColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: matchColor.withOpacity(0.5),
+                                color: matchColor.withValues(alpha: 0.5),
                                 width: 1,
                               ),
                             ),
@@ -277,7 +277,7 @@ class _ExerciseNameAutocompleteState
         link: _layerLink,
         child: TextField(
           controller: widget.controller,
-          decoration: (widget.decoration ?? InputDecoration())
+          decoration: (widget.decoration ?? const InputDecoration())
               .copyWith(
                 hintText: widget.hint ?? context.l10n.exerciseNameHint,
                 prefixIcon: _isSearching

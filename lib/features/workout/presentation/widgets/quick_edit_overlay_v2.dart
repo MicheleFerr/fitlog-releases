@@ -15,10 +15,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart'; // ✅ NUOVO
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
@@ -35,6 +37,7 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
     this.exerciseSets,
     this.onSupersetSave,
     this.isSuperset = false,
+    this.countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) : assert(
          (!isSuperset && exerciseSet != null && onSave != null) ||
          (isSuperset && exerciseNames != null && exerciseSets != null && onSupersetSave != null),
@@ -46,7 +49,8 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
   final Offset position;
   final ExerciseSet? previousSet;
   final String? exerciseName;
-  
+  final ExerciseCountingMode countingMode; // ✅ NUOVO: Determines which fields to show/edit
+
   // Superset support
   final List<String>? exerciseNames;
   final Map<String, ExerciseSet>? exerciseSets;
@@ -67,10 +71,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   // Values - single or superset
   late double _selectedWeight;
   late int _selectedReps;
-  
+  late int _selectedSeconds; // ✅ NUOVO: For time-based exercises
+
   // Superset values
   final Map<String, double> _supersetWeights = {};
   final Map<String, int> _supersetReps = {};
+  final Map<String, int> _supersetSeconds = {}; // ✅ NUOVO
   int _currentExerciseIndex = 0;
   
   // Apply to All states
@@ -80,16 +86,20 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   // Controllers
   late FixedExtentScrollController _weightController;
   late FixedExtentScrollController _repsController;
+  late FixedExtentScrollController _secondsController; // ✅ NUOVO
   late TextEditingController _weightTextController;
   late TextEditingController _repsTextController;
-  
+  late TextEditingController _secondsTextController; // ✅ NUOVO
+
   // Focus
   final _weightFocusNode = FocusNode();
   final _repsFocusNode = FocusNode();
+  final _secondsFocusNode = FocusNode(); // ✅ NUOVO
   
   // UI State
   bool _isManualWeightEntry = false;
   bool _isManualRepsEntry = false;
+  bool _isManualSecondsEntry = false; // ✅ NUOVO
   bool _usePercentage = false;
   double _percentageValue = 5.0;
 
@@ -112,15 +122,18 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         final exerciseSet = widget.exerciseSets![exerciseName];
         _supersetWeights[exerciseName] = exerciseSet?.weight ?? 20.0;
         _supersetReps[exerciseName] = exerciseSet?.reps ?? 10;
+        _supersetSeconds[exerciseName] = exerciseSet?.seconds ?? 60; // ✅ NUOVO
       }
       // Set current values to first exercise
       final firstExercise = widget.exerciseNames!.first;
       _selectedWeight = _supersetWeights[firstExercise]!;
       _selectedReps = _supersetReps[firstExercise]!;
+      _selectedSeconds = _supersetSeconds[firstExercise]!; // ✅ NUOVO
     } else {
       // Initialize single exercise values
       _selectedWeight = widget.exerciseSet!.weight ?? 0.0;
       _selectedReps = widget.exerciseSet!.reps ?? 0;
+      _selectedSeconds = widget.exerciseSet!.seconds ?? 60; // ✅ NUOVO: Default 60 seconds
     }
     
     // Controllers
@@ -130,9 +143,13 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     _repsController = FixedExtentScrollController(
       initialItem: _selectedReps > 0 ? _selectedReps - 1 : 0,
     );
-    
+    _secondsController = FixedExtentScrollController(
+      initialItem: _selectedSeconds.clamp(0, 600), // ✅ NUOVO: 0-600 seconds range
+    );
+
     _weightTextController = TextEditingController(text: _selectedWeight.toString());
     _repsTextController = TextEditingController(text: _selectedReps.toString());
+    _secondsTextController = TextEditingController(text: _selectedSeconds.toString()); // ✅ NUOVO
     
     // OPTIMIZED: Simpler, faster animation
     _animationController = AnimationController(
@@ -161,8 +178,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     // Focus listeners
     _weightFocusNode.addListener(_onWeightFocusChanged);
     _repsFocusNode.addListener(_onRepsFocusChanged);
+    _secondsFocusNode.addListener(_onSecondsFocusChanged); // ✅ NUOVO
   }
-  
+
   void _onWeightFocusChanged() {
     if (_weightFocusNode.hasFocus) {
       _weightTextController.selection = TextSelection(
@@ -171,12 +189,22 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       );
     }
   }
-  
+
   void _onRepsFocusChanged() {
     if (_repsFocusNode.hasFocus) {
       _repsTextController.selection = TextSelection(
         baseOffset: 0,
         extentOffset: _repsTextController.text.length,
+      );
+    }
+  }
+
+  // ✅ NUOVO: Focus handler for seconds
+  void _onSecondsFocusChanged() {
+    if (_secondsFocusNode.hasFocus) {
+      _secondsTextController.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: _secondsTextController.text.length,
       );
     }
   }
@@ -207,13 +235,17 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   void dispose() {
     _weightFocusNode.removeListener(_onWeightFocusChanged);
     _repsFocusNode.removeListener(_onRepsFocusChanged);
+    _secondsFocusNode.removeListener(_onSecondsFocusChanged); // ✅ NUOVO
     _animationController.dispose();
     _weightController.dispose();
     _repsController.dispose();
+    _secondsController.dispose(); // ✅ NUOVO
     _weightTextController.dispose();
     _repsTextController.dispose();
+    _secondsTextController.dispose(); // ✅ NUOVO
     _weightFocusNode.dispose();
     _repsFocusNode.dispose();
+    _secondsFocusNode.dispose(); // ✅ NUOVO
     super.dispose();
   }
 
@@ -348,7 +380,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           Row(
             children: [
               Icon(
-                widget.isSuperset ? AppIcons.workout : AppIcons.editNoteRounded,
+                widget.isSuperset ? Icons.fitness_center : AppIcons.editNoteRounded,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
@@ -393,12 +425,25 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Weight and Reps Pickers
+          // ✅ NUOVO: Conditional pickers based on counting mode
           Row(
             children: [
-              Expanded(child: _buildWeightPicker(theme, measurementUnit)),
-              const SizedBox(width: 16),
-              Expanded(child: _buildRepsPicker(theme)),
+              // Conditional weight picker (only for weighted mode)
+              if (widget.countingMode.requiresWeight)
+                Expanded(child: _buildWeightPicker(theme, measurementUnit)),
+
+              // Conditional spacing
+              if (widget.countingMode.requiresWeight &&
+                  (widget.countingMode.requiresReps || widget.countingMode.requiresTime))
+                const SizedBox(width: 16),
+
+              // Conditional reps picker (for weighted + reps modes)
+              if (widget.countingMode.requiresReps)
+                Expanded(child: _buildRepsPicker(theme)),
+
+              // Conditional seconds picker (for time mode)
+              if (widget.countingMode.requiresTime)
+                Expanded(child: _buildSecondsPicker(theme)),
             ],
           ),
           
@@ -737,6 +782,157 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     );
   }
 
+  // ✅ NUOVO: Seconds picker for time-based exercises
+  Widget _buildSecondsPicker(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.timer, size: 14, color: theme.colorScheme.tertiary),
+            const SizedBox(width: 4),
+            Text(
+              'Duration',  // TODO: Add localization
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.tertiary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            IconButton(
+              icon: Icon(
+                _isManualSecondsEntry ? Icons.dialpad : AppIcons.keyboard,
+                size: 16,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isManualSecondsEntry = !_isManualSecondsEntry;
+                });
+                if (!_isManualSecondsEntry) {
+                  _secondsFocusNode.unfocus();
+                } else if (!_isRequestingFocus) {
+                  _isRequestingFocus = true;
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    if (mounted && _isManualSecondsEntry) {
+                      _secondsFocusNode.requestFocus();
+                      _isRequestingFocus = false;
+                    }
+                  });
+                }
+              },
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              tooltip: _isManualSecondsEntry ? 'Use wheel' : 'Type manually',
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 100,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: theme.colorScheme.tertiary.withValues(alpha: 0.2),
+            ),
+          ),
+          child: _isManualSecondsEntry
+              ? Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 110, // ✅ MODIFICATO: Increased from 80 to 110 for 3-digit seconds (e.g., "100s")
+                        child: TextField(
+                          controller: _secondsTextController,
+                          focusNode: _secondsFocusNode,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.tertiary,
+                            fontSize: 24,
+                          ),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            suffix: Text('s', style: TextStyle(fontSize: 12)),
+                          ),
+                          textInputAction: TextInputAction.done,
+                          onChanged: (value) {
+                            final seconds = int.tryParse(value);
+                            if (seconds != null && seconds > 0) {
+                              setState(() {
+                                _selectedSeconds = seconds;
+                              });
+                            }
+                          },
+                          onSubmitted: (value) {
+                            _confirmManualSeconds();
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        onPressed: _confirmManualSeconds,
+                        icon: Icon(
+                          Icons.check_circle,
+                          color: theme.colorScheme.tertiary,
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        constraints: const BoxConstraints(),
+                        tooltip: 'Done',
+                      ),
+                    ],
+                  ),
+                )
+              : ListWheelScrollView.useDelegate(
+                  controller: _secondsController,
+                  itemExtent: 36,
+                  perspective: 0.005,
+                  diameterRatio: 1.2,
+                  physics: const FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    // ✅ FIX: Limit to 6:00 (360 seconds) for time-based exercises
+                    // User requested "fino a 5 minuti e 60 secondi" = 5:60 = 6:00
+                    childCount: 361, // 0-360 seconds (0:00 to 6:00)
+                    builder: (context, index) {
+                      final seconds = index;
+                      final isSelected = seconds == _selectedSeconds;
+                      return Center(
+                        child: Text(
+                          seconds < 60
+                              ? '${seconds}s'
+                              : '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected
+                                ? theme.colorScheme.tertiary
+                                : theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      _selectedSeconds = index;
+                      _secondsTextController.text = _selectedSeconds.toString();
+
+                      // Auto-apply to all if seconds mode is active (for superset)
+                      if (widget.isSuperset && _isRepsAppliedToAll) {
+                        for (String exerciseName in widget.exerciseNames!) {
+                          _supersetSeconds[exerciseName] = _selectedSeconds;
+                        }
+                      }
+                    });
+                    HapticFeedback.selectionClick();
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildRecentWeights(ThemeData theme) {
     return Consumer(
       builder: (context, ref, child) {
@@ -857,27 +1053,33 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         children: [
           // Mode Toggle - Clear segmented control
           _buildModeToggle(theme),
-          
+
           const SizedBox(width: 12),
-          
+
           // Dynamic content area
           Expanded(
-            child: _usePercentage 
+            child: _usePercentage
               ? _buildPercentageSlider(theme)
               : const SizedBox.shrink(),
           ),
-          
+
           const SizedBox(width: 12),
-          
-          // Plate Calculator - Always visible
-          _buildPlateCalculatorButton(theme, measurementUnit),
+
+          // ✅ MODIFICATO: Plate Calculator - Only visible for weighted mode
+          if (widget.countingMode.requiresWeight)
+            _buildPlateCalculatorButton(theme, measurementUnit),
         ],
       ),
     );
   }
 
   Widget _buildModeToggle(ThemeData theme) {
-    return Container(
+    // ✅ MODIFICATO: Different labels based on counting mode
+    final String absoluteLabel = widget.countingMode.requiresTime
+        ? AppLocalizations.of(context).duration // "Secondi" or "Duration"
+        : 'KG';
+
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
@@ -888,7 +1090,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildModeButton('KG', !_usePercentage, theme, () {
+          _buildModeButton(absoluteLabel, !_usePercentage, theme, () {
             setState(() => _usePercentage = false);
             HapticFeedback.selectionClick();
           }),
@@ -1012,33 +1214,62 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   }
 
   Widget _buildAdjustmentButtons(ThemeData theme) {
+    // ✅ MODIFICATO: Different buttons based on counting mode
+    if (_usePercentage) {
+      // Percentage mode - works for both weight and time
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildAdjustButton(
+            '-${_percentageValue.toInt()}%',
+            () => widget.countingMode.requiresTime
+                ? _adjustSecondsByPercentage(-_percentageValue)
+                : _adjustWeightByPercentage(-_percentageValue),
+            theme.colorScheme.error,
+            theme,
+          ),
+          const SizedBox(width: 12),
+          _buildAdjustButton(
+            '+${_percentageValue.toInt()}%',
+            () => widget.countingMode.requiresTime
+                ? _adjustSecondsByPercentage(_percentageValue)
+                : _adjustWeightByPercentage(_percentageValue),
+            theme.colorScheme.primary,
+            theme,
+          ),
+        ],
+      );
+    }
+
+    // Absolute mode - different buttons for time vs weight
+    if (widget.countingMode.requiresTime) {
+      // Time mode: -20s, -5s, +5s, +20s
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildAdjustButton('-20s', () => _adjustSeconds(-20), theme.colorScheme.error, theme),
+          const SizedBox(width: 8),
+          _buildAdjustButton('-5s', () => _adjustSeconds(-5), theme.colorScheme.error.withValues(alpha: 0.7), theme),
+          const SizedBox(width: 8),
+          _buildAdjustButton('+5s', () => _adjustSeconds(5), theme.colorScheme.primary, theme),
+          const SizedBox(width: 8),
+          _buildAdjustButton('+20s', () => _adjustSeconds(20), theme.colorScheme.tertiary, theme),
+        ],
+      );
+    }
+
+    // Weight mode: -2.5, +2.5, +5, +10
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: _usePercentage 
-        ? [
-            _buildAdjustButton(
-              '-${_percentageValue.toInt()}%',
-              () => _adjustWeightByPercentage(-_percentageValue),
-              theme.colorScheme.error,
-              theme,
-            ),
-            const SizedBox(width: 12),
-            _buildAdjustButton(
-              '+${_percentageValue.toInt()}%',
-              () => _adjustWeightByPercentage(_percentageValue),
-              theme.colorScheme.primary,
-              theme,
-            ),
-          ]
-        : [
-            _buildAdjustButton('-2.5', () => _adjustWeight(-2.5), theme.colorScheme.error, theme),
-            const SizedBox(width: 8),
-            _buildAdjustButton('+2.5', () => _adjustWeight(2.5), theme.colorScheme.primary, theme),
-            const SizedBox(width: 8),
-            _buildAdjustButton('+5', () => _adjustWeight(5), theme.colorScheme.primary, theme),
-            const SizedBox(width: 8),
-            _buildAdjustButton('+10', () => _adjustWeight(10), theme.colorScheme.tertiary, theme),
-          ],
+      children: [
+        _buildAdjustButton('-2.5', () => _adjustWeight(-2.5), theme.colorScheme.error, theme),
+        const SizedBox(width: 8),
+        _buildAdjustButton('+2.5', () => _adjustWeight(2.5), theme.colorScheme.primary, theme),
+        const SizedBox(width: 8),
+        _buildAdjustButton('+5', () => _adjustWeight(5), theme.colorScheme.primary, theme),
+        const SizedBox(width: 8),
+        _buildAdjustButton('+10', () => _adjustWeight(10), theme.colorScheme.tertiary, theme),
+      ],
     );
   }
 
@@ -1154,6 +1385,24 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     }
   }
 
+  // ✅ NUOVO: Confirm manual seconds entry
+  void _confirmManualSeconds() {
+    final seconds = int.tryParse(_secondsTextController.text);
+    if (seconds != null && seconds > 0) {
+      setState(() {
+        _selectedSeconds = seconds.clamp(0, 600);
+        _isManualSecondsEntry = false;
+      });
+      _secondsController.animateToItem(
+        _selectedSeconds,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+      _secondsFocusNode.unfocus();
+      HapticFeedback.lightImpact();
+    }
+  }
+
   void _adjustWeight(double delta) {
     final newWeight = (_selectedWeight + delta).clamp(0.0, 500.0);
     _setWeight((newWeight * 2).round() / 2); // Round to 0.5kg
@@ -1165,15 +1414,50 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     _setWeight((newWeight * 2).round() / 2); // Round to 0.5kg
   }
 
+  // ✅ NUOVO: Adjust seconds by fixed amount
+  void _adjustSeconds(int delta) {
+    final newSeconds = (_selectedSeconds + delta).clamp(5, 600); // 5s to 10min
+    _setSeconds(newSeconds);
+  }
+
+  // ✅ NUOVO: Adjust seconds by percentage
+  void _adjustSecondsByPercentage(double percentage) {
+    final adjustment = (_selectedSeconds * (percentage / 100)).round();
+    final newSeconds = (_selectedSeconds + adjustment).clamp(5, 600);
+    _setSeconds(newSeconds);
+  }
+
+  // ✅ NUOVO: Set seconds value
+  void _setSeconds(int seconds) {
+    setState(() {
+      _selectedSeconds = seconds;
+      _secondsTextController.text = seconds.toString();
+
+      if (widget.isSuperset) {
+        final currentExercise = widget.exerciseNames![_currentExerciseIndex];
+        _supersetSeconds[currentExercise] = _selectedSeconds;
+      }
+    });
+
+    // Update controller
+    _secondsController.animateToItem(
+      seconds,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+
+    HapticFeedback.selectionClick();
+  }
+
   void _copyFromPreviousSet() {
     final previousSet = widget.previousSet;
     if (previousSet == null) return;
-    
+
     final weight = previousSet.weight;
     if (weight != null) {
       _setWeight(weight);
     }
-    
+
     final reps = previousSet.reps;
     if (reps != null) {
       setState(() {
@@ -1186,7 +1470,21 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         curve: Curves.easeOut,
       );
     }
-    
+
+    // ✅ NUOVO: Copy seconds for time-based exercises
+    final seconds = previousSet.seconds;
+    if (seconds != null) {
+      setState(() {
+        _selectedSeconds = seconds;
+        _secondsTextController.text = _selectedSeconds.toString();
+      });
+      _secondsController.animateToItem(
+        _selectedSeconds,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+
     HapticFeedback.mediumImpact();
   }
 
@@ -1307,38 +1605,47 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   void _switchToExercise(int index) {
     if (index == _currentExerciseIndex) return;
-    
+
     // Save current exercise values
     final currentExercise = widget.exerciseNames![_currentExerciseIndex];
     _supersetWeights[currentExercise] = _selectedWeight;
     _supersetReps[currentExercise] = _selectedReps;
-    
+    _supersetSeconds[currentExercise] = _selectedSeconds; // ✅ NUOVO
+
     // Switch to new exercise
     _currentExerciseIndex = index;
     final newExercise = widget.exerciseNames![index];
-    
+
     setState(() {
       _selectedWeight = _supersetWeights[newExercise]!;
       _selectedReps = _supersetReps[newExercise]!;
-      
+      _selectedSeconds = _supersetSeconds[newExercise]!; // ✅ NUOVO
+
       // Update text controllers
       _weightTextController.text = _selectedWeight.toString();
       _repsTextController.text = _selectedReps.toString();
+      _secondsTextController.text = _selectedSeconds.toString(); // ✅ NUOVO
     });
-    
+
     // Animate wheel controllers to new values
     _weightController.animateToItem(
       (_selectedWeight * 2).round(),
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
-    
+
     _repsController.animateToItem(
       _selectedReps > 0 ? _selectedReps - 1 : 0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
-    
+
+    _secondsController.animateToItem(
+      _selectedSeconds,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    ); // ✅ NUOVO
+
     HapticFeedback.selectionClick();
   }
 
@@ -1380,35 +1687,38 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   void _save() {
     HapticFeedback.lightImpact();
-    
+
     // Update current exercise values before saving
     if (widget.isSuperset) {
       final currentExercise = widget.exerciseNames![_currentExerciseIndex];
       _supersetWeights[currentExercise] = _selectedWeight;
       _supersetReps[currentExercise] = _selectedReps;
+      _supersetSeconds[currentExercise] = _selectedSeconds; // ✅ NUOVO
     }
-    
+
     // Animate out first, then call the callback (which will handle navigation)
     _animationController.reverse().then((_) {
       if (mounted) {
         if (widget.isSuperset) {
           // Create updated sets map for superset
           final updatedSets = <String, ExerciseSet>{};
-          
+
           for (String exerciseName in widget.exerciseNames!) {
             final originalSet = widget.exerciseSets![exerciseName]!;
             updatedSets[exerciseName] = originalSet.copyWith(
-              weight: _supersetWeights[exerciseName]!,
-              reps: _supersetReps[exerciseName]!,
+              weight: _supersetWeights[exerciseName],
+              reps: _supersetReps[exerciseName],
+              seconds: _supersetSeconds[exerciseName], // ✅ NUOVO
             );
           }
-          
+
           widget.onSupersetSave!(updatedSets);
         } else {
-          // Single exercise save
+          // ✅ NUOVO: Single exercise save based on counting mode
           final updatedSet = widget.exerciseSet!.copyWith(
-            weight: _selectedWeight > 0 ? _selectedWeight : null,
-            reps: _selectedReps > 0 ? _selectedReps : null,
+            weight: widget.countingMode.requiresWeight && _selectedWeight > 0 ? _selectedWeight : null,
+            reps: widget.countingMode.requiresReps && _selectedReps > 0 ? _selectedReps : null,
+            seconds: widget.countingMode.requiresTime && _selectedSeconds > 0 ? _selectedSeconds : null,
           );
           widget.onSave!(updatedSet);
         }
@@ -1585,10 +1895,11 @@ extension QuickEditOverlayV2Extension on BuildContext {
     required Offset position,
     ExerciseSet? previousSet,
     String? exerciseName,
+    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) {
     return showDialog(
       context: this,
-      barrierColor: Colors.black54,
+      barrierColor: colors.onSurface.withValues(alpha: 0.54),
       builder: (context) => Stack(
         children: [
           GestureDetector(
@@ -1614,6 +1925,7 @@ extension QuickEditOverlayV2Extension on BuildContext {
             position: position,
             previousSet: previousSet,
             exerciseName: exerciseName,
+            countingMode: countingMode, // ✅ NUOVO
           ),
         ],
       ),

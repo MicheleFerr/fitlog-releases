@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WeeklyGoalsWidget extends ConsumerWidget {
@@ -28,12 +31,12 @@ class WeeklyGoalsWidget extends ConsumerWidget {
   Widget _buildCompactView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authService = ref.watch(authServiceProvider);
-    final userEmail = authService.currentUser?.email;
-    
-    if (userEmail == null) {
+    final userId = authService.currentUser?.uid;
+
+    if (userId == null) {
       return _buildEmptyState(context);
     }
-    
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -51,13 +54,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.green.withValues(alpha: 0.08),
-              Colors.green.withValues(alpha: 0.03),
+              theme.colorScheme.primary.withValues(alpha: 0.08),
+              theme.colorScheme.primary.withValues(alpha: 0.03),
             ],
           ),
         ),
         child: FutureBuilder<int>(
-          future: _getWeeklyWorkoutCount(userEmail),
+          future: _getWeeklyWorkoutCount(userId),
           builder: (context, snapshot) {
             final count = snapshot.data ?? 0;
             const goal = 4;
@@ -73,12 +76,12 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.green.withValues(alpha: 0.2),
+                          color: theme.colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           AppIcons.flag,
-                          color: Colors.green,
+                          color: theme.colorScheme.primary,
                           size: 20,
                         ),
                       ),
@@ -100,7 +103,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                         '$count',
                         style: theme.textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: count >= goal ? Colors.green : theme.colorScheme.onSurface,
+                          color: count >= goal ? theme.colorScheme.primary : theme.colorScheme.onSurface,
                         ),
                       ),
                       Text(
@@ -118,16 +121,16 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(4),
                     backgroundColor: theme.colorScheme.surfaceContainerHighest,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      count >= goal ? Colors.green : theme.colorScheme.primary,
+                      theme.colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    count >= goal ? 'Obiettivo raggiunto! 🎉' : 
+                    count >= goal ? 'Obiettivo raggiunto! 🎉' :
                     count == 0 ? 'Inizia il tuo primo workout' :
                     'Ancora ${goal - count} workout',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: count >= goal ? Colors.green : 
+                      color: count >= goal ? theme.colorScheme.primary :
                              theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w600,
                     ),
@@ -144,12 +147,12 @@ class WeeklyGoalsWidget extends ConsumerWidget {
   Widget _buildStandardView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authService = ref.watch(authServiceProvider);
-    final userEmail = authService.currentUser?.email;
-    
-    if (userEmail == null) {
+    final userId = authService.currentUser?.uid;
+
+    if (userId == null) {
       return _buildEmptyState(context);
     }
-    
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -167,13 +170,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.green.withValues(alpha: 0.06),
-              Colors.green.withValues(alpha: 0.02),
+              theme.colorScheme.primary.withValues(alpha: 0.06),
+              theme.colorScheme.primary.withValues(alpha: 0.02),
             ],
           ),
         ),
         child: FutureBuilder<Map<String, bool>>(
-          future: _getWeeklyWorkouts(userEmail),
+          future: _getWeeklyWorkouts(userId),
           builder: (context, snapshot) {
             final workoutDays = snapshot.data ?? {};
             final count = workoutDays.values.where((v) => v).length;
@@ -188,14 +191,14 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Colors.green, Colors.lightGreen],
+                          gradient: LinearGradient(
+                            colors: [theme.colorScheme.primary, theme.colorScheme.primaryContainer],
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           AppIcons.flag,
-                          color: Colors.white,
+                          color: theme.colorScheme.onPrimary,
                           size: 24,
                         ),
                       ),
@@ -223,13 +226,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: theme.colorScheme.primary,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Text(
+                          child: Text(
                             '✓ Completato',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
@@ -253,8 +256,8 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             width: 36,
                             height: 36,
                             decoration: BoxDecoration(
-                              color: hasWorkout 
-                                  ? Colors.green 
+                              color: hasWorkout
+                                  ? theme.colorScheme.primary
                                   : theme.colorScheme.surfaceContainerHighest,
                               shape: BoxShape.circle,
                               border: isToday ? Border.all(
@@ -264,9 +267,9 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             ),
                             child: Center(
                               child: hasWorkout
-                                  ? const Icon(
-                                      AppIcons.check,
-                                      color: Colors.white,
+                                  ? Icon(
+                                      Icons.check,
+                                      color: theme.colorScheme.onPrimary,
                                       size: 18,
                                     )
                                   : Text(
@@ -314,7 +317,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             Text(
                               '${(count / goal * 100).toInt()}%',
                               style: theme.textTheme.titleSmall?.copyWith(
-                                color: Colors.green,
+                                color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -327,7 +330,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(4),
                           backgroundColor: theme.colorScheme.surfaceContainerHighest,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            count >= goal ? Colors.green : theme.colorScheme.primary,
+                            theme.colorScheme.primary,
                           ),
                         ),
                       ],
@@ -345,12 +348,12 @@ class WeeklyGoalsWidget extends ConsumerWidget {
   Widget _buildExpandedView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authService = ref.watch(authServiceProvider);
-    final userEmail = authService.currentUser?.email;
-    
-    if (userEmail == null) {
+    final userId = authService.currentUser?.uid;
+
+    if (userId == null) {
       return _buildEmptyState(context);
     }
-    
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -360,15 +363,15 @@ class WeeklyGoalsWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.green.withValues(alpha: 0.04),
-              Colors.green.withValues(alpha: 0.01),
+              theme.colorScheme.primary.withValues(alpha: 0.04),
+              theme.colorScheme.primary.withValues(alpha: 0.01),
             ],
           ),
         ),
@@ -381,21 +384,21 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Colors.green, Colors.lightGreen],
+                      gradient: LinearGradient(
+                        colors: [theme.colorScheme.primary, theme.colorScheme.primaryContainer],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.green.withValues(alpha: 0.3),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: const Icon(
-                      AppIcons.trackChanges,
-                      color: Colors.white,
+                    child: Icon(
+                      Icons.track_changes,
+                      color: theme.colorScheme.onPrimary,
                       size: 28,
                     ),
                   ),
@@ -424,7 +427,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
               const SizedBox(height: 24),
               // Weekly overview with suggestions
               FutureBuilder<Map<String, bool>>(
-                future: _getWeeklyWorkouts(userEmail),
+                future: _getWeeklyWorkouts(userId),
                 builder: (context, snapshot) {
                   final workoutDays = snapshot.data ?? {};
                   final count = workoutDays.values.where((v) => v).length;
@@ -441,7 +444,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               icon: AppIcons.workout,
                               label: 'Completati',
                               value: '$count',
-                              color: Colors.blue,
+                              color: context.colors.primary,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -451,7 +454,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               icon: AppIcons.flag,
                               label: 'Obiettivo',
                               value: '$goal',
-                              color: Colors.green,
+                              color: context.colors.success,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -461,7 +464,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               icon: AppIcons.calendar,
                               label: 'Giorni rimasti',
                               value: '${7 - DateTime.now().weekday}',
-                              color: Colors.orange,
+                              color: context.colors.secondary,
                             ),
                           ),
                         ],
@@ -512,20 +515,20 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Colors.green.withValues(alpha: 0.1),
-                                Colors.green.withValues(alpha: 0.05),
+                                context.colors.success.withValues(alpha: 0.1),
+                                context.colors.success.withValues(alpha: 0.05),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: Colors.green.withValues(alpha: 0.3),
+                              color: context.colors.success.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
                             children: [
                               const Icon(
-                                AppIcons.achievement,
-                                color: Colors.green,
+                                Icons.emoji_events,
+                                color: context.colors.success,
                                 size: 32,
                               ),
                               const SizedBox(width: 12),
@@ -536,7 +539,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                                     Text(
                                       'Obiettivo Raggiunto!',
                                       style: theme.textTheme.titleMedium?.copyWith(
-                                        color: Colors.green,
+                                        color: context.colors.success,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -631,46 +634,64 @@ class WeeklyGoalsWidget extends ConsumerWidget {
     );
   }
 
-  Future<int> _getWeeklyWorkoutCount(String userEmail) async {
+  /// ✅ MIGRATED: Reads from 'workouts' collection instead of exerciseActivities
+  Future<int> _getWeeklyWorkoutCount(String userId) async {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    
+
+    if (kDebugMode) {
+      debugPrint('📊 [WeeklyGoals] Fetching workout count from workouts collection');
+    }
+
     final query = await FirebaseFirestore.instance
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: userEmail.toLowerCase())
-        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(weekStart))
+        .collection('users')
+        .doc(userId)
+        .collection('workouts')
+        .where('completedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(weekStart))
         .get();
-    
-    // Count unique days
+
+    // Count unique days from completed workouts
     final Set<String> uniqueDays = {};
     for (final doc in query.docs) {
-      final timestamp = doc.data()['createdAt'] as Timestamp?;
+      final data = doc.data();
+      final timestamp = data['completedAt'] as Timestamp?;
       if (timestamp != null) {
         final date = timestamp.toDate();
         uniqueDays.add('${date.year}-${date.month}-${date.day}');
       }
     }
-    
+
+    if (kDebugMode) {
+      debugPrint('  ✅ Found ${uniqueDays.length} unique workout days this week');
+    }
+
     return uniqueDays.length;
   }
 
-  Future<Map<String, bool>> _getWeeklyWorkouts(String userEmail) async {
+  /// ✅ MIGRATED: Reads from 'workouts' collection instead of exerciseActivities
+  Future<Map<String, bool>> _getWeeklyWorkouts(String userId) async {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    
+
+    if (kDebugMode) {
+      debugPrint('📊 [WeeklyGoals] Fetching weekly workout map from workouts collection');
+    }
+
     final query = await FirebaseFirestore.instance
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: userEmail.toLowerCase())
-        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(weekStart))
+        .collection('users')
+        .doc(userId)
+        .collection('workouts')
+        .where('completedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(weekStart))
         .get();
-    
+
     final Map<String, bool> workoutDays = {
-      'L': false, 'M': false, 'M': false, 'G': false, 
+      'L': false, 'M': false, 'M': false, 'G': false,
       'V': false, 'S': false, 'D': false,
     };
-    
+
     for (final doc in query.docs) {
-      final timestamp = doc.data()['createdAt'] as Timestamp?;
+      final data = doc.data();
+      final timestamp = data['completedAt'] as Timestamp?;
       if (timestamp != null) {
         final date = timestamp.toDate();
         final dayIndex = date.weekday - 1;
@@ -680,7 +701,12 @@ class WeeklyGoalsWidget extends ConsumerWidget {
         }
       }
     }
-    
+
+    if (kDebugMode) {
+      final completedDays = workoutDays.values.where((v) => v).length;
+      debugPrint('  ✅ Found workouts on $completedDays days this week');
+    }
+
     return workoutDays;
   }
 

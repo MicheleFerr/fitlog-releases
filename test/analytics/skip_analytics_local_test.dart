@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/skip_analytics_local_repository.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
@@ -62,9 +63,12 @@ void main() {
       // Setup Firebase mock
       setupFirebaseCoreMocks();
       await Firebase.initializeApp();
-      
+
       // Initialize Hive for testing
       Hive.init('./test/hive_test');
+
+      // Initialize HiveBoxManagerEnhanced
+      await HiveBoxManagerEnhanced.initialize();
     });
 
     setUp(() async {

@@ -1160,7 +1160,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importSettingsDesc => 'Load settings from JSON file';
 
   @override
-  String get resetToDefaults => 'Reset to Defaults';
+  String resetToDefaults(String mode) {
+    return 'Reset to $mode Defaults';
+  }
 
   @override
   String get resetToDefaultsDesc => 'Restore all settings to default';
@@ -2383,6 +2385,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get community => 'Community';
 
   @override
+  String get communityComingSoonTitle => 'Community Feature Coming Soon';
+
+  @override
+  String get communityComingSoonDescription =>
+      'We\'re working on building an amazing community feature where you can connect with other athletes, share your progress, and learn from each other. Stay tuned!';
+
+  @override
   String get generalInformation => 'General Information';
 
   @override
@@ -2537,6 +2546,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get match => 'match';
 
   @override
+  String get linkedTo => 'Linked to';
+
+  @override
   String get skipExercise => 'Skip Exercise';
 
   @override
@@ -2550,6 +2562,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discover => 'Discover';
+
+  @override
+  String get searchContributions => 'Search contributions...';
+
+  @override
+  String get sort => 'Sort';
+
+  @override
+  String get noContributionsFound => 'No contributions found';
+
+  @override
+  String get tryDifferentSearch => 'Try adjusting your search or filters';
+
+  @override
+  String get errorLoadingContributions => 'Error loading contributions';
 
   @override
   String get trending => 'Trending';
@@ -3586,7 +3613,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restTimeAfterRound => 'Rest time after completing all exercises';
 
   @override
-  String get setCompleted => 'Set completed!';
+  String get setCompleted => 'Set completed';
 
   @override
   String get next => 'Next';
@@ -3668,6 +3695,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verifyWeightReps => 'Verify Weight & Reps';
+
+  @override
+  String get verifyTime => 'Verify Minutes & Seconds';
+
+  @override
+  String get verifyReps => 'Verify Reps';
 
   @override
   String get exerciseHistory => 'Exercise History';
@@ -4633,6 +4666,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apreProtocol10Helper => 'Use your 10 rep max weight';
 
   @override
+  String get apreProtocolPreview => 'Protocol Change Preview';
+
+  @override
+  String get aprePreviewDescription =>
+      'Preview how your weights will change with the new protocol';
+
+  @override
+  String apreCurrentProtocol(int protocol) {
+    return 'Current (APRE $protocol)';
+  }
+
+  @override
+  String apreNewProtocol(int protocol) {
+    return 'New (APRE $protocol)';
+  }
+
+  @override
+  String get apreSet1Preview => 'Set 1 (50%)';
+
+  @override
+  String get apreSet2Preview => 'Set 2 (75%)';
+
+  @override
+  String get apreSet3Preview => 'Set 3 (100%)';
+
+  @override
+  String get apreSet4Preview => 'Set 4';
+
+  @override
+  String get apreAdjustedBasedOnPerformance => 'Adjusted based on performance';
+
+  @override
+  String get apreApplyChanges => 'Apply Changes';
+
+  @override
   String get autoAdjustment => 'Auto Adjustment';
 
   @override
@@ -4999,6 +5067,33 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get enableRpeTooltip =>
       'RPE (Rate of Perceived Exertion) helps you track how hard each set feels, enabling smart auto-regulation based on your fatigue level.';
+
+  @override
+  String get attentionRequired => 'Attention';
+
+  @override
+  String get enable => 'Enable';
+
+  @override
+  String get essentialsSection => 'Essentials';
+
+  @override
+  String get essentialsSectionDesc => 'Core settings to get started';
+
+  @override
+  String get advancedSection => 'Advanced';
+
+  @override
+  String get advancedSectionDesc => 'Customizations for experienced users';
+
+  @override
+  String get visualizationCategory => 'Visualization';
+
+  @override
+  String get autoRegulationCategory => 'Auto-regulation';
+
+  @override
+  String get interfaceCategory => 'Interface';
 
   @override
   String get enableTutTitle => 'Enable TUT Tracking';
@@ -6294,7 +6389,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Better recovery between sessions and higher quality sets';
 
   @override
-  String get filterByType => 'Filter by Type';
+  String get filterByType => 'Type';
 
   @override
   String get filterByPriority => 'Filter by Priority';
@@ -11488,13 +11583,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get countingModeWeighted => 'Weighted';
+  String get countingModeWeighted => 'Weight + Reps';
 
   @override
-  String get countingModeReps => 'Reps';
+  String get countingModeReps => 'Reps Only';
 
   @override
-  String get countingModeTime => 'Time';
+  String get countingModeTime => 'Time-based';
 
   @override
   String get refreshed => 'Refreshed';
@@ -12213,18 +12308,458 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get templateNotFound => 'Template not found';
+  String get completeDayWithWorkout => 'Complete Day with Workout';
 
   @override
-  String templateLoadError(String error) {
-    return 'Error loading template: $error';
+  String get selectWorkoutToLinkTo => 'Select workout to link to';
+
+  @override
+  String get completeWithoutWorkout => 'Complete without workout';
+
+  @override
+  String get noRecentWorkoutsFound => 'No recent workouts found';
+
+  @override
+  String get completeDayWithoutWorkout =>
+      'Complete this day without linking a workout';
+
+  @override
+  String get completeDay => 'Complete Day';
+
+  @override
+  String get failedToLoadWorkouts => 'Failed to load workouts';
+
+  @override
+  String get dayCompletedWithWorkout => 'Day completed with workout!';
+
+  @override
+  String get dayCompletedManually => 'Day completed manually';
+
+  @override
+  String get failedToCompleteDay => 'Failed to complete day';
+
+  @override
+  String get changeCountingFormat => 'Change counting format';
+
+  @override
+  String get currentFormat => 'Current format';
+
+  @override
+  String get countingModeWeightedDesc => 'Input: Weight (kg/lb) + Reps';
+
+  @override
+  String get countingModeWeightedExample => 'Example: 80kg × 10 reps';
+
+  @override
+  String get countingModeRepsDesc => 'Input: Reps only (no weight)';
+
+  @override
+  String get countingModeRepsExample => 'Example: 15 reps';
+
+  @override
+  String get countingModeTimeDesc => 'Input: Duration (mm:ss)';
+
+  @override
+  String get countingModeTimeExample => 'Example: 1:30 (90 seconds)';
+
+  @override
+  String get confirmChange => 'Confirm change';
+
+  @override
+  String get countingModeWarningTitle => 'Warning';
+
+  @override
+  String countingModeWarningMessage(int count, String fromMode, String toMode) {
+    return 'You have $count completed sets with format \"$fromMode\".\n\nChanging to \"$toMode\" may invalidate existing data.';
   }
 
   @override
-  String get loadingTemplate => 'Loading template...';
+  String get countingModeWarningInfo =>
+      'Changing format during a workout is not recommended. Consider finishing the workout first.';
 
   @override
-  String unexpectedError(String error) {
-    return 'Unexpected error: $error';
+  String get keepData => 'Keep data';
+
+  @override
+  String get resetAll => 'Reset all';
+
+  @override
+  String get countingModeChanged => 'Counting format updated!';
+
+  @override
+  String get analyticsFeedbackThankYou => 'Thank you for your feedback!';
+
+  @override
+  String get analyticsFeedbackThankYouSubtitle =>
+      'Your feedback helps us improve the analytics experience';
+
+  @override
+  String get analyticsFeedbackQuestion => 'Is this analytics view helpful?';
+
+  @override
+  String get analyticsFeedbackHelpful => 'Helpful';
+
+  @override
+  String get analyticsFeedbackNotHelpful => 'Not helpful';
+
+  @override
+  String get analyticsFeedbackCommentPlaceholder => 'Tell us more (optional)';
+
+  @override
+  String get analyticsFeedbackSubmitting => 'Submitting...';
+
+  @override
+  String get analyticsFeedbackSubmit => 'Submit feedback';
+
+  @override
+  String get analyticsFeedbackError =>
+      'Could not submit feedback. Please try again.';
+
+  @override
+  String get analyticsFeedbackSuccess => 'Feedback submitted successfully!';
+
+  @override
+  String autoEnabledMaster(String masterName) {
+    return '✅ $masterName auto-enabled (required for this feature)';
   }
+
+  @override
+  String dependentsDisabled(int count) {
+    return '⚠️ $count dependent features auto-disabled';
+  }
+
+  @override
+  String get quickInfoIconTitle => 'Quick Info Icon';
+
+  @override
+  String get quickInfoIconDescription => 'Tap for exercise details';
+
+  @override
+  String get quickInfoIconTooltip =>
+      'Shows exercise information modal with form cues and tips';
+
+  @override
+  String get quickWarmupIconTitle => 'Warmup Icon';
+
+  @override
+  String get quickWarmupIconDescription => 'Tap for warmup suggestions';
+
+  @override
+  String get quickWarmupIconTooltip =>
+      'Displays warmup sets recommendation based on working weight';
+
+  @override
+  String get quickPreventionIconTitle => 'Prevention Icon';
+
+  @override
+  String get quickPreventionIconDescription => 'Tap for injury prevention tips';
+
+  @override
+  String get quickPreventionIconTooltip =>
+      'Shows injury prevention advice and mobility exercises';
+
+  @override
+  String get exerciseNotesTitle => 'Exercise Notes';
+
+  @override
+  String get exerciseNotesDescription => 'Add notes about form and cues';
+
+  @override
+  String get exerciseNotesTooltip =>
+      'Personal notes visible only to you during workouts';
+
+  @override
+  String get exerciseInsightsTitle => 'Exercise Insights';
+
+  @override
+  String get exerciseInsightsDescription => 'View charts and statistics';
+
+  @override
+  String get exerciseInsightsTooltip =>
+      'Analytics charts showing volume, PRs, and progress trends';
+
+  @override
+  String get insightsPerformanceWarning =>
+      'ℹ️ Charts may slow down on older devices';
+
+  @override
+  String modeSwitchWarningTitle(String mode) {
+    return 'Switch to $mode Mode?';
+  }
+
+  @override
+  String modeSwitchWarningMessage(String mode) {
+    return 'This will reset your custom settings to $mode defaults.';
+  }
+
+  @override
+  String get modeSwitchUndoHint =>
+      'You\'ll have 5 seconds to undo after confirming.';
+
+  @override
+  String get undoSuccessful => '✅ Settings restored';
+
+  @override
+  String get sortByHelpful => 'Most Helpful';
+
+  @override
+  String get sortByRecent => 'Most Recent';
+
+  @override
+  String get sortBySaved => 'Most Saved';
+
+  @override
+  String get sortByTrending => 'Trending';
+
+  @override
+  String get filterByDifficulty => 'Difficulty';
+
+  @override
+  String get filterByAuthorTier => 'Author';
+
+  @override
+  String get filterByDateRange => 'Date Range';
+
+  @override
+  String get resetFilters => 'Reset';
+
+  @override
+  String get dateFrom => 'From';
+
+  @override
+  String get dateTo => 'To';
+
+  @override
+  String get contributionTypeCorrection => 'Correction';
+
+  @override
+  String get contributionTypeTip => 'Tip';
+
+  @override
+  String get contributionTypeWarning => 'Warning';
+
+  @override
+  String get contributionTypeVariant => 'Variant';
+
+  @override
+  String get contributionTypeTranslation => 'Translation';
+
+  @override
+  String get contributionTypeTechnique => 'Technique';
+
+  @override
+  String get difficultyBeginner => 'Beginner';
+
+  @override
+  String get difficultyIntermediate => 'Intermediate';
+
+  @override
+  String get difficultyAdvanced => 'Advanced';
+
+  @override
+  String get authorTierCommunity => 'Community';
+
+  @override
+  String get authorTierExpert => 'Expert';
+
+  @override
+  String get authorTierAdmin => 'Admin';
+
+  @override
+  String get saves => 'Saves';
+
+  @override
+  String get views => 'Views';
+
+  @override
+  String get comments => 'Comments';
+
+  @override
+  String get upvotes => 'Upvotes';
+
+  @override
+  String get bookmarkContribution => 'Bookmark contribution';
+
+  @override
+  String get saveContribution => 'Save';
+
+  @override
+  String get unsaveContribution => 'Unsave';
+
+  @override
+  String get saved => 'Saved';
+
+  @override
+  String get legalDisclaimerTitle => 'Medical Disclaimer';
+
+  @override
+  String get legalDisclaimerContent =>
+      '⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.';
+
+  @override
+  String get legalDisclaimerAccept => 'I Accept';
+
+  @override
+  String get legalDisclaimerDecline => 'I Decline';
+
+  @override
+  String get legalDocuments => 'Legal Documents';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'How we handle your data (GDPR compliant)';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get tosSubtitle => 'User agreements and liability limitations';
+
+  @override
+  String get disclaimerSubtitle => 'Important safety information';
+
+  @override
+  String get errorLoadingDocument =>
+      'Error loading document. Please try again.';
+
+  @override
+  String get apreCalculationMetadata => 'Calculation Analysis';
+
+  @override
+  String get apreShowCalculationDetails => 'Show Calculation Details';
+
+  @override
+  String get apreHideCalculationDetails => 'Hide Calculation Details';
+
+  @override
+  String get apreFormula => 'Formula';
+
+  @override
+  String get apreDataPoints => 'Data Points';
+
+  @override
+  String get apreDataAge => 'Data Age';
+
+  @override
+  String get apreStandardDeviation => 'Variability';
+
+  @override
+  String get apreConfidence => 'Confidence';
+
+  @override
+  String get apreLastCalculation => 'Last Updated';
+
+  @override
+  String apreDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days ago',
+      one: 'Yesterday',
+      zero: 'Today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get apreNoHistory => 'No Historical Data';
+
+  @override
+  String get apreNoHistoryDescription =>
+      'No historical data available for APRE calculations. Please select how you\'d like to estimate your 1RM to get started.';
+
+  @override
+  String get apreOptionFromLastWorkout => 'From Last Workout';
+
+  @override
+  String get apreOptionManualEstimate => 'Manual Estimate';
+
+  @override
+  String get apreOptionTestSet => 'Test Set';
+
+  @override
+  String get apreOptionFromLastWorkoutDescription =>
+      'Use last set weight/reps as estimate';
+
+  @override
+  String get apreOptionManualEstimateDescription =>
+      'Enter estimated 1RM directly';
+
+  @override
+  String get apreOptionTestSetDescription => 'Guide to do a test set first';
+
+  @override
+  String get apreEnter1RM => 'Enter Estimated 1RM (kg)';
+
+  @override
+  String get aprePreviewWeights => 'Preview Weights';
+
+  @override
+  String get apreContinue => 'Continue';
+
+  @override
+  String get apreCancel => 'Cancel';
+
+  @override
+  String get ageGateTitle => 'Verify Your Age';
+
+  @override
+  String get ageGateInstructions =>
+      'Please enter your date of birth to continue.';
+
+  @override
+  String get ageGateBirthDate => 'Date of Birth';
+
+  @override
+  String get ageGateContinue => 'Continue';
+
+  @override
+  String get ageRestrictionTitle => 'Age Restriction';
+
+  @override
+  String get ageRestrictionMessage =>
+      'You must be at least 14 years old to use FITlog Pro.\n\nThis requirement is mandated by GDPR (EU Regulation 2016/679) and Italian privacy laws.';
+
+  @override
+  String get ageRestrictionOk => 'I Understand';
+
+  @override
+  String get ageMinorWarningTitle => 'Important Notice for Minors';
+
+  @override
+  String get ageMinorWarningMessage =>
+      'If you are between 14 and 17 years old:\n\n• You MUST have parental consent to use this app\n• You MUST consult a physician before training\n• You MUST be supervised by an adult during workouts\n• Your parents are legally responsible for your use of this app\n\nDo you confirm you have parental consent?';
+
+  @override
+  String get ageMinorWarningConfirm => 'Yes, I Have Consent';
+
+  @override
+  String get ageMinorWarningDecline => 'No';
+
+  @override
+  String get footerDisclaimerShort =>
+      'NOT medical advice • Consult physician • Use at your own risk';
+
+  @override
+  String get footerDisclaimerTapHint => 'Tap for full disclaimer';
+
+  @override
+  String get apreProtocolChangeWarningTitle => 'Workout in Progress';
+
+  @override
+  String get apreProtocolChangeWarningMessage =>
+      'You cannot change APRE protocol during an active workout. Please finish your current workout first, then return to adjust protocol settings.';
+
+  @override
+  String get apreGotIt => 'Got it';
+
+  @override
+  String get apreCalculationMethodTitle => 'APRE Calculation Method';
+
+  @override
+  String get apreCalculationMethodDescription =>
+      'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.';
 }

@@ -4,7 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -58,7 +58,7 @@ class WorkoutFAB extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const WorkoutCustomizationModalV2(),
+      builder: (context) => const WorkoutCustomizationModalV3(),
     ).then((workoutName) {
       if (workoutName != null && workoutName is String) {
         // Simplified - just use existing workout start method

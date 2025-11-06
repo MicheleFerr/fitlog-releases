@@ -46,7 +46,28 @@ mixin _$CommunityContribution {
   bool get isFeatured => throw _privateConstructorUsedError;
   int get trustScore =>
       throw _privateConstructorUsedError; // 0-100 basato su track record utente
-  Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get metadata =>
+      throw _privateConstructorUsedError; // NEW: Discovery & Search fields
+  List<String> get exerciseIds =>
+      throw _privateConstructorUsedError; // Multiple exercises (was single exerciseId)
+  String get difficulty =>
+      throw _privateConstructorUsedError; // beginner, intermediate, advanced
+  List<String> get tags =>
+      throw _privateConstructorUsedError; // User-added tags (lowercase, max 5)
+  List<String> get applicableTo =>
+      throw _privateConstructorUsedError; // Goals: hypertrophy, strength, mobility
+  String? get authorTier =>
+      throw _privateConstructorUsedError; // community, expert, admin (nullable for backward compat)
+  double get authorTrustScore => throw _privateConstructorUsedError; // 0-1
+  double get qualityScore =>
+      throw _privateConstructorUsedError; // 0-1 (aggregate score)
+  int get saves => throw _privateConstructorUsedError; // How many users saved
+  int get viewCount => throw _privateConstructorUsedError; // Track popularity
+  DateTime? get lastActivityAt =>
+      throw _privateConstructorUsedError; // For trending
+  String? get sourceType =>
+      throw _privateConstructorUsedError; // exerciseDb, userSubmitted
+  List<String> get relatedExerciseIds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -85,7 +106,19 @@ abstract class $CommunityContributionCopyWith<$Res> {
       DateTime? updatedAt,
       bool isFeatured,
       int trustScore,
-      Map<String, dynamic>? metadata});
+      Map<String, dynamic>? metadata,
+      List<String> exerciseIds,
+      String difficulty,
+      List<String> tags,
+      List<String> applicableTo,
+      String? authorTier,
+      double authorTrustScore,
+      double qualityScore,
+      int saves,
+      int viewCount,
+      DateTime? lastActivityAt,
+      String? sourceType,
+      List<String> relatedExerciseIds});
 }
 
 /// @nodoc
@@ -127,6 +160,18 @@ class _$CommunityContributionCopyWithImpl<$Res,
     Object? isFeatured = null,
     Object? trustScore = null,
     Object? metadata = freezed,
+    Object? exerciseIds = null,
+    Object? difficulty = null,
+    Object? tags = null,
+    Object? applicableTo = null,
+    Object? authorTier = freezed,
+    Object? authorTrustScore = null,
+    Object? qualityScore = null,
+    Object? saves = null,
+    Object? viewCount = null,
+    Object? lastActivityAt = freezed,
+    Object? sourceType = freezed,
+    Object? relatedExerciseIds = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -229,6 +274,54 @@ class _$CommunityContributionCopyWithImpl<$Res,
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>?,
+      exerciseIds: null == exerciseIds
+          ? _value.exerciseIds
+          : exerciseIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      difficulty: null == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as String,
+      tags: null == tags
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      applicableTo: null == applicableTo
+          ? _value.applicableTo
+          : applicableTo // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      authorTier: freezed == authorTier
+          ? _value.authorTier
+          : authorTier // ignore: cast_nullable_to_non_nullable
+              as String?,
+      authorTrustScore: null == authorTrustScore
+          ? _value.authorTrustScore
+          : authorTrustScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      qualityScore: null == qualityScore
+          ? _value.qualityScore
+          : qualityScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      saves: null == saves
+          ? _value.saves
+          : saves // ignore: cast_nullable_to_non_nullable
+              as int,
+      viewCount: null == viewCount
+          ? _value.viewCount
+          : viewCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      lastActivityAt: freezed == lastActivityAt
+          ? _value.lastActivityAt
+          : lastActivityAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      sourceType: freezed == sourceType
+          ? _value.sourceType
+          : sourceType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      relatedExerciseIds: null == relatedExerciseIds
+          ? _value.relatedExerciseIds
+          : relatedExerciseIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -267,7 +360,19 @@ abstract class _$$CommunityContributionImplCopyWith<$Res>
       DateTime? updatedAt,
       bool isFeatured,
       int trustScore,
-      Map<String, dynamic>? metadata});
+      Map<String, dynamic>? metadata,
+      List<String> exerciseIds,
+      String difficulty,
+      List<String> tags,
+      List<String> applicableTo,
+      String? authorTier,
+      double authorTrustScore,
+      double qualityScore,
+      int saves,
+      int viewCount,
+      DateTime? lastActivityAt,
+      String? sourceType,
+      List<String> relatedExerciseIds});
 }
 
 /// @nodoc
@@ -307,6 +412,18 @@ class __$$CommunityContributionImplCopyWithImpl<$Res>
     Object? isFeatured = null,
     Object? trustScore = null,
     Object? metadata = freezed,
+    Object? exerciseIds = null,
+    Object? difficulty = null,
+    Object? tags = null,
+    Object? applicableTo = null,
+    Object? authorTier = freezed,
+    Object? authorTrustScore = null,
+    Object? qualityScore = null,
+    Object? saves = null,
+    Object? viewCount = null,
+    Object? lastActivityAt = freezed,
+    Object? sourceType = freezed,
+    Object? relatedExerciseIds = null,
   }) {
     return _then(_$CommunityContributionImpl(
       id: null == id
@@ -409,6 +526,54 @@ class __$$CommunityContributionImplCopyWithImpl<$Res>
           ? _value._metadata
           : metadata // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>?,
+      exerciseIds: null == exerciseIds
+          ? _value._exerciseIds
+          : exerciseIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      difficulty: null == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as String,
+      tags: null == tags
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      applicableTo: null == applicableTo
+          ? _value._applicableTo
+          : applicableTo // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      authorTier: freezed == authorTier
+          ? _value.authorTier
+          : authorTier // ignore: cast_nullable_to_non_nullable
+              as String?,
+      authorTrustScore: null == authorTrustScore
+          ? _value.authorTrustScore
+          : authorTrustScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      qualityScore: null == qualityScore
+          ? _value.qualityScore
+          : qualityScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      saves: null == saves
+          ? _value.saves
+          : saves // ignore: cast_nullable_to_non_nullable
+              as int,
+      viewCount: null == viewCount
+          ? _value.viewCount
+          : viewCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      lastActivityAt: freezed == lastActivityAt
+          ? _value.lastActivityAt
+          : lastActivityAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      sourceType: freezed == sourceType
+          ? _value.sourceType
+          : sourceType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      relatedExerciseIds: null == relatedExerciseIds
+          ? _value._relatedExerciseIds
+          : relatedExerciseIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -441,11 +606,27 @@ class _$CommunityContributionImpl implements _CommunityContribution {
       this.updatedAt,
       this.isFeatured = false,
       this.trustScore = 0,
-      final Map<String, dynamic>? metadata})
+      final Map<String, dynamic>? metadata,
+      final List<String> exerciseIds = const [],
+      this.difficulty = 'beginner',
+      final List<String> tags = const [],
+      final List<String> applicableTo = const [],
+      this.authorTier,
+      this.authorTrustScore = 0.5,
+      this.qualityScore = 0.5,
+      this.saves = 0,
+      this.viewCount = 0,
+      this.lastActivityAt,
+      this.sourceType,
+      final List<String> relatedExerciseIds = const []})
       : _upvotedBy = upvotedBy,
         _downvotedBy = downvotedBy,
         _comments = comments,
-        _metadata = metadata;
+        _metadata = metadata,
+        _exerciseIds = exerciseIds,
+        _tags = tags,
+        _applicableTo = applicableTo,
+        _relatedExerciseIds = relatedExerciseIds;
 
   factory _$CommunityContributionImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommunityContributionImplFromJson(json);
@@ -535,9 +716,83 @@ class _$CommunityContributionImpl implements _CommunityContribution {
     return EqualUnmodifiableMapView(value);
   }
 
+// NEW: Discovery & Search fields
+  final List<String> _exerciseIds;
+// NEW: Discovery & Search fields
+  @override
+  @JsonKey()
+  List<String> get exerciseIds {
+    if (_exerciseIds is EqualUnmodifiableListView) return _exerciseIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_exerciseIds);
+  }
+
+// Multiple exercises (was single exerciseId)
+  @override
+  @JsonKey()
+  final String difficulty;
+// beginner, intermediate, advanced
+  final List<String> _tags;
+// beginner, intermediate, advanced
+  @override
+  @JsonKey()
+  List<String> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tags);
+  }
+
+// User-added tags (lowercase, max 5)
+  final List<String> _applicableTo;
+// User-added tags (lowercase, max 5)
+  @override
+  @JsonKey()
+  List<String> get applicableTo {
+    if (_applicableTo is EqualUnmodifiableListView) return _applicableTo;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_applicableTo);
+  }
+
+// Goals: hypertrophy, strength, mobility
+  @override
+  final String? authorTier;
+// community, expert, admin (nullable for backward compat)
+  @override
+  @JsonKey()
+  final double authorTrustScore;
+// 0-1
+  @override
+  @JsonKey()
+  final double qualityScore;
+// 0-1 (aggregate score)
+  @override
+  @JsonKey()
+  final int saves;
+// How many users saved
+  @override
+  @JsonKey()
+  final int viewCount;
+// Track popularity
+  @override
+  final DateTime? lastActivityAt;
+// For trending
+  @override
+  final String? sourceType;
+// exerciseDb, userSubmitted
+  final List<String> _relatedExerciseIds;
+// exerciseDb, userSubmitted
+  @override
+  @JsonKey()
+  List<String> get relatedExerciseIds {
+    if (_relatedExerciseIds is EqualUnmodifiableListView)
+      return _relatedExerciseIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_relatedExerciseIds);
+  }
+
   @override
   String toString() {
-    return 'CommunityContribution(id: $id, exerciseId: $exerciseId, exerciseName: $exerciseName, userId: $userId, userName: $userName, userAvatar: $userAvatar, type: $type, status: $status, title: $title, description: $description, originalValue: $originalValue, suggestedValue: $suggestedValue, upvotes: $upvotes, downvotes: $downvotes, upvotedBy: $upvotedBy, downvotedBy: $downvotedBy, comments: $comments, reviewNote: $reviewNote, reviewedBy: $reviewedBy, reviewedAt: $reviewedAt, createdAt: $createdAt, updatedAt: $updatedAt, isFeatured: $isFeatured, trustScore: $trustScore, metadata: $metadata)';
+    return 'CommunityContribution(id: $id, exerciseId: $exerciseId, exerciseName: $exerciseName, userId: $userId, userName: $userName, userAvatar: $userAvatar, type: $type, status: $status, title: $title, description: $description, originalValue: $originalValue, suggestedValue: $suggestedValue, upvotes: $upvotes, downvotes: $downvotes, upvotedBy: $upvotedBy, downvotedBy: $downvotedBy, comments: $comments, reviewNote: $reviewNote, reviewedBy: $reviewedBy, reviewedAt: $reviewedAt, createdAt: $createdAt, updatedAt: $updatedAt, isFeatured: $isFeatured, trustScore: $trustScore, metadata: $metadata, exerciseIds: $exerciseIds, difficulty: $difficulty, tags: $tags, applicableTo: $applicableTo, authorTier: $authorTier, authorTrustScore: $authorTrustScore, qualityScore: $qualityScore, saves: $saves, viewCount: $viewCount, lastActivityAt: $lastActivityAt, sourceType: $sourceType, relatedExerciseIds: $relatedExerciseIds)';
   }
 
   @override
@@ -586,7 +841,29 @@ class _$CommunityContributionImpl implements _CommunityContribution {
                 other.isFeatured == isFeatured) &&
             (identical(other.trustScore, trustScore) ||
                 other.trustScore == trustScore) &&
-            const DeepCollectionEquality().equals(other._metadata, _metadata));
+            const DeepCollectionEquality().equals(other._metadata, _metadata) &&
+            const DeepCollectionEquality()
+                .equals(other._exerciseIds, _exerciseIds) &&
+            (identical(other.difficulty, difficulty) ||
+                other.difficulty == difficulty) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            const DeepCollectionEquality()
+                .equals(other._applicableTo, _applicableTo) &&
+            (identical(other.authorTier, authorTier) ||
+                other.authorTier == authorTier) &&
+            (identical(other.authorTrustScore, authorTrustScore) ||
+                other.authorTrustScore == authorTrustScore) &&
+            (identical(other.qualityScore, qualityScore) ||
+                other.qualityScore == qualityScore) &&
+            (identical(other.saves, saves) || other.saves == saves) &&
+            (identical(other.viewCount, viewCount) ||
+                other.viewCount == viewCount) &&
+            (identical(other.lastActivityAt, lastActivityAt) ||
+                other.lastActivityAt == lastActivityAt) &&
+            (identical(other.sourceType, sourceType) ||
+                other.sourceType == sourceType) &&
+            const DeepCollectionEquality()
+                .equals(other._relatedExerciseIds, _relatedExerciseIds));
   }
 
   @JsonKey(ignore: true)
@@ -617,7 +894,19 @@ class _$CommunityContributionImpl implements _CommunityContribution {
         updatedAt,
         isFeatured,
         trustScore,
-        const DeepCollectionEquality().hash(_metadata)
+        const DeepCollectionEquality().hash(_metadata),
+        const DeepCollectionEquality().hash(_exerciseIds),
+        difficulty,
+        const DeepCollectionEquality().hash(_tags),
+        const DeepCollectionEquality().hash(_applicableTo),
+        authorTier,
+        authorTrustScore,
+        qualityScore,
+        saves,
+        viewCount,
+        lastActivityAt,
+        sourceType,
+        const DeepCollectionEquality().hash(_relatedExerciseIds)
       ]);
 
   @JsonKey(ignore: true)
@@ -661,7 +950,19 @@ abstract class _CommunityContribution implements CommunityContribution {
       final DateTime? updatedAt,
       final bool isFeatured,
       final int trustScore,
-      final Map<String, dynamic>? metadata}) = _$CommunityContributionImpl;
+      final Map<String, dynamic>? metadata,
+      final List<String> exerciseIds,
+      final String difficulty,
+      final List<String> tags,
+      final List<String> applicableTo,
+      final String? authorTier,
+      final double authorTrustScore,
+      final double qualityScore,
+      final int saves,
+      final int viewCount,
+      final DateTime? lastActivityAt,
+      final String? sourceType,
+      final List<String> relatedExerciseIds}) = _$CommunityContributionImpl;
 
   factory _CommunityContribution.fromJson(Map<String, dynamic> json) =
       _$CommunityContributionImpl.fromJson;
@@ -716,6 +1017,30 @@ abstract class _CommunityContribution implements CommunityContribution {
   int get trustScore;
   @override // 0-100 basato su track record utente
   Map<String, dynamic>? get metadata;
+  @override // NEW: Discovery & Search fields
+  List<String> get exerciseIds;
+  @override // Multiple exercises (was single exerciseId)
+  String get difficulty;
+  @override // beginner, intermediate, advanced
+  List<String> get tags;
+  @override // User-added tags (lowercase, max 5)
+  List<String> get applicableTo;
+  @override // Goals: hypertrophy, strength, mobility
+  String? get authorTier;
+  @override // community, expert, admin (nullable for backward compat)
+  double get authorTrustScore;
+  @override // 0-1
+  double get qualityScore;
+  @override // 0-1 (aggregate score)
+  int get saves;
+  @override // How many users saved
+  int get viewCount;
+  @override // Track popularity
+  DateTime? get lastActivityAt;
+  @override // For trending
+  String? get sourceType;
+  @override // exerciseDb, userSubmitted
+  List<String> get relatedExerciseIds;
   @override
   @JsonKey(ignore: true)
   _$$CommunityContributionImplCopyWith<_$CommunityContributionImpl>

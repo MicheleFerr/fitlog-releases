@@ -18,6 +18,7 @@ import 'package:hive/hive.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/repositories/i_exercise_usage_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/hive_exercise_usage_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
+import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// Provider for IExerciseUsageRepository
 ///
@@ -90,8 +91,9 @@ final exerciseUsageRepositoryAsyncProvider =
     Hive.registerAdapter(ExerciseUsageModelAdapter());
   }
 
-  // Open box (async)
-  final box = await Hive.openBox<ExerciseUsageModel>('exercise_usage');
+  // Open box (async) using HiveBoxManagerEnhanced
+  final boxManager = ref.watch(hiveBoxManagerProvider);
+  final box = await boxManager.openBox<ExerciseUsageModel>('exercise_usage');
 
   // Create and initialize repository
   final repository = HiveExerciseUsageRepository(box);

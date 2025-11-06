@@ -347,7 +347,6 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
 
   /// Get volume data for specific period
   Map<DateTime, double> getVolumeByPeriod(AnalysisPeriod period) {
-    final now = DateTime.now();
     final volumeData = <DateTime, double>{};
     
     for (final activity in state.activities) {

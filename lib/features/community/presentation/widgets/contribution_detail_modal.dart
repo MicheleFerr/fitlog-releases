@@ -16,6 +16,8 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/adm
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal per visualizzare dettagli completi di un contributo
@@ -54,7 +56,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -67,7 +69,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -142,10 +144,10 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.errorContainer.withOpacity(0.1),
+        color: theme.colorScheme.errorContainer.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.colorScheme.error.withOpacity(0.3),
+          color: theme.colorScheme.error.withValues(alpha: 0.3),
           width: 2,
         ),
       ),
@@ -178,7 +180,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                   icon: const Icon(AppIcons.complete),
                   label: const Text('Approva'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: context.colors.success,
                   ),
                 ),
               ),
@@ -189,8 +191,8 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                   icon: const Icon(AppIcons.cancel),
                   label: const Text('Rifiuta'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.red.withOpacity(0.2),
-                    foregroundColor: Colors.red,
+                    backgroundColor: context.colors.error.withValues(alpha: 0.2),
+                    foregroundColor: context.colors.error,
                   ),
                 ),
               ),
@@ -234,7 +236,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                     Icon(
                       AppIcons.commentsDisabledOutlined,
                       size: 48,
-                      color: theme.colorScheme.outline.withOpacity(0.5),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 12),
                     Text(
@@ -266,10 +268,10 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.1),
+          color: theme.colorScheme.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -334,7 +336,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
         color: theme.colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: theme.colorScheme.outline.withOpacity(0.1),
+            color: theme.colorScheme.outline.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -382,7 +384,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
         label: const Text('Segnala contributo'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,
-          side: BorderSide(color: theme.colorScheme.error.withOpacity(0.3)),
+          side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.3)),
         ),
       ),
     );
@@ -493,7 +495,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       SnackBarService.showCustom(
         context,
         message: '🚫 Contributo rifiutato',
-        backgroundColor: Colors.red,
+        backgroundColor: context.colors.error,
       );
     } catch (e) {
       if (!mounted) return;
@@ -606,7 +608,7 @@ class _RejectDialogState extends State<_RejectDialog> {
             Navigator.pop(context, _controller.text);
           },
           style: FilledButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: context.colors.error,
           ),
           child: const Text('Rifiuta'),
         ),
@@ -656,16 +658,23 @@ class _ReportDialogState extends State<_ReportDialog> {
             ),
           ),
           const SizedBox(height: 12),
-          ..._reportReasons.map((reason) => RadioListTile<String>(
-                title: Text(reason),
-                value: reason,
-                groupValue: _selectedReason,
-                onChanged: (value) {
-                  setState(() => _selectedReason = value);
-                },
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-              )),
+          RadioGroup<String>(
+            groupValue: _selectedReason,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _selectedReason = value);
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _reportReasons.map((reason) => RadioListTile<String>(
+                    title: Text(reason),
+                    value: reason,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  )).toList(),
+            ),
+          ),
           if (_selectedReason == 'Altro') ...[
             const SizedBox(height: 12),
             TextField(

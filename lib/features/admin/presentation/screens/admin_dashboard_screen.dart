@@ -14,8 +14,10 @@ import 'package:gymbro_flutter_new/features/admin/presentation/widgets/firebase_
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_stats_card.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_quick_actions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_recent_activity.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/widgets/admin_ai_insights_feedback_widget.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
@@ -56,6 +58,8 @@ class AdminDashboardScreen extends ConsumerWidget {
           ref.invalidate(collectionStatsProvider);
           ref.invalidate(adminStatsProvider);
           ref.invalidate(recentActivityProvider);
+          ref.invalidate(adminFeedbackStatsProvider);
+          ref.invalidate(adminAllFeedbackProvider);
         },
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -82,6 +86,11 @@ class AdminDashboardScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
+              // AI Coach Insights Feedback
+              const AdminAIInsightsFeedbackWidget(),
+
+              const SizedBox(height: 24),
+
               // Recent Activity
               _buildRecentActivitySection(context, l10n),
             ],
@@ -101,7 +110,7 @@ class AdminDashboardScreen extends ConsumerWidget {
           gradient: LinearGradient(
             colors: [
               Theme.of(context).colorScheme.primaryContainer,
-              Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+              Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

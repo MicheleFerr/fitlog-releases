@@ -12,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/quick_exercise_picker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Modal per creare un nuovo contributo community
@@ -70,7 +72,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -83,7 +85,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withOpacity(0.3),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -226,10 +228,10 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                          color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: theme.colorScheme.primary.withOpacity(0.3),
+                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -289,10 +291,10 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+          color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: theme.colorScheme.primary.withOpacity(0.3),
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -408,7 +410,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   Icon(
                     _getTypeIcon(type),
                     size: 16,
-                    color: isSelected ? Colors.white : color,
+                    color: isSelected ? context.colors.surface : color,
                   ),
                   const SizedBox(width: 6),
                   Text(_getTypeLabel(type)),
@@ -420,9 +422,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                 }
               },
               selectedColor: color,
-              checkmarkColor: Colors.white,
+              checkmarkColor: context.colors.surface,
               labelStyle: TextStyle(
-                color: isSelected ? Colors.white : color,
+                color: isSelected ? context.colors.surface : color,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             );
@@ -489,10 +491,10 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       Navigator.pop(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Contributo inviato! In attesa di approvazione'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 3),
+        SnackBar(
+          content: const Text('✅ Contributo inviato! In attesa di approvazione'),
+          backgroundColor: context.colors.success,
+          duration: const Duration(seconds: 3),
         ),
       );
     } catch (e) {
@@ -548,15 +550,15 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
   Color _getTypeColor(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return Colors.blue;
+        return context.colors.primary;
       case ContributionType.warning:
-        return Colors.orange;
+        return context.colors.secondary;
       case ContributionType.correction:
-        return Colors.red;
+        return context.colors.error;
       case ContributionType.technique:
-        return Colors.green;
+        return context.colors.success;
       case ContributionType.variant:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ContributionType.translation:
         return Colors.teal;
     }

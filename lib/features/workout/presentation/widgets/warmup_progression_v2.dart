@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WarmupSet {
 
@@ -152,7 +153,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Warmup completed! Ready for working sets 💪'),
-          backgroundColor: Colors.green,
+          backgroundColor: context.colors.success,
           duration: Duration(seconds: 2),
         ),
       );
@@ -185,7 +186,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -198,12 +199,12 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: context.colors.secondary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
-                    AppIcons.whatshot,
-                    color: Colors.orange,
+                    Icons.whatshot,
+                    color: context.colors.secondary,
                     size: 24,
                   ),
                 ),
@@ -243,8 +244,8 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(
                 completedCount == warmupSets.length 
-                  ? Colors.green 
-                  : Colors.orange,
+                  ? context.colors.success 
+                  : context.colors.secondary,
               ),
             ),
           ),
@@ -261,7 +262,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                   margin: const EdgeInsets.only(bottom: 8),
                   elevation: set.completed ? 0 : 1,
                   color: set.completed 
-                    ? theme.colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                    ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
                     : null,
                   child: Padding(
                     padding: const EdgeInsets.all(12),
@@ -273,13 +274,13 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                           height: 56,
                           decoration: BoxDecoration(
                             color: set.completed 
-                              ? Colors.green.withOpacity(0.1)
-                              : Colors.orange.withOpacity(0.1),
+                              ? context.colors.success.withValues(alpha: 0.1)
+                              : context.colors.secondary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: set.completed 
-                                ? Colors.green.withOpacity(0.3)
-                                : Colors.orange.withOpacity(0.3),
+                                ? context.colors.success.withValues(alpha: 0.3)
+                                : context.colors.secondary.withValues(alpha: 0.3),
                               width: 2,
                             ),
                           ),
@@ -291,7 +292,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: set.completed ? Colors.green : Colors.orange,
+                                  color: set.completed ? context.colors.success : context.colors.secondary,
                                 ),
                               ),
                               Text(
@@ -299,7 +300,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                 style: TextStyle(
                                   fontSize: 8,
                                   fontWeight: FontWeight.w600,
-                                  color: set.completed ? Colors.green : Colors.orange,
+                                  color: set.completed ? context.colors.success : context.colors.secondary,
                                 ),
                               ),
                             ],
@@ -325,7 +326,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.primaryContainer
-                                          .withOpacity(set.completed ? 0.3 : 1),
+                                          .withValues(alpha: set.completed ? 0.3 : 1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Row(
@@ -348,7 +349,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                               AppIcons.edit,
                                               size: 14,
                                               color: theme.colorScheme.onPrimaryContainer
-                                                .withOpacity(0.5),
+                                                .withValues(alpha: 0.5),
                                             ),
                                           ],
                                         ],
@@ -376,7 +377,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: theme.colorScheme.onSurfaceVariant
-                                    .withOpacity(0.7),
+                                    .withValues(alpha: 0.7),
                                 ),
                               ),
                             ],
@@ -386,8 +387,8 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                         // Action button
                         if (set.completed)
                           const Icon(
-                            AppIcons.complete,
-                            color: Colors.green,
+                            Icons.check_circle,
+                            color: context.colors.success,
                             size: 32,
                           )
                         else
@@ -407,7 +408,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.1),
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.1),
               border: Border(
                 top: BorderSide(
                   color: theme.colorScheme.surfaceContainerHighest,

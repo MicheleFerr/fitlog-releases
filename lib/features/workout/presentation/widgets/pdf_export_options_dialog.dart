@@ -62,30 +62,46 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Opzione 1: Formato Compatto
-            _buildOptionTile(
-              context,
-              value: PdfDetailLevel.compact,
-              title: l10n.pdfDetailLevelCompact,
-              description: l10n.pdfDetailLevelCompactDesc,
-            ),
-            const SizedBox(height: 8),
+            // RadioGroup per gestire la selezione
+            RadioGroup<PdfDetailLevel>(
+              groupValue: _selectedLevel,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    _selectedLevel = newValue;
+                  });
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Opzione 1: Formato Compatto
+                  _buildOptionTile(
+                    context,
+                    value: PdfDetailLevel.compact,
+                    title: l10n.pdfDetailLevelCompact,
+                    description: l10n.pdfDetailLevelCompactDesc,
+                  ),
+                  const SizedBox(height: 8),
 
-            // Opzione 2: Dettagliato con Peso
-            _buildOptionTile(
-              context,
-              value: PdfDetailLevel.detailedWithWeight,
-              title: l10n.pdfDetailLevelDetailed,
-              description: l10n.pdfDetailLevelDetailedDesc,
-            ),
-            const SizedBox(height: 8),
+                  // Opzione 2: Dettagliato con Peso
+                  _buildOptionTile(
+                    context,
+                    value: PdfDetailLevel.detailedWithWeight,
+                    title: l10n.pdfDetailLevelDetailed,
+                    description: l10n.pdfDetailLevelDetailedDesc,
+                  ),
+                  const SizedBox(height: 8),
 
-            // Opzione 3: Dettagliato senza Peso
-            _buildOptionTile(
-              context,
-              value: PdfDetailLevel.detailedWithoutWeight,
-              title: l10n.pdfDetailLevelNoWeight,
-              description: l10n.pdfDetailLevelNoWeightDesc,
+                  // Opzione 3: Dettagliato senza Peso
+                  _buildOptionTile(
+                    context,
+                    value: PdfDetailLevel.detailedWithoutWeight,
+                    title: l10n.pdfDetailLevelNoWeight,
+                    description: l10n.pdfDetailLevelNoWeightDesc,
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
 
@@ -160,12 +176,12 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
           border: Border.all(
             color: isSelected
                 ? colorScheme.primary
-                : colorScheme.outline.withOpacity(0.3),
+                : colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
           color: isSelected
-              ? colorScheme.primaryContainer.withOpacity(0.3)
+              ? colorScheme.primaryContainer.withValues(alpha: 0.3)
               : Colors.transparent,
         ),
         child: Row(
@@ -173,14 +189,6 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
             // Radio button
             Radio<PdfDetailLevel>(
               value: value,
-              groupValue: _selectedLevel,
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    _selectedLevel = newValue;
-                  });
-                }
-              },
             ),
             const SizedBox(width: 8),
 

@@ -6,7 +6,8 @@ import 'package:gymbro_flutter_new/shared/domain/entities/timer_sound.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Dialog to test timer sounds directly on iOS
 class TimerSoundTestDialog extends ConsumerStatefulWidget {
@@ -112,8 +113,8 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
             for (final sound in TimerSound.values) ...[
               ListTile(
                 leading: Icon(
-                  sound == currentSound ? AppIcons.complete : Icons.circle_outlined,
-                  color: sound == currentSound ? Colors.green : null,
+                  sound == currentSound ? Icons.check_circle : Icons.circle_outlined,
+                  color: sound == currentSound ? context.colors.success : null,
                 ),
                 title: Text(sound.getLocalizedName()),
                 subtitle: const Text('Tap to test with 3-second timer'),
@@ -164,7 +165,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Column(

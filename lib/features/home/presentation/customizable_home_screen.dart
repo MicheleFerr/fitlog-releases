@@ -148,7 +148,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
             floating: true,
             pinned: true,
             backgroundColor: Colors.transparent,
-            flexibleSpace: Container(
+            flexibleSpace: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -304,7 +304,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -330,7 +330,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                                 Text(
                                   'Gestisci segnalazioni esercizi',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     fontSize: 14,
                                   ),
                                 ),
@@ -456,7 +456,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
           
           // Edit overlay
           Positioned.fill(
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(12),
@@ -637,7 +637,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
       case WidgetSize.small:
         return AppIcons.cropSquare;
       case WidgetSize.medium:
-        return Icons.crop_16_9;
+        return AppIcons.crop169;
       case WidgetSize.large:
         return AppIcons.cropPortrait;
     }

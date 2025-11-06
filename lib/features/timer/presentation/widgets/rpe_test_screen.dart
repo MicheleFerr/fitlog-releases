@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/rpe_live_activity_widget.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Screen di test per il sistema RPE Live Activities
 class RPETestScreen extends ConsumerWidget {
@@ -14,7 +15,7 @@ class RPETestScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('🧪 Test RPE Live Activity'),
         backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: context.colors.surface,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -83,7 +84,7 @@ class RPETestScreen extends ConsumerWidget {
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
                 backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: context.colors.surface,
               ),
             ),
             

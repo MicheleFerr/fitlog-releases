@@ -48,6 +48,31 @@ _$CommunityContributionImpl _$$CommunityContributionImplFromJson(
       isFeatured: json['isFeatured'] as bool? ?? false,
       trustScore: (json['trustScore'] as num?)?.toInt() ?? 0,
       metadata: json['metadata'] as Map<String, dynamic>?,
+      exerciseIds: (json['exerciseIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      difficulty: json['difficulty'] as String? ?? 'beginner',
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
+      applicableTo: (json['applicableTo'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      authorTier: json['authorTier'] as String?,
+      authorTrustScore: (json['authorTrustScore'] as num?)?.toDouble() ?? 0.5,
+      qualityScore: (json['qualityScore'] as num?)?.toDouble() ?? 0.5,
+      saves: (json['saves'] as num?)?.toInt() ?? 0,
+      viewCount: (json['viewCount'] as num?)?.toInt() ?? 0,
+      lastActivityAt: json['lastActivityAt'] == null
+          ? null
+          : DateTime.parse(json['lastActivityAt'] as String),
+      sourceType: json['sourceType'] as String?,
+      relatedExerciseIds: (json['relatedExerciseIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$CommunityContributionImplToJson(
@@ -78,6 +103,18 @@ Map<String, dynamic> _$$CommunityContributionImplToJson(
       'isFeatured': instance.isFeatured,
       'trustScore': instance.trustScore,
       'metadata': instance.metadata,
+      'exerciseIds': instance.exerciseIds,
+      'difficulty': instance.difficulty,
+      'tags': instance.tags,
+      'applicableTo': instance.applicableTo,
+      'authorTier': instance.authorTier,
+      'authorTrustScore': instance.authorTrustScore,
+      'qualityScore': instance.qualityScore,
+      'saves': instance.saves,
+      'viewCount': instance.viewCount,
+      'lastActivityAt': instance.lastActivityAt?.toIso8601String(),
+      'sourceType': instance.sourceType,
+      'relatedExerciseIds': instance.relatedExerciseIds,
     };
 
 const _$ContributionTypeEnumMap = {

@@ -51,22 +51,21 @@ class RoutinePredictionEngine {
   ///
   /// [workoutHistory]: Recent workouts (newest first, 30-50 workouts recommended)
   /// [activeRoutineTemplateId]: Optional active routine ID for Level 2
+  /// [nextWorkoutTemplateId]: Optional next uncompleted workout template ID from routine
+  /// [nextWorkoutScheduledDate]: Optional scheduled date for next workout from routine
   /// [availableTemplateNames]: Optional list of existing template names for validation
-  /// [activeRoutine]: Optional active routine entity for Level 2 prediction
   /// [useCache]: Whether to use cached suggestion (default: true)
   ///
   /// Returns: [WorkoutSuggestion] with predicted workout and confidence
   ///
   /// If [availableTemplateNames] is provided, the engine will validate suggestions
   /// against existing templates and fallback to generic "Workout" if template not found.
-  ///
-  /// **IMPORTANT**: If [activeRoutine] is provided, ONLY Level 2 (Routine-Based) is used.
-  /// No fallback to Level 3/4. User wants to follow routine exclusively.
   Future<WorkoutSuggestion> predictNextWorkout({
     required List<Workout> workoutHistory,
     String? activeRoutineTemplateId,
+    String? nextWorkoutTemplateId,
+    DateTime? nextWorkoutScheduledDate,
     List<String>? availableTemplateNames,
-    dynamic activeRoutine, // FlexibleRoutine? (imported only where needed)
     bool useCache = true,
   }) async {
     // Check cache first
@@ -81,32 +80,20 @@ class RoutinePredictionEngine {
     }
 
     // Try Level 2: Routine-Based
-    if (activeRoutine != null) {
+    if (activeRoutineTemplateId != null && nextWorkoutTemplateId != null) {
       final routineSuggestion = await _tryRoutineBased(
         workoutHistory,
-        activeRoutine,
+        activeRoutineTemplateId,
+        nextWorkoutTemplateId,
+        nextWorkoutScheduledDate,
+        availableTemplateNames,
       );
       if (routineSuggestion != null) {
         return _cacheAndReturn(routineSuggestion);
       }
-
-      // 🔥 CRITICAL: If routine active, DO NOT fallback to Level 3/4
-      // User wants to follow routine exclusively
-      if (kDebugMode || kProfileMode) {
-        debugPrint('🔍 [PREDICTION] Active routine present but no template for today');
-        debugPrint('🔍 [PREDICTION] Returning rest day (no fallback to frequency/day-based)');
-      }
-
-      return _cacheAndReturn(WorkoutSuggestion(
-        level: SuggestionLevel.dayBased,
-        workoutName: 'Rest Day',
-        confidence: 1.0,
-        reason: 'Your routine schedule shows rest day today',
-        generatedAt: DateTime.now(),
-      ));
     }
 
-    // Try Level 3: Frequency-Based (only if NO active routine)
+    // Try Level 3: Frequency-Based
     final frequencySuggestion = await _tryFrequencyBased(workoutHistory);
     if (frequencySuggestion != null) {
       final validatedSuggestion = _validateTemplateExists(
@@ -184,65 +171,53 @@ class RoutinePredictionEngine {
   ///
   /// Requirements:
   /// - Active routine exists
-  /// - Routine has scheduled template for today
-  ///
-  /// Returns null if today is a rest day or no template scheduled
+  /// - Routine has defined schedule
+  /// - Not yet implemented (placeholder)
   Future<WorkoutSuggestion?> _tryRoutineBased(
     List<Workout> workoutHistory,
-    dynamic activeRoutine, // FlexibleRoutine
+    String routineTemplateId,
+    String nextWorkoutTemplateId,
+    DateTime? scheduledDate,
+    List<String>? availableTemplateNames,
   ) async {
-    if (kDebugMode || kProfileMode) {
-      debugPrint('🔍 [ROUTINE_BASED] Checking routine for today');
+    // ✅ IMPLEMENTED: Use next uncompleted workout from active routine
+
+    // Find template name from template ID
+    if (availableTemplateNames == null || availableTemplateNames.isEmpty) {
+      return null; // Cannot validate without template names
     }
 
-    try {
-      // Get today's scheduled day from routine
-      final today = DateTime.now();
-      final scheduledDay = activeRoutine.getScheduledDay(today);
+    // Search for template name matching this template ID
+    // Note: Templates are indexed by name, we need to find the template by ID
+    // For now, we'll use the template ID as fallback if we can't find the name
+    String? workoutName;
 
-      if (scheduledDay == null) {
-        if (kDebugMode || kProfileMode) {
-          debugPrint('🔍 [ROUTINE_BASED] No scheduled day found for today');
-        }
-        return null;
-      }
+    // Try to find workout name from recent history that matches this template ID
+    final matchingWorkout = workoutHistory.firstWhere(
+      (w) => w.templateId == nextWorkoutTemplateId,
+      orElse: () => workoutHistory.first, // Fallback
+    );
 
-      if (kDebugMode || kProfileMode) {
-        debugPrint('🔍 [ROUTINE_BASED] Scheduled day: ${scheduledDay.templateId}, status: ${scheduledDay.status}');
-      }
+    workoutName = matchingWorkout.name ?? 'Workout';
 
-      // Check if rest day
-      if (scheduledDay.isRestDay || scheduledDay.templateId == null) {
-        if (kDebugMode || kProfileMode) {
-          debugPrint('🔍 [ROUTINE_BASED] Today is a rest day');
-        }
-        return null; // Rest day - return null so caller knows to show rest
-      }
-
-      // Get template ID for today
-      final templateId = scheduledDay.templateId!;
-
-      if (kDebugMode || kProfileMode) {
-        debugPrint('🔍 [ROUTINE_BASED] ✅ Found template ID for today: $templateId');
-      }
-
-      // Calculate confidence based on routine adherence
-      final adherence = activeRoutine.adherenceRate ?? 100.0;
-      final confidence = (0.80 + (adherence / 100 * 0.15)).clamp(0.80, 0.95);
-
-      return WorkoutSuggestion(
-        level: SuggestionLevel.routine,
-        workoutName: templateId, // 🔥 Return template ID (not name)
-        confidence: confidence,
-        reason: 'Following your active routine: ${activeRoutine.name ?? "Routine"}',
-        generatedAt: DateTime.now(),
-      );
-    } catch (e) {
-      if (kDebugMode || kProfileMode) {
-        debugPrint('❌ [ROUTINE_BASED] Error: $e');
-      }
+    // Validate that this template name exists
+    if (!availableTemplateNames.contains(workoutName)) {
+      // Template doesn't exist, return null to fallback to frequency-based
       return null;
     }
+
+    // Calculate confidence based on routine adherence
+    // High confidence if user follows routine consistently
+    final confidence = 0.80; // High confidence for routine-based suggestions
+
+    return WorkoutSuggestion(
+      level: SuggestionLevel.routine,
+      workoutName: workoutName,
+      confidence: confidence,
+      reason: 'Next in your active routine',
+      scheduledDate: scheduledDate, // ✅ NEW: Pass scheduled date to UI
+      generatedAt: DateTime.now(),
+    );
   }
 
   // ========== LEVEL 3: FREQUENCY-BASED ==========

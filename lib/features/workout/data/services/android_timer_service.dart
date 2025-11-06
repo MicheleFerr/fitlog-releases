@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// Android Timer Service
@@ -76,7 +77,9 @@ class AndroidTimerService {
       });
       return result ?? false;
     } on PlatformException catch (e) {
-      print('❌ Failed to start Android timer: ${e.message}');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to start Android timer: ${e.message}');
+      }
       return false;
     }
   }
@@ -100,7 +103,9 @@ class AndroidTimerService {
       });
       return result ?? false;
     } on PlatformException catch (e) {
-      print('❌ Failed to update Android timer: ${e.message}');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to update Android timer: ${e.message}');
+      }
       return false;
     }
   }
@@ -113,7 +118,9 @@ class AndroidTimerService {
       final result = await _channel.invokeMethod<bool>('stopTimer');
       return result ?? false;
     } on PlatformException catch (e) {
-      print('❌ Failed to stop Android timer: ${e.message}');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to stop Android timer: ${e.message}');
+      }
       return false;
     }
   }

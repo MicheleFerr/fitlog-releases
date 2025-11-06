@@ -47,6 +47,20 @@ class CommunityContribution with _$CommunityContribution {
     @Default(false) bool isFeatured,
     @Default(0) int trustScore, // 0-100 basato su track record utente
     Map<String, dynamic>? metadata,
+
+    // NEW: Discovery & Search fields
+    @Default([]) List<String> exerciseIds, // Multiple exercises (was single exerciseId)
+    @Default('beginner') String difficulty, // beginner, intermediate, advanced
+    @Default([]) List<String> tags, // User-added tags (lowercase, max 5)
+    @Default([]) List<String> applicableTo, // Goals: hypertrophy, strength, mobility
+    String? authorTier, // community, expert, admin (nullable for backward compat)
+    @Default(0.5) double authorTrustScore, // 0-1
+    @Default(0.5) double qualityScore, // 0-1 (aggregate score)
+    @Default(0) int saves, // How many users saved
+    @Default(0) int viewCount, // Track popularity
+    DateTime? lastActivityAt, // For trending
+    String? sourceType, // exerciseDb, userSubmitted
+    @Default([]) List<String> relatedExerciseIds, // For variants
   }) = _CommunityContribution;
 
   factory CommunityContribution.fromJson(Map<String, dynamic> json) =>

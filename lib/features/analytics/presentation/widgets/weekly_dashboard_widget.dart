@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/contextual_training_advisor.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WeeklyDashboardWidget extends StatefulWidget {
 
@@ -129,7 +130,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
       for (final set in activity.sets) {
         // effort is stored as 1-10, but RPE scale is 6-10
         // Convert: if effort <= 5, use RPE 6-7, if effort > 5, map to RPE 7-10
-        final effort = set.effort ?? 7;
+        final effort = set.effort;
         final rpe = effort <= 5 
             ? 6.0 + (effort / 5.0) // Maps 1-5 to 6-7
             : 7.0 + ((effort - 5) / 5.0 * 3); // Maps 6-10 to 7-10
@@ -331,15 +332,15 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         _buildStatCard(
           'Effective Volume',
           '${(_currentWeekData!.effectiveVolume / 1000).toStringAsFixed(1)}k kg',
-          AppIcons.complete,
-          Colors.green,
+          Icons.check_circle,
+          context.colors.success,
           theme,
         ),
         _buildStatCard(
           'Avg Intensity',
           '${_currentWeekData!.avgIntensity.toStringAsFixed(1)}/10',
-          AppIcons.streak,
-          Colors.orange,
+          Icons.local_fire_department,
+          context.colors.secondary,
           theme,
         ),
         _buildStatCard(
@@ -500,13 +501,13 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: context.colors.error,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
+                  child: Text(
                     'PR!',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -560,9 +561,9 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             HapticFeedback.lightImpact();
             widget.onDataSync?.call(_currentWeekData!);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Data synced to cloud'),
-                backgroundColor: Colors.green,
+              SnackBar(
+                content: const Text('Data synced to cloud'),
+                backgroundColor: context.colors.success,
               ),
             );
           }

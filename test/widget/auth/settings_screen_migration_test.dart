@@ -142,7 +142,7 @@ void main() {
           displayName: 'Michele (Admin)',
         );
         
-        final isAdmin = adminUser.email.contains('michele.cozzolino93@gmail.com') ?? false;
+        final isAdmin = adminUser.email.contains('michele.cozzolino93@gmail.com');
 
         // Act
         await tester.pumpWidget(createTestWidget(

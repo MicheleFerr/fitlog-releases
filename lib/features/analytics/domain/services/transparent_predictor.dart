@@ -43,7 +43,7 @@ class TransparentPredictor {
           scenario: 'optimistic',
           value: upper * 1.05,
           description: 'If you\'re having a great day',
-          assumptions: {
+          assumptions: const {
             'Rest': 'Fully recovered',
             'Nutrition': 'Well-fed',
             'Motivation': 'Peak mental state',
@@ -53,7 +53,7 @@ class TransparentPredictor {
           scenario: 'realistic',
           value: median,
           description: 'Based on average of 3 formulas',
-          assumptions: {
+          assumptions: const {
             'Conditions': 'Normal training day',
             'Fatigue': 'Typical levels',
           },
@@ -62,7 +62,7 @@ class TransparentPredictor {
           scenario: 'pessimistic',
           value: lower * 0.95,
           description: 'Conservative estimate',
-          assumptions: {
+          assumptions: const {
             'Fatigue': 'Accumulated fatigue',
             'Technique': 'Form breakdown risk',
           },
@@ -77,7 +77,7 @@ Calculated using average of 3 validated formulas:
 
 Standard error: ±${(standardError * 100).toStringAsFixed(1)}% based on your historical data.
       ''',
-      limitations: [
+      limitations: const [
         'Accuracy decreases significantly above 10 reps',
         'Assumes consistent form and technique',
         'Individual fiber type composition affects accuracy',
@@ -108,7 +108,7 @@ Standard error: ±${(standardError * 100).toStringAsFixed(1)}% based on your his
         metric: 'Future Performance',
         reliability: ReliabilityLevel.veryLow,
         methodology: 'Insufficient data (need at least 3 sessions)',
-        limitations: ['Not enough historical data for meaningful prediction'],
+        limitations: const ['Not enough historical data for meaningful prediction'],
       );
     }
     
@@ -147,7 +147,7 @@ Standard error: ±${(standardError * 100).toStringAsFixed(1)}% based on your his
           scenario: 'optimistic',
           value: currentMax + (predictedIncrease * 1.5),
           description: 'If progression continues perfectly',
-          assumptions: {
+          assumptions: const {
             'Training': 'No missed sessions',
             'Recovery': 'Optimal sleep and nutrition',
             'Progress': 'No plateaus',
@@ -157,7 +157,7 @@ Standard error: ±${(standardError * 100).toStringAsFixed(1)}% based on your his
           scenario: 'realistic',
           value: currentMax + predictedIncrease,
           description: 'Accounting for normal variation',
-          assumptions: {
+          assumptions: const {
             'Training': '80% adherence',
             'Progress': 'Some minor plateaus',
             'Recovery': 'Average conditions',
@@ -167,7 +167,7 @@ Standard error: ±${(standardError * 100).toStringAsFixed(1)}% based on your his
           scenario: 'pessimistic',
           value: currentMax + (predictedIncrease * 0.3),
           description: 'Conservative with plateaus',
-          assumptions: {
+          assumptions: const {
             'Plateaus': 'Hit adaptation limit',
             'Recovery': 'Suboptimal conditions',
             'Adherence': 'Missed sessions',
@@ -186,7 +186,7 @@ Beginner: 2.5-5kg/week possible
 Intermediate: 1-2.5kg/week typical  
 Advanced: 0.5-1kg/week good progress
       ''',
-      limitations: [
+      limitations: const [
         'Linear projection does not account for plateaus',
         'Biological adaptation follows logarithmic, not linear curve',
         'Individual recovery capacity varies greatly',

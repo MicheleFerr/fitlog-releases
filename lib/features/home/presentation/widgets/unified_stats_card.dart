@@ -75,7 +75,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
     final achievementXPAsync = ref.watch(achievementXPProvider);
     final streakAsync = ref.watch(currentStreakProvider);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(
