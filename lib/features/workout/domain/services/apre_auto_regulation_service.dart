@@ -73,6 +73,10 @@ class APREAutoRegulationService {
   static const int minFormulaReps = 1;
   static const int maxFormulaReps = 10;
 
+  /// Brzycki formula coefficients: 1RM = weight × (36 / (37 - reps))
+  static const int _brzyckiNumerator = 36;
+  static const int _brzyckiDenominatorBase = 37;
+
   /// Cache validity period (7 days)
   static const int cacheValidityDays = 7;
 
@@ -469,9 +473,14 @@ class APREAutoRegulationService {
   ///
   /// Formula: 1RM = weight × (36 / (37 - reps))
   /// Valid for reps between 1-10 (most accurate 1-6 reps)
+  ///
+  /// For reps >= 37, the formula breaks down mathematically (division by zero or negative).
+  /// In this edge case, we return the weight itself as a conservative estimate.
   static double _calculate1RM(double weight, int reps) {
-    if (reps >= 37) return weight; // Formula breaks down, return weight
-    return weight * (36 / (37 - reps));
+    if (reps >= _brzyckiDenominatorBase) {
+      return weight; // Formula breaks down, return weight as conservative estimate
+    }
+    return weight * (_brzyckiNumerator / (_brzyckiDenominatorBase - reps));
   }
 
   // ============================================================================
