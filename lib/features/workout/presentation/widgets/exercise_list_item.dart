@@ -5376,23 +5376,7 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
 
   /// Builds collapsible metadata banner for APRE calculations
   Widget _buildMetadataBanner(BuildContext context) {
-    // Parse metadata from JSON string
-    Map<String, dynamic>? calculations;
-    if (widget.exercise.calculationMetadata != null) {
-      try {
-        final decoded = jsonDecode(widget.exercise.calculationMetadata!);
-        // Convert to expected format for CalculationMetadataDisplay
-        calculations = {
-          'confidence': _parseConfidence(decoded['confidence']),
-          'dataPoints': decoded['dataPoints'] ?? 0,
-          'formula': decoded['formula'] ?? 'Brzycki',
-          'dataAge': Duration(days: decoded['dataAge']?['inDays'] ?? 0),
-          'standardDeviation': decoded['standardDeviation']?.toDouble() ?? 0.0,
-        };
-      } catch (e) {
-        debugPrint('Error parsing calculation metadata: $e');
-      }
-    }
+    final calculations = _parseCalculationMetadata();
 
     // Don't show banner if no calculations available
     if (calculations == null) return const SizedBox.shrink();
@@ -5459,6 +5443,26 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
         ],
       ),
     );
+  }
+
+  /// Parses calculation metadata from JSON string
+  Map<String, dynamic>? _parseCalculationMetadata() {
+    if (widget.exercise.calculationMetadata == null) return null;
+
+    try {
+      final decoded = jsonDecode(widget.exercise.calculationMetadata!);
+      // Convert to expected format for CalculationMetadataDisplay
+      return {
+        'confidence': _parseConfidence(decoded['confidence']),
+        'dataPoints': decoded['dataPoints'] ?? 0,
+        'formula': decoded['formula'] ?? 'Brzycki',
+        'dataAge': Duration(days: decoded['dataAge']?['inDays'] ?? 0),
+        'standardDeviation': decoded['standardDeviation']?.toDouble() ?? 0.0,
+      };
+    } catch (e) {
+      debugPrint('⚠️ Error parsing calculation metadata: $e');
+      return null;
+    }
   }
 
   /// Parses confidence string to enum
