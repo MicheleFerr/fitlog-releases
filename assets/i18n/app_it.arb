@@ -1127,6 +1127,8 @@
   "rateYourEffort": "Valuta il tuo sforzo",
   "completeSet": "Completa Serie",
   "verifyWeightReps": "Verifica Peso e Ripetizioni",
+  "verifyTime": "Verifica Minuti e Secondi",
+  "verifyReps": "Verifica Ripetizioni",
   "exerciseHistory": "Storico Esercizio",
   "errorLoadingHistory": "Errore nel caricamento della cronologia",
   "statistics": "Statistiche",
@@ -5551,5 +5553,59 @@
   "saved": "Salvato",
   "@saved": {
     "description": "Etichetta che indica che un contributo è salvato"
+  },
+  "legalDisclaimerTitle": "Disclaimer Medico",
+  "@legalDisclaimerTitle": {
+    "description": "Titolo per il modal del disclaimer legale"
+  },
+  "legalDisclaimerContent": "⚠️ AVVISO IMPORTANTE\n\nFITlog Pro è uno strumento di tracciamento workout.\n\nNON è sostituto di:\n• Consulenza medica\n• Personal trainer\n• Medico sportivo\n• Consulente fitness\n\nDEVI:\n✓ Consultare un medico prima di iniziare qualsiasi programma di allenamento\n✓ Interrompere immediatamente in caso di dolore o disagio\n✓ Assumerti la piena responsabilità per la tua sicurezza durante l'allenamento\n\nIl fornitore NON è responsabile per:\n• Infortuni fisici\n• Peggioramento condizioni mediche\n• Mancato raggiungimento obiettivi fitness\n\nAccettando, riconosci questi rischi e accetti i Termini di Servizio e l'Informativa Privacy.",
+  "@legalDisclaimerContent": {
+    "description": "Testo del contenuto per il modal del disclaimer legale"
+  },
+  "legalDisclaimerAccept": "Accetto",
+  "@legalDisclaimerAccept": {
+    "description": "Pulsante di accettazione per il disclaimer legale"
+  },
+  "legalDisclaimerDecline": "Rifiuto",
+  "@legalDisclaimerDecline": {
+    "description": "Pulsante di rifiuto per il disclaimer legale"
+  },
+  "apreCalculationMetadata": "Analisi Calcolo",
+  "@apreCalculationMetadata": {
+    "description": "Intestazione per il display dei metadati di calcolo APRE"
+  },
+  "apreFormula": "Formula",
+  "@apreFormula": {
+    "description": "Etichetta per la formula di calcolo 1RM"
+  },
+  "apreDataPoints": "Dati Analizzati",
+  "@apreDataPoints": {
+    "description": "Etichetta per il numero di serie analizzate"
+  },
+  "apreDataAge": "Età Dati",
+  "@apreDataAge": {
+    "description": "Etichetta per l'età dei dati utilizzati nel calcolo"
+  },
+  "apreStandardDeviation": "Variabilità",
+  "@apreStandardDeviation": {
+    "description": "Etichetta per la deviazione standard delle stime"
+  },
+  "apreConfidence": "Affidabilità",
+  "@apreConfidence": {
+    "description": "Etichetta per il livello di confidenza del calcolo"
+  },
+  "apreLastCalculation": "Ultimo Aggiornamento",
+  "@apreLastCalculation": {
+    "description": "Etichetta per la data dell'ultimo calcolo"
+  },
+  "apreDaysAgo": "{days, plural, =0{Oggi} =1{Ieri} other{{days} giorni fa}}",
+  "@apreDaysAgo": {
+    "description": "Formato per visualizzare i giorni dall'ultimo dato",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
   }
 }

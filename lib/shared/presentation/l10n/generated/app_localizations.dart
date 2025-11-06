@@ -6875,6 +6875,18 @@ abstract class AppLocalizations {
   /// **'Verify Weight & Reps'**
   String get verifyWeightReps;
 
+  /// Toggle text to verify time before RPE (time counting mode)
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Minutes & Seconds'**
+  String get verifyTime;
+
+  /// Toggle text to verify reps before RPE (reps-only counting mode)
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Reps'**
+  String get verifyReps;
+
   /// Title for exercise history bottom sheet
   ///
   /// In en, this message translates to:
@@ -22169,6 +22181,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved'**
   String get saved;
+
+  /// Title for the legal disclaimer modal
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Disclaimer'**
+  String get legalDisclaimerTitle;
+
+  /// Content text for the legal disclaimer modal
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.'**
+  String get legalDisclaimerContent;
+
+  /// Accept button for legal disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'I Accept'**
+  String get legalDisclaimerAccept;
+
+  /// Decline button for legal disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'I Decline'**
+  String get legalDisclaimerDecline;
+
+  /// Header for APRE calculation metadata display
+  ///
+  /// In en, this message translates to:
+  /// **'Calculation Analysis'**
+  String get apreCalculationMetadata;
+
+  /// Label for 1RM calculation formula
+  ///
+  /// In en, this message translates to:
+  /// **'Formula'**
+  String get apreFormula;
+
+  /// Label for number of sets analyzed
+  ///
+  /// In en, this message translates to:
+  /// **'Data Points'**
+  String get apreDataPoints;
+
+  /// Label for age of data used in calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Data Age'**
+  String get apreDataAge;
+
+  /// Label for standard deviation of estimates
+  ///
+  /// In en, this message translates to:
+  /// **'Variability'**
+  String get apreStandardDeviation;
+
+  /// Label for confidence level of calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get apreConfidence;
+
+  /// Label for last calculation date
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated'**
+  String get apreLastCalculation;
+
+  /// Format for displaying days since data
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}'**
+  String apreDaysAgo(int days);
 }
 
 class _AppLocalizationsDelegate

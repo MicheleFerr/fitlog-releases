@@ -3724,6 +3724,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get verifyWeightReps => 'Verifica Peso e Ripetizioni';
 
   @override
+  String get verifyTime => 'Verifica Minuti e Secondi';
+
+  @override
+  String get verifyReps => 'Verifica Ripetizioni';
+
+  @override
   String get exerciseHistory => 'Storico Esercizio';
 
   @override
@@ -12687,4 +12693,50 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get saved => 'Salvato';
+
+  @override
+  String get legalDisclaimerTitle => 'Disclaimer Medico';
+
+  @override
+  String get legalDisclaimerContent =>
+      '⚠️ AVVISO IMPORTANTE\n\nFITlog Pro è uno strumento di tracciamento workout.\n\nNON è sostituto di:\n• Consulenza medica\n• Personal trainer\n• Medico sportivo\n• Consulente fitness\n\nDEVI:\n✓ Consultare un medico prima di iniziare qualsiasi programma di allenamento\n✓ Interrompere immediatamente in caso di dolore o disagio\n✓ Assumerti la piena responsabilità per la tua sicurezza durante l\'allenamento\n\nIl fornitore NON è responsabile per:\n• Infortuni fisici\n• Peggioramento condizioni mediche\n• Mancato raggiungimento obiettivi fitness\n\nAccettando, riconosci questi rischi e accetti i Termini di Servizio e l\'Informativa Privacy.';
+
+  @override
+  String get legalDisclaimerAccept => 'Accetto';
+
+  @override
+  String get legalDisclaimerDecline => 'Rifiuto';
+
+  @override
+  String get apreCalculationMetadata => 'Analisi Calcolo';
+
+  @override
+  String get apreFormula => 'Formula';
+
+  @override
+  String get apreDataPoints => 'Dati Analizzati';
+
+  @override
+  String get apreDataAge => 'Età Dati';
+
+  @override
+  String get apreStandardDeviation => 'Variabilità';
+
+  @override
+  String get apreConfidence => 'Affidabilità';
+
+  @override
+  String get apreLastCalculation => 'Ultimo Aggiornamento';
+
+  @override
+  String apreDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days giorni fa',
+      one: 'Ieri',
+      zero: 'Oggi',
+    );
+    return '$_temp0';
+  }
 }

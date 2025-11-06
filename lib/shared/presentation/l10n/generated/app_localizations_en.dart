@@ -3697,6 +3697,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verifyWeightReps => 'Verify Weight & Reps';
 
   @override
+  String get verifyTime => 'Verify Minutes & Seconds';
+
+  @override
+  String get verifyReps => 'Verify Reps';
+
+  @override
   String get exerciseHistory => 'Exercise History';
 
   @override
@@ -12544,4 +12550,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saved => 'Saved';
+
+  @override
+  String get legalDisclaimerTitle => 'Medical Disclaimer';
+
+  @override
+  String get legalDisclaimerContent =>
+      '⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.';
+
+  @override
+  String get legalDisclaimerAccept => 'I Accept';
+
+  @override
+  String get legalDisclaimerDecline => 'I Decline';
+
+  @override
+  String get apreCalculationMetadata => 'Calculation Analysis';
+
+  @override
+  String get apreFormula => 'Formula';
+
+  @override
+  String get apreDataPoints => 'Data Points';
+
+  @override
+  String get apreDataAge => 'Data Age';
+
+  @override
+  String get apreStandardDeviation => 'Variability';
+
+  @override
+  String get apreConfidence => 'Confidence';
+
+  @override
+  String get apreLastCalculation => 'Last Updated';
+
+  @override
+  String apreDaysAgo(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days ago',
+      one: 'Yesterday',
+      zero: 'Today',
+    );
+    return '$_temp0';
+  }
 }

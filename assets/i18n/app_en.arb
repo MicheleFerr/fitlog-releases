@@ -4859,6 +4859,14 @@
   "@verifyWeightReps": {
     "description": "Toggle text to verify weight and reps before RPE"
   },
+  "verifyTime": "Verify Minutes & Seconds",
+  "@verifyTime": {
+    "description": "Toggle text to verify time before RPE (time counting mode)"
+  },
+  "verifyReps": "Verify Reps",
+  "@verifyReps": {
+    "description": "Toggle text to verify reps before RPE (reps-only counting mode)"
+  },
   "exerciseHistory": "Exercise History",
   "@exerciseHistory": {
     "description": "Title for exercise history bottom sheet"
@@ -15027,5 +15035,59 @@
   "saved": "Saved",
   "@saved": {
     "description": "Label indicating a contribution is saved"
+  },
+  "legalDisclaimerTitle": "Medical Disclaimer",
+  "@legalDisclaimerTitle": {
+    "description": "Title for the legal disclaimer modal"
+  },
+  "legalDisclaimerContent": "⚠️ IMPORTANT NOTICE\n\nFITlog Pro is a workout tracking tool.\n\nNOT a substitute for:\n• Medical advice\n• Personal trainer\n• Sports physician\n• Fitness consultant\n\nYou MUST:\n✓ Consult a physician before starting any exercise program\n✓ Stop immediately if you experience pain or discomfort\n✓ Take sole responsibility for your safety during training\n\nThe provider is NOT liable for:\n• Physical injuries\n• Worsening of medical conditions\n• Failure to achieve fitness goals\n\nBy accepting, you acknowledge these risks and agree to the Terms of Service and Privacy Policy.",
+  "@legalDisclaimerContent": {
+    "description": "Content text for the legal disclaimer modal"
+  },
+  "legalDisclaimerAccept": "I Accept",
+  "@legalDisclaimerAccept": {
+    "description": "Accept button for legal disclaimer"
+  },
+  "legalDisclaimerDecline": "I Decline",
+  "@legalDisclaimerDecline": {
+    "description": "Decline button for legal disclaimer"
+  },
+  "apreCalculationMetadata": "Calculation Analysis",
+  "@apreCalculationMetadata": {
+    "description": "Header for APRE calculation metadata display"
+  },
+  "apreFormula": "Formula",
+  "@apreFormula": {
+    "description": "Label for 1RM calculation formula"
+  },
+  "apreDataPoints": "Data Points",
+  "@apreDataPoints": {
+    "description": "Label for number of sets analyzed"
+  },
+  "apreDataAge": "Data Age",
+  "@apreDataAge": {
+    "description": "Label for age of data used in calculation"
+  },
+  "apreStandardDeviation": "Variability",
+  "@apreStandardDeviation": {
+    "description": "Label for standard deviation of estimates"
+  },
+  "apreConfidence": "Confidence",
+  "@apreConfidence": {
+    "description": "Label for confidence level of calculation"
+  },
+  "apreLastCalculation": "Last Updated",
+  "@apreLastCalculation": {
+    "description": "Label for last calculation date"
+  },
+  "apreDaysAgo": "{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}",
+  "@apreDaysAgo": {
+    "description": "Format for displaying days since data",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
   }
 }
