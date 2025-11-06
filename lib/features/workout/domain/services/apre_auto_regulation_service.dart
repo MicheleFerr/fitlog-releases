@@ -220,7 +220,7 @@ class APREAutoRegulationService {
         : estimates1RM.fold(0.0, (sum, v) => sum + v) / estimates1RM.length;
 
     // STEP 4: Calculate confidence
-    final confidence = _calculateConfidence(
+    final confidence = calculateConfidence(
       dataPoints: topSets.length,
       dataAge: dataAge,
       standardDeviation: stdDev,
@@ -488,7 +488,8 @@ class APREAutoRegulationService {
   // ============================================================================
 
   /// Calcola livello di confidenza basato su qualità e quantità dati
-  static CalculationConfidence _calculateConfidence({
+  @visibleForTesting
+  static CalculationConfidence calculateConfidence({
     required int dataPoints,
     required Duration dataAge,
     required double standardDeviation,
