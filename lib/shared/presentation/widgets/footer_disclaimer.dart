@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/legal_disclaimer_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Footer disclaimer shown at bottom of workout-related screens.
 ///
@@ -52,8 +53,9 @@ class FooterDisclaimer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.warning,
+                SemanticIcon(
+                  icon: AppIcons.warning,
+                  semanticLabel: 'Warning',
                   size: 14, // Smaller than tiny for ultra-compact footer
                   color: context.colors.onSurface.withValues(alpha: 0.6),
                 ),

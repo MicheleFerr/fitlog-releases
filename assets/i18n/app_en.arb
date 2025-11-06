@@ -15229,5 +15229,17 @@
   "footerDisclaimerTapHint": "Tap for full disclaimer",
   "@footerDisclaimerTapHint": {
     "description": "Hint text to tap footer for full disclaimer"
+  },
+  "apreProtocolChangeWarningTitle": "Workout in Progress",
+  "@apreProtocolChangeWarningTitle": {
+    "description": "Title for APRE protocol change warning dialog"
+  },
+  "apreProtocolChangeWarningMessage": "You cannot change APRE protocol during an active workout. Please finish your current workout first, then return to adjust protocol settings.",
+  "@apreProtocolChangeWarningMessage": {
+    "description": "Message explaining why APRE protocol cannot be changed during workout"
+  },
+  "apreGotIt": "Got it",
+  "@apreGotIt": {
+    "description": "Button to dismiss APRE workout-in-progress warning"
   }
 }
