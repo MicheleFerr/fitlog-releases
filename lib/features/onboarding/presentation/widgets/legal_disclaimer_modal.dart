@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal dialog that displays medical disclaimer and liability limitations.
@@ -40,8 +41,8 @@ class LegalDisclaimerModal extends StatelessWidget {
           SemanticIcon(
             icon: AppIcons.warningAmberRounded,
             semanticLabel: context.l10n.legalDisclaimerTitle,
-            color: context.colors.error,
-            size: AppIconSize.large,
+            size: AppIconSize.xlarge,
+            color: context.iconError,
           ),
           const SizedBox(width: 12),
           Expanded(
