@@ -19,7 +19,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/debug_screen_name_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/mixins/tour_target_keys_mixin.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/onboarding_tour_overlay_enhanced.dart';
@@ -91,6 +90,92 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
     super.dispose();
   }
 
+  /// Shows a dialog informing the user that the Community feature is coming soon
+  void _showCommunityComingSoonDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.people,
+              color: Theme.of(context).colorScheme.primary,
+              size: 28,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l10n.communityComingSoonTitle,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.communityComingSoonDescription,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.construction,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '🚀 ${l10n.comingSoon}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              l10n.close,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentWorkout = ref.watch(currentWorkoutProvider);
@@ -98,14 +183,13 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
 
     // Note: FAB step removed from tour (was obscured by bottom sheet)
 
-    return DebugScreenNameOverlay(
-      screenName: 'HomeScreenOptimized',
-      child: Stack(
-        children: [
+    return Stack(
+      children: [
           // Main scaffold content
           Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
+        key: const PageStorageKey('home_screen_scroll'),
         slivers: [
           // Premium App Bar with proper theming
           SliverAppBar(
@@ -237,14 +321,14 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                 ),
                 const SizedBox(height: 24),
 
-                // Community card - navigate to community hub
+                // Community card - Coming Soon dialog
                 Material(
                   key: communityCardKey,
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
                       HapticFeedback.lightImpact();
-                      context.push('/community');
+                      _showCommunityComingSoonDialog(context);
                     },
                     borderRadius: BorderRadius.circular(16),
                     child: Ink(
@@ -261,17 +345,30 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              l10n.community,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.community,
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  l10n.comingSoon,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
+                            Icons.info_outline,
+                            size: 20,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ],
@@ -482,7 +579,6 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
           // Uses OnboardingTourManager for advanced positioning
           OnboardingTourOverlayEnhanced(manager: _tourManager),
         ],
-      ), // End of Stack
-    );
+      ); // End of Stack
   }
 }
