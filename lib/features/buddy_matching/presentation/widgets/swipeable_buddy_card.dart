@@ -236,7 +236,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                           const SizedBox(width: 8),
                           if (widget.profile.isVerified)
                             const Icon(
-                              Icons.verified,
+                              AppIcons.verified,
                               color: context.colors.primary,
                               size: 20,
                             ),
@@ -255,7 +255,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                               child: Row(
                                 children: [
                                   const Icon(
-                                    Icons.location_on,
+                                    AppIcons.location,
                                     color: context.colors.onSurface.withValues(alpha: 0.7),
                                     size: 14,
                                   ),

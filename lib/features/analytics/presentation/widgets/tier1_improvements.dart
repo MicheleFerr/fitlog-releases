@@ -434,7 +434,7 @@ class TrendIndicator extends StatelessWidget {
     final isPositive = difference >= 0;
     
     final color = isPositive ? context.successColor : context.errorColor;
-    final icon = isPositive ? Icons.trending_up : Icons.trending_down;
+    final icon = isPositive ? AppIcons.trendUp : AppIcons.trendDown;
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -954,8 +954,8 @@ class StreakWidget extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.star,
+                  Icon(
+                    AppIcons.star,
                     color: context.warningColor,
                     size: 16,
                   ),

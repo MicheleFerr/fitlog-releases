@@ -20,16 +20,16 @@ class HomeWidgetConfig {
   factory HomeWidgetConfig.fromJson(Map<String, dynamic> json) {
     // Use a map to get the correct IconData constant
     final iconMap = {
-      Icons.fitness_center.codePoint: Icons.fitness_center,
-      Icons.emoji_events.codePoint: Icons.emoji_events,
-      Icons.psychology.codePoint: Icons.psychology,
-      Icons.play_arrow.codePoint: Icons.play_arrow,
-      Icons.trending_up.codePoint: Icons.trending_up,
-      Icons.people.codePoint: Icons.people,
+      AppIcons.workout.codePoint: AppIcons.workout,
+      AppIcons.achievement.codePoint: AppIcons.achievement,
+      AppIcons.ai.codePoint: AppIcons.ai,
+      AppIcons.play.codePoint: AppIcons.play,
+      AppIcons.trendUp.codePoint: AppIcons.trendUp,
+      AppIcons.people.codePoint: AppIcons.people,
       AppIcons.apps.codePoint: AppIcons.apps,
-      Icons.history.codePoint: Icons.history,
+      AppIcons.history.codePoint: AppIcons.history,
       AppIcons.flag.codePoint: AppIcons.flag,
-      Icons.format_quote.codePoint: Icons.format_quote,
+      AppIcons.formatQuote.codePoint: AppIcons.formatQuote,
       // Add more icons as needed
     };
     
