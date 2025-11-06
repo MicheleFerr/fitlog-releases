@@ -12600,6 +12600,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legalDisclaimerDecline => 'I Decline';
 
   @override
+  String get legalDocuments => 'Legal Documents';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'How we handle your data (GDPR compliant)';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get tosSubtitle => 'User agreements and liability limitations';
+
+  @override
+  String get disclaimerSubtitle => 'Important safety information';
+
+  @override
+  String get errorLoadingDocument =>
+      'Error loading document. Please try again.';
+
+  @override
   String get apreCalculationMetadata => 'Calculation Analysis';
 
   @override

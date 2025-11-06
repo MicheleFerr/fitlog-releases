@@ -5622,6 +5622,34 @@
   "@legalDisclaimerDecline": {
     "description": "Pulsante di rifiuto per il disclaimer legale"
   },
+  "legalDocuments": "Documenti Legali",
+  "@legalDocuments": {
+    "description": "Titolo della schermata dei documenti legali"
+  },
+  "privacyPolicy": "Informativa sulla Privacy",
+  "@privacyPolicy": {
+    "description": "Titolo dell'Informativa sulla Privacy"
+  },
+  "privacyPolicySubtitle": "Come gestiamo i tuoi dati (conforme GDPR)",
+  "@privacyPolicySubtitle": {
+    "description": "Sottotitolo dell'Informativa sulla Privacy"
+  },
+  "termsOfService": "Termini di Servizio",
+  "@termsOfService": {
+    "description": "Titolo dei Termini di Servizio"
+  },
+  "tosSubtitle": "Accordi utente e limitazioni di responsabilità",
+  "@tosSubtitle": {
+    "description": "Sottotitolo dei Termini di Servizio"
+  },
+  "disclaimerSubtitle": "Informazioni importanti sulla sicurezza",
+  "@disclaimerSubtitle": {
+    "description": "Sottotitolo del Disclaimer Medico"
+  },
+  "errorLoadingDocument": "Errore nel caricamento del documento. Riprova.",
+  "@errorLoadingDocument": {
+    "description": "Messaggio di errore quando il caricamento del documento fallisce"
+  },
   "apreCalculationMetadata": "Analisi Calcolo",
   "@apreCalculationMetadata": {
     "description": "Intestazione per il display dei metadati di calcolo APRE"

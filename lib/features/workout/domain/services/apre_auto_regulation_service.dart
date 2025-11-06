@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/onerm_calculation_config.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 
 /// 🐛 DEBUG FLAG: Enable verbose APRE calculation logs
@@ -112,11 +113,18 @@ class APREAutoRegulationService {
 
   /// Calculates all APRE weight values from historical data with enhanced metadata
   /// Returns a map with calculated RMs and detailed statistical metadata
+  ///
+  /// The [config] parameter determines which strategy to use for selecting
+  /// historical sets for calculation. Defaults to [OneRMCalculationConfig.topFiveSets].
+  ///
+  /// Note: The actual filtering logic for [config] will be implemented in T3.2.
+  /// Currently, this parameter is accepted but not yet used in filtering.
   static Map<String, dynamic> calculateAPREWeights({
     required List<dynamic> historicalSets,
     required int protocol,
     bool useMetricSystem = true,
     int? maxSetsToUse = 10,
+    OneRMCalculationConfig config = OneRMCalculationConfig.topFiveSets,
   }) {
     if (kEnableApreDebugLogs) {
       debugPrint('[APRE] Calculating weights from ${historicalSets.length} historical sets');
@@ -368,6 +376,31 @@ class APREAutoRegulationService {
       default:
         return 'APRE Protocol';
     }
+  }
+
+  // ============================================================================
+  // SET SELECTION STRATEGIES
+  // ============================================================================
+
+  /// Selects subset of sets based on configuration strategy
+  ///
+  /// Implementation will be added in T3.2 - Top Set Selection Logic.
+  /// For now, this returns all sets without filtering to maintain
+  /// current behavior while allowing the config parameter to be used.
+  ///
+  /// Future implementation will filter sets based on:
+  /// - [OneRMCalculationConfig.topThreeSets] → Most recent 3 sets
+  /// - [OneRMCalculationConfig.topFiveSets] → Most recent 5 sets (default)
+  /// - [OneRMCalculationConfig.allSetsInWindow] → All sets (no filtering)
+  /// - [OneRMCalculationConfig.medianOfTop5] → Median of top 5 sets
+  // ignore: unused_element (T3.2 placeholder - will be used when filtering logic is implemented)
+  static List<dynamic> _selectTopSets(
+    List<dynamic> allSets,
+    OneRMCalculationConfig config,
+  ) {
+    // TODO(T3.2): Implement filtering logic based on config
+    // For now, return all sets to maintain current behavior
+    return allSets;
   }
 
   // ============================================================================

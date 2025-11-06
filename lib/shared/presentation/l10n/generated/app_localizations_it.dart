@@ -12744,6 +12744,29 @@ class AppLocalizationsIt extends AppLocalizations {
   String get legalDisclaimerDecline => 'Rifiuto';
 
   @override
+  String get legalDocuments => 'Documenti Legali';
+
+  @override
+  String get privacyPolicy => 'Informativa sulla Privacy';
+
+  @override
+  String get privacyPolicySubtitle =>
+      'Come gestiamo i tuoi dati (conforme GDPR)';
+
+  @override
+  String get termsOfService => 'Termini di Servizio';
+
+  @override
+  String get tosSubtitle => 'Accordi utente e limitazioni di responsabilità';
+
+  @override
+  String get disclaimerSubtitle => 'Informazioni importanti sulla sicurezza';
+
+  @override
+  String get errorLoadingDocument =>
+      'Errore nel caricamento del documento. Riprova.';
+
+  @override
   String get apreCalculationMetadata => 'Analisi Calcolo';
 
   @override

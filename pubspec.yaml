@@ -158,6 +158,10 @@ flutter:
     - assets/sounds/
     - assets/images/
     - assets/i18n/
+    - docs/legal/PRIVACY_POLICY_IT.md
+    - docs/legal/PRIVACY_POLICY_EN.md
+    - docs/legal/TERMS_OF_SERVICE_IT.md
+    - docs/legal/TERMS_OF_SERVICE_EN.md
     - assets/data/
 
   # Enable generation of the app_localizations.dart file

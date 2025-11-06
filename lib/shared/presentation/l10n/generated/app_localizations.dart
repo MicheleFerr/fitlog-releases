@@ -22266,6 +22266,48 @@ abstract class AppLocalizations {
   /// **'I Decline'**
   String get legalDisclaimerDecline;
 
+  /// Title for legal documents screen
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Documents'**
+  String get legalDocuments;
+
+  /// Privacy Policy title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Privacy Policy subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'How we handle your data (GDPR compliant)'**
+  String get privacyPolicySubtitle;
+
+  /// Terms of Service title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// Terms of Service subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'User agreements and liability limitations'**
+  String get tosSubtitle;
+
+  /// Medical Disclaimer subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Important safety information'**
+  String get disclaimerSubtitle;
+
+  /// Error message when document fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading document. Please try again.'**
+  String get errorLoadingDocument;
+
   /// Header for APRE calculation metadata display
   ///
   /// In en, this message translates to:

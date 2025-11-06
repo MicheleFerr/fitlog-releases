@@ -15104,6 +15104,34 @@
   "@legalDisclaimerDecline": {
     "description": "Decline button for legal disclaimer"
   },
+  "legalDocuments": "Legal Documents",
+  "@legalDocuments": {
+    "description": "Title for legal documents screen"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy Policy title"
+  },
+  "privacyPolicySubtitle": "How we handle your data (GDPR compliant)",
+  "@privacyPolicySubtitle": {
+    "description": "Privacy Policy subtitle"
+  },
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+    "description": "Terms of Service title"
+  },
+  "tosSubtitle": "User agreements and liability limitations",
+  "@tosSubtitle": {
+    "description": "Terms of Service subtitle"
+  },
+  "disclaimerSubtitle": "Important safety information",
+  "@disclaimerSubtitle": {
+    "description": "Medical Disclaimer subtitle"
+  },
+  "errorLoadingDocument": "Error loading document. Please try again.",
+  "@errorLoadingDocument": {
+    "description": "Error message when document fails to load"
+  },
   "apreCalculationMetadata": "Calculation Analysis",
   "@apreCalculationMetadata": {
     "description": "Header for APRE calculation metadata display"
