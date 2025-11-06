@@ -2040,6 +2040,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get templateNotFound => 'Template not found';
+
+  @override
+  String get loadingTemplate => 'Loading template...';
+
+  @override
+  String templateLoadError(String error) {
+    return 'Error loading template: $error';
+  }
+
+  @override
+  String unexpectedError(String error) {
+    return 'Unexpected error: $error';
+  }
+
+  @override
   String workoutInProgress(String name) {
     return 'You already have a workout in progress: $name';
   }
@@ -12762,4 +12778,735 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get apreCalculationMethodDescription =>
       'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get accurate => 'Accurate';
+
+  @override
+  String get achievementsCopied => 'Achievements copied';
+
+  @override
+  String get activeDays => 'Active days';
+
+  @override
+  String get activeMatches => 'Active matches';
+
+  @override
+  String get addRep => 'Add rep';
+
+  @override
+  String get advancedTemplate => 'Advanced template';
+
+  @override
+  String get afternoon => 'Afternoon';
+
+  @override
+  String get ageRange => 'Age range';
+
+  @override
+  String get applyProgressiveOverload => 'Apply progressive overload';
+
+  @override
+  String get availability => 'Availability';
+
+  @override
+  String get averageVolume => 'Average volume';
+
+  @override
+  String get avgPerWeek => 'Avg per week';
+
+  @override
+  String get batterySaverActive => 'Battery saver active';
+
+  @override
+  String get beginnerTemplate => 'Beginner template';
+
+  @override
+  String get bestDay => 'Best day';
+
+  @override
+  String get bio => 'Bio';
+
+  @override
+  String get blockUser => 'Block user';
+
+  @override
+  String get boosted => 'Boosted';
+
+  @override
+  String get bothWorkoutAndGym => 'Both workout and gym';
+
+  @override
+  String get buddyMatching => 'Buddy matching';
+
+  @override
+  String get changeLayout => 'Change layout';
+
+  @override
+  String get cityPicker => 'City picker';
+
+  @override
+  String get clearAllSets => 'Clear all sets';
+
+  @override
+  String get clearDemoData => 'Clear demo data';
+
+  @override
+  String get cloudSync => 'Cloud sync';
+
+  @override
+  String get compactView => 'Compact view';
+
+  @override
+  String get comparedTo => 'Compared to';
+
+  @override
+  String get comparedToLast => 'Compared to last';
+
+  @override
+  String get comparedToPrevious => 'Compared to previous';
+
+  @override
+  String get completeAllSets => 'Complete all sets';
+
+  @override
+  String get completeAnalysis => 'Complete analysis';
+
+  @override
+  String get completeStatistics => 'Complete statistics';
+
+  @override
+  String get consecutiveDays => 'Consecutive days';
+
+  @override
+  String get copyFromLastWorkout => 'Copied from last workout';
+
+  @override
+  String get criticalPriority => 'Critical priority';
+
+  @override
+  String get customDateRange => 'Custom date range';
+
+  @override
+  String get dailyAverage => 'Daily average';
+
+  @override
+  String get dailyTrend => 'Daily trend';
+
+  @override
+  String get dataExported => 'Data exported';
+
+  @override
+  String get dateRange => 'Date range';
+
+  @override
+  String get declined => 'Declined';
+
+  @override
+  String get demoProfiles => 'Demo profiles';
+
+  @override
+  String get detailedStats => 'Detailed stats';
+
+  @override
+  String get developmentMode => 'Development mode';
+
+  @override
+  String get discardWorkoutMessage => 'Discard workout message';
+
+  @override
+  String get discardWorkoutTitle => 'Discard workout title';
+
+  @override
+  String get distance => 'Distance';
+
+  @override
+  String get downloaded => 'Downloaded';
+
+  @override
+  String get duplicateWorkout => 'Duplicate workout';
+
+  @override
+  String get editProfile => 'Edit profile';
+
+  @override
+  String get editTemplateDescription => 'Edit template description';
+
+  @override
+  String get enableLocation => 'Enable location';
+
+  @override
+  String get enableLocationForBetterMatches =>
+      'Enable location for better matches';
+
+  @override
+  String get endWorkoutTitle => 'End workout title';
+
+  @override
+  String get endurance => 'Endurance';
+
+  @override
+  String get errorAuth => 'Error auth';
+
+  @override
+  String get errorGeneric => 'Error generic';
+
+  @override
+  String get errorInvalidEmail => 'Error invalid email';
+
+  @override
+  String get errorNetwork => 'Error network';
+
+  @override
+  String get errorUserNotFound => 'Error user not found';
+
+  @override
+  String get errorWeakPassword => 'Error weak password';
+
+  @override
+  String get essentialStatistics => 'Essential statistics';
+
+  @override
+  String get evening => 'Evening';
+
+  @override
+  String get executing => 'Executing';
+
+  @override
+  String get expertTemplate => 'Expert template';
+
+  @override
+  String get export => 'Export';
+
+  @override
+  String get exporting => 'Exporting';
+
+  @override
+  String get failed => 'Failed';
+
+  @override
+  String get fatigue => 'Fatigue';
+
+  @override
+  String get fatto => 'Fatto';
+
+  @override
+  String get fieldRequired => 'Field required';
+
+  @override
+  String get filterWorkouts => 'Filter workouts';
+
+  @override
+  String get findYourWorkoutPartner => 'Find your workout partner';
+
+  @override
+  String get flexibility => 'Flexibility';
+
+  @override
+  String get form => 'Form';
+
+  @override
+  String get fullView => 'Full view';
+
+  @override
+  String get generalFitness => 'General fitness';
+
+  @override
+  String get goPremium => 'Go premium';
+
+  @override
+  String get gymBuddyOnly => 'Gym buddy only';
+
+  @override
+  String get hypertrophy => 'Hypertrophy';
+
+  @override
+  String get iceBreakerCategoryCasual => 'Ice breaker category casual';
+
+  @override
+  String get iceBreakerCategoryExperience => 'Ice breaker category experience';
+
+  @override
+  String get iceBreakerCategoryFitness => 'Ice breaker category fitness';
+
+  @override
+  String get iceBreakerCategoryGoals => 'Ice breaker category goals';
+
+  @override
+  String get iceBreakerCategoryMotivation => 'Ice breaker category motivation';
+
+  @override
+  String get iceBreakerCategoryWorkout => 'Ice breaker category workout';
+
+  @override
+  String get iceBreakers => 'Ice breakers';
+
+  @override
+  String get improved => 'Improved';
+
+  @override
+  String get improvementDetected => 'Improvement detected';
+
+  @override
+  String get instagramHandle => 'Instagram handle';
+
+  @override
+  String get instagramVerified => 'Instagram verified';
+
+  @override
+  String get intensity => 'Intensity';
+
+  @override
+  String get intermediateTemplate => 'Intermediate template';
+
+  @override
+  String get invalidValue => 'Invalid value';
+
+  @override
+  String get itsAMatch => 'It\'s a match';
+
+  @override
+  String get km => 'Km';
+
+  @override
+  String get last => 'Last';
+
+  @override
+  String get lastSync => 'Last sync';
+
+  @override
+  String get like => 'Like';
+
+  @override
+  String get localStorageOnly => 'Local storage only';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get locationHelpsFindNearbyBuddies =>
+      'Location helps find nearby buddies';
+
+  @override
+  String get locationPermissionDenied => 'Location permission denied';
+
+  @override
+  String get locationPermissionExplanation => 'Location permission explanation';
+
+  @override
+  String get locationPermissionGranted => 'Location permission granted';
+
+  @override
+  String get locationPermissionRequired => 'Location permission required';
+
+  @override
+  String get locationUpdateError => 'Location update error';
+
+  @override
+  String get locationUpdated => 'Location updated';
+
+  @override
+  String get lookingForWorkoutBuddy => 'Looking for workout buddy';
+
+  @override
+  String get matchFilters => 'Match filters';
+
+  @override
+  String get matchingPurpose => 'Matching purpose';
+
+  @override
+  String get matchingPurposeBoth => 'Matching purpose both';
+
+  @override
+  String get matchingPurposeGymBuddy => 'Matching purpose gym buddy';
+
+  @override
+  String get matchingPurposeOpenToEverything =>
+      'Matching purpose open to everything';
+
+  @override
+  String get matchingPurposeWorkoutPartner =>
+      'Matching purpose workout partner';
+
+  @override
+  String get maxAge => 'Max age';
+
+  @override
+  String get maxDistance => 'Max distance';
+
+  @override
+  String get midday => 'Midday';
+
+  @override
+  String get minAge => 'Min age';
+
+  @override
+  String get minimalView => 'Minimal view';
+
+  @override
+  String get morning => 'Morning';
+
+  @override
+  String get muscleGain => 'Muscle gain';
+
+  @override
+  String get needMoreWorkouts => 'Need more workouts';
+
+  @override
+  String get newPersonalRecordsAchieved => 'New personal records achieved';
+
+  @override
+  String get noComparisonData => 'No comparison data';
+
+  @override
+  String get noMatchesFound => 'No matches found';
+
+  @override
+  String get noPRsYet => 'No p rs yet';
+
+  @override
+  String get noWorkoutsFound => 'No workouts found';
+
+  @override
+  String get noWorkoutsFoundDescription => 'No workouts found description';
+
+  @override
+  String get noWorkoutsRecorded => 'No workouts recorded';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get oops => 'Oops';
+
+  @override
+  String get openCityPicker => 'Open city picker';
+
+  @override
+  String get openIceBreakers => 'Open ice breakers';
+
+  @override
+  String get openInstagram => 'Open instagram';
+
+  @override
+  String get openSettings => 'Open settings';
+
+  @override
+  String get openToDating => 'Open to dating';
+
+  @override
+  String get openToFriendship => 'Open to friendship';
+
+  @override
+  String get overallAssessment => 'Overall assessment';
+
+  @override
+  String get partnerships => 'Partnerships';
+
+  @override
+  String get pass => 'Pass';
+
+  @override
+  String get perDay => 'Per day';
+
+  @override
+  String get performanceDeclined => 'Performance declined';
+
+  @override
+  String get photoVerified => 'Photo verified';
+
+  @override
+  String get pleaseSelectAtLeastOneGoal => 'Please select at least one goal';
+
+  @override
+  String get pleaseSelectPreferredTimes => 'Please select preferred times';
+
+  @override
+  String get pleaseSelectYourCity => 'Please select your city';
+
+  @override
+  String get preferredTimes => 'Preferred times';
+
+  @override
+  String get preparing => 'Preparing';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profile updated successfully';
+
+  @override
+  String get progressTitle => 'Progress title';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get redo => 'Redo';
+
+  @override
+  String get refreshMatches => 'Refresh matches';
+
+  @override
+  String get rep => 'Rep';
+
+  @override
+  String get reportReasonFakeProfile => 'Report reason fake profile';
+
+  @override
+  String get reportReasonHarassment => 'Report reason harassment';
+
+  @override
+  String get reportReasonInappropriatePhotos =>
+      'Report reason inappropriate photos';
+
+  @override
+  String get reportReasonOther => 'Report reason other';
+
+  @override
+  String get reportReasonSpam => 'Report reason spam';
+
+  @override
+  String get reportReasonUnderage => 'Report reason underage';
+
+  @override
+  String get reportUser => 'Report user';
+
+  @override
+  String get resetDefaults => 'Reset defaults';
+
+  @override
+  String get resetLayout => 'Reset layout';
+
+  @override
+  String get resting => 'Resting';
+
+  @override
+  String get restorePurchases => 'Restore purchases';
+
+  @override
+  String get rpeTimerAndMore => 'Rpe timer and more';
+
+  @override
+  String get saveToFirebaseForReuse => 'Save to firebase for reuse';
+
+  @override
+  String get screenWontTurnOff => 'Screen wont turn off';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get searchCity => 'Search city';
+
+  @override
+  String get searchingForMatches => 'Searching for matches';
+
+  @override
+  String get seedDemoData => 'Seed demo data';
+
+  @override
+  String get selectDataType => 'Select data type';
+
+  @override
+  String get selectDates => 'Select dates';
+
+  @override
+  String get selectExportFormat => 'Select export format';
+
+  @override
+  String get selectMetrics => 'Select metrics';
+
+  @override
+  String get setTrackingReady => 'Set tracking ready';
+
+  @override
+  String get setupYourProfile => 'Setup your profile';
+
+  @override
+  String get similarPerformance => 'Similar performance';
+
+  @override
+  String get sinceRegistration => 'Since registration';
+
+  @override
+  String get skipTimer => 'Skip timer';
+
+  @override
+  String get startWorkoutNow => 'Start workout now';
+
+  @override
+  String get stopSet => 'Stop set';
+
+  @override
+  String get streakLabel => 'Streak label';
+
+  @override
+  String get superLike => 'Super like';
+
+  @override
+  String get swipeToDecide => 'Swipe to decide';
+
+  @override
+  String get syncAllWorkouts => 'Sync all workouts';
+
+  @override
+  String get syncWorkouts => 'Sync workouts';
+
+  @override
+  String get syncing => 'Syncing';
+
+  @override
+  String get tapPlusToAddExercise => 'Tap plus to add exercise';
+
+  @override
+  String get tapToViewMore => 'Tap to view more';
+
+  @override
+  String get tellUsAboutYourself => 'Tell us about yourself';
+
+  @override
+  String get templateLimitSuggestion => 'Template limit suggestion';
+
+  @override
+  String get templateSyncDescription => 'Template sync description';
+
+  @override
+  String get thisMonth => 'This month';
+
+  @override
+  String get timeRange => 'Time range';
+
+  @override
+  String get toggleToShowInMatching => 'Toggle to show in matching';
+
+  @override
+  String get totalWeightLifted => 'Total weight lifted';
+
+  @override
+  String get trainingDays => 'Training days';
+
+  @override
+  String get unableToGetLocation => 'Unable to get location';
+
+  @override
+  String get unknownLocation => 'Unknown location';
+
+  @override
+  String get updateLocation => 'Update location';
+
+  @override
+  String get upgradeForMoreTemplates => 'Upgrade for more templates';
+
+  @override
+  String get upgradeToPremiumForSync => 'Upgrade to premium for sync';
+
+  @override
+  String get uploaded => 'Uploaded';
+
+  @override
+  String get useCurrentLocation => 'Use current location';
+
+  @override
+  String get valueTooHigh => 'Value too high';
+
+  @override
+  String get valueTooLow => 'Value too low';
+
+  @override
+  String get velocityProfile => 'Velocity profile';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get verifiedOnly => 'Verified only';
+
+  @override
+  String get viewProfile => 'View profile';
+
+  @override
+  String get viewWorkout => 'View workout';
+
+  @override
+  String get volumeDetails => 'Volume details';
+
+  @override
+  String get volumePerDay => 'Volume per day';
+
+  @override
+  String get volumeSettings => 'Volume settings';
+
+  @override
+  String get vsLastWeek => 'Vs last week';
+
+  @override
+  String get weeklyDistribution => 'Weekly distribution';
+
+  @override
+  String get weeklyDistributionDesc => 'Weekly distribution desc';
+
+  @override
+  String get weeklyDistributionInfo => 'Weekly distribution info';
+
+  @override
+  String get weeklyVolume => 'Weekly volume';
+
+  @override
+  String get weightLoss => 'Weight loss';
+
+  @override
+  String get weightUnit => 'Weight unit';
+
+  @override
+  String get workoutComparison => 'Workout comparison';
+
+  @override
+  String get workoutDeclineDescription => 'Workout decline description';
+
+  @override
+  String get workoutDeleted => 'Workout deleted';
+
+  @override
+  String get workoutDuplicated => 'Workout duplicated';
+
+  @override
+  String get workoutGoals => 'Workout goals';
+
+  @override
+  String get workoutImprovementDescription => 'Workout improvement description';
+
+  @override
+  String get workoutPartnerOnly => 'Workout partner only';
+
+  @override
+  String get workoutSimilarDescription => 'Workout similar description';
+
+  @override
+  String get workoutType => 'Workout type';
+
+  @override
+  String get workoutsLabel => 'Workouts label';
+
+  @override
+  String get years => 'Years';
+
+  @override
+  String get zenMode => 'Zen mode';
+
+  @override
+  String get zenModeActiveDescription => 'Zen mode active description';
+
+  @override
+  String get zenModeInactiveDescription => 'Zen mode inactive description';
+
+  @override
+  String get zonePicker => 'Zone picker';
+
+  @override
+  String get workoutDuration => 'Workout duration';
+
+  @override
+  String get tryAgain => 'Try again';
 }

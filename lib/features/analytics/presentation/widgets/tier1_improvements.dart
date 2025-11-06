@@ -717,7 +717,7 @@ class MotivationalEmptyState extends StatelessWidget {
                 child: Column(
                   children: [
                     Icon(
-                      AppIcons.misc.formatQuote,
+                      AppIcons.formatQuote,
                       color: theme.colorScheme.primary.withValues(alpha: 0.5),
                       size: 24,
                     ),
@@ -819,7 +819,7 @@ class StreakWidget extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            context.warningColor.shade400,
+            Colors.orange.shade400,  // Material orange shade
             context.warningColor,
           ],
           begin: Alignment.topLeft,

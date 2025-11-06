@@ -226,7 +226,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
   Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme) {
     switch (insight.type) {
       case InsightType.achievement:
-        return colorScheme.success;
+        return Colors.green;  // Success color for achievements
       case InsightType.warning:
         return colorScheme.secondary;
       case InsightType.suggestion:
@@ -380,7 +380,7 @@ class _InsightDetailsSheet extends StatelessWidget {
   Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme) {
     switch (insight.type) {
       case InsightType.achievement:
-        return colorScheme.success;
+        return Colors.green;  // Success color for achievements
       case InsightType.warning:
         return colorScheme.secondary;
       case InsightType.suggestion:

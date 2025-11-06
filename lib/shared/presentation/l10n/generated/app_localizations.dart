@@ -3911,6 +3911,30 @@ abstract class AppLocalizations {
   /// **'Workout \"{name}\" started!'**
   String workoutStarted(String name);
 
+  /// Template not found error
+  ///
+  /// In en, this message translates to:
+  /// **'Template not found'**
+  String get templateNotFound;
+
+  /// Loading template message
+  ///
+  /// In en, this message translates to:
+  /// **'Loading template...'**
+  String get loadingTemplate;
+
+  /// Template load error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading template: {error}'**
+  String templateLoadError(String error);
+
+  /// Unexpected error message
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected error: {error}'**
+  String unexpectedError(String error);
+
   /// Workout already in progress warning
   ///
   /// In en, this message translates to:
@@ -22553,6 +22577,1458 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.'**
   String get apreCalculationMethodDescription;
+
+  /// Auto-generated for about
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// Auto-generated for accurate
+  ///
+  /// In en, this message translates to:
+  /// **'Accurate'**
+  String get accurate;
+
+  /// Auto-generated for achievementsCopied
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements copied'**
+  String get achievementsCopied;
+
+  /// Auto-generated for activeDays
+  ///
+  /// In en, this message translates to:
+  /// **'Active days'**
+  String get activeDays;
+
+  /// Auto-generated for activeMatches
+  ///
+  /// In en, this message translates to:
+  /// **'Active matches'**
+  String get activeMatches;
+
+  /// Auto-generated for addRep
+  ///
+  /// In en, this message translates to:
+  /// **'Add rep'**
+  String get addRep;
+
+  /// Auto-generated for advancedTemplate
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced template'**
+  String get advancedTemplate;
+
+  /// Auto-generated for afternoon
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get afternoon;
+
+  /// Auto-generated for ageRange
+  ///
+  /// In en, this message translates to:
+  /// **'Age range'**
+  String get ageRange;
+
+  /// Auto-generated for applyProgressiveOverload
+  ///
+  /// In en, this message translates to:
+  /// **'Apply progressive overload'**
+  String get applyProgressiveOverload;
+
+  /// Auto-generated for availability
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get availability;
+
+  /// Auto-generated for averageVolume
+  ///
+  /// In en, this message translates to:
+  /// **'Average volume'**
+  String get averageVolume;
+
+  /// Auto-generated for avgPerWeek
+  ///
+  /// In en, this message translates to:
+  /// **'Avg per week'**
+  String get avgPerWeek;
+
+  /// Auto-generated for batterySaverActive
+  ///
+  /// In en, this message translates to:
+  /// **'Battery saver active'**
+  String get batterySaverActive;
+
+  /// Auto-generated for beginnerTemplate
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner template'**
+  String get beginnerTemplate;
+
+  /// Auto-generated for bestDay
+  ///
+  /// In en, this message translates to:
+  /// **'Best day'**
+  String get bestDay;
+
+  /// Auto-generated for bio
+  ///
+  /// In en, this message translates to:
+  /// **'Bio'**
+  String get bio;
+
+  /// Auto-generated for blockUser
+  ///
+  /// In en, this message translates to:
+  /// **'Block user'**
+  String get blockUser;
+
+  /// Auto-generated for boosted
+  ///
+  /// In en, this message translates to:
+  /// **'Boosted'**
+  String get boosted;
+
+  /// Auto-generated for bothWorkoutAndGym
+  ///
+  /// In en, this message translates to:
+  /// **'Both workout and gym'**
+  String get bothWorkoutAndGym;
+
+  /// Auto-generated for buddyMatching
+  ///
+  /// In en, this message translates to:
+  /// **'Buddy matching'**
+  String get buddyMatching;
+
+  /// Auto-generated for changeLayout
+  ///
+  /// In en, this message translates to:
+  /// **'Change layout'**
+  String get changeLayout;
+
+  /// Auto-generated for cityPicker
+  ///
+  /// In en, this message translates to:
+  /// **'City picker'**
+  String get cityPicker;
+
+  /// Auto-generated for clearAllSets
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all sets'**
+  String get clearAllSets;
+
+  /// Auto-generated for clearDemoData
+  ///
+  /// In en, this message translates to:
+  /// **'Clear demo data'**
+  String get clearDemoData;
+
+  /// Auto-generated for cloudSync
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync'**
+  String get cloudSync;
+
+  /// Auto-generated for compactView
+  ///
+  /// In en, this message translates to:
+  /// **'Compact view'**
+  String get compactView;
+
+  /// Auto-generated for comparedTo
+  ///
+  /// In en, this message translates to:
+  /// **'Compared to'**
+  String get comparedTo;
+
+  /// Auto-generated for comparedToLast
+  ///
+  /// In en, this message translates to:
+  /// **'Compared to last'**
+  String get comparedToLast;
+
+  /// Auto-generated for comparedToPrevious
+  ///
+  /// In en, this message translates to:
+  /// **'Compared to previous'**
+  String get comparedToPrevious;
+
+  /// Auto-generated for completeAllSets
+  ///
+  /// In en, this message translates to:
+  /// **'Complete all sets'**
+  String get completeAllSets;
+
+  /// Auto-generated for completeAnalysis
+  ///
+  /// In en, this message translates to:
+  /// **'Complete analysis'**
+  String get completeAnalysis;
+
+  /// Auto-generated for completeStatistics
+  ///
+  /// In en, this message translates to:
+  /// **'Complete statistics'**
+  String get completeStatistics;
+
+  /// Auto-generated for consecutiveDays
+  ///
+  /// In en, this message translates to:
+  /// **'Consecutive days'**
+  String get consecutiveDays;
+
+  /// Auto-generated for copyFromLastWorkout
+  ///
+  /// In en, this message translates to:
+  /// **'Copied from last workout'**
+  String get copyFromLastWorkout;
+
+  /// Auto-generated for criticalPriority
+  ///
+  /// In en, this message translates to:
+  /// **'Critical priority'**
+  String get criticalPriority;
+
+  /// Auto-generated for customDateRange
+  ///
+  /// In en, this message translates to:
+  /// **'Custom date range'**
+  String get customDateRange;
+
+  /// Auto-generated for dailyAverage
+  ///
+  /// In en, this message translates to:
+  /// **'Daily average'**
+  String get dailyAverage;
+
+  /// Auto-generated for dailyTrend
+  ///
+  /// In en, this message translates to:
+  /// **'Daily trend'**
+  String get dailyTrend;
+
+  /// Auto-generated for dataExported
+  ///
+  /// In en, this message translates to:
+  /// **'Data exported'**
+  String get dataExported;
+
+  /// Auto-generated for dateRange
+  ///
+  /// In en, this message translates to:
+  /// **'Date range'**
+  String get dateRange;
+
+  /// Auto-generated for declined
+  ///
+  /// In en, this message translates to:
+  /// **'Declined'**
+  String get declined;
+
+  /// Auto-generated for demoProfiles
+  ///
+  /// In en, this message translates to:
+  /// **'Demo profiles'**
+  String get demoProfiles;
+
+  /// Auto-generated for detailedStats
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed stats'**
+  String get detailedStats;
+
+  /// Auto-generated for developmentMode
+  ///
+  /// In en, this message translates to:
+  /// **'Development mode'**
+  String get developmentMode;
+
+  /// Auto-generated for discardWorkoutMessage
+  ///
+  /// In en, this message translates to:
+  /// **'Discard workout message'**
+  String get discardWorkoutMessage;
+
+  /// Auto-generated for discardWorkoutTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Discard workout title'**
+  String get discardWorkoutTitle;
+
+  /// Auto-generated for distance
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// Auto-generated for downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get downloaded;
+
+  /// Auto-generated for duplicateWorkout
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate workout'**
+  String get duplicateWorkout;
+
+  /// Auto-generated for editProfile
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfile;
+
+  /// Auto-generated for editTemplateDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Edit template description'**
+  String get editTemplateDescription;
+
+  /// Auto-generated for enableLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Enable location'**
+  String get enableLocation;
+
+  /// Auto-generated for enableLocationForBetterMatches
+  ///
+  /// In en, this message translates to:
+  /// **'Enable location for better matches'**
+  String get enableLocationForBetterMatches;
+
+  /// Auto-generated for endWorkoutTitle
+  ///
+  /// In en, this message translates to:
+  /// **'End workout title'**
+  String get endWorkoutTitle;
+
+  /// Auto-generated for endurance
+  ///
+  /// In en, this message translates to:
+  /// **'Endurance'**
+  String get endurance;
+
+  /// Auto-generated for errorAuth
+  ///
+  /// In en, this message translates to:
+  /// **'Error auth'**
+  String get errorAuth;
+
+  /// Auto-generated for errorGeneric
+  ///
+  /// In en, this message translates to:
+  /// **'Error generic'**
+  String get errorGeneric;
+
+  /// Auto-generated for errorInvalidEmail
+  ///
+  /// In en, this message translates to:
+  /// **'Error invalid email'**
+  String get errorInvalidEmail;
+
+  /// Auto-generated for errorNetwork
+  ///
+  /// In en, this message translates to:
+  /// **'Error network'**
+  String get errorNetwork;
+
+  /// Auto-generated for errorUserNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'Error user not found'**
+  String get errorUserNotFound;
+
+  /// Auto-generated for errorWeakPassword
+  ///
+  /// In en, this message translates to:
+  /// **'Error weak password'**
+  String get errorWeakPassword;
+
+  /// Auto-generated for essentialStatistics
+  ///
+  /// In en, this message translates to:
+  /// **'Essential statistics'**
+  String get essentialStatistics;
+
+  /// Auto-generated for evening
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get evening;
+
+  /// Auto-generated for executing
+  ///
+  /// In en, this message translates to:
+  /// **'Executing'**
+  String get executing;
+
+  /// Auto-generated for expertTemplate
+  ///
+  /// In en, this message translates to:
+  /// **'Expert template'**
+  String get expertTemplate;
+
+  /// Auto-generated for export
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
+  /// Auto-generated for exporting
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting'**
+  String get exporting;
+
+  /// Auto-generated for failed
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// Auto-generated for fatigue
+  ///
+  /// In en, this message translates to:
+  /// **'Fatigue'**
+  String get fatigue;
+
+  /// Auto-generated for fatto
+  ///
+  /// In en, this message translates to:
+  /// **'Fatto'**
+  String get fatto;
+
+  /// Auto-generated for fieldRequired
+  ///
+  /// In en, this message translates to:
+  /// **'Field required'**
+  String get fieldRequired;
+
+  /// Auto-generated for filterWorkouts
+  ///
+  /// In en, this message translates to:
+  /// **'Filter workouts'**
+  String get filterWorkouts;
+
+  /// Auto-generated for findYourWorkoutPartner
+  ///
+  /// In en, this message translates to:
+  /// **'Find your workout partner'**
+  String get findYourWorkoutPartner;
+
+  /// Auto-generated for flexibility
+  ///
+  /// In en, this message translates to:
+  /// **'Flexibility'**
+  String get flexibility;
+
+  /// Auto-generated for form
+  ///
+  /// In en, this message translates to:
+  /// **'Form'**
+  String get form;
+
+  /// Auto-generated for fullView
+  ///
+  /// In en, this message translates to:
+  /// **'Full view'**
+  String get fullView;
+
+  /// Auto-generated for generalFitness
+  ///
+  /// In en, this message translates to:
+  /// **'General fitness'**
+  String get generalFitness;
+
+  /// Auto-generated for goPremium
+  ///
+  /// In en, this message translates to:
+  /// **'Go premium'**
+  String get goPremium;
+
+  /// Auto-generated for gymBuddyOnly
+  ///
+  /// In en, this message translates to:
+  /// **'Gym buddy only'**
+  String get gymBuddyOnly;
+
+  /// Auto-generated for hypertrophy
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy'**
+  String get hypertrophy;
+
+  /// Auto-generated for iceBreakerCategoryCasual
+  ///
+  /// In en, this message translates to:
+  /// **'Ice breaker category casual'**
+  String get iceBreakerCategoryCasual;
+
+  /// Auto-generated for iceBreakerCategoryExperience
+  ///
+  /// In en, this message translates to:
+  /// **'Ice breaker category experience'**
+  String get iceBreakerCategoryExperience;
+
+  /// Auto-generated for iceBreakerCategoryFitness
+  ///
+  /// In en, this message translates to:
+  /// **'Ice breaker category fitness'**
+  String get iceBreakerCategoryFitness;
+
+  /// Auto-generated for iceBreakerCategoryGoals
+  ///
+  /// In en, this message translates to:
+  /// **'Ice breaker category goals'**
+  String get iceBreakerCategoryGoals;
+
+  /// Auto-generated for iceBreakerCategoryMotivation
+  ///
+  /// In en, this message translates to:
+  /// **'Ice breaker category motivation'**
+  String get iceBreakerCategoryMotivation;
+
+  /// Auto-generated for iceBreakerCategoryWorkout
+  ///
+  /// In en, this message translates to:
+  /// **'Ice breaker category workout'**
+  String get iceBreakerCategoryWorkout;
+
+  /// Auto-generated for iceBreakers
+  ///
+  /// In en, this message translates to:
+  /// **'Ice breakers'**
+  String get iceBreakers;
+
+  /// Auto-generated for improved
+  ///
+  /// In en, this message translates to:
+  /// **'Improved'**
+  String get improved;
+
+  /// Auto-generated for improvementDetected
+  ///
+  /// In en, this message translates to:
+  /// **'Improvement detected'**
+  String get improvementDetected;
+
+  /// Auto-generated for instagramHandle
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram handle'**
+  String get instagramHandle;
+
+  /// Auto-generated for instagramVerified
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram verified'**
+  String get instagramVerified;
+
+  /// Auto-generated for intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Intensity'**
+  String get intensity;
+
+  /// Auto-generated for intermediateTemplate
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate template'**
+  String get intermediateTemplate;
+
+  /// Auto-generated for invalidValue
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid value'**
+  String get invalidValue;
+
+  /// Auto-generated for itsAMatch
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a match'**
+  String get itsAMatch;
+
+  /// Auto-generated for km
+  ///
+  /// In en, this message translates to:
+  /// **'Km'**
+  String get km;
+
+  /// Auto-generated for last
+  ///
+  /// In en, this message translates to:
+  /// **'Last'**
+  String get last;
+
+  /// Auto-generated for lastSync
+  ///
+  /// In en, this message translates to:
+  /// **'Last sync'**
+  String get lastSync;
+
+  /// Auto-generated for like
+  ///
+  /// In en, this message translates to:
+  /// **'Like'**
+  String get like;
+
+  /// Auto-generated for localStorageOnly
+  ///
+  /// In en, this message translates to:
+  /// **'Local storage only'**
+  String get localStorageOnly;
+
+  /// Auto-generated for location
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// Auto-generated for locationHelpsFindNearbyBuddies
+  ///
+  /// In en, this message translates to:
+  /// **'Location helps find nearby buddies'**
+  String get locationHelpsFindNearbyBuddies;
+
+  /// Auto-generated for locationPermissionDenied
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied'**
+  String get locationPermissionDenied;
+
+  /// Auto-generated for locationPermissionExplanation
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission explanation'**
+  String get locationPermissionExplanation;
+
+  /// Auto-generated for locationPermissionGranted
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission granted'**
+  String get locationPermissionGranted;
+
+  /// Auto-generated for locationPermissionRequired
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission required'**
+  String get locationPermissionRequired;
+
+  /// Auto-generated for locationUpdateError
+  ///
+  /// In en, this message translates to:
+  /// **'Location update error'**
+  String get locationUpdateError;
+
+  /// Auto-generated for locationUpdated
+  ///
+  /// In en, this message translates to:
+  /// **'Location updated'**
+  String get locationUpdated;
+
+  /// Auto-generated for lookingForWorkoutBuddy
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for workout buddy'**
+  String get lookingForWorkoutBuddy;
+
+  /// Auto-generated for matchFilters
+  ///
+  /// In en, this message translates to:
+  /// **'Match filters'**
+  String get matchFilters;
+
+  /// Auto-generated for matchingPurpose
+  ///
+  /// In en, this message translates to:
+  /// **'Matching purpose'**
+  String get matchingPurpose;
+
+  /// Auto-generated for matchingPurposeBoth
+  ///
+  /// In en, this message translates to:
+  /// **'Matching purpose both'**
+  String get matchingPurposeBoth;
+
+  /// Auto-generated for matchingPurposeGymBuddy
+  ///
+  /// In en, this message translates to:
+  /// **'Matching purpose gym buddy'**
+  String get matchingPurposeGymBuddy;
+
+  /// Auto-generated for matchingPurposeOpenToEverything
+  ///
+  /// In en, this message translates to:
+  /// **'Matching purpose open to everything'**
+  String get matchingPurposeOpenToEverything;
+
+  /// Auto-generated for matchingPurposeWorkoutPartner
+  ///
+  /// In en, this message translates to:
+  /// **'Matching purpose workout partner'**
+  String get matchingPurposeWorkoutPartner;
+
+  /// Auto-generated for maxAge
+  ///
+  /// In en, this message translates to:
+  /// **'Max age'**
+  String get maxAge;
+
+  /// Auto-generated for maxDistance
+  ///
+  /// In en, this message translates to:
+  /// **'Max distance'**
+  String get maxDistance;
+
+  /// Auto-generated for midday
+  ///
+  /// In en, this message translates to:
+  /// **'Midday'**
+  String get midday;
+
+  /// Auto-generated for minAge
+  ///
+  /// In en, this message translates to:
+  /// **'Min age'**
+  String get minAge;
+
+  /// Auto-generated for minimalView
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal view'**
+  String get minimalView;
+
+  /// Auto-generated for morning
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get morning;
+
+  /// Auto-generated for muscleGain
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle gain'**
+  String get muscleGain;
+
+  /// Auto-generated for needMoreWorkouts
+  ///
+  /// In en, this message translates to:
+  /// **'Need more workouts'**
+  String get needMoreWorkouts;
+
+  /// Auto-generated for newPersonalRecordsAchieved
+  ///
+  /// In en, this message translates to:
+  /// **'New personal records achieved'**
+  String get newPersonalRecordsAchieved;
+
+  /// Auto-generated for noComparisonData
+  ///
+  /// In en, this message translates to:
+  /// **'No comparison data'**
+  String get noComparisonData;
+
+  /// Auto-generated for noMatchesFound
+  ///
+  /// In en, this message translates to:
+  /// **'No matches found'**
+  String get noMatchesFound;
+
+  /// Auto-generated for noPRsYet
+  ///
+  /// In en, this message translates to:
+  /// **'No p rs yet'**
+  String get noPRsYet;
+
+  /// Auto-generated for noWorkoutsFound
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts found'**
+  String get noWorkoutsFound;
+
+  /// Auto-generated for noWorkoutsFoundDescription
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts found description'**
+  String get noWorkoutsFoundDescription;
+
+  /// Auto-generated for noWorkoutsRecorded
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts recorded'**
+  String get noWorkoutsRecorded;
+
+  /// Auto-generated for notNow
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
+  /// Auto-generated for oops
+  ///
+  /// In en, this message translates to:
+  /// **'Oops'**
+  String get oops;
+
+  /// Auto-generated for openCityPicker
+  ///
+  /// In en, this message translates to:
+  /// **'Open city picker'**
+  String get openCityPicker;
+
+  /// Auto-generated for openIceBreakers
+  ///
+  /// In en, this message translates to:
+  /// **'Open ice breakers'**
+  String get openIceBreakers;
+
+  /// Auto-generated for openInstagram
+  ///
+  /// In en, this message translates to:
+  /// **'Open instagram'**
+  String get openInstagram;
+
+  /// Auto-generated for openSettings
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
+
+  /// Auto-generated for openToDating
+  ///
+  /// In en, this message translates to:
+  /// **'Open to dating'**
+  String get openToDating;
+
+  /// Auto-generated for openToFriendship
+  ///
+  /// In en, this message translates to:
+  /// **'Open to friendship'**
+  String get openToFriendship;
+
+  /// Auto-generated for overallAssessment
+  ///
+  /// In en, this message translates to:
+  /// **'Overall assessment'**
+  String get overallAssessment;
+
+  /// Auto-generated for partnerships
+  ///
+  /// In en, this message translates to:
+  /// **'Partnerships'**
+  String get partnerships;
+
+  /// Auto-generated for pass
+  ///
+  /// In en, this message translates to:
+  /// **'Pass'**
+  String get pass;
+
+  /// Auto-generated for perDay
+  ///
+  /// In en, this message translates to:
+  /// **'Per day'**
+  String get perDay;
+
+  /// Auto-generated for performanceDeclined
+  ///
+  /// In en, this message translates to:
+  /// **'Performance declined'**
+  String get performanceDeclined;
+
+  /// Auto-generated for photoVerified
+  ///
+  /// In en, this message translates to:
+  /// **'Photo verified'**
+  String get photoVerified;
+
+  /// Auto-generated for pleaseSelectAtLeastOneGoal
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one goal'**
+  String get pleaseSelectAtLeastOneGoal;
+
+  /// Auto-generated for pleaseSelectPreferredTimes
+  ///
+  /// In en, this message translates to:
+  /// **'Please select preferred times'**
+  String get pleaseSelectPreferredTimes;
+
+  /// Auto-generated for pleaseSelectYourCity
+  ///
+  /// In en, this message translates to:
+  /// **'Please select your city'**
+  String get pleaseSelectYourCity;
+
+  /// Auto-generated for preferredTimes
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred times'**
+  String get preferredTimes;
+
+  /// Auto-generated for preparing
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing'**
+  String get preparing;
+
+  /// Auto-generated for profileUpdatedSuccessfully
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccessfully;
+
+  /// Auto-generated for progressTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Progress title'**
+  String get progressTitle;
+
+  /// Auto-generated for rating
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// Auto-generated for redo
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get redo;
+
+  /// Auto-generated for refreshMatches
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh matches'**
+  String get refreshMatches;
+
+  /// Auto-generated for rep
+  ///
+  /// In en, this message translates to:
+  /// **'Rep'**
+  String get rep;
+
+  /// Auto-generated for reportReasonFakeProfile
+  ///
+  /// In en, this message translates to:
+  /// **'Report reason fake profile'**
+  String get reportReasonFakeProfile;
+
+  /// Auto-generated for reportReasonHarassment
+  ///
+  /// In en, this message translates to:
+  /// **'Report reason harassment'**
+  String get reportReasonHarassment;
+
+  /// Auto-generated for reportReasonInappropriatePhotos
+  ///
+  /// In en, this message translates to:
+  /// **'Report reason inappropriate photos'**
+  String get reportReasonInappropriatePhotos;
+
+  /// Auto-generated for reportReasonOther
+  ///
+  /// In en, this message translates to:
+  /// **'Report reason other'**
+  String get reportReasonOther;
+
+  /// Auto-generated for reportReasonSpam
+  ///
+  /// In en, this message translates to:
+  /// **'Report reason spam'**
+  String get reportReasonSpam;
+
+  /// Auto-generated for reportReasonUnderage
+  ///
+  /// In en, this message translates to:
+  /// **'Report reason underage'**
+  String get reportReasonUnderage;
+
+  /// Auto-generated for reportUser
+  ///
+  /// In en, this message translates to:
+  /// **'Report user'**
+  String get reportUser;
+
+  /// Auto-generated for resetDefaults
+  ///
+  /// In en, this message translates to:
+  /// **'Reset defaults'**
+  String get resetDefaults;
+
+  /// Auto-generated for resetLayout
+  ///
+  /// In en, this message translates to:
+  /// **'Reset layout'**
+  String get resetLayout;
+
+  /// Auto-generated for resting
+  ///
+  /// In en, this message translates to:
+  /// **'Resting'**
+  String get resting;
+
+  /// Auto-generated for restorePurchases
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
+
+  /// Auto-generated for rpeTimerAndMore
+  ///
+  /// In en, this message translates to:
+  /// **'Rpe timer and more'**
+  String get rpeTimerAndMore;
+
+  /// Auto-generated for saveToFirebaseForReuse
+  ///
+  /// In en, this message translates to:
+  /// **'Save to firebase for reuse'**
+  String get saveToFirebaseForReuse;
+
+  /// Auto-generated for screenWontTurnOff
+  ///
+  /// In en, this message translates to:
+  /// **'Screen wont turn off'**
+  String get screenWontTurnOff;
+
+  /// Auto-generated for search
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// Auto-generated for searchCity
+  ///
+  /// In en, this message translates to:
+  /// **'Search city'**
+  String get searchCity;
+
+  /// Auto-generated for searchingForMatches
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for matches'**
+  String get searchingForMatches;
+
+  /// Auto-generated for seedDemoData
+  ///
+  /// In en, this message translates to:
+  /// **'Seed demo data'**
+  String get seedDemoData;
+
+  /// Auto-generated for selectDataType
+  ///
+  /// In en, this message translates to:
+  /// **'Select data type'**
+  String get selectDataType;
+
+  /// Auto-generated for selectDates
+  ///
+  /// In en, this message translates to:
+  /// **'Select dates'**
+  String get selectDates;
+
+  /// Auto-generated for selectExportFormat
+  ///
+  /// In en, this message translates to:
+  /// **'Select export format'**
+  String get selectExportFormat;
+
+  /// Auto-generated for selectMetrics
+  ///
+  /// In en, this message translates to:
+  /// **'Select metrics'**
+  String get selectMetrics;
+
+  /// Auto-generated for setTrackingReady
+  ///
+  /// In en, this message translates to:
+  /// **'Set tracking ready'**
+  String get setTrackingReady;
+
+  /// Auto-generated for setupYourProfile
+  ///
+  /// In en, this message translates to:
+  /// **'Setup your profile'**
+  String get setupYourProfile;
+
+  /// Auto-generated for similarPerformance
+  ///
+  /// In en, this message translates to:
+  /// **'Similar performance'**
+  String get similarPerformance;
+
+  /// Auto-generated for sinceRegistration
+  ///
+  /// In en, this message translates to:
+  /// **'Since registration'**
+  String get sinceRegistration;
+
+  /// Auto-generated for skipTimer
+  ///
+  /// In en, this message translates to:
+  /// **'Skip timer'**
+  String get skipTimer;
+
+  /// Auto-generated for startWorkoutNow
+  ///
+  /// In en, this message translates to:
+  /// **'Start workout now'**
+  String get startWorkoutNow;
+
+  /// Auto-generated for stopSet
+  ///
+  /// In en, this message translates to:
+  /// **'Stop set'**
+  String get stopSet;
+
+  /// Auto-generated for streakLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Streak label'**
+  String get streakLabel;
+
+  /// Auto-generated for superLike
+  ///
+  /// In en, this message translates to:
+  /// **'Super like'**
+  String get superLike;
+
+  /// Auto-generated for swipeToDecide
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to decide'**
+  String get swipeToDecide;
+
+  /// Auto-generated for syncAllWorkouts
+  ///
+  /// In en, this message translates to:
+  /// **'Sync all workouts'**
+  String get syncAllWorkouts;
+
+  /// Auto-generated for syncWorkouts
+  ///
+  /// In en, this message translates to:
+  /// **'Sync workouts'**
+  String get syncWorkouts;
+
+  /// Auto-generated for syncing
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing'**
+  String get syncing;
+
+  /// Auto-generated for tapPlusToAddExercise
+  ///
+  /// In en, this message translates to:
+  /// **'Tap plus to add exercise'**
+  String get tapPlusToAddExercise;
+
+  /// Auto-generated for tapToViewMore
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view more'**
+  String get tapToViewMore;
+
+  /// Auto-generated for tellUsAboutYourself
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about yourself'**
+  String get tellUsAboutYourself;
+
+  /// Auto-generated for templateLimitSuggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Template limit suggestion'**
+  String get templateLimitSuggestion;
+
+  /// Auto-generated for templateSyncDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Template sync description'**
+  String get templateSyncDescription;
+
+  /// Auto-generated for thisMonth
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get thisMonth;
+
+  /// Auto-generated for timeRange
+  ///
+  /// In en, this message translates to:
+  /// **'Time range'**
+  String get timeRange;
+
+  /// Auto-generated for toggleToShowInMatching
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle to show in matching'**
+  String get toggleToShowInMatching;
+
+  /// Auto-generated for totalWeightLifted
+  ///
+  /// In en, this message translates to:
+  /// **'Total weight lifted'**
+  String get totalWeightLifted;
+
+  /// Auto-generated for trainingDays
+  ///
+  /// In en, this message translates to:
+  /// **'Training days'**
+  String get trainingDays;
+
+  /// Auto-generated for unableToGetLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to get location'**
+  String get unableToGetLocation;
+
+  /// Auto-generated for unknownLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown location'**
+  String get unknownLocation;
+
+  /// Auto-generated for updateLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Update location'**
+  String get updateLocation;
+
+  /// Auto-generated for upgradeForMoreTemplates
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade for more templates'**
+  String get upgradeForMoreTemplates;
+
+  /// Auto-generated for upgradeToPremiumForSync
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to premium for sync'**
+  String get upgradeToPremiumForSync;
+
+  /// Auto-generated for uploaded
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded'**
+  String get uploaded;
+
+  /// Auto-generated for useCurrentLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Use current location'**
+  String get useCurrentLocation;
+
+  /// Auto-generated for valueTooHigh
+  ///
+  /// In en, this message translates to:
+  /// **'Value too high'**
+  String get valueTooHigh;
+
+  /// Auto-generated for valueTooLow
+  ///
+  /// In en, this message translates to:
+  /// **'Value too low'**
+  String get valueTooLow;
+
+  /// Auto-generated for velocityProfile
+  ///
+  /// In en, this message translates to:
+  /// **'Velocity profile'**
+  String get velocityProfile;
+
+  /// Auto-generated for verified
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get verified;
+
+  /// Auto-generated for verifiedOnly
+  ///
+  /// In en, this message translates to:
+  /// **'Verified only'**
+  String get verifiedOnly;
+
+  /// Auto-generated for viewProfile
+  ///
+  /// In en, this message translates to:
+  /// **'View profile'**
+  String get viewProfile;
+
+  /// Auto-generated for viewWorkout
+  ///
+  /// In en, this message translates to:
+  /// **'View workout'**
+  String get viewWorkout;
+
+  /// Auto-generated for volumeDetails
+  ///
+  /// In en, this message translates to:
+  /// **'Volume details'**
+  String get volumeDetails;
+
+  /// Auto-generated for volumePerDay
+  ///
+  /// In en, this message translates to:
+  /// **'Volume per day'**
+  String get volumePerDay;
+
+  /// Auto-generated for volumeSettings
+  ///
+  /// In en, this message translates to:
+  /// **'Volume settings'**
+  String get volumeSettings;
+
+  /// Auto-generated for vsLastWeek
+  ///
+  /// In en, this message translates to:
+  /// **'Vs last week'**
+  String get vsLastWeek;
+
+  /// Auto-generated for weeklyDistribution
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly distribution'**
+  String get weeklyDistribution;
+
+  /// Auto-generated for weeklyDistributionDesc
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly distribution desc'**
+  String get weeklyDistributionDesc;
+
+  /// Auto-generated for weeklyDistributionInfo
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly distribution info'**
+  String get weeklyDistributionInfo;
+
+  /// Auto-generated for weeklyVolume
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly volume'**
+  String get weeklyVolume;
+
+  /// Auto-generated for weightLoss
+  ///
+  /// In en, this message translates to:
+  /// **'Weight loss'**
+  String get weightLoss;
+
+  /// Auto-generated for weightUnit
+  ///
+  /// In en, this message translates to:
+  /// **'Weight unit'**
+  String get weightUnit;
+
+  /// Auto-generated for workoutComparison
+  ///
+  /// In en, this message translates to:
+  /// **'Workout comparison'**
+  String get workoutComparison;
+
+  /// Auto-generated for workoutDeclineDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Workout decline description'**
+  String get workoutDeclineDescription;
+
+  /// Auto-generated for workoutDeleted
+  ///
+  /// In en, this message translates to:
+  /// **'Workout deleted'**
+  String get workoutDeleted;
+
+  /// Auto-generated for workoutDuplicated
+  ///
+  /// In en, this message translates to:
+  /// **'Workout duplicated'**
+  String get workoutDuplicated;
+
+  /// Auto-generated for workoutGoals
+  ///
+  /// In en, this message translates to:
+  /// **'Workout goals'**
+  String get workoutGoals;
+
+  /// Auto-generated for workoutImprovementDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Workout improvement description'**
+  String get workoutImprovementDescription;
+
+  /// Auto-generated for workoutPartnerOnly
+  ///
+  /// In en, this message translates to:
+  /// **'Workout partner only'**
+  String get workoutPartnerOnly;
+
+  /// Auto-generated for workoutSimilarDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Workout similar description'**
+  String get workoutSimilarDescription;
+
+  /// Auto-generated for workoutType
+  ///
+  /// In en, this message translates to:
+  /// **'Workout type'**
+  String get workoutType;
+
+  /// Auto-generated for workoutsLabel
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts label'**
+  String get workoutsLabel;
+
+  /// Auto-generated for years
+  ///
+  /// In en, this message translates to:
+  /// **'Years'**
+  String get years;
+
+  /// Auto-generated for zenMode
+  ///
+  /// In en, this message translates to:
+  /// **'Zen mode'**
+  String get zenMode;
+
+  /// Auto-generated for zenModeActiveDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Zen mode active description'**
+  String get zenModeActiveDescription;
+
+  /// Auto-generated for zenModeInactiveDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Zen mode inactive description'**
+  String get zenModeInactiveDescription;
+
+  /// Auto-generated for zonePicker
+  ///
+  /// In en, this message translates to:
+  /// **'Zone picker'**
+  String get zonePicker;
+
+  /// Workout duration label
+  ///
+  /// In en, this message translates to:
+  /// **'Workout duration'**
+  String get workoutDuration;
+
+  /// Try again button
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate

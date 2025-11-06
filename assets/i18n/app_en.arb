@@ -1467,9 +1467,15 @@
   "@importSettingsDesc": {
     "description": "Import settings description"
   },
-  "resetToDefaults": "Reset to Defaults",
+  "resetToDefaults": "Reset to {mode} Defaults",
   "@resetToDefaults": {
-    "description": "Reset settings to default values"
+    "description": "Button text to reset to mode defaults",
+    "placeholders": {
+      "mode": {
+        "type": "String",
+        "description": "Mode name (Base or Pro)"
+      }
+    }
   },
   "resetToDefaultsDesc": "Restore all settings to default",
   "@resetToDefaultsDesc": {
@@ -2428,7 +2434,7 @@
   },
   "comingSoon": "Coming Soon",
   "@comingSoon": {
-    "description": "Coming soon dialog title"
+    "description": "Coming soon label"
   },
   "warmupSetsAdded": "Added {count} warmup sets",
   "@warmupSetsAdded": {
@@ -2656,6 +2662,32 @@
     "description": "Workout started snackbar",
     "placeholders": {
       "name": {
+        "type": "String"
+      }
+    }
+  },
+  "templateNotFound": "Template not found",
+  "@templateNotFound": {
+    "description": "Template not found error"
+  },
+  "loadingTemplate": "Loading template...",
+  "@loadingTemplate": {
+    "description": "Loading template message"
+  },
+  "templateLoadError": "Error loading template: {error}",
+  "@templateLoadError": {
+    "description": "Template load error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "unexpectedError": "Unexpected error: {error}",
+  "@unexpectedError": {
+    "description": "Unexpected error message",
+    "placeholders": {
+      "error": {
         "type": "String"
       }
     }
@@ -3131,10 +3163,6 @@
   "community": "Community",
   "@community": {
     "description": "Community section title"
-  },
-  "comingSoon": "Coming Soon",
-  "@comingSoon": {
-    "description": "Coming soon label"
   },
   "communityComingSoonTitle": "Community Feature Coming Soon",
   "@communityComingSoonTitle": {
@@ -5509,7 +5537,7 @@
   },
   "warning": "Warning",
   "@warning": {
-    "description": "Warning type filter option"
+    "description": "Warning dialog title"
   },
   "variant": "Variant",
   "@variant": {
@@ -7557,9 +7585,9 @@
   "strategyHighvolumeincreasefreqDesc": "Same volume spread across more sessions reduces per-session fatigue",
   "strategyHighvolumeincreasefreqImpl": "Split current volume across more days. Example: 28 sets/week → 7 sets × 4 days instead of 14 sets × 2 days",
   "strategyHighvolumeincreasefreqOutcome": "Better recovery between sessions and higher quality sets",
-  "filterByType": "Filter by Type",
+  "filterByType": "Type",
   "@filterByType": {
-    "description": "Filter label for recommendation type filter"
+    "description": "Filter label for contribution type"
   },
   "filterByPriority": "Filter by Priority",
   "@filterByPriority": {
@@ -13738,17 +13766,17 @@
       }
     }
   },
-  "countingModeWeighted": "Weighted",
+  "countingModeWeighted": "Weight + Reps",
   "@countingModeWeighted": {
-    "description": "Exercise counting mode for weighted exercises (with weight)"
+    "description": "Counting mode for weighted exercises"
   },
-  "countingModeReps": "Reps",
+  "countingModeReps": "Reps Only",
   "@countingModeReps": {
-    "description": "Exercise counting mode for bodyweight exercises (reps only)"
+    "description": "Counting mode for bodyweight exercises"
   },
-  "countingModeTime": "Time",
+  "countingModeTime": "Time-based",
   "@countingModeTime": {
-    "description": "Exercise counting mode for time-based exercises"
+    "description": "Counting mode for time-based exercises"
   },
   "refreshed": "Refreshed",
   "@refreshed": {
@@ -14167,7 +14195,7 @@
   },
   "current": "Current",
   "@current": {
-    "description": "Current status indicator"
+    "description": "Badge label indicating current selection"
   },
   "elite": "Elite",
   "@elite": {
@@ -14720,10 +14748,6 @@
   "@currentFormat": {
     "description": "Label showing the current counting format"
   },
-  "countingModeWeighted": "Weight + Reps",
-  "@countingModeWeighted": {
-    "description": "Counting mode for weighted exercises"
-  },
   "countingModeWeightedDesc": "Input: Weight (kg/lb) + Reps",
   "@countingModeWeightedDesc": {
     "description": "Description for weighted counting mode"
@@ -14732,10 +14756,6 @@
   "@countingModeWeightedExample": {
     "description": "Example for weighted counting mode"
   },
-  "countingModeReps": "Reps Only",
-  "@countingModeReps": {
-    "description": "Counting mode for bodyweight exercises"
-  },
   "countingModeRepsDesc": "Input: Reps only (no weight)",
   "@countingModeRepsDesc": {
     "description": "Description for reps-only counting mode"
@@ -14743,10 +14763,6 @@
   "countingModeRepsExample": "Example: 15 reps",
   "@countingModeRepsExample": {
     "description": "Example for reps-only counting mode"
-  },
-  "countingModeTime": "Time-based",
-  "@countingModeTime": {
-    "description": "Counting mode for time-based exercises"
   },
   "countingModeTimeDesc": "Input: Duration (mm:ss)",
   "@countingModeTimeDesc": {
@@ -14759,14 +14775,6 @@
   "confirmChange": "Confirm change",
   "@confirmChange": {
     "description": "Button to confirm a change action"
-  },
-  "current": "Current",
-  "@current": {
-    "description": "Badge label indicating current selection"
-  },
-  "warning": "Warning",
-  "@warning": {
-    "description": "Warning dialog title"
   },
   "countingModeWarningTitle": "Warning",
   "@countingModeWarningTitle": {
@@ -14954,16 +14962,6 @@
   "@modeSwitchUndoHint": {
     "description": "Hint about undo feature in mode switch dialog"
   },
-  "resetToDefaults": "Reset to {mode} Defaults",
-  "@resetToDefaults": {
-    "description": "Button text to reset to mode defaults",
-    "placeholders": {
-      "mode": {
-        "type": "String",
-        "description": "Mode name (Base or Pro)"
-      }
-    }
-  },
   "undoSuccessful": "✅ Settings restored",
   "@undoSuccessful": {
     "description": "Snackbar message when undo is successful"
@@ -14987,10 +14985,6 @@
   "filterByDifficulty": "Difficulty",
   "@filterByDifficulty": {
     "description": "Filter label for difficulty level"
-  },
-  "filterByType": "Type",
-  "@filterByType": {
-    "description": "Filter label for contribution type"
   },
   "filterByAuthorTier": "Author",
   "@filterByAuthorTier": {
@@ -15301,5 +15295,973 @@
   "apreCalculationMethodDescription": "Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.",
   "@apreCalculationMethodDescription": {
     "description": "Description explaining APRE calculation method options"
+  },
+  "about": "About",
+  "@about": {
+    "description": "Auto-generated for about"
+  },
+  "accurate": "Accurate",
+  "@accurate": {
+    "description": "Auto-generated for accurate"
+  },
+  "achievementsCopied": "Achievements copied",
+  "@achievementsCopied": {
+    "description": "Auto-generated for achievementsCopied"
+  },
+  "activeDays": "Active days",
+  "@activeDays": {
+    "description": "Auto-generated for activeDays"
+  },
+  "activeMatches": "Active matches",
+  "@activeMatches": {
+    "description": "Auto-generated for activeMatches"
+  },
+  "addRep": "Add rep",
+  "@addRep": {
+    "description": "Auto-generated for addRep"
+  },
+  "advancedTemplate": "Advanced template",
+  "@advancedTemplate": {
+    "description": "Auto-generated for advancedTemplate"
+  },
+  "afternoon": "Afternoon",
+  "@afternoon": {
+    "description": "Auto-generated for afternoon"
+  },
+  "ageRange": "Age range",
+  "@ageRange": {
+    "description": "Auto-generated for ageRange"
+  },
+  "applyProgressiveOverload": "Apply progressive overload",
+  "@applyProgressiveOverload": {
+    "description": "Auto-generated for applyProgressiveOverload"
+  },
+  "availability": "Availability",
+  "@availability": {
+    "description": "Auto-generated for availability"
+  },
+  "averageVolume": "Average volume",
+  "@averageVolume": {
+    "description": "Auto-generated for averageVolume"
+  },
+  "avgPerWeek": "Avg per week",
+  "@avgPerWeek": {
+    "description": "Auto-generated for avgPerWeek"
+  },
+  "batterySaverActive": "Battery saver active",
+  "@batterySaverActive": {
+    "description": "Auto-generated for batterySaverActive"
+  },
+  "beginnerTemplate": "Beginner template",
+  "@beginnerTemplate": {
+    "description": "Auto-generated for beginnerTemplate"
+  },
+  "bestDay": "Best day",
+  "@bestDay": {
+    "description": "Auto-generated for bestDay"
+  },
+  "bio": "Bio",
+  "@bio": {
+    "description": "Auto-generated for bio"
+  },
+  "blockUser": "Block user",
+  "@blockUser": {
+    "description": "Auto-generated for blockUser"
+  },
+  "boosted": "Boosted",
+  "@boosted": {
+    "description": "Auto-generated for boosted"
+  },
+  "bothWorkoutAndGym": "Both workout and gym",
+  "@bothWorkoutAndGym": {
+    "description": "Auto-generated for bothWorkoutAndGym"
+  },
+  "buddyMatching": "Buddy matching",
+  "@buddyMatching": {
+    "description": "Auto-generated for buddyMatching"
+  },
+  "changeLayout": "Change layout",
+  "@changeLayout": {
+    "description": "Auto-generated for changeLayout"
+  },
+  "cityPicker": "City picker",
+  "@cityPicker": {
+    "description": "Auto-generated for cityPicker"
+  },
+  "clearAllSets": "Clear all sets",
+  "@clearAllSets": {
+    "description": "Auto-generated for clearAllSets"
+  },
+  "clearDemoData": "Clear demo data",
+  "@clearDemoData": {
+    "description": "Auto-generated for clearDemoData"
+  },
+  "cloudSync": "Cloud sync",
+  "@cloudSync": {
+    "description": "Auto-generated for cloudSync"
+  },
+  "compactView": "Compact view",
+  "@compactView": {
+    "description": "Auto-generated for compactView"
+  },
+  "comparedTo": "Compared to",
+  "@comparedTo": {
+    "description": "Auto-generated for comparedTo"
+  },
+  "comparedToLast": "Compared to last",
+  "@comparedToLast": {
+    "description": "Auto-generated for comparedToLast"
+  },
+  "comparedToPrevious": "Compared to previous",
+  "@comparedToPrevious": {
+    "description": "Auto-generated for comparedToPrevious"
+  },
+  "completeAllSets": "Complete all sets",
+  "@completeAllSets": {
+    "description": "Auto-generated for completeAllSets"
+  },
+  "completeAnalysis": "Complete analysis",
+  "@completeAnalysis": {
+    "description": "Auto-generated for completeAnalysis"
+  },
+  "completeStatistics": "Complete statistics",
+  "@completeStatistics": {
+    "description": "Auto-generated for completeStatistics"
+  },
+  "consecutiveDays": "Consecutive days",
+  "@consecutiveDays": {
+    "description": "Auto-generated for consecutiveDays"
+  },
+  "copyFromLastWorkout": "Copied from last workout",
+  "@copyFromLastWorkout": {
+    "description": "Auto-generated for copyFromLastWorkout"
+  },
+  "criticalPriority": "Critical priority",
+  "@criticalPriority": {
+    "description": "Auto-generated for criticalPriority"
+  },
+  "customDateRange": "Custom date range",
+  "@customDateRange": {
+    "description": "Auto-generated for customDateRange"
+  },
+  "dailyAverage": "Daily average",
+  "@dailyAverage": {
+    "description": "Auto-generated for dailyAverage"
+  },
+  "dailyTrend": "Daily trend",
+  "@dailyTrend": {
+    "description": "Auto-generated for dailyTrend"
+  },
+  "dataExported": "Data exported",
+  "@dataExported": {
+    "description": "Auto-generated for dataExported"
+  },
+  "dateRange": "Date range",
+  "@dateRange": {
+    "description": "Auto-generated for dateRange"
+  },
+  "declined": "Declined",
+  "@declined": {
+    "description": "Auto-generated for declined"
+  },
+  "demoProfiles": "Demo profiles",
+  "@demoProfiles": {
+    "description": "Auto-generated for demoProfiles"
+  },
+  "detailedStats": "Detailed stats",
+  "@detailedStats": {
+    "description": "Auto-generated for detailedStats"
+  },
+  "developmentMode": "Development mode",
+  "@developmentMode": {
+    "description": "Auto-generated for developmentMode"
+  },
+  "discardWorkoutMessage": "Discard workout message",
+  "@discardWorkoutMessage": {
+    "description": "Auto-generated for discardWorkoutMessage"
+  },
+  "discardWorkoutTitle": "Discard workout title",
+  "@discardWorkoutTitle": {
+    "description": "Auto-generated for discardWorkoutTitle"
+  },
+  "distance": "Distance",
+  "@distance": {
+    "description": "Auto-generated for distance"
+  },
+  "downloaded": "Downloaded",
+  "@downloaded": {
+    "description": "Auto-generated for downloaded"
+  },
+  "duplicateWorkout": "Duplicate workout",
+  "@duplicateWorkout": {
+    "description": "Auto-generated for duplicateWorkout"
+  },
+  "editProfile": "Edit profile",
+  "@editProfile": {
+    "description": "Auto-generated for editProfile"
+  },
+  "editTemplateDescription": "Edit template description",
+  "@editTemplateDescription": {
+    "description": "Auto-generated for editTemplateDescription"
+  },
+  "enableLocation": "Enable location",
+  "@enableLocation": {
+    "description": "Auto-generated for enableLocation"
+  },
+  "enableLocationForBetterMatches": "Enable location for better matches",
+  "@enableLocationForBetterMatches": {
+    "description": "Auto-generated for enableLocationForBetterMatches"
+  },
+  "endWorkoutTitle": "End workout title",
+  "@endWorkoutTitle": {
+    "description": "Auto-generated for endWorkoutTitle"
+  },
+  "endurance": "Endurance",
+  "@endurance": {
+    "description": "Auto-generated for endurance"
+  },
+  "errorAuth": "Error auth",
+  "@errorAuth": {
+    "description": "Auto-generated for errorAuth"
+  },
+  "errorGeneric": "Error generic",
+  "@errorGeneric": {
+    "description": "Auto-generated for errorGeneric"
+  },
+  "errorInvalidEmail": "Error invalid email",
+  "@errorInvalidEmail": {
+    "description": "Auto-generated for errorInvalidEmail"
+  },
+  "errorNetwork": "Error network",
+  "@errorNetwork": {
+    "description": "Auto-generated for errorNetwork"
+  },
+  "errorUserNotFound": "Error user not found",
+  "@errorUserNotFound": {
+    "description": "Auto-generated for errorUserNotFound"
+  },
+  "errorWeakPassword": "Error weak password",
+  "@errorWeakPassword": {
+    "description": "Auto-generated for errorWeakPassword"
+  },
+  "essentialStatistics": "Essential statistics",
+  "@essentialStatistics": {
+    "description": "Auto-generated for essentialStatistics"
+  },
+  "evening": "Evening",
+  "@evening": {
+    "description": "Auto-generated for evening"
+  },
+  "executing": "Executing",
+  "@executing": {
+    "description": "Auto-generated for executing"
+  },
+  "expertTemplate": "Expert template",
+  "@expertTemplate": {
+    "description": "Auto-generated for expertTemplate"
+  },
+  "export": "Export",
+  "@export": {
+    "description": "Auto-generated for export"
+  },
+  "exporting": "Exporting",
+  "@exporting": {
+    "description": "Auto-generated for exporting"
+  },
+  "failed": "Failed",
+  "@failed": {
+    "description": "Auto-generated for failed"
+  },
+  "fatigue": "Fatigue",
+  "@fatigue": {
+    "description": "Auto-generated for fatigue"
+  },
+  "fatto": "Fatto",
+  "@fatto": {
+    "description": "Auto-generated for fatto"
+  },
+  "fieldRequired": "Field required",
+  "@fieldRequired": {
+    "description": "Auto-generated for fieldRequired"
+  },
+  "filterWorkouts": "Filter workouts",
+  "@filterWorkouts": {
+    "description": "Auto-generated for filterWorkouts"
+  },
+  "findYourWorkoutPartner": "Find your workout partner",
+  "@findYourWorkoutPartner": {
+    "description": "Auto-generated for findYourWorkoutPartner"
+  },
+  "flexibility": "Flexibility",
+  "@flexibility": {
+    "description": "Auto-generated for flexibility"
+  },
+  "form": "Form",
+  "@form": {
+    "description": "Auto-generated for form"
+  },
+  "fullView": "Full view",
+  "@fullView": {
+    "description": "Auto-generated for fullView"
+  },
+  "generalFitness": "General fitness",
+  "@generalFitness": {
+    "description": "Auto-generated for generalFitness"
+  },
+  "goPremium": "Go premium",
+  "@goPremium": {
+    "description": "Auto-generated for goPremium"
+  },
+  "gymBuddyOnly": "Gym buddy only",
+  "@gymBuddyOnly": {
+    "description": "Auto-generated for gymBuddyOnly"
+  },
+  "hypertrophy": "Hypertrophy",
+  "@hypertrophy": {
+    "description": "Auto-generated for hypertrophy"
+  },
+  "iceBreakerCategoryCasual": "Ice breaker category casual",
+  "@iceBreakerCategoryCasual": {
+    "description": "Auto-generated for iceBreakerCategoryCasual"
+  },
+  "iceBreakerCategoryExperience": "Ice breaker category experience",
+  "@iceBreakerCategoryExperience": {
+    "description": "Auto-generated for iceBreakerCategoryExperience"
+  },
+  "iceBreakerCategoryFitness": "Ice breaker category fitness",
+  "@iceBreakerCategoryFitness": {
+    "description": "Auto-generated for iceBreakerCategoryFitness"
+  },
+  "iceBreakerCategoryGoals": "Ice breaker category goals",
+  "@iceBreakerCategoryGoals": {
+    "description": "Auto-generated for iceBreakerCategoryGoals"
+  },
+  "iceBreakerCategoryMotivation": "Ice breaker category motivation",
+  "@iceBreakerCategoryMotivation": {
+    "description": "Auto-generated for iceBreakerCategoryMotivation"
+  },
+  "iceBreakerCategoryWorkout": "Ice breaker category workout",
+  "@iceBreakerCategoryWorkout": {
+    "description": "Auto-generated for iceBreakerCategoryWorkout"
+  },
+  "iceBreakers": "Ice breakers",
+  "@iceBreakers": {
+    "description": "Auto-generated for iceBreakers"
+  },
+  "improved": "Improved",
+  "@improved": {
+    "description": "Auto-generated for improved"
+  },
+  "improvementDetected": "Improvement detected",
+  "@improvementDetected": {
+    "description": "Auto-generated for improvementDetected"
+  },
+  "instagramHandle": "Instagram handle",
+  "@instagramHandle": {
+    "description": "Auto-generated for instagramHandle"
+  },
+  "instagramVerified": "Instagram verified",
+  "@instagramVerified": {
+    "description": "Auto-generated for instagramVerified"
+  },
+  "intensity": "Intensity",
+  "@intensity": {
+    "description": "Auto-generated for intensity"
+  },
+  "intermediateTemplate": "Intermediate template",
+  "@intermediateTemplate": {
+    "description": "Auto-generated for intermediateTemplate"
+  },
+  "invalidValue": "Invalid value",
+  "@invalidValue": {
+    "description": "Auto-generated for invalidValue"
+  },
+  "itsAMatch": "It's a match",
+  "@itsAMatch": {
+    "description": "Auto-generated for itsAMatch"
+  },
+  "km": "Km",
+  "@km": {
+    "description": "Auto-generated for km"
+  },
+  "last": "Last",
+  "@last": {
+    "description": "Auto-generated for last"
+  },
+  "lastSync": "Last sync",
+  "@lastSync": {
+    "description": "Auto-generated for lastSync"
+  },
+  "like": "Like",
+  "@like": {
+    "description": "Auto-generated for like"
+  },
+  "localStorageOnly": "Local storage only",
+  "@localStorageOnly": {
+    "description": "Auto-generated for localStorageOnly"
+  },
+  "location": "Location",
+  "@location": {
+    "description": "Auto-generated for location"
+  },
+  "locationHelpsFindNearbyBuddies": "Location helps find nearby buddies",
+  "@locationHelpsFindNearbyBuddies": {
+    "description": "Auto-generated for locationHelpsFindNearbyBuddies"
+  },
+  "locationPermissionDenied": "Location permission denied",
+  "@locationPermissionDenied": {
+    "description": "Auto-generated for locationPermissionDenied"
+  },
+  "locationPermissionExplanation": "Location permission explanation",
+  "@locationPermissionExplanation": {
+    "description": "Auto-generated for locationPermissionExplanation"
+  },
+  "locationPermissionGranted": "Location permission granted",
+  "@locationPermissionGranted": {
+    "description": "Auto-generated for locationPermissionGranted"
+  },
+  "locationPermissionRequired": "Location permission required",
+  "@locationPermissionRequired": {
+    "description": "Auto-generated for locationPermissionRequired"
+  },
+  "locationUpdateError": "Location update error",
+  "@locationUpdateError": {
+    "description": "Auto-generated for locationUpdateError"
+  },
+  "locationUpdated": "Location updated",
+  "@locationUpdated": {
+    "description": "Auto-generated for locationUpdated"
+  },
+  "lookingForWorkoutBuddy": "Looking for workout buddy",
+  "@lookingForWorkoutBuddy": {
+    "description": "Auto-generated for lookingForWorkoutBuddy"
+  },
+  "matchFilters": "Match filters",
+  "@matchFilters": {
+    "description": "Auto-generated for matchFilters"
+  },
+  "matchingPurpose": "Matching purpose",
+  "@matchingPurpose": {
+    "description": "Auto-generated for matchingPurpose"
+  },
+  "matchingPurposeBoth": "Matching purpose both",
+  "@matchingPurposeBoth": {
+    "description": "Auto-generated for matchingPurposeBoth"
+  },
+  "matchingPurposeGymBuddy": "Matching purpose gym buddy",
+  "@matchingPurposeGymBuddy": {
+    "description": "Auto-generated for matchingPurposeGymBuddy"
+  },
+  "matchingPurposeOpenToEverything": "Matching purpose open to everything",
+  "@matchingPurposeOpenToEverything": {
+    "description": "Auto-generated for matchingPurposeOpenToEverything"
+  },
+  "matchingPurposeWorkoutPartner": "Matching purpose workout partner",
+  "@matchingPurposeWorkoutPartner": {
+    "description": "Auto-generated for matchingPurposeWorkoutPartner"
+  },
+  "maxAge": "Max age",
+  "@maxAge": {
+    "description": "Auto-generated for maxAge"
+  },
+  "maxDistance": "Max distance",
+  "@maxDistance": {
+    "description": "Auto-generated for maxDistance"
+  },
+  "midday": "Midday",
+  "@midday": {
+    "description": "Auto-generated for midday"
+  },
+  "minAge": "Min age",
+  "@minAge": {
+    "description": "Auto-generated for minAge"
+  },
+  "minimalView": "Minimal view",
+  "@minimalView": {
+    "description": "Auto-generated for minimalView"
+  },
+  "morning": "Morning",
+  "@morning": {
+    "description": "Auto-generated for morning"
+  },
+  "muscleGain": "Muscle gain",
+  "@muscleGain": {
+    "description": "Auto-generated for muscleGain"
+  },
+  "needMoreWorkouts": "Need more workouts",
+  "@needMoreWorkouts": {
+    "description": "Auto-generated for needMoreWorkouts"
+  },
+  "newPersonalRecordsAchieved": "New personal records achieved",
+  "@newPersonalRecordsAchieved": {
+    "description": "Auto-generated for newPersonalRecordsAchieved"
+  },
+  "noComparisonData": "No comparison data",
+  "@noComparisonData": {
+    "description": "Auto-generated for noComparisonData"
+  },
+  "noMatchesFound": "No matches found",
+  "@noMatchesFound": {
+    "description": "Auto-generated for noMatchesFound"
+  },
+  "noPRsYet": "No p rs yet",
+  "@noPRsYet": {
+    "description": "Auto-generated for noPRsYet"
+  },
+  "noWorkoutsFound": "No workouts found",
+  "@noWorkoutsFound": {
+    "description": "Auto-generated for noWorkoutsFound"
+  },
+  "noWorkoutsFoundDescription": "No workouts found description",
+  "@noWorkoutsFoundDescription": {
+    "description": "Auto-generated for noWorkoutsFoundDescription"
+  },
+  "noWorkoutsRecorded": "No workouts recorded",
+  "@noWorkoutsRecorded": {
+    "description": "Auto-generated for noWorkoutsRecorded"
+  },
+  "notNow": "Not now",
+  "@notNow": {
+    "description": "Auto-generated for notNow"
+  },
+  "oops": "Oops",
+  "@oops": {
+    "description": "Auto-generated for oops"
+  },
+  "openCityPicker": "Open city picker",
+  "@openCityPicker": {
+    "description": "Auto-generated for openCityPicker"
+  },
+  "openIceBreakers": "Open ice breakers",
+  "@openIceBreakers": {
+    "description": "Auto-generated for openIceBreakers"
+  },
+  "openInstagram": "Open instagram",
+  "@openInstagram": {
+    "description": "Auto-generated for openInstagram"
+  },
+  "openSettings": "Open settings",
+  "@openSettings": {
+    "description": "Auto-generated for openSettings"
+  },
+  "openToDating": "Open to dating",
+  "@openToDating": {
+    "description": "Auto-generated for openToDating"
+  },
+  "openToFriendship": "Open to friendship",
+  "@openToFriendship": {
+    "description": "Auto-generated for openToFriendship"
+  },
+  "overallAssessment": "Overall assessment",
+  "@overallAssessment": {
+    "description": "Auto-generated for overallAssessment"
+  },
+  "partnerships": "Partnerships",
+  "@partnerships": {
+    "description": "Auto-generated for partnerships"
+  },
+  "pass": "Pass",
+  "@pass": {
+    "description": "Auto-generated for pass"
+  },
+  "perDay": "Per day",
+  "@perDay": {
+    "description": "Auto-generated for perDay"
+  },
+  "performanceDeclined": "Performance declined",
+  "@performanceDeclined": {
+    "description": "Auto-generated for performanceDeclined"
+  },
+  "photoVerified": "Photo verified",
+  "@photoVerified": {
+    "description": "Auto-generated for photoVerified"
+  },
+  "pleaseSelectAtLeastOneGoal": "Please select at least one goal",
+  "@pleaseSelectAtLeastOneGoal": {
+    "description": "Auto-generated for pleaseSelectAtLeastOneGoal"
+  },
+  "pleaseSelectPreferredTimes": "Please select preferred times",
+  "@pleaseSelectPreferredTimes": {
+    "description": "Auto-generated for pleaseSelectPreferredTimes"
+  },
+  "pleaseSelectYourCity": "Please select your city",
+  "@pleaseSelectYourCity": {
+    "description": "Auto-generated for pleaseSelectYourCity"
+  },
+  "preferredTimes": "Preferred times",
+  "@preferredTimes": {
+    "description": "Auto-generated for preferredTimes"
+  },
+  "preparing": "Preparing",
+  "@preparing": {
+    "description": "Auto-generated for preparing"
+  },
+  "profileUpdatedSuccessfully": "Profile updated successfully",
+  "@profileUpdatedSuccessfully": {
+    "description": "Auto-generated for profileUpdatedSuccessfully"
+  },
+  "progressTitle": "Progress title",
+  "@progressTitle": {
+    "description": "Auto-generated for progressTitle"
+  },
+  "rating": "Rating",
+  "@rating": {
+    "description": "Auto-generated for rating"
+  },
+  "redo": "Redo",
+  "@redo": {
+    "description": "Auto-generated for redo"
+  },
+  "refreshMatches": "Refresh matches",
+  "@refreshMatches": {
+    "description": "Auto-generated for refreshMatches"
+  },
+  "rep": "Rep",
+  "@rep": {
+    "description": "Auto-generated for rep"
+  },
+  "reportReasonFakeProfile": "Report reason fake profile",
+  "@reportReasonFakeProfile": {
+    "description": "Auto-generated for reportReasonFakeProfile"
+  },
+  "reportReasonHarassment": "Report reason harassment",
+  "@reportReasonHarassment": {
+    "description": "Auto-generated for reportReasonHarassment"
+  },
+  "reportReasonInappropriatePhotos": "Report reason inappropriate photos",
+  "@reportReasonInappropriatePhotos": {
+    "description": "Auto-generated for reportReasonInappropriatePhotos"
+  },
+  "reportReasonOther": "Report reason other",
+  "@reportReasonOther": {
+    "description": "Auto-generated for reportReasonOther"
+  },
+  "reportReasonSpam": "Report reason spam",
+  "@reportReasonSpam": {
+    "description": "Auto-generated for reportReasonSpam"
+  },
+  "reportReasonUnderage": "Report reason underage",
+  "@reportReasonUnderage": {
+    "description": "Auto-generated for reportReasonUnderage"
+  },
+  "reportUser": "Report user",
+  "@reportUser": {
+    "description": "Auto-generated for reportUser"
+  },
+  "resetDefaults": "Reset defaults",
+  "@resetDefaults": {
+    "description": "Auto-generated for resetDefaults"
+  },
+  "resetLayout": "Reset layout",
+  "@resetLayout": {
+    "description": "Auto-generated for resetLayout"
+  },
+  "resting": "Resting",
+  "@resting": {
+    "description": "Auto-generated for resting"
+  },
+  "restorePurchases": "Restore purchases",
+  "@restorePurchases": {
+    "description": "Auto-generated for restorePurchases"
+  },
+  "rpeTimerAndMore": "Rpe timer and more",
+  "@rpeTimerAndMore": {
+    "description": "Auto-generated for rpeTimerAndMore"
+  },
+  "saveToFirebaseForReuse": "Save to firebase for reuse",
+  "@saveToFirebaseForReuse": {
+    "description": "Auto-generated for saveToFirebaseForReuse"
+  },
+  "screenWontTurnOff": "Screen wont turn off",
+  "@screenWontTurnOff": {
+    "description": "Auto-generated for screenWontTurnOff"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Auto-generated for search"
+  },
+  "searchCity": "Search city",
+  "@searchCity": {
+    "description": "Auto-generated for searchCity"
+  },
+  "searchingForMatches": "Searching for matches",
+  "@searchingForMatches": {
+    "description": "Auto-generated for searchingForMatches"
+  },
+  "seedDemoData": "Seed demo data",
+  "@seedDemoData": {
+    "description": "Auto-generated for seedDemoData"
+  },
+  "selectDataType": "Select data type",
+  "@selectDataType": {
+    "description": "Auto-generated for selectDataType"
+  },
+  "selectDates": "Select dates",
+  "@selectDates": {
+    "description": "Auto-generated for selectDates"
+  },
+  "selectExportFormat": "Select export format",
+  "@selectExportFormat": {
+    "description": "Auto-generated for selectExportFormat"
+  },
+  "selectMetrics": "Select metrics",
+  "@selectMetrics": {
+    "description": "Auto-generated for selectMetrics"
+  },
+  "setTrackingReady": "Set tracking ready",
+  "@setTrackingReady": {
+    "description": "Auto-generated for setTrackingReady"
+  },
+  "setupYourProfile": "Setup your profile",
+  "@setupYourProfile": {
+    "description": "Auto-generated for setupYourProfile"
+  },
+  "similarPerformance": "Similar performance",
+  "@similarPerformance": {
+    "description": "Auto-generated for similarPerformance"
+  },
+  "sinceRegistration": "Since registration",
+  "@sinceRegistration": {
+    "description": "Auto-generated for sinceRegistration"
+  },
+  "skipTimer": "Skip timer",
+  "@skipTimer": {
+    "description": "Auto-generated for skipTimer"
+  },
+  "startWorkoutNow": "Start workout now",
+  "@startWorkoutNow": {
+    "description": "Auto-generated for startWorkoutNow"
+  },
+  "stopSet": "Stop set",
+  "@stopSet": {
+    "description": "Auto-generated for stopSet"
+  },
+  "streakLabel": "Streak label",
+  "@streakLabel": {
+    "description": "Auto-generated for streakLabel"
+  },
+  "superLike": "Super like",
+  "@superLike": {
+    "description": "Auto-generated for superLike"
+  },
+  "swipeToDecide": "Swipe to decide",
+  "@swipeToDecide": {
+    "description": "Auto-generated for swipeToDecide"
+  },
+  "syncAllWorkouts": "Sync all workouts",
+  "@syncAllWorkouts": {
+    "description": "Auto-generated for syncAllWorkouts"
+  },
+  "syncWorkouts": "Sync workouts",
+  "@syncWorkouts": {
+    "description": "Auto-generated for syncWorkouts"
+  },
+  "syncing": "Syncing",
+  "@syncing": {
+    "description": "Auto-generated for syncing"
+  },
+  "tapPlusToAddExercise": "Tap plus to add exercise",
+  "@tapPlusToAddExercise": {
+    "description": "Auto-generated for tapPlusToAddExercise"
+  },
+  "tapToViewMore": "Tap to view more",
+  "@tapToViewMore": {
+    "description": "Auto-generated for tapToViewMore"
+  },
+  "tellUsAboutYourself": "Tell us about yourself",
+  "@tellUsAboutYourself": {
+    "description": "Auto-generated for tellUsAboutYourself"
+  },
+  "templateLimitSuggestion": "Template limit suggestion",
+  "@templateLimitSuggestion": {
+    "description": "Auto-generated for templateLimitSuggestion"
+  },
+  "templateSyncDescription": "Template sync description",
+  "@templateSyncDescription": {
+    "description": "Auto-generated for templateSyncDescription"
+  },
+  "thisMonth": "This month",
+  "@thisMonth": {
+    "description": "Auto-generated for thisMonth"
+  },
+  "timeRange": "Time range",
+  "@timeRange": {
+    "description": "Auto-generated for timeRange"
+  },
+  "toggleToShowInMatching": "Toggle to show in matching",
+  "@toggleToShowInMatching": {
+    "description": "Auto-generated for toggleToShowInMatching"
+  },
+  "totalWeightLifted": "Total weight lifted",
+  "@totalWeightLifted": {
+    "description": "Auto-generated for totalWeightLifted"
+  },
+  "trainingDays": "Training days",
+  "@trainingDays": {
+    "description": "Auto-generated for trainingDays"
+  },
+  "unableToGetLocation": "Unable to get location",
+  "@unableToGetLocation": {
+    "description": "Auto-generated for unableToGetLocation"
+  },
+  "unknownLocation": "Unknown location",
+  "@unknownLocation": {
+    "description": "Auto-generated for unknownLocation"
+  },
+  "updateLocation": "Update location",
+  "@updateLocation": {
+    "description": "Auto-generated for updateLocation"
+  },
+  "upgradeForMoreTemplates": "Upgrade for more templates",
+  "@upgradeForMoreTemplates": {
+    "description": "Auto-generated for upgradeForMoreTemplates"
+  },
+  "upgradeToPremiumForSync": "Upgrade to premium for sync",
+  "@upgradeToPremiumForSync": {
+    "description": "Auto-generated for upgradeToPremiumForSync"
+  },
+  "uploaded": "Uploaded",
+  "@uploaded": {
+    "description": "Auto-generated for uploaded"
+  },
+  "useCurrentLocation": "Use current location",
+  "@useCurrentLocation": {
+    "description": "Auto-generated for useCurrentLocation"
+  },
+  "valueTooHigh": "Value too high",
+  "@valueTooHigh": {
+    "description": "Auto-generated for valueTooHigh"
+  },
+  "valueTooLow": "Value too low",
+  "@valueTooLow": {
+    "description": "Auto-generated for valueTooLow"
+  },
+  "velocityProfile": "Velocity profile",
+  "@velocityProfile": {
+    "description": "Auto-generated for velocityProfile"
+  },
+  "verified": "Verified",
+  "@verified": {
+    "description": "Auto-generated for verified"
+  },
+  "verifiedOnly": "Verified only",
+  "@verifiedOnly": {
+    "description": "Auto-generated for verifiedOnly"
+  },
+  "viewProfile": "View profile",
+  "@viewProfile": {
+    "description": "Auto-generated for viewProfile"
+  },
+  "viewWorkout": "View workout",
+  "@viewWorkout": {
+    "description": "Auto-generated for viewWorkout"
+  },
+  "volumeDetails": "Volume details",
+  "@volumeDetails": {
+    "description": "Auto-generated for volumeDetails"
+  },
+  "volumePerDay": "Volume per day",
+  "@volumePerDay": {
+    "description": "Auto-generated for volumePerDay"
+  },
+  "volumeSettings": "Volume settings",
+  "@volumeSettings": {
+    "description": "Auto-generated for volumeSettings"
+  },
+  "vsLastWeek": "Vs last week",
+  "@vsLastWeek": {
+    "description": "Auto-generated for vsLastWeek"
+  },
+  "weeklyDistribution": "Weekly distribution",
+  "@weeklyDistribution": {
+    "description": "Auto-generated for weeklyDistribution"
+  },
+  "weeklyDistributionDesc": "Weekly distribution desc",
+  "@weeklyDistributionDesc": {
+    "description": "Auto-generated for weeklyDistributionDesc"
+  },
+  "weeklyDistributionInfo": "Weekly distribution info",
+  "@weeklyDistributionInfo": {
+    "description": "Auto-generated for weeklyDistributionInfo"
+  },
+  "weeklyVolume": "Weekly volume",
+  "@weeklyVolume": {
+    "description": "Auto-generated for weeklyVolume"
+  },
+  "weightLoss": "Weight loss",
+  "@weightLoss": {
+    "description": "Auto-generated for weightLoss"
+  },
+  "weightUnit": "Weight unit",
+  "@weightUnit": {
+    "description": "Auto-generated for weightUnit"
+  },
+  "workoutComparison": "Workout comparison",
+  "@workoutComparison": {
+    "description": "Auto-generated for workoutComparison"
+  },
+  "workoutDeclineDescription": "Workout decline description",
+  "@workoutDeclineDescription": {
+    "description": "Auto-generated for workoutDeclineDescription"
+  },
+  "workoutDeleted": "Workout deleted",
+  "@workoutDeleted": {
+    "description": "Auto-generated for workoutDeleted"
+  },
+  "workoutDuplicated": "Workout duplicated",
+  "@workoutDuplicated": {
+    "description": "Auto-generated for workoutDuplicated"
+  },
+  "workoutGoals": "Workout goals",
+  "@workoutGoals": {
+    "description": "Auto-generated for workoutGoals"
+  },
+  "workoutImprovementDescription": "Workout improvement description",
+  "@workoutImprovementDescription": {
+    "description": "Auto-generated for workoutImprovementDescription"
+  },
+  "workoutPartnerOnly": "Workout partner only",
+  "@workoutPartnerOnly": {
+    "description": "Auto-generated for workoutPartnerOnly"
+  },
+  "workoutSimilarDescription": "Workout similar description",
+  "@workoutSimilarDescription": {
+    "description": "Auto-generated for workoutSimilarDescription"
+  },
+  "workoutType": "Workout type",
+  "@workoutType": {
+    "description": "Auto-generated for workoutType"
+  },
+  "workoutsLabel": "Workouts label",
+  "@workoutsLabel": {
+    "description": "Auto-generated for workoutsLabel"
+  },
+  "years": "Years",
+  "@years": {
+    "description": "Auto-generated for years"
+  },
+  "zenMode": "Zen mode",
+  "@zenMode": {
+    "description": "Auto-generated for zenMode"
+  },
+  "zenModeActiveDescription": "Zen mode active description",
+  "@zenModeActiveDescription": {
+    "description": "Auto-generated for zenModeActiveDescription"
+  },
+  "zenModeInactiveDescription": "Zen mode inactive description",
+  "@zenModeInactiveDescription": {
+    "description": "Auto-generated for zenModeInactiveDescription"
+  },
+  "zonePicker": "Zone picker",
+  "@zonePicker": {
+    "description": "Auto-generated for zonePicker"
+  },
+  "workoutDuration": "Workout duration",
+  "@workoutDuration": {
+    "description": "Workout duration label"
+  },
+  "tryAgain": "Try again",
+  "@tryAgain": {
+    "description": "Try again button"
   }
 }

@@ -1826,7 +1826,7 @@ class HomeWidgetFactory {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              AppIcons.misc.formatQuote,
+              AppIcons.formatQuote,
               color: theme.colorScheme.primary.withValues(alpha: 0.5),
               size: 24,
             ),

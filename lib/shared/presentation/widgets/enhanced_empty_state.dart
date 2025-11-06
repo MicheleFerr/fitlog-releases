@@ -219,7 +219,7 @@ class EnhancedEmptyState extends StatelessWidget {
         child: Column(
           children: [
             Icon(
-              AppIcons.misc.formatQuote,
+              AppIcons.formatQuote,
               color: quoteColor,
               size: 24,
             ),

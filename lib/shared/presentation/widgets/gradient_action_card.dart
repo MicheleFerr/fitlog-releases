@@ -169,17 +169,13 @@ class _GradientActionCardState extends State<GradientActionCard>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                        // Icon with staggered animation (100ms)
+                        // Icon with animation (uses AppAnimations.iconSwap internally)
                         AnimatedIconSwap(
                           outlinedIcon: widget.outlinedIcon,
                           filledIcon: widget.filledIcon,
                           isPressed: _isPressed,
                           color: Colors.white,
                           size: 48,
-                          // Staggered: finishes before card scale (150ms)
-                          duration: _prefersReducedMotion
-                              ? Duration.zero
-                              : const Duration(milliseconds: 100),
                         ),
 
                         const SizedBox(height: 16),

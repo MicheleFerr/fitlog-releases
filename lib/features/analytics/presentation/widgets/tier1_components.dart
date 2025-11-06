@@ -560,7 +560,7 @@ class MotivationalEmptyState extends StatelessWidget {
                   child: Column(
                     children: [
                       Icon(
-                        AppIcons.misc.formatQuote,
+                        AppIcons.formatQuote,
                         color: colorScheme.secondary,
                         size: 24,
                       ),

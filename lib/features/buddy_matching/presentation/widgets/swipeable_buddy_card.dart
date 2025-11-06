@@ -256,7 +256,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                                 children: [
                                   const Icon(
                                     Icons.location_on,
-                                    color: context.colors.surface70,
+                                    color: context.colors.onSurface.withValues(alpha: 0.7),
                                     size: 14,
                                   ),
                                   const SizedBox(width: 4),
@@ -264,7 +264,7 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                                     child: Text(
                                       widget.profile.preferences.locationName!,
                                       style: theme.textTheme.bodySmall?.copyWith(
-                                        color: context.colors.surface70,
+                                        color: context.colors.onSurface.withValues(alpha: 0.7),
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),

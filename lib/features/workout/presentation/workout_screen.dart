@@ -296,14 +296,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         );
                       }
                     },
-                    icon: Icon(_isReorderMode ? AppIcons.done : Icons.swap_vert),
+                    icon: Icon(_isReorderMode ? AppIcons.done : AppIcons.swapVert),
                     tooltip: _isReorderMode ? context.l10n.confirmReorder : context.l10n.reorderExercises,
                   ),
                 if (isActive)
                   IconButton(
                     key: _completeWorkoutButtonKey, // PHASE 2: GlobalKey for contextual overlay
                     onPressed: () => _completeWorkout(context, ref),
-                    icon: const Icon(Icons.check_circle),
+                    icon: const Icon(AppIcons.checkCircle),
                     tooltip: context.l10n.completeWorkout,
                   ),
                 IconButton(
@@ -439,7 +439,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 64, color: context.errorColor),
+              Icon(AppIcons.error, size: 64, color: context.errorColor),
               const SizedBox(height: 16),
               Text(context.l10n.errorOccurred),
               const SizedBox(height: 8),
@@ -547,7 +547,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              isCustomTab ? AppIcons.noteAdd : Icons.inventory_2_outlined,
+              isCustomTab ? AppIcons.noteAdd : AppIcons.inventory2Outlined,
               size: 64,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
@@ -776,7 +776,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            Icon(Icons.format_list_bulleted, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
+                            Icon(AppIcons.formatListBulleted, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
                             const SizedBox(width: 4),
                             Text(
                               '${template.exercises.length} ${AppLocalizations.of(modalContext).exercises}',
@@ -809,7 +809,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   color: context.successContainer,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.play_arrow, color: context.successColor),
+                child: Icon(AppIcons.play, color: context.successColor),
               ),
               title: Text(AppLocalizations.of(modalContext).startWorkout, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).startWorkoutWithTemplate),
@@ -828,7 +828,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     color: context.infoContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.edit, color: context.infoColor),
+                  child: Icon(AppIcons.edit, color: context.infoColor),
                 ),
                 title: Text(AppLocalizations.of(modalContext).editTemplate, style: const TextStyle(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).editTemplateSubtitle),
@@ -847,7 +847,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   color: context.warningContainer,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.share, color: context.warningColor),
+                child: Icon(AppIcons.share, color: context.warningColor),
               ),
               title: Text(AppLocalizations.of(modalContext).sharePdf, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).sharePdfSubtitle),
@@ -865,7 +865,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   color: context.colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.print, color: context.colors.primary),
+                child: Icon(AppIcons.print, color: context.colors.primary),
               ),
               title: Text(AppLocalizations.of(modalContext).print, style: const TextStyle(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).printTemplate),
@@ -884,7 +884,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     color: context.errorContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.delete, color: context.errorColor),
+                  child: Icon(AppIcons.delete, color: context.errorColor),
                 ),
                 title: Text(AppLocalizations.of(modalContext).deleteTemplate, style: const TextStyle(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).deleteTemplateSubtitle),
@@ -1000,7 +1000,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     }
   }
 
-  void _startWorkoutFromTemplate(BuildContext context, WidgetRef ref, wt.WorkoutTemplate template) async {
+  Future<void> _startWorkoutFromTemplate(BuildContext context, WidgetRef ref, wt.WorkoutTemplate template) async {
     try {
       // Incrementa contatore utilizzo
       await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
@@ -1378,7 +1378,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         ),
                       ),
                       Icon(
-                        Icons.arrow_forward_ios,
+                        AppIcons.forwardIos,
                         color: context.textOnSuccess,
                       ),
                     ],
@@ -1906,7 +1906,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               },
             ),
             ListTile(
-              leading: Icon(Icons.stop, color: context.errorColor),
+              leading: Icon(AppIcons.stop, color: context.errorColor),
               title: Text(context.l10n.endWorkout),
               onTap: () {
                 Navigator.pop(context);
@@ -2196,7 +2196,7 @@ class _QuickStartCard extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.arrow_forward_ios,
+                AppIcons.forwardIos,
                 color: context.colors.onSurface.withValues(alpha: 0.3),
                 size: 16,
               ),
@@ -2442,7 +2442,7 @@ class _TemplateQuickStartCard extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.delete,
+                    AppIcons.delete,
                     color: context.errorColor,
                   ),
                 ),
@@ -2723,7 +2723,7 @@ class _SaveTemplateHelper {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.inventory_2,
+                            AppIcons.inventory2,
                             size: 48,
                             color: context.warningColor,
                           ),

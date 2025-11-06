@@ -348,7 +348,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                         child: Column(
                                           children: [
                                             Icon(
-                                              AppIcons.misc.formatQuote,
+                                              AppIcons.formatQuote,
                                               color: Colors.white.withValues(alpha: 0.5),
                                               size: 30,
                                             ),

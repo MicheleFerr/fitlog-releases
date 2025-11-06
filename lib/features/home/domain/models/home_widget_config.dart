@@ -260,7 +260,7 @@ class DefaultHomeWidgets {
       id: 'motivational_quote',
       type: HomeWidgetType.motivationalQuote,
       title: 'Quote del Giorno',
-      icon: AppIcons.misc.formatQuote,
+      icon: AppIcons.formatQuote,
       order: 12,
       isVisible: false,
       size: WidgetSize.small,
