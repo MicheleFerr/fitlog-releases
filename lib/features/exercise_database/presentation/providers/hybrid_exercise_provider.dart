@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/services/exer
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_cache_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 
 // ====================
 // REPOSITORY PROVIDERS
