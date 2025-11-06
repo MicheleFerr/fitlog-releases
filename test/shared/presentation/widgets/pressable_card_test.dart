@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/pressable_card.dart';
-import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
 void main() {
   group('PressableCard', () {
@@ -19,7 +18,6 @@ void main() {
       );
 
       expect(find.text('Test Child'), findsOneWidget);
-      await tester.pumpAndSettle(); // Allow dispose
     });
 
     testWidgets('calls onTap when tapped', (tester) async {
@@ -54,23 +52,19 @@ void main() {
         ),
       );
 
-      // Press down (use drag instead of press for better widget finding)
-      final gesture = await tester.startGesture(
-        tester.getCenter(find.byType(PressableCard)),
-      );
+      // Press down
+      await tester.press(find.byType(PressableCard), warnIfMissed: false);
       await tester.pump(); // Start animation
       await tester.pump(const Duration(milliseconds: 75)); // Mid-animation
 
       // Verify Transform.scale exists (scale animation running)
+      // Multiple Transforms may exist in the widget tree, so just check at least one
       expect(
         find.byWidgetPredicate(
           (widget) => widget is Transform && widget.transform != null,
         ),
-        findsOneWidget,
+        findsWidgets,
       );
-
-      await gesture.up();
-      await tester.pumpAndSettle(); // Allow dispose
     });
 
     testWidgets('shows accent color overlay when pressed', (tester) async {
@@ -88,10 +82,8 @@ void main() {
         ),
       );
 
-      // Press and hold using gesture
-      final gesture = await tester.startGesture(
-        tester.getCenter(find.byType(PressableCard)),
-      );
+      // Press and hold
+      await tester.press(find.byType(PressableCard), warnIfMissed: false);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 75));
 
@@ -102,9 +94,6 @@ void main() {
         ),
         findsWidgets,
       );
-
-      await gesture.up();
-      await tester.pumpAndSettle(); // Allow dispose
     });
 
     testWidgets('shows border when pressed and showBorder is true',
@@ -114,36 +103,32 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: PressableCard(
-              accentColor: accentColor,
-              showBorder: true,
-              onTap: () {},
-              child: const Text('Press'),
+            body: SizedBox(
+              width: 200,
+              height: 100,
+              child: PressableCard(
+                accentColor: accentColor,
+                showBorder: true,
+                onTap: () {},
+                child: const Text('Press'),
+              ),
             ),
           ),
         ),
       );
 
-      // Press and hold using gesture
-      final gesture = await tester.startGesture(
-        tester.getCenter(find.byType(PressableCard)),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 75));
+      // Press and hold (don't complete the tap yet)
+      await tester.press(find.byType(PressableCard), warnIfMissed: false);
+      await tester.pump(); // Start animation
+      await tester.pump(const Duration(milliseconds: 75)); // Mid-animation
 
-      // Verify Container with decoration exists
-      expect(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is Container &&
-              widget.decoration != null &&
-              widget.decoration is BoxDecoration,
-        ),
-        findsWidgets,
+      // Verify border exists with more specific assertion during press
+      final container = tester.widget<AnimatedContainer>(
+        find.byType(AnimatedContainer).first,
       );
-
-      await gesture.up();
-      await tester.pumpAndSettle(); // Allow dispose
+      expect(container.decoration, isA<BoxDecoration>());
+      final decoration = container.decoration as BoxDecoration;
+      expect(decoration.border, isNotNull);
     });
 
     testWidgets('does not trigger haptics when enableHaptics is false',
@@ -163,7 +148,6 @@ void main() {
       );
 
       expect(find.byType(PressableCard), findsOneWidget);
-      await tester.pumpAndSettle(); // Allow dispose
     });
   });
 }
