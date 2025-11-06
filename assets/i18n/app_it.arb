@@ -1707,6 +1707,58 @@
   "@apreProtocol10Helper": {
     "description": "Helper text for APRE 10 protocol"
   },
+  "apreProtocolPreview": "Anteprima Cambio Protocollo",
+  "@apreProtocolPreview": {
+    "description": "Title for APRE protocol change preview"
+  },
+  "aprePreviewDescription": "Vedi come cambieranno i tuoi pesi con il nuovo protocollo",
+  "@aprePreviewDescription": {
+    "description": "Description for protocol preview feature"
+  },
+  "apreCurrentProtocol": "Attuale (APRE {protocol})",
+  "@apreCurrentProtocol": {
+    "description": "Label for current protocol in preview",
+    "placeholders": {
+      "protocol": {
+        "type": "int",
+        "description": "Current protocol number (3, 6, or 10)"
+      }
+    }
+  },
+  "apreNewProtocol": "Nuovo (APRE {protocol})",
+  "@apreNewProtocol": {
+    "description": "Label for new protocol in preview",
+    "placeholders": {
+      "protocol": {
+        "type": "int",
+        "description": "New protocol number (3, 6, or 10)"
+      }
+    }
+  },
+  "apreSet1Preview": "Serie 1 (50%)",
+  "@apreSet1Preview": {
+    "description": "Label for Set 1 in protocol preview"
+  },
+  "apreSet2Preview": "Serie 2 (75%)",
+  "@apreSet2Preview": {
+    "description": "Label for Set 2 in protocol preview"
+  },
+  "apreSet3Preview": "Serie 3 (100%)",
+  "@apreSet3Preview": {
+    "description": "Label for Set 3 in protocol preview"
+  },
+  "apreSet4Preview": "Serie 4",
+  "@apreSet4Preview": {
+    "description": "Label for Set 4 in protocol preview"
+  },
+  "apreAdjustedBasedOnPerformance": "Adattato in base alla performance",
+  "@apreAdjustedBasedOnPerformance": {
+    "description": "Description for Set 4 adjustment in protocol preview"
+  },
+  "apreApplyChanges": "Applica Modifiche",
+  "@apreApplyChanges": {
+    "description": "Button to apply protocol changes in preview"
+  },
   "autoAdjustment": "Regolazione Automatica",
   "@autoAdjustment": {
     "description": "Label for automatic load adjustment feature"

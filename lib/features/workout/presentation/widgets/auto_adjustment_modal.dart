@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_cal
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
 
@@ -26,6 +28,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
 
   // APRE settings
   int _apreProtocol = 6;
+  int? _previousProtocol; // Track protocol changes for preview
   final _apreBaseWeightController = TextEditingController();
   double? _calculated1RM;
   double? _calculated3RM;
@@ -33,6 +36,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
   double? _calculated10RM;
   String? _calculationInfo;
   bool _isCalculating1RM = false;
+  bool _showProtocolPreview = false;
 
   // RPE settings
   final _targetRPEMinController = TextEditingController();
@@ -49,6 +53,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
 
     // APRE settings
     _apreProtocol = widget.exercise.apreProtocol ?? 6;
+    _previousProtocol = _apreProtocol; // Initialize previous protocol
     _apreBaseWeightController.text = widget.exercise.apreBaseWeight?.toString() ?? '';
 
     // Initialize cached calculations if available
@@ -362,19 +367,34 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           ],
           selected: {_apreProtocol},
           onSelectionChanged: (Set<int> newSelection) {
-            setState(() {
-              _apreProtocol = newSelection.first;
-              // Auto-set base weight for new protocol if we have cached values
-              final baseWeight = _apreProtocol == 3 ? _calculated3RM :
-                                _apreProtocol == 6 ? _calculated6RM :
-                                _calculated10RM;
-              if (baseWeight != null) {
-                _apreBaseWeightController.text = baseWeight.toStringAsFixed(1);
+            final newProtocol = newSelection.first;
+
+            // Show preview if protocol is changing and we have calculated values
+            if (newProtocol != _previousProtocol &&
+                _calculated1RM != null &&
+                _calculated3RM != null &&
+                _calculated6RM != null &&
+                _calculated10RM != null) {
+              setState(() {
+                _apreProtocol = newProtocol;
+                _showProtocolPreview = true;
+              });
+            } else {
+              setState(() {
+                _apreProtocol = newProtocol;
+                _showProtocolPreview = false;
+                // Auto-set base weight for new protocol if we have cached values
+                final baseWeight = _apreProtocol == 3 ? _calculated3RM :
+                                  _apreProtocol == 6 ? _calculated6RM :
+                                  _calculated10RM;
+                if (baseWeight != null) {
+                  _apreBaseWeightController.text = baseWeight.toStringAsFixed(1);
+                }
+              });
+              // Only calculate if we don't have cached values
+              if (_calculated1RM == null) {
+                _calculate1RMAndBaseWeight();
               }
-            });
-            // Only calculate if we don't have cached values
-            if (_calculated1RM == null) {
-              _calculate1RMAndBaseWeight();
             }
           },
         ),
@@ -513,6 +533,12 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           const SizedBox(height: 12),
         ],
 
+        // Protocol Preview (when protocol changes)
+        if (_showProtocolPreview) ...[
+          _buildProtocolPreview(l10n),
+          const SizedBox(height: 16),
+        ],
+
         // Base Weight Input
         TextField(
           controller: _apreBaseWeightController,
@@ -530,6 +556,286 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         ),
       ],
     );
+  }
+
+  Widget _buildProtocolPreview(AppLocalizations l10n) {
+    if (_previousProtocol == null) return const SizedBox.shrink();
+
+    // Calculate set weights for both protocols
+    final previousBaseWeight = _previousProtocol == 3 ? _calculated3RM :
+                               _previousProtocol == 6 ? _calculated6RM :
+                               _calculated10RM;
+    final newBaseWeight = _apreProtocol == 3 ? _calculated3RM :
+                         _apreProtocol == 6 ? _calculated6RM :
+                         _calculated10RM;
+
+    if (previousBaseWeight == null || newBaseWeight == null) {
+      return const SizedBox.shrink();
+    }
+
+    // APRE structure: Set 1 (50%), Set 2 (75%), Set 3 (100% of RM), Set 4 (adjusted)
+    final prevSet1 = previousBaseWeight * 0.5;
+    final prevSet2 = previousBaseWeight * 0.75;
+    final prevSet3 = previousBaseWeight;
+
+    final newSet1 = newBaseWeight * 0.5;
+    final newSet2 = newBaseWeight * 0.75;
+    final newSet3 = newBaseWeight;
+
+    return Card(
+      elevation: 2,
+      color: context.colors.secondaryContainer.withValues(alpha: 0.3),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Icon(
+                  AppIcons.preview,
+                  size: 20,
+                  color: context.colors.secondary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l10n.apreProtocolPreview,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.secondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.aprePreviewDescription,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Comparison table
+            Container(
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: context.colors.outlineVariant,
+                ),
+              ),
+              child: Column(
+                children: [
+                  // Header row
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: context.colors.surfaceContainerHighest,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            'Set',
+                            style: context.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            l10n.apreCurrentProtocol(_previousProtocol!),
+                            style: context.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(
+                          AppIcons.arrowForwardRounded,
+                          size: 16,
+                          color: context.colors.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            l10n.apreNewProtocol(_apreProtocol),
+                            style: context.textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.colors.primary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(height: 1, color: context.colors.outlineVariant),
+
+                  // Set 1 row
+                  _buildPreviewRow(l10n, l10n.apreSet1Preview, prevSet1, newSet1),
+                  Divider(height: 1, color: context.colors.outlineVariant),
+
+                  // Set 2 row
+                  _buildPreviewRow(l10n, l10n.apreSet2Preview, prevSet2, newSet2),
+                  Divider(height: 1, color: context.colors.outlineVariant),
+
+                  // Set 3 row
+                  _buildPreviewRow(l10n, l10n.apreSet3Preview, prevSet3, newSet3),
+                  Divider(height: 1, color: context.colors.outlineVariant),
+
+                  // Set 4 row (adjusted)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            l10n.apreSet4Preview,
+                            style: context.textTheme.bodyMedium,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 7,
+                          child: Text(
+                            l10n.apreAdjustedBasedOnPerformance,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _apreProtocol = _previousProtocol!;
+                        _showProtocolPreview = false;
+                      });
+                    },
+                    icon: Icon(AppIcons.cancel, size: AppIconSize.small),
+                    label: Text(l10n.cancel),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: _applyProtocolChange,
+                    icon: Icon(AppIcons.completeOutline, size: AppIconSize.small),
+                    label: Text(l10n.apreApplyChanges),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPreviewRow(AppLocalizations l10n, String setLabel, double prevWeight, double newWeight) {
+    final weightDiff = newWeight - prevWeight;
+    final isIncrease = weightDiff > 0;
+    final diffColor = isIncrease ? context.colors.success : context.colors.error;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              setLabel,
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              '${prevWeight.toStringAsFixed(1)} kg',
+              style: context.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Icon(
+            AppIcons.arrowForwardRounded,
+            size: 16,
+            color: context.colors.primary,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '${newWeight.toStringAsFixed(1)} kg',
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.primary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                if (weightDiff.abs() > 0.1) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    '${isIncrease ? '+' : ''}${weightDiff.toStringAsFixed(1)} kg',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: diffColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _applyProtocolChange() {
+    setState(() {
+      _showProtocolPreview = false;
+      _previousProtocol = _apreProtocol;
+
+      // Update base weight for new protocol
+      final baseWeight = _apreProtocol == 3 ? _calculated3RM :
+                        _apreProtocol == 6 ? _calculated6RM :
+                        _calculated10RM;
+      if (baseWeight != null) {
+        _apreBaseWeightController.text = baseWeight.toStringAsFixed(1);
+      }
+    });
   }
 
   Widget _buildRPEConfiguration(AppLocalizations l10n) {

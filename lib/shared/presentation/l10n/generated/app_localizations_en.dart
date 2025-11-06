@@ -4666,6 +4666,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apreProtocol10Helper => 'Use your 10 rep max weight';
 
   @override
+  String get apreProtocolPreview => 'Protocol Change Preview';
+
+  @override
+  String get aprePreviewDescription =>
+      'Preview how your weights will change with the new protocol';
+
+  @override
+  String apreCurrentProtocol(int protocol) {
+    return 'Current (APRE $protocol)';
+  }
+
+  @override
+  String apreNewProtocol(int protocol) {
+    return 'New (APRE $protocol)';
+  }
+
+  @override
+  String get apreSet1Preview => 'Set 1 (50%)';
+
+  @override
+  String get apreSet2Preview => 'Set 2 (75%)';
+
+  @override
+  String get apreSet3Preview => 'Set 3 (100%)';
+
+  @override
+  String get apreSet4Preview => 'Set 4';
+
+  @override
+  String get apreAdjustedBasedOnPerformance => 'Adjusted based on performance';
+
+  @override
+  String get apreApplyChanges => 'Apply Changes';
+
+  @override
   String get autoAdjustment => 'Auto Adjustment';
 
   @override

@@ -8651,6 +8651,66 @@ abstract class AppLocalizations {
   /// **'Use your 10 rep max weight'**
   String get apreProtocol10Helper;
 
+  /// Title for APRE protocol change preview
+  ///
+  /// In en, this message translates to:
+  /// **'Protocol Change Preview'**
+  String get apreProtocolPreview;
+
+  /// Description for protocol preview feature
+  ///
+  /// In en, this message translates to:
+  /// **'Preview how your weights will change with the new protocol'**
+  String get aprePreviewDescription;
+
+  /// Label for current protocol in preview
+  ///
+  /// In en, this message translates to:
+  /// **'Current (APRE {protocol})'**
+  String apreCurrentProtocol(int protocol);
+
+  /// Label for new protocol in preview
+  ///
+  /// In en, this message translates to:
+  /// **'New (APRE {protocol})'**
+  String apreNewProtocol(int protocol);
+
+  /// Label for Set 1 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 1 (50%)'**
+  String get apreSet1Preview;
+
+  /// Label for Set 2 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 2 (75%)'**
+  String get apreSet2Preview;
+
+  /// Label for Set 3 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 3 (100%)'**
+  String get apreSet3Preview;
+
+  /// Label for Set 4 in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Set 4'**
+  String get apreSet4Preview;
+
+  /// Description for Set 4 adjustment in protocol preview
+  ///
+  /// In en, this message translates to:
+  /// **'Adjusted based on performance'**
+  String get apreAdjustedBasedOnPerformance;
+
+  /// Button to apply protocol changes in preview
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Changes'**
+  String get apreApplyChanges;
+
   /// Label for automatic load adjustment feature
   ///
   /// In en, this message translates to:

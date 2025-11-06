@@ -4701,6 +4701,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get apreProtocol10Helper => 'Usa il tuo massimale per 10 ripetizioni';
 
   @override
+  String get apreProtocolPreview => 'Anteprima Cambio Protocollo';
+
+  @override
+  String get aprePreviewDescription =>
+      'Vedi come cambieranno i tuoi pesi con il nuovo protocollo';
+
+  @override
+  String apreCurrentProtocol(int protocol) {
+    return 'Attuale (APRE $protocol)';
+  }
+
+  @override
+  String apreNewProtocol(int protocol) {
+    return 'Nuovo (APRE $protocol)';
+  }
+
+  @override
+  String get apreSet1Preview => 'Serie 1 (50%)';
+
+  @override
+  String get apreSet2Preview => 'Serie 2 (75%)';
+
+  @override
+  String get apreSet3Preview => 'Serie 3 (100%)';
+
+  @override
+  String get apreSet4Preview => 'Serie 4';
+
+  @override
+  String get apreAdjustedBasedOnPerformance =>
+      'Adattato in base alla performance';
+
+  @override
+  String get apreApplyChanges => 'Applica Modifiche';
+
+  @override
   String get autoAdjustment => 'Regolazione Automatica';
 
   @override
