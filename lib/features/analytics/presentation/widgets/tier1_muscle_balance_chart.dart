@@ -556,7 +556,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             l10n: l10n,
           ),
           
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           
           // Target with edit button
           _buildEditableMetricRow(
@@ -571,7 +571,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           
           // Progress indicator
           if (improvement != 0) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -588,7 +588,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                     color: improvement >= 0 ? context.colors.success : context.colors.error,
                     size: 20,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -888,13 +888,13 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 formula: 'Volume = Sets × Reps × Weight',
                 example: '3 sets × 10 reps × 50kg = 1500kg',
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _buildFormulaCard(
                 title: l10n.strengthPercentage,
                 formula: 'Strength % = (Current Volume / Max Volume) × 100',
                 example: '(1500kg / 5000kg) × 100 = 30%',
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 l10n.targetExplanation,
                 style: Theme.of(context).textTheme.bodySmall,

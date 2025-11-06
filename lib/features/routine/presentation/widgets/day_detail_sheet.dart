@@ -66,7 +66,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       ),
       child: statsAsync.when(
         data: (stats) => _buildContent(context, stats),
-        loading: () => const SizedBox(
+        loading: () => SizedBox(
           height: 400,
           child: Center(child: LoadingIndicator()),
         ),
@@ -157,7 +157,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           Row(
             children: [
               Icon(statusIcon, size: 32, color: statusColor),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   stats.templateName ?? widget.dayInfo.templateId ?? 'Rest Day',
@@ -170,7 +170,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             ],
           ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Date
           Text(
@@ -201,7 +201,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
         child: Row(
           children: [
             Icon(statusIcon, color: statusColor, size: 20),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(
               statusText,
               style: context.textTheme.titleMedium?.copyWith(
@@ -229,7 +229,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -289,8 +289,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(AppIcons.achievement, color: Colors.amber, size: 20),
-                  const SizedBox(width: 8),
+                  Icon(AppIcons.achievement, color: Colors.amber, size: 20),
+                  SizedBox(width: 8),
                   Text(
                     '🎯 Personal Record!',
                     style: context.textTheme.titleSmall?.copyWith(
@@ -317,7 +317,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
     return Row(
       children: [
         Icon(icon, color: context.colors.primary, size: 20),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Text(
             label,
@@ -356,7 +356,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: color),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             '${trend.abs().toStringAsFixed(1)}%',
             style: context.textTheme.bodySmall?.copyWith(
@@ -391,8 +391,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               // Change Template button
               TextButton.icon(
                 onPressed: () => _changeTemplate(context),
-                icon: const Icon(AppIcons.swapHoriz, size: 18),
-                label: const Text('Change'),
+                icon: Icon(AppIcons.swapHoriz, size: 18),
+                label: Text('Change'),
                 style: TextButton.styleFrom(
                   foregroundColor: context.colors.secondary,
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -400,7 +400,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           templateAsync.when(
             data: (template) {
               if (template == null) {
@@ -438,7 +438,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   '${exercise.exerciseName}: ${exercise.sets.length}x${exercise.sets.first.targetReps}',
@@ -475,7 +475,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                                   size: 18,
                                   color: context.colors.primary,
                                 ),
-                                const SizedBox(width: 4),
+                                SizedBox(width: 4),
                                 Text(
                                   _showAllExercises
                                       ? 'Show Less'
@@ -519,7 +519,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -536,14 +536,14 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                     child: Row(
                       children: [
                         Icon(AppIcons.history, size: 16, color: context.colors.primary),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           dateFormat.format(workout.completedAt),
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             '${workout.totalVolume.toStringAsFixed(0)} kg • ${workout.duration.inMinutes} min',
@@ -565,7 +565,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                         color: stats.volumeChangePercent! > 0 ? Colors.green : Colors.red,
                         size: 20,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         '${stats.volumeChangePercent!.abs().toStringAsFixed(1)}% volume vs last time',
                         style: context.textTheme.bodyMedium?.copyWith(
@@ -602,7 +602,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                   letterSpacing: 1.2,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Tooltip(
                 message: 'AI-powered insights based on:\n'
                     '• RPE (Rate of Perceived Exertion)\n'
@@ -618,7 +618,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Based on your performance metrics',
             style: context.textTheme.bodySmall?.copyWith(
@@ -626,7 +626,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               fontStyle: FontStyle.italic,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           suggestionsAsync.when(
             data: (suggestions) => Container(
               padding: const EdgeInsets.all(16),
@@ -649,7 +649,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                             size: 16,
                             color: context.colors.primary,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               suggestion,
@@ -685,8 +685,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(AppIcons.streak, color: Colors.orange, size: 20),
-                  const SizedBox(width: 8),
+                  Icon(AppIcons.streak, color: Colors.orange, size: 20),
+                  SizedBox(width: 8),
                   Text(
                     '🔥 ${stats.currentStreak} day streak',
                     style: context.textTheme.titleSmall?.copyWith(
@@ -713,8 +713,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             // Start Workout button
             ElevatedButton.icon(
               onPressed: () => _startWorkout(context),
-              icon: const Icon(AppIcons.play),
-              label: const Text('Start Workout'),
+              icon: Icon(AppIcons.play),
+              label: Text('Start Workout'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.colors.primary,
                 foregroundColor: context.colors.onPrimary,
@@ -724,15 +724,15 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
 
           if (widget.dayInfo.status == DayStatus.completed) ...[
             // View Full Details button
             OutlinedButton.icon(
               onPressed: () => _viewWorkoutDetails(context, stats),
-              icon: const Icon(AppIcons.visibility),
-              label: const Text('View Full Details'),
+              icon: Icon(AppIcons.visibility),
+              label: Text('View Full Details'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.colors.primary,
                 minimumSize: const Size(double.infinity, 54),
@@ -763,13 +763,13 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
               ],
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _skipDay(context),
-                  icon: const Icon(AppIcons.skipNext, size: 18),
-                  label: const Text('Skip'),
+                  icon: Icon(AppIcons.skipNext, size: 18),
+                  label: Text('Skip'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.error,
                     side: BorderSide(color: context.colors.error),

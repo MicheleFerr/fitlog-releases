@@ -163,7 +163,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.topExercises,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -228,7 +228,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +239,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   '${exercise.totalVolume.toStringAsFixed(0)}kg total volume',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -283,7 +283,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
               size: 48,
               color: Colors.grey.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               localizations.noExerciseData,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -363,12 +363,12 @@ class EnhancedStreakCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   AppIcons.streak,
                   color: Colors.orange,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.workoutStreak,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -448,7 +448,7 @@ class EnhancedStreakCard extends StatelessWidget {
     return Column(
       children: [
         Icon(icon, color: color, size: 28),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(

@@ -79,7 +79,7 @@ class DocumentViewerScreen extends StatelessWidget {
         future: _loadDocument(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: LoadingIndicator());
+            return Center(child: LoadingIndicator());
           }
 
           if (snapshot.hasError) {

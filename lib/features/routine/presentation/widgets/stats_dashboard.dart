@@ -61,7 +61,7 @@ class StatsDashboard extends StatelessWidget {
                 color: context.colors.primary,
                 size: 24,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Progress Overview',
                 style: context.textTheme.titleMedium?.copyWith(
@@ -72,7 +72,7 @@ class StatsDashboard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Progress bar
           Column(
@@ -97,7 +97,7 @@ class StatsDashboard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(
@@ -109,7 +109,7 @@ class StatsDashboard extends StatelessWidget {
                       AlwaysStoppedAnimation<Color>(context.colors.primary),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 '${routine.completedDays} of ${routine.totalWorkoutDays} workouts completed',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -133,7 +133,7 @@ class StatsDashboard extends StatelessWidget {
                   color: _getAdherenceColor(routine.adherenceRate, context),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
                   context,
@@ -146,7 +146,7 @@ class StatsDashboard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           Row(
             children: [
@@ -159,7 +159,7 @@ class StatsDashboard extends StatelessWidget {
                   color: context.colors.error,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
                   context,
@@ -196,7 +196,7 @@ class StatsDashboard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: color, size: 20),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             value,
             style: context.textTheme.titleLarge?.copyWith(
@@ -204,7 +204,7 @@ class StatsDashboard extends StatelessWidget {
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             label,
             style: context.textTheme.bodySmall?.copyWith(

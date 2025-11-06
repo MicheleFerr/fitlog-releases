@@ -111,7 +111,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
             Icon(AppIcons.feedbackOutlined, size: 24),
             SizedBox(width: 12),
@@ -126,7 +126,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               'Come vuoi gestire "${exercise.nome}"?',
               style: context.textTheme.bodyMedium,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               '• Riduci priorità: L\'esercizio apparirà meno in alto\n• Rimuovi dai popolari: L\'esercizio non sarà più suggerito come frequente',
               style: context.textTheme.bodySmall?.copyWith(
@@ -138,17 +138,17 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Annulla'),
+            child: Text('Annulla'),
           ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
-            icon: const Icon(AppIcons.arrowDownward, size: 18),
-            label: const Text('Riduci priorità'),
+            icon: Icon(AppIcons.arrowDownward, size: 18),
+            label: Text('Riduci priorità'),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop('remove'),
-            icon: const Icon(AppIcons.deleteOutline, size: 18),
-            label: const Text('Rimuovi'),
+            icon: Icon(AppIcons.deleteOutline, size: 18),
+            label: Text('Rimuovi'),
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.errorContainer,
               foregroundColor: context.colors.onErrorContainer,
@@ -348,7 +348,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -424,7 +424,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Divider(),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     l10n.filters,
                     style: context.textTheme.titleMedium?.copyWith(
@@ -484,7 +484,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
                       return _buildSearchResults(filteredExercises);
                     },
-                    loading: () => const Center(child: CircularProgressIndicator()),
+                    loading: () => Center(child: CircularProgressIndicator()),
                     error: (error, stack) => _buildErrorState(error),
                   ),
           ),
@@ -578,7 +578,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 size: 16,
                 color: context.colors.primary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 '${_fuzzyResults.length} ${l10n.exercisesFound}',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -586,7 +586,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   color: context.colors.primary,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 '(Smart Search)',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -650,7 +650,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 color: context.colors.primary,
                 size: 28,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   l10n.exerciseNotFound,
@@ -662,19 +662,19 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             l10n.exerciseNotFoundHelpText,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: _showAddTemporaryExerciseDialog,
-              icon: const Icon(AppIcons.addCircleOutline),
+              icon: Icon(AppIcons.addCircleOutline),
               label: Text(l10n.addTemporaryExercise),
               style: FilledButton.styleFrom(
                 backgroundColor: context.colors.primaryContainer,
@@ -701,7 +701,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               AppIcons.workout,
               color: context.colors.primary,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(l10n.addTemporaryExercise),
             ),
@@ -969,7 +969,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   _showMuscleGroupsFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.muscleGroups,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -977,7 +977,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
                 if (_selectedMuscleGroups.isNotEmpty) ...[
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
@@ -1036,7 +1036,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   _showDifficultyFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.difficulty,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -1044,7 +1044,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
                 if (_selectedDifficulty.isNotEmpty) ...[
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
@@ -1100,7 +1100,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   _showEquipmentFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.equipment,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -1108,7 +1108,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
                 if (_selectedEquipment.isNotEmpty) ...[
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
@@ -1159,7 +1159,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     if (isSelected) {
       return CircleAvatar(
         backgroundColor: context.colors.primary,
-        child: const Icon(AppIcons.check, color: Colors.white),
+        child: Icon(AppIcons.check, color: Colors.white),
       );
     }
     
@@ -1252,7 +1252,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   exercise.attrezzatura,
                   style: context.textTheme.bodySmall,
@@ -1357,7 +1357,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             ),
             // Auto-correct icon
             if (wasAutoCorrected) ...[
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Icon(
                 AppIcons.autoFixHigh,
                 size: 16,
@@ -1450,7 +1450,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   exercise.attrezzatura,
                   style: context.textTheme.bodySmall,
@@ -1480,7 +1480,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
               // Spacer
-              if (!isSelected && !widget.selectionMode) const SizedBox(width: 4),
+              if (!isSelected && !widget.selectionMode) SizedBox(width: 4),
               // Selection icon
               isSelected
                   ? Icon(AppIcons.complete, color: context.colors.primary)
@@ -1520,19 +1520,19 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final l10n = context.l10n;
     return ListView(
       children: [
-        const SizedBox(height: 64),
+        SizedBox(height: 64),
         Icon(
           AppIcons.searchOff,
           size: 64,
           color: context.colors.onSurface.withValues(alpha: 0.5),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Text(
           l10n.noExercisesFound,
           style: context.textTheme.headlineSmall,
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           l10n.tryModifyingFilters,
           style: context.textTheme.bodyMedium?.copyWith(

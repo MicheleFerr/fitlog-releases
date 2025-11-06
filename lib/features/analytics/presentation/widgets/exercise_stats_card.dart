@@ -32,7 +32,7 @@ class ExerciseStatsCard extends StatelessWidget {
                       AppIcons.leaderboard,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       'Top Exercises',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -43,11 +43,11 @@ class ExerciseStatsCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () => _showAllExercises(context, exerciseStats),
-                  child: const Text('View All'),
+                  child: Text('View All'),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             
             if (exerciseStats.isEmpty)
               Center(
@@ -82,7 +82,7 @@ class ExerciseStatsCard extends StatelessWidget {
             radius: 20,
             child: Icon(AppIcons.workout, size: 20),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           
           // Exercise info
           Expanded(
@@ -95,7 +95,7 @@ class ExerciseStatsCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(
                   '${stat.totalSets} sets • ${stat.sessions} sessions',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -125,7 +125,7 @@ class ExerciseStatsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -200,7 +200,7 @@ class ExerciseStatsCard extends StatelessWidget {
                             const CircleAvatar(
                               child: Icon(AppIcons.workout),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -84,9 +84,9 @@ class _ConsentDialogState extends State<ConsentDialog> {
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             ...ConsentType.values.map((type) => _buildConsentTile(type)),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildPrivacyPolicyLink(),
           ],
         ),
@@ -139,7 +139,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
                           ),
                         ),
                         if (type.isRequired) ...[
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6,
@@ -160,7 +160,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
                         ],
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       type.description,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -202,7 +202,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
               size: 16,
               color: context.colors.primary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               'Read our Privacy Policy',
               style: context.textTheme.bodySmall?.copyWith(

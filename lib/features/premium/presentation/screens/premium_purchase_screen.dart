@@ -189,7 +189,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Sync everywhere • Backup forever • Join the community',
             style: theme.textTheme.bodyLarge?.copyWith(
@@ -589,12 +589,12 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                 CircularProgressIndicator(
                   color: colorScheme.primary,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(
                   _isRestoring ? 'Restoring purchases...' : 'Processing payment...',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   'Please wait',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -702,7 +702,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
       child: Row(
         children: [
           Icon(icon, color: color),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Text(
             title,
             style: Theme.of(context).textTheme.bodyLarge,
@@ -795,10 +795,14 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   }
   
   void _showLegalDocument(BuildContext context, String type) {
-    Navigator.of(context).push(
+    // TODO: Import LegalDocumentScreen or create the screen
+    /* Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => LegalDocumentScreen(documentType: type),
       ),
+    ); */
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Legal document: $type')),
     );
   }
 }

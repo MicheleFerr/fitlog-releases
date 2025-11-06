@@ -89,7 +89,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
         mainAxisSize: MainAxisSize.min,
         children: [
           indicator,
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             message!,
             style: context.textTheme.bodyMedium?.copyWith(

@@ -31,7 +31,7 @@ class AdminDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         title: Row(
@@ -126,7 +126,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                   size: 28,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   l10n.welcomeAdmin,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -136,14 +136,14 @@ class AdminDashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               l10n.adminDashboardDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               children: [
                 Icon(
@@ -151,7 +151,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                   size: 16,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   l10n.secureAdminAccess,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -177,7 +177,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         const AdminStatsCard(),
       ],
     );
@@ -193,7 +193,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.cloud,
               color: Theme.of(context).colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               l10n.firebaseManagement,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -202,7 +202,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         const FirebaseInitWidget(),
       ],
     );
@@ -218,7 +218,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.flashOn,
               color: Theme.of(context).colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               l10n.quickActions,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -227,7 +227,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         const AdminQuickActions(),
       ],
     );
@@ -243,7 +243,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.history,
               color: Theme.of(context).colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               l10n.recentActivity,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -252,7 +252,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         const AdminRecentActivity(),
       ],
     );
@@ -268,7 +268,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.admin,
               color: Theme.of(context).colorScheme.primary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(l10n.adminInfo),
           ],
         ),
@@ -332,7 +332,7 @@ class _InfoItem extends StatelessWidget {
           size: 20,
           color: Theme.of(context).colorScheme.primary,
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

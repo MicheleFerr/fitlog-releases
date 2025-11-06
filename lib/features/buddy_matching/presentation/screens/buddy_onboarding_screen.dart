@@ -297,7 +297,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Errore nel salvataggio delle preferenze'),
+            content: Text('Errore nel salvataggio delle preferenze'),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

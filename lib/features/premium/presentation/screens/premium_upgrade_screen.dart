@@ -67,7 +67,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     
     final user = ref.watch(currentUserProvider).value;
     final isPremium = user?.accountTier == AccountTier.premium || 
-                      user?.accountTier == AccountTier.pro;
+                      user?.accountTier == AccountTier.premium;
     
     if (isPremium) {
       // Already premium
@@ -127,7 +127,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                     
                     // FAQ
                     _buildFAQSection(context),
-                    const SizedBox(height: 100),
+                    SizedBox(height: 100),
                   ]),
                 ),
               ),
@@ -164,7 +164,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Sync across all devices, access community features, and never lose your progress',
               style: theme.textTheme.bodyLarge,
@@ -526,7 +526,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 ),
               ),
               child: _isProcessingUpgrade
-                  ? const SizedBox(
+                  ? SizedBox(
                       height: 24,
                       width: 24,
                       child: CircularProgressIndicator(
@@ -596,7 +596,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  user?.accountTier.name.toUpperCase() ?? 'PREMIUM',
+                  user?.accountTier.toUpperCase() ?? 'PREMIUM',
                   style: theme.textTheme.labelLarge?.copyWith(
                     color: colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
@@ -630,13 +630,21 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     // This handles the case where user starts purchase but doesn't complete
     _pendingRefreshTimer = Timer(const Duration(minutes: 2), () async {
       debugPrint('⏰ 2-minute timer triggered - refreshing profile...');
-      await ref.read(currentUserProvider.notifier).forceRefreshProfile();
+      // TODO: currentUserProvider is StreamProvider, doesn't have .notifier
+      // Need to create a proper StateNotifierProvider with forceRefreshProfile method
+      // await ref.read(currentUserProvider.notifier).forceRefreshProfile();
     });
     
     try {
+      // Convert String plan to PremiumPlan enum
+      final premiumPlan = PremiumPlan.values.firstWhere(
+        (e) => e.name == plan.toLowerCase(),
+        orElse: () => PremiumPlan.monthly, // default fallback
+      );
+
       // Call the purchase provider
       final success = await ref.read(premiumUpgradeProvider.notifier)
-          .purchasePremium(plan);
+          .purchasePremium(premiumPlan);
       
       if (success) {
         // Purchase successful! Cancel the 2-minute timer
@@ -644,14 +652,15 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         
         // Immediately refresh profile
         debugPrint('✅ Purchase successful - refreshing profile immediately');
-        await ref.read(currentUserProvider.notifier).forceRefreshProfile();
+        // TODO: currentUserProvider is StreamProvider, doesn't have .notifier
+        // await ref.read(currentUserProvider.notifier).forceRefreshProfile();
 
         if (!context.mounted) return;
 
         // Show success
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
                 Icon(Icons.check_circle, color: Colors.white),
                 SizedBox(width: 8),

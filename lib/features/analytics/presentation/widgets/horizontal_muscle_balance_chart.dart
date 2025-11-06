@@ -180,7 +180,7 @@ class HorizontalMuscleBalanceChart extends StatelessWidget {
                                 : theme.colorScheme.onSurface,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Icon(
                         isBalanced
                           ? AppIcons.complete

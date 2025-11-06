@@ -43,7 +43,7 @@ class SmartSuggestionsWidget extends ConsumerWidget {
                   AppIcons.tip,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.smartSuggestions,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -111,20 +111,20 @@ class SmartSuggestionTile extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             suggestion.title,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             suggestion.description,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           if (suggestion.reasoning.isNotEmpty) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -138,7 +138,7 @@ class SmartSuggestionTile extends ConsumerWidget {
                     size: 16,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       suggestion.reasoning,

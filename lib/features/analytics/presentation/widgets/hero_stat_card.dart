@@ -78,7 +78,7 @@ class HeroStatCard extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     // Value
                     Text(
                       value,
@@ -87,7 +87,7 @@ class HeroStatCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     // Subtitle
                     Text(
                       subtitle,

@@ -171,25 +171,25 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: FilledButton.icon(
                   onPressed: () => _handleApprove(),
-                  icon: const Icon(AppIcons.complete),
-                  label: const Text('Approva'),
+                  icon: Icon(AppIcons.complete),
+                  label: Text('Approva'),
                   style: FilledButton.styleFrom(
                     backgroundColor: context.colors.success,
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: FilledButton.tonalIcon(
                   onPressed: () => _handleReject(),
-                  icon: const Icon(AppIcons.cancel),
-                  label: const Text('Rifiuta'),
+                  icon: Icon(AppIcons.cancel),
+                  label: Text('Rifiuta'),
                   style: FilledButton.styleFrom(
                     backgroundColor: context.colors.error.withValues(alpha: 0.2),
                     foregroundColor: context.colors.error,
@@ -601,7 +601,7 @@ class _RejectDialogState extends State<_RejectDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Annulla'),
+          child: Text('Annulla'),
         ),
         FilledButton(
           onPressed: () {

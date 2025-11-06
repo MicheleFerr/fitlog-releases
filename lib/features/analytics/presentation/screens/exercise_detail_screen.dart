@@ -77,11 +77,11 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
           // View mode toggle
           _buildViewModeToggle(),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Stats summary
           _buildStatsSummary(metrics, filteredSets),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Charts based on view mode
           if (_viewMode == ChartViewMode.combined) ...[
@@ -94,7 +94,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               context.colors.primary,
               _buildWeightChart(filteredSets),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Volume progression chart
             _buildChartCard(
@@ -103,7 +103,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               context.colors.secondary,
               _buildVolumeChart(filteredSets),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Reps progression chart
             _buildChartCard(
@@ -112,7 +112,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               context.colors.success,
               _buildRepsChart(filteredSets),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // RPE progression chart (if available)
             if (filteredSets.any((s) => s.rpe != null)) ...[
@@ -128,7 +128,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
           // Session history
           _buildSessionHistory(filteredSets),
-          const SizedBox(height: 100),
+          SizedBox(height: 100),
         ],
       ),
     );
@@ -185,12 +185,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ButtonSegment<ChartViewMode>(
           value: ChartViewMode.combined,
           label: Text(context.l10n.combinedView),
-          icon: const Icon(AppIcons.lineChart),
+          icon: Icon(AppIcons.lineChart),
         ),
         ButtonSegment<ChartViewMode>(
           value: ChartViewMode.separated,
           label: Text(context.l10n.separatedView),
-          icon: const Icon(AppIcons.stackedLineChart),
+          icon: Icon(AppIcons.stackedLineChart),
         ),
       ],
       selected: {_viewMode},
@@ -230,7 +230,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             Row(
               children: [
                 Icon(AppIcons.insights, color: context.colors.primary, size: 24),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.combinedChart,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -239,7 +239,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.tapToToggle,
               style: context.textTheme.bodySmall?.copyWith(
@@ -482,7 +482,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               size: 18,
               color: isVisible ? color : context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(
               label,
               style: context.textTheme.bodySmall?.copyWith(
@@ -538,7 +538,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               color: context.colors.primary,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -578,7 +578,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: context.textTheme.titleSmall?.copyWith(
@@ -608,7 +608,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             Row(
               children: [
                 Icon(icon, color: color, size: 24),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   title,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -943,7 +943,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 size: 20,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

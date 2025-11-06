@@ -412,7 +412,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                     size: 16,
                     color: isSelected ? context.colors.surface : color,
                   ),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                   Text(_getTypeLabel(type)),
                 ],
               ),
@@ -430,7 +430,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
             );
           }).toList(),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           _getTypeDescription(_selectedType),
           style: theme.textTheme.bodySmall?.copyWith(
@@ -492,7 +492,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('✅ Contributo inviato! In attesa di approvazione'),
+          content: Text('✅ Contributo inviato! In attesa di approvazione'),
           backgroundColor: context.colors.success,
           duration: const Duration(seconds: 3),
         ),

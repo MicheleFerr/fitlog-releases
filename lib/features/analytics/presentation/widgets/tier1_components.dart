@@ -57,7 +57,7 @@ class HelpButton extends StatelessWidget {
         title: Row(
           children: [
             Icon(AppIcons.info, color: colorScheme.primary),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(_getTitle(context, metricKey)),
           ],
         ),
@@ -371,7 +371,7 @@ class _InteractiveMetricCardState extends State<InteractiveMetricCard>
                           HelpButton(metricKey: widget.helpKey!),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Text(
                       widget.title,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -401,7 +401,7 @@ class _InteractiveMetricCardState extends State<InteractiveMetricCard>
                           },
                         ),
                         if (widget.unit != null) ...[
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             widget.unit!,
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -535,7 +535,7 @@ class MotivationalEmptyState extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Text(
               title,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -543,7 +543,7 @@ class MotivationalEmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               subtitle,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -564,7 +564,7 @@ class MotivationalEmptyState extends StatelessWidget {
                         color: colorScheme.secondary,
                         size: 24,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         motivationalQuote!,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -591,7 +591,7 @@ class MotivationalEmptyState extends StatelessWidget {
                         color: Colors.amber,
                         size: 20,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

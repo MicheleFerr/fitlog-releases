@@ -166,7 +166,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                   color: context.colors.primary,
                   size: 28,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   context.l10n.routineRecoverSkippedDays,
                   style: context.textTheme.headlineSmall?.copyWith(
@@ -176,11 +176,11 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(AppIcons.close),
+                  icon: Icon(AppIcons.close),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.routineRecoverSkippedDaysSubtitle,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -205,7 +205,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                         size: 48,
                         color: context.colors.error,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
                         _error!,
                         style: context.textTheme.bodyLarge,
@@ -226,12 +226,12 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                         size: 64,
                         color: context.colors.primary,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
                         context.l10n.routineNoSkippedDays,
                         style: context.textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         context.l10n.routineOnTrack,
                         style: context.textTheme.bodyMedium?.copyWith(
@@ -271,7 +271,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
 
                     // Available Recovery Days
                     Expanded(
@@ -284,7 +284,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           if (_selectedSkippedDay == null)
                             Expanded(
                               child: Center(
@@ -362,7 +362,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                         ? context.colors.primary
                         : context.colors.onSurface.withValues(alpha: 0.5),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     _formatDate(day.date),
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -371,7 +371,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsets.only(left: 28),
                 child: Text(
@@ -405,7 +405,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                 size: 20,
                 color: context.colors.primary,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   _formatDate(day.date),

@@ -128,7 +128,7 @@ class _RoutineOnboardingScreenState
                         child: Text(context.l10n.routineOnboardingBack),
                       ),
                     ),
-                  if (_currentPage > 0) const SizedBox(width: 12),
+                  if (_currentPage > 0) SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: _handleNext,
@@ -171,7 +171,7 @@ class _RoutineOnboardingScreenState
               color: context.colors.primary,
             ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
 
           // Title
           Text(
@@ -182,7 +182,7 @@ class _RoutineOnboardingScreenState
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Subtitle
           Text(
@@ -212,7 +212,7 @@ class _RoutineOnboardingScreenState
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Definition
           Container(
@@ -231,7 +231,7 @@ class _RoutineOnboardingScreenState
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Features
           _buildFeatureItem(
@@ -240,21 +240,21 @@ class _RoutineOnboardingScreenState
             title: context.l10n.routineOnboardingFeatureScheduled,
             description: context.l10n.routineOnboardingFeatureScheduledDesc,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildFeatureItem(
             context,
             icon: AppIcons.workout,
             title: context.l10n.routineOnboardingFeatureTemplates,
             description: context.l10n.routineOnboardingFeatureTemplatesDesc,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildFeatureItem(
             context,
             icon: AppIcons.repeat,
             title: context.l10n.routineOnboardingFeatureProgression,
             description: context.l10n.routineOnboardingFeatureProgressionDesc,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildFeatureItem(
             context,
             icon: AppIcons.lineChart,
@@ -280,7 +280,7 @@ class _RoutineOnboardingScreenState
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
 
           // Steps
           _buildStepItem(
@@ -290,7 +290,7 @@ class _RoutineOnboardingScreenState
             description: context.l10n.routineOnboardingStep1Desc,
             icon: AppIcons.create,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _buildStepItem(
             context,
             number: 2,
@@ -298,7 +298,7 @@ class _RoutineOnboardingScreenState
             description: context.l10n.routineOnboardingStep2Desc,
             icon: AppIcons.assignment,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _buildStepItem(
             context,
             number: 3,
@@ -325,7 +325,7 @@ class _RoutineOnboardingScreenState
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
 
           // Benefits
           _buildBenefitCard(
@@ -335,7 +335,7 @@ class _RoutineOnboardingScreenState
             description: context.l10n.routineOnboardingBenefit1Desc,
             color: context.colors.primary,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildBenefitCard(
             context,
             icon: AppIcons.insights,
@@ -343,7 +343,7 @@ class _RoutineOnboardingScreenState
             description: context.l10n.routineOnboardingBenefit2Desc,
             color: context.colors.success,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           _buildBenefitCard(
             context,
             icon: AppIcons.autoAwesome,
@@ -351,7 +351,7 @@ class _RoutineOnboardingScreenState
             description: context.l10n.routineOnboardingBenefit3Desc,
             color: context.colors.secondary,
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
 
           // CTA
           Container(
@@ -368,7 +368,7 @@ class _RoutineOnboardingScreenState
             child: Row(
               children: [
                 Icon(AppIcons.rocket, color: context.colors.primary),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     context.l10n.routineOnboardingReadyCTA,
@@ -402,7 +402,7 @@ class _RoutineOnboardingScreenState
           ),
           child: Icon(icon, color: context.colors.primary, size: 24),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -413,7 +413,7 @@ class _RoutineOnboardingScreenState
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 description,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -455,7 +455,7 @@ class _RoutineOnboardingScreenState
             ),
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,7 +463,7 @@ class _RoutineOnboardingScreenState
               Row(
                 children: [
                   Icon(icon, color: context.colors.primary, size: 20),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       title,
@@ -474,7 +474,7 @@ class _RoutineOnboardingScreenState
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 description,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -512,7 +512,7 @@ class _RoutineOnboardingScreenState
             ),
             child: Icon(icon, color: color, size: 24),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -524,7 +524,7 @@ class _RoutineOnboardingScreenState
                     color: color,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   description,
                   style: context.textTheme.bodySmall?.copyWith(

@@ -13509,4 +13509,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tryAgain => 'Try again';
+
+  @override
+  String andMoreRecords(int count) {
+    return 'and $count more records';
+  }
+
+  @override
+  String andXMore(int count) {
+    return 'and $count more';
+  }
+
+  @override
+  String get errorDeleting => 'Error deleting';
+
+  @override
+  String get errorPickingImage => 'Error picking image';
+
+  @override
+  String get errorSharing => 'Error sharing';
+
+  @override
+  String get errorStartingWorkout => 'Error starting workout';
+
+  @override
+  String exercisesCompleted(int count) {
+    return '$count exercises completed';
+  }
+
+  @override
+  String exportFailedError(String error) {
+    return 'Export failed: $error';
+  }
+
+  @override
+  String get saveAndEndWorkout => 'Save and end workout';
+
+  @override
+  String saveError(String error) {
+    return 'Error saving: $error';
+  }
+
+  @override
+  String superLikesRemaining(int count) {
+    return '$count super likes remaining';
+  }
+
+  @override
+  String templateLimitMessage(int max) {
+    return 'You have reached the limit of $max templates';
+  }
+
+  @override
+  String trustScore(int score) {
+    return 'Trust score: $score';
+  }
+
+  @override
+  String workoutStartedFromTemplate(String name) {
+    return 'Workout started from template: $name';
+  }
+
+  @override
+  String xpPoints(int count) {
+    return '$count XP';
+  }
+
+  @override
+  String get keepScreenOn => 'Keep screen on';
 }

@@ -271,12 +271,12 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
+                            Icon(
                               AppIcons.favorite,
                               size: 48,
                               color: context.colors.surface,
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12),
                             Text(
                               l10n.itsAMatch,
                               style: theme.textTheme.headlineSmall?.copyWith(

@@ -32,7 +32,7 @@ class StrengthProgressionChart extends StatelessWidget {
                   Icons.trending_up,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Strength Progression',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -41,7 +41,7 @@ class StrengthProgressionChart extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Container(
               height: 200,
               alignment: Alignment.center,
@@ -57,14 +57,14 @@ class StrengthProgressionChart extends StatelessWidget {
                     size: 48,
                     color: context.colors.onSurface.withValues(alpha: 0.3),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     'Chart implementation coming soon',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     '${activities.length} activities loaded',
                     style: context.textTheme.bodySmall?.copyWith(

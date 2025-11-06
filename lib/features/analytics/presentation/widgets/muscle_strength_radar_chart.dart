@@ -358,7 +358,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
           ),
           
           if (target != null) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             _buildStrengthBar(
               label: 'Obiettivo',
               value: target,
@@ -369,7 +369,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
           ],
           
           if (previous != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               children: [
                 Icon(
@@ -377,7 +377,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
                   color: improvement >= 0 ? context.colors.success : context.colors.error,
                   size: 20,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   '${improvement >= 0 ? '+' : ''}${improvement.toStringAsFixed(1)} '
                   '(${improvementPercent >= 0 ? '+' : ''}${improvementPercent.toStringAsFixed(1)}%)',

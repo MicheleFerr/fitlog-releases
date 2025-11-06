@@ -494,7 +494,7 @@ class _AnimatedIconState extends State<_AnimatedIcon>
               transform: GradientRotation(_controller.value * 2 * math.pi),
             ),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.people,
             color: context.colors.surface,
             size: 24,
@@ -616,7 +616,7 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(false);
                 },
-                icon: const Icon(AppIcons.close),
+                icon: Icon(AppIcons.close),
                 style: IconButton.styleFrom(
                   backgroundColor: context.colors.error.withValues(alpha: 0.1),
                   foregroundColor: context.colors.error,
@@ -627,7 +627,7 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(true);
                 },
-                icon: const Icon(AppIcons.check),
+                icon: Icon(AppIcons.check),
                 style: IconButton.styleFrom(
                   backgroundColor: context.colors.success.withValues(alpha: 0.1),
                   foregroundColor: context.colors.success,

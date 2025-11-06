@@ -221,7 +221,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                           widget.onClose();
                         });
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
                         color: context.colors.surface,
                         size: 32,

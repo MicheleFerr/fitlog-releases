@@ -24029,6 +24029,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get tryAgain;
+
+  /// Additional records count
+  ///
+  /// In en, this message translates to:
+  /// **'and {count} more records'**
+  String andMoreRecords(int count);
+
+  /// Additional items count
+  ///
+  /// In en, this message translates to:
+  /// **'and {count} more'**
+  String andXMore(int count);
+
+  /// Error message for delete failure
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting'**
+  String get errorDeleting;
+
+  /// Error message for image picker failure
+  ///
+  /// In en, this message translates to:
+  /// **'Error picking image'**
+  String get errorPickingImage;
+
+  /// Error message for share failure
+  ///
+  /// In en, this message translates to:
+  /// **'Error sharing'**
+  String get errorSharing;
+
+  /// Error message for workout start failure
+  ///
+  /// In en, this message translates to:
+  /// **'Error starting workout'**
+  String get errorStartingWorkout;
+
+  /// Number of completed exercises
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises completed'**
+  String exercisesCompleted(int count);
+
+  /// Export failure error message
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed: {error}'**
+  String exportFailedError(String error);
+
+  /// Button to save and finish workout
+  ///
+  /// In en, this message translates to:
+  /// **'Save and end workout'**
+  String get saveAndEndWorkout;
+
+  /// Save failure error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving: {error}'**
+  String saveError(String error);
+
+  /// Remaining super likes count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} super likes remaining'**
+  String superLikesRemaining(int count);
+
+  /// Template limit reached message
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached the limit of {max} templates'**
+  String templateLimitMessage(int max);
+
+  /// User trust score display
+  ///
+  /// In en, this message translates to:
+  /// **'Trust score: {score}'**
+  String trustScore(int score);
+
+  /// Workout started message
+  ///
+  /// In en, this message translates to:
+  /// **'Workout started from template: {name}'**
+  String workoutStartedFromTemplate(String name);
+
+  /// Experience points display
+  ///
+  /// In en, this message translates to:
+  /// **'{count} XP'**
+  String xpPoints(int count);
+
+  /// Setting to keep screen on during workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Keep screen on'**
+  String get keepScreenOn;
 }
 
 class _AppLocalizationsDelegate

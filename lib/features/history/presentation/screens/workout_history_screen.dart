@@ -130,7 +130,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(AppIcons.arrowBackIos),
+          icon: Icon(AppIcons.arrowBackIos),
           onPressed: () => context.pop(),
         ),
         actions: [

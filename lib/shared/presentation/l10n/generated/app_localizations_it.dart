@@ -13657,4 +13657,73 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tryAgain => 'Riprova';
+
+  @override
+  String andMoreRecords(int count) {
+    return 'e $count altri record';
+  }
+
+  @override
+  String andXMore(int count) {
+    return 'e altri $count';
+  }
+
+  @override
+  String get errorDeleting => 'Errore durante l\'eliminazione';
+
+  @override
+  String get errorPickingImage => 'Errore durante la selezione dell\'immagine';
+
+  @override
+  String get errorSharing => 'Errore durante la condivisione';
+
+  @override
+  String get errorStartingWorkout =>
+      'Errore durante l\'avvio dell\'allenamento';
+
+  @override
+  String exercisesCompleted(int count) {
+    return '$count esercizi completati';
+  }
+
+  @override
+  String exportFailedError(String error) {
+    return 'Esportazione fallita: $error';
+  }
+
+  @override
+  String get saveAndEndWorkout => 'Salva e termina allenamento';
+
+  @override
+  String saveError(String error) {
+    return 'Errore durante il salvataggio: $error';
+  }
+
+  @override
+  String superLikesRemaining(int count) {
+    return '$count super like rimanenti';
+  }
+
+  @override
+  String templateLimitMessage(int max) {
+    return 'Hai raggiunto il limite di $max template';
+  }
+
+  @override
+  String trustScore(int score) {
+    return 'Punteggio di fiducia: $score';
+  }
+
+  @override
+  String workoutStartedFromTemplate(String name) {
+    return 'Allenamento avviato dal template: $name';
+  }
+
+  @override
+  String xpPoints(int count) {
+    return '$count XP';
+  }
+
+  @override
+  String get keepScreenOn => 'Mantieni schermo acceso';
 }

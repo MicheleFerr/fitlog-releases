@@ -274,7 +274,7 @@ class _ContextualMenuItemWidget extends StatelessWidget {
               size: 20,
               color: effectiveColor,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 item.label,

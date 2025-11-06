@@ -70,7 +70,7 @@ class _CalendarViewState extends State<CalendarView> {
                 color: context.colors.primary,
                 size: 20,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Schedule',
                 style: context.textTheme.titleMedium?.copyWith(
@@ -236,7 +236,7 @@ class _CalendarViewState extends State<CalendarView> {
                 border: Border.all(color: item.$1),
               ),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text(
               item.$2,
               style: context.textTheme.bodySmall?.copyWith(

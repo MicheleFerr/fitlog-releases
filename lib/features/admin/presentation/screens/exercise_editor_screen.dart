@@ -289,7 +289,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
             ],
           ),
         ),
@@ -347,7 +347,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(12),

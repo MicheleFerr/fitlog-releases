@@ -77,7 +77,7 @@ class SortModal extends ConsumerWidget {
               currentSort,
               icon: AppIcons.trendUp,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
         ),
       ),

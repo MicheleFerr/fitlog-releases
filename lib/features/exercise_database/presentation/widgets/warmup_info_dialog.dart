@@ -31,7 +31,7 @@ class WarmupInfoDialog extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Phase 1: Mobility
               _buildPhaseCard(
@@ -40,7 +40,7 @@ class WarmupInfoDialog extends StatelessWidget {
                 description: l10n.warmupPhase1Desc,
                 color: context.colors.primary,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               // Phase 2: Activation
               _buildPhaseCard(
@@ -49,7 +49,7 @@ class WarmupInfoDialog extends StatelessWidget {
                 description: l10n.warmupPhase2Desc,
                 color: context.colors.secondary,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               // Phase 3: Warmup Sets (Dynamic)
               Container(
@@ -92,14 +92,14 @@ class WarmupInfoDialog extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       l10n.warmupPhase3Desc,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(

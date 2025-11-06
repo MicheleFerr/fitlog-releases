@@ -138,11 +138,11 @@ class MatchesPreviewBar extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Row(
                         children: [
                           if (confirmedMatches > 0) ...[
-                            const Icon(
+                            Icon(
                               AppIcons.favorite,
                               size: 14,
                               color: context.colors.error,
@@ -163,7 +163,7 @@ class MatchesPreviewBar extends StatelessWidget {
                               ),
                             ),
                           if (activePartnerships > 0) ...[
-                            const Icon(
+                            Icon(
                               AppIcons.handshake,
                               size: 14,
                               color: context.colors.success,

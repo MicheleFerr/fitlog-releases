@@ -125,7 +125,7 @@ class NotificationPanel extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   AppLocalizations.of(context).notifications ?? 'Notifiche',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -218,11 +218,11 @@ class NotificationPanel extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Text(
+              Text(
                 '📊',
                 style: TextStyle(fontSize: 20),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context).quickStats ?? 'I tuoi progressi',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -274,7 +274,7 @@ class NotificationPanel extends ConsumerWidget {
             ),
           if (quickStatsAsync.hasValue && quickStatsAsync.value != null)
             if (quickStatsAsync.value!.volumeIncrease > 0) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
@@ -292,7 +292,7 @@ class NotificationPanel extends ConsumerWidget {
                       size: 14,
                       color: context.colors.success,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       'Volume +${quickStatsAsync.value!.formattedVolumeIncrease}',
                       style: TextStyle(
@@ -314,7 +314,7 @@ class NotificationPanel extends ConsumerWidget {
     return Column(
       children: [
         Text(emoji, style: const TextStyle(fontSize: 20)),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: const TextStyle(
@@ -343,14 +343,14 @@ class NotificationPanel extends ConsumerWidget {
             size: 64,
             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             AppLocalizations.of(context).noNotifications ?? 'Nessuna notifica',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).notificationsDescription ?? 'Ti terremo aggiornato sui tuoi progressi!',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -442,7 +442,7 @@ class NotificationTile extends StatelessWidget {
                     ),
                   ),
                   
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   
                   // Content
                   Expanded(
@@ -467,7 +467,7 @@ class NotificationTile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           notification.message,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -477,7 +477,7 @@ class NotificationTile extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         if (notification.action != null) ...[
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Row(
                             children: [
                               Icon(
@@ -485,7 +485,7 @@ class NotificationTile extends StatelessWidget {
                                 size: 14,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Text(
                                 notification.action!.label,
                                 style: TextStyle(

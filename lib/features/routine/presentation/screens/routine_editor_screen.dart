@@ -214,7 +214,7 @@ class RoutineEditorScreen extends ConsumerWidget { // For editing existing routi
                   ),
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           label,
           style: context.textTheme.bodySmall?.copyWith(
@@ -304,7 +304,7 @@ class RoutineEditorScreen extends ConsumerWidget { // For editing existing routi
                   child: Text(context.l10n.routineButtonBack),
                 ),
               ),
-            if (state.currentStep > 0) const SizedBox(width: 12),
+            if (state.currentStep > 0) SizedBox(width: 12),
 
             // Next/Create button
             Expanded(

@@ -281,14 +281,14 @@ class _IconShowcaseScreenState extends State<IconShowcaseScreen> {
                     size: AppIconSize.emptyState,
                     color: context.colors.outline,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     'No icons found',
                     style: context.textTheme.titleMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     'Try a different search term',
                     style: context.textTheme.bodySmall?.copyWith(
@@ -352,7 +352,7 @@ class _IconCard extends StatelessWidget {
               size: AppIconSize.xlarge,
               color: context.colors.primary,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               iconName,
               style: context.textTheme.labelSmall?.copyWith(

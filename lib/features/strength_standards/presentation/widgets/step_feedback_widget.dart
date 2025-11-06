@@ -75,7 +75,7 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
                           : context.colors.onSurfaceVariant,
                       size: 20,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         _currentRating != null
@@ -112,7 +112,7 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
                 child: Column(
                   children: [
                     const Divider(),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Text(
                       context.l10n.feedbackQuestion,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -162,7 +162,7 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
                       }),
                     ),
 
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
 
                     // Rating labels
                     Row(
@@ -208,7 +208,7 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
                   color: context.colors.primary,
                   size: size,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   '$rating/5',
                   style: context.textTheme.labelSmall?.copyWith(

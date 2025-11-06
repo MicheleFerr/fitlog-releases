@@ -347,7 +347,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
           fitInsideHorizontally: true,
           fitInsideVertically: true,
           tooltipPadding: const EdgeInsets.all(8),
-          tooltipRoundedRadius: 8,
+          // TODO: tooltipRoundedRadius deprecated in fl_chart - use custom painter if needed
           getTooltipItems: (spots) {
             return spots.map((spot) {
               final index = spot.spotIndex;
@@ -464,7 +464,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
             theme: theme,
           ),
           if (widget.targetWeight != null) ...[
-            const SizedBox(width: 24),
+            SizedBox(width: 24),
             _buildLegendItem(
               color: context.colors.success,
               label: 'Obiettivo',
@@ -493,7 +493,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
             border: isDashed ? Border.all(color: color, width: 1) : null,
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           label,
           style: theme.textTheme.bodySmall,

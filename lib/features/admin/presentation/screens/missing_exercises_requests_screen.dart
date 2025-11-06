@@ -60,7 +60,7 @@ class _MissingExercisesRequestsScreenState
           Expanded(
             child: requestsAsync.when(
               data: (requests) => _buildRequestsList(requests),
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => Center(child: CircularProgressIndicator()),
               error: (error, _) => _buildErrorState(error),
             ),
           ),
@@ -162,7 +162,7 @@ class _MissingExercisesRequestsScreenState
               size: 64,
               color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Nessuna richiesta ${_getStatusLabel(_selectedFilter).toLowerCase()}',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -207,7 +207,7 @@ class _MissingExercisesRequestsScreenState
                   color: _getStatusColor(request.status),
                   size: 20,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     request.exerciseName,
@@ -219,7 +219,7 @@ class _MissingExercisesRequestsScreenState
               ],
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             // Details
             Text(
@@ -229,7 +229,7 @@ class _MissingExercisesRequestsScreenState
                     fontFamily: 'monospace',
                   ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               'Richiesto: ${_formatDate(request.requestedAt)}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -238,7 +238,7 @@ class _MissingExercisesRequestsScreenState
             ),
 
             if (request.reviewedAt != null) ...[
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 'Revisionato: ${_formatDate(request.reviewedAt!)}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -248,7 +248,7 @@ class _MissingExercisesRequestsScreenState
             ],
 
             if (request.adminNotes != null) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -267,16 +267,16 @@ class _MissingExercisesRequestsScreenState
 
             // Actions (only for pending requests)
             if (request.status == RequestStatus.pending) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               const Divider(),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _rejectRequest(request),
-                      icon: const Icon(AppIcons.close),
-                      label: const Text('Rifiuta'),
+                      icon: Icon(AppIcons.close),
+                      label: Text('Rifiuta'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.error,
                       ),
@@ -412,7 +412,7 @@ class _MissingExercisesRequestsScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Annulla'),
+            child: Text('Annulla'),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),

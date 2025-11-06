@@ -100,7 +100,7 @@ class _CommunityDiscoveryScreenState
                           size: AppIconSize.small,
                           color: context.colors.tertiary,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           'Admin',
                           style: context.textTheme.labelSmall?.copyWith(
@@ -168,14 +168,14 @@ class _CommunityDiscoveryScreenState
                 size: AppIconSize.xxlarge * 2,
                 color: context.colors.onSurface.withValues(alpha: 0.3),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               Text(
                 'Admin Only',
                 style: context.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 'This feature is currently restricted to administrators only.',
                 textAlign: TextAlign.center,
@@ -183,7 +183,7 @@ class _CommunityDiscoveryScreenState
                   color: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 'Community discovery and contributions will be available to all users soon.',
                 textAlign: TextAlign.center,
@@ -194,7 +194,7 @@ class _CommunityDiscoveryScreenState
 
               // 🐛 DEBUG INFO (only in debug mode)
               if (kDebugMode) ...[
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -215,7 +215,7 @@ class _CommunityDiscoveryScreenState
                           color: context.colors.error,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         'UserProfile: ${userProfile == null ? "NULL ❌" : "✅ Loaded"}',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -240,7 +240,7 @@ class _CommunityDiscoveryScreenState
                           ),
                         ),
                       ],
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         'To fix: Set isAdmin=true in Firestore',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -355,7 +355,7 @@ class _CommunityDiscoveryScreenState
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
 
           // Sort Button
           OutlinedButton.icon(
@@ -434,7 +434,7 @@ class _CommunityDiscoveryScreenState
               size: 64,
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               context.l10n.noContributionsFound,
               style: context.textTheme.titleMedium?.copyWith(
@@ -443,7 +443,7 @@ class _CommunityDiscoveryScreenState
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.tryDifferentSearch,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -469,7 +469,7 @@ class _CommunityDiscoveryScreenState
               size: 64,
               color: context.colors.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               context.l10n.errorLoadingContributions,
               style: context.textTheme.titleMedium?.copyWith(
@@ -478,7 +478,7 @@ class _CommunityDiscoveryScreenState
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               error.toString(),
               style: context.textTheme.bodySmall?.copyWith(

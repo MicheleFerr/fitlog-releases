@@ -43,7 +43,7 @@ class PatternSelectionStep extends ConsumerWidget {
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             context.l10n.routinePatternChooseDescription,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -51,12 +51,12 @@ class PatternSelectionStep extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Toggle between preset and custom
           _buildPatternModeToggle(context, ref, state),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Show preset patterns or custom builder
           if (state.usePresetPattern) ...[
@@ -119,7 +119,7 @@ class PatternSelectionStep extends ConsumerWidget {
                           : context.colors.onSurface.withValues(alpha: 0.6),
                       size: 20,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       context.l10n.routinePatternPreset,
                       style: context.textTheme.labelLarge?.copyWith(
@@ -159,7 +159,7 @@ class PatternSelectionStep extends ConsumerWidget {
                           : context.colors.onSurface.withValues(alpha: 0.6),
                       size: 20,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       context.l10n.routinePatternCustom,
                       style: context.textTheme.labelLarge?.copyWith(
@@ -241,7 +241,7 @@ class PatternSelectionStep extends ConsumerWidget {
                             size: 24,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,7 +255,7 @@ class PatternSelectionStep extends ConsumerWidget {
                                       : context.colors.onSurface,
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              SizedBox(height: 2),
                               Text(
                                 '${context.l10n.routineWorkoutCount(workoutDays)}, ${context.l10n.routineRestCount(restDays)}',
                                 style: context.textTheme.bodySmall?.copyWith(
@@ -282,7 +282,7 @@ class PatternSelectionStep extends ConsumerWidget {
 
                     // Show details only if selected or no pattern is selected
                     if (!shouldCollapse) ...[
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Text(
                         _getLocalizedPatternDescription(pattern, context),
                         style: context.textTheme.bodyMedium?.copyWith(
@@ -343,7 +343,7 @@ class PatternSelectionStep extends ConsumerWidget {
                       ? context.colors.secondary
                       : context.colors.primary,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   _formatDayLabel(day),
                   style: context.textTheme.labelSmall?.copyWith(
@@ -385,7 +385,7 @@ class PatternSelectionStep extends ConsumerWidget {
             color: context.colors.secondary,
             size: 32,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,7 +397,7 @@ class PatternSelectionStep extends ConsumerWidget {
                     color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Create your own custom workout sequence - Coming soon!',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -496,7 +496,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   size: 24,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -582,7 +582,7 @@ class PatternSelectionStep extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       context.l10n.routineTotalWorkouts(totalWorkoutDays),
                       style: context.textTheme.bodySmall?.copyWith(
@@ -649,7 +649,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   size: 16,
                   color: context.colors.onSurface.withValues(alpha: 0.6),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   '${_getTotalMonths(startDate, endDate) - monthsToShow.length} more months...',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -870,7 +870,7 @@ class PatternSelectionStep extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
 
           // Day info
           Expanded(
@@ -889,7 +889,7 @@ class PatternSelectionStep extends ConsumerWidget {
                         ? context.colors.secondary
                         : context.colors.primary,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -932,7 +932,7 @@ class PatternSelectionStep extends ConsumerWidget {
     return Column(
       children: [
         Icon(icon, color: color, size: 20),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: context.textTheme.titleMedium?.copyWith(

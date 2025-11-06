@@ -179,7 +179,7 @@ class RoutineDetailScreen extends ConsumerWidget {
                         icon: AppIcons.calendar,
                         label: _formatDateRange(routine.startDate, routine.endDate),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       _buildInfoChip(
                         context,
                         icon: AppIcons.workout,
@@ -187,7 +187,7 @@ class RoutineDetailScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   if (routine.isActive)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -203,7 +203,7 @@ class RoutineDetailScreen extends ConsumerWidget {
                             size: 16,
                             color: context.colors.onPrimary,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             'ACTIVE',
                             style: context.textTheme.labelSmall?.copyWith(
@@ -224,7 +224,7 @@ class RoutineDetailScreen extends ConsumerWidget {
         // More actions menu
         IconButton(
           onPressed: () => _showMoreActions(context, ref, routine),
-          icon: const Icon(AppIcons.moreVert),
+          icon: Icon(AppIcons.moreVert),
         ),
       ],
     );
@@ -248,7 +248,7 @@ class RoutineDetailScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: context.colors.primary),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             label,
             style: context.textTheme.bodySmall?.copyWith(
@@ -288,7 +288,7 @@ class RoutineDetailScreen extends ConsumerWidget {
             : const Text('No reason provided'),
         trailing: TextButton(
           onPressed: () => _recoverDay(context, ref, routine, skip.date),
-          child: const Text('Recover'),
+          child: Text('Recover'),
         ),
       ),
     );
@@ -304,14 +304,14 @@ class RoutineDetailScreen extends ConsumerWidget {
             size: 64,
             color: context.colors.error,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'Routine not found',
             style: context.textTheme.titleLarge?.copyWith(
               color: context.colors.error,
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           ElevatedButton(
             onPressed: () => context.pop(),
             child: const Text('Go Back'),
@@ -333,7 +333,7 @@ class RoutineDetailScreen extends ConsumerWidget {
               size: 64,
               color: context.colors.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Error loading routine',
               style: context.textTheme.titleMedium?.copyWith(
@@ -341,13 +341,13 @@ class RoutineDetailScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               error.toString(),
               style: context.textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => context.pop(),
               child: const Text('Go Back'),
@@ -498,8 +498,8 @@ class RoutineDetailScreen extends ConsumerWidget {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(AppIcons.archive),
-              title: const Text('Archive'),
+              leading: Icon(AppIcons.archive),
+              title: Text('Archive'),
               onTap: () {
                 Navigator.pop(modalContext);
                 // TODO: Archive action

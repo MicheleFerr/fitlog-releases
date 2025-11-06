@@ -61,12 +61,12 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Stats Overview
             statsAsync.when(
               data: (stats) => _buildStatsOverview(context, stats),
-              loading: () => const Center(
+              loading: () => Center(
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: CircularProgressIndicator(),
@@ -116,7 +116,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const Center(
+              loading: () => Center(
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: CircularProgressIndicator(),
@@ -215,7 +215,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(

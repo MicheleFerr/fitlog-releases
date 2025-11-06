@@ -77,7 +77,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   color: context.colors.primary,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // App Title
               Text(
@@ -88,7 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 context.l10n.appSubtitle,
                 style: context.textTheme.bodyLarge?.copyWith(
@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               
               // Welcome Card
               Card(
@@ -109,13 +109,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         size: 32,
                         color: context.colors.primary,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
                         context.l10n.welcomeToGymBro,
                         textAlign: TextAlign.center,
                         style: context.textTheme.titleMedium,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         context.l10n.welcomeDescription,
                         textAlign: TextAlign.center,
@@ -128,7 +128,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               
               // Email/Password Login Form (conditionally shown)
               if (_showLoginForm) ...[
@@ -142,7 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.emailLabel,
                           hintText: context.l10n.emailHint,
-                          prefixIcon: const Icon(AppIcons.email),
+                          prefixIcon: Icon(AppIcons.email),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -156,7 +156,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       
                       // Password Field
                       TextFormField(
@@ -164,7 +164,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.passwordLabel,
                           hintText: context.l10n.passwordHint,
-                          prefixIcon: const Icon(AppIcons.lock),
+                          prefixIcon: Icon(AppIcons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(_obscurePassword ? AppIcons.visibility : AppIcons.visibilityOff),
                             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -179,7 +179,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                       
                       // Sign In Button
                       SizedBox(
@@ -187,7 +187,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: FilledButton(
                           onPressed: authController.isLoading ? null : _handleEmailSignIn,
                           child: authController.isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(strokeWidth: 2),
@@ -195,19 +195,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               : Text(context.l10n.signInButton),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // Forgot Password
                       TextButton(
                         onPressed: _handleForgotPassword,
                         child: Text(context.l10n.forgotPassword),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // Back to options
                       TextButton.icon(
                         onPressed: () => setState(() => _showLoginForm = false),
-                        icon: const Icon(AppIcons.back),
+                        icon: Icon(AppIcons.back),
                         label: Text(context.l10n.backToOptions),
                       ),
                     ],
@@ -220,12 +220,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: FilledButton.icon(
                     onPressed: authController.isLoading ? null : _signInWithGoogle,
                     icon: authController.isLoading
-                        ? const SizedBox(
+                        ? SizedBox(
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(AppIcons.gMobiledata, size: 24),
+                        : Icon(AppIcons.gMobiledata, size: 24),
                     label: Text(context.l10n.signInWithGoogle),
                   ),
                 ),
@@ -243,16 +243,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         foregroundColor: Colors.white,
                       ),
                       icon: authController.isLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Icon(AppIcons.apple),
+                          : Icon(AppIcons.apple),
                       label: Text(context.l10n.signInWithApple),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                 ],
 
                 // Email Sign In Button
@@ -260,19 +260,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => setState(() => _showLoginForm = true),
-                    icon: const Icon(AppIcons.email),
+                    icon: Icon(AppIcons.email),
                     label: Text(context.l10n.signInWithEmail),
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Register Button
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => context.pushNamed('register'),
-                    icon: const Icon(AppIcons.personAdd),
+                    icon: Icon(AppIcons.personAdd),
                     label: Text(context.l10n.signUpButton),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: context.colors.primary,
@@ -282,7 +282,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ],
               
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               
               // Features Preview
               Row(
@@ -382,7 +382,7 @@ class _FeatureIcon extends StatelessWidget {
             size: 24,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           label,
           style: context.textTheme.labelSmall?.copyWith(

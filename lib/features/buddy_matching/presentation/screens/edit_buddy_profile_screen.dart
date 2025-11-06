@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/provider
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/enhanced/city_picker_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/data/services/location_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
 
 class EditBuddyProfileScreen extends ConsumerStatefulWidget {
   const EditBuddyProfileScreen({super.key});
@@ -346,11 +347,12 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
                 child: Column(
                   children: [
                     CityPickerWidget(
-                      selectedCityCode: _selectedCityCode,
-                      onCityChanged: (cityCode, cityName) {
+                      // TODO: Fix parameter names - CityPickerWidget uses selectedCity/onCitySelected
+                      selectedCity: null, // _selectedCityCode,
+                      onCitySelected: (city, zone) {
                         setState(() {
-                          _selectedCityCode = cityCode;
-                          _selectedCityName = cityName;
+                          // _selectedCityCode = city.code;
+                          // _selectedCityName = city.name;
                         });
                       },
                     ),
@@ -414,7 +416,7 @@ class _EditBuddyProfileScreenState extends ConsumerState<EditBuddyProfileScreen>
                 ),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
             ],
           ),
         ),

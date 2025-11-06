@@ -127,7 +127,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                             size: 14,
                             color: context.colors.onSecondary,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             'NO PESI',
                             style: TextStyle(
@@ -160,7 +160,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                 error: (_, __) => const SizedBox.shrink(),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Expand/Collapse button
               GestureDetector(
@@ -179,7 +179,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                         size: 16,
                         color: context.colors.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Text(
                         _isExpanded ? 'Meno dettagli' : 'Più dettagli',
                         style: TextStyle(
@@ -194,7 +194,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
 
               // Expanded fields
               if (_isExpanded) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 dropdownValues.when(
                   data: (values) => _buildExpandedFields(context, values),
                   loading: () => const SizedBox.shrink(),
@@ -204,13 +204,13 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
 
               // Focus muscles chips
               if (widget.exercise.focus.isNotEmpty) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _buildMuscleChips(context, 'Focus:', widget.exercise.focus, context.colors.primary),
               ],
 
               // Secondary muscles chips
               if (widget.exercise.muscoliSecondari.isNotEmpty) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _buildMuscleChips(context, 'Secondari:', widget.exercise.muscoliSecondari, context.colors.secondary),
               ],
             ],
@@ -404,7 +404,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             size: 16,
             color: context.colors.onSurfaceVariant,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,7 +417,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(
                   value,
                   style: TextStyle(
@@ -466,7 +466,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -479,7 +479,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                       color: context.colors.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     'Tieni premuto per anteprima',
                     style: TextStyle(
@@ -551,7 +551,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     AppIcons.image,
                     color: context.colors.onPrimaryContainer,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     l10n.imagePreview,
                     style: context.textTheme.titleMedium?.copyWith(
@@ -579,7 +579,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                         size: 64,
                         color: context.colors.onSurfaceVariant,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         'Errore caricamento immagine',
                         style: TextStyle(
@@ -612,7 +612,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                   const SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Chiudi'),
+                    child: Text('Chiudi'),
                   ),
                 ],
               ),

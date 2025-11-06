@@ -561,6 +561,12 @@ class BuddyProfileDetails extends StatelessWidget {
         return AppIcons.premium;
       case BadgeType.verified:
         return AppIcons.verified;
+      case BadgeType.instagramVerified:
+        return AppIcons.verified;  // Instagram verified badge
+      case BadgeType.superLiker:
+        return AppIcons.star;  // Super liker badge
+      case BadgeType.earlyAdopter:
+        return AppIcons.star;  // Early adopter badge
     }
   }
 }

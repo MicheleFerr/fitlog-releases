@@ -75,6 +75,11 @@ class IceBreaker with _$IceBreaker {
 
   factory IceBreaker.fromJson(Map<String, dynamic> json) =>
       _$IceBreakerFromJson(json);
+
+  factory IceBreaker.fromFirestore(dynamic doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return IceBreaker.fromJson(data);
+  }
 }
 
 /// Predefined ice breaker messages for GymBro

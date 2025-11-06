@@ -107,7 +107,7 @@ class LoadMoreIndicator extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const CircularProgressIndicator(),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               message,
               style: Theme.of(context).textTheme.bodySmall,

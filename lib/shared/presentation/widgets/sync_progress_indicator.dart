@@ -88,7 +88,7 @@ class SyncProgressIndicator extends ConsumerWidget implements PreferredSizeWidge
           ),
 
           if (showDetails) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             // Dettagli: Percentuale, Operazioni, Tempo
             Row(
@@ -215,7 +215,7 @@ class SyncProgressDialog extends ConsumerWidget {
         children: [
           if (message != null) ...[
             Text(message!),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
           ],
 
           // Circular progress
@@ -224,7 +224,7 @@ class SyncProgressDialog extends ConsumerWidget {
             strokeWidth: 6,
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Percentuale
           Text(
@@ -235,7 +235,7 @@ class SyncProgressDialog extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // Dettagli
           Text(

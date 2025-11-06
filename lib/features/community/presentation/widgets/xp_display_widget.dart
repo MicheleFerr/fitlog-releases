@@ -122,14 +122,14 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.star,
                                 color: context.colors.surface,
                                 size: 28,
                               ),
                               Text(
                                 'Lv.$level',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: context.colors.surface,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -206,9 +206,9 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                 ),
                 
                 if (widget.showDetails) ...[
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   const Divider(),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   
                   // Stats Grid
                   Row(

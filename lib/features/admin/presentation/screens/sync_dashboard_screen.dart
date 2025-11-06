@@ -135,7 +135,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
               
               // User Statistics
               _buildUserStats(context, data),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               
               // System Health
               _buildSystemHealth(context, data),
@@ -340,7 +340,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           'Feature Status',
           style: theme.textTheme.headlineSmall,
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         ...data.featureStats.entries.map((entry) {
           return _buildFeatureRow(context, entry.key, entry.value);
         }),

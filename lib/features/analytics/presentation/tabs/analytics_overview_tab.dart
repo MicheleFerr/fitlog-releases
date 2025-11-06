@@ -132,11 +132,11 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           
           // Recent Workouts Section
           _buildRecentWorkouts(context, filteredWorkouts),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           
           // Quick Actions
           _buildQuickActions(context),
-          const SizedBox(height: 100), // Space for bottom navigation
+          SizedBox(height: 100), // Space for bottom navigation
         ],
       ),
     );
@@ -261,7 +261,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ...recent.map((workout) => _buildWorkoutItem(context, workout)),
           ],
         ),
@@ -487,7 +487,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('No completed exercises found in your workouts'),
+          content: Text('No completed exercises found in your workouts'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -552,7 +552,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Unable to load exercise activities'),
+          content: Text('Unable to load exercise activities'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );

@@ -97,7 +97,7 @@ class ExerciseDetailsModal extends StatelessWidget {
             color: context.colors.onSurface,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Focus and Equipment Row
         Row(
@@ -109,14 +109,14 @@ class ExerciseDetailsModal extends StatelessWidget {
               label: exercise.focusDisplayName,
               color: context.colors.primary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
 
             // Difficulty Badge
             _buildDifficultyChip(context),
           ],
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         // Equipment
         _buildInfoChip(
@@ -149,7 +149,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 16, color: color),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           Text(
             label,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -226,7 +226,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                   color: context.colors.onPrimaryContainer,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text(
                 context.l10n.technicalNotes,
                 style: context.textTheme.titleMedium?.copyWith(
@@ -236,7 +236,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Steps
           ..._buildFormattedSteps(context, exercise.noteTecniche!),
@@ -274,7 +274,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                   color: context.colors.onSecondaryContainer,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Text(
                   context.l10n.warmupProtocol,
@@ -295,7 +295,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Warmup Phases
           if (exercise.mobilitaPre != null) ...[
@@ -305,7 +305,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               title: context.l10n.warmupPhase1Title.replaceAll('🔄 ', ''),
               content: exercise.mobilitaPre!,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
 
           if (exercise.attivazionePre != null) ...[
@@ -315,7 +315,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               title: context.l10n.warmupPhase2Title.replaceAll('⚡ ', ''),
               content: exercise.attivazionePre!,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
 
           if (exercise.warmupSets != null) ...[
@@ -326,7 +326,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               content: exercise.warmupSets!,
               isMonospace: true,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
 
           if (exercise.tempoWarmup != null) ...[
@@ -368,7 +368,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                 icon,
                 style: const TextStyle(fontSize: 18),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   title,
@@ -380,7 +380,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             content,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -433,7 +433,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Text(
                 step,

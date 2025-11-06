@@ -59,7 +59,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
         onChanged: (value) => ref.read(templateSearchProvider.notifier).state = value,
         decoration: InputDecoration(
           hintText: 'Search templates...',
-          prefixIcon: const Icon(AppIcons.search),
+          prefixIcon: Icon(AppIcons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -143,7 +143,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
               '$label: $value',
               style: Theme.of(context).textTheme.labelMedium,
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Icon(
               AppIcons.arrowDropDown,
               size: 16,
@@ -165,12 +165,12 @@ class SmartTemplatesGrid extends ConsumerWidget {
             size: 64,
             color: Theme.of(context).colorScheme.outline,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'No templates found',
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Try adjusting your filters',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -272,7 +272,7 @@ class SmartTemplateCard extends ConsumerWidget {
                               ),
                             ),
                           ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 6,
@@ -331,7 +331,7 @@ class SmartTemplateCard extends ConsumerWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       template.description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -348,7 +348,7 @@ class SmartTemplateCard extends ConsumerWidget {
                           size: 16,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           '${template.exercises.length} exercises',
                           style: Theme.of(context).textTheme.labelSmall,
@@ -356,12 +356,12 @@ class SmartTemplateCard extends ConsumerWidget {
                         const Spacer(),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               AppIcons.star,
                               size: 16,
                               color: context.colors.warning,
                             ),
-                            const SizedBox(width: 2),
+                            SizedBox(width: 2),
                             Text(
                               template.averageRating.toStringAsFixed(1),
                               style: Theme.of(context).textTheme.labelSmall,
@@ -397,7 +397,7 @@ class SmartTemplateCard extends ConsumerWidget {
               Navigator.of(context).pop();
               // TODO: Start workout from template
             },
-            child: const Text('Start Workout'),
+            child: Text('Start Workout'),
           ),
         ],
       ),

@@ -40,7 +40,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -73,15 +73,15 @@ class SettingsScreen extends ConsumerWidget {
 
             // Appearance Settings
             _buildAppearanceSection(context, ref, config),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Workout Settings
             _buildWorkoutSection(context, ref, config),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Units & Language
             _buildUnitsLanguageSection(context, ref, config),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // iOS Features (if iOS)
             if (Theme.of(context).platform == TargetPlatform.iOS) ...[
@@ -95,7 +95,7 @@ class SettingsScreen extends ConsumerWidget {
 
             // Advanced Settings
             _buildAdvancedSection(context, ref, config),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Account Actions
             _buildAccountSection(context, ref),
@@ -152,7 +152,7 @@ class SettingsScreen extends ConsumerWidget {
                     color: context.colors.primary,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +166,7 @@ class SettingsScreen extends ConsumerWidget {
                           color: context.colors.onPrimaryContainer,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         questionnaire != null
                             ? '${l10n.fitnessBenchmarkLevel}: ${questionnaire.experienceLevel.name}'
@@ -203,7 +203,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.person,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.account,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -225,10 +225,10 @@ class SettingsScreen extends ConsumerWidget {
                                   ? NetworkImage(user.photoURL!)
                                   : null,
                               child: user.photoURL == null
-                                  ? const Icon(AppIcons.person)
+                                  ? Icon(AppIcons.person)
                                   : null,
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,20 +250,20 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         // Admin Dashboard Button
                         SizedBox(
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             onPressed: () => context.pushNamed('admin'),
-                            icon: const Icon(AppIcons.admin),
+                            icon: Icon(AppIcons.admin),
                             label: Text(context.l10n.adminDashboard),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: context.colors.primary,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         // Database Manager Button (Direct Access)
                         SizedBox(
                           width: double.infinity,
@@ -275,7 +275,7 @@ class SettingsScreen extends ConsumerWidget {
                                 ),
                               );
                             },
-                            icon: const Icon(Icons.storage),
+                            icon: Icon(Icons.storage),
                             label: Text(context.l10n.databaseManager),
                             style: FilledButton.styleFrom(
                               backgroundColor: context.colors.primary,
@@ -284,9 +284,9 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                       ],
                     )
-                  : const Text('Not logged in'),
-              loading: () => const Text('Loading...'),
-              error: (_, __) => const Text('Error loading user'),
+                  : Text('Not logged in'),
+              loading: () => Text('Loading...'),
+              error: (_, __) => Text('Error loading user'),
             ),
           ],
         ),
@@ -310,7 +310,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.workout,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.fitnessQuestionnaireTitle,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -319,7 +319,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             if (questionnaire != null) ...[
               // Display current profile summary
               Row(
@@ -332,7 +332,7 @@ class SettingsScreen extends ConsumerWidget {
                           '${l10n.fitnessQuestionnaireExperienceLevelLabel}: ${questionnaire.experienceLevel.name}',
                           style: context.textTheme.bodyMedium,
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           '${l10n.fitnessQuestionnaireBodyweightLabel}: ${questionnaire.bodyweightKg.toStringAsFixed(1)} kg',
                           style: context.textTheme.bodySmall?.copyWith(
@@ -351,7 +351,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -367,8 +367,8 @@ class SettingsScreen extends ConsumerWidget {
                       ref.invalidate(userFitnessQuestionnaireProvider);
                     }
                   },
-                  icon: const Icon(AppIcons.edit),
-                  label: const Text('Update Profile'),
+                  icon: Icon(AppIcons.edit),
+                  label: Text('Update Profile'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.primary,
                   ),
@@ -382,7 +382,7 @@ class SettingsScreen extends ConsumerWidget {
                   color: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
@@ -422,7 +422,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.theme,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   context.l10n.appearance,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -431,7 +431,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Theme Mode Selection
             _buildSettingTile(
@@ -479,7 +479,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.workout,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Workout',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -543,7 +543,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.language,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Units & Language',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -592,7 +592,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.phoneIphone,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'iOS Features',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -645,7 +645,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.volumeUp,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Audio & Feedback',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -714,7 +714,7 @@ class SettingsScreen extends ConsumerWidget {
                   AppIcons.settingsApplications,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Advanced',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -752,7 +752,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Reset Timer Position',
               subtitle: 'Reset draggable timer to default position',
-              leading: const Icon(AppIcons.pictureInPictureAlt),
+              leading: Icon(AppIcons.pictureInPictureAlt),
               onTap: () => _resetTimerPosition(context, ref),
             ),
 
@@ -780,7 +780,7 @@ class SettingsScreen extends ConsumerWidget {
                 final isAdmin = ref.watch(isAdminCachedProvider);
                 if (!isAdmin) return const SizedBox.shrink();
 
-                return const Column(
+                return Column(
                   children: [
                     // DISABLED: Fitness Profile Debug
                     // Reason: GDPR compliance - medical questionnaire data
@@ -789,7 +789,7 @@ class SettingsScreen extends ConsumerWidget {
                     //   context,
                     //   title: 'Fitness Profile Debug',
                     //   subtitle: 'View fitness profile and weight suggestions status',
-                    //   leading: const Icon(Icons.bug_report),
+                    //   leading: Icon(Icons.bug_report),
                     //   onTap: () => context.pushNamed('fitness-profile-debug'),
                     // ),
                     // const Divider(),
@@ -870,10 +870,10 @@ class SettingsScreen extends ConsumerWidget {
                           ? context.colors.tertiary
                           : context.colors.outline,
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Text(context.l10n.settingsBetaMode),
                       if (betaModeEnabled) ...[
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
@@ -942,11 +942,11 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   AppIcons.logout,
                   color: Colors.red,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Account Actions',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -1011,8 +1011,8 @@ class SettingsScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            const Icon(AppIcons.formatSize),
-            const SizedBox(width: 16),
+            Icon(AppIcons.formatSize),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1090,7 +1090,7 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Choose Language'),
+        title: Text('Choose Language'),
         content: RadioGroup<String>(
           groupValue: currentLang,
           onChanged: (value) {
@@ -1234,8 +1234,8 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset Timer Position'),
-        content: const Text('This will reset the draggable timer to its default position. Useful if the timer is stuck off-screen.'),
+        title: Text('Reset Timer Position'),
+        content: Text('This will reset the draggable timer to its default position. Useful if the timer is stuck off-screen.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -1248,7 +1248,7 @@ class SettingsScreen extends ConsumerWidget {
               Navigator.pop(context);
               SnackBarService.showSuccess(context, 'Timer position reset to default');
             },
-            child: const Text('Reset Position'),
+            child: Text('Reset Position'),
           ),
         ],
       ),
@@ -1334,8 +1334,8 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset Settings'),
-        content: const Text('Are you sure you want to reset all settings to defaults? This cannot be undone.'),
+        title: Text('Reset Settings'),
+        content: Text('Are you sure you want to reset all settings to defaults? This cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -1360,7 +1360,7 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(context.l10n.signOutButton),
-        content: const Text('Are you sure you want to sign out?'),
+        content: Text('Are you sure you want to sign out?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -1455,7 +1455,7 @@ class SettingsScreen extends ConsumerWidget {
 
     return configAsync.when(
       data: (currentConfig) => ExpansionTile(
-        leading: const Icon(AppIcons.calculate),
+        leading: Icon(AppIcons.calculate),
         title: Text(context.l10n.apreCalculationMethodTitle),
         subtitle: Text(currentConfig.displayName),
         children: [
@@ -1470,7 +1470,7 @@ class SettingsScreen extends ConsumerWidget {
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 ...OneRMCalculationConfig.values.map((config) {
                   return RadioListTile<OneRMCalculationConfig>(
                     title: Text(config.displayName),
@@ -1478,7 +1478,7 @@ class SettingsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(config.description),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           config.useCase,
                           style: context.textTheme.labelSmall?.copyWith(

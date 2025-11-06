@@ -262,8 +262,8 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                           ),
                           FilledButton.icon(
                             onPressed: () => Navigator.pop(context, true),
-                            icon: const Icon(AppIcons.download),
-                            label: const Text('Download Exercises'),
+                            icon: Icon(AppIcons.download),
+                            label: Text('Download Exercises'),
                           ),
                         ],
                       ),
@@ -443,7 +443,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                   'Recent Activity',
                   style: theme.textTheme.titleMedium,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 _buildRecentActivity(context, state),
               ],
             ),
@@ -603,7 +603,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                   'Muscle Group Distribution',
                   style: theme.textTheme.titleMedium,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 SizedBox(
                   height: 200,
                   child: _buildMuscleGroupChart(context, state),

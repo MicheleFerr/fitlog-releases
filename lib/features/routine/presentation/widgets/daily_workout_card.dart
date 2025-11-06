@@ -103,7 +103,7 @@ class DailyWorkoutCard extends ConsumerWidget {
           Row(
             children: [
               _buildStatusIcon(context, dayInfo.status),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +115,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                         color: context.colors.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       _getStatusLabel(dayInfo.status),
                       style: context.textTheme.bodySmall?.copyWith(
@@ -156,8 +156,8 @@ class DailyWorkoutCard extends ConsumerWidget {
                       ),
                       child: Row(
                         children: [
-                          const Icon(AppIcons.complete, color: Colors.green, size: 20),
-                          const SizedBox(width: 8),
+                          Icon(AppIcons.complete, color: Colors.green, size: 20),
+                          SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               'Auto-completing day... ✨',
@@ -185,7 +185,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                           child: Row(
                             children: [
                               Icon(AppIcons.info, color: context.colors.secondary, size: 20),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   'You completed a different workout today',
@@ -197,14 +197,14 @@ class DailyWorkoutCard extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Row(
                           children: [
                             Expanded(
                               child: ElevatedButton.icon(
                                 onPressed: () => _showSubstitutionDialog(context, ref, routine, date, status),
-                                icon: const Icon(AppIcons.swapHoriz, size: 20),
-                                label: const Text('Substitute'),
+                                icon: Icon(AppIcons.swapHoriz, size: 20),
+                                label: Text('Substitute'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: context.colors.secondary,
                                   foregroundColor: context.colors.onSecondary,
@@ -215,12 +215,12 @@ class DailyWorkoutCard extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: OutlinedButton.icon(
                                 onPressed: onSkip,
-                                icon: const Icon(AppIcons.eventBusy, size: 20),
-                                label: const Text('Skip'),
+                                icon: Icon(AppIcons.eventBusy, size: 20),
+                                label: Text('Skip'),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: context.colors.error,
                                   side: BorderSide(color: context.colors.error),
@@ -255,12 +255,12 @@ class DailyWorkoutCard extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: onSkip,
-                          icon: const Icon(AppIcons.eventBusy, size: 20),
-                          label: const Text('Skip'),
+                          icon: Icon(AppIcons.eventBusy, size: 20),
+                          label: Text('Skip'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: context.colors.error,
                             side: BorderSide(color: context.colors.error),
@@ -292,12 +292,12 @@ class DailyWorkoutCard extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: onSkip,
-                        icon: const Icon(AppIcons.eventBusy, size: 20),
-                        label: const Text('Skip'),
+                        icon: Icon(AppIcons.eventBusy, size: 20),
+                        label: Text('Skip'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.colors.error,
                           side: BorderSide(color: context.colors.error),
@@ -329,12 +329,12 @@ class DailyWorkoutCard extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: onSkip,
-                      icon: const Icon(AppIcons.eventBusy, size: 20),
-                      label: const Text('Skip'),
+                      icon: Icon(AppIcons.eventBusy, size: 20),
+                      label: Text('Skip'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: context.colors.error,
                         side: BorderSide(color: context.colors.error),
@@ -419,7 +419,7 @@ class DailyWorkoutCard extends ConsumerWidget {
             color: context.colors.secondary,
             size: 32,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,7 +431,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                     color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Take a break and let your body recover',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -474,7 +474,7 @@ class DailyWorkoutCard extends ConsumerWidget {
             color: context.colors.primary,
             size: 32,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -488,7 +488,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   'Tap complete when done',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -517,12 +517,12 @@ class DailyWorkoutCard extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             AppIcons.celebration,
             color: Colors.green,
             size: 32,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Text(
               day.status == DayStatus.completed

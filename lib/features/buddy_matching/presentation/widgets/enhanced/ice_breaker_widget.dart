@@ -164,14 +164,14 @@ class _IceBreakerWidgetState extends ConsumerState<IceBreakerWidget>
               shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: _selectedCategoryIceBreakers.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 8),
+              separatorBuilder: (context, index) => SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final iceBreaker = _selectedCategoryIceBreakers[index];
                 return _buildIceBreakerCard(context, iceBreaker);
               },
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
         ],
       ),
     );
@@ -214,7 +214,7 @@ class _IceBreakerWidgetState extends ConsumerState<IceBreakerWidget>
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       previewMessage,
@@ -228,7 +228,7 @@ class _IceBreakerWidgetState extends ConsumerState<IceBreakerWidget>
                 ],
               ),
               if (iceBreaker.tags.isNotEmpty) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Wrap(
                   spacing: 6,
                   runSpacing: 4,

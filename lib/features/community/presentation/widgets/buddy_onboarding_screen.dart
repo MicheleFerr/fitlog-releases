@@ -181,11 +181,11 @@ class _WelcomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             '🤝',
             style: TextStyle(fontSize: 80),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Text(
             'Trova il tuo Workout Buddy',
             style: context.textTheme.headlineMedium?.copyWith(
@@ -193,13 +193,13 @@ class _WelcomePage extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'Rispondi a queste domande per trovare il partner di allenamento perfetto per te',
             style: context.textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 48),
+          SizedBox(height: 48),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -213,7 +213,7 @@ class _WelcomePage extends StatelessWidget {
                 _buildFeature(context, AppIcons.schedule, 'Orari compatibili'),
                 const SizedBox(height: 12),
                 _buildFeature(context, AppIcons.workout, 'Stesso livello fitness'),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 _buildFeature(context, AppIcons.camera, 'Connetti Instagram (opzionale)'),
               ],
             ),
@@ -251,14 +251,14 @@ class _SchedulePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'Quando ti alleni di solito? ⏰',
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Seleziona tutti gli orari in cui sei disponibile',
             style: context.textTheme.bodyLarge,
@@ -381,23 +381,23 @@ class _LevelAndGoalsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'Il tuo livello fitness 💪',
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           _buildLevelSelector(context),
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'I tuoi obiettivi 🎯',
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Seleziona fino a 3 obiettivi principali',
             style: context.textTheme.bodyLarge,
@@ -553,14 +553,14 @@ class _LocationPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'Dove ti alleni? 📍',
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Inserisci la tua zona o quartiere',
             style: context.textTheme.bodyLarge,
@@ -570,19 +570,19 @@ class _LocationPage extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Zona/Quartiere',
               hintText: 'es. Milano Centro, Porta Romana',
-              prefixIcon: const Icon(AppIcons.location),
+              prefixIcon: Icon(AppIcons.location),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
             onChanged: onLocationChanged,
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'Distanza massima: ${maxDistance.toInt()} km',
             style: context.textTheme.titleMedium,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Slider(
             value: maxDistance,
             min: 1,
@@ -591,7 +591,7 @@ class _LocationPage extends StatelessWidget {
             label: '${maxDistance.toInt()} km',
             onChanged: onDistanceChanged,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -604,7 +604,7 @@ class _LocationPage extends StatelessWidget {
                   AppIcons.info,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Useremo questa informazione per trovare buddy nella tua zona',
@@ -637,7 +637,7 @@ class _PersonalityPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'Che tipo di partner cerchi? 🤔',
             style: context.textTheme.headlineSmall?.copyWith(
@@ -712,15 +712,15 @@ class _PersonalityPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 if (isSelected)
-                  const Icon(AppIcons.complete, color: Colors.green),
+                  Icon(AppIcons.complete, color: Colors.green),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               subtitle,
               style: context.textTheme.bodyMedium,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               description,
               style: context.textTheme.bodySmall?.copyWith(
@@ -755,14 +755,14 @@ class _SocialPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'Connetti i tuoi social 📱',
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Opzionale - aiuta i buddy a conoscerti meglio',
             style: context.textTheme.bodyLarge,
@@ -800,7 +800,7 @@ class _SocialPage extends StatelessWidget {
             onChanged: onBioChanged,
           ),
           
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           
           // Privacy note
           Container(
@@ -817,7 +817,7 @@ class _SocialPage extends StatelessWidget {
                   color: context.colors.primary,
                   size: 20,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -826,7 +826,7 @@ class _SocialPage extends StatelessWidget {
                         'Privacy garantita',
                         style: context.textTheme.titleSmall,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         'Il tuo Instagram sarà visibile solo ai match confermati. Non salviamo mai le tue foto.',
                         style: context.textTheme.bodySmall,
@@ -864,14 +864,14 @@ class _ReviewPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
           Text(
             'Riepilogo ✅',
             style: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Controlla le tue preferenze',
             style: context.textTheme.bodyLarge,

@@ -66,7 +66,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -206,7 +206,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
               style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               l10n.trackYourWorkoutsAndMonitorProgress,
               style: theme.textTheme.bodyLarge?.copyWith(
@@ -214,7 +214,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             FilledButton(
               onPressed: () => context.push('/login'),
               child: Text(l10n.signIn),

@@ -39,7 +39,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                   AppIcons.syncIcon,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   AppLocalizations.of(context).exerciseSync,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -140,7 +140,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
           height: 20,
           child: CircularProgressIndicator(strokeWidth: 2),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(AppLocalizations.of(context).checkingStatus),
       ],
     );
@@ -154,7 +154,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
           color: Theme.of(context).colorScheme.error,
           size: 20,
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Text(
             '${AppLocalizations.of(context).statusError}: $error',
@@ -187,7 +187,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                 size: 16,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context).versionInfo,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
@@ -224,7 +224,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
           ],
 
           if (versionCheck.hasUpdates) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
@@ -239,7 +239,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                     size: 16,
                     color: context.colors.secondary,
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Text(
                     AppLocalizations.of(context).updateAvailable,
                     style: TextStyle(
@@ -271,7 +271,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
             height: 16,
             child: CircularProgressIndicator(strokeWidth: 2),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(AppLocalizations.of(context).checkingVersion),
         ],
       ),
@@ -292,7 +292,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
             size: 16,
             color: Theme.of(context).colorScheme.error,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Text(
               '${AppLocalizations.of(context).versionCheckError}: $error',
@@ -402,7 +402,7 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Titolo
               Text(
@@ -437,7 +437,7 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
               // Statistiche cache
               _buildCacheStats(),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Azioni
               Row(

@@ -31,7 +31,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
                   AppIcons.lineChart,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Weekly Frequency',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -40,7 +40,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             
             // Simple bar chart representation
             SizedBox(
@@ -110,7 +110,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
                           : null,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
 
                   // Week label
                   Text(
@@ -191,7 +191,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(

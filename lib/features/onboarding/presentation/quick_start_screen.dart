@@ -140,7 +140,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     ),
                   ),
 
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
 
                   // Title
                   Text(
@@ -153,7 +153,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
 
                   // Subtitle
                   Text(
@@ -165,7 +165,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  const SizedBox(height: 48),
+                  SizedBox(height: 48),
 
                   // Question
                   Text(
@@ -178,7 +178,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
 
                   // Question description
                   Text(
@@ -190,7 +190,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40),
 
                   // Beginner option
                   _ExperienceLevelCard(
@@ -318,7 +318,7 @@ class _ExperienceLevelCard extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
 
             // Text content
             Expanded(
@@ -333,7 +333,7 @@ class _ExperienceLevelCard extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     description,
                     style: context.textTheme.bodyMedium?.copyWith(

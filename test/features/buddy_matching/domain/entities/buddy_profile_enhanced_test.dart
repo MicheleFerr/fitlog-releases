@@ -13,6 +13,7 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
 
 void main() {
   group('Enhanced BuddyProfile Tests', () {

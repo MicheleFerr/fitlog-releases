@@ -320,10 +320,10 @@ class WorkoutComparisonWidget extends ConsumerWidget {
       return l10n.daysAgo(difference);
     } else if (difference < 30) {
       final weeks = (difference / 7).floor();
-      return l10n.weeksAgo(weeks);
+      return l10n.weeksAgo(weeks.toString());
     } else {
       final months = (difference / 30).floor();
-      return l10n.monthsAgo(months);
+      return l10n.monthsAgo(months.toString());
     }
   }
 }
@@ -675,10 +675,10 @@ class DetailedWorkoutComparison extends ConsumerWidget {
       return l10n.daysAgo(difference);
     } else if (difference < 30) {
       final weeks = (difference / 7).floor();
-      return l10n.weeksAgo(weeks);
+      return l10n.weeksAgo(weeks.toString());
     } else {
       final months = (difference / 30).floor();
-      return l10n.monthsAgo(months);
+      return l10n.monthsAgo(months.toString());
     }
   }
 }

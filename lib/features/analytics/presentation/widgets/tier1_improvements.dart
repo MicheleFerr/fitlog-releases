@@ -500,7 +500,7 @@ class InsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = _getColors(theme);
+    final colors = _getColors(theme, context);
     
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -557,7 +557,7 @@ class InsightCard extends StatelessWidget {
             ),
           ),
           if (action != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             action!,
           ],
         ],
@@ -565,28 +565,28 @@ class InsightCard extends StatelessWidget {
     );
   }
 
-  InsightColors _getColors(ThemeData theme) {
+  InsightColors _getColors(ThemeData theme, BuildContext context) {
     return switch (type) {
       InsightType.success => InsightColors(
-          background: context.successColor,
-          border: context.successColor.shade700,
-          icon: context.successColor.shade900,
-          iconBackground: context.successColor.shade100,
-          text: context.successColor.shade900,
+          background: Colors.green.shade50,
+          border: Colors.green.shade700,
+          icon: Colors.green.shade900,
+          iconBackground: Colors.green.shade100,
+          text: Colors.green.shade900,
         ),
       InsightType.warning => InsightColors(
-          background: context.warningColor,
-          border: context.warningColor.shade700,
-          icon: context.warningColor.shade900,
-          iconBackground: context.warningColor.shade100,
-          text: context.warningColor.shade900,
+          background: Colors.orange.shade50,
+          border: Colors.orange.shade700,
+          icon: Colors.orange.shade900,
+          iconBackground: Colors.orange.shade100,
+          text: Colors.orange.shade900,
         ),
       InsightType.error => InsightColors(
-          background: context.errorColor,
-          border: context.errorColor.shade700,
-          icon: context.errorColor.shade900,
-          iconBackground: context.errorColor.shade100,
-          text: context.errorColor.shade900,
+          background: theme.colorScheme.errorContainer,
+          border: theme.colorScheme.error,
+          icon: theme.colorScheme.error,
+          iconBackground: theme.colorScheme.errorContainer.withValues(alpha: 0.5),
+          text: theme.colorScheme.onErrorContainer,
         ),
       InsightType.info => InsightColors(
           background: theme.colorScheme.primary,
@@ -945,7 +945,7 @@ class StreakWidget extends StatelessWidget {
           
           // Motivational message
           if (motivationalMessage != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(

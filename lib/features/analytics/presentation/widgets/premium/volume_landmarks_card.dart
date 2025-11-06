@@ -102,7 +102,7 @@ class VolumeLandmarksCard extends StatelessWidget {
           // Uncategorized exercises warning
           if (uncategorizedExercises.isNotEmpty) ...[
             _buildUncategorizedSection(context, uncategorizedExercises),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
           ],
 
           // Scientific citation
@@ -303,7 +303,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         // Zone indicator with dynamic explanations and exercises (expandable)
         _buildZoneIndicator(context, zone, currentSets, landmarks, muscle, exercises),
@@ -835,7 +835,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
 
                     _buildZoneExplanation(
                       context,
@@ -843,21 +843,21 @@ class VolumeLandmarksCard extends StatelessWidget {
                       l10n.mvExplanation,
                       context.colors.surfaceContainerHighest,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MEV',
                       l10n.mevExplanation,
                       context.colors.secondary,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MAV',
                       l10n.mavExplanation,
                       context.colors.success,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MRV',

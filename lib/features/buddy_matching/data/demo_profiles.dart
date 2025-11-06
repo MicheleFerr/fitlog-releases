@@ -13,6 +13,7 @@ library;
 
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
 
 /// Demo profiles for development and testing

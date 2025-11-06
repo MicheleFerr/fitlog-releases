@@ -130,12 +130,12 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Analytics Esercizi'),
+        title: Text('Analytics Esercizi'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(AppIcons.arrowBackIos),
+          icon: Icon(AppIcons.arrowBackIos),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -292,7 +292,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
           ),
           child: Icon(icon, color: color, size: 20),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           value,
           style: TextStyle(
@@ -552,14 +552,14 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           'Categoria: ${exercise.category}',
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24),
 
                         // Detailed Stats
                         Text(
@@ -568,7 +568,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
 
                         _buildDetailRow('Peso Massimo', '${exercise.maxWeight} kg'),
                         _buildDetailRow('Ultimo Peso', '${exercise.lastWeight} kg'),
@@ -576,14 +576,14 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
                         _buildDetailRow('Sessioni', exercise.sessionsCount.toString()),
                         _buildDetailRow('RPE Medio', exercise.avgRpe.toString()),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24),
                         Text(
                           'Funzionalità in arrivo:',
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           '• Grafici dei progressi\n• Storico completo\n• Analisi forme\n• Confronti temporali',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(

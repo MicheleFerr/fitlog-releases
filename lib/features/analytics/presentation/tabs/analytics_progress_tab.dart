@@ -135,12 +135,12 @@ class AnalyticsProgressTab extends ConsumerWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         
         // Personal Records Section
         _buildPersonalRecords(context, workouts),
         
-        const SizedBox(height: 100), // Space for bottom navigation
+        SizedBox(height: 100), // Space for bottom navigation
       ],
     );
   }
@@ -477,7 +477,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             ...workoutsInWeek.map((workout) => _buildWorkoutItem(context, workout)),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
         ),
       ),

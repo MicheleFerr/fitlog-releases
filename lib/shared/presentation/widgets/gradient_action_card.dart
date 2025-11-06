@@ -178,7 +178,7 @@ class _GradientActionCardState extends State<GradientActionCard>
                           size: 48,
                         ),
 
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
 
                         // Title (centered)
                         Text(

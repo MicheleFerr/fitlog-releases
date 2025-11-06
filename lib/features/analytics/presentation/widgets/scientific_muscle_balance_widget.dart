@@ -311,7 +311,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
                 size: 48,
                 color: Colors.grey.withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 l10n.noMuscleGroupData,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -406,7 +406,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             '📚 $reference',
             style: TextStyle(
@@ -415,7 +415,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
               fontSize: 12,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             explanation,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(

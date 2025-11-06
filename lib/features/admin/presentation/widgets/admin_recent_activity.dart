@@ -104,7 +104,7 @@ class AdminRecentActivity extends ConsumerWidget {
                   AppIcons.history,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.recentActivity,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -164,7 +164,7 @@ class AdminRecentActivity extends ConsumerWidget {
       child: Column(
         children: [
           const CircularProgressIndicator(),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(l10n.loadingActivity),
         ],
       ),
@@ -184,7 +184,7 @@ class AdminRecentActivity extends ConsumerWidget {
             AppIcons.error,
             color: Theme.of(context).colorScheme.error,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,14 +220,14 @@ class AdminRecentActivity extends ConsumerWidget {
             size: 48,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             l10n.noRecentActivity,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             l10n.noRecentActivityDescription,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -307,7 +307,7 @@ class _ActivityItem extends StatelessWidget {
               size: isCompact ? 16 : 20,
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,7 +320,7 @@ class _ActivityItem extends StatelessWidget {
                   maxLines: isCompact ? 1 : 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(
                   '${activity.userName} • $timeAgo',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -328,7 +328,7 @@ class _ActivityItem extends StatelessWidget {
                   ),
                 ),
                 if (!isCompact && activity.description != null) ...[
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     activity.description!,
                     style: Theme.of(context).textTheme.bodySmall,

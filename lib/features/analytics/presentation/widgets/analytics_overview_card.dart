@@ -25,7 +25,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
                   AppIcons.dashboard,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Overview',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -95,7 +95,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
             emoji,
             style: const TextStyle(fontSize: 24),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             value,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(

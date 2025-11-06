@@ -125,9 +125,14 @@ class UserModel {
 
   /// Validates the user model data
   bool get isValid {
-    return uid.isNotEmpty && 
-           email.isNotEmpty && 
+    return uid.isNotEmpty &&
+           email.isNotEmpty &&
            displayName.isNotEmpty;
+  }
+
+  /// Account tier for premium features (defaults to 'free')
+  String get accountTier {
+    return preferences.accountTier ?? 'free';
   }
 
   /// Returns a string representation for debugging
@@ -174,6 +179,7 @@ class UserPreferences {
     this.units = 'kg',
     this.restTimerSound = true,
     this.notifications = true,
+    this.accountTier = 'free',
   });
 
   factory UserPreferences.fromMap(Map<String, dynamic> map) {
@@ -181,17 +187,20 @@ class UserPreferences {
       units: map['units'] as String? ?? 'kg',
       restTimerSound: map['restTimerSound'] as bool? ?? true,
       notifications: map['notifications'] as bool? ?? true,
+      accountTier: map['accountTier'] as String? ?? 'free',
     );
   }
   final String units; // 'kg' or 'lbs'
   final bool restTimerSound;
   final bool notifications;
+  final String? accountTier;
 
   Map<String, dynamic> toMap() {
     return {
       'units': units,
       'restTimerSound': restTimerSound,
       'notifications': notifications,
+      'accountTier': accountTier,
     };
   }
 
@@ -199,11 +208,13 @@ class UserPreferences {
     String? units,
     bool? restTimerSound,
     bool? notifications,
+    String? accountTier,
   }) {
     return UserPreferences(
       units: units ?? this.units,
       restTimerSound: restTimerSound ?? this.restTimerSound,
       notifications: notifications ?? this.notifications,
+      accountTier: accountTier ?? this.accountTier,
     );
   }
 

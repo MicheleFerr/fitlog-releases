@@ -44,7 +44,7 @@ class TemplateSelectionStep extends ConsumerWidget {
     final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     return templatesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -56,14 +56,14 @@ class TemplateSelectionStep extends ConsumerWidget {
                 size: 64,
                 color: context.colors.error,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 context.l10n.routineErrorLoadingTemplates,
                 style: context.textTheme.titleMedium?.copyWith(
                   color: context.colors.error,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 error.toString(),
                 style: context.textTheme.bodySmall,
@@ -105,7 +105,7 @@ class TemplateSelectionStep extends ConsumerWidget {
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             context.l10n.routineSelectionSubtitle,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -113,7 +113,7 @@ class TemplateSelectionStep extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Selection counter
           Row(
@@ -156,7 +156,7 @@ class TemplateSelectionStep extends ConsumerWidget {
             );
           }),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Info card
           if (selectedCount > 0)
@@ -176,7 +176,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                     color: context.colors.primary,
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       context.l10n.routineNextStepInfo,
@@ -230,7 +230,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                 },
                 activeColor: context.colors.primary,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               // Icon
               Container(
@@ -249,7 +249,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                   size: 24,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               // Info
               Expanded(
@@ -262,7 +262,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(
@@ -271,7 +271,7 @@ class TemplateSelectionStep extends ConsumerWidget {
                           color:
                               context.colors.onSurface.withValues(alpha: 0.6),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           context.l10n.routineExercises(template.exercises.length),
                           style: context.textTheme.bodySmall?.copyWith(
@@ -280,14 +280,14 @@ class TemplateSelectionStep extends ConsumerWidget {
                           ),
                         ),
                         if (template.estimatedDuration > 0) ...[
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Icon(
                             AppIcons.schedule,
                             size: 14,
                             color:
                                 context.colors.onSurface.withValues(alpha: 0.6),
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             '${template.estimatedDuration} ${context.l10n.minutes}',
                             style: context.textTheme.bodySmall?.copyWith(
@@ -322,7 +322,7 @@ class TemplateSelectionStep extends ConsumerWidget {
               size: 80,
               color: context.colors.error,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Title
             Text(
@@ -333,7 +333,7 @@ class TemplateSelectionStep extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Message
             Text(
@@ -343,7 +343,7 @@ class TemplateSelectionStep extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
 
             // Primary Action - Create Template
             ElevatedButton.icon(
@@ -367,12 +367,12 @@ class TemplateSelectionStep extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Secondary Action - Go Back
             OutlinedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(AppIcons.back),
+              icon: Icon(AppIcons.back),
               label: Text(context.l10n.routineButtonBack),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(

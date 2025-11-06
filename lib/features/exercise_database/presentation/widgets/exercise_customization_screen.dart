@@ -81,7 +81,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         title: Text('Personalizza Esercizi (${_customizations.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -131,7 +131,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         customization.exercise.focusDisplayName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -156,7 +156,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Text(
                             customization.exercise.attrezzatura,
                             style: Theme.of(context).textTheme.bodySmall,
@@ -174,12 +174,12 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               ],
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // ✅ NUOVO: Counting Mode Selector
             _buildCountingModeSelector(customization, exerciseIndex),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Sets Section
             Row(
@@ -400,7 +400,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
           ),
         ),
 
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
 
         // ✅ MODIFICATO: Mostra campi in base al counting mode
         if (countingMode == ExerciseCountingMode.weighted) ...[
@@ -420,9 +420,9 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          const Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
+          Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(width: 8),
         ],
 
         // Reps Picker Button (per weighted e reps)
@@ -647,7 +647,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             Row(
               children: [
                 Icon(icon, size: 12, color: color),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(
                   label,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -657,7 +657,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 ),
               ],
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             Text(
               value,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(

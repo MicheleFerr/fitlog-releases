@@ -344,7 +344,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             // Social proof section
             _buildSocialProofSection(context),
             
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
             
             // Continue button
             _buildContinueButton(context),
@@ -398,7 +398,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               AppIcons.premium,
               size: 40,
               color: context.colors.surface,
@@ -477,7 +477,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             color: colorScheme.onSurface,
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         ...features.map((feature) => _buildFeatureCard(context, feature)),
       ],
     );
@@ -595,7 +595,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ...List.generate(5, (index) => 
-                const Icon(
+                Icon(
                   AppIcons.starRounded,
                   color: context.colors.warning,
                   size: 20,
@@ -682,8 +682,8 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 8),
-                const Icon(
+                SizedBox(width: 8),
+                Icon(
                   AppIcons.arrowForwardRounded,
                   color: context.colors.surface,
                   size: 20,
@@ -932,7 +932,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     
                     if (plan == PremiumPlan.yearly) ...[
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
@@ -1253,7 +1253,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(
+                              SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
@@ -1261,7 +1261,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                                   strokeWidth: 2,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Text(
                                 'Processing...',
                                 style: theme.textTheme.titleMedium?.copyWith(
@@ -1274,12 +1274,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 AppIcons.rocketLaunchRounded,
                                 color: context.colors.surface,
                                 size: 24,
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Text(
                                 'Start Free Trial • ${_getPlanTitle(_selectedPlan)}',
                                 style: theme.textTheme.titleMedium?.copyWith(
@@ -1362,7 +1362,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: CircularProgressIndicator(
                       color: context.colors.surface,
                       strokeWidth: 3,
@@ -1431,7 +1431,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                   ],
                 ),
-                child: const Icon(
+                child: Icon(
                   AppIcons.completeOutline,
                   size: 60,
                   color: context.colors.surface,
@@ -1607,7 +1607,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
       if (userProfile?.isPremium ?? false) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
                 Icon(Icons.check_circle, color: Colors.white),
                 SizedBox(width: 8),

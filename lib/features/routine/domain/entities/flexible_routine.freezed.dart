@@ -38,6 +38,12 @@ mixin _$ScheduledDay {
   /// Notes for this day
   String? get notes => throw _privateConstructorUsedError;
 
+  /// ✅ NEW: Is this a recovery for missed workout?
+  bool get isRecovery => throw _privateConstructorUsedError;
+
+  /// ✅ NEW: Date of the original missed workout (for recovery tracking)
+  DateTime? get originalMissedDate => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ScheduledDayCopyWith<ScheduledDay> get copyWith =>
@@ -57,7 +63,9 @@ abstract class $ScheduledDayCopyWith<$Res> {
       String? workoutId,
       String? skipReason,
       DateTime? originalDate,
-      String? notes});
+      String? notes,
+      bool isRecovery,
+      DateTime? originalMissedDate});
 }
 
 /// @nodoc
@@ -80,6 +88,8 @@ class _$ScheduledDayCopyWithImpl<$Res, $Val extends ScheduledDay>
     Object? skipReason = freezed,
     Object? originalDate = freezed,
     Object? notes = freezed,
+    Object? isRecovery = null,
+    Object? originalMissedDate = freezed,
   }) {
     return _then(_value.copyWith(
       date: null == date
@@ -110,6 +120,14 @@ class _$ScheduledDayCopyWithImpl<$Res, $Val extends ScheduledDay>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
+      isRecovery: null == isRecovery
+          ? _value.isRecovery
+          : isRecovery // ignore: cast_nullable_to_non_nullable
+              as bool,
+      originalMissedDate: freezed == originalMissedDate
+          ? _value.originalMissedDate
+          : originalMissedDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -129,7 +147,9 @@ abstract class _$$ScheduledDayImplCopyWith<$Res>
       String? workoutId,
       String? skipReason,
       DateTime? originalDate,
-      String? notes});
+      String? notes,
+      bool isRecovery,
+      DateTime? originalMissedDate});
 }
 
 /// @nodoc
@@ -150,6 +170,8 @@ class __$$ScheduledDayImplCopyWithImpl<$Res>
     Object? skipReason = freezed,
     Object? originalDate = freezed,
     Object? notes = freezed,
+    Object? isRecovery = null,
+    Object? originalMissedDate = freezed,
   }) {
     return _then(_$ScheduledDayImpl(
       date: null == date
@@ -180,6 +202,14 @@ class __$$ScheduledDayImplCopyWithImpl<$Res>
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
+      isRecovery: null == isRecovery
+          ? _value.isRecovery
+          : isRecovery // ignore: cast_nullable_to_non_nullable
+              as bool,
+      originalMissedDate: freezed == originalMissedDate
+          ? _value.originalMissedDate
+          : originalMissedDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -194,7 +224,9 @@ class _$ScheduledDayImpl implements _ScheduledDay {
       this.workoutId,
       this.skipReason,
       this.originalDate,
-      this.notes});
+      this.notes,
+      this.isRecovery = false,
+      this.originalMissedDate});
 
   factory _$ScheduledDayImpl.fromJson(Map<String, dynamic> json) =>
       _$$ScheduledDayImplFromJson(json);
@@ -224,9 +256,18 @@ class _$ScheduledDayImpl implements _ScheduledDay {
   @override
   final String? notes;
 
+  /// ✅ NEW: Is this a recovery for missed workout?
+  @override
+  @JsonKey()
+  final bool isRecovery;
+
+  /// ✅ NEW: Date of the original missed workout (for recovery tracking)
+  @override
+  final DateTime? originalMissedDate;
+
   @override
   String toString() {
-    return 'ScheduledDay(date: $date, status: $status, templateId: $templateId, workoutId: $workoutId, skipReason: $skipReason, originalDate: $originalDate, notes: $notes)';
+    return 'ScheduledDay(date: $date, status: $status, templateId: $templateId, workoutId: $workoutId, skipReason: $skipReason, originalDate: $originalDate, notes: $notes, isRecovery: $isRecovery, originalMissedDate: $originalMissedDate)';
   }
 
   @override
@@ -244,13 +285,26 @@ class _$ScheduledDayImpl implements _ScheduledDay {
                 other.skipReason == skipReason) &&
             (identical(other.originalDate, originalDate) ||
                 other.originalDate == originalDate) &&
-            (identical(other.notes, notes) || other.notes == notes));
+            (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.isRecovery, isRecovery) ||
+                other.isRecovery == isRecovery) &&
+            (identical(other.originalMissedDate, originalMissedDate) ||
+                other.originalMissedDate == originalMissedDate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, date, status, templateId,
-      workoutId, skipReason, originalDate, notes);
+  int get hashCode => Object.hash(
+      runtimeType,
+      date,
+      status,
+      templateId,
+      workoutId,
+      skipReason,
+      originalDate,
+      notes,
+      isRecovery,
+      originalMissedDate);
 
   @JsonKey(ignore: true)
   @override
@@ -274,7 +328,9 @@ abstract class _ScheduledDay implements ScheduledDay {
       final String? workoutId,
       final String? skipReason,
       final DateTime? originalDate,
-      final String? notes}) = _$ScheduledDayImpl;
+      final String? notes,
+      final bool isRecovery,
+      final DateTime? originalMissedDate}) = _$ScheduledDayImpl;
 
   factory _ScheduledDay.fromJson(Map<String, dynamic> json) =
       _$ScheduledDayImpl.fromJson;
@@ -303,6 +359,14 @@ abstract class _ScheduledDay implements ScheduledDay {
 
   /// Notes for this day
   String? get notes;
+  @override
+
+  /// ✅ NEW: Is this a recovery for missed workout?
+  bool get isRecovery;
+  @override
+
+  /// ✅ NEW: Date of the original missed workout (for recovery tracking)
+  DateTime? get originalMissedDate;
   @override
   @JsonKey(ignore: true)
   _$$ScheduledDayImplCopyWith<_$ScheduledDayImpl> get copyWith =>

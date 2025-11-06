@@ -79,7 +79,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                         size: 24,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Send Feedback',
@@ -92,7 +92,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Category selection
                 Text(
@@ -102,7 +102,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -130,7 +130,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   }).toList(),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
 
                 // Rating
                 Text(
@@ -162,7 +162,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   }),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
 
                 // Message
                 Text(
@@ -172,7 +172,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 TextFormField(
                   controller: _messageController,
                   maxLines: 5,
@@ -197,7 +197,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   },
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Actions
                 Row(
@@ -210,11 +210,11 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                         style: TextStyle(color: context.colors.onSurface),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     ElevatedButton.icon(
                       onPressed: _submitFeedback,
-                      icon: const Icon(AppIcons.send),
-                      label: const Text('Submit'),
+                      icon: Icon(AppIcons.send),
+                      label: Text('Submit'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: context.colors.primary,
                         foregroundColor: context.colors.onPrimary,

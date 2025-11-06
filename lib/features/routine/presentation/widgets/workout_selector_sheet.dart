@@ -71,7 +71,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
           child: Column(
             children: [
               // Handle bar
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Container(
                 width: 40,
                 height: 4,
@@ -80,7 +80,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Header
               Padding(
@@ -94,7 +94,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       '${context.l10n.selectWorkoutToLinkTo} ${DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(date)}',
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -104,7 +104,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Divider(height: 1, color: context.colors.outlineVariant),
 
               // Workout list
@@ -182,7 +182,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
               size: AppIconSize.xxlarge,
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               context.l10n.noRecentWorkoutsFound,
               style: context.textTheme.titleMedium?.copyWith(
@@ -190,7 +190,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.completeDayWithoutWorkout,
               style: context.textTheme.bodySmall?.copyWith(
@@ -198,7 +198,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             FilledButton.tonal(
               onPressed: () => onCompleteWithoutWorkout(),
               child: Text(context.l10n.completeDay),
@@ -221,7 +221,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
               size: AppIconSize.xxlarge,
               color: context.colors.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               context.l10n.failedToLoadWorkouts,
               style: context.textTheme.titleMedium?.copyWith(
@@ -229,7 +229,7 @@ class WorkoutSelectorSheet extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               error.toString(),
               style: context.textTheme.bodySmall?.copyWith(

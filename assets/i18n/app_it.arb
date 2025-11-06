@@ -6052,5 +6052,21 @@
   "zenMode": "Zen modalità",
   "zenModeActiveDescription": "Zen modalità active descrizione",
   "zenModeInactiveDescription": "Zen modalità inactive descrizione",
-  "zonePicker": "Zone selettore"
+  "zonePicker": "Zone selettore",
+  "andMoreRecords": "e {count} altri record",
+  "andXMore": "e altri {count}",
+  "errorDeleting": "Errore durante l'eliminazione",
+  "errorPickingImage": "Errore durante la selezione dell'immagine",
+  "errorSharing": "Errore durante la condivisione",
+  "errorStartingWorkout": "Errore durante l'avvio dell'allenamento",
+  "exercisesCompleted": "{count} esercizi completati",
+  "exportFailedError": "Esportazione fallita: {error}",
+  "saveAndEndWorkout": "Salva e termina allenamento",
+  "saveError": "Errore durante il salvataggio: {error}",
+  "superLikesRemaining": "{count} super like rimanenti",
+  "templateLimitMessage": "Hai raggiunto il limite di {max} template",
+  "trustScore": "Punteggio di fiducia: {score}",
+  "workoutStartedFromTemplate": "Allenamento avviato dal template: {name}",
+  "xpPoints": "{count} XP",
+  "keepScreenOn": "Mantieni schermo acceso"
 }

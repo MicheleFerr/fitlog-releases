@@ -73,7 +73,7 @@ class InstagramLinkButton extends StatelessWidget {
               size: compact ? 16 : 20,
               color: context.colors.surface,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             if (compact) ...[
               Text(
                 '@$cleanHandle',
@@ -130,7 +130,7 @@ class InstagramLinkButton extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Impossibile aprire Instagram'),
+            content: Text('Impossibile aprire Instagram'),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Theme.of(context).colorScheme.error,
           ),

@@ -42,14 +42,14 @@ class ExerciseReviewScreen extends ConsumerWidget {
             size: 64,
             color: context.colors.error,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'Errore nel caricamento del report',
             style: context.textTheme.titleMedium?.copyWith(
               color: context.colors.error,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
@@ -74,12 +74,12 @@ class ExerciseReviewScreen extends ConsumerWidget {
             size: 64,
             color: context.colors.onSurfaceVariant,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'Nessun report disponibile',
             style: context.textTheme.titleMedium,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Il report mensile sarà disponibile dopo la prima esecuzione',
             style: context.textTheme.bodySmall?.copyWith(
@@ -134,7 +134,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
           ],
 
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
         ],
       ),
     );
@@ -151,7 +151,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           'Revisione automatica mensile degli esercizi',
           style: context.textTheme.bodySmall?.copyWith(
@@ -181,7 +181,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         GridView.count(
           crossAxisCount: 2,
           mainAxisSpacing: 12,
@@ -243,7 +243,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: color, size: 24),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               value,
               style: context.textTheme.headlineSmall?.copyWith(
@@ -251,7 +251,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 color: color,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               label,
               style: context.textTheme.bodySmall?.copyWith(
@@ -259,7 +259,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               subtitle,
               style: context.textTheme.bodySmall?.copyWith(
@@ -287,7 +287,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Card(
           color: context.colors.surfaceContainerHighest,
           child: Padding(
@@ -357,7 +357,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Card(
           child: ListView.separated(
             shrinkWrap: true,
@@ -412,7 +412,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Card(
           child: ListView.separated(
             shrinkWrap: true,

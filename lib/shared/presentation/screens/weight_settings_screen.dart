@@ -48,8 +48,8 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
         title: Text(context.l10n.weightSettings),
         actions: [
           IconButton(
-            icon: const Icon(AppIcons.restore),
-            tooltip: context.l10n.resetToDefaults,
+            icon: Icon(AppIcons.restore),
+            tooltip: context.l10n.resetToDefaults('Weight'),
             onPressed: () => _showResetConfirmation(),
           ),
         ],
@@ -66,12 +66,12 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                 size: 64,
                 color: context.colors.error,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 context.l10n.errorLoadingSettings,
                 style: context.textTheme.titleMedium,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 error.toString(),
                 style: context.textTheme.bodySmall?.copyWith(
@@ -96,9 +96,9 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
           title: context.l10n.quickIncrements,
           subtitle: context.l10n.quickIncrementsDescription,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildQuickIncrementChips(settings, unitLabel),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // Section 2: Custom Increment
         _buildSectionHeader(
@@ -106,9 +106,9 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
           title: context.l10n.customIncrement,
           subtitle: context.l10n.customIncrementDescription,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildCustomIncrementSection(settings, unitLabel),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // Section 3: Plate Calculator
         _buildSectionHeader(
@@ -116,9 +116,9 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
           title: context.l10n.plateCalculator,
           subtitle: context.l10n.plateCalculatorDescription,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildPlateCalculatorSection(settings, unitLabel),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // Section 4: Available Plates
         _buildSectionHeader(
@@ -126,7 +126,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
           title: context.l10n.availablePlates,
           subtitle: context.l10n.availablePlatesDescription,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildAvailablePlatesList(settings, unitLabel),
       ],
     );
@@ -141,7 +141,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: context.colors.primary, size: 24),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +153,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                   color: context.colors.onSurface,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 subtitle,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -230,7 +230,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
             },
             activeTrackColor: context.colors.primary,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Form(
             key: _formKey,
             child: TextFormField(
@@ -244,7 +244,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                 suffixText: unitLabel,
                 helperText: context.l10n.customIncrementHint,
                 border: const OutlineInputBorder(),
-                prefixIcon: const Icon(AppIcons.add),
+                prefixIcon: Icon(AppIcons.add),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -262,10 +262,10 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
               onFieldSubmitted: (value) => _saveCustomIncrement(),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           FilledButton.icon(
             onPressed: _saveCustomIncrement,
-            icon: const Icon(AppIcons.save),
+            icon: Icon(AppIcons.save),
             label: Text(context.l10n.saveCustomIncrement),
           ),
         ],
@@ -295,7 +295,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -309,7 +309,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: TextField(
                   controller: _targetWeightController,
@@ -323,10 +323,10 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           FilledButton.icon(
             onPressed: () => _calculatePlates(settings),
-            icon: const Icon(AppIcons.calculate),
+            icon: Icon(AppIcons.calculate),
             label: Text(context.l10n.calculate),
           ),
         ],
@@ -353,7 +353,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ...settings.availablePlates.map((plate) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -376,7 +376,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         '${plate.weight} $unitLabel',
@@ -393,7 +393,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                 ),
               );
             }),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             TextButton.icon(
               onPressed: () {
                 // TODO: Implement plate editor
@@ -402,7 +402,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                   context.l10n.featureComingSoon,
                 );
               },
-              icon: const Icon(AppIcons.edit),
+              icon: Icon(AppIcons.edit),
               label: Text(context.l10n.editPlates),
             ),
           ],
@@ -468,7 +468,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
               result.isExact ? AppIcons.complete : AppIcons.infoIcon,
               color: result.isExact ? context.colors.primary : context.colors.tertiary,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(context.l10n.plateCalculationResult),
           ],
         ),
@@ -498,7 +498,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             if (result.platesPerSide.isEmpty)
               Text(
                 context.l10n.barOnly,
@@ -529,7 +529,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Text(
                         '${plate.weight} $unitLabel',
                         style: context.textTheme.bodyLarge,
@@ -578,7 +578,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(context.l10n.resetToDefaults),
+        title: Text(context.l10n.resetToDefaults('Weight')),
         content: Text(context.l10n.resetSettingsConfirmation),
         actions: [
           TextButton(

@@ -403,7 +403,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             
             _buildExplanationCard(
               context,

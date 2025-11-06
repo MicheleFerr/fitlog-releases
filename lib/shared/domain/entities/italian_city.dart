@@ -33,6 +33,11 @@ class ItalianCity with _$ItalianCity {
 
   factory ItalianCity.fromJson(Map<String, dynamic> json) =>
       _$ItalianCityFromJson(json);
+
+  factory ItalianCity.fromFirestore(dynamic doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return ItalianCity.fromJson(data);
+  }
 }
 
 /// Italian city zones/districts for major cities

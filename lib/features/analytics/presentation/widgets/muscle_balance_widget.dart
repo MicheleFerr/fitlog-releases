@@ -37,7 +37,7 @@ class MuscleBalanceWidget extends StatelessWidget {
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.muscleBalance,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -62,7 +62,7 @@ class MuscleBalanceWidget extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMuscleGroupList(context, colorScheme),
             if (!balance.isBalanced) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               _buildImbalanceWarning(context, localizations),
             ],
           ],
@@ -85,7 +85,7 @@ class MuscleBalanceWidget extends StatelessWidget {
             size: 16,
             color: isBalanced ? context.colors.success : context.colors.secondary,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             isBalanced ? 'Balanced' : 'Imbalanced',
             style: TextStyle(
@@ -120,7 +120,7 @@ class MuscleBalanceWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   entry.key,
@@ -162,12 +162,12 @@ class MuscleBalanceWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             AppIcons.warningAmber,
             color: context.colors.secondary,
             size: 20,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +204,7 @@ class MuscleBalanceWidget extends StatelessWidget {
                 size: 48,
                 color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 'No muscle group data available',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(

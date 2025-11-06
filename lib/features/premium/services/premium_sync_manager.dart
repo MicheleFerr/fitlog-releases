@@ -154,7 +154,8 @@ class PremiumSyncManager {
     try {
       // 1. Sync workouts
       final workoutResult = await _workoutSyncService.syncNow();
-      result.merge(workoutResult);
+      // TODO: Implement SyncResult.merge() method
+      // result.merge(workoutResult);
       
       // 2. Sync templates
       await _templateRepository.processSyncQueue();

@@ -90,4 +90,46 @@ class HybridCommunityRepositoryAdapter implements CommunityRepository {
     // TODO: Implement in HybridCommunityRepository if needed
     throw UnimplementedError('Admin moderation not implemented in HybridRepository');
   }
+
+  @override
+  Stream<List<CommunityContribution>> searchContributionsStream({
+    required String query,
+    dynamic filters, // TODO: Should be ContributionFilters? when class is defined
+    int limit = 20,
+  }) {
+    // TODO: Implement in HybridCommunityRepository if needed
+    throw UnimplementedError('Search stream not implemented in HybridRepository');
+  }
+
+  @override
+  Stream<List<CommunityContribution>> filterContributions({
+    required dynamic filters, // TODO: Should be ContributionFilters when class is defined
+    int limit = 20,
+  }) {
+    // TODO: Implement in HybridCommunityRepository if needed
+    throw UnimplementedError('Filter contributions not implemented in HybridRepository');
+  }
+
+  @override
+  Future<void> saveContribution(String contributionId, String userId) async {
+    // TODO: Implement in HybridCommunityRepository if needed
+    throw UnimplementedError('Save contribution not implemented in HybridRepository');
+  }
+
+  @override
+  Future<void> unsaveContribution(String contributionId, String userId) async {
+    // TODO: Implement in HybridCommunityRepository if needed
+    throw UnimplementedError('Unsave contribution not implemented in HybridRepository');
+  }
+
+  @override
+  Future<List<String>> getSavedContributionIds(String userId) async {
+    // TODO: Implement in HybridCommunityRepository if needed
+    return [];
+  }
+
+  @override
+  Future<void> incrementViewCount(String contributionId) async {
+    // TODO: Implement in HybridCommunityRepository if needed
+  }
 }

@@ -32,7 +32,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                       AppIcons.history,
                       color: context.colors.secondary,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       'Recent Workouts',
                       style: context.textTheme.titleMedium?.copyWith(
@@ -66,9 +66,22 @@ class RecentWorkoutsCard extends StatelessWidget {
               )
             else
               ...recentWorkouts.map((workout) {
+                // Calculate total volume
+                final totalVolume = workout.exercises.fold<double>(
+                  0.0,
+                  (sum, exercise) => sum + exercise.sets.fold<double>(
+                    0.0,
+                    (setSum, set) => setSum + (set.isCompleted ? (set.weight ?? 0) * (set.reps ?? 0) : 0),
+                  ),
+                );
+
                 return _buildWorkoutItem(
                   context,
-                  workout,
+                  workout.name,
+                  workout.createdAt,
+                  workout.exercises.length,
+                  totalVolume,
+                  _convertWorkoutToActivities(workout),
                 );
               }),
           ],
@@ -125,7 +138,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                 size: 20,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             
             // Workout info
             Expanded(
@@ -138,7 +151,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     '${_formatDate(date)} • $exerciseCount exercises',
                     style: context.textTheme.bodySmall?.copyWith(
@@ -210,7 +223,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         // Title and date
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -226,7 +239,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: 4),
                                   Text(
                                     _formatDate(syntheticActivities.first.createdAt),
                                     style: context.textTheme.bodyMedium?.copyWith(
@@ -318,7 +331,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             color: context.colors.primary,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           label,
           style: context.textTheme.bodySmall?.copyWith(
@@ -374,7 +387,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                 '${activity.sets.length} serie',
                 style: context.textTheme.bodySmall,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text(
                 '${_calculateExerciseVolume(activity).toStringAsFixed(0)} kg volume',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -537,7 +550,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             ),
             // Additional stats if available
             if (activity.sets.any((s) => s.rpe != null || s.rir != null)) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -605,7 +618,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             color: context.colors.onSurface.withValues(alpha: 0.6),
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: context.textTheme.titleMedium?.copyWith(

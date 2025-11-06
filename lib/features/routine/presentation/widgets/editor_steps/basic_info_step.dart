@@ -70,7 +70,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.routineBasicInfoSubtitle,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -78,7 +78,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               ),
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // Routine name
             TextFormField(
@@ -86,7 +86,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               decoration: InputDecoration(
                 labelText: context.l10n.routineNameLabel,
                 hintText: context.l10n.routineNameHint,
-                prefixIcon: const Icon(AppIcons.label),
+                prefixIcon: Icon(AppIcons.label),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -111,7 +111,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               },
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Description (optional)
             TextFormField(
@@ -119,7 +119,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               decoration: InputDecoration(
                 labelText: context.l10n.routineDescriptionLabel,
                 hintText: context.l10n.routineDescriptionHint,
-                prefixIcon: const Icon(AppIcons.template),
+                prefixIcon: Icon(AppIcons.template),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -135,7 +135,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               },
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Routine type
             Text(
@@ -145,10 +145,10 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _buildTypeSelector(context, state.type),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Date range
             Text(
@@ -158,7 +158,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
@@ -169,7 +169,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                     onTap: () => _selectStartDate(context, state.startDate),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: _buildDateField(
                     context,
@@ -185,7 +185,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Duration info chip
             _buildDurationInfo(context, state.startDate, state.endDate),
@@ -277,7 +277,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                           : context.colors.onSurface.withValues(alpha: 0.7),
                       size: 24,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         label,
@@ -297,7 +297,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                       ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   subtitle,
                   style: context.textTheme.bodySmall?.copyWith(
@@ -339,7 +339,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface.withValues(alpha: 0.6),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Row(
               children: [
                 Icon(
@@ -347,7 +347,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                   size: 20,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   _formatDate(date),
                   style: context.textTheme.titleMedium?.copyWith(
@@ -401,7 +401,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
             color: context.colors.primary,
             size: 20,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             context.l10n.routineDurationInfo(durationText),
             style: context.textTheme.bodyMedium?.copyWith(

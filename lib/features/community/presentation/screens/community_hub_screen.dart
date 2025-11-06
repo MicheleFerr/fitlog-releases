@@ -347,12 +347,12 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                             size: 64,
                             color: Theme.of(context).colorScheme.primary,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           Text(
                             'Nessun Contributo Pending',
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             'Tutti i contributi sono stati revisionati!',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -401,7 +401,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -437,7 +437,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     color: _getTypeColor(contribution.type),
                     size: 20,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       contribution.title,
@@ -451,7 +451,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   _buildStatusBadge(contribution.status),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 contribution.exerciseName,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -459,14 +459,14 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                       fontWeight: FontWeight.w600,
                     ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 contribution.description,
                 style: Theme.of(context).textTheme.bodyMedium,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 children: [
                   Text(
@@ -478,16 +478,16 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   const Spacer(),
                   TextButton.icon(
                     onPressed: () => _handleApprove(contribution.id),
-                    icon: const Icon(AppIcons.complete, size: 18),
-                    label: const Text('Approva'),
+                    icon: Icon(AppIcons.complete, size: 18),
+                    label: Text('Approva'),
                     style: TextButton.styleFrom(
                       foregroundColor: context.successColor,
                     ),
                   ),
                   TextButton.icon(
                     onPressed: () => _handleReject(contribution.id),
-                    icon: const Icon(AppIcons.cancel, size: 18),
-                    label: const Text('Rifiuta'),
+                    icon: Icon(AppIcons.cancel, size: 18),
+                    label: Text('Rifiuta'),
                     style: TextButton.styleFrom(
                       foregroundColor: context.errorColor,
                     ),
@@ -544,7 +544,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Annulla'),
+            child: Text('Annulla'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, 'No reason provided'),
@@ -889,7 +889,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Container(
                   width: double.infinity,
                   height: 16,
@@ -898,7 +898,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Container(
                   width: 150,
                   height: 16,

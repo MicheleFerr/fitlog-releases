@@ -275,7 +275,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
               l10n.personalizedRecommendations,
               theme,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             FilledButton.icon(
               onPressed: () => context.push('/premium'),
               icon: const Icon(AppIcons.star),
@@ -307,7 +307,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
               color: theme.colorScheme.primary,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Text(
               text,

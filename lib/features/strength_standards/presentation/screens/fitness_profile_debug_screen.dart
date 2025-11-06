@@ -19,7 +19,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fitness Profile Debug'),
+        title: Text('Fitness Profile Debug'),
         backgroundColor: context.colors.surface,
       ),
       body: ListView(
@@ -38,7 +38,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                         questionnaire != null ? Icons.check_circle : Icons.warning,
                         color: questionnaire != null ? context.colors.success : context.colors.secondary,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         'Questionnaire Status',
                         style: context.textTheme.titleMedium?.copyWith(
@@ -47,9 +47,9 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   if (questionnaire != null) ...[
-                    const Text('✅ Questionnaire loaded: YES'),
+                    Text('✅ Questionnaire loaded: YES'),
                     Text('✅ Is valid: ${UserFitnessQuestionnaireExtension(questionnaire).isValid}'),
                     Text('✅ Experience: ${questionnaire.experienceLevel.name}'),
                     Text('✅ Bodyweight: ${questionnaire.bodyweightKg.toStringAsFixed(1)} kg'),
@@ -57,7 +57,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                     Text('✅ Sex: ${questionnaire.sex.name}'),
                     if (questionnaire.completedAt != null)
                       Text('✅ Completed: ${questionnaire.completedAt}'),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text('Max Lifts:', style: context.textTheme.titleSmall),
                     if (questionnaire.benchPressMax != null)
                       Text('  Bench: ${questionnaire.benchPressMax!.toStringAsFixed(1)} kg'),
@@ -82,7 +82,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Medical Clearance Status
           Card(
@@ -97,7 +97,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                         medicalClearance != null ? Icons.check_circle : Icons.warning,
                         color: medicalClearance != null ? context.colors.success : context.colors.secondary,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         'Medical Clearance',
                         style: context.textTheme.titleMedium?.copyWith(
@@ -119,7 +119,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Weight Suggestions Status
           Card(
@@ -134,7 +134,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                         suggestionsEnabled ? Icons.check_circle : Icons.error,
                         color: suggestionsEnabled ? context.colors.success : context.colors.error,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         'Weight Suggestions',
                         style: context.textTheme.titleMedium?.copyWith(
@@ -143,13 +143,13 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Text(
                     suggestionsEnabled
                         ? '✅ Weight suggestions: ENABLED'
                         : '❌ Weight suggestions: DISABLED',
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     'To enable: Complete questionnaire with valid data',
                     style: context.textTheme.bodySmall?.copyWith(
@@ -161,7 +161,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Available Mappings
           Card(
@@ -189,7 +189,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                             children: [
                               Text('✅ Total mappings: ${mappings.length}'),
                               Text('✅ High confidence (≥80%): ${highConfidence.length}'),
-                              const SizedBox(height: 8),
+                              SizedBox(height: 8),
                               Text(
                                 'High confidence exercises:',
                                 style: context.textTheme.titleSmall,
@@ -214,7 +214,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Actions
           Card(

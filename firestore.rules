@@ -883,6 +883,82 @@ rules_version = '2';
       return !request.query.limit.exists() || request.query.limit <= 100;
     }
 
+    // ============= BUDDY MATCHING VALIDATION HELPERS =============
+
+    // Validate buddy profile data structure and content
+    function validateBuddyProfileData(data) {
+      return data.keys().hasAll(['uid', 'displayName', 'preferences', 'isActive'])
+        && data.uid is string
+        && validateStringField(data, 'displayName', 1, 100, false)
+        && data.isActive is bool
+        && validateBuddyPreferences(data.preferences)
+        && (!data.keys().hasAny(['bio']) || validateStringField(data, 'bio', 0, 500, true))
+        && (!data.keys().hasAny(['reportCount']) || data.reportCount is int)
+        && (!data.keys().hasAny(['isBanned']) || data.isBanned is bool);
+    }
+
+    // Validate buddy profile updates (prevent critical field tampering)
+    function validateBuddyProfileUpdate(oldData, newData) {
+      return newData.uid == oldData.uid  // UID cannot change
+        && (!newData.keys().hasAny(['reportCount']) || newData.reportCount == oldData.reportCount)  // Report count only by system
+        && (!newData.keys().hasAny(['isBanned']) || newData.isBanned == oldData.isBanned)  // Ban status only by admin
+        && (!newData.keys().hasAny(['isVerified']) || newData.isVerified == oldData.isVerified)  // Verification only by system
+        && validateBuddyProfileData(newData);
+    }
+
+    // Validate buddy preferences structure
+    function validateBuddyPreferences(prefs) {
+      return prefs.keys().hasAny(['isLookingForBuddy'])
+        && prefs.isLookingForBuddy is bool
+        && (!prefs.keys().hasAny(['maxDistance']) || (prefs.maxDistance is number && prefs.maxDistance >= 1 && prefs.maxDistance <= 100))
+        && (!prefs.keys().hasAny(['bio']) || validateStringField(prefs, 'bio', 0, 500, true));
+    }
+
+    // Validate buddy match data structure
+    function validateBuddyMatchData(data) {
+      return data.keys().hasAll(['user1Id', 'user2Id', 'status', 'compatibilityScore'])
+        && data.user1Id is string
+        && data.user2Id is string
+        && data.user1Id != data.user2Id  // Cannot match with self
+        && data.status in ['pending', 'confirmed', 'partnership', 'completed', 'expired', 'cancelled']
+        && data.compatibilityScore is number
+        && data.compatibilityScore >= 0
+        && data.compatibilityScore <= 100;
+    }
+
+    // Validate buddy match updates (prevent status manipulation)
+    function validateBuddyMatchUpdate(oldData, newData) {
+      return newData.user1Id == oldData.user1Id  // User IDs cannot change
+        && newData.user2Id == oldData.user2Id
+        && newData.compatibilityScore == oldData.compatibilityScore  // Score cannot change
+        && validateBuddyMatchStatusTransition(oldData.status, newData.status);
+    }
+
+    // Validate buddy match status transitions (prevent invalid flows)
+    function validateBuddyMatchStatusTransition(oldStatus, newStatus) {
+      return (oldStatus == 'pending' && newStatus in ['confirmed', 'expired', 'cancelled'])
+        || (oldStatus == 'confirmed' && newStatus in ['partnership', 'cancelled'])
+        || (oldStatus == 'partnership' && newStatus in ['completed', 'cancelled'])
+        || (oldStatus == newStatus);  // Status can stay the same
+    }
+
+    // Validate buddy action data structure
+    function validateBuddyActionData(data) {
+      return data.keys().hasAll(['fromUserId', 'toUserId', 'actionType'])
+        && data.fromUserId is string
+        && data.toUserId is string
+        && data.fromUserId != data.toUserId  // Cannot action on self
+        && data.actionType in ['like', 'superLike', 'pass', 'block', 'report']
+        && (data.actionType != 'report' || validateBuddyReport(data));
+    }
+
+    // Validate buddy report data (requires reason and description)
+    function validateBuddyReport(data) {
+      return data.keys().hasAll(['reportReason', 'reportDescription'])
+        && data.reportReason in ['inappropriatePhotos', 'harassment', 'spam', 'fakeProfile', 'underage', 'other']
+        && validateStringField(data, 'reportDescription', 10, 500, false);
+    }
+
     // ============= COMMUNITY CONTRIBUTION STATS =============
     match /user_contribution_stats/{userId} {
       // Read: Chiunque può leggere stats (per leaderboard)
@@ -1237,6 +1313,131 @@ rules_version = '2';
 
       // Solo il proprietario può eliminare i propri achievement
       allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ============= BUDDY MATCHING SYSTEM =============
+
+    // Buddy Profiles Collection
+    match /buddy_profiles/{profileId} {
+      // 🔒 SECURITY: Users can only read their own profile OR profiles that are actively looking for buddy
+      allow get: if request.auth != null && (
+        request.auth.uid == profileId ||
+        (resource.data.isActive == true && resource.data.preferences.isLookingForBuddy == true)
+      );
+
+      // 🔒 SECURITY: List queries must be limited and only for active profiles
+      allow list: if request.auth != null &&
+        isQueryLimitValid() &&
+        request.query.limit <= 50; // Max 50 profiles per query
+
+      // 🔒 SECURITY: Users can only create their own profile
+      allow create: if request.auth != null &&
+        request.auth.uid == profileId &&
+        request.resource.data.uid == request.auth.uid &&
+        validateBuddyProfileData(request.resource.data) &&
+        isDocumentSizeValid();
+
+      // 🔒 SECURITY: Users can only update their own profile
+      allow update: if request.auth != null &&
+        request.auth.uid == profileId &&
+        request.auth.uid == resource.data.uid &&
+        validateBuddyProfileUpdate(resource.data, request.resource.data) &&
+        isDocumentSizeValid();
+
+      // 🔒 SECURITY: Users can only delete their own profile
+      allow delete: if request.auth != null &&
+        request.auth.uid == profileId;
+    }
+
+    // Buddy Matches Collection
+    match /buddy_matches/{matchId} {
+      // 🔒 SECURITY: Only match participants can read the match
+      allow get: if request.auth != null && (
+        request.auth.uid == resource.data.user1Id ||
+        request.auth.uid == resource.data.user2Id
+      );
+
+      // 🔒 SECURITY: Users can only list their own matches
+      allow list: if request.auth != null && isQueryLimitValid();
+
+      // 🔒 SECURITY: Match creation requires valid participants
+      allow create: if request.auth != null &&
+        (request.auth.uid == request.resource.data.user1Id ||
+         request.auth.uid == request.resource.data.user2Id) &&
+        validateBuddyMatchData(request.resource.data) &&
+        isDocumentSizeValid();
+
+      // 🔒 SECURITY: Only match participants can update
+      allow update: if request.auth != null &&
+        (request.auth.uid == resource.data.user1Id ||
+         request.auth.uid == resource.data.user2Id) &&
+        validateBuddyMatchUpdate(resource.data, request.resource.data) &&
+        isDocumentSizeValid();
+
+      // 🔒 SECURITY: Only match participants can delete (cancel)
+      allow delete: if request.auth != null &&
+        (request.auth.uid == resource.data.user1Id ||
+         request.auth.uid == resource.data.user2Id);
+    }
+
+    // Buddy Actions Collection (likes, passes, blocks, reports)
+    match /buddy_actions/{actionId} {
+      // 🔒 SECURITY: Users can only read their own actions
+      allow get: if request.auth != null &&
+        request.auth.uid == resource.data.fromUserId;
+
+      // 🔒 SECURITY: Users can list their own actions
+      allow list: if request.auth != null &&
+        isQueryLimitValid();
+
+      // 🔒 SECURITY: Users can only create actions from themselves
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.fromUserId &&
+        validateBuddyActionData(request.resource.data) &&
+        isDocumentSizeValid();
+
+      // 🔒 SECURITY: Actions are immutable (no updates)
+      allow update: if false;
+
+      // 🔒 SECURITY: Users can delete their own non-report actions
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.fromUserId &&
+        resource.data.actionType != 'report';
+    }
+
+    // Buddy Messages Collection (chat within matches)
+    match /buddy_matches/{matchId}/messages/{messageId} {
+      // 🔒 SECURITY: Only match participants can read messages
+      allow read: if request.auth != null &&
+        (request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user1Id ||
+         request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user2Id);
+
+      // 🔒 SECURITY: Only match participants can send messages
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.senderId &&
+        (request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user1Id ||
+         request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user2Id) &&
+        validateStringField(request.resource.data, 'content', 1, 1000, false) &&
+        isDocumentSizeValid();
+
+      // 🔒 SECURITY: Messages are immutable
+      allow update, delete: if false;
+    }
+
+    // User Search Filters (saved preferences)
+    match /user_search_filters/{userId} {
+      // 🔒 SECURITY: Users can only access their own filters
+      allow read, write: if request.auth != null &&
+        request.auth.uid == userId;
+    }
+
+    // Ice Breakers Collection (read-only reference data)
+    match /ice_breakers/{iceBreakerId} {
+      // 🔒 SECURITY: All authenticated users can read ice breakers
+      allow read: if request.auth != null;
+
+      // 🔒 SECURITY: Only admins can manage ice breakers
+      allow write: if request.auth != null && isAdmin();
     }
 
     // ============= BACKUP COLLECTIONS (for data migration) =============

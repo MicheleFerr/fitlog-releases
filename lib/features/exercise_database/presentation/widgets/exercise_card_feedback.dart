@@ -52,7 +52,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Segnala problema'),
+          title: Text('Segnala problema'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -74,7 +74,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         'v$version',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -84,7 +84,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Tipo di segnalazione
                 Text(
@@ -117,7 +117,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                     });
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Messaggio
                 Text(
@@ -236,7 +236,7 @@ class _ExerciseFeedbackButtonState
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(AppIcons.flagOutlined),
+      icon: Icon(AppIcons.flagOutlined),
       tooltip: context.l10n.reportExerciseIssue,
       onPressed: _showFeedbackDialog,
     );
@@ -269,7 +269,7 @@ class _ExerciseFeedbackButtonState
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       'v${widget.version}',
                       style: context.textTheme.labelSmall?.copyWith(
@@ -279,7 +279,7 @@ class _ExerciseFeedbackButtonState
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Tipo di segnalazione
               Text(
@@ -324,7 +324,7 @@ class _ExerciseFeedbackButtonState
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Messaggio
               Text(
@@ -333,7 +333,7 @@ class _ExerciseFeedbackButtonState
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               TextField(
                 controller: _messageController,
                 maxLines: 4,
@@ -372,7 +372,7 @@ class _ExerciseFeedbackButtonState
                       ),
                     ),
                   )
-                : const Icon(AppIcons.send),
+                : Icon(AppIcons.send),
             label: Text(context.l10n.sendFeedback),
           ),
         ],

@@ -110,7 +110,7 @@ class RoutineCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               if (showActiveBadge) ...[
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -126,7 +126,7 @@ class RoutineCard extends StatelessWidget {
                         size: 14,
                         color: context.colors.onPrimary,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Text(
                         'ACTIVE',
                         style: context.textTheme.labelSmall?.copyWith(
@@ -230,7 +230,7 @@ class RoutineCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: color),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             label,
             style: context.textTheme.bodySmall?.copyWith(
@@ -269,7 +269,7 @@ class RoutineCard extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
@@ -299,7 +299,7 @@ class RoutineCard extends StatelessWidget {
             color: _getAdherenceColor(context, adherence),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: _buildStatChip(
             context,
@@ -309,7 +309,7 @@ class RoutineCard extends StatelessWidget {
             color: context.colors.secondary,
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: _buildStatChip(
             context,
@@ -343,7 +343,7 @@ class RoutineCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, size: 16, color: color),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             value,
             style: context.textTheme.titleMedium?.copyWith(
@@ -371,20 +371,20 @@ class RoutineCard extends StatelessWidget {
         // View button
         TextButton.icon(
           onPressed: onTap,
-          icon: const Icon(AppIcons.visibility, size: 16),
-          label: const Text('View'),
+          icon: Icon(AppIcons.visibility, size: 16),
+          label: Text('View'),
           style: TextButton.styleFrom(
             foregroundColor: context.colors.primary,
           ),
         ),
 
         if (!showActiveBadge && onActivate != null) ...[
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           // Activate button
           ElevatedButton.icon(
             onPressed: onActivate,
-            icon: const Icon(AppIcons.play, size: 16),
-            label: const Text('Activate'),
+            icon: Icon(AppIcons.play, size: 16),
+            label: Text('Activate'),
             style: ElevatedButton.styleFrom(
               backgroundColor: context.colors.primary,
               foregroundColor: context.colors.onPrimary,
@@ -396,7 +396,7 @@ class RoutineCard extends StatelessWidget {
         // More actions menu
         IconButton(
           onPressed: () => _showMoreActions(context),
-          icon: const Icon(AppIcons.moreVert),
+          icon: Icon(AppIcons.moreVert),
           color: context.colors.onSurface.withValues(alpha: 0.7),
         ),
       ],

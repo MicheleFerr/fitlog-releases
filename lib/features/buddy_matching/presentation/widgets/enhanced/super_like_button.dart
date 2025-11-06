@@ -90,7 +90,7 @@ class SuperLikeButton extends ConsumerWidget {
           ),
         ),
         
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         
         // Remaining count
         Container(
@@ -129,6 +129,9 @@ class SuperLikeAnimation extends StatefulWidget {
 class _SuperLikeAnimationState extends State<SuperLikeAnimation>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+  late CurvedAnimation _scaleCurve;
+  late CurvedAnimation _rotationCurve;
+  late CurvedAnimation _slideCurve;
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotationAnimation;
   late Animation<Offset> _slideAnimation;
@@ -136,41 +139,47 @@ class _SuperLikeAnimationState extends State<SuperLikeAnimation>
   @override
   void initState() {
     super.initState();
-    
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
 
+    _scaleCurve = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    );
+
+    _rotationCurve = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+
+    _slideCurve = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    ).animate(_scaleCurve);
 
     _rotationAnimation = Tween<double>(
       begin: 0.0,
       end: 0.1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(_rotationCurve);
 
     _slideAnimation = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(0, -0.1),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(_slideCurve);
   }
 
   @override
   void didUpdateWidget(SuperLikeAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (widget.animate && !oldWidget.animate) {
       _controller.forward().then((_) {
         _controller.reverse();
@@ -181,6 +190,9 @@ class _SuperLikeAnimationState extends State<SuperLikeAnimation>
   @override
   void dispose() {
     _controller.dispose();
+    _scaleCurve.dispose();
+    _rotationCurve.dispose();
+    _slideCurve.dispose();
     super.dispose();
   }
 
@@ -222,39 +234,45 @@ class SuperLikeOverlay extends StatefulWidget {
 class _SuperLikeOverlayState extends State<SuperLikeOverlay>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+  late CurvedAnimation _fadeCurve;
+  late CurvedAnimation _scaleCurve;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
 
+    _fadeCurve = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.3, curve: Curves.easeIn),
+    );
+
+    _scaleCurve = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    );
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 0.3, curve: Curves.easeIn),
-    ));
+    ).animate(_fadeCurve);
 
     _scaleAnimation = Tween<double>(
       begin: 0.3,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    ).animate(_scaleCurve);
   }
 
   @override
   void didUpdateWidget(SuperLikeOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (widget.isVisible && !oldWidget.isVisible) {
       _controller.forward().then((_) {
         Future.delayed(const Duration(milliseconds: 500), () {
@@ -269,6 +287,8 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
   @override
   void dispose() {
     _controller.dispose();
+    _fadeCurve.dispose();
+    _scaleCurve.dispose();
     super.dispose();
   }
 
@@ -309,12 +329,12 @@ class _SuperLikeOverlayState extends State<SuperLikeOverlay>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           AppIcons.star,
                           size: 64,
                           color: context.colors.surface,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         Text(
                           AppLocalizations.of(context).superLike,
                           style: Theme.of(context).textTheme.headlineSmall?.copyWith(

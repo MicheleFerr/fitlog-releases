@@ -130,8 +130,8 @@ class _DatabaseManagerScreenState
     return AppBar(
       title: Row(
         children: [
-          const Icon(AppIcons.storage, size: AppIconSize.medium),
-          const SizedBox(width: 8),
+          Icon(AppIcons.storage, size: AppIconSize.medium),
+          SizedBox(width: 8),
           Text(context.l10n.databaseManager),
         ],
       ),
@@ -145,7 +145,7 @@ class _DatabaseManagerScreenState
       ),
       actions: [
         IconButton(
-          icon: const Icon(AppIcons.refresh, size: AppIconSize.medium),
+          icon: Icon(AppIcons.refresh, size: AppIconSize.medium),
           onPressed: () {
             ref.invalidate(exercisesITStreamProvider);
             ref.invalidate(exercisesENStreamProvider);
@@ -164,7 +164,7 @@ class _DatabaseManagerScreenState
       content: Row(
         children: [
           Icon(AppIcons.wifiOff, color: context.colors.error, size: AppIconSize.small),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             'Offline mode - showing cached data',
             style: TextStyle(color: context.colors.onErrorContainer),
@@ -250,14 +250,14 @@ class _DatabaseManagerScreenState
             Row(
               children: [
                 Icon(AppIcons.package, size: AppIconSize.large, color: context.colors.primary),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   context.l10n.versionInformation,
                   style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // 2x2 Grid
             Column(
@@ -267,7 +267,7 @@ class _DatabaseManagerScreenState
                     Expanded(
                       child: _buildInfoTile(context.l10n.currentVersion, currentVersion, AppIcons.tag),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: _buildInfoTile(context.l10n.lastPublished, dateStr, AppIcons.calendar),
                     ),
@@ -288,14 +288,14 @@ class _DatabaseManagerScreenState
               ],
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Quick Actions Row
             Row(
               children: [
                 Expanded(
                   child: FilledButton.icon(
-                    icon: const Icon(AppIcons.upload, size: AppIconSize.small),
+                    icon: Icon(AppIcons.upload, size: AppIconSize.small),
                     label: Text(context.l10n.publishNewVersion),
                     onPressed: () {
                       SnackBarService.showInfo(context, 'Publish functionality preserved from original');
@@ -333,7 +333,7 @@ class _DatabaseManagerScreenState
           Row(
             children: [
               Icon(icon, size: AppIconSize.small, color: context.colors.secondary),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Expanded(
                 child: Text(
                   label,
@@ -346,7 +346,7 @@ class _DatabaseManagerScreenState
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             value,
             style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -489,7 +489,7 @@ class _DatabaseManagerScreenState
                             ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
@@ -684,7 +684,7 @@ class _DatabaseManagerScreenState
           child: Row(
             children: [
               Icon(AppIcons.checkCircle, color: context.colors.primary),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 '${selectedExercises.length} selected',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -693,8 +693,8 @@ class _DatabaseManagerScreenState
               ),
               const Spacer(),
               TextButton.icon(
-                icon: const Icon(AppIcons.edit, size: AppIconSize.small),
-                label: const Text('Change Equipment'),
+                icon: Icon(AppIcons.edit, size: AppIconSize.small),
+                label: Text('Change Equipment'),
                 onPressed: () => _showBulkChangeEquipmentDialog(language, selectedExercises),
               ),
               TextButton.icon(
@@ -842,7 +842,7 @@ class _DatabaseManagerScreenState
               );
             }).toList(),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Difficulty chips
           Text('Difficulty:', style: context.textTheme.labelSmall),
@@ -859,7 +859,7 @@ class _DatabaseManagerScreenState
               );
             }).toList(),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Type chips (Compound/Isolation)
           Text('Type:', style: context.textTheme.labelSmall),
@@ -876,7 +876,7 @@ class _DatabaseManagerScreenState
               );
             }).toList(),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Focus muscles (multi-select)
           Text('Focus Muscles:', style: context.textTheme.labelSmall),
@@ -901,7 +901,7 @@ class _DatabaseManagerScreenState
               );
             }).toList(),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Secondary muscles (multi-select)
           Text('Secondary Muscles:', style: context.textTheme.labelSmall),
@@ -1089,7 +1089,7 @@ class _DatabaseManagerScreenState
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Delete'),
+        title: Text('Confirm Delete'),
         content: Text('Delete ${selectedExercises.length} exercises? This cannot be undone.'),
         actions: [
           TextButton(
@@ -1190,7 +1190,7 @@ class _DatabaseManagerScreenState
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: const Icon(AppIcons.chevronLeft),
+            icon: Icon(AppIcons.chevronLeft),
             onPressed: _currentPage > 0
                 ? () => setState(() => _currentPage--)
                 : null,
@@ -1220,18 +1220,18 @@ class _DatabaseManagerScreenState
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(AppIcons.searchOff, size: 64, color: context.colors.onSurfaceVariant),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             context.l10n.noExercisesFound,
             style: context.textTheme.titleMedium,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           TextButton.icon(
             onPressed: () {
               _searchController.clear();
               _onSearchChanged('');
             },
-            icon: const Icon(AppIcons.clear),
+            icon: Icon(AppIcons.clear),
             label: Text(context.l10n.clearFilters),
           ),
         ],
@@ -1286,25 +1286,25 @@ class _DatabaseManagerScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(AppIcons.error, size: 64, color: context.colors.error),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 'Error loading data',
                 style: context.textTheme.titleMedium,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 error,
                 style: context.textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () {
                   ref.invalidate(exercisesITStreamProvider);
                   ref.invalidate(exercisesENStreamProvider);
                   ref.invalidate(metadataStreamProvider);
                 },
-                icon: const Icon(AppIcons.refresh),
+                icon: Icon(AppIcons.refresh),
                 label: Text(context.l10n.retry),
               ),
             ],

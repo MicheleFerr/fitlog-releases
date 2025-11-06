@@ -126,8 +126,8 @@ class PlateauBreakerService {
     final maxWeights = metrics.map((m) => m.maxWeight).toList();
     
     // Check if max weight has increased in last 4 sessions
-    final hasProgressed = maxWeights.take(4).any((w) => 
-        w > maxWeights.skip(4).firstOrNull ?? 0);
+    final hasProgressed = maxWeights.take(4).any((w) =>
+        (w ?? 0) > (maxWeights.skip(4).firstOrNull ?? 0));
     
     final recentMax = maxWeights.first;
     final oldMax = maxWeights.length > 4 ? maxWeights[4] : maxWeights.last;

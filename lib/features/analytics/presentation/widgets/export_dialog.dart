@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/export_service.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/models/analytics_activity.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -29,7 +31,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
       title: Row(
         children: [
           Icon(AppIcons.download, color: colorScheme.primary),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Text(localizations.exportData),
         ],
       ),
@@ -75,7 +77,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
               ),
             ),
             if (_selectedFormat == ExportFormat.csv) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 localizations.selectDataType,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -131,7 +133,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                     color: colorScheme.onPrimary,
                   ),
                 )
-              : const Icon(AppIcons.download),
+              : Icon(AppIcons.download),
           label: Text(_isExporting ? localizations.exporting : localizations.export),
         ),
       ],
@@ -181,7 +183,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                 color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +194,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(
                     description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -262,15 +264,18 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
       String filePath;
 
       if (_selectedFormat == ExportFormat.pdf) {
+        // Convert to analytics activities first for statistics
+        final convertedActivities = _convertToAnalyticsActivities(analyticsState.activities);
+
         // Prepare statistics
         final statistics = {
           'totalWorkouts': analyticsState.activities.length,
-          'totalVolume': analyticsState.activities.fold<double>(
+          'totalVolume': convertedActivities.fold<double>(
             0, (sum, a) => sum + a.totalVolume
           ),
-          'avgDuration': analyticsState.activities.isEmpty ? 0 :
-            analyticsState.activities.fold<int>(0, (sum, a) => sum + (a.duration ?? 0)) ~/
-            analyticsState.activities.length,
+          'avgDuration': convertedActivities.isEmpty ? 0 :
+            convertedActivities.fold<int>(0, (sum, a) => sum + (a.duration ?? 0)) ~/
+            convertedActivities.length,
           'currentStreak': ref.read(analyticsProvider.notifier).getFrequencyStats()['currentStreak'],
           'longestStreak': ref.read(analyticsProvider.notifier).getFrequencyStats()['longestStreak'],
           'totalPRs': analyticsState.personalRecords.length,
@@ -279,7 +284,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
         };
 
         filePath = await ExportService.exportToPDF(
-          activities: analyticsState.activities,
+          activities: _convertToAnalyticsActivities(analyticsState.activities),
           personalRecords: analyticsState.personalRecords,
           insights: analyticsState.insights,
           statistics: statistics,
@@ -287,7 +292,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
         );
       } else {
         filePath = await ExportService.exportToCSV(
-          activities: analyticsState.activities,
+          activities: _convertToAnalyticsActivities(analyticsState.activities),
           type: _selectedCSVType,
         );
       }
@@ -360,6 +365,61 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
         ),
       ),
     );
+  }
+
+  /// Convert List<ExerciseActivity> to List<AnalyticsActivity>
+  List<AnalyticsActivity> _convertToAnalyticsActivities(List<ExerciseActivity> exercises) {
+    return exercises.map((exercise) {
+      // Convert sets from ExerciseActivitySet to AnalyticsSet
+      final analyticsSets = exercise.sets.map((set) {
+        return AnalyticsSet(
+          weight: double.tryParse(set.weight) ?? 0.0,
+          reps: int.tryParse(set.reps) ?? 0,
+          rpe: set.rpe?.toDouble(),
+          restTime: null, // Not available in ExerciseActivitySet
+          tempo: null,
+          isDropSet: null,
+          isFailure: null,
+          notes: null,
+        );
+      }).toList();
+
+      // Calculate totals
+      double totalVolume = 0;
+      int totalReps = 0;
+      double maxWeight = 0;
+      double? totalRpe;
+      int rpeCount = 0;
+
+      for (final set in analyticsSets) {
+        totalVolume += set.weight * set.reps;
+        totalReps += set.reps;
+        if (set.weight > maxWeight) maxWeight = set.weight;
+        if (set.rpe != null) {
+          totalRpe = (totalRpe ?? 0) + set.rpe!;
+          rpeCount++;
+        }
+      }
+
+      final averageIntensity = rpeCount > 0 ? (totalRpe! / rpeCount) : null;
+
+      return AnalyticsActivity(
+        id: exercise.id,
+        userId: exercise.email,
+        date: exercise.createdAt,
+        exerciseId: exercise.exerciseId,
+        exerciseName: exercise.exerciseName,
+        muscleGroup: 'Unknown', // ExerciseActivity doesn't have muscle group
+        sets: analyticsSets,
+        totalVolume: totalVolume,
+        totalReps: totalReps,
+        maxWeight: maxWeight,
+        averageIntensity: averageIntensity,
+        duration: null, // Calculate if needed
+        workoutId: exercise.schedaName,
+        metadata: null,
+      );
+    }).toList();
   }
 }
 

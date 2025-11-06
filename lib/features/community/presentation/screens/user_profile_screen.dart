@@ -380,7 +380,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                 size: 64,
                 color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 'Nessun contributo',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(

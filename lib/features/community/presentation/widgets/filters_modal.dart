@@ -142,7 +142,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Wrap(
           spacing: 8,
           children: [
@@ -228,7 +228,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Wrap(
           spacing: 8,
           children: [
@@ -275,7 +275,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -296,7 +296,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
                 onClear: () => setState(() => _dateFrom = null),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _buildDateButton(
                 label: context.l10n.dateTo,
@@ -363,7 +363,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   date != null
                       ? '${date.day}/${date.month}/${date.year}'
@@ -414,7 +414,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
               child: Text(context.l10n.cancel),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: FilledButton(
               onPressed: _applyFilters,

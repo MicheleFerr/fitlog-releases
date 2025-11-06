@@ -117,7 +117,7 @@ class EnhancedEmptyState extends StatelessWidget {
             // Icona animata
             _buildAnimatedIcon(effectiveColor),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Titolo
             Text(
@@ -128,7 +128,7 @@ class EnhancedEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             // Descrizione
             Text(
@@ -223,7 +223,7 @@ class EnhancedEmptyState extends StatelessWidget {
               color: quoteColor,
               size: 24,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               motivationalQuote!,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -251,7 +251,7 @@ class EnhancedEmptyState extends StatelessWidget {
               color: Colors.amber,
               size: 20,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

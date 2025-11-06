@@ -94,7 +94,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Titolo
                 Text(
@@ -106,7 +106,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                   textAlign: TextAlign.center,
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Descrizione
                 Text(
@@ -117,7 +117,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                   textAlign: TextAlign.center,
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Pulsante di download
                 SizedBox(
@@ -151,7 +151,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // Note informative
                 Text(

@@ -72,7 +72,7 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Exercise History Debug'),
+        title: Text('Exercise History Debug'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Padding(
@@ -94,7 +94,7 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
             ] else ...[
               Card(
                 color: Theme.of(context).colorScheme.primaryContainer,
@@ -110,7 +110,7 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         userId,
                         style: TextStyle(
@@ -122,7 +122,7 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
             ],
             
             Text(
@@ -136,15 +136,15 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
               onPressed: _isRunning ? null : () => _runDebugFunction(() => ExerciseHistoryDebug.inspectHiveData(userId: userId)),
               child: const Text('Inspect All Hive Data'),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             
             // Test exercise name variations
             if (userId != null) ...[
               ElevatedButton(
                 onPressed: _isRunning ? null : () => _runDebugFunction(() => ExerciseHistoryDebug.testExerciseNameVariations(userId: userId)),
-                child: const Text('Test Exercise Name Variations'),
+                child: Text('Test Exercise Name Variations'),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               
               // Test specific exercise
               Text(
@@ -190,13 +190,13 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
               ),
             ],
             
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             
             if (_isRunning) ...[
-              const Center(
+              Center(
                 child: CircularProgressIndicator(),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 'Running debug function...\nCheck the console for detailed output.',
                 textAlign: TextAlign.center,
@@ -223,7 +223,7 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     '1. Open your device console/logs to see detailed output\n'
                     '2. Run "Inspect All Hive Data" to see all workout data\n'

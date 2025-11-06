@@ -78,9 +78,9 @@ Map<String, dynamic> _$$SetExecutionTimingImplToJson(
       'metadata': instance.metadata,
     };
 
-_$$SetTimingConfigImpl _$$$SetTimingConfigImplFromJson(
+_$$$SetTimingConfigImplImpl _$$$$SetTimingConfigImplImplFromJson(
         Map<String, dynamic> json) =>
-    _$$SetTimingConfigImpl(
+    _$$$SetTimingConfigImplImpl(
       mode: $enumDecode(_$TimingModeEnumMap, json['mode']),
       samplingRateHz: (json['samplingRateHz'] as num?)?.toInt() ?? 10,
       trackVelocity: json['trackVelocity'] as bool? ?? true,
@@ -98,8 +98,8 @@ _$$SetTimingConfigImpl _$$$SetTimingConfigImplFromJson(
       motionThresholdMs: (json['motionThresholdMs'] as num?)?.toInt() ?? 500,
     );
 
-Map<String, dynamic> _$$$SetTimingConfigImplToJson(
-        _$$SetTimingConfigImpl instance) =>
+Map<String, dynamic> _$$$$SetTimingConfigImplImplToJson(
+        _$$$SetTimingConfigImplImpl instance) =>
     <String, dynamic>{
       'mode': _$TimingModeEnumMap[instance.mode]!,
       'samplingRateHz': instance.samplingRateHz,
@@ -123,9 +123,9 @@ const _$TimingModeEnumMap = {
   TimingMode.rehabilitation: 'rehabilitation',
 };
 
-_$$LiveSetMetricsImpl _$$$LiveSetMetricsImplFromJson(
+_$$$LiveSetMetricsImplImpl _$$$$LiveSetMetricsImplImplFromJson(
         Map<String, dynamic> json) =>
-    _$$LiveSetMetricsImpl(
+    _$$$LiveSetMetricsImplImpl(
       setId: json['setId'] as String,
       phase: $enumDecode(_$SetPhaseEnumMap, json['phase']),
       elapsedMs: (json['elapsedMs'] as num).toInt(),
@@ -146,8 +146,8 @@ _$$LiveSetMetricsImpl _$$$LiveSetMetricsImplFromJson(
       timestamp: DateTime.parse(json['timestamp'] as String),
     );
 
-Map<String, dynamic> _$$$LiveSetMetricsImplToJson(
-        _$$LiveSetMetricsImpl instance) =>
+Map<String, dynamic> _$$$$LiveSetMetricsImplImplToJson(
+        _$$$LiveSetMetricsImplImpl instance) =>
     <String, dynamic>{
       'setId': instance.setId,
       'phase': _$SetPhaseEnumMap[instance.phase]!,

@@ -49,7 +49,7 @@ class _DemoProfilesFabState extends ConsumerState<DemoProfilesFab> {
     //             valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.onSecondary),
     //           ),
     //         )
-    //       : const Icon(AppIcons.science),
+    //       : Icon(AppIcons.science),
     //   label: Text(_isLoading ? 'Loading...' : 'Demo'),
     // );
   }

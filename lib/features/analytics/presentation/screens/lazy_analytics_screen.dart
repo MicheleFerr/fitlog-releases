@@ -93,7 +93,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         ),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -661,10 +661,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.lock, size: 64),
-            const SizedBox(height: 16),
+            Icon(AppIcons.lock, size: 64),
+            SizedBox(height: 16),
             Text(localizations.signInRequired),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => context.go('/auth'),
               child: Text(localizations.signIn),
@@ -698,10 +698,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.workout, size: 64),
-          const SizedBox(height: 16),
+          Icon(AppIcons.workout, size: 64),
+          SizedBox(height: 16),
           Text(localizations.noWorkoutsYet),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => context.go('/workout'),
             child: Text(localizations.startWorkout),

@@ -410,7 +410,7 @@ Icon(
   // MISC ICONS
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  static const search = IconMetadata(
+  static const searchIcon = IconMetadata(
     description: 'Search functionality',
     useCases: [
       'Exercise search',
@@ -505,7 +505,7 @@ Icon(
     AppIcons.pause: pause,
 
     // Misc
-    AppIcons.search: search,
+    AppIcons.search: searchIcon,
     AppIcons.filter: filter,
     AppIcons.share: share,
     AppIcons.cloudSync: cloudSync,

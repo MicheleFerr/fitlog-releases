@@ -90,7 +90,7 @@ class RepContinuumCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Strength Zone
           _buildZoneRow(
@@ -112,7 +112,7 @@ class RepContinuumCard extends StatelessWidget {
             theme.colorScheme.primary,
             l10n.hypertrophyZoneDesc,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Endurance Zone
           _buildZoneRow(
@@ -445,7 +445,7 @@ class RepContinuumCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
 
                     _buildFindingItem(
                       context,
@@ -453,14 +453,14 @@ class RepContinuumCard extends StatelessWidget {
                       Icons.fitness_center,
                       context.colors.error,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding2,
                       AppIcons.trendUp,
                       theme.colorScheme.primary,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding3,

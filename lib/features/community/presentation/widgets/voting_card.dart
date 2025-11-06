@@ -234,7 +234,7 @@ class _VotingCardState extends State<VotingCard>
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 if (widget.contribution.isFeatured)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
@@ -258,7 +258,7 @@ class _VotingCardState extends State<VotingCard>
                                           size: 10,
                                           color: context.colors.surface,
                                         ),
-                                        const SizedBox(width: 2),
+                                        SizedBox(width: 2),
                                         Text(
                                           'Featured',
                                           style: TextStyle(
@@ -391,7 +391,7 @@ class _VotingCardState extends State<VotingCard>
                             widget.onUpvote();
                           },
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(width: 16),
 
                         // Downvote button
                         _VoteButton(
@@ -624,7 +624,7 @@ class _DiffDisplay extends StatelessWidget {
               color: theme.colorScheme.error.withValues(alpha: 0.7),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Row(
             children: [
               Container(

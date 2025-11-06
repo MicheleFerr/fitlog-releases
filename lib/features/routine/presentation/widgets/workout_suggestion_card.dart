@@ -59,7 +59,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
                 _buildLevelBadge(context),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Main suggestion: Workout Name
             Container(
@@ -75,7 +75,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
                     size: 32,
                     color: context.colors.onPrimaryContainer,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +89,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
                         ),
                         // ✅ NEW: Show scheduled date if available
                         if (suggestion.scheduledDate != null) ...[
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             _formatScheduledDate(suggestion.scheduledDate!),
                             style: context.textTheme.bodyMedium?.copyWith(
@@ -104,11 +104,11 @@ class WorkoutSuggestionCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Confidence indicator
             _buildConfidenceBar(context),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Reason text
             Container(
@@ -125,7 +125,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
                     size: 20,
                     color: context.colors.onSurfaceVariant,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       suggestion.reason,
@@ -140,7 +140,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
 
             // Pattern info (if available)
             if (suggestion.patternInfo != null) ...[
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.only(left: 28),
                 child: Text(
@@ -153,7 +153,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
               ),
             ],
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Action buttons
             Row(
@@ -164,14 +164,14 @@ class WorkoutSuggestionCard extends StatelessWidget {
                     onPressed: onStartWorkout != null
                         ? () => onStartWorkout!(suggestion.workoutName)
                         : null,
-                    icon: const Icon(AppIcons.play),
+                    icon: Icon(AppIcons.play),
                     label: Text(context.l10n.startThisWorkout),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: OutlinedButton(
                     onPressed: onShowAlternatives,
@@ -189,7 +189,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
               Center(
                 child: TextButton.icon(
                   onPressed: onWhyThisSuggestion,
-                  icon: const Icon(AppIcons.help, size: 18),
+                  icon: Icon(AppIcons.help, size: 18),
                   label: Text(context.l10n.whyThisSuggestion),
                   style: TextButton.styleFrom(
                     textStyle: context.textTheme.bodySmall,
@@ -237,7 +237,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 16, color: textColor),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           Text(
             _getLevelDisplayName(context, suggestion.level),
             style: context.textTheme.labelSmall?.copyWith(
@@ -285,7 +285,7 @@ class WorkoutSuggestionCard extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
@@ -353,7 +353,7 @@ class WorkoutSuggestionEmptyState extends StatelessWidget {
               size: 64,
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               context.l10n.notEnoughWorkoutData,
               style: context.textTheme.titleMedium?.copyWith(
@@ -361,7 +361,7 @@ class WorkoutSuggestionEmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               context.l10n.completeWorkoutsForSuggestions,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -370,10 +370,10 @@ class WorkoutSuggestionEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (onCreateWorkout != null) ...[
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               FilledButton.icon(
                 onPressed: onCreateWorkout,
-                icon: const Icon(AppIcons.add),
+                icon: Icon(AppIcons.add),
                 label: Text(context.l10n.createWorkout),
               ),
             ],
@@ -400,7 +400,7 @@ class WorkoutSuggestionLoadingState extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const LoadingIndicator(),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(context.l10n.analyzingWorkoutPattern),
             ],
           ),

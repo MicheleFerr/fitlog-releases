@@ -37,7 +37,7 @@ class AdminStatsCard extends ConsumerWidget {
                   AppIcons.analytics,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.systemStatistics,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -94,7 +94,7 @@ class AdminStatsCard extends ConsumerWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -124,7 +124,7 @@ class AdminStatsCard extends ConsumerWidget {
           ],
         ),
         if (versionInfo != null) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _VersionInfoCard(versionInfo: versionInfo, l10n: l10n),
         ],
       ],
@@ -142,7 +142,7 @@ class AdminStatsCard extends ConsumerWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -171,7 +171,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -201,7 +201,7 @@ class AdminStatsCard extends ConsumerWidget {
     return Column(
       children: [
         const CircularProgressIndicator(),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(l10n.loadingStats),
       ],
     );
@@ -220,7 +220,7 @@ class AdminStatsCard extends ConsumerWidget {
             AppIcons.error,
             color: Theme.of(context).colorScheme.error,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +294,7 @@ class _StatItem extends StatelessWidget {
             color: color,
             size: 24,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             value,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -302,7 +302,7 @@ class _StatItem extends StatelessWidget {
               color: color,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             title,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -352,7 +352,7 @@ class _VersionInfoCard extends StatelessWidget {
                 size: 16,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 l10n.currentVersion,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

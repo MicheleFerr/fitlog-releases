@@ -151,6 +151,12 @@ class ScheduledDay with _$ScheduledDay {
 
     /// Notes for this day
     String? notes,
+
+    /// ✅ NEW: Is this a recovery for missed workout?
+    @Default(false) bool isRecovery,
+
+    /// ✅ NEW: Date of the original missed workout (for recovery tracking)
+    DateTime? originalMissedDate,
   }) = _ScheduledDay;
 
   factory ScheduledDay.fromJson(Map<String, dynamic> json) =>

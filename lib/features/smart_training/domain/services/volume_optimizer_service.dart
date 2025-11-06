@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_training_metrics.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_workout_template.dart';
 
 /// Service for optimizing training volume based on scientific principles
 class VolumeOptimizerService {
@@ -626,5 +627,5 @@ class MuscleGroupData {
 }
 
 enum TrainingGoal { hypertrophy, strength, endurance, maintenance }
-enum TrainingExperience { beginner, intermediate, advanced, expert }
+// TrainingExperience moved to shared location in smart_workout_template.dart
 enum VolumeAdjustmentType { increase, decrease, maintain }

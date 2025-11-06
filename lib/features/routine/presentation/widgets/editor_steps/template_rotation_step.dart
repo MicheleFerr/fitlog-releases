@@ -53,7 +53,7 @@ class TemplateRotationStep extends ConsumerWidget {
                 size: 64,
                 color: context.colors.primary.withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 context.l10n.routineNoTemplatesSelected,
                 style: context.textTheme.titleLarge?.copyWith(
@@ -62,7 +62,7 @@ class TemplateRotationStep extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 context.l10n.routineNoTemplatesMessage,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -79,7 +79,7 @@ class TemplateRotationStep extends ConsumerWidget {
     final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     return templatesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Text(
           context.l10n.routineErrorLoading(error.toString()),
@@ -127,7 +127,7 @@ class TemplateRotationStep extends ConsumerWidget {
               color: context.colors.onSurface,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             context.l10n.routineRotationSubtitle,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -135,7 +135,7 @@ class TemplateRotationStep extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Templates count info
           Row(
@@ -145,7 +145,7 @@ class TemplateRotationStep extends ConsumerWidget {
                 color: context.colors.primary,
                 size: 20,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 context.l10n.routineTemplatesSelected(selectedTemplates.length),
                 style: context.textTheme.titleMedium?.copyWith(
@@ -209,7 +209,7 @@ class TemplateRotationStep extends ConsumerWidget {
               AppIcons.dragHandle,
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             CircleAvatar(
               backgroundColor: context.colors.primaryContainer,
               child: Text(
@@ -304,7 +304,7 @@ class TemplateRotationStep extends ConsumerWidget {
                 color: context.colors.primary,
                 size: 20,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 context.l10n.routineDistributionPreview,
                 style: context.textTheme.titleSmall?.copyWith(
@@ -314,14 +314,14 @@ class TemplateRotationStep extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             context.l10n.routineFirstDaysPreview(distribution.length, totalDays),
             style: context.textTheme.bodySmall?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.6),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           ...distribution.map((day) {
             return Padding(
@@ -364,7 +364,7 @@ class TemplateRotationStep extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
 
                   // Template info
                   Expanded(
@@ -376,7 +376,7 @@ class TemplateRotationStep extends ConsumerWidget {
                                 size: 16,
                                 color: context.colors.secondary,
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6),
                               Text(
                                 context.l10n.routineRestDay,
                                 style: context.textTheme.bodyMedium?.copyWith(
@@ -393,7 +393,7 @@ class TemplateRotationStep extends ConsumerWidget {
                                 size: 16,
                                 color: context.colors.primary,
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   day.template!.name,
@@ -413,7 +413,7 @@ class TemplateRotationStep extends ConsumerWidget {
           }),
 
           if (totalDays > 10) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Center(
               child: Text(
                 context.l10n.routineMoreDays(totalDays - 10),

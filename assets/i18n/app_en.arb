@@ -16263,5 +16263,119 @@
   "tryAgain": "Try again",
   "@tryAgain": {
     "description": "Try again button"
+  },
+  "andMoreRecords": "and {count} more records",
+  "@andMoreRecords": {
+    "description": "Additional records count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "andXMore": "and {count} more",
+  "@andXMore": {
+    "description": "Additional items count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorDeleting": "Error deleting",
+  "@errorDeleting": {
+    "description": "Error message for delete failure"
+  },
+  "errorPickingImage": "Error picking image",
+  "@errorPickingImage": {
+    "description": "Error message for image picker failure"
+  },
+  "errorSharing": "Error sharing",
+  "@errorSharing": {
+    "description": "Error message for share failure"
+  },
+  "errorStartingWorkout": "Error starting workout",
+  "@errorStartingWorkout": {
+    "description": "Error message for workout start failure"
+  },
+  "exercisesCompleted": "{count} exercises completed",
+  "@exercisesCompleted": {
+    "description": "Number of completed exercises",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exportFailedError": "Export failed: {error}",
+  "@exportFailedError": {
+    "description": "Export failure error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "saveAndEndWorkout": "Save and end workout",
+  "@saveAndEndWorkout": {
+    "description": "Button to save and finish workout"
+  },
+  "saveError": "Error saving: {error}",
+  "@saveError": {
+    "description": "Save failure error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "superLikesRemaining": "{count} super likes remaining",
+  "@superLikesRemaining": {
+    "description": "Remaining super likes count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "templateLimitMessage": "You have reached the limit of {max} templates",
+  "@templateLimitMessage": {
+    "description": "Template limit reached message",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "trustScore": "Trust score: {score}",
+  "@trustScore": {
+    "description": "User trust score display",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "workoutStartedFromTemplate": "Workout started from template: {name}",
+  "@workoutStartedFromTemplate": {
+    "description": "Workout started message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "xpPoints": "{count} XP",
+  "@xpPoints": {
+    "description": "Experience points display",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "keepScreenOn": "Keep screen on",
+  "@keepScreenOn": {
+    "description": "Setting to keep screen on during workouts"
   }
 }

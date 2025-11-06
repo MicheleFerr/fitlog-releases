@@ -68,7 +68,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                 color: context.colors.tertiary,
                 size: 28,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +92,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Current days list
           if (customDays.isNotEmpty) ...[
@@ -103,9 +103,9 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                 color: context.colors.onSurface,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             _buildDaysList(customDays),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
 
           // Add day buttons
@@ -115,7 +115,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
             children: [
               ElevatedButton.icon(
                 onPressed: () => _showAddWorkoutDialog(context),
-                icon: const Icon(AppIcons.workout, size: 18),
+                icon: Icon(AppIcons.workout, size: 18),
                 label: Text(context.l10n.customPatternAddWorkout),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.primary,
@@ -128,7 +128,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
               ),
               OutlinedButton.icon(
                 onPressed: _addRestDay,
-                icon: const Icon(AppIcons.bed, size: 18),
+                icon: Icon(AppIcons.bed, size: 18),
                 label: Text(context.l10n.customPatternAddRest),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: context.colors.secondary),
@@ -184,7 +184,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                   AppIcons.dragHandle,
                   color: context.colors.onSurfaceVariant,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -242,7 +242,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
           return Column(
             children: [
               // Handle
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 width: 40,
                 height: 4,
@@ -251,7 +251,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Header
               Padding(
@@ -263,7 +263,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                       color: context.colors.primary,
                       size: 28,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         context.l10n.customPatternSelectTemplate,
@@ -288,7 +288,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                     final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
 
                     return templatesAsync.when(
-                      loading: () => const Center(
+                      loading: () => Center(
                         child: CircularProgressIndicator(),
                       ),
                       error: (error, stack) => Center(
@@ -308,7 +308,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                                   size: 64,
                                   color: context.colors.onSurface.withValues(alpha: 0.3),
                                 ),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16),
                                 Text(
                                   context.l10n.customPatternNoTemplates,
                                   style: context.textTheme.bodyLarge?.copyWith(
@@ -380,7 +380,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                   size: 24,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               // Info
               Expanded(
@@ -393,7 +393,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(
@@ -401,7 +401,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                           size: 14,
                           color: context.colors.onSurface.withValues(alpha: 0.6),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           '${template.exercises.length} ${context.l10n.exercises}',
                           style: context.textTheme.bodySmall?.copyWith(
@@ -409,13 +409,13 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                           ),
                         ),
                         if (template.estimatedDuration > 0) ...[
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Icon(
                             AppIcons.schedule,
                             size: 14,
                             color: context.colors.onSurface.withValues(alpha: 0.6),
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             '${template.estimatedDuration} min',
                             style: context.textTheme.bodySmall?.copyWith(

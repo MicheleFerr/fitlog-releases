@@ -200,7 +200,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +301,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
             color: isImproving ? context.colors.success : context.colors.secondary,
             size: 16,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             isImproving ? 'Improving' : 'Steady',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -330,7 +330,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: color, size: 16),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -452,7 +452,7 @@ class GoalProgressWidget extends StatelessWidget {
                     size: 24,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -487,7 +487,7 @@ class GoalProgressWidget extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             EnhancedProgressRing(
               progress: progress,
               size: 100,
@@ -547,7 +547,7 @@ class WeeklyProgressSummary extends StatelessWidget {
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.weeklyProgress,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(

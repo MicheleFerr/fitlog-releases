@@ -37,12 +37,12 @@ class PRTimelineWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.emoji_events,
                   color: context.colors.warning,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.personalRecords,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -112,7 +112,7 @@ class PRTimelineWidget extends StatelessWidget {
                 size: 16,
                 color: isNew ? context.colors.warning : colorScheme.primary,
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Expanded(
                 child: Text(
                   _getPRTypeLabel(pr.type),
@@ -129,7 +129,7 @@ class PRTimelineWidget extends StatelessWidget {
                     color: context.colors.warning,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Text(
+                  child: Text(
                     'NEW',
                     style: TextStyle(
                       fontSize: 8,
@@ -140,7 +140,7 @@ class PRTimelineWidget extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             pr.exerciseName,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -149,7 +149,7 @@ class PRTimelineWidget extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             _getFormattedValue(pr),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -157,7 +157,7 @@ class PRTimelineWidget extends StatelessWidget {
               color: colorScheme.primary,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Row(
             children: [
               Text(
@@ -167,15 +167,15 @@ class PRTimelineWidget extends StatelessWidget {
                 ),
               ),
               if (pr.isSignificant) ...[
-                const SizedBox(width: 4),
-                const Icon(
+                SizedBox(width: 4),
+                Icon(
                   AppIcons.trendUp,
                   size: 12,
                   color: context.colors.success,
                 ),
                 Text(
                   '+${pr.improvementPercentage.toStringAsFixed(1)}%',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     color: context.colors.success,
                     fontWeight: FontWeight.bold,
@@ -201,7 +201,7 @@ class PRTimelineWidget extends StatelessWidget {
                 size: 48,
                 color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 localizations.noPRsYet,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(

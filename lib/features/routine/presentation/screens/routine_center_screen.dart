@@ -103,7 +103,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
         backgroundColor: context.colors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () async {
             // First try Navigator pop (for internal navigation like detail screens)
             final didPop = await Navigator.of(context).maybePop();
@@ -123,7 +123,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           // Create new routine button
           IconButton(
             onPressed: () => _navigateToCreateRoutine(context),
-            icon: const Icon(AppIcons.addCircleOutline),
+            icon: Icon(AppIcons.addCircleOutline),
             color: context.colors.primary,
             iconSize: 28,
             tooltip: 'Create New Routine',
@@ -293,7 +293,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
       child: Row(
         children: [
           Icon(icon, color: color, size: 24),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             title,
             style: context.textTheme.titleMedium?.copyWith(
@@ -319,7 +319,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               size: 80,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Text(
               'No Routines Yet',
               style: context.textTheme.titleLarge?.copyWith(
@@ -328,7 +328,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               'Create your first flexible routine to start tracking your fitness journey with multi-period planning and smart skip recovery.',
               style: context.textTheme.bodyLarge?.copyWith(
@@ -336,7 +336,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: () => _navigateToCreateRoutine(context),
               icon: Icon(AppIcons.add, color: context.colors.onPrimary),
@@ -358,7 +358,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Choose from popular patterns or create your own custom schedule',
               style: context.textTheme.bodySmall?.copyWith(
@@ -391,7 +391,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               size: 64,
               color: context.colors.error,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Error loading routines',
               style: context.textTheme.titleMedium?.copyWith(
@@ -399,7 +399,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               errorMessage,
               style: context.textTheme.bodySmall,
@@ -407,7 +407,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () async {
                 // First try Navigator pop (for internal navigation)
@@ -422,8 +422,8 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                   }
                 }
               },
-              icon: const Icon(AppIcons.back),
-              label: const Text('Go Back'),
+              icon: Icon(AppIcons.back),
+              label: Text('Go Back'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
@@ -663,7 +663,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Why This Suggestion?'),
+                title: Text('Why This Suggestion?'),
                 content: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -675,13 +675,13 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Text(
                         suggestion.reason,
                         style: context.textTheme.bodyMedium,
                       ),
                       if (suggestion.patternInfo != null) ...[
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Text(
                           suggestion.patternInfo!,
                           style: context.textTheme.bodySmall?.copyWith(
@@ -690,7 +690,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                         ),
                       ],
                       if (suggestion.frequencyData != null) ...[
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Text(
                           suggestion.frequencyData!,
                           style: context.textTheme.bodySmall?.copyWith(
@@ -698,7 +698,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                           ),
                         ),
                       ],
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       Text(
                         'Confidence: ${suggestion.displayConfidence}',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -801,7 +801,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                         size: 28,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -813,7 +813,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                               color: context.colors.onSecondaryContainer,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             skippedCount == 1
                                 ? '$skippedCount day to recover'

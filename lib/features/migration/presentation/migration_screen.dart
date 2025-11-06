@@ -61,11 +61,11 @@ class MigrationScreen extends ConsumerWidget {
                   // Progress
                   if (migrationState.isLoading) ...[
                     _buildProgressCard(context, migrationState),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                   ],
 
                   // Extra space at bottom for action buttons
-                  const SizedBox(height: 120),
+                  SizedBox(height: 120),
                 ],
               ),
             ),
@@ -108,7 +108,7 @@ class MigrationScreen extends ConsumerWidget {
                   color: colorScheme.onPrimaryContainer,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.dataMigration,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -117,14 +117,14 @@ class MigrationScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               l10n.dataMigrationDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onPrimaryContainer,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             if (!state.hasDataToMigrate && !state.isLoading)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -163,7 +163,7 @@ class MigrationScreen extends ConsumerWidget {
               l10n.migrationOptions,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Time window option
             Row(
@@ -292,7 +292,7 @@ class MigrationScreen extends ConsumerWidget {
 
             // Errors
             if (result.errors.isNotEmpty) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -308,7 +308,7 @@ class MigrationScreen extends ConsumerWidget {
                         color: colorScheme.onErrorContainer,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     ...result.errors.map((error) => Text(
                       '• $error',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -322,7 +322,7 @@ class MigrationScreen extends ConsumerWidget {
 
             // Workout groups preview
             if (result.workoutGroups.isNotEmpty && state.status == MigrationStatus.analyzed) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 l10n.workoutGroupsPreview,
                 style: Theme.of(context).textTheme.labelLarge,
@@ -376,12 +376,12 @@ class MigrationScreen extends ConsumerWidget {
                 : l10n.migrating,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             LinearProgressIndicator(
               value: state.progress,
               backgroundColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             if (state.currentMessage != null)
               Text(
                 state.currentMessage!,
@@ -417,7 +417,7 @@ class MigrationScreen extends ConsumerWidget {
             size: 16,
             color: color ?? defaultColor,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Text(
               label,
@@ -485,14 +485,14 @@ class MigrationScreen extends ConsumerWidget {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () => notifier.reset(),
-              icon: const Icon(AppIcons.refresh),
+              icon: Icon(AppIcons.refresh),
               label: Text(l10n.reset),
             ),
           ),
         ],
 
         // Back button
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
           child: TextButton(

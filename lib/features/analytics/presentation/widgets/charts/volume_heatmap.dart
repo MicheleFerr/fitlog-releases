@@ -30,7 +30,7 @@ class VolumeHeatmap extends StatelessWidget {
                   Icons.calendar_month,
                   color: context.colors.secondary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Volume Heatmap',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -39,7 +39,7 @@ class VolumeHeatmap extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Container(
               height: 200,
               alignment: Alignment.center,
@@ -55,14 +55,14 @@ class VolumeHeatmap extends StatelessWidget {
                     size: 48,
                     color: context.colors.onSurface.withValues(alpha: 0.3),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     'Heatmap implementation coming soon',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     '${activities.length} activities loaded',
                     style: context.textTheme.bodySmall?.copyWith(

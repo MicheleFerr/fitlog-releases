@@ -172,7 +172,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             
             // Titolo
             Padding(
@@ -183,7 +183,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                     widget.icon,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     widget.label,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -193,7 +193,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             
             // Opzione principale (azione normale)
             ListTile(
@@ -210,7 +210,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 ),
               ),
               title: Text(widget.label),
-              subtitle: const Text('Azione principale'),
+              subtitle: Text('Azione principale'),
               onTap: () {
                 Navigator.of(context).pop();
                 widget.onPressed();
@@ -233,7 +233,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   ),
                 ),
                 title: const Text('Storico'),
-                subtitle: const Text('Visualizza workout precedenti'),
+                subtitle: Text('Visualizza workout precedenti'),
                 onTap: () {
                   Navigator.of(context).pop();
                   widget.onShowHistory!();
@@ -263,7 +263,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               )),
             
             // Informazione drag
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               padding: const EdgeInsets.all(12),
@@ -281,7 +281,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                     size: 18,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Trascina il pulsante per spostarlo',
@@ -294,7 +294,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
         ),
       ),

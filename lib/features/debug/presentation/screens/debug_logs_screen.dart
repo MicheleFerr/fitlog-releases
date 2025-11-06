@@ -76,7 +76,7 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
             onPressed: _shareLogs,
           ),
           IconButton(
-            icon: const Icon(AppIcons.delete),
+            icon: Icon(AppIcons.delete),
             onPressed: _clearLogs,
           ),
         ],

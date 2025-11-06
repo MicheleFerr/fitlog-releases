@@ -15,6 +15,7 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
 
 part 'buddy_preferences.freezed.dart';
 part 'buddy_preferences.g.dart';
@@ -67,39 +68,7 @@ enum WorkoutGoal {
   }
 }
 
-/// Matching purpose enum for multi-purpose matching
-enum MatchingPurpose {
-  workoutPartner,
-  gymBuddy,
-  both,
-  openToEverything;
-
-  String get displayName {
-    switch (this) {
-      case MatchingPurpose.workoutPartner:
-        return 'Workout Partner';
-      case MatchingPurpose.gymBuddy:
-        return 'Gym Buddy';
-      case MatchingPurpose.both:
-        return 'Entrambi';
-      case MatchingPurpose.openToEverything:
-        return 'Aperto a tutto';
-    }
-  }
-
-  String get emoji {
-    switch (this) {
-      case MatchingPurpose.workoutPartner:
-        return '💪';
-      case MatchingPurpose.gymBuddy:
-        return '🤝';
-      case MatchingPurpose.both:
-        return '💪🤝';
-      case MatchingPurpose.openToEverything:
-        return '❤️';
-    }
-  }
-}
+// MatchingPurpose enum moved to matching_purpose.dart to avoid duplication
 
 /// Time preferences for workouts
 enum PreferredTime {

@@ -140,7 +140,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   exercise.attrezzatura,
                   style: Theme.of(context).textTheme.bodySmall,
@@ -153,7 +153,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
             ? (isSelected
                 ? Icon(AppIcons.complete,
                     color: Theme.of(context).colorScheme.primary)
-                : const Icon(AppIcons.radioButtonUnchecked))
+                : Icon(AppIcons.radioButtonUnchecked))
             : null,
         onTap: () => widget.config.strategy.onExerciseTap(context, exercise),
       ),
@@ -164,7 +164,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
     if (isSelected && widget.config.strategy.showSelectionIndicator) {
       return CircleAvatar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(AppIcons.check, color: Colors.white),
+        child: Icon(AppIcons.check, color: Colors.white),
       );
     }
 
@@ -235,12 +235,12 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
             size: 64,
             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             l10n.noExercisesFound,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             l10n.tryModifyingFilters,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(

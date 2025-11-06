@@ -83,7 +83,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
   void _showReportConfirmation() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Utente segnalato. Grazie per aver reso GymBro più sicuro.'),
+        content: Text('Utente segnalato. Grazie per aver reso GymBro più sicuro.'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         action: SnackBarAction(
           label: 'OK',
@@ -141,7 +141,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
                         ? Icon(AppIcons.person, color: colorScheme.onSurfaceVariant)
                         : null,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +165,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Reason selection
             Text(
@@ -202,7 +202,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
               ),
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Optional description
             Text(
@@ -250,7 +250,7 @@ class _ReportUserDialogState extends ConsumerState<ReportUserDialog> {
                     color: colorScheme.onErrorContainer,
                     size: 20,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Le segnalazioni false possono comportare la sospensione del tuo account.',
@@ -379,7 +379,7 @@ class BlockUserDialog extends ConsumerWidget {
                       ? Icon(AppIcons.person, color: colorScheme.onSurfaceVariant)
                       : null,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,7 +403,7 @@ class BlockUserDialog extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           Text(
             'Sei sicuro di voler bloccare questo utente? Potrai sbloccare in seguito dalle impostazioni.',

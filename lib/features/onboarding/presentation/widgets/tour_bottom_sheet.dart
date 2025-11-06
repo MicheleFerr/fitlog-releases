@@ -62,7 +62,7 @@ class TourBottomSheet extends ConsumerWidget {
                   current: step.position + 1,
                   total: step.totalSteps,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Title
                 Text(
@@ -72,7 +72,7 @@ class TourBottomSheet extends ConsumerWidget {
                     color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Description
                 Text(
@@ -85,7 +85,7 @@ class TourBottomSheet extends ConsumerWidget {
 
                 // Bullet points (for COMPLEX steps only)
                 if (step.hasBulletPoints) ...[
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   ...step.bulletPointKeys.map(
                     (key) => Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -152,7 +152,7 @@ class TourBottomSheet extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
 
                     // Skip tour button (hidden on last step)
                     if (!(usesManager ? manager!.isLastStep : tourState!.isLastStep))
@@ -251,7 +251,7 @@ class _ProgressIndicator extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
 
         // Progress bar
         Expanded(
@@ -317,14 +317,14 @@ class _AutoAdvanceIndicatorState extends State<_AutoAdvanceIndicator>
               size: AppIconSize.small,
               color: context.colors.primary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               context.l10n.autoAdvanceIn(remaining),
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2),

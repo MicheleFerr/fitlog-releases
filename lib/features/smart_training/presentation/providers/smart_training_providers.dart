@@ -7,7 +7,7 @@ import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart
 import 'package:gymbro_flutter_new/features/smart_training/domain/services/progressive_overload_engine.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/services/deload_detection_service.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/services/plateau_breaker_service.dart';
-import 'package:gymbro_flutter_new/features/smart_training/domain/services/volume_optimizer_service.dart';
+import 'package:gymbro_flutter_new/features/smart_training/domain/services/volume_optimizer_service.dart' hide TrainingExperience;
 import 'package:gymbro_flutter_new/features/smart_training/domain/services/smart_workout_templates_service.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/services/smart_suggestions_engine.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -54,13 +54,15 @@ class SmartTrainingMetricsNotifier extends StateNotifier<AsyncValue<List<SmartTr
       int validSets = 0;
 
       for (final set in exercise.sets.where((s) => s.isCompleted && !s.isWarmup)) {
-        final volume = set.weight * (set.actualReps ?? set.reps);
+        final weight = set.weight ?? 0.0;
+        final reps = (set.actualReps ?? set.reps) ?? 0;
+        final volume = weight * reps;
         exerciseVolume += volume;
         totalVolume += volume;
         totalSets++;
-        totalReps += (set.actualReps ?? set.reps);
+        totalReps += reps;
 
-        if (set.weight > maxWeight) maxWeight = set.weight;
+        if (weight > maxWeight) maxWeight = weight;
         if (set.rpe != null) {
           avgRPE += set.rpe!;
           validSets++;
@@ -68,19 +70,19 @@ class SmartTrainingMetricsNotifier extends StateNotifier<AsyncValue<List<SmartTr
 
         // Calculate 1RM for intensity
         final oneRM = ProgressiveOverloadEngine.calculateOneRM(
-          set.weight, 
-          set.actualReps ?? set.reps,
+          weight,
+          reps,
           rpe: set.rpe,
         );
 
         setMetrics.add(SetMetrics(
           setNumber: set.setNumber,
-          weight: set.weight,
-          targetReps: set.reps,
-          actualReps: set.actualReps ?? set.reps,
+          weight: weight,
+          targetReps: set.reps ?? 0,
+          actualReps: reps,
           rpe: set.rpe ?? 7,
           estimatedOneRM: oneRM,
-          intensityPercent: set.weight / oneRM * 100,
+          intensityPercent: weight / oneRM * 100,
           volume: volume,
           isWarmup: set.isWarmup,
         ));

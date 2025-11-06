@@ -53,7 +53,7 @@ class CorrectionReviewCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Row(
                         children: [
                           Icon(
@@ -61,20 +61,20 @@ class CorrectionReviewCard extends StatelessWidget {
                             size: 16,
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             correction.userName,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Icon(
                             AppIcons.clock,
                             size: 16,
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             _formatDate(correction.createdAt),
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -90,7 +90,7 @@ class CorrectionReviewCard extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Tipo di correzione
             Container(
@@ -108,7 +108,7 @@ class CorrectionReviewCard extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Valori proposti
             if (correction.originalValue != null || correction.suggestedValue != null)
@@ -129,12 +129,12 @@ class CorrectionReviewCard extends StatelessWidget {
                           color: Theme.of(context).colorScheme.error,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         correction.originalValue!,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                     ],
                     if (correction.suggestedValue != null) ...[
                       Text(
@@ -144,7 +144,7 @@ class CorrectionReviewCard extends StatelessWidget {
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         correction.suggestedValue!,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -158,14 +158,14 @@ class CorrectionReviewCard extends StatelessWidget {
 
             // Descrizione se presente
             if (correction.description.isNotEmpty) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 l10n.description,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 correction.description,
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -176,7 +176,7 @@ class CorrectionReviewCard extends StatelessWidget {
 
             // Motivo rifiuto se presente
             if (correction.status == ContributionStatus.rejected && correction.reviewNote != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -193,7 +193,7 @@ class CorrectionReviewCard extends StatelessWidget {
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       correction.reviewNote!,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -205,24 +205,24 @@ class CorrectionReviewCard extends StatelessWidget {
 
             // Azioni (solo per correzioni pending)
             if (isPending && onAction != null) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => onAction!(CorrectionAction.view),
-                      icon: const Icon(AppIcons.visibility),
+                      icon: Icon(AppIcons.visibility),
                       label: Text(l10n.viewDetails),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () => onAction!(CorrectionAction.approve),
-                      icon: const Icon(AppIcons.check),
+                      icon: Icon(AppIcons.check),
                       label: Text(l10n.approve),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: context.colors.success,
@@ -230,11 +230,11 @@ class CorrectionReviewCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () => onAction!(CorrectionAction.reject),
-                      icon: const Icon(AppIcons.close),
+                      icon: Icon(AppIcons.close),
                       label: Text(l10n.reject),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.error,
@@ -248,7 +248,7 @@ class CorrectionReviewCard extends StatelessWidget {
 
             // Info di review se già revisionata
             if (!isPending && correction.reviewedAt != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -262,7 +262,7 @@ class CorrectionReviewCard extends StatelessWidget {
                       size: 16,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       '${l10n.reviewedBy}: ${correction.reviewedBy ?? "Admin"} • ${_formatDate(correction.reviewedAt!)}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -317,7 +317,7 @@ class CorrectionReviewCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 16, color: color),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(

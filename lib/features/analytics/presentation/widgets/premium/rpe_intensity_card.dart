@@ -138,7 +138,7 @@ class RPEIntensityCard extends StatelessWidget {
             );
           }),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Scientific Reference
           _buildScientificReference(context),
@@ -251,7 +251,7 @@ class RPEIntensityCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Legend
         Wrap(
@@ -612,7 +612,7 @@ class RPEIntensityCard extends StatelessWidget {
         title: Row(
           children: [
             Icon(AppIcons.info, color: theme.colorScheme.primary),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(l10n.rpeInfoTitle),
           ],
         ),
@@ -625,7 +625,7 @@ class RPEIntensityCard extends StatelessWidget {
                 l10n.rpeInfoDescription,
                 style: theme.textTheme.bodyMedium,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _buildRPEExplanationRow(l10n.rpeScale5_6, l10n.rpeScale5_6Desc, context.successColor),
               _buildRPEExplanationRow(l10n.rpeScale7, l10n.rpeScale7Desc, context.infoColor),
               _buildRPEExplanationRow(l10n.rpeScale8, l10n.rpeScale8Desc, context.warningColor),

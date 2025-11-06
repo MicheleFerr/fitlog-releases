@@ -75,7 +75,7 @@ class WorkoutSelectorCard extends StatelessWidget {
               size: AppIconSize.large,
               color: context.colors.primary,
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
 
             // Content: Name + metadata
             Expanded(
@@ -88,7 +88,7 @@ class WorkoutSelectorCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     _buildMetadataText(context),
                     style: context.textTheme.bodySmall?.copyWith(
@@ -155,7 +155,7 @@ class WorkoutSelectorCard extends StatelessWidget {
             size: AppIconSize.small,
             color: context.colors.success,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             context.l10n.match,
             style: context.textTheme.labelSmall?.copyWith(
@@ -184,7 +184,7 @@ class WorkoutSelectorCard extends StatelessWidget {
             size: AppIconSize.small,
             color: context.colors.warning,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             '${context.l10n.linkedTo} ${linkedDate != null ? DateFormat.MMMd(Localizations.localeOf(context).toString()).format(linkedDate!) : ''}',
             style: context.textTheme.labelSmall?.copyWith(

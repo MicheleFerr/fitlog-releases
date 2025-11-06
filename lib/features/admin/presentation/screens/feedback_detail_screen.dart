@@ -191,7 +191,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Message Card
             Card(
@@ -207,7 +207,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                           size: 20,
                           color: context.colors.primary,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           l10n.feedbackDetailUserMessage,
                           style: context.textTheme.titleMedium?.copyWith(
@@ -216,7 +216,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Text(
                       widget.feedback.message,
                       style: context.textTheme.bodyLarge,
@@ -225,7 +225,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Admin Notes Card
             Card(
@@ -241,7 +241,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                           size: 20,
                           color: context.colors.secondary,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           l10n.feedbackDetailAdminNotes,
                           style: context.textTheme.titleMedium?.copyWith(
@@ -273,7 +273,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                                 height: 16,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : const Icon(AppIcons.save),
+                            : Icon(AppIcons.save),
                         label: Text(l10n.feedbackDetailSaveNotes),
                       ),
                     ),
@@ -281,7 +281,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Actions Section
             Text(
@@ -331,7 +331,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Severity Actions
             Text(
@@ -401,7 +401,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
     return Row(
       children: [
         Icon(icon, size: 16, color: context.colors.onSurfaceVariant),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           '$label: ',
           style: context.textTheme.bodySmall?.copyWith(

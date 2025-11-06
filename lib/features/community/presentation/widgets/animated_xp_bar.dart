@@ -273,7 +273,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                         color: context.colors.surface,
                         size: 24,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         '+${widget.xpGained} XP',
                         style: TextStyle(
@@ -454,7 +454,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Container(
                         height: 20,
                         decoration: BoxDecoration(

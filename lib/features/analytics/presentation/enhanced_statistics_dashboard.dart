@@ -310,7 +310,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary,
                   size: 28,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.progressTracking,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -385,7 +385,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
             size: 120,
             color: Colors.grey.withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Text(
             localizations.noWorkoutData,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -547,7 +547,7 @@ class _StatisticsFilterDialogState extends State<StatisticsFilterDialog> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               localizations.muscleGroups,
               style: Theme.of(context).textTheme.titleMedium,

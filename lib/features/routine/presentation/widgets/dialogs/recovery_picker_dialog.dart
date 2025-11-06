@@ -94,7 +94,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       size: 24,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,7 +106,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                             color: context.colors.onSurface,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           'From ${_formatDate(widget.originalDate)}',
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -119,7 +119,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 ],
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Info message
               Container(
@@ -138,7 +138,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       color: context.colors.primary,
                       size: 20,
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Select a future date to make up for this missed workout. Choose a rest day or add an extra session.',
@@ -151,12 +151,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Suggested dates section
               _buildSuggestedDates(),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Calendar
               Text(
@@ -166,7 +166,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   color: context.colors.onSurface,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               DecoratedBox(
                 decoration: BoxDecoration(
@@ -211,7 +211,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
 
               // Validation error
               if (_validationError != null) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -225,7 +225,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         color: context.colors.error,
                         size: 20,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           _validationError!,
@@ -245,7 +245,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
               if (_selectedDay != null && _validationError == null)
                 _buildImpactPreview(),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
 
               // Actions
               Row(
@@ -258,7 +258,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       style: TextStyle(color: context.colors.onSurface),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: (_selectedDay == null || _validationError != null)
                         ? null
@@ -302,7 +302,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
             color: context.colors.onSurface,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -331,7 +331,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       size: 16,
                       color: isSelected ? context.colors.surface : context.colors.primary,
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Text(
                       _formatDateShort(date),
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -339,7 +339,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4),
                     Text(
                       '(Rest day)',
                       style: context.textTheme.bodySmall?.copyWith(
@@ -409,7 +409,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 color: context.colors.primary,
                 size: 20,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Recovery impact',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -451,7 +451,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           size: 18,
           color: context.colors.onSurface.withValues(alpha: 0.7),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
@@ -466,7 +466,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
             size: 14,
             color: context.colors.primary,
           ),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Text(
           value,
           style: context.textTheme.bodySmall?.copyWith(

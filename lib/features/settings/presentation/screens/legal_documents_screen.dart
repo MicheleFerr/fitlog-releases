@@ -40,7 +40,7 @@ class LegalDocumentsScreen extends StatelessWidget {
             ),
             title: Text(context.l10n.privacyPolicy),
             subtitle: Text(context.l10n.privacyPolicySubtitle),
-            trailing: const Icon(
+            trailing: Icon(
               AppIcons.chevronRight,
               size: AppIconSize.small,
             ),
@@ -55,7 +55,7 @@ class LegalDocumentsScreen extends StatelessWidget {
             ),
             title: Text(context.l10n.termsOfService),
             subtitle: Text(context.l10n.tosSubtitle),
-            trailing: const Icon(
+            trailing: Icon(
               AppIcons.chevronRight,
               size: AppIconSize.small,
             ),

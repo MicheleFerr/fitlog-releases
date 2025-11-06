@@ -143,7 +143,7 @@ class VerificationBadges extends ConsumerWidget {
             size: 16,
             color: color,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             text,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -232,7 +232,7 @@ class TrustScoreIndicator extends ConsumerWidget {
               color: color,
             ),
             if (showText) ...[
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 l10n.trustScore(trustScore.round()),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -326,7 +326,7 @@ class ConnectionTypeBadges extends ConsumerWidget {
             style: TextStyle(fontSize: compact ? 12 : 14),
           ),
           if (text.isNotEmpty && !compact) ...[
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text(
               text,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(

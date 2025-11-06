@@ -422,10 +422,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.error, size: 64),
-            const SizedBox(height: 16),
+            Icon(AppIcons.error, size: 64),
+            SizedBox(height: 16),
             Text('Page not found: ${state.fullPath ?? state.path ?? 'Unknown'}'),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => context.goNamed('home'),
               child: const Text('Go Home'),

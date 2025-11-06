@@ -292,7 +292,7 @@ class _SwapConfirmationDialog extends StatelessWidget {
               context.l10n.swapDaysDescription,
               style: context.textTheme.bodyMedium,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             // Today's scheduled day
             Container(
               padding: const EdgeInsets.all(12),
@@ -310,7 +310,7 @@ class _SwapConfirmationDialog extends StatelessWidget {
                       color: context.colors.primary,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     swapOpportunity.todayScheduledDay.templateId ?? 'N/A',
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -320,7 +320,7 @@ class _SwapConfirmationDialog extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Center(
               child: Text(
                 '↔',
@@ -329,7 +329,7 @@ class _SwapConfirmationDialog extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             // Future scheduled day
             Container(
               padding: const EdgeInsets.all(12),
@@ -347,7 +347,7 @@ class _SwapConfirmationDialog extends StatelessWidget {
                       color: context.colors.secondary,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     swapOpportunity.futureScheduledDay.templateId ?? 'N/A',
                     style: context.textTheme.bodyMedium?.copyWith(

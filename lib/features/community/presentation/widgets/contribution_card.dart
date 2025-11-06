@@ -47,14 +47,14 @@ class ContributionCard extends ConsumerWidget {
               Row(
                 children: [
                   _buildTypeBadge(context),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   _buildDifficultyBadge(context),
                   const Spacer(),
                   _buildAuthorInfo(context),
                 ],
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               // Title
               Text(
@@ -66,7 +66,7 @@ class ContributionCard extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
 
               // Description preview
               Text(
@@ -78,7 +78,7 @@ class ContributionCard extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
 
               // Footer: Stats + Save button
               Row(
@@ -90,13 +90,13 @@ class ContributionCard extends ConsumerWidget {
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Text(
                     contribution.upvotes.toString(),
                     style: context.textTheme.bodySmall,
                   ),
 
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
 
                   // Comments
                   SemanticIcon(
@@ -105,13 +105,13 @@ class ContributionCard extends ConsumerWidget {
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Text(
                     contribution.comments.length.toString(),
                     style: context.textTheme.bodySmall,
                   ),
 
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
 
                   // Saves
                   SemanticIcon(
@@ -120,7 +120,7 @@ class ContributionCard extends ConsumerWidget {
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Text(
                     contribution.saves.toString(),
                     style: context.textTheme.bodySmall,
@@ -136,7 +136,7 @@ class ContributionCard extends ConsumerWidget {
                     ),
                   ),
 
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
 
                   // Save button
                   IconButton(
@@ -226,7 +226,7 @@ class ContributionCard extends ConsumerWidget {
               ),
             ),
           ),
-        const SizedBox(width: 6),
+        SizedBox(width: 6),
         Text(
           contribution.userName,
           style: context.textTheme.bodySmall?.copyWith(

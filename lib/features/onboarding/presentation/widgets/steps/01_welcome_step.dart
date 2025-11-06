@@ -275,7 +275,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                 l10n.onboardingWelcomeFeature2Description,
                 colorScheme.secondary,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               _buildAnimatedFeature(
                 2,
                 AppIcons.workout,
@@ -283,7 +283,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                 l10n.onboardingWelcomeFeature3Description,
                 colorScheme.tertiary,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               _buildAnimatedFeature(
                 3,
                 AppIcons.rocket,
@@ -342,7 +342,7 @@ class _WelcomeStepState extends State<WelcomeStep>
             },
           ),
 
-          const SizedBox(height: 60), // Bottom padding per scrolling completo
+          SizedBox(height: 60), // Bottom padding per scrolling completo
         ],
       ),
     );

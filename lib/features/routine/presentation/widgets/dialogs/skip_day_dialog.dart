@@ -108,7 +108,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                         size: 24,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +120,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                               color: context.colors.onSurface,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             _formatDate(widget.date),
                             style: context.textTheme.bodyMedium?.copyWith(
@@ -133,7 +133,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Warning for consecutive skips
                 if (isConsecutiveSkip) ...[
@@ -153,7 +153,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                           color: context.colors.secondary,
                           size: 24,
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             'You have ${widget.routine.skipTracker.currentSkipStreak} consecutive skip(s). Consider recovering them to maintain consistency.',
@@ -165,7 +165,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
 
                 // Reason selection
@@ -176,7 +176,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Reason chips
                 Wrap(
@@ -185,7 +185,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   children: _buildReasonChips(),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
 
                 // Optional note
                 Text(
@@ -195,7 +195,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 TextFormField(
                   controller: _noteController,
                   maxLines: 3,
@@ -216,7 +216,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                 // Impact preview
                 _buildImpactPreview(),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Actions
                 Row(
@@ -229,7 +229,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                         style: TextStyle(color: context.colors.onSurface),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     ElevatedButton(
                       onPressed: _selectedReason == null ? null : _confirmSkip,
                       style: ElevatedButton.styleFrom(
@@ -280,7 +280,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   ? context.colors.onPrimary
                   : context.colors.onSurface.withValues(alpha: 0.7),
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(reason.$3),
           ],
         ),
@@ -331,7 +331,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                 size: 20,
                 color: context.colors.primary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Impact on your progress',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -376,7 +376,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           size: 18,
           color: context.colors.onSurface.withValues(alpha: 0.7),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
@@ -393,13 +393,13 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           ),
         ),
         if (change != null) ...[
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Icon(
             isNegative ? AppIcons.arrowDownward : AppIcons.arrowUpward,
             size: 14,
             color: isNegative ? context.colors.error : context.colors.success,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             change,
             style: context.textTheme.bodySmall?.copyWith(

@@ -110,7 +110,7 @@ class _CityPickerWidgetState extends ConsumerState<CityPickerWidget> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           
           // Title
           Padding(

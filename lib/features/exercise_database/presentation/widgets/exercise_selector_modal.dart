@@ -72,8 +72,8 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
       ),
       child: Row(
         children: [
-          const Icon(AppIcons.workout),
-          const SizedBox(width: 12),
+          Icon(AppIcons.workout),
+          SizedBox(width: 12),
           Expanded(
             child: Text(
               'Add Exercise',
@@ -108,7 +108,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
                     _searchController.clear();
                     ref.read(exerciseSearchQueryProvider.notifier).state = '';
                   },
-                  icon: const Icon(AppIcons.clear),
+                  icon: Icon(AppIcons.clear),
                 )
               : null,
           border: OutlineInputBorder(
@@ -169,7 +169,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
         
         return _buildExerciseList(context, exercises);
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => Center(child: CircularProgressIndicator()),
       error: (error, stack) => _buildErrorState(context, error.toString()),
     );
   }
@@ -238,7 +238,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Wrap(
               spacing: 4,
               children: exercise.muscleGroups.take(3).map((muscle) {
@@ -278,7 +278,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
             size: 64,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -300,14 +300,14 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
             size: 64,
             color: Theme.of(context).colorScheme.error,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'Error loading exercises',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.error,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             error,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -331,13 +331,13 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
       case ExerciseCategory.shoulders:
         return const Icon(AppIcons.workout);
       case ExerciseCategory.arms:
-        return const Icon(AppIcons.workout);
+        return Icon(AppIcons.workout);
       case ExerciseCategory.legs:
-        return const Icon(AppIcons.workout);
+        return Icon(AppIcons.workout);
       case ExerciseCategory.abs:
-        return const Icon(AppIcons.workout);
+        return Icon(AppIcons.workout);
       case ExerciseCategory.other:
-        return const Icon(AppIcons.workout);
+        return Icon(AppIcons.workout);
     }
   }
 

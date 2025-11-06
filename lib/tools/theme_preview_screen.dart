@@ -246,11 +246,11 @@ class _SemanticColorPreview extends StatelessWidget {
     return Column(
       children: [
         _semanticCard(context, 'Success', context.successColor, context.textOnSuccess),
-        const SizedBox(height: AppSpacing.xs),
+        SizedBox(height: AppSpacing.xs),
         _semanticCard(context, 'Error', context.errorColor, context.textOnError),
-        const SizedBox(height: AppSpacing.xs),
+        SizedBox(height: AppSpacing.xs),
         _semanticCard(context, 'Warning', context.warningColor, context.textOnWarning),
-        const SizedBox(height: AppSpacing.xs),
+        SizedBox(height: AppSpacing.xs),
         _semanticCard(context, 'Info', context.infoColor, context.textOnInfo),
       ],
     );
@@ -289,11 +289,11 @@ class _TypographyPreview extends StatelessWidget {
         Text('Headline Large', style: context.textTheme.headlineLarge),
         Text('Headline Medium', style: context.textTheme.headlineMedium),
         Text('Headline Small', style: context.textTheme.headlineSmall),
-        const SizedBox(height: AppSpacing.sm),
+        SizedBox(height: AppSpacing.sm),
         Text('Title Large', style: context.textTheme.titleLarge),
         Text('Title Medium', style: context.textTheme.titleMedium),
         Text('Title Small', style: context.textTheme.titleSmall),
-        const SizedBox(height: AppSpacing.sm),
+        SizedBox(height: AppSpacing.sm),
         Text('Body Large', style: context.textTheme.bodyLarge),
         Text('Body Medium', style: context.textTheme.bodyMedium),
         Text('Body Small', style: context.textTheme.bodySmall),
@@ -332,7 +332,7 @@ class _SpacingPreview extends StatelessWidget {
             height: 24,
             color: context.colors.primary,
           ),
-          const SizedBox(width: AppSpacing.xs),
+          SizedBox(width: AppSpacing.xs),
           Text(label, style: context.textTheme.bodySmall),
         ],
       ),
@@ -395,7 +395,7 @@ class _CardsPreview extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                SizedBox(height: AppSpacing.xs),
                 Text(
                   'This is a standard card with default padding.',
                   style: context.textTheme.bodyMedium,
@@ -404,7 +404,7 @@ class _CardsPreview extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
+        SizedBox(height: AppSpacing.sm),
         Card(
           elevation: 4,
           child: Padding(
@@ -412,7 +412,7 @@ class _CardsPreview extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.info, color: context.colors.primary),
-                const SizedBox(width: AppSpacing.sm),
+                SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
                     'Elevated Card',

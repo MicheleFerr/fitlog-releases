@@ -123,7 +123,7 @@ class _AnalyticsFeedbackWidgetState
             color: context.colors.success,
             size: 24,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +135,7 @@ class _AnalyticsFeedbackWidgetState
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   context.l10n.analyticsFeedbackThankYouSubtitle,
                   style: textTheme.bodySmall?.copyWith(
@@ -177,7 +177,7 @@ class _AnalyticsFeedbackWidgetState
                 '📊',
                 style: textTheme.headlineSmall,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   context.l10n.analyticsFeedbackQuestion,
@@ -189,7 +189,7 @@ class _AnalyticsFeedbackWidgetState
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // 👍👎 Buttons
           Row(
@@ -205,7 +205,7 @@ class _AnalyticsFeedbackWidgetState
                 onTap: () => _onFeedbackSelected(true),
               ),
 
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
 
               // 👎 Non utile
               _buildFeedbackButton(
@@ -225,7 +225,7 @@ class _AnalyticsFeedbackWidgetState
             axisAlignment: -1.0,
             child: Column(
               children: [
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // TextField commento
                 TextField(
@@ -270,14 +270,14 @@ class _AnalyticsFeedbackWidgetState
                         ? null
                         : _onSubmitFeedback,
                     icon: submissionState.isLoading
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 16,
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                             ),
                           )
-                        : const Icon(Icons.send),
+                        : Icon(Icons.send),
                     label: Text(
                       submissionState.isLoading
                           ? context.l10n.analyticsFeedbackSubmitting
@@ -291,7 +291,7 @@ class _AnalyticsFeedbackWidgetState
 
           // Error message
           if (submissionState.hasError) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -305,7 +305,7 @@ class _AnalyticsFeedbackWidgetState
                     color: context.colors.error,
                     size: 16,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       context.l10n.analyticsFeedbackError,

@@ -87,7 +87,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                           AppIcons.history,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           AppLocalizations.of(context).recentWorkouts,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -119,7 +119,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
           // Content
           if (analyticsState.activities.isEmpty && analyticsState.isLoadingMore)
             // Initial loading skeleton
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(16),
               child: WorkoutSkeletonLoader(itemCount: 3),
             )
@@ -135,7 +135,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                       size: 48,
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       AppLocalizations.of(context).noWorkoutsYet,
                       style: TextStyle(
@@ -243,7 +243,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             phaseText,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -317,7 +317,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     
                     // Workout info
                     Expanded(
@@ -332,7 +332,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Row(
                             children: [
                               Icon(
@@ -340,20 +340,20 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                                 size: 14,
                                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Text(
                                 '$exerciseCount exercises',
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12),
                               Icon(
                                 AppIcons.scale,
                                 size: 14,
                                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Text(
                                 _formatVolume(totalVolume),
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -389,7 +389,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
         child: Column(
           children: [
             const CircularProgressIndicator(),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               ref.read(lazyAnalyticsProvider.notifier).loadingMessage,
               style: Theme.of(context).textTheme.bodySmall,
@@ -408,8 +408,8 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
           onPressed: () {
             ref.read(lazyAnalyticsProvider.notifier).loadMoreData();
           },
-          icon: const Icon(AppIcons.expandMore),
-          label: const Text('Load older workouts'),
+          icon: Icon(AppIcons.expandMore),
+          label: Text('Load older workouts'),
         ),
       ),
     );
@@ -493,7 +493,7 @@ class _WorkoutDetailsSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     // Title
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -509,7 +509,7 @@ class _WorkoutDetailsSheet extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: 4),
                               Text(
                                 _formatDate(activities.first.createdAt),
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -564,7 +564,7 @@ class _WorkoutDetailsSheet extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             ...activity.sets.map((set) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: Row(
@@ -576,7 +576,7 @@ class _WorkoutDetailsSheet extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Text(
                     '${set.weight} kg × ${set.reps} reps',
                     style: Theme.of(context).textTheme.bodyMedium,

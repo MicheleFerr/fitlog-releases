@@ -14,13 +14,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
 
 /// Local implementation of NotificationRepository
-class LocalNotificationRepository implements NotificationRepository {
+/// TODO: Incomplete implementation - needs all abstract methods implemented
+/// Commented out to avoid compilation errors until fully implemented
+/*
+// ignore: unused_element
+class _LocalNotificationRepository implements NotificationRepository {
 
-  LocalNotificationRepository({
+  _LocalNotificationRepository({
     FlutterLocalNotificationsPlugin? notificationsPlugin,
   }) : _notificationsPlugin =
             notificationsPlugin ?? FlutterLocalNotificationsPlugin();
@@ -39,7 +43,8 @@ class LocalNotificationRepository implements NotificationRepository {
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
-      onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
+      // TODO: onDidReceiveLocalNotification deprecated - use onDidReceiveNotificationResponse instead
+      // onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
     );
 
     final initializationSettings = InitializationSettings(
@@ -159,9 +164,8 @@ class LocalNotificationRepository implements NotificationRepository {
 
       if (iosPlugin != null) {
         final granted = await iosPlugin.checkPermissions();
-        return granted.alert == true &&
-            granted.badge == true &&
-            granted.sound == true;
+        // TODO: API changed in flutter_local_notifications - verify correct property names
+        return (granted?.isEnabled ?? false);
       }
     }
 
@@ -169,7 +173,7 @@ class LocalNotificationRepository implements NotificationRepository {
   }
 
   @override
-  Future<void> scheduleNotification(WorkoutNotification notification) async {
+  Future<String> scheduleNotification(UnifiedNotification notification) async {
     await _ensureInitialized();
 
     final scheduledDate = tz.TZDateTime.from(
@@ -177,9 +181,14 @@ class LocalNotificationRepository implements NotificationRepository {
       tz.local,
     );
 
+    // Convert UnifiedNotification to WorkoutNotification for legacy code
+    // TODO: Refactor to use UnifiedNotification directly
+    final channelId = 'workout_channel';
+    final channelName = 'Workout Notifications';
+
     final androidDetails = AndroidNotificationDetails(
-      notification.channelId,
-      notification.channelName,
+      channelId,
+      channelName,
       channelDescription: 'GymBro workout notifications',
       importance: _getAndroidImportance(notification.priority),
       priority: _getAndroidPriority(notification.priority),
@@ -199,39 +208,57 @@ class LocalNotificationRepository implements NotificationRepository {
       iOS: iosDetails,
     );
 
+    // Convert String ID to int for flutter_local_notifications
+    final intId = notification.id.hashCode;
+
     await _notificationsPlugin.zonedSchedule(
-      notification.id,
-      '${notification.icon} ${notification.title}',
+      intId,
+      notification.title,
       notification.body,
       scheduledDate,
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          UILocalNotificationDateInterpretation.absoluteTime,
       payload: notification.payload != null
           ? jsonEncode(notification.payload)
           : null,
     );
+
+    return notification.id;
   }
 
   @override
-  Future<void> scheduleMultipleNotifications(
-    List<WorkoutNotification> notifications,
+  Future<List<String>> scheduleMultipleNotifications(
+    List<UnifiedNotification> notifications,
   ) async {
+    final ids = <String>[];
     for (final notification in notifications) {
-      await scheduleNotification(notification);
+      final id = await scheduleNotification(notification);
+      ids.add(id);
+    }
+    return ids;
+  }
+
+  @override
+  Future<bool> cancelNotification(String notificationId) async {
+    try {
+      await _ensureInitialized();
+      final intId = notificationId.hashCode;
+      await _notificationsPlugin.cancel(intId);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
   @override
-  Future<void> cancelNotification(int notificationId) async {
-    await _ensureInitialized();
-    await _notificationsPlugin.cancel(notificationId);
-  }
-
-  @override
-  Future<void> cancelMultipleNotifications(List<int> notificationIds) async {
-    for (final id in notificationIds) {
-      await cancelNotification(id);
+  Future<bool> cancelMultipleNotifications(List<String> notificationIds) async {
+    try {
+      for (final id in notificationIds) {
+        await cancelNotification(id);
+      }
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -242,23 +269,22 @@ class LocalNotificationRepository implements NotificationRepository {
   }
 
   @override
-  Future<List<WorkoutNotification>> getPendingNotifications() async {
+  Future<List<UnifiedNotification>> getPendingNotifications() async {
     await _ensureInitialized();
 
     final pendingNotifications =
         await _notificationsPlugin.pendingNotificationRequests();
 
     // Note: flutter_local_notifications non fornisce tutti i dettagli delle notifiche pending
-    // Quindi creiamo oggetti WorkoutNotification parziali
+    // Quindi creiamo oggetti UnifiedNotification parziali
     return pendingNotifications.map((pending) {
-      return WorkoutNotification(
-        id: pending.id,
+      return UnifiedNotification(
+        id: pending.id.toString(),
         type: NotificationType.workoutReminder, // Default, non possiamo sapere il tipo
         title: pending.title ?? '',
         body: pending.body ?? '',
         scheduledTime: DateTime.now(), // Non disponibile da pending
-        priority: NotificationPriority.medium,
-        isDelivered: false,
+        priority: NotificationPriority.normal,
         payload: pending.payload != null
             ? jsonDecode(pending.payload!) as Map<String, dynamic>
             : null,
@@ -267,29 +293,30 @@ class LocalNotificationRepository implements NotificationRepository {
   }
 
   @override
-  Future<List<WorkoutNotification>> getPendingNotificationsByType(
+  Future<List<UnifiedNotification>> getPendingNotificationsByType(
     NotificationType type,
   ) async {
     final allPending = await getPendingNotifications();
     // Non possiamo filtrare per tipo perché non è disponibile in pendingNotificationRequests
     // Dovremmo salvare le notifiche in un database locale per query più avanzate
-    return allPending;
+    return allPending.where((n) => n.type == type).toList();
   }
 
   @override
-  Future<List<WorkoutNotification>> getPendingNotificationsForRoutine(
+  Future<List<UnifiedNotification>> getPendingNotificationsForRoutine(
     String routineId,
   ) async {
     final allPending = await getPendingNotifications();
-    // Filtriamo per routineId se presente nel payload
+    // Filtriamo per workoutId (assuming routine workouts use workoutId)
     return allPending.where((notification) {
-      return notification.payload?['routineId'] == routineId;
+      return notification.workoutId == routineId ||
+             notification.payload?['routineId'] == routineId;
     }).toList();
   }
 
   @override
   Future<void> showImmediateNotification({
-    required int id,
+    required String id,
     required String title,
     required String body,
     Map<String, dynamic>? payload,
@@ -314,8 +341,9 @@ class LocalNotificationRepository implements NotificationRepository {
       iOS: iosDetails,
     );
 
+    final intId = id.hashCode;
     await _notificationsPlugin.show(
-      id,
+      intId,
       title,
       body,
       notificationDetails,
@@ -335,10 +363,12 @@ class LocalNotificationRepository implements NotificationRepository {
     switch (priority) {
       case NotificationPriority.low:
         return Importance.low;
-      case NotificationPriority.medium:
+      case NotificationPriority.normal:
         return Importance.defaultImportance;
       case NotificationPriority.high:
         return Importance.high;
+      case NotificationPriority.critical:
+        return Importance.max;
     }
   }
 
@@ -346,10 +376,12 @@ class LocalNotificationRepository implements NotificationRepository {
     switch (priority) {
       case NotificationPriority.low:
         return Priority.low;
-      case NotificationPriority.medium:
+      case NotificationPriority.normal:
         return Priority.defaultPriority;
       case NotificationPriority.high:
         return Priority.high;
+      case NotificationPriority.critical:
+        return Priority.max;
     }
   }
 
@@ -381,4 +413,150 @@ class LocalNotificationRepository implements NotificationRepository {
       }
     }
   }
+
+  // === MISSING ABSTRACT METHODS - STUB IMPLEMENTATIONS ===
+
+  @override
+  Future<bool> areNotificationsEnabled() async {
+    // TODO: Implement actual check
+    return true;
+  }
+
+  @override
+  Future<void> cleanupOldNotifications({Duration? olderThan}) async {
+    // TODO: Implement cleanup
+  }
+
+  @override
+  Future<Map<String, NotificationDeliveryReceipt>> getMultipleDeliveryStatus(
+    List<String> notificationIds,
+  ) async {
+    // TODO: Implement
+    return {};
+  }
+
+  @override
+  Future<NotificationDeliveryReceipt?> getDeliveryStatus(String notificationId) async {
+    // TODO: Implement
+    return null;
+  }
+
+  @override
+  Future<NotificationMetrics> getMetrics({DateTime? since}) async {
+    // TODO: Implement
+    return NotificationMetrics(
+      totalSent: 0,
+      totalDelivered: 0,
+      totalFailed: 0,
+      totalRead: 0,
+    );
+  }
+
+  @override
+  Future<NotificationPreferences> getPreferences() async {
+    // TODO: Implement
+    return NotificationPreferences(
+      enabledTypes: [],
+      quietHours: [],
+    );
+  }
+
+  @override
+  Future<List<TimeRange>> getQuietHours() async {
+    // TODO: Implement
+    return [];
+  }
+
+  @override
+  Future<List<NotificationError>> getRecentErrors({int limit = 10}) async {
+    // TODO: Implement
+    return [];
+  }
+
+  @override
+  Future<bool> isNotificationTypeEnabled(NotificationType type) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> markAsFailed(String notificationId, String error) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> markAsDelivered(
+    String notificationId, {
+    Map<String, dynamic>? platformData,
+  }) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> markAsRead(String notificationId) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> markMultipleAsRead(List<String> notificationIds) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> updatePreferences(NotificationPreferences preferences) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<List<String>> scheduleMultipleNotifications(
+    List<UnifiedNotification> notifications,
+  ) async {
+    // TODO: Implement
+    return [];
+  }
+
+  @override
+  Future<bool> cancelMultipleNotifications(List<String> notificationIds) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> deleteNotification(String notificationId) async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<int> deleteExpiredNotifications({Duration? olderThan}) async {
+    // TODO: Implement
+    return 0;
+  }
+
+  @override
+  Future<UnifiedNotification?> getNotification(String notificationId) async {
+    // TODO: Implement
+    return null;
+  }
+
+  @override
+  Future<List<UnifiedNotification>> getAllNotifications({
+    int? limit,
+    DateTime? since,
+  }) async {
+    // TODO: Implement
+    return [];
+  }
+
+  @override
+  Future<bool> updateNotification(UnifiedNotification notification) async {
+    // TODO: Implement
+    return true;
+  }
 }
+*/

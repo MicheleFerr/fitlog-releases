@@ -172,10 +172,10 @@ class ErrorHandler {
                   size: 48,
                   color: Theme.of(context).colorScheme.error,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(message),
                 if (kDebugMode) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     'Debug: ${error.toString()}',
                     style: Theme.of(context).textTheme.bodySmall,
@@ -297,19 +297,19 @@ class ErrorScreen extends StatelessWidget {
                 size: 80,
                 color: Theme.of(context).colorScheme.error,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               Text(
                 l10n.criticalError,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 message,
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               if (kDebugMode) ...[
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(

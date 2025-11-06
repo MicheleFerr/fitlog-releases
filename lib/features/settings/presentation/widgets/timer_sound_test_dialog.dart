@@ -92,7 +92,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
     final currentSound = TimerSound.fromFileName(config.timerSound);
 
     return AlertDialog(
-      title: const Text('Test Timer Sounds'),
+      title: Text('Test Timer Sounds'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -102,14 +102,14 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
               'Current Sound: ${currentSound.getLocalizedName()}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             
             // Individual sound test buttons
-            const Text(
+            Text(
               'Test Individual Sounds:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             
             for (final sound in TimerSound.values) ...[
               ListTile(
@@ -140,11 +140,11 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(AppIcons.play),
-              label: const Text('Run Full Sound Test'),
+                  : Icon(AppIcons.play),
+              label: Text('Run Full Sound Test'),
             ),
             
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             
             if (_testStatus.isNotEmpty) ...[
               Container(
@@ -160,7 +160,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
               ),
             ],
             
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             
             // Instructions
             Container(

@@ -21,10 +21,10 @@ class AnalyticsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('📊 Analytics'),
+        title: Text('📊 Analytics'),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -132,7 +132,7 @@ class _AnalyticsContent extends StatelessWidget {
                   AppIcons.trendUp,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Progress Tracking',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -196,7 +196,7 @@ class _AnalyticsContent extends StatelessWidget {
             ),
             child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,8 +331,8 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.error, size: 64, color: Colors.red),
-          const SizedBox(height: 16),
+          Icon(AppIcons.error, size: 64, color: Colors.red),
+          SizedBox(height: 16),
           Text(
             'Error loading analytics',
             style: Theme.of(context).textTheme.headlineSmall,
@@ -358,21 +358,21 @@ class _EmptyStateView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.workout, size: 80, color: Colors.grey),
-          const SizedBox(height: 24),
+          Icon(AppIcons.workout, size: 80, color: Colors.grey),
+          SizedBox(height: 24),
           Text(
             'No workout data yet',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 12),
+          Text(
             'Complete some workouts to see your\nanalytics and progress!',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => context.go('/workout'),
             icon: const Icon(AppIcons.play),

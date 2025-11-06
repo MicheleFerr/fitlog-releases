@@ -94,7 +94,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             // Statistiche rapide
             _buildStatsCards(context, l10n, corrections),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Correzioni in pending
             if (pendingCorrections.isNotEmpty) ...[
@@ -112,7 +112,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
                   onAction: (action) => _handleCorrectionAction(context, ref, correction, action),
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
             ],
 
             // Correzioni già revisionate
@@ -153,7 +153,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             color: context.colors.secondary,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: _StatCard(
             title: l10n.approved,
@@ -162,7 +162,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             color: context.colors.success,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: _StatCard(
             title: l10n.rejected,
@@ -185,7 +185,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
     return Row(
       children: [
         Icon(icon, color: color, size: 20),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           title,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -193,7 +193,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             color: color,
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
@@ -235,12 +235,12 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             size: 64,
             color: Theme.of(context).colorScheme.error,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             l10n.errorLoadingCorrections,
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             error,
             style: Theme.of(context).textTheme.bodySmall,
@@ -261,14 +261,14 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             size: 64,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             l10n.noCorrections,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             l10n.noCorrectionsDescription,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -434,7 +434,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               value,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(

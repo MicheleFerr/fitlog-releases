@@ -480,15 +480,15 @@ void main() {
 
     test('addCompletedWorkout adds only completed workouts', () {
       final notifier = container.read(workoutHistoryProvider.notifier);
-      
+
       final incompleteWorkout = Workout(id: 'test-id', name: 'Incomplete', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
-      final completedWorkout = Workout(id: 'test-id', name: 'Complete', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
+      final completedWorkout = Workout(id: 'test-id', name: 'Complete', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1))
         .startWorkout()
         .completeWorkout();
-      
+
       notifier.addCompletedWorkout(incompleteWorkout);
       notifier.addCompletedWorkout(completedWorkout);
-      
+
       final history = container.read(workoutHistoryProvider);
       expect(history.length, 1);
       expect(history[0].name, 'Complete');
@@ -530,11 +530,11 @@ void main() {
       final lastWeek = now.subtract(const Duration(days: 7));
       
       // Create workouts with specific dates
-      final recentWorkout = Workout(id: 'test-id', name: 'Recent', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
+      final recentWorkout = Workout(id: 'test-id', name: 'Recent', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1))
         .copyWith(startTime: now)
         .completeWorkout();
-      
-      final oldWorkout = Workout(id: 'test-id', name: 'Old', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1));
+
+      final oldWorkout = Workout(id: 'test-id', name: 'Old', createdAt: DateTime(2024, 1, 1), updatedAt: DateTime(2024, 1, 1))
         .copyWith(startTime: lastWeek)
         .completeWorkout();
       

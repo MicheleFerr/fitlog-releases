@@ -69,7 +69,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         title: Text(localizations.analytics),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: const Icon(AppIcons.back),
+          icon: Icon(AppIcons.back),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -410,7 +410,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
     return Column(
       children: [
         Icon(icon, size: 24, color: effectiveColor),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -488,7 +488,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           label,
           style: Theme.of(context).textTheme.bodySmall,
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -702,8 +702,8 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.error, size: 64, color: Colors.red),
-          const SizedBox(height: 16),
+          Icon(AppIcons.error, size: 64, color: Colors.red),
+          SizedBox(height: 16),
           Text(
             'Error loading analytics',
             style: Theme.of(context).textTheme.headlineSmall,
@@ -731,21 +731,21 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.workout, size: 80, color: Colors.grey),
-          const SizedBox(height: 24),
+          Icon(AppIcons.workout, size: 80, color: Colors.grey),
+          SizedBox(height: 24),
           Text(
             localizations.noWorkoutData,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             localizations.startWorkoutToSeeAnalytics,
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.grey),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => context.go('/workout'),
             icon: const Icon(AppIcons.play),

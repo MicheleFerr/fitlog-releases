@@ -182,7 +182,7 @@ class SyncStatusCard extends ConsumerWidget {
                         );
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.exportFailedError(error: e.toString()))),
+                          SnackBar(content: Text(l10n.exportFailedError(e.toString()))),
                         );
                       }
                     },

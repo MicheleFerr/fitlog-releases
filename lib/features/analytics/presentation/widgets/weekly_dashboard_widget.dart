@@ -490,7 +490,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                 AppIcons.achievement,
                 color: theme.colorScheme.tertiary,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Best Set of the Week',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -498,7 +498,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                 ),
               ),
               if (bestSet.isPR) ...[
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
@@ -563,7 +563,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             widget.onDataSync?.call(_currentWeekData!);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('Data synced to cloud'),
+                content: Text('Data synced to cloud'),
                 backgroundColor: context.colors.success,
               ),
             );

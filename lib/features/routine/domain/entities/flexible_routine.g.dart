@@ -17,6 +17,10 @@ _$ScheduledDayImpl _$$ScheduledDayImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['originalDate'] as String),
       notes: json['notes'] as String?,
+      isRecovery: json['isRecovery'] as bool? ?? false,
+      originalMissedDate: json['originalMissedDate'] == null
+          ? null
+          : DateTime.parse(json['originalMissedDate'] as String),
     );
 
 Map<String, dynamic> _$$ScheduledDayImplToJson(_$ScheduledDayImpl instance) =>
@@ -28,6 +32,8 @@ Map<String, dynamic> _$$ScheduledDayImplToJson(_$ScheduledDayImpl instance) =>
       'skipReason': instance.skipReason,
       'originalDate': instance.originalDate?.toIso8601String(),
       'notes': instance.notes,
+      'isRecovery': instance.isRecovery,
+      'originalMissedDate': instance.originalMissedDate?.toIso8601String(),
     };
 
 const _$DayStatusEnumMap = {

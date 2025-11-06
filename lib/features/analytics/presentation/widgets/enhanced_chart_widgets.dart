@@ -33,7 +33,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.weeklyVolumeChart,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -199,7 +199,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                       ),
                     ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildVolumeInsights(context, volumeData),
           ],
         ),
@@ -231,7 +231,7 @@ class EnhancedVolumeChart extends StatelessWidget {
             color: isImproving ? Colors.green : Colors.red,
             size: 20,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             child: Text(
               isImproving
@@ -291,7 +291,7 @@ class EnhancedVolumeChart extends StatelessWidget {
             size: 48,
             color: Colors.grey.withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -336,7 +336,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
                   color: colorScheme.secondary,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.workoutFrequency,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -440,7 +440,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
                       ),
                     ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildFrequencyInsights(context, frequencyData),
           ],
         ),
@@ -471,14 +471,14 @@ class EnhancedFrequencyChart extends StatelessWidget {
                 color: colorScheme.secondary,
                 size: 16,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 localizations.bestWorkoutDay(_getDayName(bestDay, localizations)),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Icon(
@@ -486,7 +486,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
                 color: colorScheme.outline,
                 size: 16,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 localizations.averageWorkoutsPerDay(averagePerDay.toStringAsFixed(1)),
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -524,7 +524,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
             size: 48,
             color: Colors.grey.withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -591,7 +591,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
                   color: colorScheme.tertiary,
                   size: 24,
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text(
                   localizations.bodyPartDistribution,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -653,7 +653,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
+                                    SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         section.category,
@@ -742,7 +742,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
             size: 48,
             color: Colors.grey.withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(

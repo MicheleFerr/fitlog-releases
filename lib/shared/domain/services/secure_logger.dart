@@ -54,7 +54,7 @@ class SecureLogger {
     Map<String, dynamic>? data,
   }) {
     if (!kDebugMode) return; // NO LOGS IN PRODUCTION
-    if (_minLogLevel.index > LogLevel.debug.index) return;
+    if (_minLogLevel.severity > LogLevel.debug.severity) return;
 
     _log('🐛 DEBUG', message, error: error, stackTrace: stackTrace, data: data);
   }
@@ -72,7 +72,7 @@ class SecureLogger {
     Map<String, dynamic>? data,
   }) {
     if (!kDebugMode) return; // NO LOGS IN PRODUCTION
-    if (_minLogLevel.index > LogLevel.info.index) return;
+    if (_minLogLevel.severity > LogLevel.info.severity) return;
 
     _log('ℹ️ INFO', message, error: error, stackTrace: stackTrace, data: data);
   }
@@ -90,7 +90,7 @@ class SecureLogger {
     Map<String, dynamic>? data,
   }) {
     if (!kDebugMode) return; // NO LOGS IN PRODUCTION (for now)
-    if (_minLogLevel.index > LogLevel.warning.index) return;
+    if (_minLogLevel.severity > LogLevel.warning.severity) return;
 
     _log(
       '⚠️ WARNING',
@@ -116,7 +116,7 @@ class SecureLogger {
     Map<String, dynamic>? data,
   }) {
     if (!kDebugMode) return; // NO LOGS IN PRODUCTION
-    if (_minLogLevel.index > LogLevel.error.index) return;
+    if (_minLogLevel.severity > LogLevel.error.severity) return;
 
     _log(
       '❌ ERROR',
@@ -139,7 +139,7 @@ class SecureLogger {
     Map<String, dynamic>? metrics,
   }) {
     if (!kDebugMode) return; // NO LOGS IN PRODUCTION
-    if (_minLogLevel.index > LogLevel.performance.index) return;
+    if (_minLogLevel.severity > LogLevel.performance.severity) return;
 
     final data = <String, dynamic>{};
     if (durationMs != null) data['duration_ms'] = durationMs;
@@ -305,6 +305,6 @@ enum LogLevel {
   error(3),
   performance(4);
 
-  const LogLevel(this.index);
-  final int index;
+  const LogLevel(this.severity);
+  final int severity; // Renamed from 'index' to avoid conflict with Enum.index
 }

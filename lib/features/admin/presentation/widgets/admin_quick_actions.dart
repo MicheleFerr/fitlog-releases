@@ -40,7 +40,7 @@ class AdminQuickActions extends ConsumerWidget {
                   AppIcons.flashOn,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   l10n.quickActions,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -312,7 +312,7 @@ class _QuickActionCard extends StatelessWidget {
                   size: 32,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -322,7 +322,7 @@ class _QuickActionCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -419,7 +419,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -429,7 +429,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

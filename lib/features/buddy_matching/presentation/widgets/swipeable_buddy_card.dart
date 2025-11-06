@@ -233,33 +233,33 @@ class _SwipeableBuddyCardState extends State<SwipeableBuddyCard>
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           if (widget.profile.isVerified)
-                            const Icon(
+                            Icon(
                               AppIcons.verified,
                               color: context.colors.primary,
                               size: 20,
                             ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Row(
                         children: [
                           FitnessLevelBadge(
                             level: widget.profile.preferences.fitnessLevel,
                             compact: true,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           if (widget.profile.preferences.locationName != null)
                             Flexible(
                               child: Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     AppIcons.location,
                                     color: context.colors.onSurface.withValues(alpha: 0.7),
                                     size: 14,
                                   ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: 4),
                                   Flexible(
                                     child: Text(
                                       widget.profile.preferences.locationName!,

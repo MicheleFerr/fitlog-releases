@@ -679,7 +679,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                       ? context.colors.error
                                       : context.colors.secondary,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               volumeChange > 5
                                   ? localizations.improvement
@@ -719,7 +719,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   ],
                 ),
                 if (previousPerformance != null) ...[
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -1408,7 +1408,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                         ? context.colors.error
                                         : context.colors.secondary,
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: 4),
                               Text(
                                 volumeChange > 5
                                     ? localizations.improvement
@@ -1448,7 +1448,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                     ],
                   ),
                   if (previousPerformance != null) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -2336,7 +2336,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     color: context.colors.surface,
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -47,7 +47,7 @@ class BetaModeBanner extends ConsumerWidget {
                   size: 16,
                   color: Theme.of(context).colorScheme.onTertiary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'BETA MODE - All Premium Features Unlocked',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -56,7 +56,7 @@ class BetaModeBanner extends ConsumerWidget {
                     letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Icon(
                   AppIcons.science,
                   size: 16,
@@ -97,7 +97,7 @@ class BetaModeIndicator extends ConsumerWidget {
             size: 14,
             color: Theme.of(context).colorScheme.onTertiaryContainer,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             'BETA',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(

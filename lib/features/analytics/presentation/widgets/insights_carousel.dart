@@ -60,7 +60,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                 size: 16,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   l10n.insightDisclaimer,
@@ -90,7 +90,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
             },
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _buildPageIndicator(localizedInsights.length),
       ],
     );
@@ -127,7 +127,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                     ),
                     child: Icon(icon, color: color, size: 20),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +158,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Expanded(
                 child: Text(
                   insight.message,
@@ -181,7 +181,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                       size: 16,
                       color: colorScheme.onPrimaryContainer,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         insight.recommendation,
@@ -235,6 +235,8 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
         return colorScheme.outline;
       case InsightType.motivation:
         return colorScheme.primary;
+      case InsightType.improvement:
+        return Colors.blue;  // Blue for improvement insights
     }
   }
 
@@ -250,6 +252,8 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
         return AppIcons.infoIcon;
       case InsightType.motivation:
         return AppIcons.streak;
+      case InsightType.improvement:
+        return Icons.trending_up;  // Trending up icon for improvements
     }
   }
 
@@ -293,7 +297,7 @@ class _InsightDetailsSheet extends StatelessWidget {
                   style: const TextStyle(fontSize: 32),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,19 +320,19 @@ class _InsightDetailsSheet extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Text(
             AppLocalizations.of(context).insight,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             insight.message,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Text(
             AppLocalizations.of(context).recommendation,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -389,6 +393,8 @@ class _InsightDetailsSheet extends StatelessWidget {
         return colorScheme.outline;
       case InsightType.motivation:
         return colorScheme.primary;
+      case InsightType.improvement:
+        return Colors.blue;  // Blue for improvement insights
     }
   }
 
