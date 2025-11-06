@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
@@ -979,6 +980,147 @@ void main() {
       expect(lowResult['confidence'], equals(CalculationConfidence.low));
     });
   });
+
+  // ============================================================================
+  // T3.2: Set Selection Strategies (TDD)
+  // ============================================================================
+  group('APREAutoRegulationService - Set Selection Strategies (T3.2)', () {
+    test('T3.2.1: topThreeSets returns 3 most recent sets', () {
+      // Arrange
+      final sets = _createMockSets(10); // 10 sets with timestamps
+
+      // Act
+      final selected = APREAutoRegulationService._selectTopSets(
+        sets,
+        OneRMCalculationConfig.topThreeSets,
+      );
+
+      // Assert
+      expect(selected.length, equals(3));
+      // Verify they are the 3 most recent (sorted descending)
+      expect(selected[0]['timestamp'], greaterThan(selected[1]['timestamp']));
+      expect(selected[1]['timestamp'], greaterThan(selected[2]['timestamp']));
+    });
+
+    test('T3.2.2: topThreeSets returns all sets when fewer than 3', () {
+      // Arrange
+      final sets = _createMockSets(2);
+
+      // Act
+      final selected = APREAutoRegulationService._selectTopSets(
+        sets,
+        OneRMCalculationConfig.topThreeSets,
+      );
+
+      // Assert
+      expect(selected.length, equals(2));
+    });
+
+    test('T3.2.3: topFiveSets returns 5 most recent sets', () {
+      // Arrange
+      final sets = _createMockSets(10);
+
+      // Act
+      final selected = APREAutoRegulationService._selectTopSets(
+        sets,
+        OneRMCalculationConfig.topFiveSets,
+      );
+
+      // Assert
+      expect(selected.length, equals(5));
+    });
+
+    test('T3.2.4: topFiveSets returns all sets when fewer than 5', () {
+      // Arrange
+      final sets = _createMockSets(3);
+
+      // Act
+      final selected = APREAutoRegulationService._selectTopSets(
+        sets,
+        OneRMCalculationConfig.topFiveSets,
+      );
+
+      // Assert
+      expect(selected.length, equals(3));
+    });
+
+    test('T3.2.5: allSetsInWindow returns all sets without filtering', () {
+      // Arrange
+      final sets = _createMockSets(10);
+
+      // Act
+      final selected = APREAutoRegulationService._selectTopSets(
+        sets,
+        OneRMCalculationConfig.allSetsInWindow,
+      );
+
+      // Assert
+      expect(selected.length, equals(10));
+      expect(selected, equals(sets)); // Same list
+    });
+
+    test('T3.2.6: medianOfTop5 returns median of top 5 sets', () {
+      // Arrange
+      final sets = _createMockSetsWithVariedWeights();
+
+      // Act
+      final selected = APREAutoRegulationService._selectTopSets(
+        sets,
+        OneRMCalculationConfig.medianOfTop5,
+      );
+
+      // Assert
+      expect(selected.length, equals(1)); // Only median
+    });
+
+    test('T3.2.7: medianOfTop5 returns single set when only 1 available', () {
+      // Arrange
+      final sets = _createMockSets(1);
+
+      // Act
+      final selected = APREAutoRegulationService._selectTopSets(
+        sets,
+        OneRMCalculationConfig.medianOfTop5,
+      );
+
+      // Assert
+      expect(selected.length, equals(1));
+    });
+
+    test('T3.2.8: returns empty list when no sets available', () {
+      // Arrange & Act & Assert
+      for (final config in OneRMCalculationConfig.values) {
+        final selected = APREAutoRegulationService._selectTopSets([], config);
+        expect(selected, isEmpty, reason: 'Config $config should return empty for empty input');
+      }
+    });
+  });
+}
+
+/// Creates N mock sets with realistic timestamps and data
+List<dynamic> _createMockSets(int count) {
+  final now = DateTime.now();
+  return List.generate(count, (i) {
+    return {
+      'weight': 100.0 + (i * 5), // Varying weights
+      'reps': 5,
+      'timestamp': Timestamp.fromDate(now.subtract(Duration(days: i))),
+    };
+  });
+}
+
+/// Creates mock sets with varied weights for median testing
+List<dynamic> _createMockSetsWithVariedWeights() {
+  final now = DateTime.now();
+  final weights = [100.0, 110.0, 105.0, 120.0, 95.0, 115.0, 108.0, 112.0];
+
+  return weights.asMap().entries.map((entry) {
+    return {
+      'weight': entry.value,
+      'reps': 5,
+      'timestamp': Timestamp.fromDate(now.subtract(Duration(days: entry.key))),
+    };
+  }).toList();
 }
 
 /// Mock set with date for testing data age
