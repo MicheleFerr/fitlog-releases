@@ -104,10 +104,12 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
   );
 
   final nextWorkoutTemplateId = nextUncompletedWorkout?.templateId;
+  final nextWorkoutScheduledDate = nextUncompletedWorkout?.date;
 
   if (kDebugMode || kProfileMode) {
     debugPrint('🔍 [WORKOUT_SUGGESTION] Active routine template ID: $activeRoutineTemplateId');
     debugPrint('🔍 [WORKOUT_SUGGESTION] Next uncompleted workout template ID: $nextWorkoutTemplateId');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Next workout scheduled date: $nextWorkoutScheduledDate');
   }
 
   // Get available template names for validation
@@ -132,6 +134,7 @@ final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async 
     workoutHistory: workouts,
     activeRoutineTemplateId: activeRoutineTemplateId,
     nextWorkoutTemplateId: nextWorkoutTemplateId, // ✅ NEW: Pass next workout from routine
+    nextWorkoutScheduledDate: nextWorkoutScheduledDate, // ✅ NEW: Pass scheduled date
     availableTemplateNames: availableTemplateNames,
     useCache: true,
   );

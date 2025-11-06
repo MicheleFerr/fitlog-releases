@@ -58,6 +58,15 @@ mixin _$WorkoutSuggestion {
   /// Example: "5 times in last 30 days"
   String? get frequencyData => throw _privateConstructorUsedError;
 
+  /// Optional scheduled date for routine-based suggestions
+  ///
+  /// When provided, indicates the date when this workout is scheduled
+  /// in the active routine. Used to display "This is the workout you should
+  /// do on dd/mm/yyyy" in the UI.
+  ///
+  /// Example: DateTime(2025, 11, 8) → "08/11/2025"
+  DateTime? get scheduledDate => throw _privateConstructorUsedError;
+
   /// Timestamp when this suggestion was generated
   DateTime? get generatedAt => throw _privateConstructorUsedError;
 
@@ -81,6 +90,7 @@ abstract class $WorkoutSuggestionCopyWith<$Res> {
       String? patternInfo,
       String? routineTemplateId,
       String? frequencyData,
+      DateTime? scheduledDate,
       DateTime? generatedAt});
 }
 
@@ -104,6 +114,7 @@ class _$WorkoutSuggestionCopyWithImpl<$Res, $Val extends WorkoutSuggestion>
     Object? patternInfo = freezed,
     Object? routineTemplateId = freezed,
     Object? frequencyData = freezed,
+    Object? scheduledDate = freezed,
     Object? generatedAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -135,6 +146,10 @@ class _$WorkoutSuggestionCopyWithImpl<$Res, $Val extends WorkoutSuggestion>
           ? _value.frequencyData
           : frequencyData // ignore: cast_nullable_to_non_nullable
               as String?,
+      scheduledDate: freezed == scheduledDate
+          ? _value.scheduledDate
+          : scheduledDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       generatedAt: freezed == generatedAt
           ? _value.generatedAt
           : generatedAt // ignore: cast_nullable_to_non_nullable
@@ -159,6 +174,7 @@ abstract class _$$WorkoutSuggestionImplCopyWith<$Res>
       String? patternInfo,
       String? routineTemplateId,
       String? frequencyData,
+      DateTime? scheduledDate,
       DateTime? generatedAt});
 }
 
@@ -180,6 +196,7 @@ class __$$WorkoutSuggestionImplCopyWithImpl<$Res>
     Object? patternInfo = freezed,
     Object? routineTemplateId = freezed,
     Object? frequencyData = freezed,
+    Object? scheduledDate = freezed,
     Object? generatedAt = freezed,
   }) {
     return _then(_$WorkoutSuggestionImpl(
@@ -211,6 +228,10 @@ class __$$WorkoutSuggestionImplCopyWithImpl<$Res>
           ? _value.frequencyData
           : frequencyData // ignore: cast_nullable_to_non_nullable
               as String?,
+      scheduledDate: freezed == scheduledDate
+          ? _value.scheduledDate
+          : scheduledDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       generatedAt: freezed == generatedAt
           ? _value.generatedAt
           : generatedAt // ignore: cast_nullable_to_non_nullable
@@ -230,6 +251,7 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
       this.patternInfo,
       this.routineTemplateId,
       this.frequencyData,
+      this.scheduledDate,
       this.generatedAt = null})
       : super._();
 
@@ -281,6 +303,16 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
   @override
   final String? frequencyData;
 
+  /// Optional scheduled date for routine-based suggestions
+  ///
+  /// When provided, indicates the date when this workout is scheduled
+  /// in the active routine. Used to display "This is the workout you should
+  /// do on dd/mm/yyyy" in the UI.
+  ///
+  /// Example: DateTime(2025, 11, 8) → "08/11/2025"
+  @override
+  final DateTime? scheduledDate;
+
   /// Timestamp when this suggestion was generated
   @override
   @JsonKey()
@@ -288,7 +320,7 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
 
   @override
   String toString() {
-    return 'WorkoutSuggestion(level: $level, workoutName: $workoutName, confidence: $confidence, reason: $reason, patternInfo: $patternInfo, routineTemplateId: $routineTemplateId, frequencyData: $frequencyData, generatedAt: $generatedAt)';
+    return 'WorkoutSuggestion(level: $level, workoutName: $workoutName, confidence: $confidence, reason: $reason, patternInfo: $patternInfo, routineTemplateId: $routineTemplateId, frequencyData: $frequencyData, scheduledDate: $scheduledDate, generatedAt: $generatedAt)';
   }
 
   @override
@@ -308,14 +340,25 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
                 other.routineTemplateId == routineTemplateId) &&
             (identical(other.frequencyData, frequencyData) ||
                 other.frequencyData == frequencyData) &&
+            (identical(other.scheduledDate, scheduledDate) ||
+                other.scheduledDate == scheduledDate) &&
             (identical(other.generatedAt, generatedAt) ||
                 other.generatedAt == generatedAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, level, workoutName, confidence,
-      reason, patternInfo, routineTemplateId, frequencyData, generatedAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      level,
+      workoutName,
+      confidence,
+      reason,
+      patternInfo,
+      routineTemplateId,
+      frequencyData,
+      scheduledDate,
+      generatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -341,6 +384,7 @@ abstract class _WorkoutSuggestion extends WorkoutSuggestion {
       final String? patternInfo,
       final String? routineTemplateId,
       final String? frequencyData,
+      final DateTime? scheduledDate,
       final DateTime? generatedAt}) = _$WorkoutSuggestionImpl;
   const _WorkoutSuggestion._() : super._();
 
@@ -392,6 +436,16 @@ abstract class _WorkoutSuggestion extends WorkoutSuggestion {
   ///
   /// Example: "5 times in last 30 days"
   String? get frequencyData;
+  @override
+
+  /// Optional scheduled date for routine-based suggestions
+  ///
+  /// When provided, indicates the date when this workout is scheduled
+  /// in the active routine. Used to display "This is the workout you should
+  /// do on dd/mm/yyyy" in the UI.
+  ///
+  /// Example: DateTime(2025, 11, 8) → "08/11/2025"
+  DateTime? get scheduledDate;
   @override
 
   /// Timestamp when this suggestion was generated

@@ -22517,6 +22517,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Got it'**
   String get apreGotIt;
+
+  /// Title for APRE calculation method setting
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Calculation Method'**
+  String get apreCalculationMethodTitle;
+
+  /// Description explaining APRE calculation method options
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.'**
+  String get apreCalculationMethodDescription;
 }
 
 class _AppLocalizationsDelegate

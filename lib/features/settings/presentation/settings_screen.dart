@@ -20,6 +20,8 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/scre
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/providers/apre_calculation_config_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/onerm_calculation_config.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -767,6 +769,11 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
+            // APRE Calculation Method
+            _buildAPRECalculationMethodSetting(context, ref),
+
+            const Divider(),
+
             // Fitness Profile Debug (Admin Only)
             Consumer(
               builder: (context, ref, child) {
@@ -1440,6 +1447,78 @@ class SettingsScreen extends ConsumerWidget {
       default:
         return 'English';
     }
+  }
+
+  /// APRE Calculation Method Setting
+  Widget _buildAPRECalculationMethodSetting(BuildContext context, WidgetRef ref) {
+    final configAsync = ref.watch(apreCalculationConfigProvider);
+
+    return configAsync.when(
+      data: (currentConfig) => ExpansionTile(
+        leading: const Icon(AppIcons.calculate),
+        title: Text(context.l10n.apreCalculationMethodTitle),
+        subtitle: Text(currentConfig.displayName),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.apreCalculationMethodDescription,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ...OneRMCalculationConfig.values.map((config) {
+                  return RadioListTile<OneRMCalculationConfig>(
+                    title: Text(config.displayName),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(config.description),
+                        const SizedBox(height: 4),
+                        Text(
+                          config.useCase,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    value: config,
+                    groupValue: currentConfig,
+                    onChanged: (value) {
+                      if (value != null) {
+                        ref
+                            .read(apreCalculationConfigProvider.notifier)
+                            .setConfig(value);
+                        SnackBarService.showSuccess(
+                          context,
+                          'APRE calculation method updated to ${value.displayName}',
+                        );
+                      }
+                    },
+                  );
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
+      loading: () => const ListTile(
+        leading: Icon(AppIcons.calculate),
+        title: Text('APRE Calculation Method'),
+        subtitle: Text('Loading...'),
+      ),
+      error: (error, stack) => ListTile(
+        leading: Icon(AppIcons.error, color: context.colors.error),
+        title: const Text('APRE Calculation Method'),
+        subtitle: Text('Error: $error'),
+      ),
+    );
   }
 
   Color _getPrimaryColor(String colorName) {

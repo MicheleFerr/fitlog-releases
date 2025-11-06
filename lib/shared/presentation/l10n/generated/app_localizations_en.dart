@@ -12741,4 +12741,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get apreGotIt => 'Got it';
+
+  @override
+  String get apreCalculationMethodTitle => 'APRE Calculation Method';
+
+  @override
+  String get apreCalculationMethodDescription =>
+      'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.';
 }

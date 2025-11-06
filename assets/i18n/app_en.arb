@@ -15277,5 +15277,13 @@
   "apreGotIt": "Got it",
   "@apreGotIt": {
     "description": "Button to dismiss APRE workout-in-progress warning"
+  },
+  "apreCalculationMethodTitle": "APRE Calculation Method",
+  "@apreCalculationMethodTitle": {
+    "description": "Title for APRE calculation method setting"
+  },
+  "apreCalculationMethodDescription": "Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.",
+  "@apreCalculationMethodDescription": {
+    "description": "Description explaining APRE calculation method options"
   }
 }

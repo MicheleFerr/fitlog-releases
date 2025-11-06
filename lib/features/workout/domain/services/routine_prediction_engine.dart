@@ -52,6 +52,7 @@ class RoutinePredictionEngine {
   /// [workoutHistory]: Recent workouts (newest first, 30-50 workouts recommended)
   /// [activeRoutineTemplateId]: Optional active routine ID for Level 2
   /// [nextWorkoutTemplateId]: Optional next uncompleted workout template ID from routine
+  /// [nextWorkoutScheduledDate]: Optional scheduled date for next workout from routine
   /// [availableTemplateNames]: Optional list of existing template names for validation
   /// [useCache]: Whether to use cached suggestion (default: true)
   ///
@@ -63,6 +64,7 @@ class RoutinePredictionEngine {
     required List<Workout> workoutHistory,
     String? activeRoutineTemplateId,
     String? nextWorkoutTemplateId,
+    DateTime? nextWorkoutScheduledDate,
     List<String>? availableTemplateNames,
     bool useCache = true,
   }) async {
@@ -83,6 +85,7 @@ class RoutinePredictionEngine {
         workoutHistory,
         activeRoutineTemplateId,
         nextWorkoutTemplateId,
+        nextWorkoutScheduledDate,
         availableTemplateNames,
       );
       if (routineSuggestion != null) {
@@ -174,6 +177,7 @@ class RoutinePredictionEngine {
     List<Workout> workoutHistory,
     String routineTemplateId,
     String nextWorkoutTemplateId,
+    DateTime? scheduledDate,
     List<String>? availableTemplateNames,
   ) async {
     // ✅ IMPLEMENTED: Use next uncompleted workout from active routine
@@ -211,6 +215,7 @@ class RoutinePredictionEngine {
       workoutName: workoutName,
       confidence: confidence,
       reason: 'Next in your active routine',
+      scheduledDate: scheduledDate, // ✅ NEW: Pass scheduled date to UI
       generatedAt: DateTime.now(),
     );
   }

@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 // APRE auto-regulation
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/providers/apre_calculation_config_provider.dart';
 // 🔒 Security: Input sanitization
 import 'package:gymbro_flutter_new/shared/domain/services/input_sanitizer.dart';
 // Haptic feedback
@@ -1634,11 +1635,13 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           return null;
         }
 
-        // Calculate APRE weights
+        // Calculate APRE weights with user's preferred config
+        final config = await ref.read(apreCalculationConfigProvider.future);
         final calculations = APREAutoRegulationService.calculateAPREWeights(
           historicalSets: historyData,
           protocol: exercise.apreProtocol ?? 6,
           useMetricSystem: true,
+          config: config,
         );
 
         if (calculations.isEmpty) {
@@ -1712,11 +1715,13 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         return;
       }
 
-      // Calculate APRE weights using the service
+      // Calculate APRE weights using the service with user's preferred config
+      final config = await ref.read(apreCalculationConfigProvider.future);
       final calculations = APREAutoRegulationService.calculateAPREWeights(
         historicalSets: historyData,
         protocol: exercise.apreProtocol ?? 6,
         useMetricSystem: true, // TODO: Get from user settings
+        config: config,
       );
 
       if (calculations.isEmpty) {

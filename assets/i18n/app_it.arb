@@ -5795,5 +5795,13 @@
   "apreGotIt": "Ho capito",
   "@apreGotIt": {
     "description": "Pulsante per chiudere l'avviso allenamento in corso"
+  },
+  "apreCalculationMethodTitle": "Metodo Calcolo APRE",
+  "@apreCalculationMethodTitle": {
+    "description": "Titolo per impostazione metodo calcolo APRE"
+  },
+  "apreCalculationMethodDescription": "Scegli come vengono selezionate le serie storiche per la stima del 1RM negli allenamenti APRE. Strategie diverse ottimizzano recency, volume dati o stabilità.",
+  "@apreCalculationMethodDescription": {
+    "description": "Descrizione che spiega le opzioni del metodo calcolo APRE"
   }
 }

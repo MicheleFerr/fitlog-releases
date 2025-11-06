@@ -60,6 +60,15 @@ class WorkoutSuggestion with _$WorkoutSuggestion {
     /// Example: "5 times in last 30 days"
     String? frequencyData,
 
+    /// Optional scheduled date for routine-based suggestions
+    ///
+    /// When provided, indicates the date when this workout is scheduled
+    /// in the active routine. Used to display "This is the workout you should
+    /// do on dd/mm/yyyy" in the UI.
+    ///
+    /// Example: DateTime(2025, 11, 8) → "08/11/2025"
+    DateTime? scheduledDate,
+
     /// Timestamp when this suggestion was generated
     @Default(null) DateTime? generatedAt,
   }) = _WorkoutSuggestion;

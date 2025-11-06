@@ -12885,4 +12885,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get apreGotIt => 'Ho capito';
+
+  @override
+  String get apreCalculationMethodTitle => 'Metodo Calcolo APRE';
+
+  @override
+  String get apreCalculationMethodDescription =>
+      'Scegli come vengono selezionate le serie storiche per la stima del 1RM negli allenamenti APRE. Strategie diverse ottimizzano recency, volume dati o stabilità.';
 }
