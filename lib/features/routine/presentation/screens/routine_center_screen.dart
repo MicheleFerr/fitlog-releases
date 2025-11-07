@@ -23,6 +23,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -292,7 +293,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 24),
+          Icon(icon, color: color),
           SizedBox(width: 8),
           Text(
             title,
@@ -608,96 +609,102 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
 
   Widget _buildWorkoutSuggestionCard(BuildContext context, WidgetRef ref) {
     final suggestionAsync = ref.watch(workoutSuggestionProvider);
+    final completionStatusAsync = ref.watch(todayCompletionStatusProvider);
+
+    // ✅ NEW: Check if today's workout is already completed
+    final isCompletedToday = completionStatusAsync != null;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: suggestionAsync.when(
-        data: (suggestion) => WorkoutSuggestionCard(
-          suggestion: suggestion,
-          onStartWorkout: (workoutName) async {
-            // Haptic feedback
-            await HapticFeedback.mediumImpact();
+      child: isCompletedToday
+          ? _buildCompletionMessage(context, ref, completionStatusAsync)
+          : suggestionAsync.when(
+              data: (suggestion) => WorkoutSuggestionCard(
+                suggestion: suggestion,
+                onStartWorkout: (workoutName) async {
+                  // Haptic feedback
+                  await HapticFeedback.mediumImpact();
 
-            // Get template by name
-            final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+                  // Get template by name
+                  final templatesAsync = ref.read(customWorkoutTemplatesProvider);
 
-            await templatesAsync.when(
-              data: (templates) async {
-                // Find template by normalized name (case-insensitive)
-                final template = templates.firstWhere(
-                  (t) => t.name.toLowerCase() == workoutName.toLowerCase(),
-                  orElse: () => templates.first, // Fallback to first template if not found
-                );
+                  await templatesAsync.when(
+                    data: (templates) async {
+                      // Find template by normalized name (case-insensitive)
+                      final template = templates.firstWhere(
+                        (t) => t.name.toLowerCase() == workoutName.toLowerCase(),
+                        orElse: () => templates.first, // Fallback to first template if not found
+                      );
 
-                // Start workout from template
-                ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+                      // Start workout from template
+                      ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
 
-                // Navigate to workout screen
-                if (context.mounted) {
-                  context.goNamed('workout');
-                }
-              },
-              loading: () {
-                SnackBarService.showInfo(
-                  context,
-                  'Loading template...',
-                );
-              },
-              error: (error, _) {
-                SnackBarService.showError(
-                  context,
-                  'Failed to load template: $error',
-                );
-              },
-            );
-          },
-          onShowAlternatives: () {
-            // TODO: Show alternatives dialog with other suggestions
-            SnackBarService.showInfo(
-              context,
-              'Alternatives feature coming soon!',
-            );
-          },
-          onWhyThisSuggestion: () {
-            // Show explanation of why this workout was suggested
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Why This Suggestion?'),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Suggestion Level: ${_getLevelName(suggestion.level)}',
-                        style: context.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        suggestion.reason,
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      if (suggestion.patternInfo != null) ...[
-                        SizedBox(height: 12),
-                        Text(
-                          suggestion.patternInfo!,
-                          style: context.textTheme.bodySmall?.copyWith(
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                      if (suggestion.frequencyData != null) ...[
-                        SizedBox(height: 12),
-                        Text(
-                          suggestion.frequencyData!,
-                          style: context.textTheme.bodySmall?.copyWith(
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
+                      // Navigate to workout screen
+                      if (context.mounted) {
+                        context.goNamed('workout');
+                      }
+                    },
+                    loading: () {
+                      SnackBarService.showInfo(
+                        context,
+                        'Loading template...',
+                      );
+                    },
+                    error: (error, _) {
+                      SnackBarService.showError(
+                        context,
+                        'Failed to load template: $error',
+                      );
+                    },
+                  );
+                },
+                onShowAlternatives: () {
+                  // TODO: Show alternatives dialog with other suggestions
+                  SnackBarService.showInfo(
+                    context,
+                    'Alternatives feature coming soon!',
+                  );
+                },
+                onWhyThisSuggestion: () {
+                  // Show explanation of why this workout was suggested
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Why This Suggestion?'),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Suggestion Level: ${_getLevelName(suggestion.level)}',
+                              style: context.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              suggestion.reason,
+                              style: context.textTheme.bodyMedium,
+                            ),
+                            if (suggestion.patternInfo != null) ...[
+                              SizedBox(height: 12),
+                              Text(
+                                suggestion.patternInfo!,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ],
+                            if (suggestion.frequencyData != null) ...[
+                              SizedBox(height: 12),
+                              Text(
+                                suggestion.frequencyData!,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ],
                       SizedBox(height: 16),
                       Text(
                         'Confidence: ${suggestion.displayConfidence}',
@@ -751,6 +758,96 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
       case SuggestionLevel.dayBased:
         return 'Day-Based Default';
     }
+  }
+
+  /// ✅ NEW: Build completion message when today's workout is completed
+  ///
+  /// Shows congratulations message and link to view completed workout instead
+  /// of showing the next workout suggestion
+  Widget _buildCompletionMessage(
+    BuildContext context,
+    WidgetRef ref,
+    Map<String, dynamic>? completionStatus,
+  ) {
+    final isRecovery = (completionStatus?['isRecovery'] as bool?) ?? false;
+
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: context.colors.success.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      color: context.colors.successContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with congratulations
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: context.colors.success.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    AppIcons.complete,
+                    color: context.colors.success,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '🎉 Grande oggi ti sei allenato!',
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.colors.onSuccessContainer,
+                        ),
+                      ),
+                      if (isRecovery)
+                        Text(
+                          'Recovery workout completed',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSuccessContainer
+                                .withValues(alpha: 0.7),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // View completed workout button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Navigate to workout history to view completed workout
+                  context.goNamed('workout_history');
+                },
+                icon: Icon(AppIcons.visibility),
+                label: Text('Consulta la Scheda Completata'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: context.colors.success,
+                  foregroundColor: context.colors.onSuccess,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // === SKIP RECOVERY ===

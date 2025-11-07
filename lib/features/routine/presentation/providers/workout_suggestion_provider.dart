@@ -178,3 +178,42 @@ final isSuggestionStaleProvider = Provider<bool>((ref) {
     orElse: () => false,
   );
 });
+
+/// ✅ NEW: Provider to check if today's workout is already completed
+///
+/// Returns completion info if workout is completed today, null otherwise.
+/// Checks the active routine's schedule for today's completion status.
+///
+/// Returns: {completedAt: DateTime} or null
+final todayCompletionStatusProvider =
+    Provider<Map<String, dynamic>?>((ref) {
+  final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
+
+  return activeRoutineAsync.maybeWhen(
+    data: (routine) {
+      if (routine == null) return null;
+
+      // Get today's date (UTC normalized)
+      final nowUtc = DateTime.now().toUtc();
+      final todayUtc = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
+      final todayKey =
+          '${todayUtc.year}-${todayUtc.month.toString().padLeft(2, '0')}-${todayUtc.day.toString().padLeft(2, '0')}';
+
+      // Check if today's workout is completed
+      final todayDay = routine.schedule[todayKey];
+      if (todayDay == null) return null;
+
+      if (todayDay.status != DayStatus.completed) {
+        return null;
+      }
+
+      // Return completion info
+      return {
+        'completedAt': DateTime.now(),
+        'templateId': todayDay.templateId,
+        'isRecovery': todayDay.isRecovery ?? false,
+      };
+    },
+    orElse: () => null,
+  );
+});

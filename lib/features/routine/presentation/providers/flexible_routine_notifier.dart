@@ -21,6 +21,7 @@
 /// - Return success/failure with error messages
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
@@ -440,6 +441,102 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
         isLoading: false,
         error: 'Recovery error: ${e.toString()}',
       );
+      return false;
+    }
+  }
+
+  /// ✅ NEW: Auto-detect and mark as recovery when user completes manually
+  ///
+  /// When user completes a workout that was originally scheduled yesterday
+  /// (and was skipped), automatically mark it as recovery. This prevents
+  /// the "Recover Workout" CTA from appearing when they've already done it manually.
+  ///
+  /// Parameters:
+  /// - routineId: ID of the active routine
+  /// - completedTemplateId: Template ID of the workout user just completed
+  /// - completionDate: Date when user completed the workout
+  ///
+  /// Returns: true if auto-detection succeeded and was marked as recovery
+  Future<bool> autoDetectAndMarkAsRecovery({
+    required String routineId,
+    required String completedTemplateId,
+    required DateTime completionDate,
+  }) async {
+    try {
+      // Get the routine to check if this is an auto-recovery scenario
+      final routine = await _repository.getRoutineById(routineId);
+      if (routine == null) return false;
+
+      // Normalize dates to UTC for consistency
+      final completionDateUtc = completionDate.toUtc();
+      final completionDateNormalized = DateTime.utc(
+        completionDateUtc.year,
+        completionDateUtc.month,
+        completionDateUtc.day,
+      );
+      final yesterdayUtc =
+          completionDateNormalized.subtract(const Duration(days: 1));
+
+      // Format dates as keys
+      final completionDateKey =
+          '${completionDateNormalized.year}-${completionDateNormalized.month.toString().padLeft(2, '0')}-${completionDateNormalized.day.toString().padLeft(2, '0')}';
+      final yesterdayDateKey =
+          '${yesterdayUtc.year}-${yesterdayUtc.month.toString().padLeft(2, '0')}-${yesterdayUtc.day.toString().padLeft(2, '0')}';
+
+      // Get scheduled days
+      final yesterdayDay = routine.schedule[yesterdayDateKey];
+      final todayDay = routine.schedule[completionDateKey];
+
+      // Check if this is an auto-recovery scenario:
+      // 1. Yesterday had a workout (not null, not a rest day)
+      // 2. Yesterday was skipped
+      // 3. Today was a rest day OR scheduled for same workout
+      // 4. Completed template matches yesterday's template
+      if (yesterdayDay == null || yesterdayDay.templateId == null) {
+        return false;
+      }
+
+      if (yesterdayDay.status != DayStatus.skipped) {
+        return false;
+      }
+
+      if (yesterdayDay.templateId != completedTemplateId) {
+        return false;
+      }
+
+      // This IS an auto-recovery! Mark today as recovery completion
+      final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
+
+      // Update today's day with recovery flags
+      updatedSchedule[completionDateKey] = (todayDay ?? ScheduledDay(
+        date: completionDateNormalized,
+        templateId: completedTemplateId,
+        status: DayStatus.scheduled,
+      ))
+          .copyWith(
+        isRecovery: true,
+        originalMissedDate: yesterdayUtc,
+        status: DayStatus.completed,
+      );
+
+      // Update the routine
+      final updatedRoutine = routine.copyWith(
+        schedule: updatedSchedule,
+        updatedAt: DateTime.now(),
+      );
+
+      await _repository.updateRoutine(updatedRoutine);
+
+      state = state.copyWith(
+        isLoading: false,
+        successMessage: 'Workout automatically marked as recovery! 💪',
+      );
+
+      return true;
+    } catch (e) {
+      // Silent failure - this is a best-effort operation
+      // Error is logged but doesn't prevent the workout completion
+      debugPrint('Auto-recovery detection failed: ${e.toString()}');
       return false;
     }
   }
