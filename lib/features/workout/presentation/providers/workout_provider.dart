@@ -802,6 +802,10 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
             if (isRecovery) {
               debugLog(LogCategory.workout, '🔄 [Recovery] Detected and marked as recovery workout');
+
+              // ✅ FIX: Invalidate provider to refresh UI with updated recovery status
+              // This ensures "Recupero Giorni" banner disappears immediately
+              ref.invalidate(activeFlexibleRoutineProvider);
             }
           }
         }
