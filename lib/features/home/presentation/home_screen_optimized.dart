@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_c
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/smart_workout_cta.dart';
 // import 'package:gymbro_flutter_new/features/home/presentation/widgets/progress_dashboard.dart'; // Widget rimosso
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/secondary_actions.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/smart_cta_button/smart_cta_button_exports.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/dynamic_greeting.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_update_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
@@ -241,6 +242,10 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                 // AI Coach Insights Card
                 AICoachCard(key: aiCoachCardKey),
                 SizedBox(height: 24),
+
+                // Smart CTA Button - Dynamic workout suggestions
+                const SmartCTAButton(),
+                const SizedBox(height: 20),
 
                 // Primary CTA - Smart workout starter
                 SmartWorkoutCTA(key: smartWorkoutCardKey),
