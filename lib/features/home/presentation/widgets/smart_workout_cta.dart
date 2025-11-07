@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -8,6 +9,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Smart workout CTA button that pre-loads workouts from active routines
 class SmartWorkoutCTA extends ConsumerWidget {
@@ -16,14 +20,14 @@ class SmartWorkoutCTA extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final routineAsync = ref.watch(activeFlexibleRoutineProvider);
+    final routineAsync = ref.watch(safeActiveRoutineProvider);
 
     return routineAsync.when(
       loading: () => _buildLoadingState(context, theme),
       error: (_, __) => _buildDisabledState(
         context,
         theme,
-        'Errore caricamento',
+        context.l10n.smartWorkoutCTAErrorLoading,
       ),
       data: (routine) {
         // Guard 1: Check if routine exists and has uncompleted workout
@@ -31,7 +35,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
           return _buildDisabledState(
             context,
             theme,
-            'Giorno di Riposo 🌟',
+            context.l10n.smartWorkoutCTARestDay,
           );
         }
 
@@ -41,7 +45,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
           return _buildDisabledState(
             context,
             theme,
-            'Routine incompleta',
+            context.l10n.smartWorkoutCTAIncompleteRoutine,
           );
         }
 
@@ -61,16 +65,10 @@ class SmartWorkoutCTA extends ConsumerWidget {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
+        color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(24),
       ),
-      child: const Center(
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: CircularProgressIndicator(strokeWidth: 3),
-        ),
-      ),
+      child: const LoadingIndicator(),
     );
   }
 
@@ -98,7 +96,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Usa il pulsante "+ Sessione Libera" per un allenamento libero',
+              context.l10n.smartWorkoutCTARestDayHint,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               ),
@@ -124,7 +122,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
       error: (_, __) => _buildDisabledState(
         context,
         theme,
-        'Errore caricamento template',
+        context.l10n.smartWorkoutCTAErrorTemplate,
       ),
       data: (templates) {
         // Find the template
@@ -133,7 +131,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
           return _buildDisabledState(
             context,
             theme,
-            'Template non trovato',
+            context.l10n.smartWorkoutCTATemplateNotFound,
           );
         }
 
@@ -159,7 +157,10 @@ class SmartWorkoutCTA extends ConsumerWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () => _onSmartCTATap(context, ref, template.id, template.name),
+              onTap: () async {
+                await HapticFeedback.lightImpact();
+                await _onSmartCTATap(context, ref, template.id, template.name);
+              },
               borderRadius: BorderRadius.circular(24),
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -171,11 +172,11 @@ class SmartWorkoutCTA extends ConsumerWidget {
                         Icon(
                           AppIcons.rocket,
                           color: theme.colorScheme.onPrimary,
-                          size: 16,
+                          size: AppIconSize.small,
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'INIZIA ALLENAMENTO',
+                          context.l10n.smartWorkoutCTAStart,
                           style: TextStyle(
                             color: theme.colorScheme.onPrimary,
                             fontSize: 12,
@@ -195,7 +196,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Suggerito per oggi • ~${template.estimatedDuration} min',
+                      context.l10n.smartWorkoutCTASuggestedToday(template.estimatedDuration),
                       style: TextStyle(
                         color: theme.colorScheme.onPrimary.withValues(alpha: 0.85),
                         fontSize: 14,
@@ -221,7 +222,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
     final sessionId = generateSessionId();
 
     // Guard 1: Check AsyncValue state
-    final routineAsync = ref.read(activeFlexibleRoutineProvider);
+    final routineAsync = ref.read(safeActiveRoutineProvider);
     if (routineAsync is! AsyncData) {
       return;
     }
