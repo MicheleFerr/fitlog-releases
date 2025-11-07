@@ -282,6 +282,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
   }
 
   Widget _buildCompactStat(String label, String value, IconData icon, Color color) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -293,14 +294,14 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: color.withValues(alpha: 0.8),
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
                 fontSize: 10,
               ),
             ),
             Text(
               value,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: color,
+                color: colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
