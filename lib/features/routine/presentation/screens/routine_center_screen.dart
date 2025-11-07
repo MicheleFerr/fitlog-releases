@@ -854,8 +854,8 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               child: ElevatedButton.icon(
                 onPressed: () {
                   // Navigate to workout history to view completed workout
-                  // ✅ FIX: Correct route name (workout-history, not workout_history)
-                  context.goNamed('workout-history');
+                  // ✅ FIX: Use pushNamed to maintain navigation stack (allows back button)
+                  context.pushNamed('workout-history');
                 },
                 icon: Icon(AppIcons.visibility),
                 label: Text('Consulta la Scheda Completata'),
