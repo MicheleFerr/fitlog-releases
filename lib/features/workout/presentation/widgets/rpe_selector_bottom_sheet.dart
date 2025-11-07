@@ -164,7 +164,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       _actualReps = exerciseSet.actualReps ?? widget.targetReps;
       _actualWeight = exerciseSet.weight ?? 0.0;
       _selectedRpe = exerciseSet.rpe;
-      _isSetCompleted = exerciseSet.isCompleted; // ✅ Initialize from set state
+      // ✅ FIX: Default to completed during workout so RPE is immediately visible and set is marked as done
+      // This prevents RPE from being -1 when user completes set without touching the completion toggle
+      _isSetCompleted = true; // Changed from: exerciseSet.isCompleted
       _originallyCompleted = exerciseSet.isCompleted; // ✅ Track original state (set once)
 
       // ✅ NEW: Initialize time variables for time-based exercises
@@ -612,7 +614,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               Row(
                 children: [
                   Icon(
-                    _isSetCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+                    _isSetCompleted ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
                     size: 20,
                     color: _isSetCompleted ? colorScheme.tertiary : colorScheme.onSurfaceVariant,
                   ),
@@ -1526,7 +1528,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.repeat, size: 18, color: colorScheme.primary),
+              Icon(AppIcons.repeat, size: 18, color: colorScheme.primary),
               const SizedBox(width: 8),
               Text(
                 l10n.reps,
@@ -1555,7 +1557,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     color: colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.remove, size: 24, color: colorScheme.error),
+                  child: Icon(AppIcons.remove, size: 24, color: colorScheme.error),
                 ),
               ),
               // Reps display
@@ -1597,7 +1599,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     color: colorScheme.primaryContainer.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.add, size: 24, color: colorScheme.primary),
+                  child: Icon(AppIcons.add, size: 24, color: colorScheme.primary),
                 ),
               ),
             ],
@@ -1637,7 +1639,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.schedule, size: 16, color: colorScheme.primary),
+                    Icon(AppIcons.schedule, size: 16, color: colorScheme.primary),
                     const SizedBox(width: 4),
                     Text(
                       'Minuti', // TODO: Add localization
@@ -1666,7 +1668,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.remove, size: 18, color: colorScheme.error),
+                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
                       ),
                     ),
                     // Minutes display
@@ -1715,7 +1717,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.add, size: 18, color: colorScheme.primary),
+                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
                       ),
                     ),
                   ],
@@ -1739,7 +1741,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.timer, size: 16, color: colorScheme.primary),
+                    Icon(AppIcons.timer, size: 16, color: colorScheme.primary),
                     const SizedBox(width: 4),
                     Text(
                       'Secondi', // TODO: Add localization
@@ -1768,7 +1770,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.remove, size: 18, color: colorScheme.error),
+                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
                       ),
                     ),
                     // Seconds display
@@ -1817,7 +1819,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(Icons.add, size: 18, color: colorScheme.primary),
+                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
                       ),
                     ),
                   ],
