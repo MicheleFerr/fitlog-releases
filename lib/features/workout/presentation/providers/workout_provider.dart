@@ -803,9 +803,15 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             if (isRecovery) {
               debugLog(LogCategory.workout, '🔄 [Recovery] Detected and marked as recovery workout');
 
-              // ✅ FIX: Invalidate provider to refresh UI with updated recovery status
-              // This ensures "Recupero Giorni" banner disappears immediately
+              // ✅ FIX: Force refresh from Firestore server (not cache)
+              // Wait 500ms to ensure Firestore write has propagated
+              await Future.delayed(const Duration(milliseconds: 500));
+
+              // Invalidate BOTH providers to force fresh fetch
               ref.invalidate(activeFlexibleRoutineProvider);
+              ref.invalidate(userFlexibleRoutinesProvider);
+
+              debugLog(LogCategory.workout, '🔄 [Recovery] Providers invalidated, forcing server refresh');
             }
           }
         }
