@@ -55,7 +55,9 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
   @override
   void initState() {
     super.initState();
-    _isCompleted = widget.exerciseSet.isCompleted;
+    // ✅ FIX: Default to completed so RPE is immediately visible
+    // User is typically opening this dialog to complete the set during workout
+    _isCompleted = true; // Changed from: widget.exerciseSet.isCompleted
     _selectedRpe = widget.exerciseSet.rpe;
     
     _weightController = TextEditingController(

@@ -217,7 +217,10 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
         _supersetReps[exerciseName] = exerciseSet?.reps ?? 10;
         _supersetSeconds[exerciseName] = exerciseSet?.seconds ?? 60; // ✅ NUOVO
         _supersetRpes[exerciseName] = exerciseSet?.rpe;
-        _supersetCompleted[exerciseName] = exerciseSet?.isCompleted ?? false;
+        // ✅ FIX: Default to completed during workout for superset exercises
+        _supersetCompleted[exerciseName] = widget.isInWorkout
+            ? true
+            : (exerciseSet?.isCompleted ?? false);
       }
 
       // Set current values to first exercise
@@ -233,7 +236,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
       _selectedReps = widget.exerciseSet.reps ?? widget.previousSet?.reps ?? 10;
       _selectedSeconds = widget.exerciseSet.seconds ?? widget.previousSet?.seconds ?? 60; // ✅ NUOVO: Default 60 seconds
       _selectedRpe = widget.exerciseSet.rpe;
-      _isCompleted = widget.exerciseSet.isCompleted;
+      // ✅ FIX: Default to completed during workout so RPE is immediately visible and set is marked as done
+      _isCompleted = widget.isInWorkout ? true : widget.exerciseSet.isCompleted;
     }
 
     _updateRir();
@@ -641,8 +645,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                               HapticFeedback.mediumImpact();
                                             },
                                             icon: Icon(
-                                              _isCompleted 
-                                                ? Icons.check_circle 
+                                              _isCompleted
+                                                ? AppIcons.complete
                                                 : AppIcons.radioButtonUnchecked,
                                               color: _isCompleted 
                                                 ? colorScheme.tertiary 
@@ -1157,7 +1161,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          Icons.timer,
+                                          AppIcons.timer,
                                           size: 18,
                                           color: colorScheme.tertiary,
                                         ),
@@ -1452,8 +1456,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                             children: [
                               Icon(
                                 widget.countingMode == ExerciseCountingMode.time
-                                    ? Icons.timer
-                                    : Icons.calculate,
+                                    ? AppIcons.timer
+                                    : AppIcons.calculate,
                                 size: 16,
                                 color: colorScheme.tertiary,
                               ),
