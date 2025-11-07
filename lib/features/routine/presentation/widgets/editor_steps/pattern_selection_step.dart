@@ -15,6 +15,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_pattern.dart';
@@ -809,11 +810,9 @@ class PatternSelectionStep extends ConsumerWidget {
 
   /// Format month and year for header
   String _formatMonthYear(DateTime date, BuildContext context) {
-    final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return '${months[date.month - 1]} ${date.year}';
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMMM y', locale);
+    return dateFormat.format(date);
   }
 
   /// Get short weekday name (Mon, Tue, etc.)

@@ -27,6 +27,7 @@
 /// - noScheduled: Tertiary button → "Esplora Workout"
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -53,15 +54,27 @@ class SmartCTAButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (kDebugMode) {
+      debugPrint('🎯 [SmartCTAButton] BUILD START');
+    }
+
     final today = DateTime.now();
 
     // Watch active routine (real-time updates)
     final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
 
+    if (kDebugMode) {
+      debugPrint('🎯 [SmartCTAButton] activeRoutineAsync state: ${activeRoutineAsync.runtimeType}');
+    }
+
     // Watch completed workouts today (real-time updates)
     final completedTodayAsync = ref.watch(
       completedWorkoutsByDateProvider(today),
     );
+
+    if (kDebugMode) {
+      debugPrint('🎯 [SmartCTAButton] completedTodayAsync state: ${completedTodayAsync.runtimeType}');
+    }
 
     return activeRoutineAsync.when(
       data: (routine) {

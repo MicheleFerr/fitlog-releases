@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_matching_service.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
@@ -382,8 +383,8 @@ class _SwapConfirmationDialog extends StatelessWidget {
   }
 
   String _formatDate(DateTime date, BuildContext context) {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    final dayName = days[date.weekday - 1];
-    return '$dayName ${date.day}/${date.month}';
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('E d/M', locale);
+    return dateFormat.format(date);
   }
 }

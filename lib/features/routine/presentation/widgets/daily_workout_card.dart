@@ -17,6 +17,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
@@ -109,7 +110,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _isToday(date) ? 'Today\'s Workout' : _formatDate(date),
+                      _isToday(date) ? context.l10n.routineTodayWorkout : _formatDate(context, date),
                       style: context.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: context.colors.onSurface,
@@ -616,9 +617,10 @@ class DailyWorkoutCard extends ConsumerWidget {
         date.day == now.day;
   }
 
-  String _formatDate(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  String _formatDate(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMM d, y', locale);
+    return dateFormat.format(date);
   }
 
   /// Auto-complete day with the workout instance

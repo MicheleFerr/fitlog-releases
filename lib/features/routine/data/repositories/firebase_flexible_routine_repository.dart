@@ -22,6 +22,7 @@
 library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
 
@@ -210,6 +211,10 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
   @override
   Stream<FlexibleRoutine?> watchActiveRoutine(String userId) {
     try {
+      if (kDebugMode) {
+        debugPrint('🔍 [watchActiveRoutine] START - userId: $userId');
+      }
+
       return _collection
           .where('userId', isEqualTo: userId)
           .where('isActive', isEqualTo: true)
@@ -217,10 +222,27 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
           .limit(1)
           .snapshots()
           .map((snapshot) {
-        if (snapshot.docs.isEmpty) return null;
-        return FlexibleRoutine.fromJson(snapshot.docs.first.data());
+        if (kDebugMode) {
+          debugPrint('🔍 [watchActiveRoutine] Snapshot received: ${snapshot.docs.length} docs');
+        }
+
+        if (snapshot.docs.isEmpty) {
+          if (kDebugMode) {
+            debugPrint('⚠️ [watchActiveRoutine] No active routine found, returning null');
+          }
+          return null;
+        }
+
+        final routine = FlexibleRoutine.fromJson(snapshot.docs.first.data());
+        if (kDebugMode) {
+          debugPrint('✅ [watchActiveRoutine] Active routine found: ${routine.name} (id: ${routine.id})');
+        }
+        return routine;
       });
     } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [watchActiveRoutine] Error: $e');
+      }
       throw _handleError(e, 'watchActiveRoutine');
     }
   }

@@ -16,6 +16,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
@@ -93,12 +94,12 @@ class ReviewStep extends ConsumerWidget {
               _buildDetailRow(
                 context,
                 label: 'Start Date',
-                value: _formatDate(state.startDate),
+                value: _formatDate(context, state.startDate),
               ),
               _buildDetailRow(
                 context,
                 label: 'End Date',
-                value: _formatDate(state.endDate),
+                value: _formatDate(context, state.endDate),
               ),
               _buildDetailRow(
                 context,
@@ -413,22 +414,10 @@ class ReviewStep extends ConsumerWidget {
     }
   }
 
-  String _formatDate(DateTime date) {
-    final months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  String _formatDate(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMMM d, y', locale);
+    return dateFormat.format(date);
   }
 
   String _formatDayLabel(String day) {

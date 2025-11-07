@@ -284,6 +284,42 @@ class MockFlexibleRoutineNotifier extends _i1.Mock
       ) as _i5.Future<bool>);
 
   @override
+  _i5.Future<bool> performRecoveryWorkout({
+    required String? routineId,
+    required String? workoutId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #performRecoveryWorkout,
+          [],
+          {
+            #routineId: routineId,
+            #workoutId: workoutId,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+
+  @override
+  _i5.Future<bool> autoDetectAndMarkAsRecovery({
+    required String? routineId,
+    required String? completedTemplateId,
+    required DateTime? completionDate,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #autoDetectAndMarkAsRecovery,
+          [],
+          {
+            #routineId: routineId,
+            #completedTemplateId: completedTemplateId,
+            #completionDate: completionDate,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+
+  @override
   _i5.Future<_i6.FlexibleRoutine?> getRoutineById(String? routineId) =>
       (super.noSuchMethod(
         Invocation.method(

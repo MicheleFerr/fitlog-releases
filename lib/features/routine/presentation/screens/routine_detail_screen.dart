@@ -20,6 +20,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
@@ -106,8 +107,25 @@ class RoutineDetailScreen extends ConsumerWidget {
           ),
         ),
 
-        // Unrecovered skips section
-        if (routine.skipTracker.unrecoveredSkips.isNotEmpty) ...[
+        // 🆕 FIXED: Show "Missed Workouts" only if ACTUALLY behind schedule (count-based)
+        //
+        // OLD LOGIC (❌ WRONG):
+        // - Showed "Missed Workouts" if any day had status=skipped
+        // - Ignored if workout was done on different day
+        //
+        // NEW LOGIC (✅ CORRECT):
+        // - Shows "Missed Workouts" ONLY if workoutsBehindSchedule > 0
+        // - workoutsBehindSchedule = max(0, workoutsDue - workoutsCompleted)
+        // - If user did all workouts (even on different days), no "missed" message
+        //
+        // Example:
+        // - Day 6 skipped, day 7 workout done instead
+        // - workoutsBehindSchedule = 0 (2 due, 2 completed)
+        // - No "Missed Workouts" shown ✅
+        //
+        // Only show if truly behind:
+        // - 2 workouts due, 1 completed → 1 missed ❌
+        if (routine.workoutsBehindSchedule > 0 && routine.skipTracker.unrecoveredSkips.isNotEmpty) ...[
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
@@ -177,7 +195,7 @@ class RoutineDetailScreen extends ConsumerWidget {
                       _buildInfoChip(
                         context,
                         icon: AppIcons.calendar,
-                        label: _formatDateRange(routine.startDate, routine.endDate),
+                        label: _formatDateRange(context, routine.startDate, routine.endDate),
                       ),
                       SizedBox(width: 8),
                       _buildInfoChip(
@@ -278,7 +296,7 @@ class RoutineDetailScreen extends ConsumerWidget {
           ),
         ),
         title: Text(
-          _formatDate(skip.date),
+          _formatDate(context, skip.date),
           style: context.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -484,19 +502,20 @@ class RoutineDetailScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              leading: Icon(
-                AppIcons.editCalendar,
-                color: context.colors.primary,
-              ),
-              title: const Text('Edit Schedule'),
-              subtitle: const Text('Change workout templates for each day'),
-              onTap: () {
-                Navigator.pop(modalContext);
-                _editSchedule(context, ref, routine);
-              },
-            ),
-            const Divider(),
+            // TODO: Edit Schedule feature not yet implemented
+            // ListTile(
+            //   leading: Icon(
+            //     AppIcons.editCalendar,
+            //     color: context.colors.primary,
+            //   ),
+            //   title: const Text('Edit Schedule'),
+            //   subtitle: const Text('Change workout templates for each day'),
+            //   onTap: () {
+            //     Navigator.pop(modalContext);
+            //     _editSchedule(context, ref, routine);
+            //   },
+            // ),
+            // const Divider(),
             ListTile(
               leading: Icon(AppIcons.archive),
               title: Text('Archive'),
@@ -535,13 +554,14 @@ class RoutineDetailScreen extends ConsumerWidget {
     // TODO: Implement full edit schedule screen
   }
 
-  String _formatDate(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  String _formatDate(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMM d, y', locale);
+    return dateFormat.format(date);
   }
 
-  String _formatDateRange(DateTime start, DateTime end) {
-    return '${_formatDate(start)} - ${_formatDate(end)}';
+  String _formatDateRange(BuildContext context, DateTime start, DateTime end) {
+    return '${_formatDate(context, start)} - ${_formatDate(context, end)}';
   }
 
   String _formatDayStatus(DayStatus status) {

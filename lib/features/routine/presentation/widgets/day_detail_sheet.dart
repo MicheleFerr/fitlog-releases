@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/workout_selector_sheet.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
 
 class DayDetailSheet extends ConsumerStatefulWidget {
@@ -111,6 +112,54 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
 
           const SizedBox(height: 24),
 
+          // 🆕 Off-Schedule Workout Badge (if workout done on rest day)
+          if (widget.dayInfo.status == DayStatus.rest && stats.hasCompletedWorkout) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.blue.withValues(alpha: 0.2),
+                      Colors.purple.withValues(alpha: 0.2),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue.withValues(alpha: 0.5)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(AppIcons.star, color: Colors.blue, size: 20),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            context.l10n.routineExtraWorkout,
+                            style: context.textTheme.titleSmall?.copyWith(
+                              color: Colors.blue.shade700,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            context.l10n.routineExtraWorkoutMessage,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+
           // Performance section (if completed)
           if (stats.hasCompletedWorkout) ...[
             _buildPerformanceSection(context, stats),
@@ -144,7 +193,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   }
 
   Widget _buildHeader(BuildContext context, DayStats stats) {
-    final dateFormat = DateFormat('EEEE, MMMM d, y');
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('EEEE, MMMM d, y', locale);
     final statusIcon = _getStatusIcon();
     final statusColor = _getStatusColor(context);
 
@@ -160,7 +210,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  stats.templateName ?? widget.dayInfo.templateId ?? 'Rest Day',
+                  stats.templateName ?? widget.dayInfo.templateId ?? context.l10n.routineRestDay,
                   style: context.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.colors.onSurface,
@@ -222,7 +272,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'TODAY\'S PERFORMANCE',
+            context.l10n.routineTodayPerformance,
             style: context.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.primary,
@@ -241,7 +291,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 _buildStatRow(
                   context,
                   icon: AppIcons.workout,
-                  label: 'Volume',
+                  label: context.l10n.routineVolume,
                   value: '${stats.totalVolume.toStringAsFixed(0)} kg',
                   trend: stats.volumeChangePercent,
                 ),
@@ -249,7 +299,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 _buildStatRow(
                   context,
                   icon: AppIcons.timer,
-                  label: 'Duration',
+                  label: context.l10n.routineDuration,
                   value: _formatDuration(stats.duration),
                   trend: stats.durationChange?.inMinutes.toDouble(),
                 ),
@@ -257,15 +307,15 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 _buildStatRow(
                   context,
                   icon: AppIcons.complete,
-                  label: 'Exercises',
+                  label: context.l10n.exercisesLabel,
                   value: '${stats.completedExercises}/${stats.totalExercises}',
                 ),
                 const SizedBox(height: 12),
                 _buildStatRow(
                   context,
                   icon: AppIcons.speed,
-                  label: 'Average RPE',
-                  value: stats.averageRPE > 0 ? '${stats.averageRPE.toStringAsFixed(1)}/10' : 'N/A',
+                  label: context.l10n.routineAverageRPE,
+                  value: stats.averageRPE > 0 ? '${stats.averageRPE.toStringAsFixed(1)}/10' : context.l10n.notAvailable,
                 ),
               ],
             ),
@@ -292,7 +342,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                   Icon(AppIcons.achievement, color: Colors.amber, size: 20),
                   SizedBox(width: 8),
                   Text(
-                    '🎯 Personal Record!',
+                    '🎯 ${context.l10n.personalRecord}',
                     style: context.textTheme.titleSmall?.copyWith(
                       color: Colors.amber.shade700,
                       fontWeight: FontWeight.bold,
@@ -381,7 +431,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'WORKOUT PREVIEW',
+                context.l10n.routineWorkoutPreview,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.primary,
@@ -392,7 +442,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               TextButton.icon(
                 onPressed: () => _changeTemplate(context),
                 icon: Icon(AppIcons.swapHoriz, size: 18),
-                label: Text('Change'),
+                label: Text(context.l10n.routineChange),
                 style: TextButton.styleFrom(
                   foregroundColor: context.colors.secondary,
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -405,7 +455,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             data: (template) {
               if (template == null) {
                 return Text(
-                  'Template not found',
+                  context.l10n.routineTemplateNotFound,
                   style: TextStyle(color: context.colors.error),
                 );
               }
@@ -478,8 +528,8 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                                 SizedBox(width: 4),
                                 Text(
                                   _showAllExercises
-                                      ? 'Show Less'
-                                      : 'Show All ($remainingCount more)',
+                                      ? context.l10n.routineShowLess
+                                      : context.l10n.routineShowAll(remainingCount),
                                   style: context.textTheme.bodySmall?.copyWith(
                                     color: context.colors.primary,
                                     fontWeight: FontWeight.bold,
@@ -506,13 +556,14 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   }
 
   Widget _buildHistoricalSection(BuildContext context, DayStats stats) {
+    final locale = Localizations.localeOf(context).toString();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'WORKOUT HISTORY',
+            context.l10n.routineWorkoutHistory,
             style: context.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.primary,
@@ -530,7 +581,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ...stats.previousWorkouts.take(3).map((workout) {
-                  final dateFormat = DateFormat('MMM d');
+                  final dateFormat = DateFormat('MMM d', locale);
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Row(
@@ -595,7 +646,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           Row(
             children: [
               Text(
-                'INSIGHTS & SUGGESTIONS',
+                context.l10n.routineInsightsSuggestions,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.primary,
@@ -714,7 +765,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             ElevatedButton.icon(
               onPressed: () => _startWorkout(context),
               icon: Icon(AppIcons.play),
-              label: Text('Start Workout'),
+              label: Text(context.l10n.routineStartWorkout),
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.colors.primary,
                 foregroundColor: context.colors.onPrimary,
@@ -732,7 +783,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             OutlinedButton.icon(
               onPressed: () => _viewWorkoutDetails(context, stats),
               icon: Icon(AppIcons.visibility),
-              label: Text('View Full Details'),
+              label: Text(context.l10n.routineViewFullDetails),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.colors.primary,
                 minimumSize: const Size(double.infinity, 54),
@@ -753,7 +804,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                   child: OutlinedButton.icon(
                     onPressed: () => _completeDay(context),
                     icon: const Icon(AppIcons.check, size: 18),
-                    label: const Text('Complete'),
+                    label: Text(context.l10n.routineComplete),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.green,
                       side: const BorderSide(color: Colors.green),
@@ -769,7 +820,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 child: OutlinedButton.icon(
                   onPressed: () => _skipDay(context),
                   icon: Icon(AppIcons.skipNext, size: 18),
-                  label: Text('Skip'),
+                  label: Text(context.l10n.routineSkip),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.error,
                     side: BorderSide(color: context.colors.error),
@@ -820,15 +871,15 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   String _getStatusText() {
     switch (widget.dayInfo.status) {
       case DayStatus.completed:
-        return 'Completed';
+        return context.l10n.routineStatusCompleted;
       case DayStatus.scheduled:
-        return 'Scheduled';
+        return context.l10n.routineStatusScheduled;
       case DayStatus.skipped:
-        return 'Skipped';
+        return context.l10n.routineStatusSkipped;
       case DayStatus.recovered:
-        return 'Recovered';
+        return context.l10n.routineStatusRecovered;
       case DayStatus.rest:
-        return 'Rest Day';
+        return context.l10n.routineRestDay;
     }
   }
 
@@ -851,7 +902,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       final template = await ref.read(templateByIdProvider(widget.dayInfo.templateId!).future);
       if (template == null) {
         if (context.mounted) {
-          SnackBarService.showError(context, 'Template not found');
+          SnackBarService.showError(context, context.l10n.routineTemplateNotFound);
         }
         return;
       }
@@ -862,11 +913,11 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       if (context.mounted) {
         Navigator.pop(context); // Close bottom sheet
         context.goNamed('workout'); // Navigate to workout screen
-        SnackBarService.showSuccess(context, 'Workout started! 💪');
+        SnackBarService.showSuccess(context, context.l10n.routineWorkoutStarted);
       }
     } catch (e) {
       if (context.mounted) {
-        SnackBarService.showError(context, 'Error starting workout: $e');
+        SnackBarService.showError(context, context.l10n.routineErrorStartingWorkout(e.toString()));
       }
     }
   }
@@ -954,9 +1005,9 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   Future<void> _skipDay(BuildContext context) async {
     final confirmed = await ModalService.showConfirmDialog(
       context,
-      title: 'Skip Day',
-      message: 'Mark this day as skipped?',
-      confirmText: 'Skip',
+      title: context.l10n.routineSkipDay,
+      message: context.l10n.routineSkipDayConfirm,
+      confirmText: context.l10n.routineSkip,
       isDangerous: true,
     );
 
@@ -971,9 +1022,9 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
     if (context.mounted) {
       if (success) {
         Navigator.pop(context);
-        SnackBarService.showSuccess(context, 'Day skipped');
+        SnackBarService.showSuccess(context, context.l10n.routineDaySkipped);
       } else {
-        SnackBarService.showError(context, 'Failed to skip day');
+        SnackBarService.showError(context, context.l10n.routineFailedToSkip);
       }
     }
   }
@@ -985,7 +1036,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
 
       if (templates.isEmpty) {
         if (context.mounted) {
-          SnackBarService.showInfo(context, 'No templates available');
+          SnackBarService.showInfo(context, context.l10n.routineNoTemplatesAvailable);
         }
         return;
       }
@@ -995,7 +1046,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       // Show template selection dialog
       final selectedTemplate = await ModalService.showListDialog<WorkoutTemplate>(
         context,
-        title: 'Change Workout Template',
+        title: context.l10n.routineChangeTemplate,
         items: templates,
         itemLabel: (template) => template.name,
       );
@@ -1007,7 +1058,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
       final routine = await ref.read(routineByIdProvider(widget.routine.id).future);
       if (routine == null) {
         if (context.mounted) {
-          SnackBarService.showError(context, 'Routine not found');
+          SnackBarService.showError(context, context.l10n.routineNotFound);
         }
         return;
       }
@@ -1029,15 +1080,15 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           Navigator.pop(context); // Close sheet
           SnackBarService.showSuccess(
             context,
-            'Template changed to "${selectedTemplate.name}"',
+            context.l10n.routineTemplateChanged(selectedTemplate.name),
           );
         } else {
-          SnackBarService.showError(context, 'Failed to change template');
+          SnackBarService.showError(context, context.l10n.routineFailedToChange);
         }
       }
     } catch (e) {
       if (context.mounted) {
-        SnackBarService.showError(context, 'Error changing template: $e');
+        SnackBarService.showError(context, context.l10n.routineErrorChanging(e.toString()));
       }
     }
   }
@@ -1045,9 +1096,12 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   void _viewWorkoutDetails(BuildContext context, DayStats stats) {
     if (stats.completedWorkout == null) return;
 
-    // Navigate to workout detail screen
-    Navigator.pop(context);
-    SnackBarService.showInfo(context, 'Opening workout details...');
-    // You'll need to implement navigation to workout detail screen
+    // Show workout detail modal
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => WorkoutDetailModal(workout: stats.completedWorkout!),
+    );
   }
 }

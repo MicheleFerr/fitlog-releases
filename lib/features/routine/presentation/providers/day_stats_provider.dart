@@ -54,6 +54,56 @@ final workoutForDateProvider = FutureProvider.family<WorkoutHistoryDetail?, Date
   }
 });
 
+/// 🆕 Fetches all workouts completed in a month (for calendar coloring)
+///
+/// Returns a Map where key = "YYYY-MM-DD" and value = WorkoutHistoryDetail
+/// This allows efficient lookup for calendar day coloring without 30+ separate queries.
+///
+/// Usage:
+/// ```dart
+/// final workoutsMap = ref.watch(workoutsForMonthProvider(DateTime(2025, 1, 1)));
+/// final hasWorkout = workoutsMap.value?['2025-01-15'] != null;
+/// ```
+final workoutsForMonthProvider = FutureProvider.family<Map<String, WorkoutHistoryDetail>, DateTime>((ref, month) async {
+  final userId = ref.watch(_currentUserIdProvider);
+  if (userId == null) return {};
+
+  // Normalize to start and end of month
+  final startOfMonth = DateTime(month.year, month.month, 1);
+  final endOfMonth = DateTime(month.year, month.month + 1, 0, 23, 59, 59);
+
+  try {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('workouts')
+        .where('userId', isEqualTo: userId)
+        .where('completedAt', isGreaterThanOrEqualTo: startOfMonth)
+        .where('completedAt', isLessThanOrEqualTo: endOfMonth)
+        .orderBy('completedAt', descending: false)
+        .get();
+
+    // Build map with date key "YYYY-MM-DD"
+    final workoutsMap = <String, WorkoutHistoryDetail>{};
+    for (final doc in snapshot.docs) {
+      final workout = WorkoutHistoryDetail.fromFirestore(doc);
+      final dateKey = '${workout.completedAt.year}-${workout.completedAt.month.toString().padLeft(2, '0')}-${workout.completedAt.day.toString().padLeft(2, '0')}';
+
+      // If multiple workouts same day, keep the latest (last one in iteration)
+      workoutsMap[dateKey] = workout;
+    }
+
+    if (kDebugMode) {
+      debugPrint('✅ Loaded ${workoutsMap.length} workouts for month ${month.month}/${month.year}');
+    }
+
+    return workoutsMap;
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('⚠️ Error fetching workouts for month $month: $e');
+    }
+    return {};
+  }
+});
+
 /// Fetches history of workouts with same template
 final templateHistoryProvider = FutureProvider.family<List<WorkoutHistoryDetail>, String>((ref, templateId) async {
   final userId = ref.watch(_currentUserIdProvider);
@@ -82,14 +132,90 @@ final templateHistoryProvider = FutureProvider.family<List<WorkoutHistoryDetail>
 /// Calculates complete statistics for a routine day
 final dayStatsProvider = FutureProvider.family<DayStats, DayStatsParams>((ref, params) async {
   try {
-    // Fetch completed workout for this date
+    // Fetch completed workout for this date (ALWAYS check, even if rest day)
     final completedWorkout = await ref.watch(workoutForDateProvider(params.date).future);
 
-    // If no template ID, return empty stats
+    // 🆕 FIXED: If no template ID BUT there's a completed workout → show it!
+    // This handles the case where user did a workout on a "rest day" in the schedule
     if (params.templateId == null) {
-      return DayStats.empty(params.date);
+      // If no workout completed that day either → truly empty
+      if (completedWorkout == null) {
+        return DayStats.empty(params.date);
+      }
+
+      // ✅ Workout completed on rest day → show workout stats with its template
+      final workoutTemplateId = completedWorkout.templateId;
+      final template = workoutTemplateId != null
+          ? await ref.watch(templateByIdProvider(workoutTemplateId).future)
+          : null;
+
+      // Get history for this workout's template (if exists)
+      final previousWorkouts = workoutTemplateId != null
+          ? await ref.watch(templateHistoryProvider(workoutTemplateId).future)
+          : <WorkoutHistoryDetail>[];
+
+      final filteredHistory = previousWorkouts
+          .where((w) => w.id != completedWorkout.id)
+          .toList();
+
+      // Calculate metrics
+      final totalVolume = completedWorkout.totalVolume;
+      final duration = completedWorkout.duration;
+      final totalExercises = completedWorkout.exercises.length;
+      final completedExercises = completedWorkout.exercises.length;
+      final averageRPE = completedWorkout.averageRPE;
+
+      // Calculate comparison with last workout
+      double? volumeChangePercent;
+      Duration? durationChange;
+      bool isPersonalRecord = false;
+
+      if (filteredHistory.isNotEmpty) {
+        final lastWorkout = filteredHistory.first;
+
+        // Volume change
+        if (lastWorkout.totalVolume > 0) {
+          volumeChangePercent = ((totalVolume - lastWorkout.totalVolume) / lastWorkout.totalVolume) * 100;
+        }
+
+        // Duration change
+        durationChange = duration - lastWorkout.duration;
+
+        // Check if personal record (highest volume ever)
+        final maxVolume = filteredHistory.fold<double>(
+          0,
+          (max, workout) => workout.totalVolume > max ? workout.totalVolume : max,
+        );
+        isPersonalRecord = totalVolume > maxVolume;
+      }
+
+      // Calculate streak
+      final currentStreak = await _calculateStreak(ref, params.date);
+
+      // Check if after rest day
+      final isAfterRestDay = await _isAfterRestDay(ref, params.date);
+
+      return DayStats(
+        date: params.date,
+        templateId: workoutTemplateId,
+        templateName: template?.name ?? completedWorkout.name,
+        completedWorkout: completedWorkout,
+        totalVolume: totalVolume,
+        duration: duration,
+        totalExercises: totalExercises,
+        completedExercises: completedExercises,
+        averageRPE: averageRPE,
+        previousWorkouts: filteredHistory,
+        volumeChangePercent: volumeChangePercent,
+        durationChange: durationChange,
+        isPersonalRecord: isPersonalRecord,
+        currentStreak: currentStreak,
+        isAfterRestDay: isAfterRestDay,
+        totalWorkoutsWithTemplate: filteredHistory.length + 1,
+      );
     }
 
+    // Normal case: templateId exists in schedule
     // Fetch template name
     final template = await ref.watch(templateByIdProvider(params.templateId!).future);
     final templateName = template?.name;

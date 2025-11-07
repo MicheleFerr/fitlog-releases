@@ -18,6 +18,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
@@ -108,7 +109,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          'From ${_formatDate(widget.originalDate)}',
+                          'From ${_formatDate(context, widget.originalDate)}',
                           style: context.textTheme.bodyMedium?.copyWith(
                             color: context.colors.onSurface.withValues(alpha: 0.7),
                           ),
@@ -333,7 +334,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                     ),
                     SizedBox(width: 6),
                     Text(
-                      _formatDateShort(date),
+                      _formatDateShort(context, date),
                       style: context.textTheme.bodyMedium?.copyWith(
                         color: isSelected ? context.colors.surface : context.colors.onSurface,
                         fontWeight: FontWeight.bold,
@@ -430,7 +431,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           _buildImpactRow(
             icon: AppIcons.eventAvailable,
             label: 'Recovery Date',
-            value: _formatDate(_selectedDay!),
+            value: _formatDate(context, _selectedDay!),
             isPositive: true,
           ),
         ],
@@ -533,19 +534,15 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
     Navigator.of(context).pop(_selectedDay);
   }
 
-  String _formatDate(DateTime date) {
-    final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  String _formatDate(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMM d, y', locale);
+    return dateFormat.format(date);
   }
 
-  String _formatDateShort(DateTime date) {
-    final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.day}';
+  String _formatDateShort(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMM d', locale);
+    return dateFormat.format(date);
   }
 }

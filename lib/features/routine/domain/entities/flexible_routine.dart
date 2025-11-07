@@ -409,6 +409,62 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     return scheduledDays;
   }
 
+  /// 🆕 PUBLIC: Get workout days due up to today
+  ///
+  /// Returns count of workout days (not rest days) that were scheduled
+  /// from start date until today (inclusive).
+  ///
+  /// Used for count-based recovery logic:
+  /// - If completedDays < workoutsDueUpToToday → behind schedule
+  /// - If completedDays >= workoutsDueUpToToday → on track or ahead
+  ///
+  /// Example:
+  /// - Start date: Day 1
+  /// - Today: Day 4
+  /// - Schedule: W, W, R, W (2 workouts in first 3 days, 1 workout on day 4)
+  /// - workoutsDueUpToToday = 3
+  int get workoutsDueUpToToday {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    return schedule.values
+        .where((day) {
+          // Only workout days (not rest)
+          if (day.isRestDay) return false;
+
+          // Only days up to today (past or today)
+          final dayDate = DateTime(day.date.year, day.date.month, day.date.day);
+          return !dayDate.isAfter(today);
+        })
+        .length;
+  }
+
+  /// 🆕 PUBLIC: Get workouts behind schedule (count-based logic)
+  ///
+  /// Returns how many workouts the user is behind schedule.
+  /// Uses count-based comparison, NOT date-based:
+  /// - workoutsDue = number of workout days scheduled up to today
+  /// - workoutsCompleted = number of workout days actually completed
+  /// - behind = max(0, workoutsDue - workoutsCompleted)
+  ///
+  /// This logic correctly handles:
+  /// - Workouts done on different days than scheduled
+  /// - Multiple workouts done in one day
+  /// - Skip + recovery in same week
+  ///
+  /// Example:
+  /// - 4 days passed, 2 workouts due (day 4 and day 6)
+  /// - User completed 2 workouts (day 4 and day 7)
+  /// - workoutsBehind = max(0, 2 - 2) = 0 ✅ (on track!)
+  ///
+  /// Old logic would show:
+  /// - 1 day to recover (because day 6 has status=skipped) ❌ WRONG
+  int get workoutsBehindSchedule {
+    final due = workoutsDueUpToToday;
+    final completed = completedDays;
+    return (due - completed).clamp(0, 9999);
+  }
+
   /// Get skip rate percentage
   double get skipRate {
     return skipTracker.skipRate;

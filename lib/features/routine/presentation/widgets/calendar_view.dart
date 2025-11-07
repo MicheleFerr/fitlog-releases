@@ -16,14 +16,17 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/day_stats_provider.dart';
 
 /// Calendar widget for routine schedule
-class CalendarView extends StatefulWidget {
+class CalendarView extends ConsumerStatefulWidget {
 
   const CalendarView({
     super.key,
@@ -34,10 +37,10 @@ class CalendarView extends StatefulWidget {
   final Function(DateTime) onDayTap;
 
   @override
-  State<CalendarView> createState() => _CalendarViewState();
+  ConsumerState<CalendarView> createState() => _CalendarViewState();
 }
 
-class _CalendarViewState extends State<CalendarView> {
+class _CalendarViewState extends ConsumerState<CalendarView> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
 
@@ -72,7 +75,7 @@ class _CalendarViewState extends State<CalendarView> {
               ),
               SizedBox(width: 8),
               Text(
-                'Schedule',
+                context.l10n.routineSchedule,
                 style: context.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.onSurface,
@@ -155,30 +158,62 @@ class _CalendarViewState extends State<CalendarView> {
       );
     }
 
+    // 🆕 Check if workout was completed on this day physically
+    final workoutsForMonth = ref.watch(workoutsForMonthProvider(_focusedDay));
+    final dateKey = '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+
     Color? backgroundColor;
     Color? textColor;
 
-    switch (dayInfo.status) {
-      case DayStatus.completed:
-        backgroundColor = context.colors.success.withValues(alpha: 0.2);
-        textColor = context.colors.success.withValues(red: context.colors.success.r * 0.7, green: context.colors.success.g * 0.7, blue: context.colors.success.b * 0.7);
-        break;
-      case DayStatus.skipped:
-        backgroundColor = context.colors.error.withValues(alpha: 0.2);
-        textColor = context.colors.error;
-        break;
-      case DayStatus.recovered:
-        backgroundColor = context.colors.primary.withValues(alpha: 0.2);
-        textColor = context.colors.primary.withValues(red: context.colors.primary.r * 0.7, green: context.colors.primary.g * 0.7, blue: context.colors.primary.b * 0.7);
-        break;
-      case DayStatus.rest:
-        backgroundColor = context.colors.secondary.withValues(alpha: 0.2);
-        textColor = context.colors.secondary;
-        break;
-      case DayStatus.scheduled:
-        backgroundColor = context.colors.primaryContainer.withValues(alpha: 0.3);
-        textColor = context.colors.primary;
-        break;
+    // 🆕 FIXED: Handle async state properly - ONLY use completed workouts when data is loaded
+    final hasCompletedWorkout = workoutsForMonth.when(
+      data: (workoutsMap) => workoutsMap.containsKey(dateKey),
+      loading: () => false, // While loading, use schedule status
+      error: (_, __) => false, // On error, use schedule status
+    );
+
+    // 🐛 DEBUG: Print what's happening
+    if (kDebugMode && isToday) {
+      debugPrint('🔍 Calendar DEBUG for day ${day.day}:');
+      debugPrint('  - dateKey: $dateKey');
+      debugPrint('  - hasCompletedWorkout: $hasCompletedWorkout');
+      debugPrint('  - dayInfo.status: ${dayInfo.status}');
+      workoutsForMonth.when(
+        data: (map) => debugPrint('  - workoutsMap has ${map.length} workouts: ${map.keys.toList()}'),
+        loading: () => debugPrint('  - workoutsMap: LOADING'),
+        error: (e, s) => debugPrint('  - workoutsMap ERROR: $e'),
+      );
+    }
+
+    // 🆕 FIXED: If workout completed on this day → green (completed)
+    // Even if schedule says "rest" or "scheduled"
+    if (hasCompletedWorkout) {
+      backgroundColor = context.colors.success.withValues(alpha: 0.2);
+      textColor = context.colors.success.withValues(red: context.colors.success.r * 0.7, green: context.colors.success.g * 0.7, blue: context.colors.success.b * 0.7);
+    } else {
+      // Use schedule status
+      switch (dayInfo.status) {
+        case DayStatus.completed:
+          backgroundColor = context.colors.success.withValues(alpha: 0.2);
+          textColor = context.colors.success.withValues(red: context.colors.success.r * 0.7, green: context.colors.success.g * 0.7, blue: context.colors.success.b * 0.7);
+          break;
+        case DayStatus.skipped:
+          backgroundColor = context.colors.error.withValues(alpha: 0.2);
+          textColor = context.colors.error;
+          break;
+        case DayStatus.recovered:
+          backgroundColor = context.colors.primary.withValues(alpha: 0.2);
+          textColor = context.colors.primary.withValues(red: context.colors.primary.r * 0.7, green: context.colors.primary.g * 0.7, blue: context.colors.primary.b * 0.7);
+          break;
+        case DayStatus.rest:
+          backgroundColor = context.colors.secondary.withValues(alpha: 0.2);
+          textColor = context.colors.secondary;
+          break;
+        case DayStatus.scheduled:
+          backgroundColor = context.colors.primaryContainer.withValues(alpha: 0.3);
+          textColor = context.colors.primary;
+          break;
+      }
     }
 
     if (isSelected) {
@@ -214,10 +249,10 @@ class _CalendarViewState extends State<CalendarView> {
 
   Widget _buildLegend(BuildContext context) {
     final legendItems = [
-      (context.colors.success, 'Completed'),
-      (context.colors.primary, 'Scheduled'),
-      (context.colors.error, 'Skipped'),
-      (context.colors.secondary, 'Rest'),
+      (context.colors.success, context.l10n.routineStatusCompleted),
+      (context.colors.primary, context.l10n.routineStatusScheduled),
+      (context.colors.error, context.l10n.routineStatusSkipped),
+      (context.colors.secondary, context.l10n.routineStatusRest),
     ];
 
     return Wrap(

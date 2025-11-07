@@ -17,6 +17,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/skip_tracker.dart';
@@ -122,7 +123,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            _formatDate(widget.date),
+                            _formatDate(context, widget.date),
                             style: context.textTheme.bodyMedium?.copyWith(
                               color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
@@ -425,11 +426,9 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
     Navigator.of(context).pop(result);
   }
 
-  String _formatDate(DateTime date) {
-    final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  String _formatDate(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMM d, y', locale);
+    return dateFormat.format(date);
   }
 }

@@ -543,13 +543,29 @@ rules_version = '2';
            exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
            get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
         );
-        
+
         allow create: if request.auth != null &&
           request.auth.uid == userId;
-          
+
         allow update: if request.auth != null &&
           request.auth.uid == userId;
-          
+
+        allow delete: if request.auth != null &&
+          request.auth.uid == userId;
+      }
+
+      // ============= WORKOUTS SUBCOLLECTION =============
+      match /workouts/{workoutId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        allow create: if request.auth != null &&
+          request.auth.uid == userId &&
+          request.resource.data.userId == userId;
+
+        allow update: if request.auth != null &&
+          request.auth.uid == userId &&
+          resource.data.userId == userId;
+
         allow delete: if request.auth != null &&
           request.auth.uid == userId;
       }
@@ -985,15 +1001,12 @@ rules_version = '2';
       // Check if any schedule day has recovery=true
       let hasRecovery = newSchedule.values().hasAny(['isRecovery', true]);
 
-      if (!hasRecovery) {
-        // Not a recovery operation, allow normal update
-        return true;
-      }
-
-      // Recovery operation: validate structure
-      return newSchedule is map
+      // If no recovery, allow; otherwise validate recovery structure
+      return !hasRecovery || (
+        newSchedule is map
         && isValidRecoveryScheduleChange(oldSchedule, newSchedule)
-        && request.resource.data.updatedAt is timestamp;
+        && request.resource.data.updatedAt is timestamp
+      );
     }
 
     // Validate that recovery schedule changes are valid

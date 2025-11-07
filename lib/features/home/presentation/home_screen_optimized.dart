@@ -239,12 +239,37 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
 
                 // Removed gamification features for MVP
 
+                // Debug: Before AICoachCard
+                if (kDebugMode) ...[
+                  Builder(builder: (context) {
+                    debugPrint('🏠 [HomeScreen] ✅ Before AICoachCard (line 243)');
+                    return const SizedBox.shrink();
+                  }),
+                ],
+
                 // AI Coach Insights Card
                 AICoachCard(key: aiCoachCardKey),
                 SizedBox(height: 24),
 
+                // Debug: Before SmartCTAButton
+                if (kDebugMode) ...[
+                  Builder(builder: (context) {
+                    debugPrint('🏠 [HomeScreen] ✅ Before SmartCTAButton (line 247)');
+                    return const SizedBox.shrink();
+                  }),
+                ],
+
                 // Smart CTA Button - Dynamic workout suggestions
                 const SmartCTAButton(),
+
+                // Debug: After SmartCTAButton
+                if (kDebugMode) ...[
+                  Builder(builder: (context) {
+                    debugPrint('🏠 [HomeScreen] ✅ After SmartCTAButton (line 248)');
+                    return const SizedBox.shrink();
+                  }),
+                ],
+
                 const SizedBox(height: 20),
 
                 // Primary CTA - Smart workout starter

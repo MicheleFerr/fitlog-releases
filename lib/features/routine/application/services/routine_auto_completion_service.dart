@@ -32,6 +32,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_matching_service.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_swap_flow.dart';
@@ -179,7 +180,7 @@ class RoutineAutoCompletionService {
           if (context != null && context.mounted) {
             SnackBarService.showSuccess(
               context,
-              '${context.l10n.routineDayCompleted} ${_formatDate(matchedDate)}',
+              '${context.l10n.routineDayCompleted} ${_formatDate(matchedDate, context)}',
               duration: const Duration(seconds: 3),
             );
           }
@@ -338,7 +339,7 @@ class RoutineAutoCompletionService {
       if (context != null && context.mounted) {
         SnackBarService.showSuccess(
           context,
-          '${context.l10n.routineDayCompleted} ${_formatDate(selectedDate)}',
+          '${context.l10n.routineDayCompleted} ${_formatDate(selectedDate, context)}',
           duration: const Duration(seconds: 3),
         );
       }
@@ -362,40 +363,21 @@ class RoutineAutoCompletionService {
   }
 
   /// Format date for UI display
-  String _formatDate(DateTime date) {
+  String _formatDate(DateTime date, BuildContext context) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final dateOnly = DateTime(date.year, date.month, date.day);
 
     final diff = dateOnly.difference(today).inDays;
 
-    if (diff == 0) return 'Today';
-    if (diff == -1) return 'Yesterday';
-    if (diff == 1) return 'Tomorrow';
+    if (diff == 0) return context.l10n.today;
+    if (diff == -1) return context.l10n.yesterday;
+    if (diff == 1) return context.l10n.tomorrow;
 
     // Format as "Mon 15 Jan"
-    return '${_weekdayName(date.weekday)} ${date.day} ${_monthName(date.month)}';
-  }
-
-  String _weekdayName(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'Mon';
-      case 2:
-        return 'Tue';
-      case 3:
-        return 'Wed';
-      case 4:
-        return 'Thu';
-      case 5:
-        return 'Fri';
-      case 6:
-        return 'Sat';
-      case 7:
-        return 'Sun';
-      default:
-        return '';
-    }
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('E d MMM', locale);
+    return dateFormat.format(date);
   }
 
   String _monthName(int month) {

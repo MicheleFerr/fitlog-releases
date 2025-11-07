@@ -191,7 +191,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             SliverToBoxAdapter(
               child: _buildSectionHeader(
                 context,
-                title: 'Active Routine',
+                title: context.l10n.routineActiveRoutine,
                 icon: AppIcons.playCircle,
                 color: context.colors.primary,
               ),
@@ -221,7 +221,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             SliverToBoxAdapter(
               child: _buildSectionHeader(
                 context,
-                title: 'Other Routines',
+                title: context.l10n.routineOtherRoutines,
                 icon: AppIcons.folderOutlined,
                 color: context.colors.secondary,
               ),
@@ -249,7 +249,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             SliverToBoxAdapter(
               child: _buildSectionHeader(
                 context,
-                title: 'Archived',
+                title: context.l10n.routineArchived,
                 icon: AppIcons.archive,
                 color: context.colors.onSurface.withValues(alpha: 0.6),
               ),
@@ -423,7 +423,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                 }
               },
               icon: Icon(AppIcons.back),
-              label: Text('Go Back'),
+              label: Text(context.l10n.routineGoBack),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
@@ -485,7 +485,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
   ) async {
     final confirmed = await ModalService.showConfirmDialog(
       context,
-      title: 'Activate Routine',
+      title: context.l10n.routineActivateRoutine,
       message:
           'Activating "${routine.name}" will deactivate your current active routine. Continue?',
       isDangerous: false,
@@ -519,7 +519,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
   ) async {
     final confirmed = await ModalService.showConfirmDialog(
       context,
-      title: 'Archive Routine',
+      title: context.l10n.routineArchiveRoutine,
       message:
           'Archived routines can be unarchived later. Your progress will be preserved.',
       isDangerous: false,
@@ -577,7 +577,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
   ) async {
     final confirmed = await ModalService.showConfirmDialog(
       context,
-      title: 'Delete Routine',
+      title: context.l10n.routineDeleteRoutine,
       message:
           'This action cannot be undone. All progress and history will be permanently deleted.',
       isDangerous: true,
@@ -669,7 +669,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text('Why This Suggestion?'),
+                      title: Text(context.l10n.routineWhyThisSuggestion),
                       content: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -717,7 +717,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Got it'),
+                    child: Text(context.l10n.routineGotIt),
                   ),
                 ],
               ),
@@ -857,7 +857,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                   context.pushNamed('workout-history');
                 },
                 icon: Icon(AppIcons.visibility),
-                label: Text('Consulta la Scheda Completata'),
+                label: Text(context.l10n.routineViewCompletedWorkout),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.success,
                   foregroundColor: context.colors.onSuccess,
@@ -957,48 +957,33 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
         );
   }
 
-  /// ✅ NEW: Synchronous count of recoverable skipped days
+  /// 🆕 FIXED: Count-based recovery logic (not date-based)
   ///
-  /// Calculates directly from the routine's schedule instead of using async service.
-  /// This ensures we use the LATEST data from the provider without async timing issues.
+  /// OLD LOGIC (❌ WRONG):
+  /// - Counted days with status=skipped
+  /// - Ignored if workout was done on different day
+  /// - Result: showed "1 day to recover" even if all workouts were completed
   ///
-  /// Returns count of days that are:
-  /// - Status = skipped
-  /// - Within last 30 days
-  /// - Have a templateId (not rest days)
+  /// NEW LOGIC (✅ CORRECT):
+  /// - Compares workout count: due vs completed
+  /// - workoutsDue = number of workouts scheduled up to today
+  /// - workoutsCompleted = total workouts completed
+  /// - behind = max(0, due - completed)
+  ///
+  /// This correctly handles:
+  /// - Workouts done on different days than scheduled
+  /// - Multiple workouts in one day
+  /// - Skip + recovery in same week
+  ///
+  /// Example:
+  /// - 4 days passed, 2 workouts due (day 4, day 6)
+  /// - User completed 2 workouts (day 4, day 7)
+  /// - behind = max(0, 2 - 2) = 0 ✅ (on track!)
+  ///
+  /// OLD would show: 1 day to recover (day 6 skipped) ❌
   int _countSkippedDaysSync(FlexibleRoutine routine) {
-    final now = DateTime.now();
-    final nowUtc = now.toUtc();
-    final today = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
-
-    int count = 0;
-
-    for (final entry in routine.schedule.entries) {
-      final scheduledDay = entry.value;
-
-      // Only count skipped days
-      if (scheduledDay.status != DayStatus.skipped) continue;
-
-      // Must have a templateId (not a rest day)
-      if (scheduledDay.templateId == null) continue;
-
-      // Must be in the past
-      final dayDate = DateTime(
-        scheduledDay.date.year,
-        scheduledDay.date.month,
-        scheduledDay.date.day,
-      );
-
-      if (dayDate.isAfter(today)) continue;
-
-      // Must be within 30 days
-      final daysDifference = today.difference(dayDate).inDays;
-      if (daysDifference > 30) continue;
-
-      count++;
-    }
-
-    return count;
+    // ✅ Use new count-based logic from entity
+    return routine.workoutsBehindSchedule;
   }
 
   void _showSkipRecoveryDialog(BuildContext context) {

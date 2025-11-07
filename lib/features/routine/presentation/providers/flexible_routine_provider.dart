@@ -155,7 +155,14 @@ final routineByIdProvider =
 final completedWorkoutsByDateProvider =
     FutureProvider.family<List<Map<String, dynamic>>, DateTime>((ref, date) async {
   final userId = ref.watch(_currentUserIdProvider);
+  if (kDebugMode) {
+    debugPrint('🔍 [completedWorkoutsByDateProvider] START - userId: $userId, date: $date');
+  }
+
   if (userId == null) {
+    if (kDebugMode) {
+      debugPrint('⚠️ [completedWorkoutsByDateProvider] No userId, returning empty');
+    }
     return [];
   }
 
@@ -163,8 +170,16 @@ final completedWorkoutsByDateProvider =
   final startOfDay = DateTime(date.year, date.month, date.day);
   final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
+  if (kDebugMode) {
+    debugPrint('🔍 [completedWorkoutsByDateProvider] Query range: $startOfDay → $endOfDay');
+  }
+
   try {
     // Query workouts completed on this specific date
+    if (kDebugMode) {
+      debugPrint('🔍 [completedWorkoutsByDateProvider] Starting Firestore query...');
+    }
+
     final snapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
@@ -175,10 +190,14 @@ final completedWorkoutsByDateProvider =
         .orderBy('endTime', descending: true)
         .get();
 
+    if (kDebugMode) {
+      debugPrint('✅ [completedWorkoutsByDateProvider] Query completed: ${snapshot.docs.length} workouts found');
+    }
+
     return snapshot.docs.map((doc) => doc.data()).toList();
   } catch (e) {
     if (kDebugMode) {
-      debugPrint('⚠️ Error fetching workouts for date $date: $e');
+      debugPrint('❌ [completedWorkoutsByDateProvider] Error fetching workouts: $e');
     }
     return [];
   }
