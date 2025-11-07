@@ -16686,4 +16686,42 @@
   "@smartButtonRecoveryTips": {
     "description": "Secondary action for rest day"
   }
+,
+  "smartWorkoutCTAStart": "START WORKOUT",
+  "@smartWorkoutCTAStart": {
+    "description": "CTA button text to start workout"
+  },
+  "smartWorkoutCTARestDay": "Rest Day 🌟",
+  "@smartWorkoutCTARestDay": {
+    "description": "CTA card title on rest day"
+  },
+  "smartWorkoutCTARestDayHint": "Use \"+ Free Session\" button for a free workout",
+  "@smartWorkoutCTARestDayHint": {
+    "description": "Hint text on rest day card"
+  },
+  "smartWorkoutCTASuggestedToday": "Suggested for today • ~{duration} min",
+  "@smartWorkoutCTASuggestedToday": {
+    "description": "Subtitle showing workout suggestion and duration",
+    "placeholders": {
+      "duration": {
+        "type": "int"
+      }
+    }
+  },
+  "smartWorkoutCTAErrorLoading": "Loading error",
+  "@smartWorkoutCTAErrorLoading": {
+    "description": "Error message when routine fails to load"
+  },
+  "smartWorkoutCTAErrorTemplate": "Template loading error",
+  "@smartWorkoutCTAErrorTemplate": {
+    "description": "Error message when template fails to load"
+  },
+  "smartWorkoutCTAIncompleteRoutine": "Incomplete routine",
+  "@smartWorkoutCTAIncompleteRoutine": {
+    "description": "Error message when routine data is incomplete"
+  },
+  "smartWorkoutCTATemplateNotFound": "Template not found",
+  "@smartWorkoutCTATemplateNotFound": {
+    "description": "Error message when template doesn't exist"
+  }
 }

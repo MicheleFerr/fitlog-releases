@@ -6136,4 +6136,20 @@
   "smartButtonRestDay": "Riposa. Prossimo: {nextDate}",
   "smartButtonExploreWorkouts": "Esplora Workout",
   "smartButtonRecoveryTips": "Consigli Recupero"
+,
+  "smartWorkoutCTAStart": "INIZIA ALLENAMENTO",
+  "smartWorkoutCTARestDay": "Giorno di Riposo 🌟",
+  "smartWorkoutCTARestDayHint": "Usa il pulsante \"+ Sessione Libera\" per un allenamento libero",
+  "smartWorkoutCTASuggestedToday": "Suggerito per oggi • ~{duration} min",
+  "@smartWorkoutCTASuggestedToday": {
+    "placeholders": {
+      "duration": {
+        "type": "int"
+      }
+    }
+  },
+  "smartWorkoutCTAErrorLoading": "Errore caricamento",
+  "smartWorkoutCTAErrorTemplate": "Errore caricamento template",
+  "smartWorkoutCTAIncompleteRoutine": "Routine incompleta",
+  "smartWorkoutCTATemplateNotFound": "Template non trovato"
 }

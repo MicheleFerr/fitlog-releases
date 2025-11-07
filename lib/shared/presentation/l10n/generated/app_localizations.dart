@@ -24533,6 +24533,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recovery Tips'**
   String get smartButtonRecoveryTips;
+
+  /// CTA button text to start workout
+  ///
+  /// In en, this message translates to:
+  /// **'START WORKOUT'**
+  String get smartWorkoutCTAStart;
+
+  /// CTA card title on rest day
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Day 🌟'**
+  String get smartWorkoutCTARestDay;
+
+  /// Hint text on rest day card
+  ///
+  /// In en, this message translates to:
+  /// **'Use \"+ Free Session\" button for a free workout'**
+  String get smartWorkoutCTARestDayHint;
+
+  /// Subtitle showing workout suggestion and duration
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested for today • ~{duration} min'**
+  String smartWorkoutCTASuggestedToday(int duration);
+
+  /// Error message when routine fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Loading error'**
+  String get smartWorkoutCTAErrorLoading;
+
+  /// Error message when template fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Template loading error'**
+  String get smartWorkoutCTAErrorTemplate;
+
+  /// Error message when routine data is incomplete
+  ///
+  /// In en, this message translates to:
+  /// **'Incomplete routine'**
+  String get smartWorkoutCTAIncompleteRoutine;
+
+  /// Error message when template doesn't exist
+  ///
+  /// In en, this message translates to:
+  /// **'Template not found'**
+  String get smartWorkoutCTATemplateNotFound;
 }
 
 class _AppLocalizationsDelegate

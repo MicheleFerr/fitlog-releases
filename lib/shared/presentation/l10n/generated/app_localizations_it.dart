@@ -13948,4 +13948,31 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get smartButtonRecoveryTips => 'Consigli Recupero';
+
+  @override
+  String get smartWorkoutCTAStart => 'INIZIA ALLENAMENTO';
+
+  @override
+  String get smartWorkoutCTARestDay => 'Giorno di Riposo 🌟';
+
+  @override
+  String get smartWorkoutCTARestDayHint =>
+      'Usa il pulsante \"+ Sessione Libera\" per un allenamento libero';
+
+  @override
+  String smartWorkoutCTASuggestedToday(int duration) {
+    return 'Suggerito per oggi • ~$duration min';
+  }
+
+  @override
+  String get smartWorkoutCTAErrorLoading => 'Errore caricamento';
+
+  @override
+  String get smartWorkoutCTAErrorTemplate => 'Errore caricamento template';
+
+  @override
+  String get smartWorkoutCTAIncompleteRoutine => 'Routine incompleta';
+
+  @override
+  String get smartWorkoutCTATemplateNotFound => 'Template non trovato';
 }

@@ -13797,4 +13797,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get smartButtonRecoveryTips => 'Recovery Tips';
+
+  @override
+  String get smartWorkoutCTAStart => 'START WORKOUT';
+
+  @override
+  String get smartWorkoutCTARestDay => 'Rest Day 🌟';
+
+  @override
+  String get smartWorkoutCTARestDayHint =>
+      'Use \"+ Free Session\" button for a free workout';
+
+  @override
+  String smartWorkoutCTASuggestedToday(int duration) {
+    return 'Suggested for today • ~$duration min';
+  }
+
+  @override
+  String get smartWorkoutCTAErrorLoading => 'Loading error';
+
+  @override
+  String get smartWorkoutCTAErrorTemplate => 'Template loading error';
+
+  @override
+  String get smartWorkoutCTAIncompleteRoutine => 'Incomplete routine';
+
+  @override
+  String get smartWorkoutCTATemplateNotFound => 'Template not found';
 }
