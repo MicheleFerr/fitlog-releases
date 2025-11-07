@@ -504,19 +504,18 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
         return false;
       }
 
-      // This IS an auto-recovery! Mark today as recovery completion
+      // This IS an auto-recovery! Mark yesterday as recovery completion
       final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
 
-      // Update today's day with recovery flags
-      updatedSchedule[completionDateKey] = (todayDay ?? ScheduledDay(
-        date: completionDateNormalized,
-        templateId: completedTemplateId,
-        status: DayStatus.scheduled,
-      ))
-          .copyWith(
+      // ✅ CRITICAL FIX: Mark YESTERDAY as recovery (completed), not today
+      // This ensures:
+      // - The originally skipped workout gets marked as recovered
+      // - Rest days remain unchanged (not marked as completed)
+      // - User sees green checkmark on the day they should have worked out
+      updatedSchedule[yesterdayDateKey] = yesterdayDay.copyWith(
+        status: DayStatus.completed,
         isRecovery: true,
         originalMissedDate: yesterdayUtc,
-        status: DayStatus.completed,
       );
 
       // Update the routine

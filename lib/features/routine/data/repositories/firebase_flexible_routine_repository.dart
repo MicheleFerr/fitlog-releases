@@ -405,15 +405,12 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
       // Create updated schedule
       final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
 
-      // Mark yesterday as skipped
+      // ✅ CRITICAL FIX: Mark YESTERDAY as recovery (completed), not today
+      // This ensures:
+      // - The originally skipped workout gets marked as recovered
+      // - Rest days remain unchanged (not marked as completed)
+      // - User sees green checkmark on the day they should have worked out
       updatedSchedule[yesterdayKey] = yesterdayDay.copyWith(
-        status: DayStatus.skipped,
-      );
-
-      // Mark today as recovery (completed)
-      updatedSchedule[todayKey] = ScheduledDay(
-        date: todayUtc,
-        templateId: yesterdayDay.templateId,
         status: DayStatus.completed,
         isRecovery: true,
         originalMissedDate: yesterdayUtc,
