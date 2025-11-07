@@ -166,11 +166,13 @@ final completedWorkoutsByDateProvider =
   try {
     // Query workouts completed on this specific date
     final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
         .collection('workouts')
-        .where('userId', isEqualTo: userId)
-        .where('completedAt', isGreaterThanOrEqualTo: startOfDay)
-        .where('completedAt', isLessThanOrEqualTo: endOfDay)
-        .orderBy('completedAt', descending: true)
+        .where('status', isEqualTo: 'completed')
+        .where('endTime', isGreaterThanOrEqualTo: startOfDay)
+        .where('endTime', isLessThanOrEqualTo: endOfDay)
+        .orderBy('endTime', descending: true)
         .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
