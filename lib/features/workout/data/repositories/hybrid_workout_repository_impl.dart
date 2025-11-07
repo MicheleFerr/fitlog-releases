@@ -763,6 +763,21 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     });
   }
 
+  @override
+  Future<Workout?> getLastCompletedWorkout(String userId) async {
+    if (_isDisposed) return null;
+
+    try {
+      final workoutModel = await _localDataSource.getLastCompletedWorkout(userId);
+      return workoutModel?.toDomain(); // Convert WorkoutModel to Workout
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [HybridWorkoutRepository] getLastCompletedWorkout error: $e');
+      }
+      return null; // Graceful fallback
+    }
+  }
+
   /// Dispose of resources
   /// MEMORY LEAK FIX: Properly cancel stream subscription
   void dispose() {

@@ -328,20 +328,30 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
       if (currentUser == null) {
         return left(const AuthenticationFailure('User not authenticated'));
       }
-      
+
       final history = await _dataSource.getWorkoutHistory(
         currentUser.uid,
         page: page,
         limit: limit,
       );
-      
+
       return right(history);
-      
+
     } on FirebaseException catch (e) {
       return left(_mapFirebaseException(e));
     } catch (e) {
       return left(UnexpectedFailure('Failed to get workout history: $e'));
     }
+  }
+
+  @override
+  Future<Workout?> getLastCompletedWorkout(String userId) async {
+    // Firebase-only implementation - not commonly used
+    // The app uses HybridWorkoutRepositoryImpl in production
+    throw UnimplementedError(
+      'getLastCompletedWorkout not implemented for Firebase-only repository. '
+      'Use HybridWorkoutRepositoryImpl instead.'
+    );
   }
 
   /// Map Firebase exceptions to domain failures

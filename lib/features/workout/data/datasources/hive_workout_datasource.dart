@@ -597,6 +597,7 @@ class HiveWorkoutDataSource {
       }
 
       // Sort by startTime descending (most recent first)
+      // Fall back to createdAt if startTime is null (defensive)
       completedWorkouts.sort((a, b) {
         final aTime = a.startTime ?? a.createdAt;
         final bTime = b.startTime ?? b.createdAt;
