@@ -35,7 +35,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/routine_card.dart';
 // TODO: Reimplementare onboarding migliore
 // import 'package:gymbro_flutter_new/features/routine/presentation/widgets/onboarding/routine_onboarding_screen.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_recovery_dialog.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_recovery_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_reminder_service_provider.dart';
@@ -770,6 +770,17 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     Map<String, dynamic>? completionStatus,
   ) {
     final isRecovery = (completionStatus?['isRecovery'] as bool?) ?? false;
+    final templateId = completionStatus?['templateId'] as String?;
+
+    // Get template name
+    final templateAsync = templateId != null
+        ? ref.watch(templateByIdProvider(templateId))
+        : const AsyncValue.data(null);
+
+    final templateName = templateAsync.maybeWhen(
+      data: (template) => template?.name,
+      orElse: () => null,
+    );
 
     return Card(
       margin: EdgeInsets.zero,
@@ -813,9 +824,19 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                           color: context.colors.onSuccessContainer,
                         ),
                       ),
+                      // ✅ NEW: Show template name if available
+                      if (templateName != null)
+                        Text(
+                          templateName,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.onSuccessContainer
+                                .withValues(alpha: 0.85),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       if (isRecovery)
                         Text(
-                          'Recovery workout completed',
+                          'Workout recuperato! 💪',
                           style: context.textTheme.bodySmall?.copyWith(
                             color: context.colors.onSuccessContainer
                                 .withValues(alpha: 0.7),
@@ -964,12 +985,10 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
   }
 
   void _showSkipRecoveryDialog(BuildContext context) {
-    // Light haptic feedback when opening dialog
+    // Light haptic feedback when opening bottom sheet
     HapticFeedback.selectionClick();
 
-    showDialog(
-      context: context,
-      builder: (context) => const SkipRecoveryDialog(),
-    );
+    // ✅ NEW: Use BottomSheet instead of Dialog
+    SkipRecoveryBottomSheet.show(context);
   }
 }

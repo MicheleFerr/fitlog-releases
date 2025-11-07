@@ -53,6 +53,9 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast
 // 💾 Workout Repository for fetching workout data
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
+// ✅ NEW: Recovery detection for missed workouts
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 // 📊 Analytics Tracking for workout events & PR detection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
@@ -777,6 +780,33 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         }
       } catch (routineError) {
         debugLog(LogCategory.workout, '⚠️ [Routine] Failed to auto-complete day: $routineError');
+        // Non-critical - workout is already saved
+      }
+
+      // 7b. ✅ NEW: Check if this workout is a recovery for yesterday's skipped workout
+      try {
+        if (workout.templateId != null) {
+          final activeRoutineAsync = ref.read(activeFlexibleRoutineProvider);
+          final activeRoutine = activeRoutineAsync.maybeWhen(
+            data: (routine) => routine,
+            orElse: () => null,
+          );
+
+          if (activeRoutine != null) {
+            final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+            final isRecovery = await notifier.autoDetectAndMarkAsRecovery(
+              routineId: activeRoutine.id,
+              completedTemplateId: workout.templateId!,
+              completionDate: workout.endTime ?? DateTime.now(),
+            );
+
+            if (isRecovery) {
+              debugLog(LogCategory.workout, '🔄 [Recovery] Detected and marked as recovery workout');
+            }
+          }
+        }
+      } catch (recoveryError) {
+        debugLog(LogCategory.workout, '⚠️ [Recovery] Failed to detect recovery: $recoveryError');
         // Non-critical - workout is already saved
       }
 

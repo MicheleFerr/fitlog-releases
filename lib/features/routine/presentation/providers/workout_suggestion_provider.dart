@@ -211,6 +211,7 @@ final todayCompletionStatusProvider =
       return {
         'completedAt': DateTime.now(),
         'templateId': todayDay.templateId,
+        'workoutId': todayDay.workoutId, // ✅ ADD: workoutId for navigation
         'isRecovery': todayDay.isRecovery ?? false,
       };
     },
