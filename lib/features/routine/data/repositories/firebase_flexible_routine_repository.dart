@@ -147,17 +147,37 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
   @override
   Future<FlexibleRoutine?> getActiveRoutine(String userId) async {
     try {
-      final query = await _collection
+      if (kDebugMode) {
+        debugPrint('🔍 [getActiveRoutine] START - userId: $userId');
+      }
+
+      final snapshot = await _collection
           .where('userId', isEqualTo: userId)
           .where('isActive', isEqualTo: true)
           .where('isArchived', isEqualTo: false)
           .limit(1)
           .get();
 
-      if (query.docs.isEmpty) return null;
+      if (kDebugMode) {
+        debugPrint('🔍 [getActiveRoutine] Query completed: ${snapshot.docs.length} docs');
+      }
 
-      return FlexibleRoutine.fromJson(query.docs.first.data());
+      if (snapshot.docs.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [getActiveRoutine] No active routine found');
+        }
+        return null;
+      }
+
+      final routine = FlexibleRoutine.fromJson(snapshot.docs.first.data());
+      if (kDebugMode) {
+        debugPrint('✅ [getActiveRoutine] Found routine: ${routine.name}');
+      }
+      return routine;
     } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [getActiveRoutine] Error: $e');
+      }
       throw _handleError(e, 'getActiveRoutine');
     }
   }
