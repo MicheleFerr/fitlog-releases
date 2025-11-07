@@ -133,7 +133,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 child: Text(
                   _formatDuration(widget.workout.duration!),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
