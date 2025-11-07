@@ -38,7 +38,6 @@ import 'package:gymbro_flutter_new/features/routine/presentation/widgets/routine
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/skip_recovery_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_detail_screen.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_reminder_service_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/workout_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/workout_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
@@ -879,15 +878,14 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     WidgetRef ref,
     FlexibleRoutine activeRoutine,
   ) {
-    return FutureBuilder<int>(
-      future: _countSkippedDays(ref, activeRoutine.id),
-      builder: (context, snapshot) {
-        final skippedCount = snapshot.data ?? 0;
+    // ✅ FIX: Calculate skipped count synchronously from activeRoutine parameter
+    // This ensures we use the LATEST data from the provider, not stale cache
+    final skippedCount = _countSkippedDaysSync(activeRoutine);
 
-        // Don't show if no skipped days
-        if (skippedCount == 0) {
-          return const SizedBox.shrink();
-        }
+    // Don't show if no skipped days
+    if (skippedCount == 0) {
+      return const SizedBox.shrink();
+    }
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -957,32 +955,50 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             ),
           ),
         );
-      },
-    );
   }
 
-  Future<int> _countSkippedDays(WidgetRef ref, String routineId) async {
-    final reminderService = ref.read(routineReminderServiceProvider);
-    try {
-      // Get active routine to pass to service
-      final activeRoutineAsync = ref.read(activeFlexibleRoutineProvider);
-      final activeRoutine = activeRoutineAsync.when(
-        data: (routine) => routine,
-        loading: () => null,
-        error: (_, __) => null,
+  /// ✅ NEW: Synchronous count of recoverable skipped days
+  ///
+  /// Calculates directly from the routine's schedule instead of using async service.
+  /// This ensures we use the LATEST data from the provider without async timing issues.
+  ///
+  /// Returns count of days that are:
+  /// - Status = skipped
+  /// - Within last 30 days
+  /// - Have a templateId (not rest days)
+  int _countSkippedDaysSync(FlexibleRoutine routine) {
+    final now = DateTime.now();
+    final nowUtc = now.toUtc();
+    final today = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
+
+    int count = 0;
+
+    for (final entry in routine.schedule.entries) {
+      final scheduledDay = entry.value;
+
+      // Only count skipped days
+      if (scheduledDay.status != DayStatus.skipped) continue;
+
+      // Must have a templateId (not a rest day)
+      if (scheduledDay.templateId == null) continue;
+
+      // Must be in the past
+      final dayDate = DateTime(
+        scheduledDay.date.year,
+        scheduledDay.date.month,
+        scheduledDay.date.day,
       );
 
-      if (activeRoutine == null || activeRoutine.id != routineId) {
-        return 0;
-      }
+      if (dayDate.isAfter(today)) continue;
 
-      final skippedDays = await reminderService.getRecoverableSkippedDays(
-        routine: activeRoutine,
-      );
-      return skippedDays.length;
-    } catch (e) {
-      return 0;
+      // Must be within 30 days
+      final daysDifference = today.difference(dayDate).inDays;
+      if (daysDifference > 30) continue;
+
+      count++;
     }
+
+    return count;
   }
 
   void _showSkipRecoveryDialog(BuildContext context) {
