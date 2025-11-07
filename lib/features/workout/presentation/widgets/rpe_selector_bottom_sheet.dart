@@ -117,7 +117,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   int? _selectedRpe;
   int? _calculatedRir;
   bool _showWeightAndReps = true;
-  bool _isSetCompleted = false; // ✅ Toggle state for set completion
+  bool _isSetCompleted = true; // ✅ FIX: Default to true (user is completing set)
   bool _originallyCompleted = false; // ✅ Track original completion state for button logic
 
   // ✅ NEW: For time-based exercises (counting mode = time)
