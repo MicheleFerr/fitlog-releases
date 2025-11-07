@@ -22,6 +22,10 @@ _$WorkoutSuggestionImpl _$$WorkoutSuggestionImplFromJson(
       generatedAt: json['generatedAt'] == null
           ? null
           : DateTime.parse(json['generatedAt'] as String),
+      isRecovery: json['isRecovery'] as bool? ?? false,
+      recoveryDate: json['recoveryDate'] == null
+          ? null
+          : DateTime.parse(json['recoveryDate'] as String),
     );
 
 Map<String, dynamic> _$$WorkoutSuggestionImplToJson(
@@ -36,6 +40,8 @@ Map<String, dynamic> _$$WorkoutSuggestionImplToJson(
       'frequencyData': instance.frequencyData,
       'scheduledDate': instance.scheduledDate?.toIso8601String(),
       'generatedAt': instance.generatedAt?.toIso8601String(),
+      'isRecovery': instance.isRecovery,
+      'recoveryDate': instance.recoveryDate?.toIso8601String(),
     };
 
 const _$SuggestionLevelEnumMap = {

@@ -104,6 +104,23 @@ abstract class FlexibleRoutineRepository {
     String? notes,
   });
 
+  /// ✅ NEW: Perform missed workout recovery with atomic batch write
+  ///
+  /// Completes today's workout as recovery and marks yesterday as skipped
+  /// in a single atomic operation. Uses UTC-normalized dates for timezone safety.
+  ///
+  /// Parameters:
+  /// - routineId: ID of the active routine
+  /// - workoutId: ID of the workout to complete as recovery
+  /// - userId: ID of the user
+  ///
+  /// Returns: true if recovery succeeded, false otherwise
+  Future<bool> performMissedWorkoutRecovery({
+    required String routineId,
+    required String workoutId,
+    required String userId,
+  });
+
   // === QUERY OPERATIONS ===
 
   /// Get routines within a date range

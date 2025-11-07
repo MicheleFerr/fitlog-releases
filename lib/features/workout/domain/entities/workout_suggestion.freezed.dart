@@ -70,6 +70,12 @@ mixin _$WorkoutSuggestion {
   /// Timestamp when this suggestion was generated
   DateTime? get generatedAt => throw _privateConstructorUsedError;
 
+  /// ✅ NEW: Is this a recovery suggestion for a missed workout?
+  bool get isRecovery => throw _privateConstructorUsedError;
+
+  /// ✅ NEW: Date of the missed workout being recovered
+  DateTime? get recoveryDate => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $WorkoutSuggestionCopyWith<WorkoutSuggestion> get copyWith =>
@@ -91,7 +97,9 @@ abstract class $WorkoutSuggestionCopyWith<$Res> {
       String? routineTemplateId,
       String? frequencyData,
       DateTime? scheduledDate,
-      DateTime? generatedAt});
+      DateTime? generatedAt,
+      bool isRecovery,
+      DateTime? recoveryDate});
 }
 
 /// @nodoc
@@ -116,6 +124,8 @@ class _$WorkoutSuggestionCopyWithImpl<$Res, $Val extends WorkoutSuggestion>
     Object? frequencyData = freezed,
     Object? scheduledDate = freezed,
     Object? generatedAt = freezed,
+    Object? isRecovery = null,
+    Object? recoveryDate = freezed,
   }) {
     return _then(_value.copyWith(
       level: null == level
@@ -154,6 +164,14 @@ class _$WorkoutSuggestionCopyWithImpl<$Res, $Val extends WorkoutSuggestion>
           ? _value.generatedAt
           : generatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isRecovery: null == isRecovery
+          ? _value.isRecovery
+          : isRecovery // ignore: cast_nullable_to_non_nullable
+              as bool,
+      recoveryDate: freezed == recoveryDate
+          ? _value.recoveryDate
+          : recoveryDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -175,7 +193,9 @@ abstract class _$$WorkoutSuggestionImplCopyWith<$Res>
       String? routineTemplateId,
       String? frequencyData,
       DateTime? scheduledDate,
-      DateTime? generatedAt});
+      DateTime? generatedAt,
+      bool isRecovery,
+      DateTime? recoveryDate});
 }
 
 /// @nodoc
@@ -198,6 +218,8 @@ class __$$WorkoutSuggestionImplCopyWithImpl<$Res>
     Object? frequencyData = freezed,
     Object? scheduledDate = freezed,
     Object? generatedAt = freezed,
+    Object? isRecovery = null,
+    Object? recoveryDate = freezed,
   }) {
     return _then(_$WorkoutSuggestionImpl(
       level: null == level
@@ -236,6 +258,14 @@ class __$$WorkoutSuggestionImplCopyWithImpl<$Res>
           ? _value.generatedAt
           : generatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isRecovery: null == isRecovery
+          ? _value.isRecovery
+          : isRecovery // ignore: cast_nullable_to_non_nullable
+              as bool,
+      recoveryDate: freezed == recoveryDate
+          ? _value.recoveryDate
+          : recoveryDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -252,7 +282,9 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
       this.routineTemplateId,
       this.frequencyData,
       this.scheduledDate,
-      this.generatedAt = null})
+      this.generatedAt = null,
+      this.isRecovery = false,
+      this.recoveryDate})
       : super._();
 
   factory _$WorkoutSuggestionImpl.fromJson(Map<String, dynamic> json) =>
@@ -318,9 +350,18 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
   @JsonKey()
   final DateTime? generatedAt;
 
+  /// ✅ NEW: Is this a recovery suggestion for a missed workout?
+  @override
+  @JsonKey()
+  final bool isRecovery;
+
+  /// ✅ NEW: Date of the missed workout being recovered
+  @override
+  final DateTime? recoveryDate;
+
   @override
   String toString() {
-    return 'WorkoutSuggestion(level: $level, workoutName: $workoutName, confidence: $confidence, reason: $reason, patternInfo: $patternInfo, routineTemplateId: $routineTemplateId, frequencyData: $frequencyData, scheduledDate: $scheduledDate, generatedAt: $generatedAt)';
+    return 'WorkoutSuggestion(level: $level, workoutName: $workoutName, confidence: $confidence, reason: $reason, patternInfo: $patternInfo, routineTemplateId: $routineTemplateId, frequencyData: $frequencyData, scheduledDate: $scheduledDate, generatedAt: $generatedAt, isRecovery: $isRecovery, recoveryDate: $recoveryDate)';
   }
 
   @override
@@ -343,7 +384,11 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
             (identical(other.scheduledDate, scheduledDate) ||
                 other.scheduledDate == scheduledDate) &&
             (identical(other.generatedAt, generatedAt) ||
-                other.generatedAt == generatedAt));
+                other.generatedAt == generatedAt) &&
+            (identical(other.isRecovery, isRecovery) ||
+                other.isRecovery == isRecovery) &&
+            (identical(other.recoveryDate, recoveryDate) ||
+                other.recoveryDate == recoveryDate));
   }
 
   @JsonKey(ignore: true)
@@ -358,7 +403,9 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
       routineTemplateId,
       frequencyData,
       scheduledDate,
-      generatedAt);
+      generatedAt,
+      isRecovery,
+      recoveryDate);
 
   @JsonKey(ignore: true)
   @override
@@ -385,7 +432,9 @@ abstract class _WorkoutSuggestion extends WorkoutSuggestion {
       final String? routineTemplateId,
       final String? frequencyData,
       final DateTime? scheduledDate,
-      final DateTime? generatedAt}) = _$WorkoutSuggestionImpl;
+      final DateTime? generatedAt,
+      final bool isRecovery,
+      final DateTime? recoveryDate}) = _$WorkoutSuggestionImpl;
   const _WorkoutSuggestion._() : super._();
 
   factory _WorkoutSuggestion.fromJson(Map<String, dynamic> json) =
@@ -450,6 +499,14 @@ abstract class _WorkoutSuggestion extends WorkoutSuggestion {
 
   /// Timestamp when this suggestion was generated
   DateTime? get generatedAt;
+  @override
+
+  /// ✅ NEW: Is this a recovery suggestion for a missed workout?
+  bool get isRecovery;
+  @override
+
+  /// ✅ NEW: Date of the missed workout being recovered
+  DateTime? get recoveryDate;
   @override
   @JsonKey(ignore: true)
   _$$WorkoutSuggestionImplCopyWith<_$WorkoutSuggestionImpl> get copyWith =>

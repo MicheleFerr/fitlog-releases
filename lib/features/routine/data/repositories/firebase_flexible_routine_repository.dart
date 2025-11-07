@@ -357,6 +357,89 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
     }
   }
 
+  /// ✅ NEW: Perform missed workout recovery with atomic batch write
+  ///
+  /// Completes today's workout as recovery and marks yesterday as skipped
+  /// in a single atomic operation. Uses UTC-normalized dates for timezone safety.
+  @override
+  Future<bool> performMissedWorkoutRecovery({
+    required String routineId,
+    required String workoutId,
+    required String userId,
+  }) async {
+    try {
+      // Get the routine
+      final routine = await getRoutineById(routineId);
+      if (routine == null) {
+        throw Exception('Routine not found: $routineId');
+      }
+
+      // Get today's date (UTC normalized)
+      final now = DateTime.now();
+      final nowUtc = now.toUtc();
+      final todayUtc =
+          DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
+      final yesterdayUtc = todayUtc.subtract(const Duration(days: 1));
+
+      // Format dates as Firestore keys (YYYY-MM-DD)
+      final todayKey =
+          '${todayUtc.year}-${todayUtc.month.toString().padLeft(2, '0')}-${todayUtc.day.toString().padLeft(2, '0')}';
+      final yesterdayKey =
+          '${yesterdayUtc.year}-${yesterdayUtc.month.toString().padLeft(2, '0')}-${yesterdayUtc.day.toString().padLeft(2, '0')}';
+
+      // Get today's and yesterday's scheduled days
+      final todayDay = routine.schedule[todayKey];
+      final yesterdayDay = routine.schedule[yesterdayKey];
+
+      // Validate: Yesterday must have been scheduled
+      if (yesterdayDay == null || yesterdayDay.templateId == null) {
+        return false; // No scheduled workout yesterday
+      }
+
+      // Validate: Today must not already be completed
+      if (todayDay != null &&
+          todayDay.status == DayStatus.completed) {
+        return false; // Already completed today
+      }
+
+      // Create updated schedule
+      final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
+
+      // Mark yesterday as skipped
+      updatedSchedule[yesterdayKey] = yesterdayDay.copyWith(
+        status: DayStatus.skipped,
+      );
+
+      // Mark today as recovery (completed)
+      updatedSchedule[todayKey] = ScheduledDay(
+        date: todayUtc,
+        templateId: yesterdayDay.templateId,
+        status: DayStatus.completed,
+        isRecovery: true,
+        originalMissedDate: yesterdayUtc,
+      );
+
+      // Create updated routine with new schedule
+      final updatedRoutine = routine.copyWith(
+        schedule: updatedSchedule,
+        updatedAt: DateTime.now(),
+      );
+
+      // Use atomic batch write for all-or-nothing guarantee
+      final batch = _firestore.batch();
+      batch.update(
+        _collection.doc(routineId),
+        updatedRoutine.toJson(),
+      );
+
+      await batch.commit();
+
+      return true;
+    } catch (e) {
+      throw _handleError(e, 'performMissedWorkoutRecovery');
+    }
+  }
+
   // === QUERY OPERATIONS ===
 
   @override

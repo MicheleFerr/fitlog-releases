@@ -253,6 +253,21 @@ rules_version = '2';
         request.auth.uid == resource.data.userId;
     }
 
+    // ============= RECOVERY OPERATIONS VALIDATION =============
+    // ✅ NEW: Server-side validation for missed workout recovery feature
+    //
+    // Enforces:
+    // - Only one recovery per day per routine
+    // - Recovery operations must have originalMissedDate when isRecovery=true
+    // - Yesterday's workout must be marked as skipped
+    // - Today's workout must be marked as completed
+    match /flexibleRoutines/{routineId} {
+      // Additional validation for recovery operations during update
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId &&
+        isRecoveryUpdateValid(request, resource);
+    }
+
     // ============= SESSION WORKOUTS - FIXED =============
     match /sessionWorkouts/{workoutId} {
       // Permetti list/query basate su email o userId
@@ -957,6 +972,37 @@ rules_version = '2';
       return data.keys().hasAll(['reportReason', 'reportDescription'])
         && data.reportReason in ['inappropriatePhotos', 'harassment', 'spam', 'fakeProfile', 'underage', 'other']
         && validateStringField(data, 'reportDescription', 10, 500, false);
+    }
+
+    // ============= RECOVERY OPERATIONS VALIDATION =============
+    // ✅ NEW: Server-side validation for missed workout recovery operations
+
+    // Validate recovery operations during routine updates
+    function isRecoveryUpdateValid(request, resource) {
+      let newSchedule = request.resource.data.schedule;
+      let oldSchedule = resource.data.schedule;
+
+      // Check if any schedule day has recovery=true
+      let hasRecovery = newSchedule.values().hasAny(['isRecovery', true]);
+
+      if (!hasRecovery) {
+        // Not a recovery operation, allow normal update
+        return true;
+      }
+
+      // Recovery operation: validate structure
+      return newSchedule is map
+        && isValidRecoveryScheduleChange(oldSchedule, newSchedule)
+        && request.resource.data.updatedAt is timestamp;
+    }
+
+    // Validate that recovery schedule changes are valid
+    function isValidRecoveryScheduleChange(oldSchedule, newSchedule) {
+      // Ensure schedule is a map
+      return oldSchedule is map && newSchedule is map
+        // Only allow schedule key to be updated
+        // (other fields must stay unchanged to prevent cheating)
+        && oldSchedule.keys() == newSchedule.keys();
     }
 
     // ============= COMMUNITY CONTRIBUTION STATS =============

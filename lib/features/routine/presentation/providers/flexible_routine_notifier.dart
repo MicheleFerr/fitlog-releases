@@ -404,6 +404,46 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
     }
   }
 
+  /// ✅ NEW: Perform missed workout recovery with atomic batch write
+  ///
+  /// Completes today's workout as recovery and marks yesterday as skipped
+  /// in a single atomic operation. Uses UTC-normalized dates for timezone safety.
+  ///
+  /// Parameters:
+  /// - routineId: ID of the active routine
+  /// - workoutId: ID of the workout to complete as recovery
+  ///
+  /// Returns: true if recovery succeeded, false otherwise
+  Future<bool> performRecoveryWorkout({
+    required String routineId,
+    required String workoutId,
+  }) async {
+    try {
+      state = state.copyWith(isLoading: true, error: null);
+
+      // Delegate to repository which handles Firestore batch write
+      final success = await _repository.performMissedWorkoutRecovery(
+        routineId: routineId,
+        workoutId: workoutId,
+        userId: userId,
+      );
+
+      state = state.copyWith(
+        isLoading: false,
+        successMessage: success ? 'Workout recovered successfully! 💪' : null,
+        error: success ? null : 'Failed to record recovery',
+      );
+
+      return success;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Recovery error: ${e.toString()}',
+      );
+      return false;
+    }
+  }
+
   // === QUERY OPERATIONS ===
 
   /// Get routine by ID
