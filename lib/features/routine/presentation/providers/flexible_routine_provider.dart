@@ -82,6 +82,57 @@ final activeFlexibleRoutineProvider = StreamProvider<FlexibleRoutine?>((ref) {
   return repository.watchActiveRoutine(userId);
 });
 
+/// Safe active routine provider with timeout protection
+///
+/// Uses FutureProvider instead of StreamProvider to prevent infinite loading.
+/// - 5-second timeout to prevent hanging
+/// - AutoDispose for automatic cleanup
+/// - Graceful error recovery (returns null instead of throwing)
+/// - Comprehensive debug logging
+///
+/// Use this instead of activeFlexibleRoutineProvider in UI widgets.
+final safeActiveRoutineProvider = FutureProvider.autoDispose<FlexibleRoutine?>((ref) async {
+  final userId = ref.watch(_currentUserIdProvider);
+
+  if (kDebugMode) {
+    debugPrint('🔍 [safeActiveRoutineProvider] START - userId: $userId');
+  }
+
+  if (userId == null) {
+    if (kDebugMode) {
+      debugPrint('⚠️ [safeActiveRoutineProvider] No userId, returning null');
+    }
+    return null;
+  }
+
+  final repository = ref.watch(flexibleRoutineRepositoryProvider);
+
+  try {
+    // Timeout after 5 seconds to prevent infinite loading
+    final routine = await repository.getActiveRoutine(userId)
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            if (kDebugMode) {
+              debugPrint('⏱️ [safeActiveRoutineProvider] Timeout after 5s');
+            }
+            return null;
+          },
+        );
+
+    if (kDebugMode) {
+      debugPrint('✅ [safeActiveRoutineProvider] Completed: ${routine?.name ?? "null"}');
+    }
+
+    return routine;
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('❌ [safeActiveRoutineProvider] Error: $e');
+    }
+    return null; // Graceful fallback instead of throwing
+  }
+});
+
 /// Stream provider for all user routines (real-time updates)
 final userFlexibleRoutinesProvider =
     StreamProvider<List<FlexibleRoutine>>((ref) {
