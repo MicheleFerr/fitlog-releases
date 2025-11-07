@@ -10365,9 +10365,9 @@
   "@routineTapToAdd": {
     "description": "Empty state instruction"
   },
-  "routineChangeTemplate": "Change Template",
+  "routineChangeTemplate": "Change Workout Template",
   "@routineChangeTemplate": {
-    "description": "Change template button"
+    "description": "Title for change template dialog"
   },
   "routineRemoveFromDay": "Remove from day",
   "@routineRemoveFromDay": {
@@ -16443,5 +16443,247 @@
   "missedWorkoutRecovered": "Missed workout recovered",
   "@missedWorkoutRecovered": {
     "description": "Message confirming missed workout has been recovered"
+  },
+  "routineSchedule": "Schedule",
+  "@routineSchedule": {
+    "description": "Calendar schedule title in routine center"
+  },
+  "routineStatusCompleted": "Completed",
+  "@routineStatusCompleted": {
+    "description": "Status completed in calendar legend"
+  },
+  "routineStatusScheduled": "Scheduled",
+  "@routineStatusScheduled": {
+    "description": "Status scheduled in calendar legend"
+  },
+  "routineStatusSkipped": "Skipped",
+  "@routineStatusSkipped": {
+    "description": "Status skipped in calendar legend"
+  },
+  "routineStatusRest": "Rest",
+  "@routineStatusRest": {
+    "description": "Status rest day in calendar legend"
+  },
+  "routineExtraWorkout": "Extra Workout 💪",
+  "@routineExtraWorkout": {
+    "description": "Badge shown when workout done on rest day"
+  },
+  "routineExtraWorkoutMessage": "You trained on a scheduled rest day! Great dedication!",
+  "@routineExtraWorkoutMessage": {
+    "description": "Message shown for workout on rest day"
+  },
+  "routineTodayPerformance": "TODAY'S PERFORMANCE",
+  "@routineTodayPerformance": {
+    "description": "Section title for today's workout performance"
+  },
+  "routineVolume": "Volume",
+  "@routineVolume": {
+    "description": "Label for workout volume"
+  },
+  "routineDuration": "Duration",
+  "@routineDuration": {
+    "description": "Label for workout duration"
+  },
+  "exercisesLabel": "Exercises",
+  "@exercisesLabel": {
+    "description": "Label for exercises (without count)"
+  },
+  "routineAverageRPE": "Average RPE",
+  "@routineAverageRPE": {
+    "description": "Label for average RPE"
+  },
+  "routineWorkoutPreview": "WORKOUT PREVIEW",
+  "@routineWorkoutPreview": {
+    "description": "Section title for workout preview"
+  },
+  "routineChange": "Change",
+  "@routineChange": {
+    "description": "Button to change workout template"
+  },
+  "routineTemplateNotFound": "Template not found",
+  "@routineTemplateNotFound": {
+    "description": "Error message when template not found"
+  },
+  "routineShowLess": "Show Less",
+  "@routineShowLess": {
+    "description": "Button to show less exercises"
+  },
+  "routineShowAll": "Show All ({count} more)",
+  "@routineShowAll": {
+    "description": "Button to show all exercises",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineWorkoutHistory": "WORKOUT HISTORY",
+  "@routineWorkoutHistory": {
+    "description": "Section title for workout history"
+  },
+  "routineInsightsSuggestions": "INSIGHTS & SUGGESTIONS",
+  "@routineInsightsSuggestions": {
+    "description": "Section title for insights"
+  },
+  "routineAiInsightsBased": "AI-powered insights based on:\n• Your workout performance\n• Recovery metrics\n• Training patterns",
+  "@routineAiInsightsBased": {
+    "description": "AI insights disclaimer"
+  },
+  "routineBasedOnMetrics": "Based on your performance metrics",
+  "@routineBasedOnMetrics": {
+    "description": "Insights based on metrics message"
+  },
+  "routineStartWorkout": "Start Workout",
+  "@routineStartWorkout": {
+    "description": "Button to start workout"
+  },
+  "routineViewFullDetails": "View Full Details",
+  "@routineViewFullDetails": {
+    "description": "Button to view full workout details"
+  },
+  "routineComplete": "Complete",
+  "@routineComplete": {
+    "description": "Button to mark day as complete"
+  },
+  "routineSkip": "Skip",
+  "@routineSkip": {
+    "description": "Button to skip day"
+  },
+  "routineStatusRecovered": "Recovered",
+  "@routineStatusRecovered": {
+    "description": "Status recovered"
+  },
+  "routineWorkoutStarted": "Workout started! 💪",
+  "@routineWorkoutStarted": {
+    "description": "Success message when workout starts"
+  },
+  "routineErrorStartingWorkout": "Error starting workout: {error}",
+  "@routineErrorStartingWorkout": {
+    "description": "Error message when workout fails to start",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "routineSkipDay": "Skip Day",
+  "@routineSkipDay": {
+    "description": "Dialog title for skipping day"
+  },
+  "routineSkipDayConfirm": "Mark this day as skipped?",
+  "@routineSkipDayConfirm": {
+    "description": "Confirmation message for skipping day"
+  },
+  "routineDaySkipped": "Day skipped",
+  "@routineDaySkipped": {
+    "description": "Success message when day skipped"
+  },
+  "routineFailedToSkip": "Failed to skip day",
+  "@routineFailedToSkip": {
+    "description": "Error message when skip fails"
+  },
+  "routineNoTemplatesAvailable": "No templates available",
+  "@routineNoTemplatesAvailable": {
+    "description": "Message when no templates available"
+  },
+  "routineActiveRoutine": "Active Routine",
+  "@routineActiveRoutine": {
+    "description": "Section title for active routine"
+  },
+  "routineOtherRoutines": "Other Routines",
+  "@routineOtherRoutines": {
+    "description": "Section title for other routines"
+  },
+  "routineArchived": "Archived",
+  "@routineArchived": {
+    "description": "Section title for archived routines"
+  },
+  "routineGoBack": "Go Back",
+  "@routineGoBack": {
+    "description": "Button to go back"
+  },
+  "routineActivateRoutine": "Activate Routine",
+  "@routineActivateRoutine": {
+    "description": "Dialog title to activate routine"
+  },
+  "routineArchiveRoutine": "Archive Routine",
+  "@routineArchiveRoutine": {
+    "description": "Dialog title to archive routine"
+  },
+  "routineDeleteRoutine": "Delete Routine",
+  "@routineDeleteRoutine": {
+    "description": "Dialog title to delete routine"
+  },
+  "routineWhyThisSuggestion": "Why This Suggestion?",
+  "@routineWhyThisSuggestion": {
+    "description": "Dialog title for suggestion explanation"
+  },
+  "routineGotIt": "Got it",
+  "@routineGotIt": {
+    "description": "Button to dismiss dialog"
+  },
+  "routineViewCompletedWorkout": "View Completed Workout",
+  "@routineViewCompletedWorkout": {
+    "description": "Button to view completed workout details"
+  },
+  "routineNotFound": "Routine not found",
+  "@routineNotFound": {
+    "description": "Error when routine not found"
+  },
+  "routineTemplateChanged": "Template changed to \"{templateName}\"",
+  "@routineTemplateChanged": {
+    "description": "Success message when template changed",
+    "placeholders": {
+      "templateName": {
+        "type": "String"
+      }
+    }
+  },
+  "routineFailedToChange": "Failed to change template",
+  "@routineFailedToChange": {
+    "description": "Error when template change fails"
+  },
+  "routineErrorChanging": "Error changing template: {error}",
+  "@routineErrorChanging": {
+    "description": "Error message with details",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "routineTodayWorkout": "Today's Workout",
+  "@routineTodayWorkout": {
+    "description": "Title for today's workout card"
+  },
+  "smartButtonStartWorkout": "Start {workoutName}",
+  "@smartButtonStartWorkout": {
+    "description": "CTA button text when user has scheduled workout",
+    "placeholders": {
+      "workoutName": {
+        "type": "String"
+      }
+    }
+  },
+  "smartButtonViewRecap": "View Recap",
+  "@smartButtonViewRecap": {
+    "description": "CTA button text when user completed workout today"
+  },
+  "smartButtonRestDay": "Rest. Next: {nextDate}",
+  "@smartButtonRestDay": {
+    "description": "CTA button text on rest day",
+    "placeholders": {
+      "nextDate": {
+        "type": "String"
+      }
+    }
+  },
+  "smartButtonExploreWorkouts": "Explore Workouts",
+  "@smartButtonExploreWorkouts": {
+    "description": "CTA button text when no workout scheduled"
+  },
+  "smartButtonRecoveryTips": "Recovery Tips",
+  "@smartButtonRecoveryTips": {
+    "description": "Secondary action for rest day"
   }
 }

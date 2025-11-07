@@ -8748,7 +8748,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineTapToAdd => 'Tap a template and select \'Add to Routine\'';
 
   @override
-  String get routineChangeTemplate => 'Change Template';
+  String get routineChangeTemplate => 'Change Workout Template';
 
   @override
   String get routineRemoveFromDay => 'Remove from day';
@@ -13624,4 +13624,177 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get missedWorkoutRecovered => 'Missed workout recovered';
+
+  @override
+  String get routineSchedule => 'Schedule';
+
+  @override
+  String get routineStatusCompleted => 'Completed';
+
+  @override
+  String get routineStatusScheduled => 'Scheduled';
+
+  @override
+  String get routineStatusSkipped => 'Skipped';
+
+  @override
+  String get routineStatusRest => 'Rest';
+
+  @override
+  String get routineExtraWorkout => 'Extra Workout 💪';
+
+  @override
+  String get routineExtraWorkoutMessage =>
+      'You trained on a scheduled rest day! Great dedication!';
+
+  @override
+  String get routineTodayPerformance => 'TODAY\'S PERFORMANCE';
+
+  @override
+  String get routineVolume => 'Volume';
+
+  @override
+  String get routineDuration => 'Duration';
+
+  @override
+  String get exercisesLabel => 'Exercises';
+
+  @override
+  String get routineAverageRPE => 'Average RPE';
+
+  @override
+  String get routineWorkoutPreview => 'WORKOUT PREVIEW';
+
+  @override
+  String get routineChange => 'Change';
+
+  @override
+  String get routineTemplateNotFound => 'Template not found';
+
+  @override
+  String get routineShowLess => 'Show Less';
+
+  @override
+  String routineShowAll(int count) {
+    return 'Show All ($count more)';
+  }
+
+  @override
+  String get routineWorkoutHistory => 'WORKOUT HISTORY';
+
+  @override
+  String get routineInsightsSuggestions => 'INSIGHTS & SUGGESTIONS';
+
+  @override
+  String get routineAiInsightsBased =>
+      'AI-powered insights based on:\n• Your workout performance\n• Recovery metrics\n• Training patterns';
+
+  @override
+  String get routineBasedOnMetrics => 'Based on your performance metrics';
+
+  @override
+  String get routineStartWorkout => 'Start Workout';
+
+  @override
+  String get routineViewFullDetails => 'View Full Details';
+
+  @override
+  String get routineComplete => 'Complete';
+
+  @override
+  String get routineSkip => 'Skip';
+
+  @override
+  String get routineStatusRecovered => 'Recovered';
+
+  @override
+  String get routineWorkoutStarted => 'Workout started! 💪';
+
+  @override
+  String routineErrorStartingWorkout(String error) {
+    return 'Error starting workout: $error';
+  }
+
+  @override
+  String get routineSkipDay => 'Skip Day';
+
+  @override
+  String get routineSkipDayConfirm => 'Mark this day as skipped?';
+
+  @override
+  String get routineDaySkipped => 'Day skipped';
+
+  @override
+  String get routineFailedToSkip => 'Failed to skip day';
+
+  @override
+  String get routineNoTemplatesAvailable => 'No templates available';
+
+  @override
+  String get routineActiveRoutine => 'Active Routine';
+
+  @override
+  String get routineOtherRoutines => 'Other Routines';
+
+  @override
+  String get routineArchived => 'Archived';
+
+  @override
+  String get routineGoBack => 'Go Back';
+
+  @override
+  String get routineActivateRoutine => 'Activate Routine';
+
+  @override
+  String get routineArchiveRoutine => 'Archive Routine';
+
+  @override
+  String get routineDeleteRoutine => 'Delete Routine';
+
+  @override
+  String get routineWhyThisSuggestion => 'Why This Suggestion?';
+
+  @override
+  String get routineGotIt => 'Got it';
+
+  @override
+  String get routineViewCompletedWorkout => 'View Completed Workout';
+
+  @override
+  String get routineNotFound => 'Routine not found';
+
+  @override
+  String routineTemplateChanged(String templateName) {
+    return 'Template changed to \"$templateName\"';
+  }
+
+  @override
+  String get routineFailedToChange => 'Failed to change template';
+
+  @override
+  String routineErrorChanging(String error) {
+    return 'Error changing template: $error';
+  }
+
+  @override
+  String get routineTodayWorkout => 'Today\'s Workout';
+
+  @override
+  String smartButtonStartWorkout(String workoutName) {
+    return 'Start $workoutName';
+  }
+
+  @override
+  String get smartButtonViewRecap => 'View Recap';
+
+  @override
+  String smartButtonRestDay(String nextDate) {
+    return 'Rest. Next: $nextDate';
+  }
+
+  @override
+  String get smartButtonExploreWorkouts => 'Explore Workouts';
+
+  @override
+  String get smartButtonRecoveryTips => 'Recovery Tips';
 }

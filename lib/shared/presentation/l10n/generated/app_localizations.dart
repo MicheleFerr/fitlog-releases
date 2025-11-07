@@ -15654,10 +15654,10 @@ abstract class AppLocalizations {
   /// **'Tap a template and select \'Add to Routine\''**
   String get routineTapToAdd;
 
-  /// Change template button
+  /// Title for change template dialog
   ///
   /// In en, this message translates to:
-  /// **'Change Template'**
+  /// **'Change Workout Template'**
   String get routineChangeTemplate;
 
   /// Remove template from day action
@@ -24215,6 +24215,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Missed workout recovered'**
   String get missedWorkoutRecovered;
+
+  /// Calendar schedule title in routine center
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get routineSchedule;
+
+  /// Status completed in calendar legend
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get routineStatusCompleted;
+
+  /// Status scheduled in calendar legend
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get routineStatusScheduled;
+
+  /// Status skipped in calendar legend
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get routineStatusSkipped;
+
+  /// Status rest day in calendar legend
+  ///
+  /// In en, this message translates to:
+  /// **'Rest'**
+  String get routineStatusRest;
+
+  /// Badge shown when workout done on rest day
+  ///
+  /// In en, this message translates to:
+  /// **'Extra Workout 💪'**
+  String get routineExtraWorkout;
+
+  /// Message shown for workout on rest day
+  ///
+  /// In en, this message translates to:
+  /// **'You trained on a scheduled rest day! Great dedication!'**
+  String get routineExtraWorkoutMessage;
+
+  /// Section title for today's workout performance
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY\'S PERFORMANCE'**
+  String get routineTodayPerformance;
+
+  /// Label for workout volume
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get routineVolume;
+
+  /// Label for workout duration
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get routineDuration;
+
+  /// Label for exercises (without count)
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises'**
+  String get exercisesLabel;
+
+  /// Label for average RPE
+  ///
+  /// In en, this message translates to:
+  /// **'Average RPE'**
+  String get routineAverageRPE;
+
+  /// Section title for workout preview
+  ///
+  /// In en, this message translates to:
+  /// **'WORKOUT PREVIEW'**
+  String get routineWorkoutPreview;
+
+  /// Button to change workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get routineChange;
+
+  /// Error message when template not found
+  ///
+  /// In en, this message translates to:
+  /// **'Template not found'**
+  String get routineTemplateNotFound;
+
+  /// Button to show less exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Show Less'**
+  String get routineShowLess;
+
+  /// Button to show all exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Show All ({count} more)'**
+  String routineShowAll(int count);
+
+  /// Section title for workout history
+  ///
+  /// In en, this message translates to:
+  /// **'WORKOUT HISTORY'**
+  String get routineWorkoutHistory;
+
+  /// Section title for insights
+  ///
+  /// In en, this message translates to:
+  /// **'INSIGHTS & SUGGESTIONS'**
+  String get routineInsightsSuggestions;
+
+  /// AI insights disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered insights based on:\n• Your workout performance\n• Recovery metrics\n• Training patterns'**
+  String get routineAiInsightsBased;
+
+  /// Insights based on metrics message
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your performance metrics'**
+  String get routineBasedOnMetrics;
+
+  /// Button to start workout
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get routineStartWorkout;
+
+  /// Button to view full workout details
+  ///
+  /// In en, this message translates to:
+  /// **'View Full Details'**
+  String get routineViewFullDetails;
+
+  /// Button to mark day as complete
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get routineComplete;
+
+  /// Button to skip day
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get routineSkip;
+
+  /// Status recovered
+  ///
+  /// In en, this message translates to:
+  /// **'Recovered'**
+  String get routineStatusRecovered;
+
+  /// Success message when workout starts
+  ///
+  /// In en, this message translates to:
+  /// **'Workout started! 💪'**
+  String get routineWorkoutStarted;
+
+  /// Error message when workout fails to start
+  ///
+  /// In en, this message translates to:
+  /// **'Error starting workout: {error}'**
+  String routineErrorStartingWorkout(String error);
+
+  /// Dialog title for skipping day
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Day'**
+  String get routineSkipDay;
+
+  /// Confirmation message for skipping day
+  ///
+  /// In en, this message translates to:
+  /// **'Mark this day as skipped?'**
+  String get routineSkipDayConfirm;
+
+  /// Success message when day skipped
+  ///
+  /// In en, this message translates to:
+  /// **'Day skipped'**
+  String get routineDaySkipped;
+
+  /// Error message when skip fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to skip day'**
+  String get routineFailedToSkip;
+
+  /// Message when no templates available
+  ///
+  /// In en, this message translates to:
+  /// **'No templates available'**
+  String get routineNoTemplatesAvailable;
+
+  /// Section title for active routine
+  ///
+  /// In en, this message translates to:
+  /// **'Active Routine'**
+  String get routineActiveRoutine;
+
+  /// Section title for other routines
+  ///
+  /// In en, this message translates to:
+  /// **'Other Routines'**
+  String get routineOtherRoutines;
+
+  /// Section title for archived routines
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get routineArchived;
+
+  /// Button to go back
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get routineGoBack;
+
+  /// Dialog title to activate routine
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Routine'**
+  String get routineActivateRoutine;
+
+  /// Dialog title to archive routine
+  ///
+  /// In en, this message translates to:
+  /// **'Archive Routine'**
+  String get routineArchiveRoutine;
+
+  /// Dialog title to delete routine
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Routine'**
+  String get routineDeleteRoutine;
+
+  /// Dialog title for suggestion explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Why This Suggestion?'**
+  String get routineWhyThisSuggestion;
+
+  /// Button to dismiss dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get routineGotIt;
+
+  /// Button to view completed workout details
+  ///
+  /// In en, this message translates to:
+  /// **'View Completed Workout'**
+  String get routineViewCompletedWorkout;
+
+  /// Error when routine not found
+  ///
+  /// In en, this message translates to:
+  /// **'Routine not found'**
+  String get routineNotFound;
+
+  /// Success message when template changed
+  ///
+  /// In en, this message translates to:
+  /// **'Template changed to \"{templateName}\"'**
+  String routineTemplateChanged(String templateName);
+
+  /// Error when template change fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to change template'**
+  String get routineFailedToChange;
+
+  /// Error message with details
+  ///
+  /// In en, this message translates to:
+  /// **'Error changing template: {error}'**
+  String routineErrorChanging(String error);
+
+  /// Title for today's workout card
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Workout'**
+  String get routineTodayWorkout;
+
+  /// CTA button text when user has scheduled workout
+  ///
+  /// In en, this message translates to:
+  /// **'Start {workoutName}'**
+  String smartButtonStartWorkout(String workoutName);
+
+  /// CTA button text when user completed workout today
+  ///
+  /// In en, this message translates to:
+  /// **'View Recap'**
+  String get smartButtonViewRecap;
+
+  /// CTA button text on rest day
+  ///
+  /// In en, this message translates to:
+  /// **'Rest. Next: {nextDate}'**
+  String smartButtonRestDay(String nextDate);
+
+  /// CTA button text when no workout scheduled
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Workouts'**
+  String get smartButtonExploreWorkouts;
+
+  /// Secondary action for rest day
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Tips'**
+  String get smartButtonRecoveryTips;
 }
 
 class _AppLocalizationsDelegate
