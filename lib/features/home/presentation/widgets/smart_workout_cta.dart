@@ -159,6 +159,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
             child: InkWell(
               onTap: () async {
                 await HapticFeedback.lightImpact();
+                if (!context.mounted) return;
                 await _onSmartCTATap(context, ref, template.id, template.name);
               },
               borderRadius: BorderRadius.circular(24),
