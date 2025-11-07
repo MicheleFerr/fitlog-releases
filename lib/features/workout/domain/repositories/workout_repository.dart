@@ -80,6 +80,12 @@ abstract class WorkoutRepository {
     int page = 1,
     int limit = 10,
   });
+
+  /// Get last completed workout for user
+  ///
+  /// Returns the most recent workout with endTime != null (completed).
+  /// Returns null if no completed workouts found.
+  Future<Workout?> getLastCompletedWorkout(String userId);
 }
 
 /// Value objects for repository operations

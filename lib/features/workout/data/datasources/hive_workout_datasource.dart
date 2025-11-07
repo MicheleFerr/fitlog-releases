@@ -571,6 +571,53 @@ class HiveWorkoutDataSource {
     }
   }
 
+  /// Get last completed workout for user
+  ///
+  /// Returns the most recent workout with endTime != null (completed).
+  /// Returns null if no completed workouts found.
+  Future<WorkoutModel?> getLastCompletedWorkout(String userId) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('🔍 [HiveWorkoutDataSource] getLastCompletedWorkout - userId: $userId');
+      }
+
+      // Get all workouts for user
+      final allWorkouts = await getWorkouts(userId);
+
+      // Filter completed workouts only (endTime != null)
+      final completedWorkouts = allWorkouts
+          .where((workout) => workout.endTime != null)
+          .toList();
+
+      if (completedWorkouts.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [HiveWorkoutDataSource] No completed workouts found');
+        }
+        return null;
+      }
+
+      // Sort by startTime descending (most recent first)
+      completedWorkouts.sort((a, b) {
+        final aTime = a.startTime ?? a.createdAt;
+        final bTime = b.startTime ?? b.createdAt;
+        return bTime.compareTo(aTime);
+      });
+
+      final lastWorkout = completedWorkouts.first;
+
+      if (kDebugMode) {
+        debugPrint('✅ [HiveWorkoutDataSource] Found last workout: ${lastWorkout.id}');
+      }
+
+      return lastWorkout;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [HiveWorkoutDataSource] Error: $e');
+      }
+      throw Exception('Failed to get last completed workout: $e');
+    }
+  }
+
   /// ✅ DISPOSAL: No longer needed
   /// HiveBoxManagerEnhanced handles all box lifecycle management via ref.onDispose()
   /// Boxes are automatically closed when:
